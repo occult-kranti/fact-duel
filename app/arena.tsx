@@ -869,6 +869,7 @@ export default function Arena() {
           ].map(([id, label, Icon]: any) => (
             <Button
               key={id}
+              data-nav={id}
               variant="ghost"
               className={tab === id ? 'nav-active' : ''}
               aria-current={tab === id ? 'page' : undefined}
