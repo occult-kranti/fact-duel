@@ -1,0 +1,379 @@
+/*
+ * components/fx/fx.css — styles for the juice components (canvas, toasts, ceremony, XP pop,
+ * counter). Self-contained: every colour/radius comes from a `--fx-*` variable with a
+ * fallback chain to the app's shadcn tokens and finally a literal, so it works before the
+ * app defines any of them. Override `--fx-surface`, `--fx-text`, `--fx-accent`, `--fx-gold`,
+ * `--fx-radius` and the particle palette `--fx-1`..`--fx-5` on :root / [data-theme] to retheme.
+ */
+
+:root {
+  --fx-1: #d4ff3a;
+  --fx-2: #ffc83d;
+  --fx-3: #4ee1ff;
+  --fx-4: #ff5ea8;
+  --fx-5: #ffffff;
+}
+
+.fx-toast,
+.fx-ceremony-card,
+.fx-xp-pop {
+  --_fx-surface: var(--fx-surface, var(--popover, #2a2533));
+  --_fx-text: var(--fx-text, var(--popover-foreground, #f9f3e8));
+  --_fx-accent: var(--fx-accent, var(--primary, #f99479));
+  --_fx-accent-text: var(--fx-accent-text, var(--primary-foreground, #1b1720));
+  --_fx-gold: var(--fx-gold, #ffc83d);
+  --_fx-radius: var(--fx-radius, var(--radius, 14px));
+}
+
+/* ---------- particle canvas ---------- */
+.fx-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 40; /* above content, below dialogs (shadcn uses z-50) */
+}
+.fx-canvas[data-elevated='true'] {
+  z-index: 85; /* above the ceremony backdrop, below its card */
+}
+
+/* ---------- toasts ---------- */
+.fx-toasts {
+  position: fixed;
+  z-index: 95;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+  left: 16px;
+  right: 16px;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  align-items: center;
+}
+@media (min-width: 769px) {
+  .fx-toasts {
+    left: auto;
+    top: 20px;
+    right: 20px;
+    bottom: auto;
+    width: 360px;
+    align-items: stretch;
+  }
+}
+.fx-toast {
+  --_kind: var(--_fx-accent);
+  position: relative;
+  pointer-events: auto;
+  width: min(100%, 420px);
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) 44px;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 2px 8px 10px;
+  overflow: hidden;
+  border-radius: var(--_fx-radius);
+  background: var(--_fx-surface);
+  color: var(--_fx-text);
+  border-left: 4px solid var(--_kind);
+  box-shadow:
+    0 12px 32px rgba(0, 0, 0, 0.35),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+.fx-toast[data-kind='xp'] {
+  --_kind: var(--fx-1, #d4ff3a);
+}
+.fx-toast[data-kind='quest'] {
+  --_kind: var(--fx-3, #4ee1ff);
+}
+.fx-toast[data-kind='achievement'] {
+  --_kind: var(--_fx-gold);
+}
+.fx-toast[data-kind='streak'] {
+  --_kind: #ff7a3d;
+}
+.fx-toast[data-kind='gem'] {
+  --_kind: var(--fx-4, #ff5ea8);
+}
+.fx-toast[data-kind='info'] {
+  --_kind: var(--_fx-accent);
+}
+.fx-toast-icon {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--_kind) 20%, transparent);
+  color: var(--_kind);
+  font-size: 1.2rem;
+}
+.fx-toast-text {
+  min-width: 0;
+}
+.fx-toast-title {
+  font-weight: 750;
+  font-size: 0.95rem;
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+}
+.fx-toast-body {
+  opacity: 0.78;
+  font-size: 0.84rem;
+  overflow-wrap: anywhere;
+}
+.fx-toast-close {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  opacity: 0.7;
+  cursor: pointer;
+}
+.fx-toast-close:hover,
+.fx-toast-close:focus-visible {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.08);
+}
+.fx-toast-bar {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 100%;
+  background: var(--_kind);
+  opacity: 0.55;
+  transform-origin: left;
+  animation: fx-toast-bar var(--_dur, 3200ms) linear forwards;
+}
+.fx-toast[data-paused='true'] .fx-toast-bar {
+  animation-play-state: paused;
+}
+@keyframes fx-toast-bar {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+
+/* ---------- ceremony ---------- */
+.fx-ceremony-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: rgba(12, 9, 18, 0.74);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  pointer-events: none;
+}
+.fx-ceremony {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  padding: 20px 16px calc(20px + env(safe-area-inset-bottom, 0px));
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.fx-ceremony-card {
+  --_kind: var(--_fx-gold);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  width: min(100%, 420px);
+  border-radius: calc(var(--_fx-radius) + 8px);
+  background: var(--_fx-surface);
+  color: var(--_fx-text);
+  padding: 26px 22px 22px;
+  text-align: center;
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.5),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+.fx-ceremony-card[data-kind='level'] {
+  --_kind: var(--fx-1, #d4ff3a);
+}
+.fx-ceremony-card[data-kind='achievement'] {
+  --_kind: var(--_fx-gold);
+}
+.fx-ceremony-card[data-kind='stamp'] {
+  --_kind: var(--fx-4, #ff5ea8);
+}
+.fx-ceremony-card[data-kind='streak'] {
+  --_kind: #ff7a3d;
+}
+.fx-ceremony-rays {
+  position: absolute;
+  inset: -70%;
+  z-index: -1;
+  pointer-events: none;
+  background: repeating-conic-gradient(
+    from 0deg,
+    color-mix(in srgb, var(--_kind) 14%, transparent) 0deg 10deg,
+    transparent 10deg 28deg
+  );
+  mask-image: radial-gradient(circle at center, #000 0%, rgba(0, 0, 0, 0.7) 35%, transparent 62%);
+  -webkit-mask-image: radial-gradient(circle at center, #000 0%, rgba(0, 0, 0, 0.7) 35%, transparent 62%);
+  animation: fx-spin 28s linear infinite;
+}
+@keyframes fx-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.fx-ceremony-kicker {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--_kind);
+}
+.fx-ceremony-hero {
+  width: 132px;
+  height: 132px;
+  margin: 16px auto 6px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #1b1720;
+  background: radial-gradient(
+    circle at 35% 30%,
+    color-mix(in srgb, var(--_kind) 55%, #fff) 0%,
+    var(--_kind) 42%,
+    color-mix(in srgb, var(--_kind) 55%, #000) 100%
+  );
+  box-shadow:
+    0 0 0 10px color-mix(in srgb, var(--_kind) 22%, transparent),
+    0 22px 50px rgba(0, 0, 0, 0.45);
+}
+.fx-ceremony-hero > * {
+  max-width: 100%;
+}
+.fx-ceremony-title {
+  margin-top: 10px;
+  font-size: clamp(1.55rem, 6vw, 2.05rem);
+  font-weight: 850;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+.fx-ceremony-subtitle {
+  margin-top: 6px;
+  opacity: 0.8;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+.fx-ceremony-rewards {
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+.fx-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  font-size: 0.85rem;
+  font-weight: 650;
+  line-height: 1.2;
+}
+.fx-chip-value {
+  color: var(--_kind);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.fx-btn {
+  width: 100%;
+  min-height: 48px;
+  margin-top: 22px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--_fx-accent);
+  color: var(--_fx-accent-text);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 750;
+  cursor: pointer;
+  transition: transform 120ms ease;
+}
+.fx-btn:hover {
+  filter: brightness(1.06);
+}
+.fx-btn:active {
+  transform: scale(0.98);
+}
+.fx-btn:focus-visible {
+  outline: 3px solid var(--_kind);
+  outline-offset: 3px;
+}
+
+/* ---------- xp pop ---------- */
+.fx-xp-pop {
+  position: absolute;
+  z-index: 5;
+  pointer-events: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--fx-1, #d4ff3a);
+  color: #14170a;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+  transform-origin: center;
+}
+.fx-xp-pop[data-placement='right'] {
+  left: 100%;
+  top: 50%;
+  translate: 8px -50%;
+}
+.fx-xp-pop[data-placement='left'] {
+  right: 100%;
+  top: 50%;
+  translate: -8px -50%;
+}
+.fx-xp-pop[data-placement='top'] {
+  left: 50%;
+  bottom: 100%;
+  translate: -50% -8px;
+}
+
+/* ---------- counter ---------- */
+.fx-counter {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+}
+
+/* ---------- reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .fx-ceremony-rays,
+  .fx-toast-bar {
+    animation: none;
+  }
+}
+.fx-reduced .fx-ceremony-rays,
+.fx-reduced .fx-toast-bar {
+  animation: none;
+}
