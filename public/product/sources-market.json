@@ -1,0 +1,349 @@
+{
+  "as_of": "2026-09-12",
+  "sources": [
+    {
+      "id": "M01",
+      "publisher": "etermax",
+      "title": "Trivia Crack by The Floor — developer Android listing",
+      "url": "https://play.google.com/store/apps/details?hl=en_US&id=com.etermax.preguntados.lite",
+      "publication_or_update_date": "2026-09-09",
+      "vintage_note": "Listing updated date; features observed 2026-09-12",
+      "access_date": "2026-09-12",
+      "source_class": "primary",
+      "access": "Retrieved with web search/open; metadata and material claims checked",
+      "claims_used": "Weekly The Floor episodes, specialist champions, friend challenges, dedicated leaderboard, declared ads and in-app purchases.",
+      "limitations": "Developer marketing description; installs not active users. No generalization from individual reviews."
+    },
+    {
+      "id": "M02",
+      "publisher": "Sporcle",
+      "title": "Sporcle: Play Trivia Quizzes — developer Android listing",
+      "url": "https://play.google.com/store/apps/details?id=com.sporcle.geneva",
+      "publication_or_update_date": "2026-09-04",
+      "vintage_note": "Listing updated date",
+      "access_date": "2026-09-12",
+      "source_class": "primary",
+      "access": "Retrieved with web search/open; metadata and material claims checked",
+      "claims_used": "Two million-plus quizzes claimed, formats, daily games, badges, streaks, missions, creation/playlists and Orange membership.",
+      "limitations": "Inventory and features are developer statements, not a quality or retention audit."
+    },
+    {
+      "id": "M03",
+      "publisher": "Kahoot!",
+      "title": "Kahoot! Play & Create Quizzes — developer Android listing",
+      "url": "https://play.google.com/store/apps/details?id=no.mobitroll.kahoot.android",
+      "publication_or_update_date": "2026-09-03",
+      "vintage_note": "Listing updated date",
+      "access_date": "2026-09-12",
+      "source_class": "primary",
+      "access": "Retrieved with web search/open; metadata and material claims checked",
+      "claims_used": "Live hosting, self-paced challenges, flashcards, study leagues, creation and premium features.",
+      "limitations": "No internal architecture or economics inferred."
+    },
+    {
+      "id": "M04",
+      "publisher": "Blooket",
+      "title": "Blooket Game Mode Previews",
+      "url": "https://help.blooket.com/hc/en-us/articles/21408591795351-Blooket-Game-Mode-Previews",
+      "publication_or_update_date": null,
+      "vintage_note": "Publication/update date not displayed in retrieved article",
+      "access_date": "2026-09-12",
+      "source_class": "primary",
+      "access": "Retrieved with web search/open; metadata and material claims checked",
+      "claims_used": "Official documentation advertises over 25 modes and live/solo/homework play; Battle Royale supports 1v1 encounters.",
+      "limitations": "Mode count and claimed question-set inventory are not effectiveness or retention evidence."
+    },
+    {
+      "id": "M05",
+      "publisher": "Duolingo",
+      "title": "How to Stay Motivated When Learning a New Language",
+      "url": "https://blog.duolingo.com/sticking-with-it-tips-for-staying-motivated/",
+      "publication_or_update_date": null,
+      "vintage_note": "Publication date not displayed in retrieved text; current page accessed",
+      "access_date": "2026-09-12",
+      "source_class": "primary",
+      "access": "Retrieved with web search/open; metadata and material claims checked",
+      "claims_used": "Official descriptions of streaks, weekly leaderboards, Friends Quests and personal goals.",
+      "limitations": "Used as product precedent; not treated as independent causal evidence."
+    },
+    {
+      "id": "M06",
+      "publisher": "Duolingo",
+      "title": "Friend Streak Is Duolingo’s Latest Social Feature",
+      "url": "https://blog.duolingo.com/friend-streak/",
+      "publication_or_update_date": null,
+      "vintage_note": "Older feature announcement; exact publication date not displayed in retrieved text",
+      "access_date": "2026-09-12",
+      "source_class": "primary",
+      "access": "Retrieved with web search/open; metadata and material claims checked",
+      "claims_used": "Mutual Friend Streaks, invitation acceptance and daily practice; company-reported association with lesson completion.",
+      "limitations": "No effect estimate transferred to FACT//DUEL; selection and causality are not established by the page."
+    },
+    {
+      "id": "M07",
+      "publisher": "International Telecommunication Union",
+      "title": "Statistics",
+      "url": "https://www.itu.int/en/ITU-D/Statistics/pages/stat/default.aspx",
+      "publication_or_update_date": null,
+      "vintage_note": "Data reference year 2025; current page accessed",
+      "access_date": "2026-09-12",
+      "source_class": "primary",
+      "access": "Retrieved with web search/open; metadata and material claims checked",
+      "claims_used": "Approximately 6 billion people, 74% of world population, estimated online in 2025.",
+      "limitations": "Broad connectivity ceiling only, not app demand. Earlier ff25 page now presents a statistics landing page."
+    },
+    {
+      "id": "M08",
+      "publisher": "International Cricket Council",
+      "title": "A game for the world: cricket’s growth horizons",
+      "url": "https://www.icc-cricket.com/media-releases/a-game-for-the-world-cricket-s-growth-horizons",
+      "publication_or_update_date": "2026-03-23",
+      "vintage_note": "Event: 2026-03-08",
+      "access_date": "2026-09-12",
+      "source_class": "primary",
+      "access": "Retrieved with web search/open; metadata and material claims checked",
+      "claims_used": "India digital concurrency peak of 72.5 million for T20 World Cup final.",
+      "limitations": "Peak platform metric, not deduplicated global annual fandom or trivia intent."
+    },
+    {
+      "id": "M09",
+      "publisher": "UEFA",
+      "title": "Milestones met, history made: Record-breaking Women’s EURO reaches the summit",
+      "url": "https://www.uefa.com/womenseuro/news/029b-1e522ecda3bd-ccdd22a6bb3c-1000--milestones-met-history-made-record-breaking-women-s-euro-rea/",
+      "publication_or_update_date": "2025-07-27",
+      "vintage_note": "Forecast released around final; retains historical vintage",
+      "access_date": "2026-09-12",
+      "source_class": "primary",
+      "access": "Retrieved with web search/open; metadata and material claims checked",
+      "claims_used": "Expected cumulative live audience over 400m and expected final audience over 45m.",
+      "limitations": "Projection, not final observed reach; global, not EU only. Not used in TAM/SAM arithmetic."
+    },
+    {
+      "id": "M10",
+      "publisher": "Nielsen",
+      "title": "Super Bowl LX Final Viewership Rises to 125.6 Million Viewers with Verified Big Data",
+      "url": "https://www.nielsen.com/news-center/2026/nielsen-super-bowl-lx-final-viewership-rises-to-125-6-million-viewers-with-verified-big-data/",
+      "publication_or_update_date": "2026-02-19",
+      "vintage_note": "Event: 2026-02-08; supersedes initial estimate",
+      "access_date": "2026-09-12",
+      "source_class": "primary",
+      "access": "Retrieved with web search/open; metadata and material claims checked",
+      "claims_used": "Final revised 125.6 million viewers across listed platforms.",
+      "limitations": "Single-event audience; revised because a data provider failed to collect devices properly. Not distinct annual prospects."
+    },
+    {
+      "id": "M11",
+      "publisher": "European Commission Representation in Cyprus",
+      "title": "Europeans strongly support science and technology according to new Eurobarometer survey",
+      "url": "https://cyprus.representation.ec.europa.eu/news/europeans-strongly-support-science-and-technology-according-new-eurobarometer-survey-2025-02-03_en",
+      "publication_or_update_date": "2025-02-03",
+      "vintage_note": "Publication date; underlying fieldwork not restated in summary",
+      "access_date": "2026-09-12",
+      "source_class": "primary",
+      "access": "Retrieved with web search/open; metadata and material claims checked",
+      "claims_used": "58% want to learn more about scientific developments; lack of time among engagement barriers.",
+      "limitations": "Science curiosity is not demand for competitive trivia."
+    },
+    {
+      "id": "M12",
+      "publisher": "Pew Research Center; Brian Kennedy and Alec Tyson",
+      "title": "Americans’ Views of Space: U.S. Role, NASA Priorities and Impact of Private Companies",
+      "url": "https://www.pewresearch.org/science/2023/07/20/americans-views-of-space-u-s-role-nasa-priorities-and-impact-of-private-companies/",
+      "publication_or_update_date": "2023-07-20",
+      "vintage_note": "Older survey; May 30–June 4, 2023 fieldwork",
+      "access_date": "2026-09-12",
+      "source_class": "primary",
+      "access": "Retrieved with web search/open; metadata and material claims checked",
+      "claims_used": "47% of US adults had done at least one of four specified space activities in preceding year.",
+      "limitations": "A broad episodic activity measure, not 2026 fandom or product demand."
+    },
+    {
+      "id": "M13",
+      "publisher": "World Bank",
+      "title": "United States | Data",
+      "url": "https://data.worldbank.org/country/united-states",
+      "publication_or_update_date": null,
+      "vintage_note": "Population 2025; internet 2024",
+      "access_date": "2026-09-12",
+      "source_class": "primary",
+      "access": "Retrieved with web search/open; metadata and material claims checked",
+      "claims_used": "Population 341784857; internet use displayed rounded 95%.",
+      "limitations": "Prior-year internet rate multiplied by newer population is a model approximation."
+    },
+    {
+      "id": "M14",
+      "publisher": "World Bank",
+      "title": "India | Data",
+      "url": "https://data.worldbank.org/country/india",
+      "publication_or_update_date": null,
+      "vintage_note": "Population and internet 2025",
+      "access_date": "2026-09-12",
+      "source_class": "primary",
+      "access": "Retrieved with web search/open; metadata and material claims checked",
+      "claims_used": "Population displayed 1.46 billion; internet use displayed 70%.",
+      "limitations": "Both displayed values are rounded; multiplication not a precise independently measured online count."
+    },
+    {
+      "id": "M15",
+      "publisher": "World Bank",
+      "title": "European Union | Data",
+      "url": "https://data.worldbank.org/country/european-union",
+      "publication_or_update_date": null,
+      "vintage_note": "Population 2025",
+      "access_date": "2026-09-12",
+      "source_class": "primary",
+      "access": "Retrieved with web search/open; metadata and material claims checked",
+      "claims_used": "Population 451127411; internet aggregate unavailable on retrieved page.",
+      "limitations": "EU internet fraction in model is a 92% planning assumption, not observed World Bank figure."
+    },
+    {
+      "id": "M16",
+      "publisher": "World Bank",
+      "title": "United Kingdom | Data",
+      "url": "https://data.worldbank.org/country/united-kingdom",
+      "publication_or_update_date": null,
+      "vintage_note": "Population 2025; internet 2024",
+      "access_date": "2026-09-12",
+      "source_class": "primary",
+      "access": "Retrieved with web search/open; metadata and material claims checked",
+      "claims_used": "Population 69487000; internet use displayed rounded 95%.",
+      "limitations": "Prior-year internet rate multiplied by newer population is a model approximation."
+    }
+  ],
+  "model": {
+    "status": "Illustrative user scenarios, not measured demand or forecasts",
+    "global_online_m": 6000,
+    "global_online_source": "M07",
+    "global_adult_assumed": 0.75,
+    "joint_interest_assumed": [
+      0.05,
+      0.1,
+      0.2
+    ],
+    "tam_m": [
+      225.0,
+      450.0,
+      900.0
+    ],
+    "sam_formula": "sum(population_m * online * adult_share_among_online * English_readiness * joint_product_interest)",
+    "regions": [
+      {
+        "region": "US",
+        "population_m": 341.784857,
+        "online": 0.95,
+        "adult": 0.8,
+        "english": [
+          0.85,
+          0.9,
+          0.95
+        ],
+        "online_status": "2024 rounded carried forward",
+        "sam_m": [
+          11.039650881100002,
+          23.3780842188,
+          49.353733350800006
+        ]
+      },
+      {
+        "region": "India",
+        "population_m": 1460,
+        "online": 0.7,
+        "adult": 0.75,
+        "english": [
+          0.1,
+          0.18,
+          0.3
+        ],
+        "online_status": "2025 rounded",
+        "sam_m": [
+          3.8324999999999996,
+          13.796999999999997,
+          45.989999999999995
+        ]
+      },
+      {
+        "region": "EU27",
+        "population_m": 451.127411,
+        "online": 0.92,
+        "adult": 0.82,
+        "english": [
+          0.3,
+          0.45,
+          0.6
+        ],
+        "online_status": "assumed",
+        "sam_m": [
+          5.104957782876,
+          15.314873348628002,
+          40.839662263008
+        ]
+      },
+      {
+        "region": "UK",
+        "population_m": 69.487,
+        "online": 0.95,
+        "adult": 0.82,
+        "english": [
+          0.9,
+          0.95,
+          0.98
+        ],
+        "online_status": "2024 rounded carried forward",
+        "sam_m": [
+          2.435866785,
+          5.142385435,
+          10.609553108
+        ]
+      }
+    ],
+    "sam_total_m": [
+      22.412975448976002,
+      57.632343002428,
+      146.792948721808
+    ],
+    "all_adult_and_english_and_interest_inputs_assumed": true,
+    "geography": "US + India + EU27 + UK",
+    "sam_future_capability_assumption": "Adequate content, devices, language readiness, launch availability and product access; not current private-cohort size",
+    "sensitivity": {
+      "base_joint_interest_halved_total_m": 28.816171501214,
+      "india_english_18_to_10_delta_m": 6.131999999999998
+    },
+    "revenue": "Current paid offering absent; transaction revenue zero; dollar TAM not estimated",
+    "som_definition": "Illustrative six-week recruitment effort with return in days22–28 among activated, unique prospects deduplicated across communities",
+    "som_scenarios": [
+      {
+        "label": "small",
+        "communities": 5,
+        "prospects_each": 40,
+        "activation": 0.35,
+        "week_four_return": 0.2,
+        "retained": 14
+      },
+      {
+        "label": "base",
+        "communities": 15,
+        "prospects_each": 80,
+        "activation": 0.45,
+        "week_four_return": 0.25,
+        "retained": 135
+      },
+      {
+        "label": "wider",
+        "communities": 30,
+        "prospects_each": 150,
+        "activation": 0.55,
+        "week_four_return": 0.35,
+        "retained": 866.25
+      }
+    ],
+    "som_all_inputs_assumed": true
+  },
+  "exclusions": [
+    "No competitor private code, retention or economics",
+    "No summed sports/science fandom",
+    "No new measured market demand",
+    "No exhaustive full-book claim",
+    "FIFA2022 figures not reused in model; complete comparable new unique-audience report not recovered",
+    "No representative India science-trivia demand measure verified"
+  ]
+}

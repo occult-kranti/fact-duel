@@ -1,0 +1,54 @@
+# FACT//DUEL: the rivalry pass
+
+Current implementation record · 12 September 2026. This pass follows the user's rejection of the Curiosity Arcade treatment. It supersedes the previous visual direction and result presentation. The earlier review research is retained as evidence, not repeated as a new study.
+
+## What was wrong
+
+The previous release added functional Discovery, Passport and Vault features, but its playful learning language diluted the original sports/science rivalry. Setup competed with the decorative object and extra destinations. Modes looked too similar. Active play spent space on metadata, and results softened the verdict while exposing a large diagnostic table. A completed five-round match only offered a detailed view of the last round.
+
+The chosen correction is a game-native arena: FACT//DUEL, midnight surfaces, electric chartreuse, a restrained violet rival color and an alternate cool light theme. Strong type, a compact broadcast-style scoreboard, and original metallic sports/science artwork carry the identity. The main action is the actual bot duel. Supporting missions and 3D remain optional.
+
+## Changes that affect play
+
+| Area | Previous friction | Current behavior |
+|---|---|---|
+| Home | Setup competed with several discovery/progression panels. | A primary Play Lucky Guess button uses the selected format immediately. Advanced settings follow it. A concise topic row, format cards and optional warm-up support the next choice. |
+| Formats | The same-looking cards mainly differed by question count. | Quick Draw is one shot; Triple Threat exposes first-to-two with the higher-score fallback after three; Gauntlet explicitly plays all five. Each has a distinct accent and a round rail. Rules are unchanged. |
+| Mobile hierarchy | Large artwork and supporting copy consumed attention. | The builder appears first, formats second, art third. The active HUD suppresses redundant metadata, while answer targets stay still and use ordinary tap/click release. This is a source-level layout decision; real-device rendering is pending. |
+| 3D | A decorative object competed with setup. | A dedicated optional 3D arena uses an original metallic token/orbit composition. Static artwork appears first; controls remain ordinary HTML. The renderer unmounts before play. |
+| Live match | Score, coins, readiness and diagnostics competed with the question. | Own score is always on the left, rival on the right. A compact rail shows actual closed round outcomes, including void rounds. Connection trouble remains visible. |
+| Match finish | Soft headlines obscured the verdict. | YOU WIN, RIVAL WINS, IT'S A DRAW or MATCH REFUNDED. Final score, correct answers out of resolved valid rounds, unanswered-round note and simulated-coin outcome are explicit. |
+| Explanation | Only the last round's fact could be inspected in detail. | The server retains bounded snapshots for all completed rounds. Recap tabs expose the exact option each player chose, timing type, accepted answer, explanation and source. Timing diagnostics are expandable. |
+| Reconnection/cancellation | Earlier completed facts could be missed if snapshots were not observed. | Retained completed-round snapshots repopulate the local journal once. Cancelling in a later round still exposes already-completed receipts. |
+| Replay | A button could promise play while only returning to setup. | Bot Play again starts a new room using the captured previous configuration. Friend play uses the accurate Set up rematch label. Both remain deliberate user actions. |
+| Question concerns | A source link existed, but no place to preserve a concern. | A result can save a local issue with the exact encountered fact/source, reason and note. Reopening edits the saved note. Vault lists the records; export/reset include them. The interface explicitly says they are not sent. |
+
+## State and trust contracts
+
+Completed-round history is written only after a round closes. Each snapshot whitelists the question, accepted answer, result and public receipt fields. It contains no invitation, player token, answer-attempt token, pending bot plan or future answer. A round ID can appear once. Current formats cap history at five snapshots. The existing revision-guarded room settlement and coin conservation rules still own the result.
+
+The whole-match verdict is derived from the settled room outcome and final score. It is never inferred from the last round. A player can win a five-round match while losing the final question. Round reasons separately explain sole-correct, screen-time, close draw, no-correct-answer and timing-void cases. Scheduled bot time is labeled beside its receipt; human time is browser-reported. The 150 ms band remains a casual rule, not a measured device uncertainty guarantee.
+
+A local issue requires an already encountered journal fact. It is keyed to that round and reason, not a mutable player name. Repeated identical saves are idempotent; changed notes replace the corresponding note. The saved snapshot preserves the encountered question/options/answer/source. Notes are capped at 800 characters and the local list at 50 records. Export contains issues; reset clears them with the journal, activity and cosmetics. An existing version-2 profile without issues initializes an empty list. Storage-failure messages distinguish visit-only activity.
+
+There is no support delivery, editorial queue, automatic correction, score reversal or cloud synchronization behind the issue form. Those remain content-operation work. The new local record makes a concern inspectable and portable without inventing a service that does not exist.
+
+## Advisor work and verification
+
+An independent advisor first ranked six deficiencies in the existing experience. The lead implemented the new hierarchy, identity, result flow and local concern records, while an asset-only specialist generated one original image. A second advisor pass reviewed raw changed source and identified nine concrete correctness, presentation and layout issues.
+
+Repairs included real bot replay, changed-note updates, explicit submitted choices, bot timing labels, resolved-round denominators including timeouts, history after cancellation, void labels, reduced active mobile height and a light-theme draw color corrected from 1.85:1 to 6.06:1 contrast on white. Two final wording fixes clarified CORRECT ANSWERS and Compared times. The advisor found no remaining code blocker in its bounded reinspection; that is not an observed usability result.
+
+The automated suite now contains 58 tests. New cases cover closed-history secrecy and deduplication across five rounds, recap recovery, local-issue update/reset/migration, and separation of whole-match verdicts from last-round reasons. TypeScript and the production build are publication gates. Existing engine, HTTP, bot randomness, timing, concurrency, coin and profile tests remain part of the suite.
+
+No agent browser or physical-device session was run. The managed Sites preview workflow requires an explicit request for browser, visual or end-to-end testing. The original art asset was visually inspected; that does not validate the assembled website. Actual phone/zoom/assistive/GPU/WAN checks remain pending in the roadmap. The earlier statement about inspecting actual screens should not be read as a claim that rendered browser testing was completed.
+
+## Next evidence, in order
+
+1. Observe one complete bot duel on narrow mobile and desktop, including long answers and scroll gestures. Check the fourth option, verdict, recap and replay.
+2. Observe two permitted friend screens across separate networks. Exercise late packets, page backgrounding, cancellation in later rounds and reconnect recovery.
+3. Verify keyboard/screen-reader navigation, text enlargement, both themes, no-WebGL fallback and actual 3D resource/performance behavior.
+4. Use exported local question concerns to design the editorial workflow, then add content versions, remote reporting and correction status only when those operations exist.
+5. Expand and audit the question bank before promoting competitive repeat play. The current 54-item sample can repeat across rooms, and Discovery intentionally exposes teaching answers.
+
+The focused implementation is complete. These empirical and operational gates remain open. Private access, free per-room coins and the casual timing trust boundary are preserved.

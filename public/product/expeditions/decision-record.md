@@ -1,0 +1,97 @@
+# FACT//DUEL — a reason to start, a reason to finish
+
+12 September 2026. Current expedition release. This supersedes the v5 lobby hierarchy; existing duel timing, bot fairness and settlement contracts remain in effect.
+
+## The product decision
+
+The previous release polished a match configurator. The missing product loop was a concrete objective, a meaningful decision beyond choosing an answer, and something specific to keep afterwards. This release makes the Clubhouse the front door, with two direct paths: a finite expedition or a competitive duel.
+
+An expedition has six questions across three named chapters. Before each answer, the player chooses Steady or Bold. The answer and scoring choice lock together. After all six answers, an explicit Finish action records the result and earns that route's commemorative stamp. Returning to an unfinished route resumes the current question or its answer receipt. A finished route offers a matching-topic bot duel, a deliberate practice replay, or Done.
+
+This is a new local solo rule system, not a renamed random bot or a decorative map. It is also a bounded content release: nine routes reuse the existing 54-question sample. We did not research or create a larger bank this turn.
+
+## What the player actually gets
+
+| Need | Shipped behavior | Constraint |
+|---|---|---|
+| A purpose for this visit | One featured route, its three chapters and a visible Start or Continue action | Six questions per route; no claim of endless new content |
+| A consequential choice | Steady gives +2 correct / 0 wrong; Bold gives +3 correct / −1 wrong | Local run score only; separate from coins and Passport activity points |
+| A satisfying endpoint | Finish records six outcomes, adds one stamp and opens the full recap | Stamp means completion, even with six wrong answers |
+| Rivalry without setup friction | Three direct random-bot match buttons; separate Invite, Join and Settings flows | Human invitations still require private Site access |
+| An identity artifact | Earned stamps appear in the Clubhouse and Player collection; each opens its route | Cosmetic, local and resettable; no duel advantage |
+| A useful loss | Accepted answer, explanation, primary-source link, bookmark and local concern editor | Concerns are saved locally, not sent to a support team |
+| A return path | One active snapshot per route survives refresh in browser storage | Storage failure switches to visit-only behavior with export guidance |
+| Honest improvement records | First completed score stays fixed; best completed score and run count are separate | Replay uses the same questions and does not measure general skill |
+
+## The editorial routes
+
+| Route | Subject and actual scope | Chapters | Completion stamp |
+|---|---|---|---|
+| World Cup folklore | Cricket: India, mainly 1983 with one 2003 question | The headline / The innings / The fine print | World Cup stories |
+| One night in Istanbul | Football: the 2005 Champions League final | Set the scene / The comeback / The other side | Istanbul 2005 |
+| The Chicago files | Basketball: Jordan and one Pippen fact | The icon / Before the rings / Beyond the highlight | Chicago files |
+| Green Bay deep cuts | American football: selected Packers championship history | Big-game names / The stage / Old-school detail | Green Bay archive |
+| Advantage, Nadal | Tennis: selected Nadal milestones | The majors / The final set / Match-point detail | Nadal notebook |
+| Beyond the blue | Space: Jupiter and Apollo 11 | Look up / Meet the mission / Further out | Beyond the blue |
+| Reality, unpacked | Physics: particles, forces and constants | The big picture / The messengers / The small print | Reality notes |
+| Life at small scale | Biology: DNA and mitochondria | Inside the cell / The information / Under the surface | Cell explorer |
+| The web & the code | Computing: web history and Python | Familiar names / How it works / Syntax & history | Code notebook |
+
+Each chapter pairs two existing editorial difficulty levels in order. These labels are not calibrated ability estimates. Option order is shuffled when a run is created, then frozen in its stored snapshot. Correct-answer identity is preserved. The six underlying questions repeat on replay; changing option order does not make them fresh facts.
+
+## Why Steady and Bold
+
+With believed probability of correctness p, expected Steady points are 2p. Expected Bold points are 4p−1. Bold exceeds Steady only above p = 0.5. A uniform four-choice guess averages +0.5 Steady points or 0 Bold points. These are original calculations under the declared rules, not observed player behavior.
+
+Totals remain signed: six Bold misses score −6; six Bold correct answers score +18. Flooring a negative total at zero would change the incentives. A negative score is not debt or a coin loss. The same completion stamp is available at every score. The default is Steady, and both rules remain visible beside the answer choices.
+
+This is a simple tactical decision, not a statistically proper confidence score. Remembered questions make a high practice score unsurprising. There is no confidence ranking, public leaderboard or reward multiplier.
+
+## Design and sound
+
+The palette stays midnight/chartreuse with violet science accents and a cool light theme. The composition changes: horizontal game navigation, an actionable editorial route card, compact direct-duel controls, topic episodes and a real collection case. Existing original sport and science artwork is reused; no extra generated illustration was needed. Stamps use semantic icons, text and ordinary interface surfaces.
+
+The question view removes decorative art and presents a quiet chapter rail, run score, prompt, scoring controls and four stationary answer buttons. Narrow layouts stack the answer controls and adapt the route cards without adding a timed solo interaction. Responsive CSS was implemented; actual device fit, zoom and screen-reader behavior remain empirical gates.
+
+Optional synthesized sounds now distinguish a correct expedition answer, an informative incorrect answer and stamp completion. They follow committed visible results, not merely attempted writes. Mute, volume and hidden-document behavior remain in force. No sound is required to understand a result. The existing interactive 3D object is still available from the Clubhouse; it is not loaded into an expedition question or timed duel.
+
+## State and failure contracts
+
+| Event or failure | Handling |
+|---|---|
+| Duplicate answer / changed scoring choice | The transactional reducer accepts only the first choice at the current cursor; later choices are no-ops |
+| Advance before answering / stale index | Refused; an answered card is required and the cursor must match |
+| Duplicate Finish | Only the transition from cursor 5 to 6 creates completion; replay cannot re-award the same run |
+| Concurrent starts | A previous-run ID comparison prevents one tab overwriting another's unfinished run |
+| Switch route | Each of the nine routes keeps its own active run; no forced abandonment |
+| Reload after answer | Frozen cards, first choice, confidence and current cursor are restored |
+| Reload after sixth answer before Finish | The last receipt and Finish action remain available; no stamp is claimed early |
+| Reset while request or write is pending | Profile epochs reject stale writes; reset includes all route scores, snapshots and stamps |
+| Storage unavailable | Existing queue falls back to in-memory activity, displays visit-only guidance and keeps export available |
+| Old profile | Missing expedition state initializes empty; existing journal/Passport history does not fabricate route completion |
+| Malformed local snapshot | Unknown routes and malformed cards, choices or scores are sanitized on load |
+| Replayed content | First result is retained separately; best is updated only after explicit completion; permanent fact-activity points do not multiply |
+| Content revision | Keys include route version. Active cards are frozen snapshots. A future incompatible version needs a migration/archive policy before changing shipped keys |
+
+Expedition records are bounded to one current six-card run and first/best/latest summary per route. The existing rolling journal remains capped at 200 facts and 100 matches. Stamps are derived from completed records, not a second spendable balance. Export contains expedition state. Browser storage is inspectable and editable by its owner; this is not an anti-cheat system.
+
+The new practice endpoint returns answer-bearing teaching cards deliberately. Client components import only route metadata and local rules, never the server question module. The existing live-room projection continues to hide active answer keys and pending bot choices. Familiarity with the shared teaching bank means live play remains a casual sample, not secure assessment.
+
+## Research and advisor process
+
+The review-led-game-design skill guided evidence scope, progression semantics and a two-pass independent advisor. A second bounded agent reviewed seven primary or official sources on autonomy, feedback, retrieval, current product mechanics and an author-published book excerpt. Their full report is retained separately. It includes proposed mixed recall and richer collectible art that were not implemented in this release.
+
+The independent advisor challenged whether the loop was substantive, then inspected its source and repair paths. The implementation owner retained all Site edits. This is not an unattended swarm or a claim of a staffed product team. The earlier 32-observation competitor review sample and market scenarios remain historical inputs; no new customer survey or TAM estimate was produced this turn.
+
+## Next decisions, in order
+
+| Priority | Decision gate | Method | Pass condition to define or observe |
+|---|---|---|---|
+| 1 | Can players explain the new loop? | Observe a small formative cohort completing one route, locating its stamp and pausing/resuming | Record task success, confusion, abandonment and Steady/Bold comprehension; no invented baseline |
+| 2 | Does it work on real screens? | Explicit browser, phone, zoom, keyboard and assistive-technology QA | No lost actions, clipped controls, misleading focus or motion dependency |
+| 3 | Is the content worth returning for? | Review omissions, ambiguity and source quality; author versioned replacement/expansion packs | Independent editorial review before new routes or claims of broad topic coverage |
+| 4 | Does solo play lead to wanted duels? | Compare voluntary solo starts, route finishes and explicit duel starts in an authorized measurement plan | Keep bot activity separate from human demand; do not count forced transitions |
+| 5 | Is a learning claim justified? | Design a delayed assessment with suitable unseen/versioned items and a comparator | Define the claim and study before interpreting repeated-item accuracy |
+| 6 | Can play expand across locations? | Existing WAN, D1 request-cost and contention roadmap | Measured latency and fairness limits before ranked or larger-scale use |
+
+The release makes a concrete product hypothesis testable. It does not establish retention, audience fit, universal accessibility or long-distance fairness.

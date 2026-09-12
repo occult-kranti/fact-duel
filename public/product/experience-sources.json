@@ -1,0 +1,142 @@
+{
+  "review_title": "FACT//DUEL Curiosity Arcade experience research",
+  "reviewed_at": "2026-09-12",
+  "scope": "Eight selected primary/practitioner/official sources. Not a systematic review; no complete-book reading claim. Design proposals are inferences requiring product validation.",
+  "sources": [
+    {
+      "id": "EXP-01",
+      "type": "primary_experimental_study",
+      "title": "How gamification motivates: An experimental study of the effects of specific game design elements on psychological need satisfaction",
+      "authors": ["Michael Sailer", "Jan Ulrich Hense", "Sarah Katharina Mayr", "Heinz Mandl"],
+      "year": 2017,
+      "publication": "Computers in Human Behavior, 69, 371–380",
+      "url": "https://doi.org/10.1016/j.chb.2016.12.033",
+      "accessed_url": "https://www.researchgate.net/publication/311879391_How_gamification_motivates_An_experimental_study_of_the_effects_of_specific_game_design_elements_on_psychological_need_satisfaction",
+      "access_scope": "Primary paper text: abstract, manipulation checks, results, and discussion passages. Publisher landing page returned 403; paper text was available through ResearchGate.",
+      "finding": "Different element groups affected different reported psychological needs; decision-freedom effects were absent.",
+      "limitation": "Grouped elements do not isolate a badge effect; 88 manipulation-check exclusions left N=331. The simulation differs from this trivia game.",
+      "design_application": "Use understandable activity feedback and test Passport meaning; do not assume rewards alone create motivation.",
+      "claim_status": "Source supports directional design reasoning, not a proven FACT//DUEL outcome."
+    },
+    {
+      "id": "EXP-02",
+      "type": "primary_experimental_study_publisher_abstract",
+      "title": "Test-Enhanced Learning: Taking Memory Tests Improves Long-Term Retention",
+      "authors": ["Henry L. Roediger III", "Jeffrey D. Karpicke"],
+      "year": 2006,
+      "publication": "Psychological Science, 17(3), 249–255",
+      "doi": "10.1111/j.1467-9280.2006.01693.x",
+      "url": "https://www.psychologicalscience.org/journals/psychological-science/j.1467-9280.2006.01693.x/",
+      "access_scope": "Publisher-hosted primary study abstract; not the full paper.",
+      "finding": "Free recall of prose improved delayed retention relative to restudy; immediate performance favored restudy.",
+      "limitation": "Materials and free-recall tests differ from timed four-choice trivia. No inference of verified mastery or measured product learning.",
+      "design_application": "Offer optional untimed recall and separate attempts, reveals, scores, and self-ratings.",
+      "claim_status": "Evidence for an opportunity to retrieve; product effectiveness remains untested."
+    },
+    {
+      "id": "EXP-03",
+      "type": "primary_natural_experiment_author_manuscript_abstract",
+      "title": "How Gamification Affects Software Developers: Cautionary Evidence from a Natural Experiment on GitHub",
+      "authors": ["Lukas Moldon", "Markus Strohmaier", "Johannes Wachs"],
+      "year": 2021,
+      "publication": "2021 IEEE/ACM 43rd International Conference on Software Engineering",
+      "doi": "10.1109/ICSE43902.2021.00058",
+      "url": "https://arxiv.org/abs/2006.02371v3",
+      "access_scope": "Author-deposited manuscript metadata and abstract, v3 dated 10 May 2021.",
+      "finding": "Streak removal was followed by fewer long streaks and changes in weekend and single-contribution behavior.",
+      "limitation": "Developer behavior, observational natural experiment, not a randomized study of games or harm.",
+      "design_application": "Avoid daily-loss streak obligations and assess valued activity rather than counter maximization.",
+      "claim_status": "Illustrates unintended behavioral effects; no claim that all streaks are harmful."
+    },
+    {
+      "id": "EXP-04",
+      "type": "author_book_excerpt",
+      "title": "The Gamer’s Brain — Chapter 16: UX Strategy (published excerpt)",
+      "authors": ["Celia Hodent"],
+      "year": 2017,
+      "publication": "The Gamer’s Brain: How Neuroscience and UX Can Impact Video Game Design, CRC Press; excerpt published by GamesBeat",
+      "url": "https://gamesbeat.com/the-gamers-brain-excerpt-good-ux-is-key-to-crafting-fun/",
+      "author_verification_url": "https://celiahodent.com/about/",
+      "access_scope": "Accessible excerpt from Chapter 16 only. The author's About page links the excerpt. No complete-book reading claim.",
+      "finding": "The excerpt recommends coordinated UX practice and questioning why players care about a feature.",
+      "limitation": "Practitioner guidance, not a causal experiment or a product-specific result.",
+      "design_application": "Connect existing duel/review activities around a coherent purpose before expanding modes.",
+      "claim_status": "Conceptual design framework."
+    },
+    {
+      "id": "EXP-05",
+      "type": "publisher_book_sample",
+      "title": "The Game Development Strategy Guide — Chapter 1: What Makes Us Play (sample)",
+      "authors": ["Cheryl Platz"],
+      "year": 2025,
+      "publication": "The Game Development Strategy Guide: Crafting Modern Video Games That Thrive, Rosenfeld Media",
+      "url": "https://rosenfeldmedia.com/sample-chapter-game-development-strategy-guide/",
+      "access_scope": "Publisher-hosted sample chapter, especially definitions and intentional-friction sections. No complete-book reading claim.",
+      "finding": "The sample differentiates enjoyable purposeful obstacles from unnecessary interface friction.",
+      "limitation": "Practitioner framework, not evidence that a proposed Passport improves outcomes.",
+      "design_application": "Preserve clear challenge in questions; simplify navigation, inspection, and session endings.",
+      "claim_status": "Conceptual design framework."
+    },
+    {
+      "id": "EXP-06",
+      "type": "official_open_source_technical_documentation",
+      "title": "Three.js WebGLRenderer documentation",
+      "authors": ["Three.js contributors"],
+      "year": null,
+      "url": "https://threejs.org/docs/pages/WebGLRenderer.html",
+      "access_scope": "Current official documentation: renderer requirements, info, setPixelRatio, setAnimationLoop, powerPreference, and dispose.",
+      "finding": "Current renderer uses WebGL2, exposes resolution and renderer metrics, and documents disposal.",
+      "limitation": "APIs do not establish actual performance. Low-power is a hint, not a guarantee. Check installed version before implementation.",
+      "design_application": "Decorative scene with static fallback, measured budgets, controlled resolution, and lifecycle cleanup.",
+      "claim_status": "Verified API documentation; numerical art budgets are proposed local targets."
+    },
+    {
+      "id": "EXP-07",
+      "type": "official_accessibility_understanding_document",
+      "title": "Understanding Success Criterion 2.2.1: Timing Adjustable",
+      "authors": ["W3C Accessibility Guidelines Working Group"],
+      "year": 2026,
+      "url": "https://www.w3.org/WAI/WCAG22/Understanding/timing-adjustable.html",
+      "page_updated": "2026-08-10",
+      "access_scope": "Informative explanation of WCAG 2.2 SC 2.2.1, Level A, including exceptions and definition of real-time event.",
+      "finding": "Describes turning off, adjusting, or extending content-set time limits and narrow exceptions.",
+      "limitation": "This is explanatory guidance. An untimed Journal alone does not certify the game's conformance; bot play is not automatically a real-time exception.",
+      "design_application": "Untimed entry before play; no expiring navigation, explanations, rewards, or sources; separate timed-mode audit.",
+      "claim_status": "Accessibility design requirement reference, not a conformance assertion."
+    },
+    {
+      "id": "EXP-08",
+      "type": "official_accessibility_understanding_document",
+      "title": "Understanding Success Criterion 2.3.3: Animation from Interactions",
+      "authors": ["W3C Accessibility Guidelines Working Group"],
+      "year": 2025,
+      "url": "https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html",
+      "page_updated": "2025-09-16",
+      "access_scope": "Informative explanation of WCAG 2.2 SC 2.3.3, Level AAA; motion preference and interaction-animation examples.",
+      "finding": "Nonessential interaction-triggered motion can be disabled; supports honoring reduced-motion preferences.",
+      "limitation": "This criterion is Level AAA and does not establish overall AAA conformance. Automatic animation is addressed separately by other criteria.",
+      "design_application": "Still default artifact, persistent motion control, no parallax/card flips under reduced motion, equivalent static states.",
+      "claim_status": "Accessibility design reference, not a conformance assertion."
+    }
+  ],
+  "retrieval_limitations": [
+    "React Three Fiber Scaling Performance appeared in official search snippets but page fetches failed due to content size. It is not included as an independently reviewed source.",
+    "The Art of Game Design was located in search results but no reliable publisher excerpt was retrieved. No claim from that book is used.",
+    "The report evaluates product ideas from the supplied baseline, not source-code behavior or real player telemetry."
+  ],
+  "implementation_inferences": [
+    "Finite persistent Passports connect duel, explanation, and recall activities.",
+    "Three deterministic cosmetic rewards express activity without competitive advantage.",
+    "Collection activity badges remain independent and do not imply mastery.",
+    "Results provide explicit session endings without automatic rematches.",
+    "Local event deduplication and catalog versions support truthful activity receipts.",
+    "Curiosity Press budgets are conservative project targets that require device measurements."
+  ],
+  "deferred_evidence_gates": [
+    "Formative comprehension, source-finding, keyboard, and stopping-point playtests.",
+    "Separate timed-duel accessibility review and target-device performance measurements.",
+    "Delayed-recall comparison before claiming durable learning.",
+    "Observed item/player data and a fairness model before adaptive difficulty or ranked comparisons.",
+    "Question provenance and answer-quality review before catalog expansion."
+  ]
+}

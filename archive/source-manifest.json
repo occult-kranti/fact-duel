@@ -1,0 +1,1153 @@
+{
+  "source_head": "074ab9b9fffa7e92ce7bcdd08b16344b744b3bdb",
+  "tracked_files": 191,
+  "tracked_bytes": 2351972,
+  "files": [
+    {
+      "path": ".gitignore",
+      "mode": "100644",
+      "sha": "f94cfad433e1b17804e7600fc8bceba6ce88ab71",
+      "bytes": 613
+    },
+    {
+      "path": ".npmrc",
+      "mode": "100644",
+      "sha": "9f274d6425b9792ae0a70cb0b96a29fd98ec6ed6",
+      "bytes": 45
+    },
+    {
+      "path": ".openai/hosting.json",
+      "mode": "100644",
+      "sha": "089f85d386d9f652c42d8ae02f2ad0178ff3903c",
+      "bytes": 91
+    },
+    {
+      "path": "README.md",
+      "mode": "100644",
+      "sha": "19af7763cc083d42f933a70446d296e2d53f0c26",
+      "bytes": 11365
+    },
+    {
+      "path": "app/api/duel/route.ts",
+      "mode": "100644",
+      "sha": "11f29a0b538fabcd96e7bf171b47fd025e523521",
+      "bytes": 225
+    },
+    {
+      "path": "app/arcade-stage.tsx",
+      "mode": "100644",
+      "sha": "7ce7df35d1718a22e82107a41182a9b4847fc1c5",
+      "bytes": 2772
+    },
+    {
+      "path": "app/arena.tsx",
+      "mode": "100644",
+      "sha": "efbf883a89dba8b0e86652cdca638807ffe93220",
+      "bytes": 48748
+    },
+    {
+      "path": "app/chatgpt-auth.ts",
+      "mode": "100644",
+      "sha": "a0ae2ed9a9771b5fc36a06af554a05c18b2a13b3",
+      "bytes": 2550
+    },
+    {
+      "path": "app/collections.tsx",
+      "mode": "100644",
+      "sha": "ca11215cbb84149f02a7d2b6686f943fdb0b1bda",
+      "bytes": 4760
+    },
+    {
+      "path": "app/discovery.tsx",
+      "mode": "100644",
+      "sha": "cc6762ccbaaec81eea39ebc3cc6440fe13a773e2",
+      "bytes": 4230
+    },
+    {
+      "path": "app/expeditions.css",
+      "mode": "100644",
+      "sha": "22a4525d9f732737382a17ec6d974f4c60eb70a7",
+      "bytes": 29306
+    },
+    {
+      "path": "app/expeditions.tsx",
+      "mode": "100644",
+      "sha": "44f4bfd41b35e1662bed5fe38869490e115f11d0",
+      "bytes": 20919
+    },
+    {
+      "path": "app/globals.css",
+      "mode": "100644",
+      "sha": "48290fb78a9f17b03314552e11ef299ef61d3459",
+      "bytes": 92732
+    },
+    {
+      "path": "app/journal.tsx",
+      "mode": "100644",
+      "sha": "1964efb92083673da6fab3fa85e05874d3d534f6",
+      "bytes": 6820
+    },
+    {
+      "path": "app/layout.tsx",
+      "mode": "100644",
+      "sha": "707887433ca45f48de49cd2e83d4954d950162ca",
+      "bytes": 714
+    },
+    {
+      "path": "app/page.tsx",
+      "mode": "100644",
+      "sha": "62fd4d754c465077dbf719237efcda2e40dd58b2",
+      "bytes": 82
+    },
+    {
+      "path": "app/passport.tsx",
+      "mode": "100644",
+      "sha": "bd30e67d1155a995eda344458db0dc4eedc94df6",
+      "bytes": 5185
+    },
+    {
+      "path": "app/rivalry-widgets.tsx",
+      "mode": "100644",
+      "sha": "6073955d578120b125f5e9d5e5d069b8fd2cf215",
+      "bytes": 10284
+    },
+    {
+      "path": "app/rivalry.css",
+      "mode": "100644",
+      "sha": "2d19ff470b84732c9ab58ecc7c7f1ed6e186567a",
+      "bytes": 50614
+    },
+    {
+      "path": "app/studio/page.tsx",
+      "mode": "100644",
+      "sha": "9b6bc890801ff925ad2863e7ea75fd4162933701",
+      "bytes": 243
+    },
+    {
+      "path": "app/studio/studio.tsx",
+      "mode": "100644",
+      "sha": "a6996bd03df7286a481b4bd20077b76f809380d2",
+      "bytes": 23058
+    },
+    {
+      "path": "app/use-player.ts",
+      "mode": "100644",
+      "sha": "6364e0d56251042b1e3f624c85357bb44ca161c4",
+      "bytes": 4907
+    },
+    {
+      "path": "build/sites-vite-plugin.LICENSE",
+      "mode": "100644",
+      "sha": "4243cb4a9aaa50f954498e54c850773e9ba13eea",
+      "bytes": 1063
+    },
+    {
+      "path": "build/sites-vite-plugin.ts",
+      "mode": "100644",
+      "sha": "2ece1b96530b40a7ea4981e6341b52771a07813e",
+      "bytes": 7185
+    },
+    {
+      "path": "cloudflare-env.d.ts",
+      "mode": "100644",
+      "sha": "856e090c902917b4e1cebee0e08ea1d398fd01c3",
+      "bytes": 99
+    },
+    {
+      "path": "components.json",
+      "mode": "100644",
+      "sha": "c8f5bb16f79ed774f67415a8dc2b4a38243e3e90",
+      "bytes": 420
+    },
+    {
+      "path": "components/ui/accordion.tsx",
+      "mode": "100644",
+      "sha": "91e3a250ce6ee0797b0258454d774800650adcc8",
+      "bytes": 2048
+    },
+    {
+      "path": "components/ui/alert-dialog.tsx",
+      "mode": "100644",
+      "sha": "dad327341382f200b84d5f833eb1b7a74b0e7469",
+      "bytes": 5439
+    },
+    {
+      "path": "components/ui/alert.tsx",
+      "mode": "100644",
+      "sha": "f99164ed4b320790482f514342dab5e72f284aca",
+      "bytes": 1614
+    },
+    {
+      "path": "components/ui/aspect-ratio.tsx",
+      "mode": "100644",
+      "sha": "57e38fa96f9c0cb767d7b8de0d6dbc171d1b921a",
+      "bytes": 274
+    },
+    {
+      "path": "components/ui/attachment.tsx",
+      "mode": "100644",
+      "sha": "5bdd1ce7db5800eb55198cd0291a1e47dc67fb0d",
+      "bytes": 6002
+    },
+    {
+      "path": "components/ui/avatar.tsx",
+      "mode": "100644",
+      "sha": "ea658505703a577fe93341e5e1a0b478c27245f7",
+      "bytes": 2916
+    },
+    {
+      "path": "components/ui/badge.tsx",
+      "mode": "100644",
+      "sha": "6eb2a057aae0e23a74368cc4daf9657210e9a740",
+      "bytes": 1776
+    },
+    {
+      "path": "components/ui/breadcrumb.tsx",
+      "mode": "100644",
+      "sha": "004bb63a4c92229e612b6126d79fb7b078aa7565",
+      "bytes": 2350
+    },
+    {
+      "path": "components/ui/bubble.tsx",
+      "mode": "100644",
+      "sha": "792146e61d80ef595d032d5d09a3d572d50f1374",
+      "bytes": 4699
+    },
+    {
+      "path": "components/ui/button-group.tsx",
+      "mode": "100644",
+      "sha": "cd550d7afca6562548afe3f595b352406f7f3951",
+      "bytes": 2202
+    },
+    {
+      "path": "components/ui/button.tsx",
+      "mode": "100644",
+      "sha": "4d38506cee5430d95a59ec6a2a0cef2b79217e7a",
+      "bytes": 2392
+    },
+    {
+      "path": "components/ui/calendar.tsx",
+      "mode": "100644",
+      "sha": "5d31419b130a18c52320f5a21546a9236123b6bf",
+      "bytes": 7832
+    },
+    {
+      "path": "components/ui/card.tsx",
+      "mode": "100644",
+      "sha": "acf57dc5a534792273b8fb86227e92e001f3dc53",
+      "bytes": 1987
+    },
+    {
+      "path": "components/ui/carousel.tsx",
+      "mode": "100644",
+      "sha": "0e05a77ea155fde6af5d9a4848b1d3953df6ea5a",
+      "bytes": 5556
+    },
+    {
+      "path": "components/ui/chart.tsx",
+      "mode": "100644",
+      "sha": "9813c584e125847d88e9e7e7f9edff7e9ba45a97",
+      "bytes": 10614
+    },
+    {
+      "path": "components/ui/checkbox.tsx",
+      "mode": "100644",
+      "sha": "f5a7e433f3795b82a00c5c06a1fc6decf116a84a",
+      "bytes": 1214
+    },
+    {
+      "path": "components/ui/collapsible.tsx",
+      "mode": "100644",
+      "sha": "2f7a4e7fc64a8874373c1584646a63f28cd63c47",
+      "bytes": 795
+    },
+    {
+      "path": "components/ui/combobox.tsx",
+      "mode": "100644",
+      "sha": "2415bd801031a16bbcee8343058825feecfaea69",
+      "bytes": 9158
+    },
+    {
+      "path": "components/ui/command.tsx",
+      "mode": "100644",
+      "sha": "8fe3ccb406be52d28961b0c0220e87ecd19596ca",
+      "bytes": 4818
+    },
+    {
+      "path": "components/ui/context-menu.tsx",
+      "mode": "100644",
+      "sha": "5aaca76552cf0468b1def03c9e2c42f1f0b60734",
+      "bytes": 8268
+    },
+    {
+      "path": "components/ui/dialog.tsx",
+      "mode": "100644",
+      "sha": "84bdef4bb307087da1bfaf3cadf7be5dbda73f24",
+      "bytes": 4303
+    },
+    {
+      "path": "components/ui/direction.tsx",
+      "mode": "100644",
+      "sha": "22e165774bd595fbf41d0c45efef1cf996897983",
+      "bytes": 506
+    },
+    {
+      "path": "components/ui/drawer.tsx",
+      "mode": "100644",
+      "sha": "ad08671442203fe345093f364696bdf43528e0b7",
+      "bytes": 4255
+    },
+    {
+      "path": "components/ui/dropdown-menu.tsx",
+      "mode": "100644",
+      "sha": "ae1fcf62f1e3b648554789b8fe02943d92bf00fc",
+      "bytes": 8418
+    },
+    {
+      "path": "components/ui/empty.tsx",
+      "mode": "100644",
+      "sha": "ce4b0095f6d19d2eae2e465060e9060b0c210856",
+      "bytes": 2396
+    },
+    {
+      "path": "components/ui/field.tsx",
+      "mode": "100644",
+      "sha": "ec849dae4d3dd06a973ba22e4b2248a25cf18148",
+      "bytes": 6159
+    },
+    {
+      "path": "components/ui/form.tsx",
+      "mode": "100644",
+      "sha": "f371fea1bc35380d28678c6cf53df8f65deb2776",
+      "bytes": 3757
+    },
+    {
+      "path": "components/ui/hover-card.tsx",
+      "mode": "100644",
+      "sha": "91e869c0d3091cbeddf5cb0266e82ddf56f829a6",
+      "bytes": 1526
+    },
+    {
+      "path": "components/ui/input-group.tsx",
+      "mode": "100644",
+      "sha": "a7652d936fffd9c5bca4b88e6b9715bf559e667d",
+      "bytes": 5065
+    },
+    {
+      "path": "components/ui/input-otp.tsx",
+      "mode": "100644",
+      "sha": "6a556afacd71996bf0e385ff2b04869fb2ee4523",
+      "bytes": 2254
+    },
+    {
+      "path": "components/ui/input.tsx",
+      "mode": "100644",
+      "sha": "f1124aea14eee062fc2f4c55dad5f0d9de0ccc1a",
+      "bytes": 962
+    },
+    {
+      "path": "components/ui/item.tsx",
+      "mode": "100644",
+      "sha": "d5dbb1a9c2e70456e45a39887a4b7cc56d484a45",
+      "bytes": 4486
+    },
+    {
+      "path": "components/ui/kbd.tsx",
+      "mode": "100644",
+      "sha": "2459224fbc531f6306b73aaeb22e9022d9985332",
+      "bytes": 862
+    },
+    {
+      "path": "components/ui/label.tsx",
+      "mode": "100644",
+      "sha": "1ac80f701ebfe9dc02d632c08cafade732e46625",
+      "bytes": 606
+    },
+    {
+      "path": "components/ui/marker.tsx",
+      "mode": "100644",
+      "sha": "cfa76c6c014ab342befcbf7571eb932917406522",
+      "bytes": 1864
+    },
+    {
+      "path": "components/ui/menubar.tsx",
+      "mode": "100644",
+      "sha": "4af16a428377f81cbb3f66adfe518308e0b690d8",
+      "bytes": 8389
+    },
+    {
+      "path": "components/ui/message-scroller.tsx",
+      "mode": "100644",
+      "sha": "0b05011259c026a357380c3834bce0ead8565d22",
+      "bytes": 3992
+    },
+    {
+      "path": "components/ui/message.tsx",
+      "mode": "100644",
+      "sha": "53437e8db2b0fad1da06a7499e54ddaf116295c2",
+      "bytes": 2232
+    },
+    {
+      "path": "components/ui/native-select.tsx",
+      "mode": "100644",
+      "sha": "3058398399ad6c029ad527052475b360b114715b",
+      "bytes": 1995
+    },
+    {
+      "path": "components/ui/navigation-menu.tsx",
+      "mode": "100644",
+      "sha": "0a673f513c97fbeaae0872403b7582ab2ba7e3c3",
+      "bytes": 6658
+    },
+    {
+      "path": "components/ui/pagination.tsx",
+      "mode": "100644",
+      "sha": "1dcfb0cc050c5f2bdd930522d627313d03d3690c",
+      "bytes": 2717
+    },
+    {
+      "path": "components/ui/popover.tsx",
+      "mode": "100644",
+      "sha": "30058c4ec284ca9cad1ed1162d084ce3cd94e2b0",
+      "bytes": 2357
+    },
+    {
+      "path": "components/ui/progress.tsx",
+      "mode": "100644",
+      "sha": "b3ae25089ad549b7f13125e482f99b43dd895bd2",
+      "bytes": 755
+    },
+    {
+      "path": "components/ui/radio-group.tsx",
+      "mode": "100644",
+      "sha": "fe514536ed771f7adef0a6b9e4d1aeadc2c95481",
+      "bytes": 1460
+    },
+    {
+      "path": "components/ui/resizable.tsx",
+      "mode": "100644",
+      "sha": "a76832a10b4c5c2a137e25c16478567ba86daf0d",
+      "bytes": 1815
+    },
+    {
+      "path": "components/ui/scroll-area.tsx",
+      "mode": "100644",
+      "sha": "73c4eb1cdcd4a699b150a9ddc3e87bfb90b63d09",
+      "bytes": 1639
+    },
+    {
+      "path": "components/ui/select.tsx",
+      "mode": "100644",
+      "sha": "c0dc7120b4f78008ae5efc6d1c8b7ec8205c35d5",
+      "bytes": 6353
+    },
+    {
+      "path": "components/ui/separator.tsx",
+      "mode": "100644",
+      "sha": "cd873e3631b571060f166897b7b62e033e87c18f",
+      "bytes": 694
+    },
+    {
+      "path": "components/ui/sheet.tsx",
+      "mode": "100644",
+      "sha": "cb53bb28b6850745c9519e8e7462e05f85a50c93",
+      "bytes": 4188
+    },
+    {
+      "path": "components/ui/sidebar.tsx",
+      "mode": "100644",
+      "sha": "f5f6c5aefc88ffa2e999e284b299472215c05161",
+      "bytes": 21526
+    },
+    {
+      "path": "components/ui/skeleton.tsx",
+      "mode": "100644",
+      "sha": "3ec6be770b846170b8e7f8916e5f165e2d1730df",
+      "bytes": 276
+    },
+    {
+      "path": "components/ui/slider.tsx",
+      "mode": "100644",
+      "sha": "46ebc4b4df1e9baf1f3997a4b6c08ef80c84a9c9",
+      "bytes": 1991
+    },
+    {
+      "path": "components/ui/sonner.tsx",
+      "mode": "100644",
+      "sha": "9b20afe2e10fd9b94d1abc1ae732054b2fb9821c",
+      "bytes": 1034
+    },
+    {
+      "path": "components/ui/spinner.tsx",
+      "mode": "100644",
+      "sha": "a70e713c5b4ecb2af186efe3fadea51805f26ba5",
+      "bytes": 331
+    },
+    {
+      "path": "components/ui/switch.tsx",
+      "mode": "100644",
+      "sha": "8baa844fdb17d668b3ce07cfbd6a7ef52e2eb5eb",
+      "bytes": 1408
+    },
+    {
+      "path": "components/ui/table.tsx",
+      "mode": "100644",
+      "sha": "7add5f1a22db954ac6cb3446f1bf8c8a9fc5c335",
+      "bytes": 2478
+    },
+    {
+      "path": "components/ui/tabs.tsx",
+      "mode": "100644",
+      "sha": "b463afd170637df477e36184aa27d2ad1bd3c3e0",
+      "bytes": 3782
+    },
+    {
+      "path": "components/ui/textarea.tsx",
+      "mode": "100644",
+      "sha": "e67d8fefe50c41dfa2deed9a5096d5be7691581a",
+      "bytes": 759
+    },
+    {
+      "path": "components/ui/toggle-group.tsx",
+      "mode": "100644",
+      "sha": "9894607b212ff7182bf2024f4262da03df0a8973",
+      "bytes": 2308
+    },
+    {
+      "path": "components/ui/toggle.tsx",
+      "mode": "100644",
+      "sha": "5250c98ff7f11f531af38c227230a76b7d25bf19",
+      "bytes": 1565
+    },
+    {
+      "path": "components/ui/tooltip.tsx",
+      "mode": "100644",
+      "sha": "ec65c1e4255f050d9555c6cdade90a5f8a6c0c29",
+      "bytes": 1830
+    },
+    {
+      "path": "db/index.ts",
+      "mode": "100644",
+      "sha": "19b379900d94124b674f07ffe2dbba8f70bd8d6d",
+      "bytes": 423
+    },
+    {
+      "path": "db/schema.ts",
+      "mode": "100644",
+      "sha": "59387eb7eb9567bd818ca913ac9e5bd9c2a4281f",
+      "bytes": 625
+    },
+    {
+      "path": "drizzle.config.ts",
+      "mode": "100644",
+      "sha": "c2b2f34376984744343453838ce66658ad9d9b6a",
+      "bytes": 148
+    },
+    {
+      "path": "drizzle/0000_natural_venus.sql",
+      "mode": "100644",
+      "sha": "5db452336307d6e3f54406f3e68f3ffd73b6fd1d",
+      "bytes": 521
+    },
+    {
+      "path": "drizzle/meta/0000_snapshot.json",
+      "mode": "100644",
+      "sha": "0a941c58d7e7a12818a484ff473cf9f186fc4399",
+      "bytes": 2560
+    },
+    {
+      "path": "drizzle/meta/_journal.json",
+      "mode": "100644",
+      "sha": "70c3760be00d3ab53488f7e1ba352d2fc6123320",
+      "bytes": 203
+    },
+    {
+      "path": "eslint.config.mjs",
+      "mode": "100644",
+      "sha": "1c56c0144ce558825265a2d79d06b1ce6150d24f",
+      "bytes": 846
+    },
+    {
+      "path": "examples/d1/app/api/notes/route.ts",
+      "mode": "100644",
+      "sha": "07f8318c3c290d68163e95aa3e170ad92a235f27",
+      "bytes": 1700
+    },
+    {
+      "path": "examples/d1/db/schema.ts",
+      "mode": "100644",
+      "sha": "7bb0c157110799b9b53c767517e0d192b7201f2e",
+      "bytes": 370
+    },
+    {
+      "path": "hooks/use-mobile.ts",
+      "mode": "100644",
+      "sha": "2b0fe1dfef3b17850bbac040665f514a8ffd0f15",
+      "bytes": 565
+    },
+    {
+      "path": "lib/arcade-scene.mjs",
+      "mode": "100644",
+      "sha": "4e7a03fa2ef58d3b8100ab244157f5cfeb5ecc5e",
+      "bytes": 5817
+    },
+    {
+      "path": "lib/duel-client.ts",
+      "mode": "100644",
+      "sha": "12cbb98e7d316c903b2ffe55b3379408078d03ca",
+      "bytes": 524
+    },
+    {
+      "path": "lib/duel-presentation.mjs",
+      "mode": "100644",
+      "sha": "76ee6f5483514e71f7037044f60a2bb4c7d2fcaa",
+      "bytes": 2947
+    },
+    {
+      "path": "lib/expeditions.mjs",
+      "mode": "100644",
+      "sha": "06a89ad902cda5eb78759366e9f1b3e759949e05",
+      "bytes": 7154
+    },
+    {
+      "path": "lib/journal.mjs",
+      "mode": "100644",
+      "sha": "00a1825496896b77c1b1fc88bc816d00fda70a3e",
+      "bytes": 2884
+    },
+    {
+      "path": "lib/passport.mjs",
+      "mode": "100644",
+      "sha": "fe688ed090392602e483dd9d00625e9adb221682",
+      "bytes": 8494
+    },
+    {
+      "path": "lib/product/decisions.json",
+      "mode": "100644",
+      "sha": "bd5d87ff238b2e85fc00ea54745a4b80b3249736",
+      "bytes": 16859
+    },
+    {
+      "path": "lib/product/expedition-decisions.json",
+      "mode": "100644",
+      "sha": "3c384e92433255ef11a0ad8921d23a84375d8fc3",
+      "bytes": 14326
+    },
+    {
+      "path": "lib/product/expedition-research.json",
+      "mode": "100644",
+      "sha": "e3173886eb0bc91bd80120ac4a723752ec5bd8d6",
+      "bytes": 20635
+    },
+    {
+      "path": "lib/product/research.json",
+      "mode": "100644",
+      "sha": "c1a478d42ba5c5bea4eda771e0fef74cd806ca48",
+      "bytes": 44155
+    },
+    {
+      "path": "lib/product/review-research.json",
+      "mode": "100644",
+      "sha": "950ef389b53e0445b4f473b080674e58742ef84c",
+      "bytes": 94711
+    },
+    {
+      "path": "lib/product/rivalry-decisions.json",
+      "mode": "100644",
+      "sha": "a72ff29026a05d195108f1b7b98d1765d387717b",
+      "bytes": 10019
+    },
+    {
+      "path": "lib/product/roadmap.json",
+      "mode": "100644",
+      "sha": "7d0cd4217cb4892101f62cf7812010c8e4f843f6",
+      "bytes": 47979
+    },
+    {
+      "path": "lib/product/sources.json",
+      "mode": "100644",
+      "sha": "16846b5dfc6ae9833894c5eb55b0c8931833c28c",
+      "bytes": 34208
+    },
+    {
+      "path": "lib/profile-store.mjs",
+      "mode": "100644",
+      "sha": "3699da12c4f6d05c2a7576599f769d3e52284068",
+      "bytes": 1954
+    },
+    {
+      "path": "lib/server/duel-service.mjs",
+      "mode": "100644",
+      "sha": "c6fc20ea230c17dc135bcfc81bc8cf03cd4e93c7",
+      "bytes": 10602
+    },
+    {
+      "path": "lib/server/http-handler.mjs",
+      "mode": "100644",
+      "sha": "c7a14d88eec130b62289582d5f3d93901088774f",
+      "bytes": 2327
+    },
+    {
+      "path": "lib/server/questions.mjs",
+      "mode": "100644",
+      "sha": "c8c029b9f878451104b868f11a02c568d1f534bc",
+      "bytes": 30352
+    },
+    {
+      "path": "lib/server/room-engine.mjs",
+      "mode": "100644",
+      "sha": "77dca8ead50ccf37f2292ad711b66c6d04c6f5fa",
+      "bytes": 11164
+    },
+    {
+      "path": "lib/utils.ts",
+      "mode": "100644",
+      "sha": "b500fb167fdaa78785feb0ff03b51f8a182a44ae",
+      "bytes": 177
+    },
+    {
+      "path": "next.config.ts",
+      "mode": "100644",
+      "sha": "e9ffa3083ad279ecf95fd8eae59cb253e9a539c4",
+      "bytes": 133
+    },
+    {
+      "path": "package.json",
+      "mode": "100644",
+      "sha": "2dd7355d61c4a75fe80740d7f967de76011af289",
+      "bytes": 2069
+    },
+    {
+      "path": "pnpm-lock.yaml",
+      "mode": "100644",
+      "sha": "2c4502b89a99d0c204f123b3aa3a9e85208259ba",
+      "bytes": 341575
+    },
+    {
+      "path": "pnpm-workspace.yaml",
+      "mode": "100644",
+      "sha": "e892e5ef8bbc978abbc776fc9ac67c499b05c623",
+      "bytes": 722
+    },
+    {
+      "path": "postcss.config.mjs",
+      "mode": "100644",
+      "sha": "61e36849cf7cfa9f1f71b4a3964a4953e3e243d3",
+      "bytes": 94
+    },
+    {
+      "path": "public/arena-art.webp",
+      "mode": "100644",
+      "sha": "931db2cc6ff0c9578c6d7359c387987d97ddb1b1",
+      "bytes": 122324
+    },
+    {
+      "path": "public/art/curiosity-stage.webp",
+      "mode": "100644",
+      "sha": "62534b2573ce311d872e2e57e655a902e6fa8a7b",
+      "bytes": 40296
+    },
+    {
+      "path": "public/art/rivalry-stage.webp",
+      "mode": "100644",
+      "sha": "e5f7fa1714570706a7c81e740c2c6938636ceb0a",
+      "bytes": 120928
+    },
+    {
+      "path": "public/favicon.svg",
+      "mode": "100644",
+      "sha": "77bc31d5a9903d98f1fe64b41c31b19ac5cb0cae",
+      "bytes": 173
+    },
+    {
+      "path": "public/file.svg",
+      "mode": "100644",
+      "sha": "16fe3d3a3ab9bd42e1616ec00066faba7e4aabe0",
+      "bytes": 392
+    },
+    {
+      "path": "public/globe.svg",
+      "mode": "100644",
+      "sha": "c7215fe0f2634ae9f51d15dacc09184f5343941a",
+      "bytes": 1036
+    },
+    {
+      "path": "public/licenses/fake-indexeddb-Apache-2.0.txt",
+      "mode": "100644",
+      "sha": "ad44ec8ca3641cddb7e580ade97f9244b71ad40b",
+      "bytes": 10893
+    },
+    {
+      "path": "public/licenses/three-MIT.txt",
+      "mode": "100644",
+      "sha": "8ada2a5f982916b0ba4b7a0aa7de347587e745d7",
+      "bytes": 1081
+    },
+    {
+      "path": "public/product/advisor-loop1.md",
+      "mode": "100644",
+      "sha": "992f634da1a7fffd451b36a294e105d35673847a",
+      "bytes": 10719
+    },
+    {
+      "path": "public/product/advisor-loop2.md",
+      "mode": "100644",
+      "sha": "be3eb98d81cbc33323cfaacc97e514ed8013fd79",
+      "bytes": 14759
+    },
+    {
+      "path": "public/product/art-direction.md",
+      "mode": "100644",
+      "sha": "5a1f585a8da0d2929e96f75b7a3e7b0dd070f855",
+      "bytes": 5166
+    },
+    {
+      "path": "public/product/cover-prompts.json",
+      "mode": "100644",
+      "sha": "04ecbecb498e627cf723c929064086481b6dc661",
+      "bytes": 2863
+    },
+    {
+      "path": "public/product/curiosity-stage-prompt.json",
+      "mode": "100644",
+      "sha": "114e18fc35dfc02589fbfe06f97c555d7a67112b",
+      "bytes": 1449
+    },
+    {
+      "path": "public/product/decision-record.md",
+      "mode": "100644",
+      "sha": "f0b208d6b16868f38c38564c1f108d7145d86184",
+      "bytes": 14402
+    },
+    {
+      "path": "public/product/expeditions/advisor-first.md",
+      "mode": "100644",
+      "sha": "548e71cf1a31eccb72ceae253dc05f5fd234f290",
+      "bytes": 8467
+    },
+    {
+      "path": "public/product/expeditions/advisor-second.md",
+      "mode": "100644",
+      "sha": "f5449dc412becc6b1d25465dd8a0a38a98f1ae9d",
+      "bytes": 9823
+    },
+    {
+      "path": "public/product/expeditions/decision-record.md",
+      "mode": "100644",
+      "sha": "5e0199f2562fc948ff88bd1fd0b55e04cf87454e",
+      "bytes": 11249
+    },
+    {
+      "path": "public/product/expeditions/design-research.md",
+      "mode": "100644",
+      "sha": "3e0b4919433f78241a8cc941d029f4a384c0559e",
+      "bytes": 17549
+    },
+    {
+      "path": "public/product/expeditions/verification.md",
+      "mode": "100644",
+      "sha": "9c057a6acec2634033fc288067129cbeba28bf33",
+      "bytes": 3048
+    },
+    {
+      "path": "public/product/experience-sources.json",
+      "mode": "100644",
+      "sha": "d7a3f9bd60e97834ba707b138bf3504830d83480",
+      "bytes": 10457
+    },
+    {
+      "path": "public/product/experience.md",
+      "mode": "100644",
+      "sha": "e462aac36250b5b62544f79d48a4f4fb53d0e216",
+      "bytes": 14470
+    },
+    {
+      "path": "public/product/game-design.md",
+      "mode": "100644",
+      "sha": "8d01cd76a04a744b91f8618c806262bfdc1f8830",
+      "bytes": 17012
+    },
+    {
+      "path": "public/product/learning-evidence.json",
+      "mode": "100644",
+      "sha": "e5a236667eca5db9af99096fc1966bc2809e6662",
+      "bytes": 27438
+    },
+    {
+      "path": "public/product/learning-reviews.md",
+      "mode": "100644",
+      "sha": "cd85041e0d4a3d6f73fe25ece6d5a408e58c8967",
+      "bytes": 15287
+    },
+    {
+      "path": "public/product/market.md",
+      "mode": "100644",
+      "sha": "07b72a0df047826bd1705b7a1f297b952a6e7c4f",
+      "bytes": 17246
+    },
+    {
+      "path": "public/product/release-verification.md",
+      "mode": "100644",
+      "sha": "2db0f51dff4ba8e5bcc76f929f8a0a8bb1208ce1",
+      "bytes": 3384
+    },
+    {
+      "path": "public/product/resource-notices.md",
+      "mode": "100644",
+      "sha": "90e37dabaec97f35561cd84541adea36c1b46407",
+      "bytes": 1475
+    },
+    {
+      "path": "public/product/review-decision-record.md",
+      "mode": "100644",
+      "sha": "bff389f6ce3c63e60df112a432277b2f38e798ff",
+      "bytes": 13534
+    },
+    {
+      "path": "public/product/review-research.md",
+      "mode": "100644",
+      "sha": "867a2f53ae69a22e8311ab9dd3f78ab313f3a0d7",
+      "bytes": 59257
+    },
+    {
+      "path": "public/product/rivalry/advisor-first.md",
+      "mode": "100644",
+      "sha": "9f16f5d507bce4c6f1b7486082e4fd3284158ac9",
+      "bytes": 10043
+    },
+    {
+      "path": "public/product/rivalry/advisor-second.md",
+      "mode": "100644",
+      "sha": "b7b557c2dc9b4f2df36cba9a5201d1307404e514",
+      "bytes": 10306
+    },
+    {
+      "path": "public/product/rivalry/art-prompt.txt",
+      "mode": "100644",
+      "sha": "7b2bfece208e38ba78c633aa59651b14cac43553",
+      "bytes": 1831
+    },
+    {
+      "path": "public/product/rivalry/decision-record.md",
+      "mode": "100644",
+      "sha": "f17c6cd65354b9f0fc0310dce07f57cd27550384",
+      "bytes": 8409
+    },
+    {
+      "path": "public/product/rivalry/verification.md",
+      "mode": "100644",
+      "sha": "df078c96ad71280bd39230719803aa2bad607ac8",
+      "bytes": 2343
+    },
+    {
+      "path": "public/product/roadmap.json",
+      "mode": "100644",
+      "sha": "7d0cd4217cb4892101f62cf7812010c8e4f843f6",
+      "bytes": 47979
+    },
+    {
+      "path": "public/product/skill-application.md",
+      "mode": "100644",
+      "sha": "01ea80a0cf29a3b03abf3fea5d2a9dd21e73c28f",
+      "bytes": 13204
+    },
+    {
+      "path": "public/product/sources-all.json",
+      "mode": "100644",
+      "sha": "16846b5dfc6ae9833894c5eb55b0c8931833c28c",
+      "bytes": 34208
+    },
+    {
+      "path": "public/product/sources-design.json",
+      "mode": "100644",
+      "sha": "7d4e23ceb0818eb54ede3bebfe781d502630d31c",
+      "bytes": 9165
+    },
+    {
+      "path": "public/product/sources-market.json",
+      "mode": "100644",
+      "sha": "7429edc4b8690b7124d53f0321658db602fe60ff",
+      "bytes": 15351
+    },
+    {
+      "path": "public/product/trivia-evidence.json",
+      "mode": "100644",
+      "sha": "b5a207721081c07a897f61d0a04cb5e70dd199c8",
+      "bytes": 44366
+    },
+    {
+      "path": "public/product/trivia-reviews.md",
+      "mode": "100644",
+      "sha": "7ea875c93ea4aa515c7ab7bc94ce28f8f5d44ffa",
+      "bytes": 15960
+    },
+    {
+      "path": "public/product/ux-review-loop1.md",
+      "mode": "100644",
+      "sha": "c8fbf9b22ce6bd5652f2bfc722a0cdb95d4a5d01",
+      "bytes": 15847
+    },
+    {
+      "path": "public/product/ux-review-loop2.md",
+      "mode": "100644",
+      "sha": "f6689823bbd0a4a74147938835427fa031358f94",
+      "bytes": 16250
+    },
+    {
+      "path": "public/science-club.webp",
+      "mode": "100644",
+      "sha": "4150f5b9ba1c23b1b985e01de5e1d9426e1f7d0f",
+      "bytes": 87534
+    },
+    {
+      "path": "public/sports-club.webp",
+      "mode": "100644",
+      "sha": "96c0abdc066558cf697542e4f8e23b91739e6fc7",
+      "bytes": 69052
+    },
+    {
+      "path": "public/window.svg",
+      "mode": "100644",
+      "sha": "d05e7a1bc066341298657dcc304dbadc4ddcab9d",
+      "bytes": 386
+    },
+    {
+      "path": "scripts/build-verified.sh",
+      "mode": "100755",
+      "sha": "6c69cf3ad6855c25c312b67f02fd1afffb97b63d",
+      "bytes": 661
+    },
+    {
+      "path": "scripts/execution-profile.mjs",
+      "mode": "100644",
+      "sha": "f27aec211320d9a5fd0dbbb07f5c508222b2b8d4",
+      "bytes": 624
+    },
+    {
+      "path": "scripts/install-ci.mjs",
+      "mode": "100644",
+      "sha": "624f8d98fb3aa14b80e87b11ebd25c158860e079",
+      "bytes": 1616
+    },
+    {
+      "path": "scripts/install-ci.sh",
+      "mode": "100755",
+      "sha": "c1da8c3bff185934dd844d85eddbf2a6e1486cca",
+      "bytes": 7494
+    },
+    {
+      "path": "scripts/install-pnpm.sh",
+      "mode": "100755",
+      "sha": "722a2f6c515f887d66a92ea311a846a4ccc00afc",
+      "bytes": 9024
+    },
+    {
+      "path": "scripts/pnpm-install.mjs",
+      "mode": "100644",
+      "sha": "d57a1efad54ed9d0857de95c1fac5c8ecfb7c18b",
+      "bytes": 10642
+    },
+    {
+      "path": "scripts/run-framework.mjs",
+      "mode": "100644",
+      "sha": "166b0c2487819135ddfb30c9267e790ebb8c498f",
+      "bytes": 993
+    },
+    {
+      "path": "scripts/sites-env.mjs",
+      "mode": "100644",
+      "sha": "1eeedb5e13e4b9af70d89446d981dfd4cd92a3fd",
+      "bytes": 906
+    },
+    {
+      "path": "scripts/sites-env.sh",
+      "mode": "100755",
+      "sha": "728416424d5d2f4c9a746d53621668225645356c",
+      "bytes": 1530
+    },
+    {
+      "path": "tests/bot.test.mjs",
+      "mode": "100644",
+      "sha": "ef940f6424bbe481efe279e0bec61ea899c6b974",
+      "bytes": 5426
+    },
+    {
+      "path": "tests/d1-local.mjs",
+      "mode": "100644",
+      "sha": "60299a3589cfd082aea839595e278f719796824c",
+      "bytes": 1434
+    },
+    {
+      "path": "tests/duel.test.mjs",
+      "mode": "100644",
+      "sha": "52e887def113c4dd765f4ac555876508796b9fa9",
+      "bytes": 18160
+    },
+    {
+      "path": "tests/expeditions.test.mjs",
+      "mode": "100644",
+      "sha": "d98ec34f43d4bd9052db79eed57d2157bd58da55",
+      "bytes": 7540
+    },
+    {
+      "path": "tests/http.test.mjs",
+      "mode": "100644",
+      "sha": "e707e1da21ef41fe48b71692272462f06ae39de0",
+      "bytes": 2913
+    },
+    {
+      "path": "tests/journal.test.mjs",
+      "mode": "100644",
+      "sha": "ada6cf46cda4256a81d3a7b1c63fb97810eb0991",
+      "bytes": 3119
+    },
+    {
+      "path": "tests/passport.test.mjs",
+      "mode": "100644",
+      "sha": "3b7598d8fc3d001b18420d5d502ec03a6c17d251",
+      "bytes": 8553
+    },
+    {
+      "path": "tests/presentation.test.mjs",
+      "mode": "100644",
+      "sha": "2e51d2f539b3bf57f64a66917ac05fee4518f657",
+      "bytes": 1300
+    },
+    {
+      "path": "tests/profile-store.test.mjs",
+      "mode": "100644",
+      "sha": "c677c99ca33bef0afe23a1f12e699d407ade3f2a",
+      "bytes": 3183
+    },
+    {
+      "path": "tests/stress.mjs",
+      "mode": "100644",
+      "sha": "03e4eb7485ba83c01ddcbf110a89c2685ffba314",
+      "bytes": 5522
+    },
+    {
+      "path": "tsconfig.json",
+      "mode": "100644",
+      "sha": "be170f57ec372cc118f2d343092a53b85fc189a4",
+      "bytes": 800
+    },
+    {
+      "path": "vendor/shadcn-tailwind-4.13.0.LICENSE.md",
+      "mode": "100644",
+      "sha": "fad4d887a681dd49233e5ed01ee2c7a1513089a0",
+      "bytes": 1063
+    },
+    {
+      "path": "vendor/shadcn-tailwind-4.13.0.css",
+      "mode": "100644",
+      "sha": "7807c58eb94de8b764b9b6b7b5d8cde6d012b17f",
+      "bytes": 16041
+    },
+    {
+      "path": "vite.config.ts",
+      "mode": "100644",
+      "sha": "e98afea633a7aa88ee0bab21773219a66563f9ac",
+      "bytes": 2240
+    }
+  ]
+}

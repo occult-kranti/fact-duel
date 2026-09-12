@@ -1,0 +1,788 @@
+{
+  "panel": "Learning and gamified education products for FACT//DUEL",
+  "retrieved_at": "2026-09-12",
+  "products": [
+    "Duolingo",
+    "Kahoot!",
+    "Quizlet",
+    "Brilliant"
+  ],
+  "observation_count": 16,
+  "method": {
+    "sampling": "Purposive qualitative selection of actionable criticisms and positive counterexamples; not representative or frequency-estimating.",
+    "source_types": [
+      "Public customer review listings",
+      "Public customer comments on official help",
+      "US App Store review selection",
+      "Dated first-person editorial commentary",
+      "Official feature help"
+    ],
+    "searches": [
+      "Product plus reviews, energy, streak, hosting, pricing, AI errors, performance and navigation",
+      "Exact review titles and reviewer names",
+      "Official help for each relevant mechanic"
+    ],
+    "inclusion": [
+      "Named reviewer or handle",
+      "Visible dated publication or comment",
+      "Concrete product experience relevant to FACT//DUEL",
+      "Positive counterexamples retained"
+    ],
+    "exclusions": [
+      "Trustpilot AI summaries",
+      "Aggregate ratings and poll percentages",
+      "Duolingo English Test experiences",
+      "Vague abuse without actionable detail",
+      "Company motive allegations",
+      "Competitor marketing summaries",
+      "Duplicate App Store rendering of the same review"
+    ],
+    "assertion_rule": "A review records an attributed experience. Official documentation verifies a mechanic only, not the incident or prevalence. Requirements are analyst inferences.",
+    "quote_policy": "Observations paraphrased. Locator titles are short exact excerpts, not full titles; match with author and dates. Markdown citations use editorial labels. No review-body passages are quoted. Per-page source budgets were checked across both deliverables; repeated full review titles were removed."
+  },
+  "limitations": [
+    "All app versions are unknown; platform is recorded only when stated or evident from source context.",
+    "Reviewers and editorial authors are self-selected or selected by the platform. No complaint rates, prevalence, market-level rankings or retention effects can be inferred.",
+    "Trustpilot review listings were readable, but individual-review click attempts returned internal retrieval errors. One direct HTML request returned HTTP 403. Exact listing URL, reviewer, title and dates are retained instead of guessed permalinks.",
+    "Trustpilot listing pagination is mutable and can differ by crawl date or locale; reader may need to search the named reviewer/title.",
+    "The App Store review page repeats the same text; L12 is counted once. Its individual star value was not reliably extracted.",
+    "L13's November 2025 experience predates its September 2026 publication and current Brilliant help. It is historical context rather than evidence of a current interface defect.",
+    "L15 publication date was normalized from a same-day relative timestamp on 12 September 2026; its experience date is explicit.",
+    "L10 supplies no disputed item or set URL; neither its errors nor AI provenance were independently established.",
+    "Kahoot's billing-help discussion contains differently dated staff replies about annual educational plans and a monthly/annual toggle; no universal current no-monthly-plan claim is made.",
+    "Quizlet's subscription overview describes monthly Plus usage limits, while its Study Guides page describes unlimited guide access for Plus and Unlimited. These do not establish a universal cap or L08's exact test allowance.",
+    "No controlled learning study, device benchmark, full accessibility audit, logged-in product walkthrough or network-failure experiment was performed.",
+    "No proprietary implementation details, retention statistics or allegations of deliberate manipulation are adopted."
+  ],
+  "observations": [
+    {
+      "id": "L01",
+      "product": "Duolingo",
+      "author": "Megan Ellis",
+      "published_date": "2025-10-01",
+      "experience_date": null,
+      "source_id": "S01",
+      "locator_title": "I'm finally quitting Duolingo",
+      "rating": null,
+      "valence": "negative",
+      "platform": "Android context; free account",
+      "version": "unknown",
+      "summary": "Energy restricts longer study; a changed Mandarin path complicates progression.",
+      "themes": [
+        "energy",
+        "streak pressure",
+        "navigation changes",
+        "progress"
+      ],
+      "verification": "Detailed first-person rollout account; universal allowance not verified.",
+      "official_source_ids": [
+        "O01",
+        "O02"
+      ],
+      "requirement_ids": [
+        "LR1",
+        "LR4",
+        "LR8"
+      ],
+      "locator_title_is_excerpt": true
+    },
+    {
+      "id": "L02",
+      "product": "Duolingo",
+      "author": "Logophilelass",
+      "published_date": "2026-06-06",
+      "experience_date": "2026-05-03",
+      "source_id": "S02",
+      "locator_title": "traded purpose for profit",
+      "rating": 2,
+      "valence": "mixed",
+      "platform": "unspecified",
+      "version": "unknown",
+      "review_label": "Unprompted review",
+      "summary": "Welcomes mistake tolerance; reports inaccessible typing and unreliable speech substitution.",
+      "themes": [
+        "accessibility",
+        "input alternatives",
+        "energy"
+      ],
+      "verification": "Input symptoms not reproduced; energy mechanics documented.",
+      "official_source_ids": [
+        "O01"
+      ],
+      "requirement_ids": [
+        "LR3",
+        "LR5"
+      ],
+      "locator_title_is_excerpt": true
+    },
+    {
+      "id": "L03",
+      "product": "Duolingo",
+      "author": "Claire Komives",
+      "published_date": "2026-06-06",
+      "experience_date": "2026-06-05",
+      "source_id": "S02",
+      "locator_title": "learn Spanish",
+      "rating": 2,
+      "valence": "negative",
+      "platform": "unspecified",
+      "version": "unknown",
+      "review_label": "Unprompted review",
+      "summary": "Repeated vocabulary feels misleadingly presented as new.",
+      "themes": [
+        "meaningful progress",
+        "content repetition"
+      ],
+      "verification": "No course items supplied; attributed perception only.",
+      "official_source_ids": [],
+      "requirement_ids": [
+        "LR2",
+        "LR4"
+      ],
+      "locator_title_is_excerpt": true
+    },
+    {
+      "id": "L04",
+      "product": "Duolingo",
+      "author": "Mary Allan",
+      "published_date": "2026-06-03",
+      "experience_date": "2026-06-03",
+      "source_id": "S02",
+      "locator_title": "Poor psychology",
+      "rating": 2,
+      "valence": "mixed",
+      "platform": "unspecified",
+      "version": "unknown",
+      "review_label": "Unprompted review",
+      "summary": "Credits language improvement but dislikes competitive and distressed-mascot cues.",
+      "themes": [
+        "pressure",
+        "gamification",
+        "positive learning experience"
+      ],
+      "verification": "Preference evidence; no universal psychological effect asserted.",
+      "official_source_ids": [
+        "O02"
+      ],
+      "requirement_ids": [
+        "LR5"
+      ],
+      "locator_title_is_excerpt": true
+    },
+    {
+      "id": "L05",
+      "product": "Kahoot!",
+      "author": "Jessly Estrada",
+      "published_date": "2026-03-02",
+      "experience_date": "2026-03-02",
+      "source_id": "S03",
+      "locator_title": "BLOOKET IS BETTER",
+      "rating": 3,
+      "valence": "mixed",
+      "platform": "unspecified",
+      "version": "unknown",
+      "review_label": "Unprompted review",
+      "summary": "Distant host-screen content is hard to read; reply points to an existing setting.",
+      "themes": [
+        "hosting",
+        "accessibility",
+        "discoverability"
+      ],
+      "verification": "Contemporaneous company reply and current official help confirm player-screen toggle.",
+      "official_source_ids": [
+        "O03",
+        "O04"
+      ],
+      "requirement_ids": [
+        "LR3",
+        "LR6"
+      ],
+      "locator_title_is_excerpt": true
+    },
+    {
+      "id": "L06",
+      "product": "Kahoot!",
+      "author": "Ingrid Webster",
+      "published_date": "2026-03-03",
+      "experience_date": "2026-02-27",
+      "source_id": "S03",
+      "locator_title": "A fun activity",
+      "rating": 5,
+      "valence": "positive",
+      "platform": "unspecified",
+      "version": "unknown",
+      "review_label": "Unprompted review",
+      "summary": "Enjoys easy setup and the competitive podium.",
+      "themes": [
+        "positive hosting",
+        "positive competition"
+      ],
+      "verification": "Attributed satisfaction, not a measured usability outcome.",
+      "official_source_ids": [],
+      "requirement_ids": [
+        "LR5",
+        "LR6"
+      ],
+      "locator_title_is_excerpt": true
+    },
+    {
+      "id": "L07",
+      "product": "Kahoot!",
+      "author": "cmunoz1885",
+      "published_date": "2025-02-06",
+      "experience_date": null,
+      "source_id": "S04",
+      "locator_title": "monthly payment plan",
+      "rating": null,
+      "valence": "mixed",
+      "platform": "unspecified",
+      "version": "unknown",
+      "review_label": "Public help comment",
+      "summary": "Annual payment is difficult to justify for a trimester's teaching.",
+      "themes": [
+        "monetization",
+        "commitment length",
+        "pricing disclosure"
+      ],
+      "verification": "Historical plan context; conflicting dated staff replies retained as limitation.",
+      "official_source_ids": [
+        "O05"
+      ],
+      "requirement_ids": [
+        "LR7"
+      ],
+      "locator_title_is_excerpt": true
+    },
+    {
+      "id": "L08",
+      "product": "Quizlet",
+      "author": "William Hemberg",
+      "published_date": "2026-05-20",
+      "experience_date": "2026-05-20",
+      "source_id": "S05",
+      "locator_title": "Bought the quizlet plus",
+      "rating": 1,
+      "valence": "negative",
+      "platform": "unspecified",
+      "version": "unknown",
+      "review_label": "Unprompted review",
+      "summary": "A paying user encounters an unexpected test limit.",
+      "themes": [
+        "monetization",
+        "entitlements",
+        "practice access"
+      ],
+      "verification": "Plus monthly limits documented; precise three-test incident unverified.",
+      "official_source_ids": [
+        "O06",
+        "O08"
+      ],
+      "requirement_ids": [
+        "LR1",
+        "LR7"
+      ],
+      "locator_title_is_excerpt": true
+    },
+    {
+      "id": "L09",
+      "product": "Quizlet",
+      "author": "Parker Parker",
+      "published_date": "2026-05-19",
+      "experience_date": "2026-05-17",
+      "source_id": "S05",
+      "locator_title": "Distraction and ad-filled site",
+      "rating": 1,
+      "valence": "negative",
+      "platform": "website context",
+      "version": "unknown",
+      "review_label": "Unprompted review",
+      "summary": "Video interruptions and sluggish scrolling disrupt assigned study.",
+      "themes": [
+        "advertising",
+        "performance",
+        "attention"
+      ],
+      "verification": "Symptoms and ad attribution reported, not benchmarked.",
+      "official_source_ids": [],
+      "requirement_ids": [
+        "LR1"
+      ],
+      "locator_title_is_excerpt": true
+    },
+    {
+      "id": "L10",
+      "product": "Quizlet",
+      "author": "Awel",
+      "published_date": "2026-05-15",
+      "experience_date": "2026-05-15",
+      "source_id": "S05",
+      "locator_title": "Unreliable yn Gymraeg",
+      "rating": 1,
+      "valence": "negative",
+      "platform": "unspecified",
+      "version": "unknown",
+      "review_label": "Unprompted review",
+      "summary": "Welsh study content allegedly contains errors; AI origin unknown.",
+      "themes": [
+        "content quality",
+        "provenance"
+      ],
+      "verification": "No item examples; official help acknowledges possible user-set errors.",
+      "official_source_ids": [
+        "O07",
+        "O09"
+      ],
+      "requirement_ids": [
+        "LR2"
+      ],
+      "locator_title_is_excerpt": true
+    },
+    {
+      "id": "L11",
+      "product": "Quizlet",
+      "author": "Charlotte Watteau",
+      "published_date": "2025-12-11",
+      "experience_date": null,
+      "source_id": "S06",
+      "locator_title": "A Pure Waste of Time",
+      "rating": 1,
+      "valence": "negative",
+      "platform": "website",
+      "version": "unknown",
+      "review_label": "Unprompted review",
+      "summary": "Reports ad-loading delays, freezes and lost study progress.",
+      "themes": [
+        "advertising",
+        "performance",
+        "recovery"
+      ],
+      "verification": "Not reproduced; device/browser unspecified.",
+      "official_source_ids": [],
+      "requirement_ids": [
+        "LR1"
+      ],
+      "locator_title_is_excerpt": true
+    },
+    {
+      "id": "L12",
+      "product": "Quizlet",
+      "author": "ImakeHELPFULreviews",
+      "published_date": "2025-07-29",
+      "experience_date": null,
+      "source_id": "S07",
+      "locator_title": "A Complete Guide",
+      "rating": null,
+      "valence": "positive_with_reservations",
+      "platform": "US App Store context",
+      "version": "unknown",
+      "summary": "Values organization and AI rewording; initially finds controls difficult.",
+      "themes": [
+        "positive practice",
+        "positive AI",
+        "navigation",
+        "feature changes"
+      ],
+      "verification": "AI guides confirmed; Q-Chat removal not independently verified here. No noticed errors is a personal report.",
+      "official_source_ids": [
+        "O08"
+      ],
+      "requirement_ids": [
+        "LR4",
+        "LR8"
+      ],
+      "locator_title_is_excerpt": true
+    },
+    {
+      "id": "L13",
+      "product": "Brilliant",
+      "author": "Falcon Argenteus",
+      "published_date": "2026-09-10",
+      "experience_date": "2025-11-10",
+      "source_id": "S08",
+      "locator_title": "I subscribed to Brilliant",
+      "rating": 2,
+      "valence": "negative",
+      "platform": "unspecified",
+      "version": "unknown",
+      "review_label": "Unprompted review",
+      "temporal_flag": "Older experience, recently published",
+      "summary": "Finds explanations too short and deeper teaching difficult to locate.",
+      "themes": [
+        "explanations",
+        "navigation",
+        "meaningful learning"
+      ],
+      "verification": "Historical; not reproduced.",
+      "official_source_ids": [
+        "O10"
+      ],
+      "requirement_ids": [
+        "LR2",
+        "LR4",
+        "LR8"
+      ],
+      "locator_title_is_excerpt": true
+    },
+    {
+      "id": "L14",
+      "product": "Brilliant",
+      "author": "Rudi Grobler",
+      "published_date": "2026-09-10",
+      "experience_date": "2026-09-10",
+      "source_id": "S08",
+      "locator_title": "Brilliant is a great app",
+      "rating": 5,
+      "valence": "positive",
+      "platform": "unspecified",
+      "version": "unknown",
+      "review_label": "Unprompted review",
+      "summary": "Praises practical examples and quick support.",
+      "themes": [
+        "positive learning",
+        "positive support"
+      ],
+      "verification": "Unverified experience.",
+      "official_source_ids": [
+        "O10"
+      ],
+      "requirement_ids": [
+        "LR4"
+      ],
+      "locator_title_is_excerpt": true
+    },
+    {
+      "id": "L15",
+      "product": "Brilliant",
+      "author": "Wojtek Hernat",
+      "published_date": "2026-09-12",
+      "experience_date": "2026-09-11",
+      "source_id": "S08",
+      "locator_title": "Predatory",
+      "rating": 1,
+      "valence": "negative",
+      "platform": "mobile website",
+      "version": "unknown",
+      "review_label": "Unprompted review",
+      "publication_date_note": "Normalized from seven-hours-ago timestamp on retrieval date.",
+      "summary": "Reports mobile subscription-management difficulty.",
+      "themes": [
+        "account management",
+        "mobile performance",
+        "monetization"
+      ],
+      "verification": "Unverified symptom.",
+      "official_source_ids": [],
+      "requirement_ids": [
+        "LR7"
+      ],
+      "locator_title_is_excerpt": true
+    },
+    {
+      "id": "L16",
+      "product": "Brilliant",
+      "author": "Dylan Maki",
+      "published_date": "2026-09-09",
+      "experience_date": "2026-09-09",
+      "source_id": "S08",
+      "locator_title": "support is even better",
+      "rating": 5,
+      "valence": "positive",
+      "platform": "unspecified",
+      "version": "unknown",
+      "review_label": "Unprompted review",
+      "summary": "Reports helpful refund support after missed renewal reminders.",
+      "themes": [
+        "positive support",
+        "account recovery",
+        "renewal"
+      ],
+      "verification": "Account-specific; unverified.",
+      "official_source_ids": [],
+      "requirement_ids": [
+        "LR7"
+      ],
+      "locator_title_is_excerpt": true
+    }
+  ],
+  "source_ledger": [
+    {
+      "id": "S01",
+      "title": "Megan Ellis first-person Duolingo commentary",
+      "url": "https://www.androidauthority.com/quitting-duolingo-energy-system-3599842/",
+      "type": "First-person editorial commentary",
+      "date": "2025-10-01",
+      "access": "Full article readable; reader poll excluded",
+      "observations": [
+        "L01"
+      ]
+    },
+    {
+      "id": "S02",
+      "title": "Duolingo Trustpilot reviews, page 9",
+      "url": "https://www.trustpilot.com/review/duolingo.com?page=9",
+      "type": "Primary customer review listing",
+      "date": null,
+      "access": "Individual review text readable; permalink clicks failed; locate by author/title/date",
+      "observations": [
+        "L02",
+        "L03",
+        "L04"
+      ]
+    },
+    {
+      "id": "S03",
+      "title": "Kahoot! Trustpilot reviews, page 7",
+      "url": "https://www.trustpilot.com/review/kahoot.com?page=7",
+      "type": "Primary customer review listing with company replies",
+      "date": null,
+      "access": "Review text and contemporaneous reply readable; pagination mutable",
+      "observations": [
+        "L05",
+        "L06"
+      ]
+    },
+    {
+      "id": "S04",
+      "title": "Kahoot payment and billing help: cmunoz1885 comment",
+      "url": "https://support.kahoot.com/hc/en-us/articles/360060150353-What-are-my-payment-and-billing-options",
+      "type": "Primary customer help comment",
+      "date": "2025-02-06",
+      "access": "Public comments readable; identify handle and date",
+      "observations": [
+        "L07"
+      ]
+    },
+    {
+      "id": "S05",
+      "title": "Quizlet Trustpilot reviews, page 2",
+      "url": "https://www.trustpilot.com/review/www.quizlet.com?page=2",
+      "type": "Primary customer review listing",
+      "date": null,
+      "access": "Full retained review text readable; exact individual permalink unavailable",
+      "observations": [
+        "L08",
+        "L09",
+        "L10"
+      ]
+    },
+    {
+      "id": "S06",
+      "title": "Quizlet Trustpilot reviews, page 4",
+      "url": "https://www.trustpilot.com/review/www.quizlet.com?page=4",
+      "type": "Primary customer review listing",
+      "date": null,
+      "access": "Full retained review text readable; exact individual permalink unavailable",
+      "observations": [
+        "L11"
+      ]
+    },
+    {
+      "id": "S07",
+      "title": "Quizlet US App Store ratings and reviews",
+      "url": "https://apps.apple.com/us/app/quizlet-more-than-flashcards/id546473125?see-all=reviews",
+      "type": "Primary customer app review",
+      "date": "2025-07-29",
+      "access": "Review readable with author/date/title; repeated rendering deduplicated",
+      "observations": [
+        "L12"
+      ]
+    },
+    {
+      "id": "S08",
+      "title": "Brilliant Trustpilot reviews",
+      "url": "https://www.trustpilot.com/review/brilliant.org",
+      "type": "Primary customer review listing",
+      "date": null,
+      "access": "Retained reviews readable; relative publication dates normalized on retrieval date; exact permalinks unavailable",
+      "observations": [
+        "L13",
+        "L14",
+        "L15",
+        "L16"
+      ]
+    },
+    {
+      "id": "O01",
+      "title": "Duolingo Energy explanation",
+      "url": "https://blog.duolingo.com/duolingo-energy/",
+      "type": "Official feature explanation",
+      "date": null,
+      "supported_claim": "Lessons consume energy; correct-answer runs restore some; mistake review exempt; refill methods and testing described.",
+      "limit": "Actively tested rollout; no universal lesson allowance inferred."
+    },
+    {
+      "id": "O02",
+      "title": "How to use Duolingo for language learning",
+      "url": "https://blog.duolingo.com/duolingo-101-how-to-learn-a-language-on-duolingo/",
+      "type": "Official introductory guide",
+      "date": "2024-12-02",
+      "supported_claim": "Streak counts consecutive practice days; gem-purchased freeze protects a missed day.",
+      "limit": "Older background documentation, not evidence of current every-account settings."
+    },
+    {
+      "id": "O03",
+      "title": "How to enable questions on participant screens",
+      "url": "https://support.kahoot.com/hc/en-us/articles/115003197928-How-to-enable-See-questions-on-participant-s-screen-in-Kahoot-live-games",
+      "type": "Official help",
+      "date": "2026-09-09",
+      "supported_claim": "Lobby toggle enables content on player devices; assignments show it by default.",
+      "limit": "Availability does not prove discoverability or successful use."
+    },
+    {
+      "id": "O04",
+      "title": "Kahoot accessibility features",
+      "url": "https://kahoot.com/accessibility/",
+      "type": "Official feature documentation",
+      "date": null,
+      "supported_claim": "Keyboard, read-aloud, timing and Accuracy experiences documented.",
+      "limit": "Vendor documentation, not an independently completed accessibility audit."
+    },
+    {
+      "id": "O05",
+      "title": "Kahoot payment and billing options",
+      "url": "https://support.kahoot.com/hc/en-us/articles/360060150353-What-are-my-payment-and-billing-options",
+      "type": "Official help and staff replies",
+      "date": null,
+      "supported_claim": "Billing options are plan-contextual; annual renewal described.",
+      "limit": "Staff replies of different dates mention annual education billing and a monthly toggle; no universal current claim."
+    },
+    {
+      "id": "O06",
+      "title": "Subscribing to Quizlet",
+      "url": "https://help.quizlet.com/hc/en-us/articles/360041181691-Subscribing-to-Quizlet",
+      "type": "Official help",
+      "date": null,
+      "supported_claim": "Plus has monthly usage limits; Unlimited is distinct.",
+      "limit": "Exact allowances and L08 transaction not established; Study Guides page is more permissive for guides."
+    },
+    {
+      "id": "O07",
+      "title": "Quizlet typos or incorrect information",
+      "url": "https://help.quizlet.com/hc/en-us/articles/360030894831-Typos-or-incorrect-information",
+      "type": "Official help",
+      "date": null,
+      "supported_claim": "User-created sets can contain errors; copying/editing does not alert all other learners.",
+      "limit": "Does not verify specific Welsh errors or AI origin."
+    },
+    {
+      "id": "O08",
+      "title": "Studying with Study Guides",
+      "url": "https://help.quizlet.com/hc/en-us/articles/18312306436365-Studying-with-Study-Guides",
+      "type": "Official help",
+      "date": null,
+      "supported_claim": "AI generates guides from uploaded materials; editing available; page describes Plus/Unlimited guide access as unlimited.",
+      "limit": "Guide-specific claim conflicts in scope with broad monthly-limit description; do not infer universal cap."
+    },
+    {
+      "id": "O09",
+      "title": "Finding flashcard sets",
+      "url": "https://help.quizlet.com/hc/en-us/articles/360029772872-Finding-flashcard-sets",
+      "type": "Official help",
+      "date": null,
+      "supported_claim": "Searchable sets are created by learners and teachers; users may copy sets.",
+      "limit": "Does not authenticate an individual set."
+    },
+    {
+      "id": "O10",
+      "title": "Brilliant: What are Learning Paths?",
+      "url": "https://brilliant.org/help/features/what-are-learning-paths/",
+      "type": "Official help",
+      "date": "2026-08-03",
+      "supported_claim": "Guided sequences mix explanations and practice checkpoints; Premium allows course-order freedom.",
+      "limit": "Intended structure does not establish explanation sufficiency for every learner."
+    }
+  ],
+  "requirements": [
+    {
+      "id": "LR1",
+      "priority": "P0",
+      "requirement": "Uninterrupted core practice with recoverable progress",
+      "acceptance": "Complete a declared practice set, explanation review and mistake retry without energy/ad/payment gates; survive refresh.",
+      "observation_ids": [
+        "L01",
+        "L08",
+        "L09",
+        "L11"
+      ]
+    },
+    {
+      "id": "LR2",
+      "priority": "P0",
+      "requirement": "Auditable scored answers and propagated corrections",
+      "acceptance": "Expose answer, explanation, source, question version and report route; trace affected matches.",
+      "observation_ids": [
+        "L03",
+        "L10",
+        "L13"
+      ]
+    },
+    {
+      "id": "LR3",
+      "priority": "P0",
+      "requirement": "Accessible controls and full player-screen questions",
+      "acceptance": "Keyboard, focus, zoom, motion and own-device readability checks; show timer/scoring before start.",
+      "observation_ids": [
+        "L02",
+        "L05"
+      ]
+    },
+    {
+      "id": "LR4",
+      "priority": "P1",
+      "requirement": "Distinguish activity rewards from demonstrated knowledge",
+      "acceptance": "Separate XP from accuracy, reviewed topics and later recall; repeat material is not labeled new mastery.",
+      "observation_ids": [
+        "L01",
+        "L03",
+        "L12",
+        "L13",
+        "L14"
+      ]
+    },
+    {
+      "id": "LR5",
+      "priority": "P1",
+      "requirement": "User control over competitive pressure",
+      "acceptance": "Untimed practice and reminder controls; resume after a break without paid status restoration.",
+      "observation_ids": [
+        "L02",
+        "L04",
+        "L06"
+      ]
+    },
+    {
+      "id": "LR6",
+      "priority": "P1",
+      "requirement": "Understandable hosting and join recovery",
+      "acceptance": "Room/readiness visible; preview player view; recover failed join without losing place.",
+      "observation_ids": [
+        "L05",
+        "L06"
+      ],
+      "inference_note": "Network recovery is a proposed safeguard, not an observed competitor failure rate."
+    },
+    {
+      "id": "LR7",
+      "priority": "P1",
+      "requirement": "Transparent future entitlements and usable account recovery",
+      "acceptance": "Show total price, duration, allowance and renewal; mobile account management and support route work.",
+      "observation_ids": [
+        "L07",
+        "L08",
+        "L15",
+        "L16"
+      ]
+    },
+    {
+      "id": "LR8",
+      "priority": "P1",
+      "requirement": "Stable navigation through content changes",
+      "acceptance": "Saved questions and mistakes have clear destinations; changed content shows targeted review guidance.",
+      "observation_ids": [
+        "L01",
+        "L12",
+        "L13"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1141 @@
+{
+  "version": 4,
+  "asOf": "2026-09-12",
+  "items": [
+    {
+      "id": "P01",
+      "milestone": "Foundation",
+      "owner": "Product lead",
+      "status": "done",
+      "priority": "P0",
+      "dependencies": [],
+      "title": "Set a focused promise",
+      "goal": "Specialist rivalry with an explanation worth keeping.",
+      "criteria": "Choose three acquisition experiments and keep bot demand separate from human demand.",
+      "evidence": "Market brief and executive decisions are recorded.",
+      "next": "Review after the first observed cohort."
+    },
+    {
+      "id": "P02",
+      "milestone": "Foundation",
+      "owner": "Research lead",
+      "status": "done",
+      "priority": "P0",
+      "dependencies": [
+        "P01"
+      ],
+      "title": "Audit the market",
+      "goal": "Compare current products and size assumptions.",
+      "criteria": "Five public competitors, primary sources, dated evidence, explicit model formulas and limitations.",
+      "evidence": "16 market sources; hypothetical TAM, SAM and obtainable cohort.",
+      "next": "Replace assumed interest rates with observed willingness to play."
+    },
+    {
+      "id": "P03",
+      "milestone": "Foundation",
+      "owner": "Experience lead",
+      "status": "done",
+      "priority": "P0",
+      "dependencies": [
+        "P01"
+      ],
+      "title": "Translate learning research",
+      "goal": "Use choice, feedback and retrieval without coercive hooks.",
+      "criteria": "Document scope of papers and book excerpts; separate hypotheses from effects established for this game.",
+      "evidence": "13 research and author/publisher sources; screen and sound contracts.",
+      "next": "Observe whether explanations earn voluntary review."
+    },
+    {
+      "id": "P04",
+      "milestone": "Foundation",
+      "owner": "Art lead",
+      "status": "done",
+      "priority": "P1",
+      "dependencies": [
+        "P03"
+      ],
+      "title": "Build an original visual identity",
+      "goal": "Make sport and science feel like one knowledge club.",
+      "criteria": "Responsive navy/cobalt and light themes, original generic covers, clear labelled states.",
+      "evidence": "Current FACT//DUEL midnight/chartreuse identity and original metallic artwork supersede the historical v3/v4 palettes; alternate light theme retained.",
+      "next": "Observe whether players understand the new lobby before adding more decoration."
+    },
+    {
+      "id": "P05",
+      "milestone": "Foundation",
+      "owner": "Frontend lead",
+      "status": "done",
+      "priority": "P0",
+      "dependencies": [
+        "P03"
+      ],
+      "title": "Make first play direct",
+      "goal": "Place match setup before editorial discovery on mobile.",
+      "criteria": "Bot, friend and join routes; free entry default; remembered name; one primary start action.",
+      "evidence": "Play builder, topic selection and clear empty-pool recovery implemented.",
+      "next": "Measure unassisted first-use completion in P17."
+    },
+    {
+      "id": "P06",
+      "milestone": "Foundation",
+      "owner": "Game engineer",
+      "status": "done",
+      "priority": "P0",
+      "dependencies": [
+        "P05"
+      ],
+      "title": "Offer three coherent duels",
+      "goal": "One, up to three, or all five rounds using the same fair rules.",
+      "criteria": "Quick Draw, Triple Threat and Gauntlet work with both opponent types; no repeated question in one deck.",
+      "evidence": "Server mode validation, deck selection and settlement updated.",
+      "next": "Extend only when a new mode adds a distinct player objective."
+    },
+    {
+      "id": "P07",
+      "milestone": "Foundation",
+      "owner": "Game engineer",
+      "status": "done",
+      "priority": "P0",
+      "dependencies": [
+        "P06"
+      ],
+      "title": "Keep bot practice honest",
+      "goal": "Make immediate play available without pretending a bot is a person.",
+      "criteria": "Uniform choices; independent random delay; precommitted plans; no adaptation; disclosed simulated receipt.",
+      "evidence": "Bot is clearly labelled and automatically ready; plans remain server-side.",
+      "next": "Check all three modes and timers in P12."
+    },
+    {
+      "id": "P08",
+      "milestone": "Foundation",
+      "owner": "Frontend lead",
+      "status": "done",
+      "priority": "P0",
+      "dependencies": [
+        "P05"
+      ],
+      "title": "Turn results into a journal",
+      "goal": "Keep an explanation after the race ends.",
+      "criteria": "Record only revealed results, deduplicate round IDs, cap storage, distinguish bot matches and saved facts.",
+      "evidence": "Versioned IndexedDB journal/profile, stable settled fact IDs, bookmarks, queued export, confirmed unified reset and frozen Recall Lab deck.",
+      "next": "Observe browser failure/recovery and source comprehension."
+    },
+    {
+      "id": "P09",
+      "milestone": "Foundation",
+      "owner": "Accessibility lead",
+      "status": "done",
+      "priority": "P0",
+      "dependencies": [
+        "P04",
+        "P05"
+      ],
+      "title": "Make choices and feedback legible",
+      "goal": "Keep selected input visible while pending.",
+      "criteria": "Pressed semantics; keyboard answer route; mute visible during play; reduced-motion CSS; controls sized for touch.",
+      "evidence": "Source changes address first advisor review. Device testing is a separate gate.",
+      "next": "Complete P15 and P16 before wider recruitment."
+    },
+    {
+      "id": "P10",
+      "milestone": "Foundation",
+      "owner": "Sound designer",
+      "status": "done",
+      "priority": "P1",
+      "dependencies": [
+        "P09"
+      ],
+      "title": "Add optional audio",
+      "goal": "Use restrained original synthesized cues.",
+      "criteria": "Off by default; remembered volume; no panic ticking; no replay on preference changes; visual equivalents.",
+      "evidence": "Countdown, answer-lock and outcome cues; one-event guards.",
+      "next": "Phone-speaker and screen-reader coexistence check in P16."
+    },
+    {
+      "id": "P11",
+      "milestone": "Foundation",
+      "owner": "Advisor",
+      "status": "done",
+      "priority": "P0",
+      "dependencies": [
+        "P03"
+      ],
+      "title": "Complete first critique loop",
+      "goal": "Catch navigation and integrity flaws before release.",
+      "criteria": "Record prioritized issues and acceptance criteria, then map each issue to an implementation or explicit deferral.",
+      "evidence": "First source review records 10 findings; fixes implemented in P05–P10.",
+      "next": "Second review checks actual code in P13."
+    },
+    {
+      "id": "P12",
+      "milestone": "Foundation",
+      "owner": "Test lead",
+      "status": "done",
+      "priority": "P0",
+      "dependencies": [
+        "P06",
+        "P07",
+        "P08"
+      ],
+      "title": "Verify the release gates",
+      "goal": "Protect timing, immutable attempts, settlement and journal data.",
+      "criteria": "All automated gameplay, transport, bot and journal tests pass; TypeScript and production build pass.",
+      "evidence": "Historical v3 gate: 39 automated tests, TypeScript and production build passed. Current arcade gates are R15.",
+      "next": "Preserve as historical evidence; consult current release record."
+    },
+    {
+      "id": "P13",
+      "milestone": "Foundation",
+      "owner": "Advisor",
+      "status": "done",
+      "priority": "P0",
+      "dependencies": [
+        "P09",
+        "P11"
+      ],
+      "title": "Complete second critique loop",
+      "goal": "Check implemented code independently.",
+      "criteria": "Revisit first-loop issues, report remaining blockers, and fix or explicitly defer with reasons.",
+      "evidence": "Historical v3 two-loop review completed. Curiosity Arcade adds the two new loops in R05/R13.",
+      "next": "Consult the new advisor record and observed pilot gates."
+    },
+    {
+      "id": "P14",
+      "milestone": "Observed pilot",
+      "owner": "Pilot coordinator",
+      "status": "planned",
+      "priority": "P0",
+      "dependencies": [
+        "P12",
+        "P13"
+      ],
+      "title": "Prepare permitted testers",
+      "goal": "Make two-screen friend sessions possible within private access.",
+      "criteria": "Document permitted testers, invite access and test devices; verify both can open the private site.",
+      "evidence": "Room invites do not grant Site access.",
+      "next": "Arrange a small approved tester group; no public acquisition yet."
+    },
+    {
+      "id": "P15",
+      "milestone": "Observed pilot",
+      "owner": "UX lead",
+      "status": "planned",
+      "priority": "P0",
+      "dependencies": [
+        "P14"
+      ],
+      "title": "Verify real mobile flows",
+      "goal": "Observe actual small screens, large text and touch.",
+      "criteria": "320–430px phones; portrait/landscape; 200% zoom; long answers; keyboard/safe areas; no inaccessible primary actions.",
+      "evidence": "Responsive source rules are implemented; no device session is claimed.",
+      "next": "Record device/OS/browser and defects for each play state."
+    },
+    {
+      "id": "P16",
+      "milestone": "Observed pilot",
+      "owner": "Accessibility lead",
+      "status": "planned",
+      "priority": "P0",
+      "dependencies": [
+        "P14"
+      ],
+      "title": "Run assistive and audio checks",
+      "goal": "Make the available controls operable and understandable.",
+      "criteria": "Keyboard-only flow, visible focus, dialog focus return, screen-reader names/status, muted and audible outcomes, reduced motion.",
+      "evidence": "Source semantics and core contrast pairs checked; full conformance not established.",
+      "next": "Include disabled and focus variants; repair before cohort expansion."
+    },
+    {
+      "id": "P17",
+      "milestone": "Observed pilot",
+      "owner": "UX researcher",
+      "status": "planned",
+      "priority": "P0",
+      "dependencies": [
+        "P15",
+        "P16"
+      ],
+      "title": "Observe ten first sessions",
+      "goal": "Test comprehension before growth.",
+      "criteria": "At least 8/10 complete unassisted and explain one attempt, random bot and tie rule; log every intervention.",
+      "evidence": "Management threshold, not an industry benchmark.",
+      "next": "Simplify setup if recurring confusion survives one repair loop."
+    },
+    {
+      "id": "P18",
+      "milestone": "Observed pilot",
+      "owner": "Network engineer",
+      "status": "planned",
+      "priority": "P0",
+      "dependencies": [
+        "P14"
+      ],
+      "title": "Exercise two distant screens",
+      "goal": "Measure whether casual timing outcomes stay understandable.",
+      "criteria": "Wi-Fi/mobile mix, asymmetric delay, jitter, loss, throttled CPU, tab hiding and reconnect; record raw and reported durations.",
+      "evidence": "Local tests are not WAN or physical display measurements.",
+      "next": "Publish distributions and refunds; adjust explicit uncertainty policy from evidence."
+    },
+    {
+      "id": "P19",
+      "milestone": "Observed pilot",
+      "owner": "Product analyst",
+      "status": "planned",
+      "priority": "P0",
+      "dependencies": [
+        "P17"
+      ],
+      "title": "Specify a consented event model",
+      "goal": "Separate people, matches, rounds and bots.",
+      "criteria": "Define eligible starter, activation, days 7–13 return, invite acceptance and human-match completion; document consent and retention.",
+      "evidence": "No remote product analytics or cohort dashboard is implemented.",
+      "next": "Review exact event fields and deletion behavior before collection."
+    },
+    {
+      "id": "P20",
+      "milestone": "Observed pilot",
+      "owner": "Engineering lead",
+      "status": "blocked",
+      "priority": "P0",
+      "dependencies": [
+        "P18",
+        "P19"
+      ],
+      "title": "Instrument the approved pilot",
+      "goal": "Collect minimal evidence for product decisions.",
+      "criteria": "Deploy consented events, sampling and deletion; no answer keys or invite tokens in analytics; verify event idempotency.",
+      "evidence": "Blocked on event/consent decisions and observed flow repair.",
+      "next": "Choose a minimal sink and prove counts reconcile to a test cohort."
+    },
+    {
+      "id": "P21",
+      "milestone": "Observed pilot",
+      "owner": "Product lead",
+      "status": "planned",
+      "priority": "P1",
+      "dependencies": [
+        "P17",
+        "P18"
+      ],
+      "title": "Run one repair cycle",
+      "goal": "Fix observed friction before adding features.",
+      "criteria": "Rank defects by failed completion and trust; replay affected flows with different testers.",
+      "evidence": "No user-research outcome is claimed yet.",
+      "next": "Record issue, change and observed outcome together."
+    },
+    {
+      "id": "P22",
+      "milestone": "Content depth",
+      "owner": "Editorial lead",
+      "status": "planned",
+      "priority": "P0",
+      "dependencies": [
+        "P01"
+      ],
+      "title": "Choose narrow launch decks",
+      "goal": "Promote coverage the bank can sustain.",
+      "criteria": "India cricket, European football and space/science have clear era/entity bounds and assigned maintainers.",
+      "evidence": "Current sample: 54 questions, six per topic across nine topics.",
+      "next": "Use actual collection counts; do not advertise exhaustive club histories."
+    },
+    {
+      "id": "P23",
+      "milestone": "Content depth",
+      "owner": "Question researcher",
+      "status": "planned",
+      "priority": "P0",
+      "dependencies": [
+        "P22"
+      ],
+      "title": "Research 120 distinct fact families",
+      "goal": "Give each of three promoted decks at least 40 reviewed families.",
+      "criteria": "Primary source, archived access date, exact scope, four defensible options, original explanation and family ID per item.",
+      "evidence": "research-duel-questions skill is available; the additional questions are not yet authored.",
+      "next": "Start with frozen history and stable science; prioritize ambiguity review."
+    },
+    {
+      "id": "P24",
+      "milestone": "Content depth",
+      "owner": "Independent editor",
+      "status": "planned",
+      "priority": "P0",
+      "dependencies": [
+        "P23"
+      ],
+      "title": "Audit every candidate",
+      "goal": "Prevent repeated facts and ambiguous answer keys.",
+      "criteria": "Independent answer verification; plausible distractors; unit/era/sex/competition clarity; conflict resolution and source rights recorded.",
+      "evidence": "Automated drafting alone cannot approve a question.",
+      "next": "Reject unsourced superlatives, unstable records without as-of dates and copied prose."
+    },
+    {
+      "id": "P25",
+      "milestone": "Content depth",
+      "owner": "Game analyst",
+      "status": "planned",
+      "priority": "P1",
+      "dependencies": [
+        "P24",
+        "P20"
+      ],
+      "title": "Calibrate reading and difficulty",
+      "goal": "Fit questions to mode and timer.",
+      "criteria": "Measure length, timeouts, accuracy and ambiguity flags by audience; enough respondents before difficulty labels become empirical.",
+      "evidence": "Current simple/expert/extreme labels are editorial.",
+      "next": "Keep identical competitive cards; no hidden adaptive advantages."
+    },
+    {
+      "id": "P26",
+      "milestone": "Content depth",
+      "owner": "Editorial operations",
+      "status": "planned",
+      "priority": "P0",
+      "dependencies": [
+        "P24"
+      ],
+      "title": "Create correction and retirement tools",
+      "goal": "Maintain trust after publication.",
+      "criteria": "Report-question flow, quarantine switch, versioned corrections, review dates and audit trail; affected facts can be retired.",
+      "evidence": "Current source links are visible; in-app disputes and remote retirement are planned.",
+      "next": "Add the smallest moderation surface before opening submissions."
+    },
+    {
+      "id": "P27",
+      "milestone": "Content depth",
+      "owner": "Localization lead",
+      "status": "planned",
+      "priority": "P1",
+      "dependencies": [
+        "P25"
+      ],
+      "title": "Test language readiness",
+      "goal": "Validate actual English comprehension by launch cohort.",
+      "criteria": "Cognitive interviews on cards; first localized deck only after equivalent meaning and distractor quality are reviewed.",
+      "evidence": "English readiness in SAM is assumed; no Hindi or other localized bank is shipped.",
+      "next": "Recalculate reachable audience when reading readiness is observed."
+    },
+    {
+      "id": "P28",
+      "milestone": "Content depth",
+      "owner": "Editorial lead",
+      "status": "blocked",
+      "priority": "P2",
+      "dependencies": [
+        "P25",
+        "P26"
+      ],
+      "title": "Expand to 300, then 600 families",
+      "goal": "Scale depth only after upkeep works.",
+      "criteria": "Each expansion gate has sufficient unseen coverage, named maintainers and no unresolved critical factual errors.",
+      "evidence": "Blocked on quality, throughput and real session repetition.",
+      "next": "Basketball/NFL, tennis, biology, physics and computing follow measured preference."
+    },
+    {
+      "id": "P29",
+      "milestone": "Demand evidence",
+      "owner": "Growth lead",
+      "status": "blocked",
+      "priority": "P0",
+      "dependencies": [
+        "P20",
+        "P21",
+        "P24"
+      ],
+      "title": "Recruit three separate cohorts",
+      "goal": "Test audience preference with bounded effort.",
+      "criteria": "At least 100 activated participants per wedge across multiple communities; label recruiting bias and separate bots/humans.",
+      "evidence": "No community messages, ad campaigns or paid acquisition have been sent.",
+      "next": "Use permitted communities and consented invitations once pilot gates pass."
+    },
+    {
+      "id": "P30",
+      "milestone": "Demand evidence",
+      "owner": "Product analyst",
+      "status": "planned",
+      "priority": "P0",
+      "dependencies": [
+        "P29"
+      ],
+      "title": "Review activation and return",
+      "goal": "Measure chosen repeat value, not session inflation.",
+      "criteria": "Target ≥70% first-match completion and ≥25% return in days 7–13; denominators and uncertainty shown.",
+      "evidence": "These are proposed management gates; no retention is measured yet.",
+      "next": "Below 15% return after two repair cycles: pause expansion."
+    },
+    {
+      "id": "P31",
+      "milestone": "Demand evidence",
+      "owner": "Growth lead",
+      "status": "planned",
+      "priority": "P0",
+      "dependencies": [
+        "P29"
+      ],
+      "title": "Test human social value",
+      "goal": "Check whether friend play merits investment.",
+      "criteria": "Target ≥15% voluntary inviters and ≥50% accepted invites completing a match; track access failures separately.",
+      "evidence": "A bot rematch is not a human social conversion.",
+      "next": "Repair failed room entry before recruiting more users."
+    },
+    {
+      "id": "P32",
+      "milestone": "Demand evidence",
+      "owner": "Product lead",
+      "status": "planned",
+      "priority": "P1",
+      "dependencies": [
+        "P30",
+        "P31"
+      ],
+      "title": "Re-estimate SAM from observations",
+      "goal": "Replace assumptions before expanding scope.",
+      "criteria": "Report audience definition, sampled interest, overlap, English readiness, uncertainty and reachable channel constraints.",
+      "evidence": "57.6m base SAM remains an illustrative future scenario.",
+      "next": "Choose one primary wedge; do not rank tiny differences as proof."
+    },
+    {
+      "id": "P33",
+      "milestone": "Demand evidence",
+      "owner": "Experience lead",
+      "status": "blocked",
+      "priority": "P2",
+      "dependencies": [
+        "P30"
+      ],
+      "title": "Test a voluntary weekly ritual",
+      "goal": "Encourage return without a punishment loop.",
+      "criteria": "One opt-in weekly goal with a stopping point; no streak loss, fake scarcity, paid advantage or notification default-on.",
+      "evidence": "Weekly collections and friend rituals are proposals, not shipped features.",
+      "next": "Compare qualitative value and consented return; retire if it adds pressure without value."
+    },
+    {
+      "id": "P34",
+      "milestone": "Scale readiness",
+      "owner": "Backend lead",
+      "status": "planned",
+      "priority": "P0",
+      "dependencies": [
+        "P18",
+        "P20"
+      ],
+      "title": "Measure present operating cost",
+      "goal": "Use real metrics before changing transport.",
+      "criteria": "Track concurrent active rooms, polls/sec, p50/p95/p99 request time, D1 contention, refunds and error rates under a documented load mix.",
+      "evidence": "Active 500ms polling means roughly four state requests/sec per two-human room; bot rooms roughly two.",
+      "next": "Repeat production-like load with actual service limits; local stress is not a capacity promise."
+    },
+    {
+      "id": "P35",
+      "milestone": "Scale readiness",
+      "owner": "Backend lead",
+      "status": "planned",
+      "priority": "P0",
+      "dependencies": [
+        "P34"
+      ],
+      "title": "Bound room and abuse costs",
+      "goal": "Protect availability during wider access.",
+      "criteria": "Per-identity creation/read limits, maximum active rooms, TTL cleanup, audit bounds and observability without secret logging.",
+      "evidence": "Existing room expiry and request checks do not equal a complete abuse program.",
+      "next": "Set budgets from traffic measurements and enforce at a shared boundary."
+    },
+    {
+      "id": "P36",
+      "milestone": "Scale readiness",
+      "owner": "Realtime engineer",
+      "status": "blocked",
+      "priority": "P1",
+      "dependencies": [
+        "P34",
+        "P35"
+      ],
+      "title": "Evaluate per-room actors and push",
+      "goal": "Reduce polling where it is actually expensive.",
+      "criteria": "Prototype one authoritative room actor, WebSocket reconnect snapshot/revision protocol and durable deadlines; compare cost/tail latency.",
+      "evidence": "No WebSocket or actor migration is shipped.",
+      "next": "Keep state transitions idempotent; do not infer physical zero latency from push."
+    },
+    {
+      "id": "P37",
+      "milestone": "Scale readiness",
+      "owner": "Integrity lead",
+      "status": "blocked",
+      "priority": "P0",
+      "dependencies": [
+        "P18",
+        "P35"
+      ],
+      "title": "Design ranked fairness separately",
+      "goal": "Keep browser timing limitations explicit.",
+      "criteria": "Threat model replay/tampering/automation, timing uncertainty, device bias and disconnect abuse; choose score-first or unranked outcomes where needed.",
+      "evidence": "Local timing can reduce packet bias but cannot prove an honest client.",
+      "next": "No paid stakes or verified ranking until the trust model is deliberately resolved."
+    },
+    {
+      "id": "P38",
+      "milestone": "Scale readiness",
+      "owner": "Data engineer",
+      "status": "blocked",
+      "priority": "P1",
+      "dependencies": [
+        "P32",
+        "P35"
+      ],
+      "title": "Add accounts only for demonstrated need",
+      "goal": "Enable cross-device collections without inventing a wallet.",
+      "criteria": "Auth, account deletion, journal migration/merge, retention and session revocation; separate any future ledger from room JSON.",
+      "evidence": "Current journal and roadmap are browser-local; room coins reset each match.",
+      "next": "Validate demand for cross-device continuity before scope expansion."
+    },
+    {
+      "id": "P39",
+      "milestone": "Scale readiness",
+      "owner": "Reliability lead",
+      "status": "blocked",
+      "priority": "P0",
+      "dependencies": [
+        "P36",
+        "P37"
+      ],
+      "title": "Test recovery and rollout",
+      "goal": "Fail safely under process, region and database faults.",
+      "criteria": "Soak/load/fault tests, duplicate settlement checks, reconnect resync, rollback rehearsal and documented observed limits.",
+      "evidence": "Single local load result does not certify a production ceiling.",
+      "next": "Define SLOs from pilot behavior and stop rollouts on violated invariants."
+    },
+    {
+      "id": "P40",
+      "milestone": "Scale readiness",
+      "owner": "Product lead",
+      "status": "blocked",
+      "priority": "P0",
+      "dependencies": [
+        "P30",
+        "P31",
+        "P39"
+      ],
+      "title": "Approve the next investment",
+      "goal": "Make expansion a decision with evidence.",
+      "criteria": "Review retention, trust, editorial cost, accessibility and operating budgets; explicit go/repair/stop with owners.",
+      "evidence": "Private free-coin POC remains the current release boundary.",
+      "next": "Legal and access review precede any change to the existing launch constraints."
+    },
+    {
+      "id": "R01",
+      "title": "Inspect trivia customer criticism",
+      "owner": "Trivia research panel",
+      "goal": "Translate actual review incidents into specific safeguards.",
+      "criteria": "Dated deduplicated observations, locator, unknown-version fields and official counterchecks.",
+      "evidence": "16 observations across four trivia apps; 17 source records.",
+      "next": "Refresh disputed or old cases before a market comparison.",
+      "dependencies": [],
+      "status": "done",
+      "priority": "P0",
+      "milestone": "Curiosity Arcade"
+    },
+    {
+      "id": "R02",
+      "title": "Inspect adjacent learning products",
+      "owner": "Learning research panel",
+      "goal": "Preserve useful motivation while reducing avoidable pressure and confusion.",
+      "criteria": "Include criticism and positive counterexamples; qualify entitlement and accessibility claims.",
+      "evidence": "16 observations across four learning products; 18 source records.",
+      "next": "Recruit actual players; do not infer prevalence from this sample.",
+      "dependencies": [],
+      "status": "done",
+      "priority": "P0",
+      "milestone": "Curiosity Arcade"
+    },
+    {
+      "id": "R03",
+      "title": "Choose evidence-informed play and art contracts",
+      "owner": "Experience panel + lead",
+      "goal": "Make every additional reward serve an understandable activity.",
+      "criteria": "Primary-study limits, bounded book access and specific screen/state definitions.",
+      "evidence": "Eight-source brief; Curiosity Arcade direction; source-backed finite activity loops.",
+      "next": "Test meaning, comprehension and freedom to stop.",
+      "dependencies": [
+        "R01",
+        "R02"
+      ],
+      "status": "done",
+      "priority": "P1",
+      "milestone": "Curiosity Arcade"
+    },
+    {
+      "id": "R04",
+      "title": "Create and exercise a reusable design skill",
+      "owner": "Skill panel",
+      "goal": "Make the review-to-implementation process reproducible.",
+      "criteria": "Validate/install skill, apply it to raw evidence, retain unverified gates.",
+      "evidence": "Review-led Game Design skill installed and forward-tested; six prioritized requirements.",
+      "next": "Reuse for next review refresh; no background automation is active.",
+      "dependencies": [
+        "R01",
+        "R02"
+      ],
+      "status": "done",
+      "priority": "P1",
+      "milestone": "Curiosity Arcade"
+    },
+    {
+      "id": "R05",
+      "title": "Run pre-implementation advisor loop",
+      "owner": "Independent advisor",
+      "goal": "Catch state, timing and evidence hazards before adding progression.",
+      "criteria": "Independent source review with consequence and acceptance criteria.",
+      "evidence": "Loop 1 recorded 11 hazards; decisions and fixes tracked.",
+      "next": "Reinspect implementation in R13.",
+      "dependencies": [
+        "R03"
+      ],
+      "status": "done",
+      "priority": "P0",
+      "milestone": "Curiosity Arcade"
+    },
+    {
+      "id": "R06",
+      "title": "Bind activity to stable fact identities",
+      "owner": "Gameplay engineering",
+      "goal": "Avoid duplicate credit from rewording and repeat rooms.",
+      "criteria": "IDs released only after duel closure; awards survive rolling journal caps.",
+      "evidence": "Settled projection IDs and separate 1,200-ID ledger; repeat/edited/cap tests.",
+      "next": "Add content versions and migration/retirement policy before bank expansion.",
+      "dependencies": [
+        "R05"
+      ],
+      "status": "done",
+      "priority": "P0",
+      "milestone": "Curiosity Arcade"
+    },
+    {
+      "id": "R07",
+      "title": "Make local saves, exports and reset coherent",
+      "owner": "Frontend engineering",
+      "goal": "Preserve browser-local activity through concurrent tabs and retries.",
+      "criteria": "Transactional writes, queued exports, generation reset, visible failure semantics.",
+      "evidence": "IndexedDB + BroadcastChannel; 30 concurrent writes exercised with fake IndexedDB; advisor fixes inspected.",
+      "next": "Observe actual browser quota, blocked storage and recovery.",
+      "dependencies": [
+        "R06"
+      ],
+      "status": "done",
+      "priority": "P0",
+      "milestone": "Curiosity Arcade"
+    },
+    {
+      "id": "R08",
+      "title": "Open untimed Discovery before the first match",
+      "owner": "Gameplay UX",
+      "goal": "Let first visitors complete a pressure-free loop.",
+      "criteria": "Three unique sourced cards, one attempt each, explanation/save/next/finish; no room/coin mutation.",
+      "evidence": "Practice API and complete Discovery UI; duplicate-attempt and API regressions.",
+      "next": "Observe first-use comprehension; teaching answers intentionally available.",
+      "dependencies": [
+        "R07"
+      ],
+      "status": "done",
+      "priority": "P1",
+      "milestone": "Curiosity Arcade"
+    },
+    {
+      "id": "R09",
+      "title": "Implement Passport and guaranteed finishes",
+      "owner": "Product + frontend",
+      "goal": "Connect exploration, explanation and practice without decay or paid advantage.",
+      "criteria": "Three finite missions, explicit 10/5/5 activity rules, deterministic cosmetics and real counts.",
+      "evidence": "Passport/titles/Orbit/Grid/Rally; eligibility/idempotence/corrupt-state regressions.",
+      "next": "Measure whether players understand activity versus knowledge.",
+      "dependencies": [
+        "R06",
+        "R08"
+      ],
+      "status": "done",
+      "priority": "P1",
+      "milestone": "Curiosity Arcade"
+    },
+    {
+      "id": "R10",
+      "title": "Build original optional 3D artwork",
+      "owner": "Art + frontend",
+      "goal": "Give the lobby a memorable, tactile identity.",
+      "criteria": "Static fallback, explicit opt-in, capped rendering, disposal and no renderer in a room.",
+      "evidence": "Historical Curiosity Arcade stage shipped. Current optional 3D lives in a separate showroom and uses a metallic token/orbit scene; all prior fallback/lifecycle guards remain.",
+      "next": "Measure actual low-end-device performance in R16.",
+      "dependencies": [
+        "R03"
+      ],
+      "status": "done",
+      "priority": "P1",
+      "milestone": "Curiosity Arcade"
+    },
+    {
+      "id": "R11",
+      "title": "Rebuild responsive play hierarchy",
+      "owner": "Gameplay UX",
+      "goal": "Keep mobile first play direct and answers stable.",
+      "criteria": "Game builder before art; named navigation; CTA before advanced settings; 44px key controls.",
+      "evidence": "Historical Curiosity Arcade layout shipped. S01 supersedes its palette and home hierarchy; click-release input remains the contract.",
+      "next": "Observe phone, zoom, screen-reader and pointer transitions; source is not physical QA.",
+      "dependencies": [
+        "R08",
+        "R10"
+      ],
+      "status": "done",
+      "priority": "P0",
+      "milestone": "Curiosity Arcade"
+    },
+    {
+      "id": "R12",
+      "title": "Make the Vault a stable revisit space",
+      "owner": "Frontend engineering",
+      "goal": "Preserve context when other tabs save new facts.",
+      "criteria": "Stable recall snapshot, source/bookmark routes, clear empty/finish state.",
+      "evidence": "Frozen recall deck; epoch reset closes stale study; unified export and source disclosures.",
+      "next": "Observe a user finding, reading, recalling and finishing.",
+      "dependencies": [
+        "R07"
+      ],
+      "status": "done",
+      "priority": "P1",
+      "milestone": "Curiosity Arcade"
+    },
+    {
+      "id": "R13",
+      "title": "Close the second advisor loop",
+      "owner": "Independent advisor",
+      "goal": "Repair concrete defects in the implemented paths.",
+      "criteria": "Review findings resolved or explicitly gated with evidence.",
+      "evidence": "All B01–B07 resolved in source; 15 targeted tests independently passed; no reviewed source blocker.",
+      "next": "Keep empirical gates open; inspect Studio evidence separately.",
+      "dependencies": [
+        "R09",
+        "R11",
+        "R12"
+      ],
+      "status": "done",
+      "priority": "P0",
+      "milestone": "Curiosity Arcade"
+    },
+    {
+      "id": "R14",
+      "title": "Publish inspectable review evidence and plan",
+      "owner": "Product lead",
+      "goal": "Make the research and implementation reviewable.",
+      "criteria": "Searchable 32-row evidence panel, full briefs, source/issue counts and honest release decisions.",
+      "evidence": "32 observations/8 apps, 69 source URLs and historical Curiosity Arcade report remain accessible. Current decision record and roadmap incorporate the rivalry pass.",
+      "next": "Use local notes/export to record actual observations; refresh source versions.",
+      "dependencies": [
+        "R01",
+        "R02",
+        "R04",
+        "R13"
+      ],
+      "status": "done",
+      "priority": "P1",
+      "milestone": "Curiosity Arcade"
+    },
+    {
+      "id": "R15",
+      "title": "Verify and build the private arcade release",
+      "owner": "Engineering lead",
+      "goal": "Confirm existing duel invariants and new local progression contracts.",
+      "criteria": "52 regressions pass, TypeScript passes, production build succeeds; preserve owner-private access.",
+      "evidence": "Historical v4 verification: 52 regressions, TypeScript and production build passed. Current pass is S05.",
+      "next": "Run observed gates before broadening audience.",
+      "dependencies": [
+        "R13",
+        "R14"
+      ],
+      "status": "done",
+      "priority": "P0",
+      "milestone": "Curiosity Arcade"
+    },
+    {
+      "id": "R16",
+      "title": "Observe graphics and touch on real devices",
+      "owner": "Accessibility + frontend",
+      "goal": "Validate the new design where source checks cannot.",
+      "criteria": "320–430px, landscape, 200% zoom, low-end/no-WebGL, reduced-motion, context-loss, keyboard and screen reader; capture failures.",
+      "evidence": "No physical-device or GPU session performed.",
+      "next": "Recruit permitted testers and exercise static/3D, scroll/click, export/reset and recall across tabs.",
+      "dependencies": [
+        "R15",
+        "P14"
+      ],
+      "status": "planned",
+      "priority": "P0",
+      "milestone": "Arcade evidence gates"
+    },
+    {
+      "id": "R17",
+      "title": "Broaden review sampling by audience",
+      "owner": "Research panel",
+      "goal": "Reduce the English/public-listing blind spots.",
+      "criteria": "Predeclare region/language/platform quotas; sample recent versions and positive/mixed/critical cases with repeatable locators.",
+      "evidence": "Current purposive sample is not globally representative.",
+      "next": "Add India/local-language and European storefront research when those launches are concrete.",
+      "dependencies": [
+        "R01",
+        "R02"
+      ],
+      "status": "planned",
+      "priority": "P1",
+      "milestone": "Arcade evidence gates"
+    },
+    {
+      "id": "R18",
+      "title": "Create a question-report and correction loop",
+      "owner": "Content + backend",
+      "goal": "Respond to disputed facts without silently rewriting past results.",
+      "criteria": "Versioned report receipt, editorial review, correction/retirement and affected-match trace; disclose local-only reports if used.",
+      "evidence": "Local concern records, encountered-fact snapshots, note editing, export and reset are implemented in S03. Remote delivery, editorial status and versioned correction remain unimplemented.",
+      "next": "Define the editorial workflow using inspectable exported local records; implement remote reporting only with that service.",
+      "dependencies": [
+        "P24",
+        "P26",
+        "R06"
+      ],
+      "status": "planned",
+      "priority": "P0",
+      "milestone": "Arcade evidence gates"
+    },
+    {
+      "id": "R19",
+      "title": "Validate activity meaning and voluntary return",
+      "owner": "Product research",
+      "goal": "Check whether the gamification serves the intended curiosity experience.",
+      "criteria": "Observe ten first sessions; users can explain stamps, locate source and stop; later return tracked only with approved consent.",
+      "evidence": "No measured learning gain, retention lift or customer satisfaction effect.",
+      "next": "Run task-based sessions before changing reward schedules.",
+      "dependencies": [
+        "R15",
+        "P17",
+        "P19"
+      ],
+      "status": "planned",
+      "priority": "P1",
+      "milestone": "Arcade evidence gates"
+    },
+    {
+      "id": "R20",
+      "title": "Control repeat exposure before competitive expansion",
+      "owner": "Content + gameplay",
+      "goal": "Avoid treating memorized sample buttons as new knowledge.",
+      "criteria": "Versioned fact families, per-player exposure policy, insufficient-pool fallback and minimum deck-depth gate.",
+      "evidence": "Within-match unique sampling and stable activity IDs exist; across-room repeat suppression does not.",
+      "next": "Research 120 audited families, then implement exposure-aware matching.",
+      "dependencies": [
+        "P23",
+        "P24",
+        "R06"
+      ],
+      "status": "blocked",
+      "priority": "P0",
+      "milestone": "Arcade evidence gates"
+    },
+    {
+      "id": "S01",
+      "milestone": "Rivalry pass",
+      "owner": "Product + frontend",
+      "status": "done",
+      "priority": "P1",
+      "dependencies": [
+        "R11"
+      ],
+      "title": "Rebuild the competitive identity and first-play hierarchy",
+      "goal": "Make a real duel the dominant first action.",
+      "criteria": "Direct default bot play, distinct format contracts, mobile builder before artwork, consistent dark/light identity.",
+      "evidence": "FACT//DUEL midnight/chartreuse design, original metallic artwork, focused lobby and compact HUD.",
+      "next": "Observe first-play and narrow-screen flows."
+    },
+    {
+      "id": "S02",
+      "milestone": "Rivalry pass",
+      "owner": "Gameplay engineering",
+      "status": "done",
+      "priority": "P0",
+      "dependencies": [
+        "R06",
+        "R12"
+      ],
+      "title": "Retain and explain the whole match",
+      "goal": "Keep all completed rounds inspectable without leaking future answers.",
+      "criteria": "Five-round snapshots deduplicate; only closed answer/receipt fields exposed; whole-match verdict separate from final round.",
+      "evidence": "New retained history and recap tabs, exact choices, timing types, cancellation recovery and secrecy regressions.",
+      "next": "Observe two-screen recovery and final-result comprehension."
+    },
+    {
+      "id": "S03",
+      "milestone": "Rivalry pass",
+      "owner": "Content + frontend",
+      "status": "done",
+      "priority": "P0",
+      "dependencies": [
+        "R07",
+        "R06"
+      ],
+      "title": "Save and edit local question concerns",
+      "goal": "Preserve the fact and concern together without implying a support service.",
+      "criteria": "Encountered snapshot, reason/note, idempotent save/update, local status, Vault/export/reset and old-profile migration.",
+      "evidence": "Local issue form and Vault list implemented; note updates/migration/reset tested. Nothing is sent.",
+      "next": "Use the receipts to specify remote editorial reporting in R18."
+    },
+    {
+      "id": "S04",
+      "milestone": "Rivalry pass",
+      "owner": "Independent advisor + lead",
+      "status": "done",
+      "priority": "P0",
+      "dependencies": [
+        "S01",
+        "S02",
+        "S03"
+      ],
+      "title": "Resolve the rivalry advisor findings",
+      "goal": "Repair semantic and state defects in the revised flow.",
+      "criteria": "Direct replay, accurate timeout denominator, actual choices, bot labels, cancelled history, void labels and light contrast.",
+      "evidence": "Two bounded advisor passes; nine findings repaired or source-mitigated; no reviewed code blocker.",
+      "next": "Keep physical rendering and interaction observations pending."
+    },
+    {
+      "id": "S05",
+      "milestone": "Rivalry pass",
+      "owner": "Engineering lead",
+      "status": "done",
+      "priority": "P0",
+      "dependencies": [
+        "S04"
+      ],
+      "title": "Verify and publish the rivalry pass",
+      "goal": "Keep prior duel invariants intact while completing the improved experience.",
+      "criteria": "58 regressions, TypeScript and production build pass; private audience preserved; documents reconcile.",
+      "evidence": "New automated cases cover five-round history, issues, recap recovery and presentation correctness.",
+      "next": "Run P15/P16/P18 and R16 before claiming device or WAN validation."
+    },
+    {
+      "id": "E01",
+      "milestone": "Expeditions",
+      "owner": "Product + frontend",
+      "status": "done",
+      "priority": "P1",
+      "dependencies": [
+        "S01"
+      ],
+      "title": "Build a finite, game-native front door",
+      "goal": "Choose a meaningful visit objective and keep competitive play direct.",
+      "criteria": "Clubhouse, nine narrow six-question routes, three named chapters, Continue, direct bot modes, separate friend/join/settings and visible stamp case.",
+      "evidence": "New Clubhouse, expedition atlas, chapter screens and collectible case implemented; existing 3D/art reused.",
+      "next": "Observe first-session navigation and route comprehension."
+    },
+    {
+      "id": "E02",
+      "milestone": "Expeditions",
+      "owner": "Gameplay engineering",
+      "status": "done",
+      "priority": "P0",
+      "dependencies": [
+        "E01"
+      ],
+      "title": "Make confidence a real scoring decision",
+      "goal": "Add agency before every first answer without coin advantages.",
+      "criteria": "Steady +2/0 and Bold +3/−1; signed totals; immutable first choices; stamp at any score; exact score feasibility validation.",
+      "evidence": "New pure rule reducer, locked stance/answer, run score and source-backed receipts; all-correct/all-wrong and corrupted-score tests.",
+      "next": "Ask players to explain the two choices and observe whether they use them deliberately."
+    },
+    {
+      "id": "E03",
+      "milestone": "Expeditions",
+      "owner": "State engineering",
+      "status": "done",
+      "priority": "P0",
+      "dependencies": [
+        "E02",
+        "R06"
+      ],
+      "title": "Make progress durable, bounded and honest",
+      "goal": "Pause and resume each route without overwriting or farming rewards.",
+      "criteria": "Atomic journal/run transition, exact run/index guards, reset epoch, six-answered-awaiting-Finish recovery, first/best separation, nine bounded snapshots, export/migration.",
+      "evidence": "Reducer and transaction races pass; duplicate Finish cannot earn twice; malformed completed-run ownership is sanitized.",
+      "next": "Test real browser storage failure, two tabs and refresh flows; define future version archive before route-key changes."
+    },
+    {
+      "id": "E04",
+      "milestone": "Expeditions",
+      "owner": "Advisor + research lead",
+      "status": "done",
+      "priority": "P1",
+      "dependencies": [
+        "E01",
+        "E02",
+        "E03"
+      ],
+      "title": "Challenge the new loop with independent evidence",
+      "goal": "Separate substantive mechanics from decorative progression.",
+      "criteria": "Two source-review passes, primary/official research access ledger, exact limitations, four findings repaired.",
+      "evidence": "Seven-source bounded report; independent advisor accepted the core as substantive and identified feedback/navigation/corruption repairs.",
+      "next": "Use empirical gates instead of assuming retention or mastery effects."
+    },
+    {
+      "id": "E05",
+      "milestone": "Expeditions",
+      "owner": "Engineering lead",
+      "status": "done",
+      "priority": "P0",
+      "dependencies": [
+        "E04"
+      ],
+      "title": "Verify and publish the expedition release",
+      "goal": "Preserve existing live-duel invariants while releasing the new solo mode.",
+      "criteria": "68 tests, TypeScript and production build pass; private access retained; current reports and links reconcile.",
+      "evidence": "New expedition, score-corruption and concurrent browser-transaction regressions; source-only review boundary documented.",
+      "next": "Run explicit browser/device/WAN checks in existing gates before claiming observed validation."
+    },
+    {
+      "id": "E06",
+      "milestone": "Expeditions",
+      "owner": "Product research",
+      "status": "planned",
+      "priority": "P1",
+      "dependencies": [
+        "E05"
+      ],
+      "title": "Observe the complete expedition-to-duel flow",
+      "goal": "Determine whether people understand the objective, score and reward.",
+      "criteria": "Observe start, confidence choice, pause/resume, finish, source review, stamp inspection and voluntary duel start; report denominator and confusion.",
+      "evidence": "No customer or browser observation this turn.",
+      "next": "Recruit an authorized formative cohort and define tasks before collecting data."
+    },
+    {
+      "id": "E07",
+      "milestone": "Expeditions",
+      "owner": "Content lead",
+      "status": "planned",
+      "priority": "P1",
+      "dependencies": [
+        "E06"
+      ],
+      "title": "Deepen the editorial packs beyond six questions",
+      "goal": "Give returning fans a reason to play beyond memorized sample cards.",
+      "criteria": "Use research-duel-questions skill; draft versioned question families, primary sources, ambiguity checks, balanced distractors, rights and calibration plan.",
+      "evidence": "54 existing items mapped into narrow routes; no new question research claimed.",
+      "next": "Prioritize one sports and one science route using observed demand; preserve old run receipts before shipping replacements."
+    },
+    {
+      "id": "E08",
+      "milestone": "Expeditions",
+      "owner": "State + content lead",
+      "status": "planned",
+      "priority": "P0",
+      "dependencies": [
+        "E03",
+        "E07"
+      ],
+      "title": "Specify compatible route-version history",
+      "goal": "Expand content without erasing or mislabeling earlier achievements.",
+      "criteria": "Archive old first/best summaries and frozen receipts; distinguish changed facts from new item families; define migration and reset/export compatibility.",
+      "evidence": "Current route keys contain version 1; snapshots are frozen, but future retired-version archive is not implemented.",
+      "next": "Design and test a v1-to-v2 migration before changing or removing a route key."
+    }
+  ]
+}

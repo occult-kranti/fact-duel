@@ -1,0 +1,11 @@
+Use case: stylized-concept
+Asset type: compact game-native lobby background for a premium sports and science four-choice 1v1 trivia game.
+Primary request: Generate exactly one original wide cinematic 3D rendered still life, landscape 1536x864 pixels.
+Scene/backdrop: Dark midnight green-black studio with a sleek dark competition dais. No stars or nebula. The objects levitate just above the dais.
+Subject: A large polished dark-chrome trivia token or thick disc with only one abstract lightning-shaped cut engraved into its face; beside it a sculptural metallic sports sphere combining basketball seam language with subtle football panel geometry; clean luminous orbital rings make the science identity legible. Token is the dominant object.
+Composition/framing: Horizontal layout weighted strongly to the RIGHT. All recognizable objects are confined to the right 60%. The left 40% is empty, uninterrupted, very dark negative space for an interface headline. Keep the object cluster compact and broadly horizontal, fully visible, with comfortable surrounding space, appropriate for a compact in-game lobby panel rather than a tall landing page hero.
+Style/medium: Confident cinematic high-end 3D product rendering with fine realistic materials and precise silhouettes.
+Lighting/mood: Dramatic studio illumination, strong backlit edge light, restrained electric glow.
+Color palette: Midnight green-black base, electric chartreuse and hot coral accent light.
+Materials/textures: Polished dark chrome token, subtly brushed metal sphere with engraved sports seams, glossy dark dais, luminous slim orbital rings.
+Constraints: No text, letters, digits, logos, watermarks, people, UI screenshot, beige, pastels, confetti, clutter. No extra emblems on the token beyond its abstract lightning cut. Sports plus science should read clearly.

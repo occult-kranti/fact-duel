@@ -1,0 +1,319 @@
+[
+  {
+    "type": "heading",
+    "level": 1,
+    "text": "FACT//DUEL: make knowledge feel like a place worth exploring"
+  },
+  {
+    "type": "paragraph",
+    "text": "Research and gameplay proposal · 12 September 2026 · bounded independent panel contribution"
+  },
+  {
+    "type": "paragraph",
+    "text": "This is an original product design informed by seven primary or official sources. It is not a systematic review, a complete-book reading exercise, a player study, or evidence that these mechanics will improve retention. The current 54-question editorial sample and Passport reducer were inspected read-only. Existing question sources were not independently re-audited in this task."
+  },
+  {
+    "type": "heading",
+    "level": 2,
+    "text": "The failure was structural"
+  },
+  {
+    "type": "paragraph",
+    "text": "The current game has working duels, an explicit bot, sources, a journal and a reliable results receipt. Its secondary loop is nevertheless mostly a counter: encounter a fact, open a panel, try a recall question, receive points and a card finish. The mode tour rewards three lengths of the same interaction. The lobby asks users to configure a match before offering a compelling reason to care about a particular one. Art frames the product; it does not change what players decide, discover, or keep."
+  },
+  {
+    "type": "paragraph",
+    "text": "The correction should be visible in the first minute: choose a subject that means something, see the finite challenge and its artifact, make an answer choice, get an illuminating explanation, and visibly change the world or collection. More currencies, streaks and mode names would increase complexity while leaving the underlying experience intact."
+  },
+  {
+    "type": "heading",
+    "level": 2,
+    "text": "Executive recommendation"
+  },
+  {
+    "type": "paragraph",
+    "text": "Make **Expeditions** the editorial front door and keep **Duel** as the fast competitive lane. Build nine authored six-question trails from the existing bank, with three two-question chapters each. Before answering, choose Steady (+2 correct / 0 wrong, the default) or Bold (+3 correct / −1 wrong). The choice changes only this run’s score; it never wagers coins or gates the completion stamp. Let players choose any trail; guide the order inside a trail to build a coherent mini-story. Start untimed, show a six-node route and allow stopping after any answer. A finished trail awards one permanent, inspectable topic artifact. Accuracy is a record of those attempts, not a qualification or rank."
+  },
+  {
+    "type": "paragraph",
+    "text": "Keep Lucky Guess available as an optional timed exhibition using the existing duel rules. A bot result must never block an expedition stamp or be described as defeating a human opponent. The bot is a disclosed simulation, so its appeal comes from tension and a comprehensible challenge, not invented community."
+  },
+  {
+    "type": "paragraph",
+    "text": "This creates three kinds of agency: **where to go**, **whether to score Steady or Bold**, and **whether to take the optional race**. Each choice has an actual consequence for content, this run’s score, or time pressure. Buying more choices is unnecessary."
+  },
+  {
+    "type": "heading",
+    "level": 2,
+    "text": "Evidence translated into decisions"
+  },
+  {
+    "type": "table",
+    "rows": [
+      [
+        "Source and access scope",
+        "What the source supports",
+        "Product inference and limitation"
+      ],
+      [
+        "[Ryan, Rigby & Przybylski (2006), The Motivational Pull of Video Games](https://selfdeterminationtheory.org/SDT/documents/2006_RyanRigbyPrzybylski_MandE.pdf). Author-hosted original paper; abstract, framework and study descriptions inspected.",
+        "The four studies examine autonomy, competence and relatedness in game motivation. Choice, understandable controls, suitable challenge and informational feedback are relevant design variables.",
+        "Let players choose a trail and their pace; make progress legible. Do not force a timed bot race to obtain an exploration reward. These are hypotheses for this product, not a demonstrated retention effect. A named bot is not evidence of social relatedness."
+      ],
+      [
+        "[Roediger & Karpicke (2006), Test-Enhanced Learning](https://pubmed.ncbi.nlm.nih.gov/16507066/). Primary study abstract.",
+        "Retrieval practice with prose improved delayed retention compared with restudy, despite different immediate-performance patterns.",
+        "Ask before revealing and offer a later replay. “Answered correctly” is an observation; “mastered” is not established by one four-choice attempt. The studied free-recall task differs from browser trivia."
+      ],
+      [
+        "[Butler & Roediger (2008), Feedback Enhances the Positive Effects and Reduces the Negative Effects of Multiple-Choice Testing](https://link.springer.com/article/10.3758/MC.36.3.604). Publisher abstract.",
+        "Immediate and delayed feedback improved delayed correct recall and reduced intrusion of misleading options compared with no feedback.",
+        "Every submitted or revealed question should resolve into the accepted answer, concise explanation and source. Wrong answers should lead to useful information rather than an opaque failure animation. Timing and effect size do not directly transfer to this game."
+      ],
+      [
+        "[Ge et al. (2021), What Is the Mechanism Underlying the Interleaving Effect in Category Induction?](https://pubmed.ncbi.nlm.nih.gov/34975661/). Primary experimental abstract.",
+        "Three experiments on artistic-style categories support a role for discriminative contrast in interleaving; arbitrary mixing is not the tested mechanism.",
+        "Offer a finite mixed replay only after several trails have been visited. Label it “Mixed recall,” not scientifically optimized learning. Mixing cricket facts and molecular biology is variety; the paper does not establish a learning advantage for that mix."
+      ],
+      [
+        "[Duolingo, Adventures](https://blog.duolingo.com/adventures/). Official feature explanation.",
+        "The documented feature embeds familiar language tasks in scenarios, with characters, environmental interaction and feedback connected to the task.",
+        "Give an episode a purpose and let progress affect a visible scene. A sports/science game can reveal a stadium ticket, orbital chart or lab card after a short coherent trail. Do not copy characters, trade dress or the article’s efficacy language. Availability claims in an announcement are not a current exhaustive rollout inventory."
+      ],
+      [
+        "[Sporcle Support, An Introduction to SporcleBot](https://support.sporcle.com/hc/en-us/articles/35883332455565-An-introduction-to-SporcleBot). Official support, updated April 2025.",
+        "Sporcle documents category/subcategory discovery, challenges, a disable option, and that its bot result is a target score rather than a bot actually playing a quiz.",
+        "Be equally explicit about Lucky Guess’s random choices and scheduled response time. Borrow transparent framing and subject discovery, not Sporcle’s target-score algorithm: this product’s random bot is different."
+      ],
+      [
+        "[Raph Koster, A Theory of Fun, author-published excerpt](https://www.theoryoffun.com/excerpt.shtml). Prologue and Chapter One, not the whole book.",
+        "The practitioner account describes disengagement when a challenge becomes exhausted, excessively hard or too easy.",
+        "Give the small bank an honest end and a replay purpose. Nine finite artifacts fit the available content better than an endless league pretending to contain new challenge. This is a design judgment informed by an anecdotal framework, not causal research."
+      ]
+    ]
+  },
+  {
+    "type": "paragraph",
+    "text": "The finite endpoint, reward schedule and visual treatment below are original design decisions. None of these sources proves that six questions is optimal, that a chartreuse interface creates trust, or that cosmetic collections increase revenue."
+  },
+  {
+    "type": "heading",
+    "level": 2,
+    "text": "Content that can actually ship"
+  },
+  {
+    "type": "paragraph",
+    "text": "The present catalog has nine topics and six questions per topic. Use the actual scope in names rather than implying complete coverage of a sport or science. Six items cannot establish broad expertise. Suggested chapters create an editorial rhythm without inventing new facts."
+  },
+  {
+    "type": "table",
+    "rows": [
+      [
+        "Trail",
+        "Existing IDs",
+        "Editorial story hook",
+        "Earned artifact and honest scope"
+      ],
+      [
+        "**The Underdog Summer**",
+        "q001–q006",
+        "India’s 1983 triumph / The innings people remember",
+        "Embossed pavilion ticket; six questions spanning India’s World Cup history, mainly 1983 with one 2003 item"
+      ],
+      [
+        "**The Istanbul Comeback**",
+        "q007–q012",
+        "The final / The people behind it",
+        "Split-score stadium ticket; the 2005 Champions League final"
+      ],
+      [
+        "**The Chicago Story**",
+        "q013–q018",
+        "Jordan’s path / The supporting cast",
+        "Holographic court pass; Jordan and one Pippen fact"
+      ],
+      [
+        "**Green Bay, Then and Now**",
+        "q019–q024",
+        "Super Bowl snapshots / Earlier foundations",
+        "Enamel helmet crest; selected Green Bay history"
+      ],
+      [
+        "**Nadal’s Major Moments**",
+        "q025–q030",
+        "Breakthroughs / Fine margins",
+        "Foil tennis ticket; selected Nadal milestones"
+      ],
+      [
+        "**Beyond the Blue**",
+        "q031–q036",
+        "Giants and moons / The crew and craft",
+        "Orbital chart; Jupiter and Apollo 11, not all astronomy"
+      ],
+      [
+        "**The Invisible Rulebook**",
+        "q037–q042",
+        "Light and forces / Particles and constants",
+        "Particle schematic card; selected physics facts"
+      ],
+      [
+        "**Inside the Cell**",
+        "q043–q048",
+        "Information / Energy",
+        "Translucent cell slide; DNA and mitochondria"
+      ],
+      [
+        "**The Web and the Tuple**",
+        "q049–q054",
+        "The web’s beginnings / Python details",
+        "Circuit library card; web history and selected Python facts"
+      ]
+    ]
+  },
+  {
+    "type": "paragraph",
+    "text": "The chosen implementation uses three pairs corresponding to the existing simple/expert/extreme editorial groups. Present these as chapters or changing challenge, not a validated difficulty scale. Six items and static difficulty labels cannot establish calibrated expertise. Chapter subtitles can borrow the story hooks above without claiming every pair is a chronological sequence."
+  },
+  {
+    "type": "paragraph",
+    "text": "Do not hide most trails behind locks. All nine are available; the route inside the selected trail communicates the next step. Completing a trail changes its world marker from empty to filled and pins its artifact in the collection. The user can stop with a satisfying outcome after one trail, without promises of more content than exists."
+  },
+  {
+    "type": "heading",
+    "level": 2,
+    "text": "Screen contracts"
+  },
+  {
+    "type": "table",
+    "rows": [
+      [
+        "Screen/state",
+        "Primary action",
+        "Information required before the action",
+        "Observable result"
+      ],
+      [
+        "Home/world atlas",
+        "Continue the selected expedition, or choose one of the nine destinations",
+        "Topic, actual six-question scope, local progress, untimed status",
+        "Opens the next unfinished node; no modal name/configuration tax"
+      ],
+      [
+        "Trail detail",
+        "Begin / Resume",
+        "Three chapters, six nodes, preview of exact reward, progress and reset implications",
+        "Starts one question; already completed nodes remain inspectable"
+      ],
+      [
+        "Question",
+        "Choose A–D",
+        "One factual prompt, four stable choices, chapter/node position, explicit untimed state, Steady/Bold rule shown before submission",
+        "Records one first submission, then reveals accepted answer and evidence"
+      ],
+      [
+        "Answer receipt",
+        "Continue",
+        "User’s choice, Steady/Bold selection, score delta, accepted answer, explanation, source link, “save fact”",
+        "Commits progress once; previous/future answers cannot be altered through repeated clicks"
+      ],
+      [
+        "Chapter landing",
+        "Continue to the next chapter / Finish for now",
+        "Actual first-attempt record; next chapter number and subject",
+        "Gives a stopping point and returns to the same resume state later"
+      ],
+      [
+        "Trail finish",
+        "Keep artifact",
+        "Six submitted answers; actual first-run score and correct count",
+        "Grants one permanent topic stamp; repeated collection cannot farm points or currency"
+      ],
+      [
+        "Optional exhibition",
+        "Race Lucky Guess",
+        "Bot label, random choice/time explanation, current selected topic and actual duel rules",
+        "Opens a genuine existing bot room; outcome stays separate from expedition completion"
+      ],
+      [
+        "Collection",
+        "Inspect an earned artifact",
+        "Why and when it was earned, exact trail, saved facts, local-only scope",
+        "Returns to source-backed receipts; earned items are not empty decoration"
+      ],
+      [
+        "Mixed recall",
+        "Try a bounded set of encountered questions",
+        "It is replay, answers may be familiar, total item count, untimed",
+        "Records recall attempts separately; original first-pass record survives"
+      ]
+    ]
+  },
+  {
+    "type": "paragraph",
+    "text": "The selected implementation grants the artifact through an explicit Finish action after all six answers. Persist a resumable “all answered, awaiting finish” state; leaving or reloading must return to that finish action, not discard the run. Finishing and granting the artifact must be atomic and idempotent. A failed write should state that progress is available for this visit, matching the existing profile store’s semantics."
+  },
+  {
+    "type": "heading",
+    "level": 2,
+    "text": "Rewards, pacing and expressive design"
+  },
+  {
+    "type": "paragraph",
+    "text": "Use one progression vocabulary: nodes answered, trails completed, artifacts collected. The six-card score is a run result, not another spendable currency. Avoid XP multipliers, energy, streak currency and fake fans. Preserve existing free room coins as part of Duel; expedition rewards should never be wagered or improve answer chances."
+  },
+  {
+    "type": "paragraph",
+    "text": "One answered node illuminates one route light. Two nodes complete a chapter. Six answers plus explicit Finish earn one artifact. All nine trails fill the atlas and produce an explicit collection-complete state. A perfect first pass may be noted as “6/6 on this first pass,” but should not unlock a superior status or imply general expertise. Repeat attempts receive clear feedback and retain their own counts without rewriting the immutable first-run history. A best score on familiar repeated cards must be labeled practice, not improved general ability."
+  },
+  {
+    "type": "paragraph",
+    "text": "World art should carry topic meaning. A sports destination is a tactile stadium exhibit; a space destination is an orbital instrument; a cell destination resembles a microscopy slide. The artifacts should appear in the actual progression route and collection, not only in a disconnected showcase. Small CSS/native SVG progress state changes are enough to connect action and consequence; reserve optional WebGL for inspection. The real buttons, text and progress remain ordinary accessible HTML."
+  },
+  {
+    "type": "paragraph",
+    "text": "Use three opt-in sound families: a short dry selection tick, a gentle resolving chord for an answered fact, and a warmer two-note artifact cue. Incorrect feedback should be neutral and informative, not a humiliating buzzer. The same event has visible feedback, mute persists, and no audio or motion is necessary to understand or finish a trail. These sound proposals are original design choices, not findings from the cited studies."
+  },
+  {
+    "type": "heading",
+    "level": 2,
+    "text": "The Steady/Bold decision: useful tension, limited interpretation"
+  },
+  {
+    "type": "paragraph",
+    "text": "For a player’s believed chance of being correct p, expected Steady points are 2p and expected Bold points are 3p − (1−p) = 4p−1. Bold has a higher expected score only above p=0.5. A uniform random guess over four choices has p=0.25: expected Steady is +0.5 and expected Bold is 0. This is a transparent original calculation, not a research finding or a statistically proper confidence score."
+  },
+  {
+    "type": "paragraph",
+    "text": "Show the actual +2/0 and +3/−1 values before submission. Steady stays the default. Selecting an answer locks both the answer and scoring choice. Keep signed totals; a zero floor would change the expected incentives near the floor. Six Bold misses can yield −6, and the UI should still grant the same completion artifact after Finish. Do not call a negative score debt or a loss of coins."
+  },
+  {
+    "type": "paragraph",
+    "text": "The downside is an additional decision before each item, which can slow the first session and distract from the facts. On mobile, the scoring controls must not push the four answer buttons out of reach or look like answers themselves. Bold can also reward optimistic guessing, and repeated known cards make perfect practice scores unsurprising. Report first-run score and later practice best separately. Nothing here establishes calibrated confidence, predicts real-money risk preferences, or validates learning. Formative testing should ask whether players can explain the rule and whether they find the choice meaningful; source inspection cannot settle that."
+  },
+  {
+    "type": "heading",
+    "level": 2,
+    "text": "State model and release tests"
+  },
+  {
+    "type": "paragraph",
+    "text": "Persist trail/catalog version, node/fact ID, Steady/Bold selection, first choice, correctness, timestamps, and completion. Separate subsequent recall history. Compute artifacts from the completed trail state rather than storing a second mutable reward balance. Reject unknown trails, invalid options, duplicate completion actions and stale profile epochs. Reset/export must cover expedition progress. A content version change must not silently relabel old receipts as attempts at the new item."
+  },
+  {
+    "type": "paragraph",
+    "text": "Critical tests: reload after an answer; reload on completion; double click; resume after leaving; correct-answer denominator and signed scoring; repeated trails do not duplicate rewards; optional bot loss leaves the stamp intact; reset from another tab cannot resurrect progress; unavailable/local-only storage copy remains accurate; edited catalog item retains its original receipt. A user with a completed old Passport must not receive invented expedition history: previously encountered facts can be shown as familiar while trail completion starts from actual trail actions."
+  },
+  {
+    "type": "paragraph",
+    "text": "Observed UI and learning evidence remain separate gates. In a formative session, ask a player to explain what they earned, why it was earned, what the bot is, and where progress is stored. Observe whether they can finish a trail and stop, inspect a source, resume, and find a saved artifact. Before a learning claim, design a delayed test with unseen or appropriately versioned prompts and a suitable comparator. Do not treat engagement counters or repeat-item accuracy as proof of durable learning."
+  },
+  {
+    "type": "heading",
+    "level": 2,
+    "text": "Decision boundary for this implementation"
+  },
+  {
+    "type": "paragraph",
+    "text": "Ship the atlas, an authored finite route, actual persistent progression, useful artifacts and coherent receipts. Keep competitive duels as a visible parallel lane. Defer seasons, social rankings, user-generated questions, remote progression and adaptive difficulty until there are users, item data and content operations to support them. The improvement is a specific reason to start and finish a session; it is not the number of mechanics listed in a roadmap."
+  }
+]

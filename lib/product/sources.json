@@ -1,0 +1,659 @@
+[
+  {
+    "id": "M01",
+    "title": "Trivia Crack by The Floor — developer Android listing",
+    "publisher": "etermax",
+    "date": "2026-09-09",
+    "url": "https://play.google.com/store/apps/details?hl=en_US&id=com.etermax.preguntados.lite",
+    "scope": "Weekly The Floor episodes, specialist champions, friend challenges, dedicated leaderboard, declared ads and in-app purchases.",
+    "limits": "Developer marketing description; installs not active users. No generalization from individual reviews."
+  },
+  {
+    "id": "M02",
+    "title": "Sporcle: Play Trivia Quizzes — developer Android listing",
+    "publisher": "Sporcle",
+    "date": "2026-09-04",
+    "url": "https://play.google.com/store/apps/details?id=com.sporcle.geneva",
+    "scope": "Two million-plus quizzes claimed, formats, daily games, badges, streaks, missions, creation/playlists and Orange membership.",
+    "limits": "Inventory and features are developer statements, not a quality or retention audit."
+  },
+  {
+    "id": "M03",
+    "title": "Kahoot! Play & Create Quizzes — developer Android listing",
+    "publisher": "Kahoot!",
+    "date": "2026-09-03",
+    "url": "https://play.google.com/store/apps/details?id=no.mobitroll.kahoot.android",
+    "scope": "Live hosting, self-paced challenges, flashcards, study leagues, creation and premium features.",
+    "limits": "No internal architecture or economics inferred."
+  },
+  {
+    "id": "M04",
+    "title": "Blooket Game Mode Previews",
+    "publisher": "Blooket",
+    "date": "Date not shown",
+    "url": "https://help.blooket.com/hc/en-us/articles/21408591795351-Blooket-Game-Mode-Previews",
+    "scope": "Official documentation advertises over 25 modes and live/solo/homework play; Battle Royale supports 1v1 encounters.",
+    "limits": "Mode count and claimed question-set inventory are not effectiveness or retention evidence."
+  },
+  {
+    "id": "M05",
+    "title": "How to Stay Motivated When Learning a New Language",
+    "publisher": "Duolingo",
+    "date": "Date not shown",
+    "url": "https://blog.duolingo.com/sticking-with-it-tips-for-staying-motivated/",
+    "scope": "Official descriptions of streaks, weekly leaderboards, Friends Quests and personal goals.",
+    "limits": "Used as product precedent; not treated as independent causal evidence."
+  },
+  {
+    "id": "M06",
+    "title": "Friend Streak Is Duolingo’s Latest Social Feature",
+    "publisher": "Duolingo",
+    "date": "Date not shown",
+    "url": "https://blog.duolingo.com/friend-streak/",
+    "scope": "Mutual Friend Streaks, invitation acceptance and daily practice; company-reported association with lesson completion.",
+    "limits": "No effect estimate transferred to FACT//DUEL; selection and causality are not established by the page."
+  },
+  {
+    "id": "M07",
+    "title": "Statistics",
+    "publisher": "International Telecommunication Union",
+    "date": "Date not shown",
+    "url": "https://www.itu.int/en/ITU-D/Statistics/pages/stat/default.aspx",
+    "scope": "Approximately 6 billion people, 74% of world population, estimated online in 2025.",
+    "limits": "Broad connectivity ceiling only, not app demand. Earlier ff25 page now presents a statistics landing page."
+  },
+  {
+    "id": "M08",
+    "title": "A game for the world: cricket’s growth horizons",
+    "publisher": "International Cricket Council",
+    "date": "2026-03-23",
+    "url": "https://www.icc-cricket.com/media-releases/a-game-for-the-world-cricket-s-growth-horizons",
+    "scope": "India digital concurrency peak of 72.5 million for T20 World Cup final.",
+    "limits": "Peak platform metric, not deduplicated global annual fandom or trivia intent."
+  },
+  {
+    "id": "M09",
+    "title": "Milestones met, history made: Record-breaking Women’s EURO reaches the summit",
+    "publisher": "UEFA",
+    "date": "2025-07-27",
+    "url": "https://www.uefa.com/womenseuro/news/029b-1e522ecda3bd-ccdd22a6bb3c-1000--milestones-met-history-made-record-breaking-women-s-euro-rea/",
+    "scope": "Expected cumulative live audience over 400m and expected final audience over 45m.",
+    "limits": "Projection, not final observed reach; global, not EU only. Not used in TAM/SAM arithmetic."
+  },
+  {
+    "id": "M10",
+    "title": "Super Bowl LX Final Viewership Rises to 125.6 Million Viewers with Verified Big Data",
+    "publisher": "Nielsen",
+    "date": "2026-02-19",
+    "url": "https://www.nielsen.com/news-center/2026/nielsen-super-bowl-lx-final-viewership-rises-to-125-6-million-viewers-with-verified-big-data/",
+    "scope": "Final revised 125.6 million viewers across listed platforms.",
+    "limits": "Single-event audience; revised because a data provider failed to collect devices properly. Not distinct annual prospects."
+  },
+  {
+    "id": "M11",
+    "title": "Europeans strongly support science and technology according to new Eurobarometer survey",
+    "publisher": "European Commission Representation in Cyprus",
+    "date": "2025-02-03",
+    "url": "https://cyprus.representation.ec.europa.eu/news/europeans-strongly-support-science-and-technology-according-new-eurobarometer-survey-2025-02-03_en",
+    "scope": "58% want to learn more about scientific developments; lack of time among engagement barriers.",
+    "limits": "Science curiosity is not demand for competitive trivia."
+  },
+  {
+    "id": "M12",
+    "title": "Americans’ Views of Space: U.S. Role, NASA Priorities and Impact of Private Companies",
+    "publisher": "Pew Research Center; Brian Kennedy and Alec Tyson",
+    "date": "2023-07-20",
+    "url": "https://www.pewresearch.org/science/2023/07/20/americans-views-of-space-u-s-role-nasa-priorities-and-impact-of-private-companies/",
+    "scope": "47% of US adults had done at least one of four specified space activities in preceding year.",
+    "limits": "A broad episodic activity measure, not 2026 fandom or product demand."
+  },
+  {
+    "id": "M13",
+    "title": "United States | Data",
+    "publisher": "World Bank",
+    "date": "Date not shown",
+    "url": "https://data.worldbank.org/country/united-states",
+    "scope": "Population 341784857; internet use displayed rounded 95%.",
+    "limits": "Prior-year internet rate multiplied by newer population is a model approximation."
+  },
+  {
+    "id": "M14",
+    "title": "India | Data",
+    "publisher": "World Bank",
+    "date": "Date not shown",
+    "url": "https://data.worldbank.org/country/india",
+    "scope": "Population displayed 1.46 billion; internet use displayed 70%.",
+    "limits": "Both displayed values are rounded; multiplication not a precise independently measured online count."
+  },
+  {
+    "id": "M15",
+    "title": "European Union | Data",
+    "publisher": "World Bank",
+    "date": "Date not shown",
+    "url": "https://data.worldbank.org/country/european-union",
+    "scope": "Population 451127411; internet aggregate unavailable on retrieved page.",
+    "limits": "EU internet fraction in model is a 92% planning assumption, not observed World Bank figure."
+  },
+  {
+    "id": "M16",
+    "title": "United Kingdom | Data",
+    "publisher": "World Bank",
+    "date": "Date not shown",
+    "url": "https://data.worldbank.org/country/united-kingdom",
+    "scope": "Population 69487000; internet use displayed rounded 95%.",
+    "limits": "Prior-year internet rate multiplied by newer population is a model approximation."
+  },
+  {
+    "id": "D01",
+    "title": "The Motivational Pull of Video Games: A Self-Determination Theory Approach",
+    "publisher": "Ryan, R. M.; Rigby, C. S.; Przybylski, A. K.",
+    "date": "2006",
+    "url": "https://selfdeterminationtheory.org/SDT/documents/2006_RyanRigbyPrzybylski_MandE.pdf",
+    "scope": "Original research, author-hosted PDF; abstract and relevant results/limitations inspected",
+    "limits": "Sampled game genres and assigned play differ from voluntary browser trivia; not a product-retention estimate"
+  },
+  {
+    "id": "D02",
+    "title": "Test-enhanced learning: taking memory tests improves long-term retention",
+    "publisher": "Roediger, H. L.; Karpicke, J. D.",
+    "date": "2006-03",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/16507066/",
+    "scope": "Original research abstract via PubMed",
+    "limits": "Students studied prose and completed free-recall tests; not this timed four-choice product"
+  },
+  {
+    "id": "D03",
+    "title": "Feedback enhances the positive effects and reduces the negative effects of multiple-choice testing",
+    "publisher": "Butler, A. C.; Roediger, H. L.",
+    "date": "2008-04",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/18491500/",
+    "scope": "Original research abstract via PubMed",
+    "limits": "Educational experiment does not validate game speed or retention uplift"
+  },
+  {
+    "id": "D04",
+    "title": "The Design of Everyday Things, Revised and Expanded Edition",
+    "publisher": "Norman, D. A.",
+    "date": "2013",
+    "url": "https://jnd.org/books/the-design-of-everyday-things-revised-and-expanded-edition/",
+    "scope": "Author synopsis and table of contents",
+    "limits": "Full book not read; recommendations are original applications of identified themes"
+  },
+  {
+    "id": "D05",
+    "title": "Don’t Make Me Think, Revisited: A Common Sense Approach to Web Usability, third edition",
+    "publisher": "Krug, Steve; New Riders / Pearson",
+    "date": "2014",
+    "url": "https://www.pearson.com/en-us/subject-catalog/p/don-t-make-me-think-revisited-a-common-sense-approach-to-web-usability/P200000000385/9780133597264",
+    "scope": "Publisher overview and table of contents; published 2013-12-23, copyright 2014",
+    "limits": "Full book not read; no universal quantitative conversion claims"
+  },
+  {
+    "id": "D06",
+    "title": "The Art of Game Design: A Book of Lenses, Third Edition",
+    "publisher": "Schell, Jesse; CRC Press / Routledge",
+    "date": "2019",
+    "url": "https://www.routledge.com/about-us/crc-press",
+    "scope": "Publisher featured-book description; exact product-page fetch failed",
+    "limits": "Full book not read; specific lenses/checklists in brief are original synthesis"
+  },
+  {
+    "id": "D07",
+    "title": "A Theory of Fun for Game Design: Excerpts",
+    "publisher": "Koster, Raph",
+    "date": null,
+    "url": "https://www.theoryoffun.com/excerpt.shtml",
+    "scope": "Author-published chapter-one excerpt, prologue and contents",
+    "limits": "Excerpt is not complete book or empirical validation; historical anecdotes not current market facts"
+  },
+  {
+    "id": "D08",
+    "title": "Universal Patterns in Color-Emotion Associations Are Further Shaped by Linguistic and Geographic Proximity",
+    "publisher": "Jonauskaite, D., et al.",
+    "date": "2020-09-08",
+    "url": "https://journals.sagepub.com/doi/10.1177/0956797620948810",
+    "scope": "Original research abstract, journal page",
+    "limits": "Color-term association study; cannot predict specific interface trust, calm, conversion or performance"
+  },
+  {
+    "id": "D09",
+    "title": "Guidelines for the Creation of Earcons",
+    "publisher": "Brewster, S. A.; Wright, P. C.; Edwards, A. D. N.",
+    "date": null,
+    "url": "https://www.dcs.gla.ac.uk/~stephen/earcon_guidelines.shtml",
+    "scope": "Author university-hosted research guidance based on six experiments",
+    "limits": "Historical interface findings; proposed sounds and durations need device and listening tests"
+  },
+  {
+    "id": "D10",
+    "title": "Web Content Accessibility Guidelines (WCAG) 2.2",
+    "publisher": "World Wide Web Consortium",
+    "date": "2024-12-12",
+    "url": "https://www.w3.org/TR/WCAG22/",
+    "scope": "Normative W3C Recommendation",
+    "limits": "Design brief is not a full accessibility audit or conformance certification"
+  },
+  {
+    "id": "D11",
+    "title": "Understanding SC 2.5.8: Target Size (Minimum)",
+    "publisher": "World Wide Web Consortium",
+    "date": null,
+    "url": "https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html",
+    "scope": "Official informative explanation of WCAG 2.2 AA criterion",
+    "limits": "Brief proposes 44px controls and 56px answer pads, not the normative AA minimum"
+  },
+  {
+    "id": "D12",
+    "title": "Understanding SC 2.5.2: Pointer Cancellation",
+    "publisher": "World Wide Web Consortium",
+    "date": null,
+    "url": "https://www.w3.org/WAI/WCAG22/Understanding/pointer-cancellation.html",
+    "scope": "Official informative explanation of WCAG 2.2 A criterion",
+    "limits": "Game status is not blanket exemption; timed pad rationale and accessibility behavior require review"
+  },
+  {
+    "id": "D13",
+    "title": "Understanding SC 2.2.1: Timing Adjustable",
+    "publisher": "World Wide Web Consortium",
+    "date": null,
+    "url": "https://www.w3.org/WAI/WCAG22/Understanding/timing-adjustable.html",
+    "scope": "Official informative explanation of WCAG 2.2 A criterion",
+    "limits": "Untimed practice improves inclusion but does not alone establish whole-product conformance"
+  },
+  {
+    "id": "TR-02",
+    "title": "Sporcle: Play Trivia Quizzes",
+    "url": "https://play.google.com/store/apps/details?hl=en_US&id=com.sporcle.geneva",
+    "publisher": "Official storefront with user reviews",
+    "date": "Retrieved 2026-09-12",
+    "scope": "Selected review observations and developer-listed product context.",
+    "limits": "Featured review subset; mutable page; requested US English; review version and actual user locale unknown; listing updates do not date reviews."
+  },
+  {
+    "id": "TR-03",
+    "title": "Quiz Planet",
+    "url": "https://play.google.com/store/apps/details?hl=en_US&id=com.lotum.quizplanet",
+    "publisher": "Official storefront with user reviews",
+    "date": "Retrieved 2026-09-12",
+    "scope": "Selected review observations and developer-listed product context.",
+    "limits": "Featured review subset; mutable page; requested US English; review version and actual user locale unknown; listing updates do not date reviews."
+  },
+  {
+    "id": "TR-04",
+    "title": "QuizDuel! Quiz & Trivia Game",
+    "url": "https://play.google.com/store/apps/details?hl=en_US&id=se.maginteractive.quizduel2",
+    "publisher": "Official storefront with user reviews",
+    "date": "Retrieved 2026-09-12",
+    "scope": "Selected review observations and developer-listed product context.",
+    "limits": "Featured review subset; mutable page; requested US English; review version and actual user locale unknown; listing updates do not date reviews."
+  },
+  {
+    "id": "TR-05",
+    "title": "Quiz Planet: Ratings & Reviews",
+    "url": "https://apps.apple.com/us/app/quiz-planet/id1466208181?platform=iphone&see-all=reviews",
+    "publisher": "Official storefront with user reviews",
+    "date": "Retrieved 2026-09-12",
+    "scope": "Four distinct mixed reviews plus attached replies.",
+    "limits": "Duplicate expanded text deduplicated; no individual review permalink; one reply has no year."
+  },
+  {
+    "id": "TR-06",
+    "title": "QuizDuel: Ratings & Reviews",
+    "url": "https://apps.apple.com/us/app/quizduel-trivia-quiz-game/id1484354626?platform=iphone&see-all=reviews",
+    "publisher": "Official storefront with user reviews",
+    "date": "Retrieved 2026-09-12",
+    "scope": "Positive matching/variety and historical repetition review.",
+    "limits": "Reviewer statements about humans and submissions are not independently verified."
+  },
+  {
+    "id": "TR-07",
+    "title": "Trivia Crack Prime",
+    "url": "https://triviacrack.help.etermax.com/hc/en-us/articles/52447169396243-Trivia-Crack-Prime",
+    "publisher": "Official help",
+    "date": "Retrieved 2026-09-12",
+    "scope": "Optional rewarded ads remain; first Classic second chance included.",
+    "limits": "Benefits may vary; public documentation is not account-level entitlement inspection."
+  },
+  {
+    "id": "TR-08",
+    "title": "Power-ups",
+    "url": "https://triviacrack.help.etermax.com/hc/en-us/articles/360024775733-Power-ups",
+    "publisher": "Official help",
+    "date": "Retrieved 2026-09-12",
+    "scope": "Retry costs differ by app variant.",
+    "limits": "Does not establish what variant TC03 used."
+  },
+  {
+    "id": "TR-09",
+    "title": "What are tickets?",
+    "url": "https://triviacrack.help.etermax.com/hc/en-us/articles/360034642493-What-are-tickets",
+    "publisher": "Official help",
+    "date": "Retrieved 2026-09-12",
+    "scope": "Tickets fund repeated chances and other actions.",
+    "limits": "Not a record of one player's historical wallet or offers."
+  },
+  {
+    "id": "TR-10",
+    "title": "Play without interruptions!",
+    "url": "https://triviacrack.help.etermax.com/hc/en-us/articles/42893141733907-Play-without-interruptions",
+    "publisher": "Official help",
+    "date": "Retrieved 2026-09-12",
+    "scope": "Prime subscription and separate one-time Premium app coexist.",
+    "limits": "Variant labels matter; does not prove any individual purchase status."
+  },
+  {
+    "id": "TR-11",
+    "title": "Sporcle: Google for Publishers case study",
+    "url": "https://www.google.com/ads/publisher/stories/sporcle/",
+    "publisher": "Commercial publisher case study with executive statements",
+    "date": "Retrieved 2026-09-12",
+    "scope": "Advertising is a deliberate part of the business model.",
+    "limits": "Commercial framing; old; no independent UX testing or confirmation of SP02/SP03."
+  },
+  {
+    "id": "TR-12",
+    "title": "Teams and Team Events",
+    "url": "https://magsupport.helpshift.com/hc/en/5-quizduel/faq/409-teams-and-team-events/",
+    "publisher": "Official help",
+    "date": "Retrieved 2026-09-12",
+    "scope": "Team creation/joining and team event participation exist.",
+    "limits": "Relative age preserved; no conversion to precise publication date; not all regions or accounts tested."
+  },
+  {
+    "id": "TR-13",
+    "title": "When will the question workshop be activated again?",
+    "url": "https://magsupport.helpshift.com/hc/en/5-quizduel/faq/118-when-will-the-question-workshop-be-activated-again/",
+    "publisher": "Official help",
+    "date": "Retrieved 2026-09-12",
+    "scope": "Workshop documented as unavailable.",
+    "limits": "Old relative update; no live account inspection."
+  },
+  {
+    "id": "TR-14",
+    "title": "How can I remove ads?",
+    "url": "https://magsupport.helpshift.com/hc/en/5-quizduel/faq/122-how-can-i-remove-ads/",
+    "publisher": "Official help",
+    "date": "Retrieved 2026-09-12",
+    "scope": "Distinguishes renewing VIP and a nonrenewing 30-day offer.",
+    "limits": "No current checkout price verified; no historical purchase determination."
+  },
+  {
+    "id": "TR-15",
+    "title": "Why am I not getting any points when a user quits the game?",
+    "url": "https://magsupport.helpshift.com/hc/en/5-quizduel/faq/116-why-am-i-not-getting-any-points-when-a-user-quits-the-game/",
+    "publisher": "Official help",
+    "date": "Retrieved 2026-09-12",
+    "scope": "No points for opponent giving up before round three; anti-manipulation rationale.",
+    "limits": "Rule may be mode-specific; no settlement reproduction."
+  },
+  {
+    "id": "TR-16",
+    "title": "I accidentally deleted the finished games. How can I restore them?",
+    "url": "https://magsupport.helpshift.com/hc/en/5-quizduel/faq/120-i-accidentally-deleted-the-finished-games-how-can-i-restore-them/",
+    "publisher": "Official help",
+    "date": "Retrieved 2026-09-12",
+    "scope": "Deleted match details unrecoverable; aggregate statistics retained.",
+    "limits": "Supplemental context, not counted as a customer review."
+  },
+  {
+    "id": "TR-17",
+    "title": "MAG Interim report 2019/20 Q4",
+    "url": "https://www.maginteractive.com/files/reports/MAG_Interim_report_ENG_2019_20_Q4.pdf",
+    "publisher": "Official corporate report",
+    "date": "Retrieved 2026-09-12",
+    "scope": "Historical migration to New QuizDuel and commercial context.",
+    "limits": "Does not verify individual contract terms, forced updates or compensation. Supplemental, not a customer review."
+  },
+  {
+    "id": "LR-01",
+    "title": "Megan Ellis: I'm finally quitting Duolingo after the latest controversial change",
+    "url": "https://www.androidauthority.com/quitting-duolingo-energy-system-3599842/",
+    "publisher": "First-person editorial commentary",
+    "date": "2025-10-01",
+    "scope": "Full article readable; reader poll excluded",
+    "limits": "Selected public account/document; no frequency or current defect claim. Full context in the relevant panel ledger."
+  },
+  {
+    "id": "LR-02",
+    "title": "Duolingo Trustpilot reviews, page 9",
+    "url": "https://www.trustpilot.com/review/duolingo.com?page=9",
+    "publisher": "Primary customer review listing",
+    "date": null,
+    "scope": "Individual review text readable; permalink clicks failed; locate by author/title/date",
+    "limits": "Selected public account/document; no frequency or current defect claim. Full context in the relevant panel ledger."
+  },
+  {
+    "id": "LR-03",
+    "title": "Kahoot! Trustpilot reviews, page 7",
+    "url": "https://www.trustpilot.com/review/kahoot.com?page=7",
+    "publisher": "Primary customer review listing with company replies",
+    "date": null,
+    "scope": "Review text and contemporaneous reply readable; pagination mutable",
+    "limits": "Selected public account/document; no frequency or current defect claim. Full context in the relevant panel ledger."
+  },
+  {
+    "id": "LR-04",
+    "title": "Kahoot payment and billing help: cmunoz1885 comment",
+    "url": "https://support.kahoot.com/hc/en-us/articles/360060150353-What-are-my-payment-and-billing-options",
+    "publisher": "Primary customer help comment",
+    "date": "2025-02-06",
+    "scope": "Public comments readable; identify handle and date",
+    "limits": "Selected public account/document; no frequency or current defect claim. Full context in the relevant panel ledger."
+  },
+  {
+    "id": "LR-05",
+    "title": "Quizlet Trustpilot reviews, page 2",
+    "url": "https://www.trustpilot.com/review/www.quizlet.com?page=2",
+    "publisher": "Primary customer review listing",
+    "date": null,
+    "scope": "Full retained review text readable; exact individual permalink unavailable",
+    "limits": "Selected public account/document; no frequency or current defect claim. Full context in the relevant panel ledger."
+  },
+  {
+    "id": "LR-06",
+    "title": "Quizlet Trustpilot reviews, page 4",
+    "url": "https://www.trustpilot.com/review/www.quizlet.com?page=4",
+    "publisher": "Primary customer review listing",
+    "date": null,
+    "scope": "Full retained review text readable; exact individual permalink unavailable",
+    "limits": "Selected public account/document; no frequency or current defect claim. Full context in the relevant panel ledger."
+  },
+  {
+    "id": "LR-07",
+    "title": "Quizlet US App Store ratings and reviews",
+    "url": "https://apps.apple.com/us/app/quizlet-more-than-flashcards/id546473125?see-all=reviews",
+    "publisher": "Primary customer app review",
+    "date": "2025-07-29",
+    "scope": "Review readable with author/date/title; repeated rendering deduplicated",
+    "limits": "Selected public account/document; no frequency or current defect claim. Full context in the relevant panel ledger."
+  },
+  {
+    "id": "LR-08",
+    "title": "Brilliant Trustpilot reviews",
+    "url": "https://www.trustpilot.com/review/brilliant.org",
+    "publisher": "Primary customer review listing",
+    "date": null,
+    "scope": "Retained reviews readable; relative publication dates normalized on retrieval date; exact permalinks unavailable",
+    "limits": "Selected public account/document; no frequency or current defect claim. Full context in the relevant panel ledger."
+  },
+  {
+    "id": "LR-09",
+    "title": "Duolingo Energy explanation",
+    "url": "https://blog.duolingo.com/duolingo-energy/",
+    "publisher": "Official feature explanation",
+    "date": null,
+    "scope": "Source documented in review ledger.",
+    "limits": "Selected public account/document; no frequency or current defect claim. Full context in the relevant panel ledger."
+  },
+  {
+    "id": "LR-10",
+    "title": "How to use Duolingo for language learning",
+    "url": "https://blog.duolingo.com/duolingo-101-how-to-learn-a-language-on-duolingo/",
+    "publisher": "Official introductory guide",
+    "date": "2024-12-02",
+    "scope": "Source documented in review ledger.",
+    "limits": "Selected public account/document; no frequency or current defect claim. Full context in the relevant panel ledger."
+  },
+  {
+    "id": "LR-11",
+    "title": "How to enable questions on participant screens",
+    "url": "https://support.kahoot.com/hc/en-us/articles/115003197928-How-to-enable-See-questions-on-participant-s-screen-in-Kahoot-live-games",
+    "publisher": "Official help",
+    "date": "2026-09-09",
+    "scope": "Source documented in review ledger.",
+    "limits": "Selected public account/document; no frequency or current defect claim. Full context in the relevant panel ledger."
+  },
+  {
+    "id": "LR-12",
+    "title": "Kahoot accessibility features",
+    "url": "https://kahoot.com/accessibility/",
+    "publisher": "Official feature documentation",
+    "date": null,
+    "scope": "Source documented in review ledger.",
+    "limits": "Selected public account/document; no frequency or current defect claim. Full context in the relevant panel ledger."
+  },
+  {
+    "id": "LR-14",
+    "title": "Subscribing to Quizlet",
+    "url": "https://help.quizlet.com/hc/en-us/articles/360041181691-Subscribing-to-Quizlet",
+    "publisher": "Official help",
+    "date": null,
+    "scope": "Source documented in review ledger.",
+    "limits": "Selected public account/document; no frequency or current defect claim. Full context in the relevant panel ledger."
+  },
+  {
+    "id": "LR-15",
+    "title": "Quizlet typos or incorrect information",
+    "url": "https://help.quizlet.com/hc/en-us/articles/360030894831-Typos-or-incorrect-information",
+    "publisher": "Official help",
+    "date": null,
+    "scope": "Source documented in review ledger.",
+    "limits": "Selected public account/document; no frequency or current defect claim. Full context in the relevant panel ledger."
+  },
+  {
+    "id": "LR-16",
+    "title": "Studying with Study Guides",
+    "url": "https://help.quizlet.com/hc/en-us/articles/18312306436365-Studying-with-Study-Guides",
+    "publisher": "Official help",
+    "date": null,
+    "scope": "Source documented in review ledger.",
+    "limits": "Selected public account/document; no frequency or current defect claim. Full context in the relevant panel ledger."
+  },
+  {
+    "id": "LR-17",
+    "title": "Finding flashcard sets",
+    "url": "https://help.quizlet.com/hc/en-us/articles/360029772872-Finding-flashcard-sets",
+    "publisher": "Official help",
+    "date": null,
+    "scope": "Source documented in review ledger.",
+    "limits": "Selected public account/document; no frequency or current defect claim. Full context in the relevant panel ledger."
+  },
+  {
+    "id": "LR-18",
+    "title": "Brilliant: What are Learning Paths?",
+    "url": "https://brilliant.org/help/features/what-are-learning-paths/",
+    "publisher": "Official help",
+    "date": "2026-08-03",
+    "scope": "Source documented in review ledger.",
+    "limits": "Selected public account/document; no frequency or current defect claim. Full context in the relevant panel ledger."
+  },
+  {
+    "id": "EXP-01",
+    "title": "How gamification motivates: An experimental study of the effects of specific game design elements on psychological need satisfaction",
+    "url": "https://doi.org/10.1016/j.chb.2016.12.033",
+    "publisher": "primary_experimental_study",
+    "date": "2017",
+    "scope": "Different element groups affected different reported psychological needs; decision-freedom effects were absent.",
+    "limits": "Grouped elements do not isolate a badge effect; 88 manipulation-check exclusions left N=331. The simulation differs from this trivia game."
+  },
+  {
+    "id": "EXP-02",
+    "title": "Test-Enhanced Learning: Taking Memory Tests Improves Long-Term Retention",
+    "url": "https://www.psychologicalscience.org/journals/psychological-science/j.1467-9280.2006.01693.x/",
+    "publisher": "primary_experimental_study_publisher_abstract",
+    "date": "2006",
+    "scope": "Free recall of prose improved delayed retention relative to restudy; immediate performance favored restudy.",
+    "limits": "Materials and free-recall tests differ from timed four-choice trivia. No inference of verified mastery or measured product learning."
+  },
+  {
+    "id": "EXP-03",
+    "title": "How Gamification Affects Software Developers: Cautionary Evidence from a Natural Experiment on GitHub",
+    "url": "https://arxiv.org/abs/2006.02371v3",
+    "publisher": "primary_natural_experiment_author_manuscript_abstract",
+    "date": "2021",
+    "scope": "Streak removal was followed by fewer long streaks and changes in weekend and single-contribution behavior.",
+    "limits": "Developer behavior, observational natural experiment, not a randomized study of games or harm."
+  },
+  {
+    "id": "EXP-04",
+    "title": "The Gamer’s Brain — Chapter 16: UX Strategy (published excerpt)",
+    "url": "https://gamesbeat.com/the-gamers-brain-excerpt-good-ux-is-key-to-crafting-fun/",
+    "publisher": "author_book_excerpt",
+    "date": "2017",
+    "scope": "The excerpt recommends coordinated UX practice and questioning why players care about a feature.",
+    "limits": "Practitioner guidance, not a causal experiment or a product-specific result."
+  },
+  {
+    "id": "EXP-05",
+    "title": "The Game Development Strategy Guide — Chapter 1: What Makes Us Play (sample)",
+    "url": "https://rosenfeldmedia.com/sample-chapter-game-development-strategy-guide/",
+    "publisher": "publisher_book_sample",
+    "date": "2025",
+    "scope": "The sample differentiates enjoyable purposeful obstacles from unnecessary interface friction.",
+    "limits": "Practitioner framework, not evidence that a proposed Passport improves outcomes."
+  },
+  {
+    "id": "EXP-06",
+    "title": "Three.js WebGLRenderer documentation",
+    "url": "https://threejs.org/docs/pages/WebGLRenderer.html",
+    "publisher": "official_open_source_technical_documentation",
+    "date": "None",
+    "scope": "Current renderer uses WebGL2, exposes resolution and renderer metrics, and documents disposal.",
+    "limits": "APIs do not establish actual performance. Low-power is a hint, not a guarantee. Check installed version before implementation."
+  },
+  {
+    "id": "EXP-08",
+    "title": "Understanding Success Criterion 2.3.3: Animation from Interactions",
+    "url": "https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html",
+    "publisher": "official_accessibility_understanding_document",
+    "date": "2025",
+    "scope": "Nonessential interaction-triggered motion can be disabled; supports honoring reduced-motion preferences.",
+    "limits": "This criterion is Level AAA and does not establish overall AAA conformance. Automatic animation is addressed separately by other criteria."
+  },
+  {
+    "id": "EX08",
+    "title": "Butler & Roediger (2008), Feedback Enhances the Positive Effects and Reduces the Negative Effects of Multiple-Choice Testing",
+    "publisher": "Primary author or official product source",
+    "date": "Accessed 2026-09-12; publication details in expedition research",
+    "url": "https://link.springer.com/article/10.3758/MC.36.3.604",
+    "scope": "Immediate and delayed feedback improved delayed correct recall and reduced intrusion of misleading options compared with no feedback.",
+    "limits": ". Publisher abstract. Every submitted or revealed question should resolve into the accepted answer, concise explanation and source. Wrong answers should lead to useful information rather than an opaque failure animation. Timing and effect size do not directly transfer to this game."
+  },
+  {
+    "id": "EX09",
+    "title": "Ge et al. (2021), What Is the Mechanism Underlying the Interleaving Effect in Category Induction?",
+    "publisher": "Primary author or official product source",
+    "date": "Accessed 2026-09-12; publication details in expedition research",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/34975661/",
+    "scope": "Three experiments on artistic-style categories support a role for discriminative contrast in interleaving; arbitrary mixing is not the tested mechanism.",
+    "limits": ". Primary experimental abstract. Offer a finite mixed replay only after several trails have been visited. Label it “Mixed recall,” not scientifically optimized learning. Mixing cricket facts and molecular biology is variety; the paper does not establish a learning advantage for that mix."
+  },
+  {
+    "id": "EX10",
+    "title": "Duolingo, Adventures",
+    "publisher": "Primary author or official product source",
+    "date": "Accessed 2026-09-12; publication details in expedition research",
+    "url": "https://blog.duolingo.com/adventures/",
+    "scope": "The documented feature embeds familiar language tasks in scenarios, with characters, environmental interaction and feedback connected to the task.",
+    "limits": ". Official feature explanation. Give an episode a purpose and let progress affect a visible scene. A sports/science game can reveal a stadium ticket, orbital chart or lab card after a short coherent trail. Do not copy characters, trade dress or the article’s efficacy language. Availability claims in an announcement are not a current exhaustive rollout inventory."
+  },
+  {
+    "id": "EX11",
+    "title": "Sporcle Support, An Introduction to SporcleBot",
+    "publisher": "Primary author or official product source",
+    "date": "Accessed 2026-09-12; publication details in expedition research",
+    "url": "https://support.sporcle.com/hc/en-us/articles/35883332455565-An-introduction-to-SporcleBot",
+    "scope": "Sporcle documents category/subcategory discovery, challenges, a disable option, and that its bot result is a target score rather than a bot actually playing a quiz.",
+    "limits": ". Official support, updated April 2025. Be equally explicit about Lucky Guess’s random choices and scheduled response time. Borrow transparent framing and subject discovery, not Sporcle’s target-score algorithm: this product’s random bot is different."
+  }
+]

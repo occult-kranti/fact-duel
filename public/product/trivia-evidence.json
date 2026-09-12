@@ -1,0 +1,944 @@
+{
+  "schema_version": "1.0",
+  "research_date": "2026-09-12",
+  "research_scope": "Public customer-review criticism and positive counterexamples for FACT//DUEL product design",
+  "records": [
+    {
+      "id": "TC01",
+      "product": "Trivia Crack by The Floor",
+      "source_id": "TC-GP",
+      "source_url": "https://play.google.com/store/apps/details?hl=en_US&id=com.etermax.preguntados.lite",
+      "platform": "Google Play / Android listing",
+      "storefront": "US English requested; reviewer locale and in-game language unknown",
+      "visible_review_date": "2025-04-02",
+      "review_date_iso": "2025-04-02",
+      "review_version": null,
+      "version_note": "No review-level version visible; current listing update is not the reviewed version.",
+      "individual_review_url": null,
+      "inspection_locator": "Date plus friend-play freezing topic",
+      "paraphrase": "Ad-related freezes disrupt friend play.",
+      "sentiment": "critical",
+      "issue_categories": [
+        "reliability",
+        "social play"
+      ],
+      "severity_inference": {
+        "level": "high",
+        "rationale": "An equivalent failure could prevent completing a duel.",
+        "author": "researcher; not a platform measurement"
+      },
+      "fact_duel_requirement": "Restore the last committed answer and duel state after interruption.",
+      "applicability_limits": [
+        "Older review; device and client unknown; cause attributed by reviewer."
+      ],
+      "developer_reply": {
+        "visible": true,
+        "visible_date": "2025-04-07",
+        "paraphrase": "Etermax requests diagnostic details.",
+        "confirms_resolution": false
+      },
+      "official_cross_check_source_ids": [],
+      "claim_status": "Public review text inspected; underlying user experience not independently reproduced.",
+      "retrieved_on": "2026-09-12",
+      "private_reviewer_identity_collected": false
+    },
+    {
+      "id": "TC02",
+      "product": "Trivia Crack by The Floor",
+      "source_id": "TC-GP",
+      "source_url": "https://play.google.com/store/apps/details?hl=en_US&id=com.etermax.preguntados.lite",
+      "platform": "Google Play / Android listing",
+      "storefront": "US English requested; reviewer locale and in-game language unknown",
+      "visible_review_date": "2026-09-06",
+      "review_date_iso": "2026-09-06",
+      "review_version": null,
+      "version_note": "No review-level version visible; current listing update is not the reviewed version.",
+      "individual_review_url": null,
+      "inspection_locator": "Date plus reward-prompt topic",
+      "paraphrase": "Reward prompts obstruct reaching trivia.",
+      "sentiment": "critical",
+      "issue_categories": [
+        "navigation",
+        "attention"
+      ],
+      "severity_inference": {
+        "level": "medium",
+        "rationale": "Avoidable prompts can obstruct the main task without corrupting its result.",
+        "author": "researcher; not a platform measurement"
+      },
+      "fact_duel_requirement": "Offer direct duel setup and defer reward/event/subscription prompts until completion.",
+      "applicability_limits": [
+        "Mode and actual elapsed time unverified; ad removal may not address reward prompts."
+      ],
+      "developer_reply": {
+        "visible": true,
+        "visible_date": "2026-09-06",
+        "paraphrase": "Etermax recommends Prime trial.",
+        "confirms_resolution": false
+      },
+      "official_cross_check_source_ids": [
+        "TC-PRIME"
+      ],
+      "claim_status": "Public review text inspected; underlying user experience not independently reproduced.",
+      "retrieved_on": "2026-09-12",
+      "private_reviewer_identity_collected": false
+    },
+    {
+      "id": "TC03",
+      "product": "Trivia Crack by The Floor",
+      "source_id": "TC-GP",
+      "source_url": "https://play.google.com/store/apps/details?hl=en_US&id=com.etermax.preguntados.lite",
+      "platform": "Google Play / Android listing",
+      "storefront": "US English requested; reviewer locale and in-game language unknown",
+      "visible_review_date": "2026-08-21",
+      "review_date_iso": "2026-08-21",
+      "review_version": null,
+      "version_note": "No review-level version visible; current listing update is not the reviewed version.",
+      "individual_review_url": null,
+      "inspection_locator": "Date plus coins/retries topic",
+      "paraphrase": "Black ad screens; coin retry utility disputed.",
+      "sentiment": "critical",
+      "issue_categories": [
+        "recovery",
+        "currency clarity"
+      ],
+      "severity_inference": {
+        "level": "high",
+        "rationale": "Equivalent behavior risks both completion and entitlement confidence.",
+        "author": "researcher; not a platform measurement"
+      },
+      "fact_duel_requirement": "Display currency uses and explain changes before a player commits.",
+      "applicability_limits": [
+        "App variant/entitlement unknown; documentation retains a coin option for an ad-free variant."
+      ],
+      "developer_reply": {
+        "visible": false,
+        "interpretation": "No reply visible in inspected public extract; absence elsewhere not established."
+      },
+      "official_cross_check_source_ids": [
+        "TC-POWER",
+        "TC-TICKETS",
+        "TC-PREMIUM"
+      ],
+      "claim_status": "Public review text inspected; underlying user experience not independently reproduced.",
+      "retrieved_on": "2026-09-12",
+      "private_reviewer_identity_collected": false
+    },
+    {
+      "id": "SP01",
+      "product": "Sporcle: Play Trivia Quizzes",
+      "source_id": "SP-GP",
+      "source_url": "https://play.google.com/store/apps/details?hl=en_US&id=com.sporcle.geneva",
+      "platform": "Google Play / Android listing",
+      "storefront": "US English requested; reviewer locale and in-game language unknown",
+      "visible_review_date": "2026-09-04",
+      "review_date_iso": "2026-09-04",
+      "review_version": null,
+      "version_note": "No review-level version visible; current listing update is not the reviewed version.",
+      "individual_review_url": null,
+      "inspection_locator": "Date plus missing-results topic",
+      "paraphrase": "Variety praised; ads and results fail.",
+      "sentiment": "mixed",
+      "issue_categories": [
+        "completion",
+        "reliability"
+      ],
+      "severity_inference": {
+        "level": "high",
+        "rationale": "A missing result prevents verifying a completed contest.",
+        "author": "researcher; not a platform measurement"
+      },
+      "fact_duel_requirement": "Persist result receipt before optional content and expose it in history.",
+      "applicability_limits": [
+        "Predominantly single-player comparison; failure not reproduced; version unknown."
+      ],
+      "developer_reply": {
+        "visible": false,
+        "interpretation": "No reply visible in inspected public extract; absence elsewhere not established."
+      },
+      "official_cross_check_source_ids": [],
+      "claim_status": "Public review text inspected; underlying user experience not independently reproduced.",
+      "retrieved_on": "2026-09-12",
+      "private_reviewer_identity_collected": false
+    },
+    {
+      "id": "SP02",
+      "product": "Sporcle: Play Trivia Quizzes",
+      "source_id": "SP-GP",
+      "source_url": "https://play.google.com/store/apps/details?hl=en_US&id=com.sporcle.geneva",
+      "platform": "Google Play / Android listing",
+      "storefront": "US English requested; reviewer locale and in-game language unknown",
+      "visible_review_date": "2026-08-26",
+      "review_date_iso": "2026-08-26",
+      "review_version": null,
+      "version_note": "No review-level version visible; current listing update is not the reviewed version.",
+      "individual_review_url": null,
+      "inspection_locator": "Date plus mid-quiz ads topic",
+      "paraphrase": "Ads reportedly interrupt quizzes.",
+      "sentiment": "mixed",
+      "issue_categories": [
+        "active-play interruptions"
+      ],
+      "severity_inference": {
+        "level": "high",
+        "rationale": "In a timed duel an overlay could change answer opportunity.",
+        "author": "researcher; not a platform measurement"
+      },
+      "fact_duel_requirement": "Prohibit overlays from question readiness through answer commitment.",
+      "applicability_limits": [
+        "Quiz identity, ad creative and version absent; no reproduction."
+      ],
+      "developer_reply": {
+        "visible": false,
+        "interpretation": "No reply visible in inspected public extract; absence elsewhere not established."
+      },
+      "official_cross_check_source_ids": [],
+      "claim_status": "Public review text inspected; underlying user experience not independently reproduced.",
+      "retrieved_on": "2026-09-12",
+      "private_reviewer_identity_collected": false
+    },
+    {
+      "id": "SP03",
+      "product": "Sporcle: Play Trivia Quizzes",
+      "source_id": "SP-GP",
+      "source_url": "https://play.google.com/store/apps/details?hl=en_US&id=com.sporcle.geneva",
+      "platform": "Google Play / Android listing",
+      "storefront": "US English requested; reviewer locale and in-game language unknown",
+      "visible_review_date": "2026-08-21",
+      "review_date_iso": "2026-08-21",
+      "review_version": null,
+      "version_note": "No review-level version visible; current listing update is not the reviewed version.",
+      "individual_review_url": null,
+      "inspection_locator": "Date plus timer/badge topic",
+      "paraphrase": "Timer and badge restrictions disputed.",
+      "sentiment": "critical",
+      "issue_categories": [
+        "rules transparency",
+        "accessible practice"
+      ],
+      "severity_inference": {
+        "level": "medium",
+        "rationale": "Hidden eligibility would make preparation and achievements unpredictable.",
+        "author": "researcher; not a platform measurement"
+      },
+      "fact_duel_requirement": "Disclose timers and achievement eligibility; provide labeled untimed practice.",
+      "applicability_limits": [
+        "Timer change and motive unconfirmed; reviewer mentions website within app review; direct help blocked."
+      ],
+      "developer_reply": {
+        "visible": false,
+        "interpretation": "No reply visible in inspected public extract; absence elsewhere not established."
+      },
+      "official_cross_check_source_ids": [],
+      "claim_status": "Public review text inspected; underlying user experience not independently reproduced.",
+      "retrieved_on": "2026-09-12",
+      "private_reviewer_identity_collected": false
+    },
+    {
+      "id": "QP01",
+      "product": "Quiz Planet",
+      "source_id": "QP-GP",
+      "source_url": "https://play.google.com/store/apps/details?hl=en_US&id=com.lotum.quizplanet",
+      "platform": "Google Play / Android listing",
+      "storefront": "US English requested; reviewer locale and in-game language unknown",
+      "visible_review_date": "2026-08-08",
+      "review_date_iso": "2026-08-08",
+      "review_version": null,
+      "version_note": "No review-level version visible; current listing update is not the reviewed version.",
+      "individual_review_url": null,
+      "inspection_locator": "Date plus inactivity-timeout topic",
+      "paraphrase": "Timeout losses and slow question corrections reported.",
+      "sentiment": "critical",
+      "issue_categories": [
+        "timing",
+        "content governance"
+      ],
+      "severity_inference": {
+        "level": "high",
+        "rationale": "Unexpected expiration or erroneous questions could distort a duel result.",
+        "author": "researcher; not a platform measurement"
+      },
+      "fact_duel_requirement": "Show interruption policy and a question-report receipt with review status.",
+      "applicability_limits": [
+        "Question text absent; exact timeout and faulty content unverified."
+      ],
+      "developer_reply": {
+        "visible": true,
+        "visible_date": "2026-08-12",
+        "paraphrase": "Lotum confirms timeout; corrections take time.",
+        "confirms_resolution": false,
+        "confirmed_scope": "Inactivity timeout is intended; no timeout length or specific question error confirmed."
+      },
+      "official_cross_check_source_ids": [],
+      "claim_status": "Public review text inspected; underlying user experience not independently reproduced.",
+      "retrieved_on": "2026-09-12",
+      "private_reviewer_identity_collected": false
+    },
+    {
+      "id": "QP02",
+      "product": "Quiz Planet",
+      "source_id": "QP-GP",
+      "source_url": "https://play.google.com/store/apps/details?hl=en_US&id=com.lotum.quizplanet",
+      "platform": "Google Play / Android listing",
+      "storefront": "US English requested; reviewer locale and in-game language unknown",
+      "visible_review_date": "2026-08-27",
+      "review_date_iso": "2026-08-27",
+      "review_version": null,
+      "version_note": "No review-level version visible; current listing update is not the reviewed version.",
+      "individual_review_url": null,
+      "inspection_locator": "Date plus generic-profile topic",
+      "paraphrase": "Opponent identity becomes unclear.",
+      "sentiment": "critical",
+      "issue_categories": [
+        "identity",
+        "social continuity"
+      ],
+      "severity_inference": {
+        "level": "medium",
+        "rationale": "Players need to recognize whom they agreed to play.",
+        "author": "researcher; not a platform measurement"
+      },
+      "fact_duel_requirement": "Keep a persistent in-product identifier and explain unavailable external profiles.",
+      "applicability_limits": [
+        "Relevant chiefly to external social profiles; Meta policy not independently inspected."
+      ],
+      "developer_reply": {
+        "visible": true,
+        "visible_date": "2026-09-03",
+        "paraphrase": "Lotum cites Facebook-only profile restrictions.",
+        "confirms_resolution": false,
+        "confirmed_scope": "Developer explanation; not independent verification of Facebook policy."
+      },
+      "official_cross_check_source_ids": [],
+      "claim_status": "Public review text inspected; underlying user experience not independently reproduced.",
+      "retrieved_on": "2026-09-12",
+      "private_reviewer_identity_collected": false
+    },
+    {
+      "id": "QP03",
+      "product": "Quiz Planet",
+      "source_id": "QP-AS",
+      "source_url": "https://apps.apple.com/us/app/quiz-planet/id1466208181?platform=iphone&see-all=reviews",
+      "platform": "Apple App Store / iPhone reviews",
+      "storefront": "US English requested; reviewer locale and in-game language unknown",
+      "visible_review_date": "2025-03-29",
+      "review_date_iso": "2025-03-29",
+      "review_version": null,
+      "version_note": "No review-level version visible; current listing update is not the reviewed version.",
+      "individual_review_url": null,
+      "inspection_locator": "Title: Good trivia game",
+      "paraphrase": "Abandoned opponents clutter turn list.",
+      "sentiment": "mixed",
+      "issue_categories": [
+        "match lifecycle"
+      ],
+      "severity_inference": {
+        "level": "medium",
+        "rationale": "A misleading action queue makes the next legitimate turn hard to find.",
+        "author": "researcher; not a platform measurement"
+      },
+      "fact_duel_requirement": "Separate active/waiting/finished/abandoned states; allow archiving without rematch.",
+      "applicability_limits": [
+        "Reply shows Mar 18 without year; chronology deliberately unresolved."
+      ],
+      "developer_reply": {
+        "visible": true,
+        "visible_date": "Mar 18 (year absent)",
+        "date_iso": null,
+        "paraphrase": "Feedback forwarded.",
+        "confirms_resolution": false
+      },
+      "official_cross_check_source_ids": [],
+      "claim_status": "Public review text inspected; underlying user experience not independently reproduced.",
+      "retrieved_on": "2026-09-12",
+      "private_reviewer_identity_collected": false
+    },
+    {
+      "id": "QP04",
+      "product": "Quiz Planet",
+      "source_id": "QP-AS",
+      "source_url": "https://apps.apple.com/us/app/quiz-planet/id1466208181?platform=iphone&see-all=reviews",
+      "platform": "Apple App Store / iPhone reviews",
+      "storefront": "US English requested; reviewer locale and in-game language unknown",
+      "visible_review_date": "2023-09-25",
+      "review_date_iso": "2023-09-25",
+      "review_version": null,
+      "version_note": "No review-level version visible; current listing update is not the reviewed version.",
+      "individual_review_url": null,
+      "inspection_locator": "Title: Wonderful game! Two requests please",
+      "paraphrase": "Post-answer comparison praised; transition taps misfire.",
+      "sentiment": "mixed",
+      "issue_categories": [
+        "input integrity",
+        "learning feedback"
+      ],
+      "severity_inference": {
+        "level": "high",
+        "rationale": "A stale tap must not commit an unintended answer.",
+        "author": "researcher; not a platform measurement"
+      },
+      "fact_duel_requirement": "Require a fresh input after transition and reveal comparisons only after commitment.",
+      "applicability_limits": [
+        "Older iOS evidence; no proof of current defect."
+      ],
+      "developer_reply": {
+        "visible": true,
+        "visible_date": "2023-10-05",
+        "paraphrase": "Feedback acknowledged.",
+        "confirms_resolution": false
+      },
+      "official_cross_check_source_ids": [],
+      "claim_status": "Public review text inspected; underlying user experience not independently reproduced.",
+      "retrieved_on": "2026-09-12",
+      "private_reviewer_identity_collected": false
+    },
+    {
+      "id": "QP05",
+      "product": "Quiz Planet",
+      "source_id": "QP-AS",
+      "source_url": "https://apps.apple.com/us/app/quiz-planet/id1466208181?platform=iphone&see-all=reviews",
+      "platform": "Apple App Store / iPhone reviews",
+      "storefront": "US English requested; reviewer locale and in-game language unknown",
+      "visible_review_date": "2023-10-18",
+      "review_date_iso": "2023-10-18",
+      "review_version": null,
+      "version_note": "No review-level version visible; current listing update is not the reviewed version.",
+      "individual_review_url": null,
+      "inspection_locator": "Title: No stats, very little history",
+      "paraphrase": "History and retry fairness criticized; ads close.",
+      "sentiment": "mixed",
+      "issue_categories": [
+        "history",
+        "competitive equality",
+        "counterexample"
+      ],
+      "severity_inference": {
+        "level": "medium",
+        "rationale": "History and equal opportunities support confidence in competition.",
+        "author": "researcher; not a platform measurement"
+      },
+      "fact_duel_requirement": "Expose past results and keep competitive answer opportunities equal.",
+      "applicability_limits": [
+        "Older variant-specific report; successful ad closing contradicts universality, not others' experiences."
+      ],
+      "developer_reply": {
+        "visible": true,
+        "visible_date": "2023-10-23",
+        "paraphrase": "Facebook statistics test mentioned.",
+        "confirms_resolution": false
+      },
+      "official_cross_check_source_ids": [],
+      "claim_status": "Public review text inspected; underlying user experience not independently reproduced.",
+      "retrieved_on": "2026-09-12",
+      "private_reviewer_identity_collected": false
+    },
+    {
+      "id": "QP06",
+      "product": "Quiz Planet",
+      "source_id": "QP-AS",
+      "source_url": "https://apps.apple.com/us/app/quiz-planet/id1466208181?platform=iphone&see-all=reviews",
+      "platform": "Apple App Store / iPhone reviews",
+      "storefront": "US English requested; reviewer locale and in-game language unknown",
+      "visible_review_date": "2024-01-14",
+      "review_date_iso": "2024-01-14",
+      "review_version": null,
+      "version_note": "No review-level version visible; current listing update is not the reviewed version.",
+      "individual_review_url": null,
+      "inspection_locator": "Title: Only ONE Thing…",
+      "paraphrase": "Score checking unexpectedly sends nudges.",
+      "sentiment": "mixed",
+      "issue_categories": [
+        "social consent",
+        "navigation"
+      ],
+      "severity_inference": {
+        "level": "medium",
+        "rationale": "Reading information should not contact another player.",
+        "author": "researcher; not a platform measurement"
+      },
+      "fact_duel_requirement": "Make profile viewing read-only; use a separate explicit reminder action.",
+      "applicability_limits": [
+        "Older review; exact notification implementation not verified."
+      ],
+      "developer_reply": {
+        "visible": true,
+        "visible_date": "2024-01-23",
+        "paraphrase": "Nudge concern acknowledged.",
+        "confirms_resolution": false
+      },
+      "official_cross_check_source_ids": [],
+      "claim_status": "Public review text inspected; underlying user experience not independently reproduced.",
+      "retrieved_on": "2026-09-12",
+      "private_reviewer_identity_collected": false
+    },
+    {
+      "id": "QD01",
+      "product": "QuizDuel",
+      "source_id": "QD-AS",
+      "source_url": "https://apps.apple.com/us/app/quizduel-trivia-quiz-game/id1484354626?platform=iphone&see-all=reviews",
+      "platform": "Apple App Store / iPhone reviews",
+      "storefront": "US English requested; reviewer locale and in-game language unknown",
+      "visible_review_date": "2025-06-10",
+      "review_date_iso": "2025-06-10",
+      "review_version": null,
+      "version_note": "No review-level version visible; current listing update is not the reviewed version.",
+      "individual_review_url": null,
+      "inspection_locator": "Title: Amazing Quiz Game, One suggestion",
+      "paraphrase": "Fast matching and variety praised; clubs requested.",
+      "sentiment": "positive",
+      "issue_categories": [
+        "matchmaking",
+        "variety"
+      ],
+      "severity_inference": {
+        "level": "positive",
+        "rationale": "Preserve quick access and appropriate choice of game mode.",
+        "author": "researcher; not a platform measurement"
+      },
+      "fact_duel_requirement": "Keep matching fast and explain opponent type without fabricating human presence.",
+      "applicability_limits": [
+        "Reviewer belief in real opponents is not bot verification; official Teams help supersedes club gap; workshop help contradicts claimed submissions availability."
+      ],
+      "developer_reply": {
+        "visible": false,
+        "interpretation": "No reply visible in inspected public extract; absence elsewhere not established."
+      },
+      "official_cross_check_source_ids": [
+        "QD-TEAMS",
+        "QD-WORKSHOP"
+      ],
+      "claim_status": "Public review text inspected; underlying user experience not independently reproduced.",
+      "retrieved_on": "2026-09-12",
+      "private_reviewer_identity_collected": false
+    },
+    {
+      "id": "QD02",
+      "product": "QuizDuel",
+      "source_id": "QD-AS",
+      "source_url": "https://apps.apple.com/us/app/quizduel-trivia-quiz-game/id1484354626?platform=iphone&see-all=reviews",
+      "platform": "Apple App Store / iPhone reviews",
+      "storefront": "US English requested; reviewer locale and in-game language unknown",
+      "visible_review_date": "2021-09-17",
+      "review_date_iso": "2021-09-17",
+      "review_version": null,
+      "version_note": "No review-level version visible; current listing update is not the reviewed version.",
+      "individual_review_url": null,
+      "inspection_locator": "Title: Repeat questions",
+      "paraphrase": "Close repeats favor remembered responses.",
+      "sentiment": "mixed",
+      "issue_categories": [
+        "freshness",
+        "fairness"
+      ],
+      "severity_inference": {
+        "level": "high",
+        "rationale": "Recent exposure could turn a knowledge contest into location memory.",
+        "author": "researcher; not a platform measurement"
+      },
+      "fact_duel_requirement": "Track exposure and exclude near-term repeats in competitive sessions.",
+      "applicability_limits": [
+        "Historical perception; repeat frequency not audited; current pool and algorithm unknown."
+      ],
+      "developer_reply": {
+        "visible": true,
+        "visible_date": "2021-09-23",
+        "paraphrase": "Repetition feedback acknowledged.",
+        "confirms_resolution": false
+      },
+      "official_cross_check_source_ids": [],
+      "claim_status": "Public review text inspected; underlying user experience not independently reproduced.",
+      "retrieved_on": "2026-09-12",
+      "private_reviewer_identity_collected": false
+    },
+    {
+      "id": "QD03",
+      "product": "QuizDuel",
+      "source_id": "QD-GP",
+      "source_url": "https://play.google.com/store/apps/details?hl=en_US&id=se.maginteractive.quizduel2",
+      "platform": "Google Play / Android listing",
+      "storefront": "US English requested; reviewer locale and in-game language unknown",
+      "visible_review_date": "2021-06-17",
+      "review_date_iso": "2021-06-17",
+      "review_version": null,
+      "version_note": "No review-level version visible; current listing update is not the reviewed version.",
+      "individual_review_url": null,
+      "inspection_locator": "Date plus opponent-wait topic",
+      "paraphrase": "Waiting disliked; alternative modes appreciated.",
+      "sentiment": "mixed",
+      "issue_categories": [
+        "pacing",
+        "mode expectations"
+      ],
+      "severity_inference": {
+        "level": "medium",
+        "rationale": "Mismatch between expected live play and asynchronous turns causes abandonment.",
+        "author": "researcher; not a platform measurement"
+      },
+      "fact_duel_requirement": "Label live versus asynchronous modes before entry and provide visible wait/exit states.",
+      "applicability_limits": [
+        "Older experience; mode pacing complaint is not evidence of a technical fault."
+      ],
+      "developer_reply": {
+        "visible": false,
+        "interpretation": "No reply visible in inspected public extract; absence elsewhere not established."
+      },
+      "official_cross_check_source_ids": [],
+      "claim_status": "Public review text inspected; underlying user experience not independently reproduced.",
+      "retrieved_on": "2026-09-12",
+      "private_reviewer_identity_collected": false
+    },
+    {
+      "id": "QD04",
+      "product": "QuizDuel",
+      "source_id": "QD-GP",
+      "source_url": "https://play.google.com/store/apps/details?hl=en_US&id=se.maginteractive.quizduel2",
+      "platform": "Google Play / Android listing",
+      "storefront": "US English requested; reviewer locale and in-game language unknown",
+      "visible_review_date": "2020-12-07",
+      "review_date_iso": "2020-12-07",
+      "review_version": null,
+      "version_note": "No review-level version visible; current listing update is not the reviewed version.",
+      "individual_review_url": null,
+      "inspection_locator": "Date plus premium-migration topic",
+      "paraphrase": "Earlier ad-removal purchase allegedly loses value.",
+      "sentiment": "critical",
+      "issue_categories": [
+        "purchase entitlements",
+        "migration"
+      ],
+      "severity_inference": {
+        "level": "high",
+        "rationale": "Equivalent migration could undermine the promise made at purchase.",
+        "author": "researcher; not a platform measurement"
+      },
+      "fact_duel_requirement": "Specify entitlement duration/scope and preserve recorded purchases during migration.",
+      "applicability_limits": [
+        "Historical allegation; price and contract not verified; do not treat as current pricing."
+      ],
+      "developer_reply": {
+        "visible": false,
+        "interpretation": "No reply visible in inspected public extract; absence elsewhere not established."
+      },
+      "official_cross_check_source_ids": [
+        "QD-ADS",
+        "QD-MIGRATION"
+      ],
+      "claim_status": "Public review text inspected; underlying user experience not independently reproduced.",
+      "retrieved_on": "2026-09-12",
+      "private_reviewer_identity_collected": false
+    }
+  ],
+  "source_ledger": [
+    {
+      "id": "TC-GP",
+      "url": "https://play.google.com/store/apps/details?hl=en_US&id=com.etermax.preguntados.lite",
+      "title": "Trivia Crack by The Floor",
+      "kind": "Official storefront with user reviews",
+      "retrieved_on": "2026-09-12",
+      "visible_dates": {
+        "listing_update": "2026-09-09"
+      },
+      "access": "Public text via web search/open; no authenticated browser",
+      "supports": "Three reviews; current The Floor branding.",
+      "limitations": "Featured review subset; mutable page; requested US English; review version and actual user locale unknown; listing updates do not date reviews."
+    },
+    {
+      "id": "SP-GP",
+      "url": "https://play.google.com/store/apps/details?hl=en_US&id=com.sporcle.geneva",
+      "title": "Sporcle: Play Trivia Quizzes",
+      "kind": "Official storefront with user reviews",
+      "retrieved_on": "2026-09-12",
+      "visible_dates": {
+        "listing_update": "2026-09-04"
+      },
+      "access": "Public text via web search/open; no authenticated browser",
+      "supports": "Selected review observations and developer-listed product context.",
+      "limitations": "Featured review subset; mutable page; requested US English; review version and actual user locale unknown; listing updates do not date reviews."
+    },
+    {
+      "id": "QP-GP",
+      "url": "https://play.google.com/store/apps/details?hl=en_US&id=com.lotum.quizplanet",
+      "title": "Quiz Planet",
+      "kind": "Official storefront with user reviews",
+      "retrieved_on": "2026-09-12",
+      "visible_dates": {
+        "listing_update": "2026-09-08"
+      },
+      "access": "Public text via web search/open; no authenticated browser",
+      "supports": "Selected review observations and developer-listed product context.",
+      "limitations": "Featured review subset; mutable page; requested US English; review version and actual user locale unknown; listing updates do not date reviews."
+    },
+    {
+      "id": "QD-GP",
+      "url": "https://play.google.com/store/apps/details?hl=en_US&id=se.maginteractive.quizduel2",
+      "title": "QuizDuel! Quiz & Trivia Game",
+      "kind": "Official storefront with user reviews",
+      "retrieved_on": "2026-09-12",
+      "visible_dates": {
+        "listing_update": "2026-09-03"
+      },
+      "access": "Public text via web search/open; no authenticated browser",
+      "supports": "Selected review observations and developer-listed product context.",
+      "limitations": "Featured review subset; mutable page; requested US English; review version and actual user locale unknown; listing updates do not date reviews."
+    },
+    {
+      "id": "QP-AS",
+      "url": "https://apps.apple.com/us/app/quiz-planet/id1466208181?platform=iphone&see-all=reviews",
+      "title": "Quiz Planet: Ratings & Reviews",
+      "kind": "Official storefront with user reviews",
+      "retrieved_on": "2026-09-12",
+      "visible_dates": {
+        "review_range_used": [
+          "2023-09-25",
+          "2025-03-29"
+        ]
+      },
+      "access": "Public text via web search/open; no authenticated browser",
+      "supports": "Four reviews and their replies.",
+      "limitations": "Duplicate expanded text deduplicated; no individual review permalink; one reply has no year."
+    },
+    {
+      "id": "QD-AS",
+      "url": "https://apps.apple.com/us/app/quizduel-trivia-quiz-game/id1484354626?platform=iphone&see-all=reviews",
+      "title": "QuizDuel: Ratings & Reviews",
+      "kind": "Official storefront with user reviews",
+      "retrieved_on": "2026-09-12",
+      "visible_dates": {
+        "review_dates_used": [
+          "2025-06-10",
+          "2021-09-17"
+        ]
+      },
+      "access": "Public text via web search/open; no authenticated browser",
+      "supports": "Positive matching/variety and historical repetition review.",
+      "limitations": "Reviewer statements about humans and submissions are not independently verified."
+    },
+    {
+      "id": "TC-PRIME",
+      "url": "https://triviacrack.help.etermax.com/hc/en-us/articles/52447169396243-Trivia-Crack-Prime",
+      "title": "Trivia Crack Prime",
+      "kind": "Official help",
+      "retrieved_on": "2026-09-12",
+      "visible_dates": {
+        "updated": "2026-06-09"
+      },
+      "access": "Public text via web search/open; no authenticated browser",
+      "supports": "Optional rewarded ads remain; first Classic second chance included.",
+      "limitations": "Benefits may vary; public documentation is not account-level entitlement inspection."
+    },
+    {
+      "id": "TC-POWER",
+      "url": "https://triviacrack.help.etermax.com/hc/en-us/articles/360024775733-Power-ups",
+      "title": "Power-ups",
+      "kind": "Official help",
+      "retrieved_on": "2026-09-12",
+      "visible_dates": {
+        "updated": "2026-06-15"
+      },
+      "access": "Public text via web search/open; no authenticated browser",
+      "supports": "Retry costs differ by app variant.",
+      "limitations": "Does not establish what variant TC03 used."
+    },
+    {
+      "id": "TC-TICKETS",
+      "url": "https://triviacrack.help.etermax.com/hc/en-us/articles/360034642493-What-are-tickets",
+      "title": "What are tickets?",
+      "kind": "Official help",
+      "retrieved_on": "2026-09-12",
+      "visible_dates": {
+        "updated": "2026-05-27"
+      },
+      "access": "Public text via web search/open; no authenticated browser",
+      "supports": "Tickets fund repeated chances and other actions.",
+      "limitations": "Not a record of one player's historical wallet or offers."
+    },
+    {
+      "id": "TC-PREMIUM",
+      "url": "https://triviacrack.help.etermax.com/hc/en-us/articles/42893141733907-Play-without-interruptions",
+      "title": "Play without interruptions!",
+      "kind": "Official help",
+      "retrieved_on": "2026-09-12",
+      "visible_dates": {
+        "updated": "2026-05-22"
+      },
+      "access": "Public text via web search/open; no authenticated browser",
+      "supports": "Prime subscription and separate one-time Premium app coexist.",
+      "limitations": "Variant labels matter; does not prove any individual purchase status."
+    },
+    {
+      "id": "SP-CASE",
+      "url": "https://www.google.com/ads/publisher/stories/sporcle/",
+      "title": "Sporcle: Google for Publishers case study",
+      "kind": "Commercial publisher case study with executive statements",
+      "retrieved_on": "2026-09-12",
+      "visible_dates": {
+        "published_year": 2023
+      },
+      "access": "Public text via web search/open; no authenticated browser",
+      "supports": "Advertising is a deliberate part of the business model.",
+      "limitations": "Commercial framing; old; no independent UX testing or confirmation of SP02/SP03."
+    },
+    {
+      "id": "QD-TEAMS",
+      "url": "https://magsupport.helpshift.com/hc/en/5-quizduel/faq/409-teams-and-team-events/",
+      "title": "Teams and Team Events",
+      "kind": "Official help",
+      "retrieved_on": "2026-09-12",
+      "visible_dates": {
+        "relative_last_updated": "274d"
+      },
+      "access": "Public text via web search/open; no authenticated browser",
+      "supports": "Team creation/joining and team event participation exist.",
+      "limitations": "Relative age preserved; no conversion to precise publication date; not all regions or accounts tested."
+    },
+    {
+      "id": "QD-WORKSHOP",
+      "url": "https://magsupport.helpshift.com/hc/en/5-quizduel/faq/118-when-will-the-question-workshop-be-activated-again/",
+      "title": "When will the question workshop be activated again?",
+      "kind": "Official help",
+      "retrieved_on": "2026-09-12",
+      "visible_dates": {
+        "relative_last_updated": "1039d"
+      },
+      "access": "Public text via web search/open; no authenticated browser",
+      "supports": "Workshop documented as unavailable.",
+      "limitations": "Old relative update; no live account inspection."
+    },
+    {
+      "id": "QD-ADS",
+      "url": "https://magsupport.helpshift.com/hc/en/5-quizduel/faq/122-how-can-i-remove-ads/",
+      "title": "How can I remove ads?",
+      "kind": "Official help",
+      "retrieved_on": "2026-09-12",
+      "visible_dates": {
+        "relative_last_updated": "1038d"
+      },
+      "access": "Public text via web search/open; no authenticated browser",
+      "supports": "Distinguishes renewing VIP and a nonrenewing 30-day offer.",
+      "limitations": "No current checkout price verified; no historical purchase determination."
+    },
+    {
+      "id": "QD-QUIT",
+      "url": "https://magsupport.helpshift.com/hc/en/5-quizduel/faq/116-why-am-i-not-getting-any-points-when-a-user-quits-the-game/",
+      "title": "Why am I not getting any points when a user quits the game?",
+      "kind": "Official help",
+      "retrieved_on": "2026-09-12",
+      "visible_dates": {
+        "relative_last_updated": "1039d"
+      },
+      "access": "Public text via web search/open; no authenticated browser",
+      "supports": "No points for opponent giving up before round three; anti-manipulation rationale.",
+      "limitations": "Rule may be mode-specific; no settlement reproduction."
+    },
+    {
+      "id": "QD-HISTORY",
+      "url": "https://magsupport.helpshift.com/hc/en/5-quizduel/faq/120-i-accidentally-deleted-the-finished-games-how-can-i-restore-them/",
+      "title": "I accidentally deleted the finished games. How can I restore them?",
+      "kind": "Official help",
+      "retrieved_on": "2026-09-12",
+      "visible_dates": {
+        "relative_last_updated": "1039d"
+      },
+      "access": "Public text via web search/open; no authenticated browser",
+      "supports": "Deleted match details unrecoverable; aggregate statistics retained.",
+      "limitations": "Supplemental context, not counted as a customer review."
+    },
+    {
+      "id": "QD-MIGRATION",
+      "url": "https://www.maginteractive.com/files/reports/MAG_Interim_report_ENG_2019_20_Q4.pdf",
+      "title": "MAG Interim report 2019/20 Q4",
+      "kind": "Official corporate report",
+      "retrieved_on": "2026-09-12",
+      "visible_dates": {
+        "report_period": "2019/20 Q4"
+      },
+      "access": "Public text via web search/open; no authenticated browser",
+      "supports": "Historical migration to New QuizDuel and commercial context.",
+      "limitations": "Does not verify individual contract terms, forced updates or compensation. Supplemental, not a customer review."
+    }
+  ],
+  "method": {
+    "sampling": "Convenience sample from publicly exposed English US storefront reviews; targeted problem searches followed by positive and official counterchecks.",
+    "observation_unit": "One distinct review; attached reply belongs to that review; multiple issues do not increase count.",
+    "sample_size": 16,
+    "products": 4,
+    "dated_2025_or_2026": 10,
+    "older_reviews": 6,
+    "prevalence_claim_permitted": false,
+    "reviewer_names_stored": false,
+    "quotes_used": true,
+    "search_examples": [
+      "Trivia Crack The Floor App Store reviews ads bugs 2025",
+      "Sporcle app reviews 2025 ads multiplayer",
+      "Quiz Planet QuizDuel app store reviews 2025",
+      "site:apps.apple.com Quiz Planet love review",
+      "QuizDuel support FAQ classic match timer VIP premium",
+      "site:triviacrack.help.etermax.com/hc/en-us/articles Second Chance",
+      "site:triviacrack.help.etermax.com/hc/en-us/articles Prime",
+      "site:sporcle.com/blog Orange ads"
+    ],
+    "workflow": [
+      "Search public pages.",
+      "Open selected storefront review pages and inspect visible date/text/replies.",
+      "Deduplicate repeated expanded review rendering.",
+      "Retain positive and mixed accounts as counterexamples.",
+      "Cross-check product mechanics against official descriptions and help.",
+      "Separate reported experiences from confirmed documentation and researcher requirements."
+    ],
+    "limitations": [
+      "No representative sampling or denominator; issue counts must not become market prevalence.",
+      "English search and storefront selection bias; ad/bug terms intentionally emphasize friction.",
+      "Storefront locale does not establish reviewer location, device, client version or played mode.",
+      "Current Trivia Crack The Floor branding does not make older/general reviews The Floor-mode reviews.",
+      "No stable individual review deep links exposed; use source URL plus date and locator.",
+      "No authenticated play, device reproduction, browser interaction, private data, proprietary code or bulk scraping.",
+      "Sporcle help and blog searches returned robots-blocking; no circumvention attempted.",
+      "Search for AppleVis criticism did not produce a reliable inspectable specific review page; it was excluded.",
+      "No professional critic article was counted; criticism here is direct public customer criticism.",
+      "Visible relative reply dates and help update ages remain unresolved when year/date absent.",
+      "Documentation can lag rollout or differ by mode/region; public replies are developer statements, not independent verification.",
+      "Source pages are mutable; individual selected observations may no longer be featured later."
+    ],
+    "quotation_note": "Only short review titles and minimal date/product metadata are retained verbatim; no review-body passages are quoted. Review titles occur once, in JSON, to locate each observation."
+  },
+  "recommended_priority_order": [
+    "Answer and result integrity",
+    "Comprehensible duel contract",
+    "Compact play loop and intentional social actions",
+    "Question provenance, freshness and report feedback",
+    "Optional features and explicit purchase terms"
+  ],
+  "deliverable_note": "Research only; no claims about FACT//DUEL implementation or observed code.",
+  "source_budget_qa": {
+    "date": "2026-09-12",
+    "scope": "Conservative combined audit of Markdown and JSON, grouping observations by canonical source page rather than treating each review as a separate source.",
+    "observed_source_word_limit": 200,
+    "verbatim_word_limit": 25,
+    "larger_word_limits_used": false,
+    "duplicate_title_correction": "Removed Markdown review titles; retained each once as a JSON locator. Four Quiz Planet titles previously occurred twice, totaling 32 words. Their retained combined title count is 16.",
+    "notes": [
+      "Original FACT//DUEL requirements, severity reasoning and methodological caveats are researcher-authored, not additional source paraphrases.",
+      "Cross-artifact metadata is retained for inspectability; review-body summaries were tightened and repeated topical locators shortened.",
+      "No additional browsing or Site modifications during QA."
+    ],
+    "combined_storefront_source_drawing_word_tally": {
+      "TC-GP": 170,
+      "SP-GP": 136,
+      "QP-GP": 133,
+      "QP-AS": 183,
+      "QD-GP": 80,
+      "QD-AS": 91
+    },
+    "tally_method": "Manual attribution of source-derived spans; counts include Markdown review metadata/observations, JSON product/date/locator/paraphrase/reply fields, ledger title/support descriptions and substantive source-specific facts elsewhere. Original recommendations, inferred severities, methodological caveats and bibliographic URLs excluded. Counts use words, not model tokens; allow remaining margin for minor attribution/tokenization differences.",
+    "other_sources": "Each of the eleven official/help/commercial-report pages contributes fewer than 100 substantive source-derived words across both files; none uses a larger source limit.",
+    "retained_review_title_verbatim_words_by_page": {
+      "QP-AS": 16,
+      "QD-AS": 7,
+      "TC-GP": 0,
+      "SP-GP": 0,
+      "QP-GP": 0,
+      "QD-GP": 0
+    },
+    "verbatim_scope": "Review titles are counted once, in JSON; no review-body quotations. Product names, bibliographic page titles and dates remain factual citation metadata."
+  }
+}

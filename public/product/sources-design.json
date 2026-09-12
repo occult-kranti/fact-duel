@@ -1,0 +1,187 @@
+{
+  "artifact": "FACT DUEL Game and Experience Design",
+  "researched_at": "2026-09-12",
+  "scope": "Independent product gameplay, psychology, accessibility and sound research; no Site mutations or user tests performed",
+  "sources": [
+    {
+      "id": 1,
+      "author_or_publisher": "Ryan, R. M.; Rigby, C. S.; Przybylski, A. K.",
+      "title": "The Motivational Pull of Video Games: A Self-Determination Theory Approach",
+      "published": "2006",
+      "url": "https://selfdeterminationtheory.org/SDT/documents/2006_RyanRigbyPrzybylski_MandE.pdf",
+      "access_scope": "Original research, author-hosted PDF; abstract and relevant results/limitations inspected",
+      "supports": "Autonomy, competence and relatedness associations with game enjoyment and future play",
+      "limitations": "Sampled game genres and assigned play differ from voluntary browser trivia; not a product-retention estimate",
+      "accessed": "2026-09-12"
+    },
+    {
+      "id": 2,
+      "author_or_publisher": "Roediger, H. L.; Karpicke, J. D.",
+      "title": "Test-enhanced learning: taking memory tests improves long-term retention",
+      "published": "2006-03",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/16507066/",
+      "access_scope": "Original research abstract via PubMed",
+      "supports": "Retrieval benefits on delayed recall compared with restudy",
+      "limitations": "Students studied prose and completed free-recall tests; not this timed four-choice product",
+      "accessed": "2026-09-12"
+    },
+    {
+      "id": 3,
+      "author_or_publisher": "Butler, A. C.; Roediger, H. L.",
+      "title": "Feedback enhances the positive effects and reduces the negative effects of multiple-choice testing",
+      "published": "2008-04",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/18491500/",
+      "access_scope": "Original research abstract via PubMed",
+      "supports": "Immediate/delayed feedback increased later correct recall and reduced distractor intrusions versus no feedback",
+      "limitations": "Educational experiment does not validate game speed or retention uplift",
+      "accessed": "2026-09-12"
+    },
+    {
+      "id": 4,
+      "author_or_publisher": "Norman, D. A.",
+      "title": "The Design of Everyday Things, Revised and Expanded Edition",
+      "published": "2013",
+      "url": "https://jnd.org/books/the-design-of-everyday-things-revised-and-expanded-edition/",
+      "access_scope": "Author synopsis and table of contents",
+      "supports": "Signifiers, feedback, conceptual models, errors and iterative human-centered design as review lenses",
+      "limitations": "Full book not read; recommendations are original applications of identified themes",
+      "accessed": "2026-09-12"
+    },
+    {
+      "id": 5,
+      "author_or_publisher": "Krug, Steve; New Riders / Pearson",
+      "title": "Don’t Make Me Think, Revisited: A Common Sense Approach to Web Usability, third edition",
+      "published": "2014",
+      "url": "https://www.pearson.com/en-us/subject-catalog/p/don-t-make-me-think-revisited-a-common-sense-approach-to-web-usability/P200000000385/9780133597264",
+      "access_scope": "Publisher overview and table of contents; published 2013-12-23, copyright 2014",
+      "supports": "Intuitive navigation, concise copy, mobile usability and usability testing",
+      "limitations": "Full book not read; no universal quantitative conversion claims",
+      "accessed": "2026-09-12"
+    },
+    {
+      "id": 6,
+      "author_or_publisher": "Schell, Jesse; CRC Press / Routledge",
+      "title": "The Art of Game Design: A Book of Lenses, Third Edition",
+      "published": "2019",
+      "url": "https://www.routledge.com/about-us/crc-press",
+      "access_scope": "Publisher featured-book description; exact product-page fetch failed",
+      "supports": "Multiple perspectives and iterative design",
+      "limitations": "Full book not read; specific lenses/checklists in brief are original synthesis",
+      "accessed": "2026-09-12"
+    },
+    {
+      "id": 7,
+      "author_or_publisher": "Koster, Raph",
+      "title": "A Theory of Fun for Game Design: Excerpts",
+      "published": null,
+      "url": "https://www.theoryoffun.com/excerpt.shtml",
+      "access_scope": "Author-published chapter-one excerpt, prologue and contents",
+      "supports": "Practitioner examples of disengagement with too difficult, too easy or exhausted challenge",
+      "limitations": "Excerpt is not complete book or empirical validation; historical anecdotes not current market facts",
+      "accessed": "2026-09-12"
+    },
+    {
+      "id": 8,
+      "author_or_publisher": "Jonauskaite, D., et al.",
+      "title": "Universal Patterns in Color-Emotion Associations Are Further Shaped by Linguistic and Geographic Proximity",
+      "published": "2020-09-08",
+      "url": "https://journals.sagepub.com/doi/10.1177/0956797620948810",
+      "access_scope": "Original research abstract, journal page",
+      "supports": "4598 participants, 30 nations, 22 languages; shared associations with local linguistic/geographic modulation",
+      "limitations": "Color-term association study; cannot predict specific interface trust, calm, conversion or performance",
+      "accessed": "2026-09-12"
+    },
+    {
+      "id": 9,
+      "author_or_publisher": "Brewster, S. A.; Wright, P. C.; Edwards, A. D. N.",
+      "title": "Guidelines for the Creation of Earcons",
+      "published": null,
+      "url": "https://www.dcs.gla.ac.uk/~stephen/earcon_guidelines.shtml",
+      "access_scope": "Author university-hosted research guidance based on six experiments",
+      "supports": "Distinct timbre and rhythm, short cues, narrow controlled intensity; avoid pitch-only distinctions",
+      "limitations": "Historical interface findings; proposed sounds and durations need device and listening tests",
+      "accessed": "2026-09-12"
+    },
+    {
+      "id": 10,
+      "author_or_publisher": "World Wide Web Consortium",
+      "title": "Web Content Accessibility Guidelines (WCAG) 2.2",
+      "published": "2024-12-12",
+      "url": "https://www.w3.org/TR/WCAG22/",
+      "access_scope": "Normative W3C Recommendation",
+      "supports": "Contrast, reflow, focus, keyboard, status and reduced-motion design targets",
+      "limitations": "Design brief is not a full accessibility audit or conformance certification",
+      "accessed": "2026-09-12"
+    },
+    {
+      "id": 11,
+      "author_or_publisher": "World Wide Web Consortium",
+      "title": "Understanding SC 2.5.8: Target Size (Minimum)",
+      "published": null,
+      "url": "https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html",
+      "access_scope": "Official informative explanation of WCAG 2.2 AA criterion",
+      "supports": "24 by 24 CSS px minimum with exceptions; larger targets support easier activation",
+      "limitations": "Brief proposes 44px controls and 56px answer pads, not the normative AA minimum",
+      "accessed": "2026-09-12"
+    },
+    {
+      "id": 12,
+      "author_or_publisher": "World Wide Web Consortium",
+      "title": "Understanding SC 2.5.2: Pointer Cancellation",
+      "published": null,
+      "url": "https://www.w3.org/WAI/WCAG22/Understanding/pointer-cancellation.html",
+      "access_scope": "Official informative explanation of WCAG 2.2 A criterion",
+      "supports": "Prefer release/click for ordinary controls; limited essential down-event exceptions",
+      "limitations": "Game status is not blanket exemption; timed pad rationale and accessibility behavior require review",
+      "accessed": "2026-09-12"
+    },
+    {
+      "id": 13,
+      "author_or_publisher": "World Wide Web Consortium",
+      "title": "Understanding SC 2.2.1: Timing Adjustable",
+      "published": null,
+      "url": "https://www.w3.org/WAI/WCAG22/Understanding/timing-adjustable.html",
+      "access_scope": "Official informative explanation of WCAG 2.2 A criterion",
+      "supports": "Turn off/adjust/extend time with limited real-time and essential exceptions",
+      "limitations": "Untimed practice improves inclusion but does not alone establish whole-product conformance",
+      "accessed": "2026-09-12"
+    }
+  ],
+  "original_calculations": {
+    "method": "WCAG sRGB relative luminance contrast ratio, opaque solid colors only",
+    "pairs": [
+      {
+        "foreground": "#16241E",
+        "background": "#F4F2E9",
+        "ratio": 14.35
+      },
+      {
+        "foreground": "#16241E",
+        "background": "#D3F26B",
+        "ratio": 12.78
+      },
+      {
+        "foreground": "#E8EFE6",
+        "background": "#0D1512",
+        "ratio": 15.82
+      },
+      {
+        "foreground": "#88C8E0",
+        "background": "#0D1512",
+        "ratio": 10.05
+      },
+      {
+        "foreground": "#F4BE71",
+        "background": "#0D1512",
+        "ratio": 10.99
+      },
+      {
+        "foreground": "#F48C85",
+        "background": "#0D1512",
+        "ratio": 7.89
+      }
+    ]
+  },
+  "implementation_status": "Recommendations and acceptance gates only; root implementation determines shipped scope",
+  "book_coverage": "Accessible descriptions, contents and Koster chapter-one excerpt; complete books were not read or downloaded."
+}
