@@ -3,6 +3,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { emptyProfile, reduceProfile, passportSummary } from '@/lib/passport.mjs';
 import { transactProfile } from '@/lib/profile-store.mjs';
 import { readJournal } from '@/lib/journal.mjs';
+import { levelForXp } from '@/lib/progression.mjs';
+const VISIT_THROTTLE_MS = 60_000;
 export function usePlayer(room: any, roomEpoch?: string) {
   const [profile, setProfile] = useState<any>(() => emptyProfile()),
     [loaded, setLoaded] = useState(false),
@@ -13,7 +15,8 @@ export function usePlayer(room: any, roomEpoch?: string) {
     queue = useRef<Promise<any>>(Promise.resolve()),
     storage = useRef(true),
     everStored = useRef(false),
-    live = useRef(true);
+    live = useRef(true),
+    lastVisit = useRef(0);
   const accept = useCallback((value: any, authoritativeReset = false) => {
     if (!live.current || (!authoritativeReset && value.revision < current.current.revision)) return;
     current.current = value;
@@ -105,6 +108,26 @@ export function usePlayer(room: any, roomEpoch?: string) {
     if (loaded && roomEpoch && (room?.round?.result || room?.completedRounds?.length))
       void dispatch({ type: 'room', room, epoch: roomEpoch });
   }, [loaded, roomEpoch, room?.id, room?.revision, dispatch]);
+  // A visit credits the day streak and rolls daily quests: once after load, then on focus at most
+  // once a minute. Same-day repeats are no-ops in the reducer, so this never writes needlessly.
+  const visit = useCallback(() => {
+    lastVisit.current = Date.now();
+    return dispatch({ type: 'visit' });
+  }, [dispatch]);
+  useEffect(() => {
+    if (!loaded) return;
+    void visit();
+    const onFocus = () => {
+      if (Date.now() - lastVisit.current >= VISIT_THROTTLE_MS) void visit();
+    };
+    window.addEventListener('focus', onFocus);
+    return () => window.removeEventListener('focus', onFocus);
+  }, [loaded, visit]);
+  const buyCosmetic = useCallback((id: string) => void dispatch({ type: 'cosmetic-buy', id }), [dispatch]);
+  const equipCosmetic = useCallback(
+    (id: string) => void dispatch({ type: 'cosmetic-equip', id }),
+    [dispatch],
+  );
   const epoch = useCallback(() => current.current.epoch, []);
   const open = useCallback((roundId: string) => void dispatch({ type: 'open', roundId }), [dispatch]);
   const recall = useCallback((roundId: string) => void dispatch({ type: 'recall', roundId }), [dispatch]);
@@ -159,6 +182,8 @@ export function usePlayer(room: any, roomEpoch?: string) {
     journal: profile.journal,
     passport: profile.passport,
     summary: passportSummary(profile.passport),
+    progression: profile.progression,
+    level: levelForXp(profile.progression?.xp ?? 0),
     loaded,
     persistent,
     storageError,
@@ -169,5 +194,8 @@ export function usePlayer(room: any, roomEpoch?: string) {
     skin,
     exportAll,
     report,
+    visit,
+    buyCosmetic,
+    equipCosmetic,
   };
 }
