@@ -1,20 +1,334 @@
 'use client';
-import {useEffect,useState} from 'react';
-import {Button} from '@/components/ui/button';
-import {BookOpen,Bookmark,ArrowRight,ArrowLeft,Check,RotateCcw,Download,Trophy,Brain,ExternalLink} from 'lucide-react';
-import {uniqueFacts} from '@/lib/journal.mjs';
+import { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import {
+  BookOpen,
+  Bookmark,
+  ArrowRight,
+  ArrowLeft,
+  Check,
+  RotateCcw,
+  Download,
+  Trophy,
+  Brain,
+  ExternalLink,
+} from 'lucide-react';
+import { uniqueFacts } from '@/lib/journal.mjs';
 
-export function Journal({journal,issues,onPlay,onSave,onOpen,onRecall,onExport,storageOK,epoch,loaded}:{journal:any;issues:any[];onPlay:()=>void;onSave:(s:string)=>void;onOpen:(s:string)=>void;onRecall:(s:string)=>void;onExport:()=>void;storageOK:boolean;epoch:string;loaded:boolean}){
- const [filter,setFilter]=useState('all'),[study,setStudy]=useState(false),[index,setIndex]=useState(0),[choice,setChoice]=useState<string|null>(null);
- const facts:any[]=uniqueFacts(journal.rounds),shown=facts.filter(f=>filter!=='saved'||journal.saved.includes(f.question));
- const [deck,setDeck]=useState<any[]>([]);
- const current=deck[index];
- useEffect(()=>{setStudy(false);setChoice(null);setDeck([]);setIndex(0);},[epoch]);
- useEffect(()=>{if(!study)return;const heading=document.querySelector<HTMLElement>('.study-question h2');if(heading){heading.tabIndex=-1;heading.focus();}},[study,index]);
- if(study&&current)return <section className="study-surface"><Button variant="ghost" onClick={()=>{setStudy(false);setChoice(null);}}><ArrowLeft/>Back to the vault</Button><div className="section-heading"><div><p className="eyebrow">RECALL LAB · NO TIMER</p><h1>Take your time.</h1></div><span className="tag">{index+1} / {deck.length}</span></div><p className="muted">Revisit a fact you encountered. There are no coins, opponents or time pressure.</p><div className="study-question"><span className="tag">{current.topic}</span><h2>{current.question}</h2><div className="answer-grid">{current.options.map((o:string,i:number)=><Button key={o} variant="outline" className={`answer-button ${choice===o?'chosen':''} ${choice&&o===current.correctAnswer?'correct-option':''}`} disabled={choice!==null} aria-pressed={choice===o} onClick={()=>{setChoice(o);onRecall(current.id);}}><span className="option-label" aria-hidden="true">{String.fromCharCode(65+i)}</span><span>{o}</span>{choice&&o===current.correctAnswer&&<Check/>}</Button>)}</div>{choice!==null&&<div className="recall-feedback" role="status"><strong>{choice===current.correctAnswer?'You remembered.':'One to revisit.'}</strong><p>{current.explanation}</p><a href={current.sourceUrl} target="_blank" rel="noopener noreferrer">Check the source<ExternalLink size={15}/></a><Button onClick={()=>{if(index+1<deck.length){setIndex(index+1);setChoice(null);}else{setStudy(false);setIndex(0);setChoice(null);}}}>{index+1<deck.length?'Next fact':'Finish practice'}<ArrowRight/></Button></div>}</div></section>;
- return <section><div className="section-heading"><div><p className="eyebrow">REWATCH THE HIGHLIGHTS</p><h1>Your fact vault.</h1></div>{facts.length>0&&<Button variant="outline" disabled={!loaded} onClick={onExport}><Download/>Export</Button>}</div><p className="muted">Your match history and encountered facts, saved in this browser. Revisit, bookmark and try recall whenever you like. Activity is not measured mastery.</p>{!storageOK&&<p className="error-box">Device storage is unavailable. This journal will last only for this visit.</p>}<div className="journal-stats"><article><Trophy/><strong>{journal.matches.length}</strong><span>Completed matches</span></article><article><BookOpen/><strong>{facts.length}</strong><span>Distinct facts encountered</span></article><article><Bookmark/><strong>{facts.filter(f=>journal.saved.includes(f.question)).length}</strong><span>Saved to revisit</span></article></div>
- {facts.length===0?<div className="empty-surface"><BookOpen/><h2>Your first fact is waiting.</h2><p>Try three untimed discovery cards or finish a duel. Their explanations and sources will be waiting here.</p><Button onClick={onPlay}>Try untimed discovery<ArrowRight/></Button></div>:<><div className="journal-toolbar"><div className="segmented"><Button aria-pressed={filter==='all'} variant="ghost" onClick={()=>{setFilter('all');setIndex(0);}}>All facts</Button><Button aria-pressed={filter==='saved'} variant="ghost" onClick={()=>{setFilter('saved');setIndex(0);}}>Saved</Button></div><Button onClick={()=>{setIndex(0);setChoice(null);setDeck(shown);setStudy(true);}} disabled={!shown.length}><Brain/>Recall practice</Button></div>{!shown.length&&<p className="empty-surface">Save a fact using its bookmark to find it here.</p>}<div className="fact-list">{shown.map(f=><article key={f.id} className="fact-entry"><div><span className="tag">{f.topic}</span><h2>{f.question}</h2><p>{f.correctAnswer}</p><details onToggle={e=>{if(e.currentTarget.open)onOpen(f.id);}}><summary>Explanation & source</summary><p>{f.explanation}</p><a href={f.sourceUrl} target="_blank" rel="noopener noreferrer">{f.sourceLabel}<ExternalLink size={15}/></a></details></div><Button size="icon" variant="ghost" aria-label={journal.saved.includes(f.question)?'Remove saved fact':'Save fact'} aria-pressed={journal.saved.includes(f.question)} onClick={()=>onSave(f.question)}><Bookmark fill={journal.saved.includes(f.question)?'currentColor':'none'}/></Button></article>)}</div></>}
- {issues?.length>0&&<section className="saved-issues"><div className="section-heading"><div><p className="eyebrow">SAVED ON THIS DEVICE · NOT SENT</p><h2>Questions you flagged.</h2></div><Button variant="outline" onClick={onExport} disabled={!loaded}><Download/>Export issues & activity</Button></div><p className="muted">These notes keep the original fact and source. They are not in a support queue and do not change past scores.</p>{issues.map((issue:any)=><details key={issue.id}><summary>{issue.fact.question}<span>{({incorrect:'Answer concern',ambiguous:'Ambiguous',source:'Source concern',other:'Other concern'} as any)[issue.reason]}</span></summary><p>{issue.note||'No additional note.'}</p><p className="small-note">Accepted answer: {issue.fact.correctAnswer}</p><a href={issue.fact.sourceUrl} target="_blank" rel="noopener noreferrer">Open original source<ExternalLink size={14}/></a><small>Saved {new Date(issue.at).toLocaleDateString()}</small></details>)}</section>}
- {journal.matches.length>0&&<section className="recent-matches"><div className="section-heading"><h2>Recent matches</h2><span className="muted">Last {Math.min(10,journal.matches.length)} on this device</span></div>{journal.matches.slice(0,10).map((m:any)=><div className="match-row" key={m.id}><span className={`outcome ${m.outcome}`}>{m.outcome}</span><div><strong>{({quick:'Quick Draw',trilogy:'Triple Threat',gauntlet:'The Gauntlet'} as any)[m.mode]||m.mode}</strong><span>{m.bot?'Practice bot':'Friend duel'}</span></div><time>{new Date(m.at).toLocaleDateString(undefined,{month:'short',day:'numeric'})}</time></div>)}</section>}
- </section>;
+export function Journal({
+  journal,
+  issues,
+  onPlay,
+  onSave,
+  onOpen,
+  onRecall,
+  onExport,
+  storageOK,
+  epoch,
+  loaded,
+}: {
+  journal: any;
+  issues: any[];
+  onPlay: () => void;
+  onSave: (s: string) => void;
+  onOpen: (s: string) => void;
+  onRecall: (s: string) => void;
+  onExport: () => void;
+  storageOK: boolean;
+  epoch: string;
+  loaded: boolean;
+}) {
+  const [filter, setFilter] = useState('all'),
+    [study, setStudy] = useState(false),
+    [index, setIndex] = useState(0),
+    [choice, setChoice] = useState<string | null>(null);
+  const facts: any[] = uniqueFacts(journal.rounds),
+    shown = facts.filter((f) => filter !== 'saved' || journal.saved.includes(f.question));
+  const [deck, setDeck] = useState<any[]>([]);
+  const current = deck[index];
+  useEffect(() => {
+    setStudy(false);
+    setChoice(null);
+    setDeck([]);
+    setIndex(0);
+  }, [epoch]);
+  useEffect(() => {
+    if (!study) return;
+    const heading = document.querySelector<HTMLElement>('.study-question h2');
+    if (heading) {
+      heading.tabIndex = -1;
+      heading.focus();
+    }
+  }, [study, index]);
+  if (study && current)
+    return (
+      <section className="study-surface">
+        <Button
+          variant="ghost"
+          onClick={() => {
+            setStudy(false);
+            setChoice(null);
+          }}
+        >
+          <ArrowLeft />
+          Back to the vault
+        </Button>
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow">RECALL LAB · NO TIMER</p>
+            <h1>Take your time.</h1>
+          </div>
+          <span className="tag">
+            {index + 1} / {deck.length}
+          </span>
+        </div>
+        <p className="muted">
+          Revisit a fact you encountered. There are no coins, opponents or time pressure.
+        </p>
+        <div className="study-question">
+          <span className="tag">{current.topic}</span>
+          <h2>{current.question}</h2>
+          <div className="answer-grid">
+            {current.options.map((o: string, i: number) => (
+              <Button
+                key={o}
+                variant="outline"
+                className={`answer-button ${choice === o ? 'chosen' : ''} ${choice && o === current.correctAnswer ? 'correct-option' : ''}`}
+                disabled={choice !== null}
+                aria-pressed={choice === o}
+                onClick={() => {
+                  setChoice(o);
+                  onRecall(current.id);
+                }}
+              >
+                <span className="option-label" aria-hidden="true">
+                  {String.fromCharCode(65 + i)}
+                </span>
+                <span>{o}</span>
+                {choice && o === current.correctAnswer && <Check />}
+              </Button>
+            ))}
+          </div>
+          {choice !== null && (
+            <div className="recall-feedback" role="status">
+              <strong>{choice === current.correctAnswer ? 'You remembered.' : 'One to revisit.'}</strong>
+              <p>{current.explanation}</p>
+              <a href={current.sourceUrl} target="_blank" rel="noopener noreferrer">
+                Check the source
+                <ExternalLink size={15} />
+              </a>
+              <Button
+                onClick={() => {
+                  if (index + 1 < deck.length) {
+                    setIndex(index + 1);
+                    setChoice(null);
+                  } else {
+                    setStudy(false);
+                    setIndex(0);
+                    setChoice(null);
+                  }
+                }}
+              >
+                {index + 1 < deck.length ? 'Next fact' : 'Finish practice'}
+                <ArrowRight />
+              </Button>
+            </div>
+          )}
+        </div>
+      </section>
+    );
+  return (
+    <section>
+      <div className="section-heading">
+        <div>
+          <p className="eyebrow">REWATCH THE HIGHLIGHTS</p>
+          <h1>Your fact vault.</h1>
+        </div>
+        {facts.length > 0 && (
+          <Button variant="outline" disabled={!loaded} onClick={onExport}>
+            <Download />
+            Export
+          </Button>
+        )}
+      </div>
+      <p className="muted">
+        Your match history and encountered facts, saved in this browser. Revisit, bookmark and try recall
+        whenever you like. Activity is not measured mastery.
+      </p>
+      {!storageOK && (
+        <p className="error-box">
+          Device storage is unavailable. This journal will last only for this visit.
+        </p>
+      )}
+      <div className="journal-stats">
+        <article>
+          <Trophy />
+          <strong>{journal.matches.length}</strong>
+          <span>Completed matches</span>
+        </article>
+        <article>
+          <BookOpen />
+          <strong>{facts.length}</strong>
+          <span>Distinct facts encountered</span>
+        </article>
+        <article>
+          <Bookmark />
+          <strong>{facts.filter((f) => journal.saved.includes(f.question)).length}</strong>
+          <span>Saved to revisit</span>
+        </article>
+      </div>
+      {facts.length === 0 ? (
+        <div className="empty-surface">
+          <BookOpen />
+          <h2>Your first fact is waiting.</h2>
+          <p>
+            Try three untimed discovery cards or finish a duel. Their explanations and sources will be waiting
+            here.
+          </p>
+          <Button onClick={onPlay}>
+            Try untimed discovery
+            <ArrowRight />
+          </Button>
+        </div>
+      ) : (
+        <>
+          <div className="journal-toolbar">
+            <div className="segmented">
+              <Button
+                aria-pressed={filter === 'all'}
+                variant="ghost"
+                onClick={() => {
+                  setFilter('all');
+                  setIndex(0);
+                }}
+              >
+                All facts
+              </Button>
+              <Button
+                aria-pressed={filter === 'saved'}
+                variant="ghost"
+                onClick={() => {
+                  setFilter('saved');
+                  setIndex(0);
+                }}
+              >
+                Saved
+              </Button>
+            </div>
+            <Button
+              onClick={() => {
+                setIndex(0);
+                setChoice(null);
+                setDeck(shown);
+                setStudy(true);
+              }}
+              disabled={!shown.length}
+            >
+              <Brain />
+              Recall practice
+            </Button>
+          </div>
+          {!shown.length && <p className="empty-surface">Save a fact using its bookmark to find it here.</p>}
+          <div className="fact-list">
+            {shown.map((f) => (
+              <article key={f.id} className="fact-entry">
+                <div>
+                  <span className="tag">{f.topic}</span>
+                  <h2>{f.question}</h2>
+                  <p>{f.correctAnswer}</p>
+                  <details
+                    onToggle={(e) => {
+                      if (e.currentTarget.open) onOpen(f.id);
+                    }}
+                  >
+                    <summary>Explanation & source</summary>
+                    <p>{f.explanation}</p>
+                    <a href={f.sourceUrl} target="_blank" rel="noopener noreferrer">
+                      {f.sourceLabel}
+                      <ExternalLink size={15} />
+                    </a>
+                  </details>
+                </div>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  aria-label={journal.saved.includes(f.question) ? 'Remove saved fact' : 'Save fact'}
+                  aria-pressed={journal.saved.includes(f.question)}
+                  onClick={() => onSave(f.question)}
+                >
+                  <Bookmark fill={journal.saved.includes(f.question) ? 'currentColor' : 'none'} />
+                </Button>
+              </article>
+            ))}
+          </div>
+        </>
+      )}
+      {issues?.length > 0 && (
+        <section className="saved-issues">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">SAVED ON THIS DEVICE · NOT SENT</p>
+              <h2>Questions you flagged.</h2>
+            </div>
+            <Button variant="outline" onClick={onExport} disabled={!loaded}>
+              <Download />
+              Export issues & activity
+            </Button>
+          </div>
+          <p className="muted">
+            These notes keep the original fact and source. They are not in a support queue and do not change
+            past scores.
+          </p>
+          {issues.map((issue: any) => (
+            <details key={issue.id}>
+              <summary>
+                {issue.fact.question}
+                <span>
+                  {
+                    (
+                      {
+                        incorrect: 'Answer concern',
+                        ambiguous: 'Ambiguous',
+                        source: 'Source concern',
+                        other: 'Other concern',
+                      } as any
+                    )[issue.reason]
+                  }
+                </span>
+              </summary>
+              <p>{issue.note || 'No additional note.'}</p>
+              <p className="small-note">Accepted answer: {issue.fact.correctAnswer}</p>
+              <a href={issue.fact.sourceUrl} target="_blank" rel="noopener noreferrer">
+                Open original source
+                <ExternalLink size={14} />
+              </a>
+              <small>Saved {new Date(issue.at).toLocaleDateString()}</small>
+            </details>
+          ))}
+        </section>
+      )}
+      {journal.matches.length > 0 && (
+        <section className="recent-matches">
+          <div className="section-heading">
+            <h2>Recent matches</h2>
+            <span className="muted">Last {Math.min(10, journal.matches.length)} on this device</span>
+          </div>
+          {journal.matches.slice(0, 10).map((m: any) => (
+            <div className="match-row" key={m.id}>
+              <span className={`outcome ${m.outcome}`}>{m.outcome}</span>
+              <div>
+                <strong>
+                  {({ quick: 'Quick Draw', trilogy: 'Triple Threat', gauntlet: 'The Gauntlet' } as any)[
+                    m.mode
+                  ] || m.mode}
+                </strong>
+                <span>{m.bot ? 'Practice bot' : 'Friend duel'}</span>
+              </div>
+              <time>{new Date(m.at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</time>
+            </div>
+          ))}
+        </section>
+      )}
+    </section>
+  );
 }

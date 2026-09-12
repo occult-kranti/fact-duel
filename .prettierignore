@@ -1,0 +1,12 @@
+node_modules
+dist
+.next
+.vinext
+.wrangler
+components/ui
+vendor
+pnpm-lock.yaml
+public
+drizzle
+archive
+lib/product

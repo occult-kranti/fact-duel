@@ -1,14 +1,15 @@
-import type { Metadata } from "next";
-import "./globals.css";
-import "./rivalry.css";
-import "./expeditions.css";
+import type { Metadata } from 'next';
+import './globals.css';
+import './rivalry.css';
+import './expeditions.css';
 
 export const metadata: Metadata = {
-  title: "FACT//DUEL — Know it. Prove it.",
-  description: "Explore nine sports and science expeditions, choose your confidence, collect stamps, or challenge a friend or a random bot. Sports and science trivia with free simulated coins.",
+  title: 'FACT//DUEL — Know it. Prove it.',
+  description:
+    'Explore nine sports and science expeditions, choose your confidence, collect stamps, or challenge a friend or a random bot. Sports and science trivia with free simulated coins.',
   icons: {
-    icon: "/favicon.svg",
-    shortcut: "/favicon.svg",
+    icon: '/favicon.svg',
+    shortcut: '/favicon.svg',
   },
 };
 

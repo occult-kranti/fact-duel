@@ -1,14 +1,189 @@
 'use client';
-import {useEffect,useRef,useState} from 'react';
-import {Button} from '@/components/ui/button';
-import {request} from '@/lib/duel-client';
-import {ArrowLeft,ArrowRight,Check,BookOpen,Bookmark,Compass} from 'lucide-react';
-export default function Discovery({topic,onBack,player}:{topic:string;onBack:()=>void;player:any}){
- const [cards,setCards]=useState<any[]>([]),[index,setIndex]=useState(0),[choice,setChoice]=useState<number|null>(null),[error,setError]=useState(''),[finished,setFinished]=useState(false),[retry,setRetry]=useState(0);
- const session=useRef(''),locked=useRef(false),heading=useRef<HTMLHeadingElement|null>(null);
- useEffect(()=>{let alive=true;setError('');session.current=crypto.randomUUID();locked.current=false;setChoice(null);setCards([]);setIndex(0);setFinished(false);request({action:'practice',topic}).then(d=>{if(alive){setCards(d.cards);setIndex(0);setFinished(false);}}).catch(e=>{if(alive)setError(e.message);});return()=>{alive=false;};},[topic,retry,player.profile.epoch]);
- useEffect(()=>{heading.current?.focus();},[index,finished,cards.length]);
- const fact=cards[index],roundId=fact?`practice:${session.current}:${index}`:'';
- const answer=(selected:number)=>{if(locked.current||!fact)return;locked.current=true;setChoice(selected);void player.dispatch({type:'practice',epoch:player.profile.epoch,fact,choice:selected,roundId});};
- return <section className="discovery-page"><Button variant="ghost" onClick={onBack}><ArrowLeft/>Back to arcade</Button><div className="section-heading"><div><p className="eyebrow">DISCOVERY · NO TIMER, NO OPPONENT</p><h1 ref={heading} tabIndex={-1}>{finished?'A good place to pause.':'Follow your curiosity.'}</h1></div><span className="tag"><Compass/>3 facts · take your time</span></div>{finished?<div className="discovery-finish"><span className="badge-orbit"><Check/></span><h2>Three facts to take with you.</h2><p>Your attempted cards and their sources are in the journal. This session is complete. Activity stamps describe exploration, not mastery.</p><Button onClick={onBack}>Finish session<Check/></Button></div>:error?<div className="empty-surface" role="alert"><h2>Couldn’t open these cards.</h2><p>{error}</p><Button onClick={()=>{locked.current=false;setChoice(null);setRetry(n=>n+1);}}>Try again</Button></div>:!fact?<p className="empty-surface" role="status">Opening three sourced facts…</p>:<><div className="discovery-progress" aria-label={`Fact ${index+1} of 3`}>{cards.map((_,i)=><span key={i} className={i<=index?'passed':''}/>)}</div><div className="study-question"><span className="tag">{fact.topic} / {fact.subtopic}</span><h2>{fact.question}</h2><p className="small-note">Choose once to see the explanation. There is no time limit.</p><div className="answer-grid">{fact.options.map((o:string,i:number)=><Button key={i} variant="outline" className={`answer-button ${choice===i?'chosen':''} ${choice!==null&&i===fact.correctIndex?'correct-option':''}`} aria-pressed={choice===i} disabled={choice!==null||!player.loaded} onClick={()=>answer(i)}><span className="option-label">{String.fromCharCode(65+i)}</span><span>{o}</span>{choice!==null&&i===fact.correctIndex&&<Check/>}</Button>)}</div>{choice!==null&&<div className="recall-feedback"><strong role="status">{choice===fact.correctIndex?'You found it.':'A new fact for the collection.'}</strong><p><b>Correct answer:</b> {fact.options[fact.correctIndex]}</p><details onToggle={e=>{if(e.currentTarget.open)player.open(roundId);}}><summary><BookOpen/>Open the explanation</summary><p>{fact.explanation}</p><a href={fact.sourceUrl} target="_blank" rel="noopener noreferrer">Source: {fact.sourceLabel}</a></details><div className="practice-actions"><Button variant="outline" onClick={()=>player.save(fact.question)}><Bookmark/>Save fact</Button><Button onClick={()=>{if(index+1<cards.length){locked.current=false;setChoice(null);setIndex(index+1);}else setFinished(true);}}>{index+1<cards.length?'Next fact':'Complete session'}<ArrowRight/></Button></div></div>}</div><p className="small-note">Open teaching cards share facts with the duel sample. Their answers are available to this practice screen; this is untimed exploration, not a ranked test.</p></>}</section>;
+import { useEffect, useRef, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { request } from '@/lib/duel-client';
+import { ArrowLeft, ArrowRight, Check, BookOpen, Bookmark, Compass } from 'lucide-react';
+export default function Discovery({
+  topic,
+  onBack,
+  player,
+}: {
+  topic: string;
+  onBack: () => void;
+  player: any;
+}) {
+  const [cards, setCards] = useState<any[]>([]),
+    [index, setIndex] = useState(0),
+    [choice, setChoice] = useState<number | null>(null),
+    [error, setError] = useState(''),
+    [finished, setFinished] = useState(false),
+    [retry, setRetry] = useState(0);
+  const session = useRef(''),
+    locked = useRef(false),
+    heading = useRef<HTMLHeadingElement | null>(null);
+  useEffect(() => {
+    let alive = true;
+    setError('');
+    session.current = crypto.randomUUID();
+    locked.current = false;
+    setChoice(null);
+    setCards([]);
+    setIndex(0);
+    setFinished(false);
+    request({ action: 'practice', topic })
+      .then((d) => {
+        if (alive) {
+          setCards(d.cards);
+          setIndex(0);
+          setFinished(false);
+        }
+      })
+      .catch((e) => {
+        if (alive) setError(e.message);
+      });
+    return () => {
+      alive = false;
+    };
+  }, [topic, retry, player.profile.epoch]);
+  useEffect(() => {
+    heading.current?.focus();
+  }, [index, finished, cards.length]);
+  const fact = cards[index],
+    roundId = fact ? `practice:${session.current}:${index}` : '';
+  const answer = (selected: number) => {
+    if (locked.current || !fact) return;
+    locked.current = true;
+    setChoice(selected);
+    void player.dispatch({ type: 'practice', epoch: player.profile.epoch, fact, choice: selected, roundId });
+  };
+  return (
+    <section className="discovery-page">
+      <Button variant="ghost" onClick={onBack}>
+        <ArrowLeft />
+        Back to arcade
+      </Button>
+      <div className="section-heading">
+        <div>
+          <p className="eyebrow">DISCOVERY · NO TIMER, NO OPPONENT</p>
+          <h1 ref={heading} tabIndex={-1}>
+            {finished ? 'A good place to pause.' : 'Follow your curiosity.'}
+          </h1>
+        </div>
+        <span className="tag">
+          <Compass />3 facts · take your time
+        </span>
+      </div>
+      {finished ? (
+        <div className="discovery-finish">
+          <span className="badge-orbit">
+            <Check />
+          </span>
+          <h2>Three facts to take with you.</h2>
+          <p>
+            Your attempted cards and their sources are in the journal. This session is complete. Activity
+            stamps describe exploration, not mastery.
+          </p>
+          <Button onClick={onBack}>
+            Finish session
+            <Check />
+          </Button>
+        </div>
+      ) : error ? (
+        <div className="empty-surface" role="alert">
+          <h2>Couldn’t open these cards.</h2>
+          <p>{error}</p>
+          <Button
+            onClick={() => {
+              locked.current = false;
+              setChoice(null);
+              setRetry((n) => n + 1);
+            }}
+          >
+            Try again
+          </Button>
+        </div>
+      ) : !fact ? (
+        <p className="empty-surface" role="status">
+          Opening three sourced facts…
+        </p>
+      ) : (
+        <>
+          <div className="discovery-progress" aria-label={`Fact ${index + 1} of 3`}>
+            {cards.map((_, i) => (
+              <span key={i} className={i <= index ? 'passed' : ''} />
+            ))}
+          </div>
+          <div className="study-question">
+            <span className="tag">
+              {fact.topic} / {fact.subtopic}
+            </span>
+            <h2>{fact.question}</h2>
+            <p className="small-note">Choose once to see the explanation. There is no time limit.</p>
+            <div className="answer-grid">
+              {fact.options.map((o: string, i: number) => (
+                <Button
+                  key={i}
+                  variant="outline"
+                  className={`answer-button ${choice === i ? 'chosen' : ''} ${choice !== null && i === fact.correctIndex ? 'correct-option' : ''}`}
+                  aria-pressed={choice === i}
+                  disabled={choice !== null || !player.loaded}
+                  onClick={() => answer(i)}
+                >
+                  <span className="option-label">{String.fromCharCode(65 + i)}</span>
+                  <span>{o}</span>
+                  {choice !== null && i === fact.correctIndex && <Check />}
+                </Button>
+              ))}
+            </div>
+            {choice !== null && (
+              <div className="recall-feedback">
+                <strong role="status">
+                  {choice === fact.correctIndex ? 'You found it.' : 'A new fact for the collection.'}
+                </strong>
+                <p>
+                  <b>Correct answer:</b> {fact.options[fact.correctIndex]}
+                </p>
+                <details
+                  onToggle={(e) => {
+                    if (e.currentTarget.open) player.open(roundId);
+                  }}
+                >
+                  <summary>
+                    <BookOpen />
+                    Open the explanation
+                  </summary>
+                  <p>{fact.explanation}</p>
+                  <a href={fact.sourceUrl} target="_blank" rel="noopener noreferrer">
+                    Source: {fact.sourceLabel}
+                  </a>
+                </details>
+                <div className="practice-actions">
+                  <Button variant="outline" onClick={() => player.save(fact.question)}>
+                    <Bookmark />
+                    Save fact
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      if (index + 1 < cards.length) {
+                        locked.current = false;
+                        setChoice(null);
+                        setIndex(index + 1);
+                      } else setFinished(true);
+                    }}
+                  >
+                    {index + 1 < cards.length ? 'Next fact' : 'Complete session'}
+                    <ArrowRight />
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
+          <p className="small-note">
+            Open teaching cards share facts with the duel sample. Their answers are available to this practice
+            screen; this is untimed exploration, not a ranked test.
+          </p>
+        </>
+      )}
+    </section>
+  );
 }

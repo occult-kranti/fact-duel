@@ -10,17 +10,22 @@ export class LocalD1 {
     this.yieldIO = yieldIO;
     this.metrics = { statements: 0, conflicts: 0, guardedWriteMisses: 0 };
   }
-  withSession() { return this; }
+  withSession() {
+    return this;
+  }
   prepare(sql) {
     const db = this;
     let args = [];
     return {
-      bind(...values) { args = values; return this; },
+      bind(...values) {
+        args = values;
+        return this;
+      },
       async first() {
         if (db.yieldIO) await setImmediate();
         db.metrics.statements++;
-        const row=db.sqlite.prepare(sql).get(...args) ?? null;
-        if(sql.startsWith('WITH clock')&&!row)db.metrics.guardedWriteMisses++;
+        const row = db.sqlite.prepare(sql).get(...args) ?? null;
+        if (sql.startsWith('WITH clock') && !row) db.metrics.guardedWriteMisses++;
         return row;
       },
       async run() {
@@ -32,6 +37,10 @@ export class LocalD1 {
       },
     };
   }
-  async batch(statements) { return Promise.all(statements.map(s => s.run())); }
-  close() { this.sqlite.close(); }
+  async batch(statements) {
+    return Promise.all(statements.map((s) => s.run()));
+  }
+  close() {
+    this.sqlite.close();
+  }
 }
