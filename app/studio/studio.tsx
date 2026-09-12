@@ -28,6 +28,7 @@ import {
   CheckCircle2,
   Clock,
   Lock,
+  CircleDashed,
 } from 'lucide-react';
 import research from '@/lib/product/research.json';
 import sourceData from '@/lib/product/sources.json';
@@ -37,6 +38,8 @@ import expeditionResearch from '@/lib/product/expedition-research.json';
 import rivalryDecisions from '@/lib/product/rivalry-decisions.json';
 import historicalDecisions from '@/lib/product/decisions.json';
 import review from '@/lib/product/review-research.json';
+import gamification from '@/lib/product/gamification.json';
+import './studio.css';
 
 type Status = 'planned' | 'in_progress' | 'blocked' | 'done';
 const statuses: { id: Status; label: string }[] = [
@@ -47,6 +50,8 @@ const statuses: { id: Status; label: string }[] = [
 ];
 const label = (value: string) => statuses.find((s) => s.id === value)?.label ?? value;
 const STORE = 'fact-duel-roadmap-v1';
+const G_RELEASE = 'Floodlight';
+const G_MILESTONE = 'Floodlight gamification';
 function download(value: unknown, name: string) {
   const url = URL.createObjectURL(new Blob([JSON.stringify(value, null, 2)], { type: 'application/json' }));
   const a = document.createElement('a');
@@ -161,10 +166,13 @@ export default function Studio() {
     ),
     [loaded, setLoaded] = useState(false),
     [storageOK, setStorageOK] = useState(true),
-    [resetOpen, setResetOpen] = useState(false);
+    [resetOpen, setResetOpen] = useState(false),
+    [doc, setDoc] = useState(gamification.articles[0]?.id ?? '');
   useEffect(() => {
     const initial = window.location.hash.slice(1);
-    if (['overview', 'voices', 'roadmap', 'market', 'experience', 'sources'].includes(initial))
+    if (
+      ['overview', 'gamification', 'voices', 'roadmap', 'market', 'experience', 'sources'].includes(initial)
+    )
       setTab(initial);
     try {
       const theme = localStorage.getItem('fact-duel-online-theme') === 'light';
@@ -208,6 +216,18 @@ export default function Studio() {
         .includes(query.toLowerCase()),
   );
   const completed = items.filter((i) => i.status === 'done').length;
+  const gItems = items.filter((i) => i.milestone === G_MILESTONE);
+  const gCount = (value: Status) => gItems.filter((i) => i.status === value).length;
+  const gDone = gCount('done'),
+    gActive = gCount('in_progress'),
+    gBlocked = gCount('blocked'),
+    gPlanned = gCount('planned');
+  const gShare = (count: number) => (100 * count) / Math.max(1, gItems.length);
+  const article = gamification.articles.find((a) => a.id === doc) ?? gamification.articles[0];
+  const go = (value: string) => {
+    setTab(value);
+    history.replaceState({}, '', `#${value}`);
+  };
   const observations = review.evidence.filter(
     (e) =>
       (reviewApp === 'all' || e.product === reviewApp) &&
@@ -273,6 +293,12 @@ export default function Studio() {
           <div className="studio-tab-scroll">
             <TabsList className="studio-tabs" aria-label="Product Studio sections">
               <TabsTrigger value="overview">Decisions</TabsTrigger>
+              <TabsTrigger value="gamification">
+                Gamification{' '}
+                <span>
+                  {gDone}/{gItems.length}
+                </span>
+              </TabsTrigger>
               <TabsTrigger value="voices">Player voices · {review.sampleCount}</TabsTrigger>
               <TabsTrigger value="roadmap">
                 Roadmap{' '}
@@ -650,7 +676,7 @@ export default function Studio() {
                     aria-pressed={milestone === name}
                     onClick={() => setMilestone(milestone === name ? 'all' : name)}
                   >
-                    <small>0{i + 1}</small>
+                    <small>{String(i + 1).padStart(2, '0')}</small>
                     <strong>{name}</strong>
                     <span>
                       {done} / {group.length} done
@@ -794,6 +820,112 @@ export default function Studio() {
                 </Button>
               </div>
             )}
+          </TabsContent>
+          <TabsContent value="gamification">
+            <div className="roadmap-heading">
+              <div>
+                <p className="eyebrow">
+                  RELEASE RECORD · {G_RELEASE.toUpperCase()} · {gItems.length} ISSUES · {gItems[0]?.id}–
+                  {gItems[gItems.length - 1]?.id}
+                </p>
+                <h2>{G_RELEASE}. Know it, prove it.</h2>
+                <p>
+                  The gamification release record: design bible, execution roadmap, decision record and
+                  research brief. The progress below counts only the “{G_MILESTONE}” milestone and applies the
+                  status edits saved in this browser.
+                </p>
+              </div>
+              <div className="roadmap-actions">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setMilestone(G_MILESTONE);
+                    setStatus('all');
+                    setQuery('');
+                    go('roadmap');
+                  }}
+                >
+                  Open G-issues in the roadmap
+                  <ArrowRight />
+                </Button>
+              </div>
+            </div>
+            <section className="gam-progress" aria-labelledby="gam-progress-title">
+              <header>
+                <strong id="gam-progress-title">
+                  {gDone} of {gItems.length} {G_RELEASE} issues marked done
+                </strong>
+                <span>{Math.round(gShare(gDone))}% of the G-milestone · tasks differ in size</span>
+              </header>
+              <div
+                className="gam-bar"
+                role="img"
+                aria-label={`${gDone} done, ${gActive} in progress, ${gBlocked} blocked, ${gPlanned} planned`}
+              >
+                <span className="status-done" style={{ width: `${gShare(gDone)}%` }} />
+                <span className="status-in_progress" style={{ width: `${gShare(gActive)}%` }} />
+                <span className="status-blocked" style={{ width: `${gShare(gBlocked)}%` }} />
+              </div>
+              <ul className="gam-counts">
+                <li className="status-done">
+                  <CheckCircle2 size={16} aria-hidden="true" />
+                  <strong>{gDone}</strong>
+                  <span>Done</span>
+                </li>
+                <li className="status-in_progress">
+                  <Clock size={16} aria-hidden="true" />
+                  <strong>{gActive}</strong>
+                  <span>In progress</span>
+                </li>
+                <li className="status-planned">
+                  <CircleDashed size={16} aria-hidden="true" />
+                  <strong>{gPlanned}</strong>
+                  <span>Planned</span>
+                </li>
+                {gBlocked > 0 && (
+                  <li className="status-blocked">
+                    <Lock size={16} aria-hidden="true" />
+                    <strong>{gBlocked}</strong>
+                    <span>Blocked</span>
+                  </li>
+                )}
+              </ul>
+            </section>
+            <nav className="gam-docnav" aria-label="Gamification records">
+              {gamification.articles.map((a) => (
+                <button
+                  key={a.id}
+                  type="button"
+                  aria-pressed={article?.id === a.id}
+                  onClick={() => setDoc(a.id)}
+                >
+                  {a.title}
+                </button>
+              ))}
+            </nav>
+            {article && (
+              <>
+                <div className="gam-doc-meta">
+                  <p className="small-note">
+                    {article.title} · generated from <code>{article.source.slice(1)}</code> ·{' '}
+                    {gamification.generatedAt.slice(0, 10)}
+                  </p>
+                  <a href={article.source} download>
+                    Download markdown
+                    <Download size={16} />
+                  </a>
+                </div>
+                <Article key={article.id} nodes={article.nodes} />
+              </>
+            )}
+            <div className="research-downloads">
+              {gamification.articles.map((a) => (
+                <a key={a.id} href={a.source} download>
+                  {a.title}
+                  <Download size={16} />
+                </a>
+              ))}
+            </div>
           </TabsContent>
           <TabsContent value="market">
             <div className="studio-note">
