@@ -1,0 +1,41 @@
+'use client';
+import { House, Compass, Swords, UserRound, Vault, type LucideIcon } from 'lucide-react';
+
+export type NavTabId = 'home' | 'journeys' | 'arena' | 'passport' | 'journal';
+
+export const NAV_TABS: { id: NavTabId; label: string; icon: LucideIcon }[] = [
+  { id: 'home', label: 'Home', icon: House },
+  { id: 'journeys', label: 'Expeditions', icon: Compass },
+  { id: 'arena', label: 'Play', icon: Swords },
+  { id: 'passport', label: 'Player', icon: UserRound },
+  { id: 'journal', label: 'Vault', icon: Vault },
+];
+
+export type NavProps = {
+  tab: string;
+  onNavigate: (id: NavTabId) => void;
+};
+
+/* Bottom tab bar ≤ 899px, left icon rail ≥ 900px (labels inline ≥ 1200px). During a room the
+ * shell does not render this component at all. */
+export function Nav({ tab, onNavigate }: NavProps) {
+  return (
+    <nav className="fd-nav" aria-label="Main navigation">
+      {NAV_TABS.map(({ id, label, icon: Icon }) => (
+        <button
+          key={id}
+          type="button"
+          className="fd-nav-btn"
+          data-nav={id}
+          aria-current={tab === id ? 'page' : undefined}
+          onClick={() => onNavigate(id)}
+        >
+          <span className="fd-nav-icon">
+            <Icon aria-hidden="true" />
+          </span>
+          <span className="fd-nav-label">{label}</span>
+        </button>
+      ))}
+    </nav>
+  );
+}

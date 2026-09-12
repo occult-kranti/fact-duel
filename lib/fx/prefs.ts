@@ -15,7 +15,7 @@
  *   when the OS `prefers-reduced-motion` media query flips.
  */
 
-export type MotionPref = 'full' | 'reduced';
+export type MotionPref = 'full' | 'reduced' | 'off';
 
 export interface FxPrefs {
   /** Sound effects enabled. Key `fact-duel-online-sound` ('on' | 'off'), default on. */
@@ -24,7 +24,7 @@ export interface FxPrefs {
   volume: number;
   /** Vibration enabled. Key `fact-duel-haptics` ('on' | 'off'), default on. */
   haptics: boolean;
-  /** Motion preference. Key `fact-duel-motion` ('full' | 'reduced'); default follows the OS. */
+  /** Motion preference. Key `fact-duel-motion` ('full' | 'reduced' | 'off'); default follows the OS. 'off' means no decorative motion or particles at all. */
   motion: MotionPref;
 }
 
@@ -94,7 +94,7 @@ function readPrefs(): FxPrefs {
     volume: Number.isFinite(volumeNum) ? Math.min(1, Math.max(0, volumeNum)) : DEFAULT_PREFS.volume,
     haptics: hapticsRaw === null ? DEFAULT_PREFS.haptics : hapticsRaw !== 'off',
     motion:
-      motionRaw === 'reduced' || motionRaw === 'full'
+      motionRaw === 'reduced' || motionRaw === 'full' || motionRaw === 'off'
         ? motionRaw
         : systemReducedMotion()
           ? 'reduced'
@@ -186,5 +186,11 @@ export function subscribePrefs(cb: Listener): () => void {
 
 /** Reduced motion is honoured when EITHER the user pref OR the OS media query asks for it. */
 export function reducedMotion(): boolean {
-  return getPrefs().motion === 'reduced' || systemReducedMotion();
+  const motion = getPrefs().motion;
+  return motion === 'reduced' || motion === 'off' || systemReducedMotion();
+}
+
+/** True when the player switched effects off entirely (no particles, confetti or shake). */
+export function effectsOff(): boolean {
+  return getPrefs().motion === 'off';
 }

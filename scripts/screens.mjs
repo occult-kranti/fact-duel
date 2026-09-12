@@ -13,9 +13,21 @@ const viewports = [
   { name: 'phone', width: 390, height: 844, mobile: true },
   { name: 'desktop', width: 1440, height: 900, mobile: false },
 ];
-const navs = ['home', 'journeys', 'arena', 'passport', 'journal', 'collections'];
+// Each entry is a [data-nav] id; `via` names a tab whose screen carries that data-nav button
+// (collections has no nav tab of its own — the Play screen's "All subjects" button carries it).
+const navs = [
+  { id: 'home' },
+  { id: 'journeys' },
+  { id: 'arena' },
+  { id: 'passport' },
+  { id: 'journal' },
+  { id: 'collections', via: 'arena' },
+];
 
-const browser = await chromium.launch({ executablePath: exe, args: ['--no-sandbox', '--use-gl=swiftshader'] });
+const browser = await chromium.launch({
+  executablePath: exe,
+  args: ['--no-sandbox', '--use-gl=swiftshader'],
+});
 for (const vp of viewports) {
   const ctx = await browser.newContext({
     viewport: { width: vp.width, height: vp.height },
@@ -27,10 +39,16 @@ for (const vp of viewports) {
   const page = await ctx.newPage();
   const errors = [];
   page.on('pageerror', (e) => errors.push(String(e)));
-  page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
+  page.on('console', (m) => {
+    if (m.type() === 'error') errors.push(m.text());
+  });
   await page.goto(base, { waitUntil: 'networkidle' });
   await page.waitForTimeout(1500);
-  for (const id of navs) {
+  for (const { id, via } of navs) {
+    if (via) {
+      await page.locator(`[data-nav="${via}"]`).first().click({ force: true });
+      await page.waitForTimeout(600);
+    }
     const btn = page.locator(`[data-nav="${id}"]`).first();
     if (await btn.count()) {
       await btn.click({ force: true });
@@ -41,7 +59,9 @@ for (const vp of viewports) {
     await page.screenshot({ path: join(out, `${vp.name}-${id}.png`), fullPage: false });
     await page.screenshot({ path: join(out, `${vp.name}-${id}-full.png`), fullPage: true });
   }
-  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+  const overflow = await page.evaluate(
+    () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+  );
   console.log(`${vp.name}: horizontal overflow ${overflow}px; console errors: ${errors.length}`);
   for (const e of errors.slice(0, 8)) console.log('  ', e.slice(0, 200));
   await ctx.close();

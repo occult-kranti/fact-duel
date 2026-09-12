@@ -1,68 +1,6 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @import '../vendor/shadcn-tailwind-4.13.0.css';
-:root {
-  color-scheme: dark;
-  --background: #201d29;
-  --foreground: #f9f3e8;
-  --card: #2a2533;
-  --card-foreground: #f9f3e8;
-  --popover: #342b3e;
-  --popover-foreground: #f9f3e8;
-  --primary: #f99479;
-  --primary-foreground: #2c1820;
-  --secondary: #3a3243;
-  --secondary-foreground: #f9f3e8;
-  --muted: #3a3243;
-  --muted-foreground: #c4bccc;
-  --accent: #453341;
-  --accent-foreground: #f9f3e8;
-  --destructive: #ffb1a6;
-  --border: #574b61;
-  --input: #8e819d;
-  --ring: #ffc09b;
-  --radius: 0.85rem;
-  --sport: #ffd576;
-  --science: #c8b5ff;
-  --positive: #9de0b6;
-  --sidebar: #25202e;
-  --sidebar-foreground: #f9f3e8;
-  --sidebar-primary: #f99479;
-  --sidebar-primary-foreground: #2c1820;
-  --sidebar-accent: #453341;
-  --sidebar-accent-foreground: #f9f3e8;
-  --sidebar-border: #574b61;
-  --sidebar-ring: #ffc09b;
-}
-[data-theme='light'] {
-  color-scheme: light;
-  --background: #f5f0e6;
-  --foreground: #292328;
-  --card: #fffcf6;
-  --card-foreground: #292328;
-  --popover: #fffcf6;
-  --popover-foreground: #292328;
-  --primary: #b63928;
-  --primary-foreground: #fff7ee;
-  --secondary: #eae2d5;
-  --secondary-foreground: #292328;
-  --muted: #eae2d5;
-  --muted-foreground: #695c65;
-  --accent: #f4dbd0;
-  --accent-foreground: #292328;
-  --destructive: #a52c26;
-  --border: #c6b6aa;
-  --input: #8e7e77;
-  --ring: #a82e20;
-  --sport: #78551d;
-  --science: #604498;
-  --positive: #256548;
-  --sidebar: #eee7db;
-  --sidebar-foreground: #292328;
-  --sidebar-accent: #f4dbd0;
-  --sidebar-accent-foreground: #292328;
-  --sidebar-border: #c6b6aa;
-}
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -74,7 +12,7 @@
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
+  --color-muted: var(--bg-2);
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
@@ -99,9 +37,8 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  --font-sans: Arial, Helvetica, sans-serif;
-  --font-mono:
-    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --font-sans: var(--font-ui);
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 * {
   box-sizing: border-box;
@@ -113,13 +50,7 @@ body {
   margin: 0;
   background: var(--background);
   color: var(--foreground);
-  font-family:
-    Inter,
-    ui-sans-serif,
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    sans-serif;
+  font-family: var(--font-ui);
   font-size: 16px;
   line-height: 1.6;
 }
