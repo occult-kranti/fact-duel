@@ -69,3 +69,47 @@ two P0s (see `advisor-loop2.md`), so this record describes what has been verifie
 - **Sound and haptics.** Audio was never unlocked (headless Chromium logged
   `The AudioContext was not allowed to start` throughout). The procedural cue layer and
   `navigator.vibrate` were not heard or felt; only their call sites were read.
+
+---
+
+## Addendum — release state, 13 September 2026 (recorded by the team lead)
+
+The record above was written during advisor loop 2, against the tree at `5221371`. Loop 2's two P0s
+and several of its P1s were fixed afterwards. Re-run against `68e88d9`:
+
+| Gate | Result |
+|---|---|
+| `node --test tests/*.test.mjs` | **94 pass, 0 fail** |
+| `pnpm exec tsc --noEmit` | clean |
+| `pnpm build` | succeeds |
+| `pnpm e2e` (new) | **12 of 12 browser invariants hold** |
+| `node scripts/screens.mjs` | 0 px horizontal overflow, 0 console errors, phone and desktop |
+| `REDUCED=1 node scripts/screens.mjs` | 0 px horizontal overflow, 0 console errors |
+| `pnpm lint` | 259 problems (237 errors, 22 warnings); 188 are `no-explicit-any`. Still red, as it was before this release (183 problems / 145 errors) |
+| Client bundle | 4.39 MB across 36 files; the largest, `gem-vault` at 2.16 MB, is lazy and is not fetched at zero gems |
+
+### Fixed after the loop-2 review
+
+- Ceremony medals now pass the hero slot height, and the hero clips its contents, so a 3D slot can
+  no longer cover a ceremony's title, rewards or Continue button.
+- Full-screen ceremonies are held while the player is on any playing surface, expeditions included.
+- Expedition rewards were rebalanced toward the run score: finishing with nothing correct pays 118
+  rather than 250, against 120 for winning a Gauntlet; a flawless bold run pays 352.
+- Every control in the settings sheet now meets the 44 px target floor.
+- Writing `scripts/e2e.mjs` exposed a real defect the screenshot sweep could not see: the
+  first-visit streak toast covered the sticky Play launch bar and the expedition brief's CTA on
+  phones, swallowing the tap. Screens with a pinned bar now publish its height and the toast stack
+  clears it.
+
+### What is still open
+
+- **Lint.** The release added about 92 errors to an already failing lint run, almost all
+  `no-explicit-any` in the new screen components. Nothing is gated on lint, and it was red before;
+  it is real debt and it is not fixed.
+- **Loop-2 backlog.** A duel score and the countdown are still not announced to screen readers, and
+  a re-mounted scene can stay in its loading state within a session.
+- **Never verified here.** Physical devices, assistive technology, real GPUs (every 3D check ran on
+  a software rasteriser), wide-area networks, Cloudflare D1 at any scale, sound and haptics (headless
+  Chromium never unlocks an AudioContext), and any observed player behaviour whatsoever. The
+  progression numbers in this release are a designer's first guess, not a tuned economy.
+

@@ -70,8 +70,11 @@ regressions; browser and cross-location testing remain separate.
 
 ## Verification
 
-`node --test tests/*.test.mjs` runs engine, SQLite concurrency and HTTP-handler
-regressions. `node tests/stress.mjs /tmp/duel-stress.json` exercises the same room
+`node --test tests/*.test.mjs` runs engine, SQLite concurrency, progression and HTTP-handler
+regressions (94 tests). `pnpm e2e` drives a real browser against a running dev server and asserts
+the invariants unit tests cannot reach: the timing contract clauses, that no renderer or ceremony
+appears during live play, that answer order survives a reveal, and that sticky call-to-action
+buttons stay tappable. `node tests/stress.mjs /tmp/duel-stress.json` exercises the same room
 service over localhost HTTP, with a real in-memory SQLite adapter and virtual
 time. It does not measure Cloudflare D1, mobile devices, browser rendering or
 cross-region capacity. Run `pnpm exec tsc --noEmit` for type checking.
@@ -216,8 +219,8 @@ a failed previously persistent reset leaves the state and explains the failure.
 Opening blocked storage falls back after four seconds. Visit-only fallback is
 visible and exportable. No cross-device sync or import/restore UI is shipped.
 
-The current release gate is 68 automated tests, TypeScript checking and the
-production build; exact results are in `public/product/expeditions/verification.md`. The rivalry advisor independently inspected the changed source and repair paths;
+The current release gate is 94 automated tests, the browser invariant gate, TypeScript checking and
+the production build; exact results are in `public/product/expeditions/verification.md`. The rivalry advisor independently inspected the changed source and repair paths;
 the earlier v4 review independently ran 15 targeted tests. No physical-device,
 assistive-technology, GPU or WAN QA is claimed. Demand, content depth and production
 capacity remain observed gates. Private access and simulated coins are unchanged.

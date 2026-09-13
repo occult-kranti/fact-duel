@@ -1566,7 +1566,7 @@
       "id": "G29",
       "milestone": "Floodlight gamification",
       "owner": "Advisor",
-      "status": "in_progress",
+      "status": "done",
       "priority": "P0",
       "dependencies": [
         "G22",
@@ -1586,7 +1586,7 @@
       "id": "G30",
       "milestone": "Floodlight gamification",
       "owner": "Release lead",
-      "status": "in_progress",
+      "status": "done",
       "priority": "P0",
       "dependencies": [
         "G29"
@@ -1601,7 +1601,7 @@
       "id": "G31",
       "milestone": "Floodlight gamification",
       "owner": "Docs lead",
-      "status": "in_progress",
+      "status": "done",
       "priority": "P1",
       "dependencies": [
         "G30"
