@@ -1,0 +1,1073 @@
+[
+  {
+    "id": "duol-q2fy26-financials",
+    "statement": "Duolingo reported revenue of $298.5 million for Q2 2026 (quarter ended 30 June 2026), up 18% year over year, with total bookings of $289.1 million (up 8%), gross profit of $216.7 million (72.6% gross margin), net income of $33.2 million and adjusted EBITDA of $77.3 million. Full-year 2026 guidance in the same letter: revenue $1,207 million, bookings $1,285 million, adjusted EBITDA $320 million (26.5% margin), gross margin approximately 71.6%.",
+    "value": "$298.5 million USD (Q2 2026 revenue); 72.6% gross margin",
+    "year": "2026",
+    "source": "https://www.sec.gov/Archives/edgar/data/1562088/000162828026053299/q2fy26duolingo6-30x26share.htm",
+    "kind": "company-disclosure",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "duol-q2fy26-users",
+    "statement": "As of 30 June 2026 Duolingo had 58.7 million daily active users (up 23% YoY), 140.6 million monthly active users (up 10% YoY) and 12.7 million paid subscribers (up 17% YoY).",
+    "value": "58.7M DAU (+23% YoY) / 140.6M MAU (+10% YoY) / 12.7M paid subscribers (+17% YoY)",
+    "year": "2026",
+    "source": "https://www.sec.gov/Archives/edgar/data/1562088/000162828026053603/duol-20260630.htm",
+    "kind": "company-disclosure",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "duol-fy2025-financials",
+    "statement": "For the full year ended 31 December 2025 Duolingo reported total revenue of $1,037.6 million, total bookings of $1,158.4 million, gross profit of $749.5 million (72.2% gross margin), net income of $414.1 million and adjusted EBITDA of $305.9 million. Q4 2025 revenue was $282.9 million with 52.7 million DAU, 133.1 million MAU and 12.2 million paid subscribers.",
+    "value": "$1,037.6 million USD (FY2025 revenue); $414.1 million net income",
+    "year": "2025",
+    "source": "https://www.sec.gov/Archives/edgar/data/1562088/000162828026012513/q4fy25duolingo12-31x25shar.htm",
+    "kind": "company-disclosure",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "duol-market-cap",
+    "statement": "Duolingo (NASDAQ: DUOL) had a market capitalisation of $6.72 billion at a share price of $143.68 as of the close on 11 September 2026.",
+    "value": "$6.72 billion USD market cap; $143.68 share price (close, 11 September 2026)",
+    "year": "2026",
+    "source": "https://www.sec.gov/Archives/edgar/data/1562088/000162828026053603/duol-20260630.htm",
+    "kind": "third-party-estimate",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "kahoot-takeprivate-terms",
+    "statement": "On 14 July 2023 Kahoot! ASA announced an agreement for a recommended voluntary all-cash offer from the Private Equity business within Goldman Sachs Asset Management, with co-investors General Atlantic FT B.V., KIRKBI Invest A/S, Glitrafjord AS and certain other investors and management shareholders, to acquire all issued and outstanding shares at a best and final offer price of NOK 35 per share, representing an aggregate equity purchase price of NOK 17.2 billion.",
+    "value": "NOK 35.00 per share; NOK 17.2 billion aggregate equity purchase price",
+    "year": "2023",
+    "source": "https://kahoot.com/files/2023/08/2Q23_Kahoot_quarterly_report.pdf",
+    "kind": "company-disclosure",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "kahoot-delisting",
+    "statement": "Kahoot! was delisted from Oslo Børs on 23 January 2024 following the successful acquisition led by Goldman Sachs Asset Management, completed via the initial offer period, a subsequent mandatory offer and compulsory acquisition of all remaining shares.",
+    "value": "Delisted 23 January 2024 (effective from and including 23 January 2024; last day of listing/trading 22 January 2024)",
+    "year": "2024",
+    "source": "https://live.euronext.com/en/product/equities/NO0010823131-XOSL/company-news",
+    "kind": "company-disclosure",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "kahoot-q2-2023-arr-subs",
+    "statement": "For the quarter ended 30 June 2023 Kahoot! reported revenue of $41.3 million (up 14% YoY), billings/invoiced revenue of $39.9 million (up 7% YoY), Annual Recurring Revenue of $163.5 million (up 15% YoY), 1,365,000 paid subscriptions across all services (up 13% YoY), adjusted EBITDA of $11.0 million (up 60% YoY) and a 95% gross margin. Platform usage over the trailing twelve months was 24 million active accounts, 259 million hosted sessions and more than 1.6 billion (non-unique) participants.",
+    "value": "$163.5 million ARR (up 15% YoY); 1,365,000 paid subscriptions (up 13% YoY); $41.3 million quarterly revenue (up 14% YoY)",
+    "year": "2023",
+    "source": "https://kahoot.com/files/2023/08/2Q23_Kahoot_quarterly_report.pdf",
+    "kind": "company-disclosure",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "kahoot-fy2022-audited",
+    "statement": "For the full year 2022 — Kahoot!'s last complete year as a listed company — the group reported recognised revenue of $146.0 million (up 60% YoY from $91.3 million), invoiced revenue/billings of $169.0 million (up 58% YoY, or 21% on a full-year pro-forma basis), adjusted EBITDA of $30.3 million (up 57% YoY), a 95% gross margin, cash of $104.8 million with no interest-bearing debt, and over 1.3 million paid subscriptions (up 18% YoY). ARR at year end was $156 million, up 17% YoY.",
+    "value": "$146.0 million USD FY2022 recognised revenue; $169.0 million invoiced revenue (billings); 1.3 million+ paid subscriptions",
+    "year": "2022",
+    "source": "https://kahoot.com/files/2023/02/4Q22_Kahoot_quarterly_report.pdf",
+    "kind": "company-disclosure",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "kahoot-q3-2023-final",
+    "statement": "Kahoot!'s final public financial disclosure was a Q3 2023 trading update dated 9 November 2023, published via Oslo Børs (announcement 603474): recognised revenue of $42.3 million for the quarter (up 16% YoY) and $124.1 million year to date (up 16% YoY), invoiced revenue of $59.1 million (up 10% YoY) and $136.5 million YTD (up 9% YoY), adjusted EBITDA of $12.5 million (up 56% YoY) and $33.5 million YTD (up 63% YoY), profit after income tax of $5.5 million, 1.4 million paid subscriptions (up 150,000 YoY), and cash and cash equivalents of $115 million. The release explicitly stated that \"The Company will not publish a full third quarter report,\" and Kahoot! was delisted from Oslo Børs on 19 January 2024 following the Goldman Sachs Asset Management-led Kangaroo BidCo takeover. The company's full-year 2023 guidance of recognised revenue \"exceeding $170m\" was issued earlier, in the Q4 2022 report and presentation of 16 February 2023 — it did not appear in the Q3 2023 trading update, which contained no guidance.",
+    "value": "$42.3 million Q3 2023 recognised revenue (up 16% YoY); $124.1 million YTD (up 16% YoY); 1.4 million paid subscriptions (up 150K YoY) — all confirmed verbatim. Correction: the \">$170 million\" FY2023 guidance was NOT in this release; it came from Kahoot!'s Q4 2022 report/presentation of 16 February 2023.",
+    "year": "2023",
+    "source": "https://newsweb.oslobors.no/message/603474",
+    "kind": "company-disclosure",
+    "verdict": "corrected"
+  },
+  {
+    "id": "kahoot-postprivate-accounts",
+    "statement": "Kahoot! AS (org.nr. 997 770 234, the renamed former Kahoot! ASA) has continued filing statutory annual accounts in Norway. Parent-company accounts show operating revenue of USD 112.824 million for FY2025, USD 99.775 million for FY2024 and USD 85.513 million for FY2023, with an operating result of USD 28.717 million and an annual result of USD 61.627 million in FY2025, and equity of USD 620.231 million.",
+    "value": "USD 112.824 million FY2025 operating revenue (parent/entity-only accounts, KAHOOT! AS, org.nr. 997 770 234)",
+    "year": "2025",
+    "source": "https://data.brreg.no/regnskapsregisteret/regnskap/997770234",
+    "kind": "audited-filing",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "kahoot-postprivate-scale",
+    "statement": "Post-privatisation Kahoot! discloses scale only in marketing terms: a company blog post dated 20 August 2026 states 'Over 10 million educators are now using Kahoot!', and the company page states 14 billion cumulative non-unique participants since 2013, play in 195 countries, 10 million teachers hosting a Kahoot! in the past 12 months, 95%+ of Fortune 500 companies as users, 600+ employees and 11 offices.",
+    "value": "10 million educators; 14 billion cumulative participants; 600+ employees",
+    "year": "2026",
+    "source": "https://kahoot.com/company/",
+    "kind": "marketing",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "etermax-trivia-crack-downloads",
+    "statement": "Trivia Crack, by Argentine company etermax (founded 2009; Android release 24 October 2013 per Google Play), has 267,939,837 lifetime Android installs per Google Play's own store data (displayed as \"100M+\"), with no published iOS figure; etermax describes the game as having reached \"hundreds of millions of players in more than 180 countries\" and as leading the trivia category in 125 countries. Separately, etermax the company reports more than 150 million active users annually across its portfolio and a presence in over 180 countries, and its 2020 About page claimed \"+700 million installs\" company-wide.",
+    "value": "Downloads: no primary source supports \">600 million\" for Trivia Crack. Google Play's own store data reports 267,939,837 lifetime Android installs (publicly bucketed as \"100,000,000+\"); Apple does not publish a count. Etermax's own archived About page claimed \"+700 million installs\" — company-wide across all etermax games (Apr 2020). Etermax's current wording for Trivia Crack is \"hundreds of millions of players in more than 180 countries\" (2025). Annual active users: \">150 million active users annually\" IS an Etermax figure, but it describes etermax the company, not Trivia Crack — the 9 Sep 2024 release reads \"With a presence in over 180 countries and more than 150 million active users annually, we [etermax] stand out in the edutainment sector.\" Confirmed as stated: founded 2009 (\"Since 2009\", etermax.com); \"#1 in trivia in 125 countries\" (\"Trivia Crack leads the trivia category in 125 countries\"); Trivia Crack available in 180+ countries. Android release date is Oct 24, 2013 per Google Play, not Oct 26.",
+    "year": "2026",
+    "source": "https://www.etermax.com/news/15-years-leading-gamified-entertainment-with-knowledge-driven-experiences",
+    "kind": "third-party-estimate",
+    "verdict": "corrected"
+  },
+  {
+    "id": "sporcle-plays",
+    "statement": "Sporcle's About page reports more than 6.8 billion quizzes played lifetime — a live counter that read 6,819,542,349 on 13 September 2026 — more than one million community-created quizzes, more than a million quizzes played online daily, and more than 250,000 live trivia nights hosted since 2009. The company was founded on 30 January 2007 and passed 1 billion plays in 2013, 4 billion in 2021 and 5 billion in 2023.",
+    "value": "6,819,542,349 lifetime quizzes played (live odometer, read directly from sporcle.com/about on 13 Sep 2026); cite as \"more than 6.8 billion\". All other figures confirmed verbatim: 1,000,000+ community-created quizzes; 1,000,000+ quizzes played online daily; 250,000+ live trivia nights since 2009; founded 30 January 2007; 1B plays 2013, 4B 2021, 5B 2023.",
+    "year": "2026",
+    "source": "https://www.sporcle.com/about/",
+    "kind": "company-disclosure",
+    "verdict": "corrected"
+  },
+  {
+    "id": "sporcle-stump-trivia-acquisition",
+    "statement": "Sporcle, Inc. acquired all assets of NTN Buzztime's Stump! Trivia hosted-events business for $1.4 million in cash. The asset purchase agreement was entered into 13 January 2020, announced 14 January 2020, and expected to close by 31 January 2020. Stump! Trivia ran approximately 400 live events a week, the majority in the Boston area.",
+    "value": "$1.4 million USD in cash",
+    "year": "2020",
+    "source": "https://www.sec.gov/Archives/edgar/data/748592/000149315220000627/form8-k.htm",
+    "kind": "audited-filing",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "jackbox-sessions",
+    "statement": "In its 6 May 2026 announcement of The Jackbox Party Pack 12, Jackbox Games' press release stated that its Party Pack series \"has been joined by players over 826 million times since December 2022\" — a count of player joins, not distinct play sessions. The number 826 million is genuine and independently corroborated, but it does not appear on any Jackbox-controlled web property; Jackbox's own press kit instead states \"Over a billion user sessions\" (all-time, since the first pack in November 2014). The pack was announced on 6 May 2026 (7 May AEST) and later dated for 15 October 2026, both confirmed on jackboxgames.com. Note: Jackbox's own announcement blog post lists platforms as PC (Steam/Epic Games Store), Nintendo Switch and Switch 2, PlayStation 5, Xbox Series X|S, iPad and the Mac App Store — Apple TV appears in the press-release version sent to media, and in Jackbox's later 21 August post, which also adds PlayStation 4 and Xbox One.",
+    "value": "826 million+ player joins (not play sessions) since December 2022 — press-release figure only; Jackbox's own press kit separately claims \"Over a billion user sessions\" all-time since Nov 2014",
+    "year": "2026",
+    "source": "https://cogconnected.com/2026/05/jackbox-party-pack-12-brings-its-chaotic-fun-on-all-major-platforms-later-this-year/",
+    "kind": "company-disclosure",
+    "verdict": "corrected"
+  },
+  {
+    "id": "brainly-series-d",
+    "statement": "Brainly closed an $80 million Series D round led by Learn Capital, with Prosus Ventures, Runa Capital, MantaRay and General Catalyst Partners participating, announced 17 December 2020, bringing total funding to approximately $150 million. At the time Brainly claimed more than 350 million monthly users (students, parents and teachers), including 30 million in the US, across 35+ countries, with user growth of more than 75% since April 2020.",
+    "value": "$80 million Series D; ~$150 million total raised; 350 million+ monthly users (2020 claim)",
+    "year": "2020",
+    "source": "https://www.prnewswire.com/news-releases/brainly-completes-80m-series-d-round-301195010.html",
+    "kind": "press-report",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "quizlet-valuation",
+    "statement": "Quizlet raised a $30 million Series C led by General Atlantic at a $1 billion valuation, announced 13 May 2020, bringing total venture funding to $62 million. The company reported more than 50 million monthly active users at the time, with two-thirds of US high school students and half of US college-aged students on the platform, and over a billion questions answered weekly. Its prior valuation was $200 million in 2018.",
+    "value": "$1 billion valuation; $30 million Series C; $62 million total raised",
+    "year": "2020",
+    "source": "https://www.generalatlantic.com/media-article/quizlet-raises-series-c-funding-from-general-atlantic/",
+    "kind": "press-report",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "quizlet-users-2026",
+    "statement": "Quizlet's current press boilerplate states that over 60 million students, teachers and everyday people use Quizlet, including 2 in 3 high school students and 1 in 2 college students in the US.",
+    "value": "60 million+ users (company self-reported; \"Over 60 million students, teachers and everyday people use Quizlet ... including 2 in 3 high school students and 1 in 2 college students in the US\")",
+    "year": "2026",
+    "source": "https://www.prnewswire.com/news-releases/quizlet-launches-new-study-tools-built-for-the-way-students-learn-302841833.html",
+    "kind": "company-disclosure",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "quizizz-wayground",
+    "statement": "Quizizz raised a $31.5 million Series B led by Tiger Global at a roughly $300 million valuation, announced 29 June 2021, bringing total funding to $47 million, with teachers in over 120 nations, more than 20 million quizzes on the platform, over 300 million questions answered weekly and use in over 80% of US K-12 schools. The company rebranded to Wayground on 24 June 2025, at which point it stated it served educators in over 150 countries and reached 90% of US schools.",
+    "value": "$31.5 million Series B led by Tiger Global; ~$300 million valuation (TechCrunch-reported only, never company-confirmed); $47 million total raised",
+    "year": "2021",
+    "source": "https://economictimes.indiatimes.com/tech/funding/tiger-global-leads-quizizzs-31-5-million-series-b-funding-round/articleshow/83965332.cms",
+    "kind": "press-report",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "blooket-scale",
+    "statement": "Blooket is privately held, bootstrapped and has never published revenue, user or headcount figures. Similarweb estimates blooket.com received 20.3 million total visits across the three months to August 2026, with a global rank of #1,651 and #23 in Education (United States); 72.26% of traffic came from the United States, with 8.63 pages per visit and an average visit duration of 7 minutes 1 second.",
+    "value": "20.3 million total visits (Similarweb, last 3 months, data dated August 2026) — estimate",
+    "year": "2026",
+    "source": "https://www.similarweb.com/website/blooket.com/",
+    "kind": "third-party-estimate",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "newzoo-global-2025",
+    "statement": "The global games market generated $201.6bn in 2025, the first year it broke $200bn, up 9.1% year over year (Newzoo actual, not forecast).",
+    "value": "$201.6 billion USD",
+    "year": "2025",
+    "source": "https://newzoo.com/articles/global-games-market-2025/",
+    "kind": "third-party-estimate",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "newzoo-mobile-2025",
+    "statement": "Mobile was $113.3bn of the 2025 global games market (+10.7% YoY), versus console $44.7bn (+2.8%) and PC $43.6bn (+12%) — mobile is ~56% of all game spending.",
+    "value": "$113.3 billion USD",
+    "year": "2025",
+    "source": "https://web.archive.org/web/20260701174151/https://newzoo.com/resources/blog/global-games-market-q2-2026",
+    "kind": "third-party-estimate",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "newzoo-region-2025",
+    "statement": "2025 games revenue by region: Asia-Pacific $95bn (+9.9%), North America $54bn (+5.7%), Europe $36.3bn (+10.7%), Latin America $8.6bn (+9.6%), Middle East & Africa $7.7bn (+15%, fastest-growing).",
+    "value": "APAC $95.0bn (+9.9%) / NA $54.0bn (+5.7%) / Europe $36.3bn (+10.7%) / LatAm $8.6bn (+9.6%) / MEA $7.7bn (+15.0%, fastest-growing) — total $201.6bn (+9.1%) USD",
+    "year": "2025",
+    "source": "https://newzoo.com/articles/global-games-market-2025",
+    "kind": "third-party-estimate",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "newzoo-forecast-2028",
+    "statement": "Newzoo forecasts the global games market at $234.4bn by 2028, a 5.1% CAGR from 2025, with mobile reaching $121.1bn in 2026 (+6.8%).",
+    "value": "$234.4 billion USD by 2028; 5.1% CAGR 2025-2028; mobile $121.1 billion in 2026 (+6.8% YoY) — Newzoo estimate, published 18 June 2026",
+    "year": "2028 (forecast)",
+    "source": "https://web.archive.org/web/20260722150002/https://newzoo.com/articles/global-games-market-2025",
+    "kind": "analyst-estimate",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "sensortower-mobile-iap-2025",
+    "statement": "Mobile games generated $81.75bn in in-app purchase revenue in 2025 (+1.3% YoY) on 50.41bn downloads (-7.2% YoY) — Google Play 42.4bn downloads, App Store 7.8bn.",
+    "value": "$81.75 billion USD IAP (2025, +1.3% YoY); 50.41bn downloads (-7.2% YoY)",
+    "year": "2025",
+    "source": "https://www.sensortower.com/blog/state-of-mobile-2026",
+    "kind": "third-party-estimate",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "sensortower-word-trivia-installs",
+    "statement": "Within mobile puzzle games, Word accounts for 9% and Trivia for 6% of installs, while the Swap/match-3 sub-genre takes 61% of all player spending in the category.",
+    "value": "Word 9% and Trivia 6% of all-time worldwide puzzle downloads; Swap 61% of all-time worldwide puzzle revenue (Sensor Tower estimates, App Store + Google Play, all-time through mid-June 2023; base = 50B downloads and $42B revenue)",
+    "year": "2023 (cumulative Jan 2012 – Jun 2023)",
+    "source": "https://sensortower.com/blog/unveiling-the-new-puzzle-landscape",
+    "kind": "third-party-estimate",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "sensortower-trivia-ios-us",
+    "statement": "Reality check on trivia monetisation: Sensor Tower estimates that in Q2 2025 the top-grossing true Trivia-genre app on US iOS was Kahoot!, peaking at only ~$38.5K per week (mid-June) before falling to $28.2K, with Trivia Crack Premium at ~$33K and GeoGuessr sliding from $31K to $28.7K weekly. The $194.7K weekly peak often cited for the category belongs to Elevate, a brain-training subscription app that Apple does not classify under Trivia at all. Figures are third-party estimates of gross App Store spend, before platform commission.",
+    "value": "The $194.7K/week figure is transcribed accurately from Sensor Tower, but it is NOT a trivia app. Usable corrected framing: per Sensor Tower estimates, the top-grossing genuine Trivia-genre app on US iOS in Q2 2025 was Kahoot! at a $38.5K weekly peak (mid-June), falling to $28.2K by quarter end; Trivia Crack Premium ~$33K/week; GeoGuessr declined from $31K to $28.7K/week. Elevate ($194.7K peak, end of April, declining to ~$151.3K) and Clever (~$30K, omitted from the claim though it outranked GeoGuessr) are brain-training apps, not trivia games. All figures are Sensor Tower MODELLED ESTIMATES of gross consumer spend (before Apple's 15-30% commission), not audited or company-reported revenue.",
+    "year": "2025 (Q2)",
+    "source": "https://sensortower.com/blog/2025-q2-ios-top-5-trivia%20games-revenue-us-604118ed241bc16eb8b8453a",
+    "kind": "third-party-estimate",
+    "verdict": "corrected"
+  },
+  {
+    "id": "sensortower-mobile-ad-revenue-2025",
+    "statement": "Sensor Tower describes mobile game ad monetization as a \"$12B+ ecosystem\" spanning 19 global markets, and reports that puzzle titles account for more than half of all ad earnings across most of the largest ad networks. In a separate February–April 2026 snapshot, casual and hyper-casual titles each accounted for 40% of ad revenue. (Sensor Tower estimate; full figures sit behind a paid report, and the vendor's public post attaches no calendar year to the $12B+ number.)",
+    "value": ">$12 billion USD across 19 markets — CONFIRMED by Sensor Tower (\"a mature, $12B+ ecosystem\", \"19 global markets\"), but with no public data window tying it to calendar 2025. The attached percentages are mis-dated: puzzle 53% and casual+hyper-casual ~80% (40% each) are February–April 2026 snapshots, NOT 2025 figures.",
+    "year": "2025",
+    "source": "https://sensortower.com/blog/gaming-deep-dive-ad-monetization-report",
+    "kind": "third-party-estimate",
+    "verdict": "corrected"
+  },
+  {
+    "id": "mnm-game-based-learning",
+    "statement": "The game-based learning market was $6.23bn in 2025 and is forecast to reach $17.82bn by 2030, a 23.4% CAGR.",
+    "value": "$6.23 billion USD (2025), $17.82 billion by 2030, 23.4% CAGR (2025–2030) — MarketsandMarkets estimate",
+    "year": "2025",
+    "source": "https://www.marketsandmarkets.com/Market-Reports/game-based-learning-market-169115901.html",
+    "kind": "third-party-estimate",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "imarc-game-based-learning",
+    "statement": "IMARC sizes the same game-based learning market at $24.5bn in 2025, reaching $88.6bn by 2034 at a 14.59% CAGR — roughly 4x MarketsandMarkets' figure for the identical year.",
+    "value": "$24.5 billion USD (2025), $88.6 billion by 2034, 14.59% CAGR (forecast period 2026-2034)",
+    "year": "2025",
+    "source": "https://www.imarcgroup.com/game-based-learning-market",
+    "kind": "third-party-estimate",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "mnm-edtech-2025",
+    "statement": "The edtech and smart classrooms market was $197.3bn in 2025 and is forecast to reach $353.1bn by 2030, a 12.3% CAGR.",
+    "value": "$197.3 billion USD (2025), $353.1 billion by 2030, 12.3% CAGR (2025-2030) — MarketsandMarkets estimate",
+    "year": "2025",
+    "source": "https://www.marketsandmarkets.com/Market-Reports/educational-technology-ed-tech-market-1066.html",
+    "kind": "third-party-estimate",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "holoniq-edtech-404b",
+    "statement": "HolonIQ's widely quoted projection puts global edtech expenditure at $404bn by 2025, a 16.3% CAGR from 2019, representing 5.5% of a $7.3 trillion total global education market.",
+    "value": "$404 billion USD global edtech expenditure by 2025; 16.3% CAGR 2019-2025; 5.5% of a $7.3 trillion total global education market (HolonIQ estimate, published 6 August 2020)",
+    "year": "2025 (projected from a 2020 base)",
+    "source": "https://www.holoniq.com/notes/global-education-technology-market-to-reach-404b-by-2025",
+    "kind": "third-party-estimate",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "holoniq-education-outlook",
+    "statement": "HolonIQ's 2025 Global Education Outlook (published 25 November 2024) projects the total global education market to reach almost US$10 trillion by 2030 at a 4.4% CAGR. Early Childhood Education and Workforce Training are the fastest-growing segments, at 7% and 6.5% CAGR respectively (K-12 3.5%, Post-Secondary 4%). EdTech venture funding fell to $1.8bn in 2024, the lowest level since 2014 and 2% of total VC since 2010. All figures are HolonIQ estimates/projections, not audited data.",
+    "value": "~US$10 trillion by 2030 at 4.4% CAGR (confirmed); EdTech VC $1.8B in 2024, lowest since 2014 and 2% of total VC since 2010 (confirmed); Workforce Training 6.5% CAGR (confirmed) but NOT the fastest-growing segment — Early Childhood Education is faster at 7% CAGR. Full ladder: ECE 7%, Workforce Training 6.5%, Post-Secondary 4%, K-12 3.5%.",
+    "year": "2025 (outlook) / 2024 (VC actual)",
+    "source": "https://www.holoniq.com/notes/2025-global-education-outlook",
+    "kind": "third-party-estimate",
+    "verdict": "corrected"
+  },
+  {
+    "id": "tbrc-fan-engagement-2025",
+    "statement": "The Business Research Company estimates the global fan engagement market at $8.09bn in 2025, growing to $9.79bn in 2026 (21.1% year-over-year), and forecasts $20.94bn by 2030 at a 20.9% CAGR. North America accounts for $2.89bn ($2,888.77m) of the 2025 total.",
+    "value": "$8.09bn (2025), $9.79bn (2026), $20.94bn (2030), North America $2.89bn (2025) — all confirmed; but the forecast CAGR is 20.9%, not 21.1%. The 21.1% figure is the single-year 2025→2026 growth rate, not the CAGR to 2030. All figures are The Business Research Company estimates.",
+    "year": "2025",
+    "source": "https://www.thebusinessresearchcompany.com/report/fan-engagement-global-market-report",
+    "kind": "third-party-estimate",
+    "verdict": "corrected"
+  },
+  {
+    "id": "marketus-fan-engagement-2024",
+    "statement": "market.us sizes the fan engagement market at $16.2bn in 2024 reaching $66.7bn by 2034 at a 15.2% CAGR, with sports teams and leagues the largest end-user at 38.5% and North America 36.8% ($5.96bn).",
+    "value": "$16.2 billion USD (2024), $66.7 billion by 2034, 15.2% CAGR (2025-2034) — Market.us estimate",
+    "year": "2024",
+    "source": "https://market.us/report/fan-engagement-market/",
+    "kind": "third-party-estimate",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "factmr-second-screen-sports",
+    "statement": "The second-screen sports apps market — companion mobile apps used while watching live sport on another screen — was $3.0bn in 2025, rising to $3.5bn in 2026 and a forecast $17.1bn by 2036, a 17.2% CAGR.",
+    "value": "$3.0 billion USD (2025), $3.5 billion (2026), $17.1 billion by 2036, 17.2% CAGR 2026-2036 — Fact.MR estimate",
+    "year": "2025",
+    "source": "https://www.factmr.com/report/second-screen-sports-apps-market",
+    "kind": "third-party-estimate",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "emarketer-second-screen-users",
+    "statement": "216.8 million US adults — 80.6% of the adult population — will use a smartphone as a second screen in 2026.",
+    "value": "216.8 million US adults (80.6% of US adults) — EMARKETER forecast, published 23 April 2026",
+    "year": "2026",
+    "source": "https://www.emarketer.com/content/second-screen-engagement-during-live-sports",
+    "kind": "third-party-estimate",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "duolingo-fy2025-audited",
+    "statement": "AUDITED BENCHMARK: Duolingo reported full-year 2025 revenue of $1,037.6m (+39% YoY) and bookings of $1,158.4m (+33%), with 52.7m daily active users (+30%), 133.1m monthly active users and 12.2m paid subscribers.",
+    "value": "$1,037.6 million USD revenue (+39% YoY); $1,158.4 million bookings (+33% YoY); 52.7m DAU (+30% YoY); 133.1m MAU (+14% YoY); 12.2m paid subscribers (+28% YoY)",
+    "year": "2025",
+    "source": "https://www.sec.gov/Archives/edgar/data/1562088/000162828026012246/q4fy25duolingo12-31x25shar.htm",
+    "kind": "audited-filing",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "sportradar-fy2025",
+    "statement": "AUDITED BENCHMARK, sports data/fan side: Sportradar reported full-year 2025 revenue of €1,290m, up 17% YoY, with record adjusted EBITDA of €297m (23.0% margin) and record free cash flow of €167m.",
+    "value": "€1,289,965 thousand (€1,290m) FY2025 revenue, +16.6% YoY (company-stated 17%); Adjusted EBITDA €296,787k (€297m, +33%), margin 23.0% (+291bps); free cash flow €167,181k (€167m)",
+    "year": "2025",
+    "source": "https://www.sec.gov/Archives/edgar/data/1836470/000110465926022552/tm267539d1_ex99-1.htm",
+    "kind": "company-disclosure",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "quizizz-series-b",
+    "statement": "Quizizz announced a $31.5M investment in an ongoing Series B led by Tiger Global Management on 29-30 June 2021 (US press dateline 29 June; company press release dated 30 June 2021). Existing investors Nexus Venture Partners, GSV Ventures and Eight Roads Ventures joined, along with new backers including Yahoo co-founder Jerry Yang. No valuation was disclosed by the company — do not use \"$300M valuation\" in an investor deck, as it traces to a single hedged, unattributed reporter aside. Cumulative capital from disclosed rounds is $44M ($12.5M Series A, March 2021 + $31.5M); the \"$47M to date\" figure originates solely with TechCrunch and is not company-stated.",
+    "value": "$31.5M CONFIRMED (company press release). $300M valuation NOT confirmed — no primary source states any valuation; the ~$300M figure exists only as an unattributed, hedged TechCrunch line (\"values it at about $300 million, I heard earlier this month\") that was added to the article ~30 min after publication and is corroborated nowhere else. Total raised: $44M is the sum of disclosed rounds ($12.5M Series A + $31.5M); the $47M figure is TechCrunch-only.",
+    "year": "2021",
+    "source": "https://www.prnewswire.com/news-releases/quizizz-gains-momentum-raises-31-5-million-to-motivate-every-student-301322655.html",
+    "kind": "press-report",
+    "verdict": "corrected"
+  },
+  {
+    "id": "kahoot-take-private",
+    "statement": "A consortium led by Goldman Sachs Asset Management, with General Atlantic, KIRKBI Invest A/S and Glitrafjord AS, agreed on 14 July 2023 to acquire Kahoot! ASA for NOK 35.00 per share in cash, an aggregate equity purchase price of approximately NOK 17.2 billion across 492,836,049 shares — a 53.1% premium to the 22 May 2023 close of NOK 22.86.",
+    "value": "NOK 17.2 billion aggregate equity purchase price at NOK 35.00 per share in cash (492,836,049 shares; NOK 17,249,261,715 exact). The \"approx. USD 1.7bn\" is a reasonable conversion (~USD 1.69bn at July 2023 USDNOK ≈ 10.2) but does NOT appear in the primary source — the release states no USD deal value.",
+    "year": "2023",
+    "source": "https://newsweb.oslobors.no/message/595365",
+    "kind": "company-disclosure",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "kahoot-fy2022",
+    "statement": "Kahoot! Group reported full-year 2022 recognised revenue of $146M (up 60% YoY), invoiced revenue of $169M (up 58%), ARR of $156M (up 17%), adjusted EBITDA of $30.3M, more than 1.3 million paid subscriptions (up 18%) and $104.8M cash with zero interest-bearing debt.",
+    "value": "$146M FY2022 recognised revenue (+60% YoY); $169.0M invoiced revenue (+58%, +21% pro forma); $156M ARR (+17%); $30.3M adjusted EBITDA (+57%); >1.3M paid subscriptions (+18%); $104.8M cash, no interest-bearing debt",
+    "year": "2022",
+    "source": "https://newsweb.oslobors.no/message/582624",
+    "kind": "company-disclosure",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "hq-trivia-raise",
+    "statement": "HQ Trivia's parent Intermedia Labs raised $15M led by Founders Fund (Cyan Banister taking a board seat) at a valuation of more than $100M, announced in early 2018.",
+    "value": "$15M round led by Founders Fund (Cyan Banister took a board seat), reported at a ~$100M valuation; round first reported 2 Feb 2018 and confirmed closed 6 Mar 2018. SEC Form D (filed 13 Mar 2018) shows a total offering of $15,000,001 with $12,539,999 sold to date and Cyan Banister listed as a Director.",
+    "year": "2018",
+    "source": "https://www.sec.gov/Archives/edgar/data/1734125/000173412518000001/xslFormDX01/primary_doc.xml",
+    "kind": "press-report",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "hq-trivia-shutdown",
+    "statement": "HQ Trivia announced on 14 February 2020 that it would \"cease operations and move to dissolution\" after a signed acquisition collapsed days before closing and its lead investors declined further funding. The app's record was 2.38 million concurrent players, set on 28 March 2018 (the 14 Feb 2020 TechCrunch piece rounds this to \"more than 2.3 million\"). Sensor Tower estimated downloads had fallen to 8% of the prior year's level by July 2019 (a ~92% YoY decline) and to roughly 67,000 installs in January 2020, against ~2 million/month at the February 2018 peak. Press reported cumulative funding of \"more than $15 million\"; the only SEC record, a Form D filed 13 March 2018 by parent company Intermedia Labs, Inc., shows a $15,000,001 offering with $12,539,999 actually sold to 6 accredited investors. Note that 14 February 2020 was not the end of HQ Trivia: the franchise was bought, relaunched on 29 March 2020, hosted its last official game on 17 November 2022 and was removed from the App Store and Google Play on 5 August 2023.",
+    "value": "2.38 million peak concurrent players (record set 28 March 2018); shutdown announced 14 February 2020 — but HQ relaunched 29 March 2020 and ran until 17 November 2022",
+    "year": "2020",
+    "source": "https://techcrunch.com/2018/08/14/hq-trivia-apple-tv/",
+    "kind": "press-report",
+    "verdict": "corrected"
+  },
+  {
+    "id": "quizup-plain-vanilla",
+    "statement": "Plain Vanilla Games raised approximately $32.4M in disclosed equity for QuizUp — including a Series B of $21.87M whose first sale was 19 December 2013 (later upsized to $26.87M), with Sequoia Capital's Roelof Botha taking a board seat. Glu Mobile acquired substantially all of Plain Vanilla's assets on 19 December 2016 in exchange for forgiving and cancelling $7.5M in aggregate principal amount of Plain Vanilla convertible promissory notes held by Glu; Glu recorded the fair value of that consideration at just $3.2M, with zero goodwill.",
+    "value": "Sold to Glu Mobile 19 Dec 2016 for $7.5M face value of forgiven convertible notes — but Glu booked the fair value of that consideration at only $3.2M. Equity raised was ~$32.4M per SEC Form D filings (not ~$40M); Series B was $21.87M with first sale 19 Dec 2013, later upsized to $26.87M.",
+    "year": "2016",
+    "source": "https://www.sec.gov/Archives/edgar/data/1366246/000155837016010604/gluu-20161215x8k.htm",
+    "kind": "press-report",
+    "verdict": "corrected"
+  },
+  {
+    "id": "quizup-shutdown",
+    "statement": "QuizUp was removed from the App Store on 20 January 2021, and publisher Glu Mobile announced (help-centre article last updated 22 January 2021) that the game would be discontinued on 22 March 2021. Archive records show the service was still reachable on 24 March 2021 and returning HTTP 503 by 28 March 2021, so the final shutdown fell in that window, roughly seven years after the iOS launch in November 2013. Plain Vanilla said QuizUp was on track to pass 20 million registered users in May 2014 — a milestone six months after launch, not a peak — and reported over a billion matches played across 230 countries as of March 2014.",
+    "value": "Publisher-announced discontinuation date was 22 March 2021, not 24 March (servers actually went dark between 24 and 28 March 2021 per archive evidence; no primary source states 24 March). App Store removal 20 January 2021 is confirmed. The \"20 million users\" figure is a Plain Vanilla claim from ~19 May 2014 (\"on track to pass 20 million users this week\"), i.e. a cumulative-registration milestone six months after launch, NOT a peak and not the count at shutdown; no primary source gives a peak. \"197 countries\" is wrong: the cited Forbes source says over a billion matches played \"across 230 countries\" (as of 6 March 2014, when the app had 11 million members).",
+    "year": "2021",
+    "source": "https://web.archive.org/web/20210201011909/https://glumobile.helpshift.com/a/quizup/?s=general&f=quizup-to-be-discontinued&l=en",
+    "kind": "third-party-estimate",
+    "verdict": "corrected"
+  },
+  {
+    "id": "teatime-trivia-royale",
+    "statement": "Teatime Games — founded by QuizUp creator Thor Fridriksson — raised over $9M and launched Trivia Royale on 17 June 2020; it passed 2.5 million downloads in three weeks on a launch budget under $500,000 (about 40% of it spent on TikTok influencers), with 45% day-one retention and ~30 minutes average daily use.",
+    "value": "$9M+ raised — SEC Form D (primary) shows $9,155,139 total amount sold, filed 9 May 2018 (first sale 25 Apr 2018), plus an earlier Form D of $1,499,913 (first sale 19 Sep 2017); Trivia Royale launched 17 June 2020 and passed 2.5M downloads by 10 July 2020 (23 days ≈ 3.3 weeks), with 2M+ independently reported at 14 days",
+    "year": "2020",
+    "source": "https://www.sec.gov/Archives/edgar/data/1717682/000171768218000001/primary_doc.xml",
+    "kind": "press-report",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "skillz-fy2021-peak",
+    "statement": "Skillz reported peak full-year 2021 revenue of $380.2M with 513,000 paying monthly active users and a net loss of $187.9M; revenue then fell 29% to $269.7M in 2022 with a $438.9M net loss and 386,000 paying MAU.",
+    "value": "$380.2M FY2021 revenue ($380,154K); 513,000 average paying MAU — both confirmed as restated figures",
+    "year": "2021",
+    "source": "https://www.sec.gov/Archives/edgar/data/1801661/000180166123000003/ex991_fy22q4-8xkxearningsr.htm",
+    "kind": "audited-filing",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "skillz-fy2025",
+    "statement": "Skillz reported full-year 2025 revenue of $104.5M (up 12.5%), a net loss of $70.4M, adjusted EBITDA loss of $50.5M, 141,000 paying monthly active users at $61.7 ARPPU, and cash and equivalents of $194.5M against $129.7M of debt — cash down $77.4M on the year.",
+    "value": "$104.5M FY2025 revenue (+12.5%); $70.4M net loss; 141,000 paying MAU — all confirmed",
+    "year": "2025",
+    "source": "https://www.sec.gov/Archives/edgar/data/1801661/000180166126000019/q425skillzex991-earningsre.htm",
+    "kind": "company-disclosure",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "skillz-aviagames-verdict",
+    "statement": "On 9 February 2024 a federal jury awarded Skillz $42.9M against AviaGames, finding willful infringement of a Skillz platform patent by AviaGames' Pocket7Games; trial evidence showed AviaGames deployed bots (internally called \"Cucumbers\" and \"Guides\") against paying human players in cash games.",
+    "value": "$42.9M jury verdict (USD)",
+    "year": "2024",
+    "source": "https://www.sec.gov/Archives/edgar/data/1801661/000180166124000100/sklz-20231231.htm",
+    "kind": "press-report",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "aviagames-series-b",
+    "statement": "AviaGames, maker of Pocket7Games, raised $40M in August 2021 led by ACME Capital with Washington Harbour Partners, Powerhouse Capital, Makers Fund and Galaxy Interactive, taking total capital raised to roughly $50M; the company claimed a $836M gross-merchandise-value run rate, 100 million tournaments a month, a 70% female player base and 40 minutes of daily play per user.",
+    "value": "$40M round announced 11 August 2021 — confirmed by the company's own Business Wire press release. ~$50M total raised to date — confirmed only as GamesBeat reporter-stated (\"To date, the company has raised about $50 million\"), not stated in the press release.",
+    "year": "2021",
+    "source": "https://aithority.com/gaming/aviagames-raises-40-million-to-diversify-gaming/",
+    "kind": "press-report",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "playbite-seed",
+    "statement": "Playbite, a casual-games hub that lets players earn points redeemable for gift cards and prizes, raised $1M announced 31 October 2023, led by Grishin Robotics with M25, Tundra Ventures, Capitalize VC and Magic Fund; it reported several hundred thousand monthly active users across 42 titles.",
+    "value": "$1,000,000 (USD) — round size confirmed; announced 30 Oct 2023 and never labelled a \"seed\" by the source",
+    "year": "2023",
+    "source": "https://gamesbeat.com/playbite-raises-1m-to-bring-back-the-magic-of-arcades-for-mobile-games/",
+    "kind": "press-report",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "whatnot-series-g",
+    "statement": "Live-shopping platform Whatnot raised $545M in a Series G announced 7 August 2026 at a $20B valuation, co-led by ICONIQ, Lightspeed and Avra, up from $11.5B in an October 2025 Series F; GMV exceeded $8B in the first half of 2026, matching all of 2025.",
+    "value": "$545M raised at $20B valuation (USD)",
+    "year": "2026",
+    "source": "https://finance.yahoo.com/small-business/articles/whatnot-raises-545m-series-g-174141222.html",
+    "kind": "press-report",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "antihero-seed-2026",
+    "statement": "Antihero Studios, founded in 2024 by King and Supercell veterans (Brawl Stars, Clash of Clans, Clash Royale, Candy Crush), raised a $4.5M seed round announced 3 March 2026 led by a16z Speedrun and Laton Ventures with Sisu Game Ventures, for its social shooter Misfitz; a February 2026 pre-alpha drew 70,000 players averaging 50 minutes across three daily sessions.",
+    "value": "$4.5M seed (USD)",
+    "year": "2026",
+    "source": "https://www.antiherostudios.com/",
+    "kind": "press-report",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "grand-games-series-b-2026",
+    "statement": "Istanbul-based hybrid-casual studio Grand Games raised a $70M Series B announced 11 May 2026 led by Balderton Capital's Growth Fund with Bek Ventures and Laton Ventures, bringing total funding to $103M at a valuation roughly 6x its January 2025 Series A with single-digit dilution; the company reported 5x year-over-year revenue growth, 50 million downloads and six live games.",
+    "value": "$70M Series B; ~6x valuation step-up; $103M total raised",
+    "year": "2026",
+    "source": "https://www.balderton.com/news/grand-games-raises-70m-series-b/",
+    "kind": "company-disclosure",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "drakestar-gaming-2025",
+    "statement": "Drake Star counted $6.2B of gaming private placements across 509 rounds in full-year 2025, up 38% on 2024's $4.5B (though round count fell from 712 to 509), with only ten rounds above $50M. Gaming M&A reached $143.6B of disclosed value across 189 deals — a 14x jump on 2024's $10.5B — dominated by EA's $55B leveraged buyout and Netflix's announced $82.7B Warner Bros. acquisition. Across all categories (M&A, private placements and public markets) Drake Star tallied $161B of disclosed value over 759 announced deals.",
+    "value": "The headline value is CONFIRMED exactly: $6.2B of gaming private placements across 509 rounds in FY2025, up 38% from $4.5B in 2024, with 10 rounds above $50M. One other figure in the claim is WRONG: gaming M&A disclosed value was $143.6B across 189 deals, NOT $161B. $161B is Drake Star's total announced disclosed value across ALL 759 deals (M&A $143.6B/189 + private placements $6.2B/509 + public markets $11.4B/61 = $161.2B / 759). The claim misattributes the all-category total to M&A alone while keeping the M&A-only deal count.",
+    "year": "2025",
+    "source": "https://www.drakestar.com/hubfs/Research/GAMING/Drake%20Star%20Global%20Gaming%20Report%202025.pdf",
+    "kind": "analyst-estimate",
+    "verdict": "corrected"
+  },
+  {
+    "id": "carta-seed-seriesa-2025",
+    "statement": "Carta data for Q3 2025 shows a median pre-money valuation of $16M on new primary seed rounds (up 14% year-over-year) and $49.3M at Series A — an all-time high — with about 17% of new rounds being down rounds, the lowest quarterly rate in nearly three years. (Carta did not publish a year-over-year percentage for Series A; against its own Q3 2024 published median of $45.0M, the increase is roughly 10%, not 20%.)",
+    "value": "$16M median seed pre-money (+14% YoY) and $49.3M median Series A pre-money (all-time high) — both exactly confirmed; ~17% down rounds confirmed. BUT the Series A \"up 20% in a year\" is unsupported: Carta published no Series A YoY figure, and its own Q3 2024 report put the Series A median pre-money at $45.0M, implying roughly +10% YoY.",
+    "year": "2025",
+    "source": "https://carta.com/data/state-of-private-markets-q3-2025/",
+    "kind": "third-party-estimate",
+    "verdict": "corrected"
+  },
+  {
+    "id": "crunchbase-seed-2025",
+    "statement": "More than half of all seed dollars in 2025 went into rounds of $10M or larger — roughly 350 deals in the $10M–$50M band plus more than 20 at $50M or above — even as seed deal counts fell from their 2021–2022 peak; the San Francisco Bay Area took about one third of all US seed deals.",
+    "value": "More than half of 2025 U.S. seed dollars went into rounds of $10M+ — about 350 deals in the $10M–$50M band plus 20-plus deals at $50M or above; the SF Bay Area took roughly one-third of all U.S. seed rounds (and 45% of U.S. seed dollars).",
+    "year": "2025",
+    "source": "https://news.crunchbase.com/venture/average-seed-funding-amounts-deals-grew-2025/",
+    "kind": "press-report",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "kahoot-participants",
+    "statement": "Kahoot! states it has had 14 billion cumulative (non-unique) participants since 2013, 10 million teachers hosting a Kahoot in the past 12 months, use in 195 countries, and adoption by 95%+ of Fortune 500 companies.",
+    "value": "14,000,000,000 cumulative non-unique participants since 2013; 10,000,000 teachers hosting in trailing 12 months; 195 countries; 95%+ of Fortune 500 companies",
+    "year": "2026",
+    "source": "https://kahoot.com/company/",
+    "kind": "marketing",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "kahoot-pricing",
+    "statement": "Kahoot! 360 business pricing is per presenter, billed annually and excluding VAT: Pro Start $19/month ($228/yr, 50 participants), Pro Standard $25/month ($300/yr, 200), Pro Plus $49/month ($588/yr, 1,000), Pro Max $69/month ($828/yr, 2,000), Pro Ultra $79/month ($948/yr, 5,000).",
+    "value": "$19–$79 per month per presenter ($228–$948 per year), billed annually, excl. VAT — Pro Start $19/mo ($228/yr, 50 participants), Pro Standard $25/mo ($300/yr, 200), Pro Plus $49/mo ($588/yr, 1,000), Pro Max $69/mo ($828/yr, 2,000), Pro Ultra $79/mo ($948/yr, 5,000)",
+    "year": "2026",
+    "source": "https://kahoot360.com/pricing/",
+    "kind": "company-disclosure",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "kahoot-stores",
+    "statement": "Kahoot! Play & Create Quizzes has 100M+ Google Play downloads with a 4.7 rating from 857K reviews and in-app purchases of $2.99–$469.99 per item (updated 3 Sep 2026); on the US App Store it holds 4.56 stars from 47,901 ratings (updated 20 Aug 2026).",
+    "value": "Android (Google Play, en_US/gl=US, live 13 Sep 2026): 100M+ downloads (exact install count 100,263,409), 4.7 stars (raw 4.7388496), 857K reviews (total ratings 856,977), in-app purchases \"$2.99 - $469.99 per item\", Updated on Sep 3, 2026. iOS US (Apple iTunes Lookup API, app id 1131203560, live 13 Sep 2026): 4.56 stars (averageUserRating 4.55937-4.55942), ~47,900 ratings (userRatingCount observed 47,895-47,905 across three polls), currentVersionReleaseDate 2026-08-20 (version 6.7.4, seller Kahoot ASA).",
+    "year": "2026",
+    "source": "https://play.google.com/store/apps/details?id=no.mobitroll.kahoot.android&hl=en_US&gl=US",
+    "kind": "company-disclosure",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "kahoot-private",
+    "statement": "Kahoot! was delisted from Oslo Børs on 23 January 2024 after a takeover at NOK 35.00 per share led by Goldman Sachs Asset Management with General Atlantic, KIRKBI and Glitrafjord AS, and has published no audited financial results since.",
+    "value": "NOK 35.00 per share; delisted from Oslo Børs as of 23 January 2024 (last day of trading 22 January 2024)",
+    "year": "2024",
+    "source": "https://newsweb.oslobors.no/message/608893",
+    "kind": "company-disclosure",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "wayground-rebrand",
+    "statement": "Quizizz became Wayground on 24 June 2025, repositioning from a quiz tool to an AI-supported supplemental learning platform; it claims use in over 150 countries and by 90% of US schools as of June 2025.",
+    "value": "Rebrand announced 24 June 2025; 150+ countries; 90% of US schools (company self-reported, as of June 2025)",
+    "year": "2025",
+    "source": "https://www.prnewswire.com/news-releases/quizizz-becomes-wayground-announces-new-ai-and-curriculum-supports-302489367.html",
+    "kind": "press-report",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "wayground-stores",
+    "statement": "Wayground's iOS app holds 4.75 stars from 41,871 US ratings but has not shipped an update since 14 November 2025 (10 months); the Android app (still package com.quizizz_mobile) has 10M+ downloads and 4.7 stars from 220K reviews.",
+    "value": "iOS US: 4.75 stars (4.75114 exact), 41,871 ratings, v8.21, last updated 14 Nov 2025 | Android (com.quizizz_mobile): 10M+ downloads, 4.7 stars, 220K reviews, also last updated 14 Nov 2025",
+    "year": "2026",
+    "source": "https://itunes.apple.com/lookup?id=1160249042&country=us",
+    "kind": "company-disclosure",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "triviacrack-stores",
+    "statement": "Trivia Crack has 100M+ Google Play downloads, a 4.5 rating from 7,860,305 reviews and in-app purchases of $0.99–$199.99 per item, plus ads; on the US App Store it holds 4.60 stars from 747,919 ratings and was updated 11 September 2026.",
+    "value": "Android (com.etermax.preguntados.lite): 100M+ downloads, 4.5 stars, 7,860,305 reviews, IAP $0.99–$199.99 per item, contains ads | iOS US (id 651510680): 4.60 stars (4.60091), 747,919 ratings, updated 11 September 2026 (v3.386.1)",
+    "year": "2026",
+    "source": "https://play.google.com/store/apps/details?id=com.etermax.preguntados.lite&hl=en_US&gl=US",
+    "kind": "company-disclosure",
+    "verdict": "corrected"
+  },
+  {
+    "id": "triviacrack-pivot",
+    "statement": "Trivia Crack's Google Play listing is now titled 'Trivia Crack by The Floor' and its entire store description leads with FOX's The Floor Season 6, promising exclusive new episodes every Thursday rather than head-to-head trivia duels.",
+    "value": "Store title \"Trivia Crack by The Floor\"; description leads with \"Season 6 of The Floor is coming!\" and promises \"Exclusive new episodes every Thursday\" (verified live 13 Sep 2026; listing updated Sep 9, 2026)",
+    "year": "2026",
+    "source": "https://play.google.com/store/apps/details?id=com.etermax.preguntados.lite&hl=en_US&gl=US",
+    "kind": "company-disclosure",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "quizup-dead",
+    "statement": "QuizUp, the 1v1 trivia app from Iceland's Plain Vanilla, launched on iOS in November 2013 and by mid-May 2014 the company said it was \"on track to pass 20 million users,\" having raised more than $26 million in venture funding at that point. On 19 December 2016 Glu Mobile acquired substantially all of Plain Vanilla's intangible and certain other assets — all rights to QuizUp plus about $1.2 million in cash — by forgiving and cancelling $7.5 million in aggregate principal of convertible promissory notes it held; Glu recorded the deemed fair value of that consideration as $3.2 million. QuizUp was removed from the App Store on 20 January 2021 and was discontinued on 22 March 2021.",
+    "value": "~20,000,000 users (company-stated, 19 May 2014); acquired by Glu Mobile on 19 Dec 2016 for consideration with a deemed fair value of $3,200,000 (effected by cancelling $7,500,000 face value of convertible notes); QuizUp discontinued 22 March 2021 (not 24 March); removed from App Store 20 January 2021 (confirmed)",
+    "year": "2021",
+    "source": "https://www.sec.gov/Archives/edgar/data/1366246/000155837017001621/gluu-20161231x10k.htm",
+    "kind": "third-party-estimate",
+    "verdict": "corrected"
+  },
+  {
+    "id": "hq-dead",
+    "statement": "HQ Trivia shut down on 14 February 2020 after a collapsed acquisition, laying off its full staff of 25; it had peaked at a record 2.38 million concurrent players (28 March 2018) and roughly 15 million all-time installs, but monthly downloads had fallen from about 2 million in February 2018 to just 67,000 in January 2020 (install figures are Sensor Tower estimates), having raised more than $15 million including a Series A led by Founders Fund.",
+    "value": "Peak 2,380,000 concurrent players (record set 28 March 2018; TechCrunch phrased it as \"more than 2.3 million\"); ~15,000,000 all-time installs (Sensor Tower estimate); 67,000 monthly INSTALLS/DOWNLOADS in January 2020 (Sensor Tower estimate) — NOT 67,000 monthly users. Shutdown 14 Feb 2020, 25 staff laid off, more than $15M raised — all confirmed.",
+    "year": "2020",
+    "source": "https://techcrunch.com/2020/02/14/hq-trivia-shuts-down/",
+    "kind": "press-report",
+    "verdict": "corrected"
+  },
+  {
+    "id": "triviaroyale-dead",
+    "statement": "Trivia Royale, built by QuizUp founder Thor Fridriksson's Teatime Games, hit 2.5 million downloads in three weeks after its 17 June 2020 launch with 45% day-one iOS retention, but Teatime Games announced on 23 February 2021 that it was closing and letting all 16 employees go because revenue was insufficient and funding talks had broken down.",
+    "value": "2,500,000+ downloads in ~3 weeks (17 Jun – 10 Jul 2020, company-reported); 45% day-one iOS retention (company-reported — see caveat); all 16 employees let go, told Friday 19 Feb 2021, made public 23 Feb 2021",
+    "year": "2021",
+    "source": "https://techcrunch.com/2020/07/10/how-thor-fridrikssons-trivia-royale-earned-2-5m-downloads-in-3-weeks/",
+    "kind": "press-report",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "sporcle-scale",
+    "statement": "Sporcle, founded 30 January 2007 (its first quiz went live later that summer; the Boston Globe dates the public launch to 23 April 2007), hosts more than one million community-created quizzes that have been played 6,819,593,090 times as of 13 September 2026. Sporcle has run more than 250,000 live trivia nights since 2009; the company does not publish a count of US states served.",
+    "value": "1,000,000+ user-created quizzes (not 2,000,000+); 6,819,593,090 total plays as of 13 Sep 2026 per Sporcle's live counter (so \"over 6 billion\" holds, but the Feb 2025 milestone date is unverified); founded 30 January 2007 (site launched 23 April 2007); \"33 US states\" unverifiable — no primary source states any state count.",
+    "year": "2025",
+    "source": "https://www.sporcle.com/about/",
+    "kind": "third-party-estimate",
+    "verdict": "corrected"
+  },
+  {
+    "id": "sporcle-pricing",
+    "statement": "Sporcle's paid tier, Sporcle Orange, costs $3.99/month or $43.99/year for an individual and $6.99/month or $74.99/year for a family of up to four accounts; its Android app has 100K+ downloads with in-app purchases of $1.99–$59.99.",
+    "value": "$3.99/month or $43.99/year individual; $6.99/month or $74.99/year family (up to 4 accounts)",
+    "year": "2026",
+    "source": "https://www.sporcle.com/memberships/",
+    "kind": "company-disclosure",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "duolingo-q2-2026",
+    "statement": "For the quarter ended 30 June 2026 Duolingo reported 58.7 million daily active users (up 23% year over year), 140.6 million monthly active users (up 10%), 12.7 million paid subscribers (up 17%), revenue of $298.5 million (up 18%) and bookings of $289.1 million.",
+    "value": "58.7M DAU (+23% YoY); 140.6M MAU (+10% YoY); 12.7M paid subscribers at period end (+17% YoY); $298.5M quarterly revenue (+18% YoY); $289.1M total bookings (+8% YoY)",
+    "year": "2026",
+    "source": "https://www.sec.gov/Archives/edgar/data/1562088/000162828026053299/q2fy26duolingo6-30x26share.htm",
+    "kind": "audited-filing",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "duolingo-streak-event",
+    "statement": "Duolingo ran a Streak Revival campaign in June 2026 in which 15.4 million learners revived their streaks, including nearly 8 million users who had no active streak when the event began.",
+    "value": "15.4 million learners revived their streaks; nearly 8 million of them had no active streak when the event began",
+    "year": "2026",
+    "source": "https://www.sec.gov/Archives/edgar/data/1562088/000162828026053299/q2fy26duolingo6-30x26share.htm",
+    "kind": "audited-filing",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "jeopardy-world-tour",
+    "statement": "Jeopardy! World Tour is live under Uken Games, now listed as 'Jeopardy! Trivia TV Game Show', with 5M+ Google Play downloads, a 4.4 rating from 169K reviews, ads and in-app purchases of $0.99–$99.99; the iOS build holds 4.35 stars from 87,578 US ratings and was last updated 20 October 2025.",
+    "value": "Android (Google Play, US locale, verified 13 Sep 2026): 5M+ downloads (payload install figure 5,177,147), 4.4 stars (precise aggregate 4.3696303), 169,403 reviews (displayed \"169K\"), \"Contains ads\" + \"In-app purchases\", \"$0.99 - $99.99 per item\", developer Uken Games, listed as \"Jeopardy!(R) Trivia TV Game Show\". iOS (Apple iTunes Lookup API, id 1096884447, verified 13 Sep 2026): averageUserRating 4.34598 (= 4.35), userRatingCount 87,580 (claim said 87,578 — live counter has ticked up 2), currentVersionReleaseDate 2025-10-20T15:28:15Z (version 59.0.0), seller Uken Inc., bundleId com.sonypicturestelevision.jeopardy2. Caveat: the en_GB URL cited in the claim renders 4.3, not 4.4 — Play serves country-specific rating aggregates.",
+    "year": "2026",
+    "source": "https://play.google.com/store/apps/details?id=com.sonypicturestelevision.jeopardy2&hl=en&gl=US",
+    "kind": "company-disclosure",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "psych-status",
+    "statement": "Psych! Outwit Your Friends (Warner Bros.) is Android-maintained but iOS-abandoned: the Google Play build has 5M+ downloads, 64.2K reviews and IAP of $0.99–$19.99 and was updated 26 May 2026, while the iOS build (4.32 stars, 20,930 US ratings) has not been updated since 25 August 2023.",
+    "value": "Android: 5M+ downloads, 64.2K reviews (64,151 exact), IAP $0.99–$19.99 per item, updated 26 May 2026 | iOS: last updated 25 August 2023 (v10.10.160), 4.32 stars, 20,930 US ratings",
+    "year": "2026",
+    "source": "https://play.google.com/store/apps/details?id=com.wb.goog.ellen.psych&hl=en_US&gl=US",
+    "kind": "company-disclosure",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "quizduel-mag",
+    "statement": "QuizDuel's owner MAG Interactive reported Q3 2025/26 (March–May 2026) net sales of 65,302 KSEK / 6,988 KUSD, up 4% in SEK and 9% in USD, with ARPDAU of 8.8 US cents (up 24%). Nine-month net sales were 200,322 KSEK / 21,563 KUSD (up 1% in SEK, 13% in USD) with ARPDAU of 9.0 US cents, up 31%. Over the nine months DAU averaged 0.9 million and MAU 2.2 million, down 14% and 13% from the prior-year comparative of 1.0 million DAU and 2.5 million MAU.",
+    "value": "Confirmed: Q3 (Mar–May 2026) net sales 65,302 KSEK (62,968 KSEK LY) / 6,988 KUSD (6,436 KUSD LY), +4% SEK and +9% USD; Q3 ARPDAU 8.8 US cents (7.1), +24%. Nine months (Sep 2025–May 2026) net sales 200,322 KSEK (198,998 KSEK LY, +1%) / 21,563 KUSD (19,091 KUSD LY, +13%); nine-month ARPDAU 9.0 US cents (6.8), +31%. Prior-year comparative (Sep 24–May 25) DAU 1.0 million and MAU 2.5 million — both correct. WRONG: the declines. Nine-month DAU fell 14% (0.9M vs 1.0M) and MAU fell 13% (2.2M vs 2.5M) — not 10% and 15%. For the quarter alone, DAU fell 12% (0.9M vs 1.0M) and MAU fell 9% (2.2M vs 2.4M). Neither period shows 10%/15%.",
+    "year": "2026",
+    "source": "https://storage.mfn.se/8d863483-ccc8-4f02-b0c5-d37d899b23e8/mag-interim-report-eng-2025-26-q3.pdf",
+    "kind": "company-disclosure",
+    "verdict": "corrected"
+  },
+  {
+    "id": "quizduel-ratings",
+    "statement": "QuizDuel has almost no US presence and poor sentiment in its core European markets: 78 US App Store ratings at 3.51 stars, versus 7,477 German ratings at 2.27 stars ('Quizduell!') and 837 Swedish ratings at 2.55 stars ('Quizkampen.'), all on the same build updated 10 September 2026.",
+    "value": "US: 3.51 stars / 78 ratings | Germany: 2.27 stars / 7,477 ratings | Sweden: 2.55 stars / 837 ratings",
+    "year": "2026",
+    "source": "https://itunes.apple.com/lookup?id=1484354626&country=de",
+    "kind": "company-disclosure",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "live-1v1-vacuum",
+    "statement": "The apps currently marketing themselves as live 1v1 trivia are negligible in scale: 'Quizion: 1v1 Trivia Battles' shows 10+ Google Play downloads (updated 13 August 2026) and 'TRIVIA GO! Live 1v1 Quiz Game' shows 10K+ downloads with 138 reviews and no update since 22 May 2025.",
+    "value": "Quizion: 1v1 Trivia Battles (com.quizion.app) — 10+ downloads, no review count displayed, updated Aug 13, 2026 | TRIVIA GO! Live 1v1 Quiz Game (live.trivia, developer Sorbet Live) — 10K+ downloads, 4.5 stars, 138 reviews, updated May 22, 2025",
+    "year": "2026",
+    "source": "https://play.google.com/store/apps/details?id=com.quizion.app&hl=en_US",
+    "kind": "company-disclosure",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "nielsen-football-51pct",
+    "statement": "Football (soccer) commands 51% global fandom, substantially ahead of every other sport, according to Nielsen's 2025 Global Sports Report.",
+    "value": "51% of people globally are fans of football (soccer) — Nielsen 2025 Global Sports Report",
+    "year": "2025",
+    "source": "https://www.nielsen.com/insights/2025/global-sports-report-2025/",
+    "kind": "third-party-estimate",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "nielsen-us-soccer-62m",
+    "statement": "The United States is the fourth-largest football market globally with 62 million football fans, per Nielsen's 2025 Global Sports Report.",
+    "value": "62 million football (soccer) fans in the U.S., the fourth-largest football market globally — Nielsen 2025 Global Sports Report (press release, 12 June 2025)",
+    "year": "2025",
+    "source": "https://www.nielsen.com/news-center/2025/the-future-of-sport-nielsens-2025-report-reveals-growth-drivers/",
+    "kind": "third-party-estimate",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "icc-billion-cricket-fans",
+    "statement": "The ICC's first global market research project found cricket has over one billion fans worldwide in the 16-69 age band, with more than 300 million active participants aged 16+.",
+    "value": "1,000,000,000+ cricket fans (ages 16-69); 300,000,000+ active participants (age 16+)",
+    "year": "2018",
+    "source": "https://www.icc-cricket.com/media-releases/first-global-market-research-project-unveils-more-than-one-billion-cricket-fans",
+    "kind": "company-disclosure",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "ipl-2025-billion-viewers",
+    "statement": "JioStar's TATA IPL 2025 reached a cumulative 1.19 billion (537M on TV, 652M on digital) with 840 billion minutes of total watch-time, the tournament marketed as reaching one billion viewers.",
+    "value": "1.19 billion cumulative reach (537M on TV + 652M on digital), not 19 billion; 840 billion minutes total watch-time is correct",
+    "year": "2025",
+    "source": "https://www.jiostar.com/news/from-stadiums-to-screens-jiostars-tata-ipl-2025-a-year-of-firsts-report-highlights-how-a-billion-viewers-came-together-to-celebrate-cricket/",
+    "kind": "company-disclosure",
+    "verdict": "corrected"
+  },
+  {
+    "id": "fifa-wc2026-digital-reach",
+    "statement": "FIFA World Cup 2026 generated 20 billion video views and 30 billion social media impressions, with 187 million unique visitors to FIFA.com and 50 million aggregated FIFA app users.",
+    "value": "20 billion video views; 30 billion impressions; 1.7 billion engagements; 187 million unique FIFA.com visitors; 50 million aggregated FIFA app users — all as of 8 July 2026 (96 of 104 matches played), not full-tournament totals",
+    "year": "2026",
+    "source": "https://inside.fifa.com/media-releases/packed-stadiums-record-digital-reach-world-cup-2026-numbers-unprecedented-scale",
+    "kind": "company-disclosure",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "fifa-wc2026-market-audiences",
+    "statement": "The FIFA World Cup 2026 opening match between the USA and Paraguay drew a combined average audience of 27.5 million viewers across FOX and Telemundo, making it the most-watched football match ever broadcast in the United States. The tournament reached 192 million unique viewers across CCTV channels in China after 11 matches; Brazil v Haiti drew a combined average of 30.7 million across TV Globo and SporTV (51.3 million reached across the Globo ecosystem); and Mexico v Korea Republic recorded 25.5 million views in Mexico, after the 23.4 million average for Mexico v South Africa.",
+    "value": "USA: 27.5M average (USA v Paraguay, FOX + Telemundo combined) — most-watched football match ever broadcast in the US. NOT 36.2M, and NOT v Bosnia & Herzegovina. China 192M unique viewers over 11 matches (CCTV), Brazil 30.7M average / 51.3M reach (Brazil v Haiti, Globo + SporTV), and Mexico 25.5M (v Korea Republic) are all CONFIRMED verbatim. All figures are overnight data; FIFA says consolidated figures come post-tournament.",
+    "year": "2026",
+    "source": "https://inside.fifa.com/organisation/media-releases/world-cup-breaks-broadcast-records-across-board",
+    "kind": "company-disclosure",
+    "verdict": "corrected"
+  },
+  {
+    "id": "fsga-2026-participation",
+    "statement": "FSGA's 2026 research found 31% of US adults (approximately 82.8 million people) and 90.3 million North Americans participated in fantasy sports or sports betting in the past 12 months, up from 29% of US adults in 2025.",
+    "value": "90.3 million North Americans (US + Canada); 82.8 million US adults (31% of US adults), up from 29% in 2025",
+    "year": "2026",
+    "source": "https://members.thefsga.org/news/Details/new-fsga-research-details-growing-role-of-ai-prediction-markets-in-fantasy-sports-and-sports-betting-341850",
+    "kind": "third-party-estimate",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "fsga-2025-split",
+    "statement": "FSGA's 2025 research put 84 million adults across the US and Canada in fantasy sports or sports betting, split into roughly 57 million fantasy players (53M US, 4.2M Canada) and 66 million sports bettors (61M US, 5.1M Canada).",
+    "value": "84 million adults in the U.S. and Canada participated in fantasy sports or sports betting in the past 12 months (77 million Americans); approximately 57 million played fantasy sports (53M US, 4.2M Canada); approximately 66 million bet on sports (61M US, 5.1M Canada). Source: FSGA research conducted by Angus Reid Group, fielded May 30–June 5, 2025 (n=3,930 US/Canadian adults), presented July 1, 2025.",
+    "year": "2025",
+    "source": "https://members.thefsga.org/news/Details/new-fsga-research-highlights-industry-stability-and-next-generation-growth-in-fantasy-sports-and-sports-betting-305937",
+    "kind": "third-party-estimate",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "fsga-2026-crossover-youth",
+    "statement": "51% of US fantasy/betting participants do both activities (up from 49%), and among 13-20 year-old fantasy players the average starting age is 14, with 66% updating lineups daily.",
+    "value": "51% do both (up from 49%); average start age 14 among 13-20 year-old season-long fantasy players; 66% update lineups daily; median annual spend $100",
+    "year": "2026",
+    "source": "https://members.thefsga.org/news/Details/new-fsga-research-highlights-industry-stability-and-next-generation-growth-in-fantasy-sports-and-sports-betting-305937",
+    "kind": "third-party-estimate",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "aga-2025-handle",
+    "statement": "Americans legally wagered a record $166.94 billion on sports in 2025 (up 11.0%), producing $16.96 billion in commercial sports betting revenue (up 22.8%) and $3.71 billion in state taxes.",
+    "value": "$166.94 billion handle (+11.0%); $16.96 billion sports betting revenue (+22.8%); $3.71 billion in sports betting taxes (+32.4%)",
+    "year": "2025",
+    "source": "https://www.americangaming.org/new/commercial-gaming-revenue-hits-78-7-billion-in-2025-driving-record-18-1-billion-in-gaming-taxes-nationwide/",
+    "kind": "company-disclosure",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "fsga-prediction-markets",
+    "statement": "7% of US adults traded on prediction markets in the past year, with 88% awareness among fantasy players and sports bettors and 94% of prediction-market users also betting on sports.",
+    "value": "7% of US adults reported trading on a prediction market in the past year; prediction-market users have a mean age of 38.6 and are 69% male (Angus Reid for FSGA, fielded May 2026)",
+    "year": "2026",
+    "source": "https://members.thefsga.org/news/Details/new-fsga-research-details-growing-role-of-ai-prediction-markets-in-fantasy-sports-and-sports-betting-341850",
+    "kind": "third-party-estimate",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "reddit-science-subs",
+    "statement": "The r/science subreddit has roughly 34.5 million members (34,498,121 shown on its own Reddit sidebar in an archived capture dated 21 August 2026), making it one of the largest single concentrations of self-selected science-interested users online.",
+    "value": "~34.5 million members (34,498,121 as of 21 August 2026)",
+    "year": "2024",
+    "source": "https://web.archive.org/web/20260821020823/https://www.reddit.com/r/science/",
+    "kind": "press-report",
+    "verdict": "corrected"
+  },
+  {
+    "id": "kurzgesagt-audience",
+    "statement": "Kurzgesagt – In a Nutshell has 25.5 million subscribers and 3,851,277,759 (~3.85 billion) lifetime views as of 13 September 2026, per its own YouTube channel page (channel ID UCsXVk37bltHxD1rDPwtNM8Q, 386 videos, joined 9 July 2013). It is the most-subscribed pure explainer-science channel on YouTube, but it is NOT the largest science channel by views: Vsauce (25.1M subs / 6.95B views), TED-Ed (22.9M / 4.70B) and Veritasium (21.2M / 4.54B) all have more lifetime views, and Mark Rober (82.4M / 18.88B) is far larger on both measures.",
+    "value": "25.5 million subscribers; 3,851,277,759 lifetime views (3.85 billion) as of 13 September 2026",
+    "year": "2026",
+    "source": "https://www.youtube.com/@kurzgesagt/about",
+    "kind": "press-report",
+    "verdict": "corrected"
+  },
+  {
+    "id": "natgeo-instagram",
+    "statement": "National Geographic has 268 million Instagram followers, the second most-followed brand account on the platform behind Nike.",
+    "value": "268 million Instagram followers (precisely 268,558,516; Instagram displays \"269M\")",
+    "year": "2026",
+    "source": "https://www.instagram.com/natgeo/",
+    "kind": "third-party-estimate",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "astc-science-centre-visits",
+    "statement": "Science engagement organisations belonging to ASTC, Ecsite, CASC and/or ASPAC recorded an estimated 115.8 million visits worldwide in 2024. The figure is an extrapolation: 126 responding organisations reported 46.6 million visits (40.3 million onsite, 6.3 million offsite), scaled to the 814 member organisations with available data. These are visits, not unique visitors.",
+    "value": "115.8 million visits in 2024 (estimated, extrapolated across 814 ASTC/Ecsite/CASC/ASPAC member organisations)",
+    "year": "2024",
+    "source": "https://www.astc.org/wp-content/uploads/2025/10/the-2024-Annual-Statistics-Summary-Report.pdf",
+    "kind": "company-disclosure",
+    "verdict": "corrected"
+  },
+  {
+    "id": "smithsonian-2025-visits",
+    "statement": "The Smithsonian's National Museum of Natural History drew 3.3 million visits in 2025 and the National Air and Space Museum 1.9 million, out of roughly 14.9 million total Smithsonian visits.",
+    "value": "NMNH 3.3 million; National Air and Space Museum 1.9 million (Mall building; Udvar-Hazy Center a further 1.0 million); total Smithsonian visits 14.9 million — calendar year 2025",
+    "year": "2025",
+    "source": "https://web.archive.org/web/20260514211535/https://www.si.edu/newsdesk/about/stats",
+    "kind": "press-report",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "ga-retention-2025",
+    "statement": "Across 16,000+ mobile games in calendar 2025, the median game retained ~22% of players at D1, just under 4% at D7, and 0.68-0.79% at D30; the top quartile reached ~30% D1 and 1.6-1.8% D30.",
+    "value": "Median D1 ~22%, D7 just under 4%, D30 0.68-0.79%; P75 D1 just above 30%, D7 6-7%, D30 1.6-1.8%; P90 D1 ~40%, D7 11-12%; P99 D1 64-68%, D7 >25% (peaking above 28%), D30 13-15%. Sample: 16,000+ mobile games, 9 regions, iOS+Android, 1,000+ MAU threshold, Jan 1 - Dec 31 2025.",
+    "year": "2025",
+    "source": "https://www.gameanalytics.com/reports/2026-mobile-pc-gaming-benchmarks",
+    "kind": "third-party-estimate",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "ga-session-2025",
+    "statement": "The median mobile game in 2025 saw sessions of 3.1-3.5 minutes, 3.8-3.9 sessions per day, and ~12 minutes of daily playtime; North America ran highest at 14.45 minutes daily.",
+    "value": "Median (P50) mobile game: session length 3.1–3.5 min; 3.8–3.9 sessions/day; ~12 min daily playtime. North America highest region at 14.45 min daily (3.64 min/session, 4.23 sessions/day). Top 1% (P99): 22+ min sessions, 12+ sessions/day, 94+ min daily playtime. Data covers calendar year 2025; report published 24 Aug 2026.",
+    "year": "2025",
+    "source": "https://www.gameanalytics.com/reports/2026-mobile-pc-gaming-benchmarks",
+    "kind": "third-party-estimate",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "ga-north-america-retention",
+    "statement": "North America is among the strongest regions for mobile game retention, with median D1 of 23.28%, D7 of 4.97% and D30 of 1.18% — above the global median on all three (global P50: D1 ~22%, D7 just under 4%, D30 ~0.68-0.79%). It ranks second behind Oceania on D1 (25.63%) and D30 (1.39%), and third on D7, where Africa and Oceania both lead at 5.60%. Source: GameAnalytics 2026 Mobile & PC Gaming Benchmarks, based on 16,000+ mobile games across 9 regions (1,000+ MAU threshold), iOS and Android, calendar year 2025.",
+    "value": "North America median (P50) D1 23.28%, D7 4.97%, D30 1.18% — all three figures confirmed exactly. Oceania leads D1 at 25.63% and D30 at 1.39% — also confirmed exactly. NA is above the global median on all three (global P50: D1 ~22%, D7 just under 4%, D30 ~0.68-0.79%). CORRECTION: North America is second only on D1 and D30. On D7 it ranks THIRD — the report states \"Africa and Oceania lead at 5.60%, followed by North America (4.97%)\". Full D7 order: Africa 5.60% = Oceania 5.60% > North America 4.97% > Europe 4.06% > South/Central America <3.8% > Asia 2.68%.",
+    "year": "2025",
+    "source": "https://www.gameanalytics.com/reports/2026-mobile-pc-gaming-benchmarks",
+    "kind": "third-party-estimate",
+    "verdict": "corrected"
+  },
+  {
+    "id": "appsflyer-casual-monetization",
+    "statement": "Casual games generate a Day-90 IAP ARPU of $1.34 and ARPPU of $7.26 plus $0.55 IAA ARPU; casino games convert 4.95% of installs to first-time payers within 30 days, and North American gaming converts 11.14%.",
+    "value": "Casual D90 IAP ARPU $1.34; Casual ARPPU $7.26; Casual IAA ARPU $0.55; Casino install-to-first-time-payer 4.95% (3.01% repeat); North America 11.14% one-time / 5.08% repeat — all per AppsFlyer, The State of App Monetization – 2026 Edition (data period January 2025 – March 2026)",
+    "year": "2026",
+    "source": "https://www.appsflyer.com/resources/reports/app-marketing-monetization-report/",
+    "kind": "third-party-estimate",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "yc-hale-5-7-slides",
+    "statement": "Y Combinator partner Kevin Hale, in YC's official deck-design guide, writes: \"Since you only have 5-7 ideas you want to get across to investors, you shouldn't have too many slides. Demo Day slides ideally have only about 5-7 slides.\" The same piece sets the three design rules — \"Make it legible. - Make it simple. - Make it obvious.\" — and the constraint \"You only have 2 minutes and 30 seconds.\"",
+    "value": "5-7 slides; 2 minutes and 30 seconds",
+    "year": "2020",
+    "source": "https://www.ycombinator.com/library/4T-how-to-design-a-better-pitch-deck",
+    "kind": "company-disclosure",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "yc-hale-teams-not-slides",
+    "statement": "Kevin Hale's stated rule for what a seed-stage deck is for: \"Investors invest in teams not slides. Your slides should make your ideas more clear. Don't let your slides distract investors from what you're saying out loud. You want them to be impressed by you. Not your slides.\" He lists the distractions to cut: \"Too much text. Excessive explanations and caveats. Excessive branding per slide. Photos with no titles or captions. Animations. Transitions. Memes. Subtle humor. Accidental humor.\"",
+    "value": "9 named slide distractions to remove",
+    "year": "2020",
+    "source": "https://www.ycombinator.com/library/4T-how-to-design-a-better-pitch-deck",
+    "kind": "company-disclosure",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "yc-harris-seed-template-order",
+    "statement": "YC's official seed-deck template by partner Aaron Harris gives the canonical slide order as: (1) title + one-line description, (2) problem, (3) solution, (4) traction, (5) more metrics, (6) unique insight / \"what makes you so special\", (7) business model, (8) market, (9) team, (10) the ask. On expansion: \"This is the only place in the deck where you can only have 1 slide... Any of the other slides in this deck should be treated as a first slide of a set... You probably don't want any set here where n > 3. This is a seed deck, remember.\"",
+    "value": "10 slide sets, max 3 slides per set (soft guidance: \"You probably don't want any set here where n > 3\")",
+    "year": "2018",
+    "source": "https://www.ycombinator.com/library/2u-how-to-build-your-seed-round-pitch-deck",
+    "kind": "company-disclosure",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "yc-ralston-12-part-deck",
+    "statement": "YC's \"A guide to seed fundraising\" (Geoff Ralston) lists a 12-part deck: Company/Logo/Tag Line; Vision; Problem; Customer; Solution; Market; Market Landscape; Current Traction; Business model; Team; Summary; Fundraising. On market size it specifies: \"The (huge) Market you are addressing - Total Available Market (TAM) >$1B if possible. Include the most persuasive evidence you have that this is real.\" It prefaces the list with \"There is no fixed format or order, but the following parts are usually present.\"",
+    "value": "12 sections; TAM >$1B",
+    "year": "2020",
+    "source": "https://www.ycombinator.com/library/4A-a-guide-to-seed-fundraising",
+    "kind": "company-disclosure",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "yc-dont-detailed-financials",
+    "statement": "YC's seed fundraising guide puts detailed financial models and inflated market numbers on its explicit DON'T list for investor communication. The Appendix section \"What Not to Do While Communicating with Investors\" lists 17 DON'Ts, among them \"Create detailed financials\" and \"Use ridiculous / silly market size numbers without clear justification,\" alongside \"Be dishonest in any way\" and \"Spend time on the obvious.\" Separately, under \"Documents You Need,\" the guide states: \"Do not spend too much time developing diligence documents for a seed round. If an investor is asking for too much due diligence or financials, they are almost certainly someone to avoid.\"",
+    "value": "17 listed DON'Ts (not 16), including \"Create detailed financials\"",
+    "year": "2020",
+    "source": "https://www.ycombinator.com/library/4A-a-guide-to-seed-fundraising",
+    "kind": "company-disclosure",
+    "verdict": "corrected"
+  },
+  {
+    "id": "yc-raise-amount-math",
+    "statement": "YC's guide gives an explicit bottom-up formula for the ask: \"A rule of thumb is that an engineer... costs all-in about $15k per month. So, if you would like to be funded for 18 months of operations with an average of five engineers, then you will need about 15k x 5 x 18 = $1.35mm... Simply answer that you are raising for N months (usually 12-18) and will thus need $X, where X will usually be between $500k and $1.5 million.\" On dilution: \"If you can manage to give up as little as 10% of your company in your seed round, that is wonderful, but most rounds will require up to 20% dilution and you should try to avoid more than 25%.\"",
+    "value": "$15k/engineer/month all-in; 15k x 5 x 18 = $1.35mm; raise for N months (usually 12-18) needing $X, usually between $500k and $1.5 million; seed dilution: 10% wonderful, most rounds up to 20%, avoid more than 25%",
+    "year": "2020",
+    "source": "https://www.ycombinator.com/library/4A-a-guide-to-seed-fundraising",
+    "kind": "company-disclosure",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "yc-exec-summary",
+    "statement": "YC specifies the leave-behind package: \"The executive summary should be one or two pages (one is better) and should include vision, product, team (location, contact info), traction, market size, and minimum financials (revenue, if any, and fundraising prior and current).\"",
+    "value": "1-2 pages (1 preferred); 6 required elements",
+    "year": "2020",
+    "source": "https://www.ycombinator.com/library/4A-a-guide-to-seed-fundraising",
+    "kind": "company-disclosure",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "sequoia-10-sections",
+    "statement": "Sequoia's business-plan/pitch guide — the template Airbnb used — lists exactly 10 sections in this order: Company purpose (\"define your company in a single declarative sentence\"), Problem, Solution, Why now?, Market potential, Competition / alternatives, Business model, Team, Financials, Vision (\"If all goes well, what will you have built in five years?\"). On financials the entire instruction is: \"If you have any, please include.\"",
+    "value": "10 sections",
+    "year": "2019",
+    "source": "https://www.sequoiacap.com/article/writing-a-business-plan/",
+    "kind": "company-disclosure",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "a16z-bottom-up-tam",
+    "statement": "a16z states its preference and shows the arithmetic of why top-down fails: \"we like seeing a bottoms-up analysis, which takes into account your target customer profile, their willingness to pay for your product or service, and how you will market and sell your product. By contrast, a top-down analysis calculates TAM based on market share and a total market size.\" The worked example: \"If I can sell a $1 toothbrush every year to 40% of the people in China, my TAM is 1.36B people x $1/toothbrush x 40% = $540M/year. This analysis not only tends to overstate market size (why 40%?), it completely ignores the difficult (and expensive!) reality of getting your toothbrush into the hands of 540M toothbrush buyers.\"",
+    "value": "1.36B people x $1/toothbrush x 40% = $540M/year (verbatim as published by a16z; note a16z's own arithmetic is loose — 1.36B x 40% is 544M, so the strictly correct product is $544M)",
+    "year": "2015",
+    "source": "https://a16z.com/16-more-startup-metrics/",
+    "kind": "company-disclosure",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "seibel-bottom-up",
+    "statement": "YC's Michael Seibel gives the same top-down/bottom-up distinction and states a preference with the specific failure mode: \"With the top down approach you determine the total market and estimate your potential share of it. With bottom up you figure out where comparable products are sold, how many of them are sold, and what % of those sales you could take. I prefer the bottom up method because it helps you avoid a common top down pitfall, which is not narrowing down the customer enough... that could mean assuming all women are in your market - no matter their age or nationality.\"",
+    "value": "2 methods (top down and bottom up); bottom up preferred",
+    "year": "2019",
+    "source": "https://www.ycombinator.com/library/4b-how-to-pitch-your-company",
+    "kind": "company-disclosure",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "seibel-seven-questions",
+    "statement": "Seibel condenses the entire seed pitch to seven questions: (1) What do you do? (2) How big is the market? (3) What's your progress? (4) What's your unique insight? (5) What's your business model? (6) Who's on your team? (7) What do you want? On progress — the pre-traction answer — he writes: \"What I'm trying to understand here is how fast you produce work. What is the ratio between what you've done and how long you've been working on it?... I also tend to value product development and customers first and other things such as fundraising or biz dev deals a distant second.\"",
+    "value": "7 questions",
+    "year": "2019",
+    "source": "https://www.ycombinator.com/library/4b-how-to-pitch-your-company",
+    "kind": "company-disclosure",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "docsend-seed-320",
+    "statement": "DocSend's own research states: \"We see VCs spend an average of three minutes and 20 seconds reviewing seed pitch decks,\" and recommends deck length: \"We've found that building a 19-20 page deck with the following sections is the best way to catch the attention of busy investors.\" The article is titled \"Sealing the deal in 12 slides\" and prescribes 12 sections, noting \"founders who open their decks with the first four sections above are more likely to raise funding than those who opt for other approaches\" (company purpose, problem, solution, market size).",
+    "value": "3 min 20 sec; 19-20 pages; 12 sections",
+    "year": "2022",
+    "source": "https://web.archive.org/web/20240302210508/https://www.docsend.com/blog/what-vcs-really-want-to-see-inside-your-seed-deck/",
+    "kind": "third-party-estimate",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "docsend-per-section-seconds",
+    "statement": "DocSend publishes per-section dwell times for seed decks, which rank the slides investors actually stop on. Business model 64 seconds (the longest; \"This section gets the longest look from VCs\"); Product 59 seconds; Traction 40 seconds; Team 38 seconds; Financials 37 seconds; Problem 34 seconds; Solution 34 seconds; Competition 34 seconds; Fundraising ask 32 seconds; Market size 29 seconds; Company purpose 26 seconds; Why now? 23 seconds.",
+    "value": "Business model 64s, Product 59s, Traction 40s, Team 38s, Financials 37s, Problem 34s, Solution 34s, Competition 34s, Fundraising ask 32s, Market size 29s, Company purpose 26s, Why now? 23s",
+    "year": "2022",
+    "source": "https://web.archive.org/web/20260622084020/https://www.docsend.com/blog/what-vcs-really-want-to-see-inside-your-seed-deck/",
+    "kind": "third-party-estimate",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "docsend-traction-80pct",
+    "statement": "DocSend's strongest failure signal: \"We found that VCs spend 80 percent more time evaluating the traction of companies that didn't raise money successfully. If your market traction isn't immediate to investors, it may raise skepticism and prompt more inspection that may not work out in your favor.\" On what counts as traction pre-launch: \"You can include letters of intent, testimonials, customer pipeline, and beta feedback as appropriate to your product's stage.\"",
+    "value": "80% more time on traction of decks that failed",
+    "year": "2022",
+    "source": "https://web.archive.org/web/20240302210508/https://www.docsend.com/blog/what-vcs-really-want-to-see-inside-your-seed-deck/",
+    "kind": "third-party-estimate",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "docsend-preseed-problem-92",
+    "statement": "DocSend's pre-seed research: \"we found that 92% of successful decks globally — and 100% in the West Coast of the US — had a slide explaining the problem that the product or company set out to solve.\" Average section lengths in successful pre-seed decks: problem 1.8 slides, product 2.8 slides. \"According to our research about 60% of companies include this [traction] section in their decks.\" Overall: \"investors spend less than 3.5 minutes on average on each pre-seed pitch deck... the best way to do this is with a 20 page deck that follows a clear narrative outline.\"",
+    "value": "92% include a problem slide (100% West Coast); 1.8 problem slides; 2.8 product slides; ~60% include traction; 20 pages; <3.5 min — all verbatim from DocSend. Caveat: DocSend's own stat boxes on the same page say 1.9 problem pages, 2.7 product pages, and 59% traction.",
+    "year": "2022",
+    "source": "https://web.archive.org/web/20251007221137/https://www.docsend.com/blog/pre-seed-pitch-deck-guide/",
+    "kind": "third-party-estimate",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "docsend-344-to-327",
+    "statement": "DocSend's Startup Index seed report tracks the canonical review-time number falling over time: \"In 2019, the average amount of time VCs viewed decks was 3:27 vs. 3:44 in 2015. This time spent metric has steadily declined throughout 2020.\" Deck length did not move: \"The number of slides in a pitch deck used to raise a successful Seed round remains unchanged at 20 slides.\" Process: successful founders in 2019 contacted 77 investors on average and held 40 meetings; unsuccessful founders contacted 70 and averaged 15 meetings.",
+    "value": "3:44 (2015) → 3:27 (2019); 20 slides; 77 contacts / 40 meetings (successful), 70 contacts / 15 meetings (unsuccessful)",
+    "year": "2020",
+    "source": "https://web.archive.org/web/20200930105556/https://www.docsend.com/blog/a-brief-anatomy-of-a-successful-seed-raise/",
+    "kind": "third-party-estimate",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "docsend-2024-weekly-218",
+    "statement": "DocSend's weekly Pitch Deck Interest metric — the most recent published time-on-deck data — shows average review time settling well below the famous 3:44: it held at \"2 minutes, 30 seconds\" for most of Q1 2024, was \"2 minutes, 24 seconds\" at the start of Q2, and fell to \"2 minutes, 18 seconds\" in both April and June 2024, described as VCs who \"raced through pitch decks.\"",
+    "value": "2 min 18 sec – 2 min 30 sec (2024). Explicit weekly values on DocSend's Pitch Deck Interest \"Investor Time Spent\" metric: 2:30 on Jan 9, Jan 16, Jan 29, Feb 26, Mar 4, Mar 11, Mar 18, Mar 25 and Jun 3, 2024; 2:24 on Apr 8, 2024 (start of Q2); 2:18 on Apr 15, 2024 and Jun 10, 2024. The Jun 10, 2024 reading of 2:18 is the last time-on-deck figure DocSend ever published.",
+    "year": "2024",
+    "source": "https://web.archive.org/web/20260525121043/https://www.docsend.com/pitch-deck-metrics/",
+    "kind": "third-party-estimate",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "a16z-no-fullybaked-model",
+    "statement": "In \"The Insider's Guide to Data Rooms: What to Know Before You Raise\" (a16z, August 25, 2022), Justine Moore lists five things a16z often sees in data rooms but wouldn't recommend including \"unless an investor specifically asks for them,\" under the heading \"What shouldn't you include?\" Two of them: \"Detailed 3- to 5-year financial projections. This may be a controversial one, but it's often difficult to model forward-looking financials for early stage consumer companies. We love to hear the key milestones you're looking to hit in the coming 12-18 months (and what you'll need to get there), but we don't expect a fully-baked model.\" And: \"Market sizing. We'll do our own work sizing the market. There are rare cases where you may want to include this (for example, if you're in an obscure market and it's hard to find publicly available data).\"",
+    "value": "Figure unchanged and exact: 0 years of financial projections required (\"Detailed 3- to 5-year financial projections\" is listed among things a16z would NOT recommend including), with \"key milestones you're looking to hit in the coming 12-18 months\" wanted instead. Market sizing is likewise on the do-not-include list. CORRECTION TO THE CITATION: the author is Justine Moore, not Olivia Moore; published August 25, 2022.",
+    "year": "2023",
+    "source": "https://a16z.com/the-insiders-guide-to-data-rooms-what-to-know-before-you-raise/",
+    "kind": "company-disclosure",
+    "verdict": "corrected"
+  },
+  {
+    "id": "a16z-projection-hygiene",
+    "statement": "a16z gives three concrete honesty rules for any numbers you do show. Anchoring: \"In most cases, your projections shouldn't be vastly different from the historical data. If MAUs have grown ~20% MoM for the past six months, it's probably unrealistic to assume 200% MoM growth for the next year.\" Accountability: \"make sure that you're fairly confident in your ability to achieve your projections. If an investor passes on your current round but wants to reconnect for later rounds, you want to be able to say that you beat or exceeded your plan.\" Labeling: \"make sure it's clear where historicals end and future projections begin by highlighting projections in a different color, or adding an (A) after actuals and a (P) after projections.\" It also names the killer inconsistency: \"your deck says $2M in ARR, but your model shows $1.5M.\"",
+    "value": "20% MoM historical vs 200% MoM projected — confirmed verbatim. (Byline correction: the author is Justine Moore, not Olivia Moore.)",
+    "year": "2023",
+    "source": "https://a16z.com/the-insiders-guide-to-data-rooms-what-to-know-before-you-raise/",
+    "kind": "company-disclosure",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "pg-three-things",
+    "statement": "Paul Graham's essay in the YC library defines what a deck must establish and how fast: \"You need three things: formidable founders, a promising market, and (usually) some evidence of success so far.\" On the window: \"Most investors decide in the first few minutes whether you seem like a winner or a loser, and once their opinion is set it's hard to change.\" He defines TAM bottom-up: \"If there are x number of customers who'd pay an average of $y per year for what you're making, then the total addressable market, or TAM, of your company is $xy. Investors don't expect you to collect all that money, but it's an upper bound on how big you can get.\" And sets the pre-launch bar: \"A three month old company at Demo Day only needs to be a promising experiment that's worth funding to see how it turns out.\"",
+    "value": "3 things (formidable founders, a promising market, and usually some evidence of success so far); investors decide in the first few minutes; TAM = x customers × $y per year = $xy",
+    "year": "2013",
+    "source": "https://paulgraham.com/convince.html",
+    "kind": "company-disclosure",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "crv-10-15-slides-2026",
+    "statement": "CRV, a seed-stage venture firm, published in June 2026: \"Most successful early stage decks run around 10 to 15 slides for the core presentation. At seed, this typically covers problem, solution, traction, unique insight, business model, market size, team and the ask.\" On placement: \"Successful decks often include a traction teaser on the first 2 or 3 slides to establish credibility immediately, then expand on the numbers later in the deck.\" On financials: \"Detailed technical explanations, financial models and supporting data belong in the appendix or data room, not the core presentation.\" On the most common structural error: \"Overloading slides with multiple points is a common structural error. Each slide should communicate one clear idea.\"",
+    "value": "10-15 core slides; traction teaser in first 2-3 slides",
+    "year": "2026",
+    "source": "https://www.crv.com/content/seed-funding-pitch-deck",
+    "kind": "company-disclosure",
+    "verdict": "confirmed"
+  }
+]
