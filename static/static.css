@@ -1,0 +1,56 @@
+/* static/static.css — the offline demo build's own chrome.
+ * Loaded after the four app stylesheets so it can use the Floodlight tokens. The only rule this
+ * build adds to the app is the honesty banner: nothing here restyles an app screen. */
+
+.fd-offline-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px max(var(--gutter, 16px), var(--safe-right, 0px));
+  padding-top: calc(10px + var(--safe-top, 0px));
+  background: var(--bg-1, #121821);
+  border-bottom: 1px solid var(--line, rgba(82, 92, 108, 0.6));
+  color: var(--muted, #a6adba);
+  font-family: var(--font-ui, ui-sans-serif, system-ui, sans-serif);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+
+.fd-offline-note b {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  height: 20px;
+  margin-top: 1px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: var(--cyan, #4ee1ff);
+  color: var(--cyan-ink, #03161c);
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.fd-offline-note p {
+  margin: 0;
+  min-width: 0;
+}
+
+.fd-offline-note strong {
+  color: var(--text, #f7f6ef);
+  font-weight: 600;
+}
+
+/* The banner scrolls away; the shell's sticky topbar then owns the top edge. */
+.fd-offline-note + .fd-shell .fd-topbar {
+  z-index: 30;
+}
+
+@media (max-width: 420px) {
+  .fd-offline-note {
+    font-size: 0.75rem;
+  }
+}

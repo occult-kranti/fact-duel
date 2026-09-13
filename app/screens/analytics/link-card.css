@@ -1,0 +1,90 @@
+/* FACT//DUEL — the measurement link row (Player screen → Analytics).
+ * Floodlight tokens only; cool cyan, the same temperature the Analytics screen uses. */
+
+.fd-an-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 56px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--bg-1);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    transform 120ms var(--ease-out),
+    border-color 160ms var(--ease-out),
+    box-shadow 160ms var(--ease-out);
+}
+.fd-an-link:hover {
+  border-color: color-mix(in oklab, var(--cyan) 50%, transparent);
+  box-shadow: var(--shadow-lift);
+  transform: translateY(-2px);
+}
+.fd-an-link:active {
+  transform: scale(0.99);
+}
+.fd-an-link:focus-visible {
+  outline: 3px solid var(--ring);
+  outline-offset: 2px;
+}
+.fd-an-link-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--r-control);
+  background: var(--cyan-soft);
+  color: var(--cyan-text);
+}
+.fd-an-link-icon svg {
+  width: 18px;
+  height: 18px;
+}
+.fd-an-link-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.fd-an-link-title {
+  font-size: var(--fs-14);
+  font-weight: 700;
+}
+.fd-an-link-note {
+  color: var(--muted);
+  font-size: var(--fs-12);
+  line-height: 1.45;
+}
+.fd-an-link-chev {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  color: var(--muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fd-an-link {
+    transition: none;
+  }
+  .fd-an-link:hover,
+  .fd-an-link:active {
+    transform: none;
+  }
+}
+:root[data-motion='off'] .fd-an-link:hover,
+:root[data-motion='off'] .fd-an-link:active,
+:root[data-motion='reduced'] .fd-an-link:hover,
+:root[data-motion='reduced'] .fd-an-link:active {
+  transform: none;
+}

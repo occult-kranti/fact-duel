@@ -26,6 +26,7 @@ export type Tab =
   | 'passport'
   | 'journal'
   | 'events'
+  | 'analytics'
   | 'collections'
   | 'discovery'
   | 'showroom'
@@ -192,6 +193,16 @@ export type PlayerScreenProps = {
   catalogue: any;
   onOpenExpedition: (id: string | null) => void;
   onMissionAction: (action: string) => void;
+  go: (tab: string) => void;
+};
+export type AnalyticsScreenProps = {
+  player: Player;
+  /**
+   * Opens the one confirmation that erases the measurement record — the same profile reset the
+   * Settings sheet opens, because that reset is the only path that clears it.
+   */
+  onErase: () => void;
+  go: (tab: string) => void;
 };
 export type VaultScreenProps = {
   player: Player;

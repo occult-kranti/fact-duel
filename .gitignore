@@ -47,3 +47,4 @@ next-env.d.ts
 
 *.tsbuildinfo
 e2e-failure-*.png
+/dist-static/

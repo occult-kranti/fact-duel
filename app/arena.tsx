@@ -27,6 +27,7 @@ import { DiscoveryScreen } from './screens/discovery-screen';
 import { CollectionsScreen } from './screens/collections-screen';
 import { ExpeditionsScreen } from './screens/expeditions-screen';
 import { EventsScreen } from './screens/events-screen';
+import { AnalyticsScreen } from './screens/analytics-screen';
 import { RulesScreen } from './screens/rules-screen';
 import { ShowroomScreen } from './screens/showroom-screen';
 import { eventModeEvent } from '@/lib/progression.mjs';
@@ -67,8 +68,12 @@ function parseInvite(text: string) {
 
 /* Orchestrator: owns state, networking, clock calibration, polling, the reveal marker, keyboard
  * handling, WebMCP registration, sound and every dialog. Screens under ./screens are presentational. */
-export default function Arena() {
-  const [tab, setTab] = useState('home'),
+/**
+ * `initialTab` is how the `/analytics` route enters: app/analytics/page.tsx renders this same
+ * orchestrator with the measurement screen already selected. Everything else routes as a tab.
+ */
+export default function Arena({ initialTab = 'home' }: { initialTab?: string }) {
+  const [tab, setTab] = useState(initialTab),
     [catalogue, setCatalogue] = useState<any>(null),
     [config, setConfig] = useState<Config>(INITIAL_CONFIG),
     [name, setName] = useState('Challenger'),
@@ -117,7 +122,10 @@ export default function Arena() {
     joinDraft = useRef<any>(null),
     alive = useRef(true),
     recovered = useRef(false),
-    eventPaid = useRef<string | null>(null);
+    eventPaid = useRef<string | null>(null),
+    countedRounds = useRef(new Set<string>()),
+    countedMatch = useRef<string | null>(null),
+    countedQuests = useRef<number | null>(null);
   const signal = useCallback(
     (type: string) => {
       if (!sound || volume <= 0 || document.hidden) return;
@@ -784,6 +792,42 @@ export default function Arena() {
       ...eventModeEvent({ badge: armed.badge, modeId: armed.id, xpBonus: armed.xpBonus }),
     });
   }, [room?.settled, room?.id, room?.config, eventMode, player.loaded, player.dispatch]);
+  /* ---------- measurement (lib/analytics.mjs) ----------
+   * The counters are recorded here, where the events actually happen, each behind the same kind of
+   * once-per-event guard the rest of this file uses: a round when its result lands (keyed by round
+   * id), a match when the room settles (keyed by room id), and a quest when progression's own
+   * `questsDone` counter moves. Expedition cards are counted in the expedition run, where the card
+   * is answered. None of it earns XP, none of it re-fires on a re-render, and none of it leaves the
+   * device — `player.noteCount` writes into the device-local analytics record and nothing else. */
+  const { noteCount } = player;
+  useEffect(() => {
+    if (!player.loaded || !rd?.id || !rd.result || countedRounds.current.has(rd.id)) return;
+    countedRounds.current.add(rd.id);
+    noteCount({ rounds: 1 });
+  }, [player.loaded, rd?.id, rd?.result, noteCount]);
+  useEffect(() => {
+    if (!player.loaded || !room?.settled || !room.id || countedMatch.current === room.id) return;
+    countedMatch.current = room.id;
+    noteCount({ matches: 1 });
+  }, [player.loaded, room?.settled, room?.id, noteCount]);
+  useEffect(() => {
+    if (!player.loaded) return;
+    const done = player.progression?.counters?.questsDone ?? 0;
+    const seen = countedQuests.current;
+    // The first pass after load only marks where this device already was; a reset lowers the
+    // counter and re-marks rather than counting backwards.
+    countedQuests.current = done;
+    if (seen !== null && done > seen) noteCount({ quests: done - seen });
+  }, [player.loaded, player.progression?.counters?.questsDone, noteCount]);
+  /* The address bar follows the measurement screen when the app is served from its own root, where
+   * /analytics is a real route (app/analytics/page.tsx). The path guard keeps the static build — it
+   * is served under a base path and has no server to answer a reloaded /analytics — out of this. */
+  useEffect(() => {
+    const { pathname, search, hash } = window.location;
+    if (pathname !== '/' && pathname !== '/analytics') return;
+    const want = tab === 'analytics' && !room ? '/analytics' : '/';
+    if (pathname !== want) history.replaceState({}, '', `${want}${search}${hash}`);
+  }, [tab, !!room]);
   const duel: DuelController = {
     room,
     phase: phase ?? '',
@@ -959,6 +1003,9 @@ export default function Arena() {
             go={go}
           />
         )}
+        {!room && tab === 'analytics' && (
+          <AnalyticsScreen player={player} go={go} onErase={() => setClearOpen(true)} />
+        )}
         {!room && tab === 'showroom' && <ShowroomScreen showArt={showArt} onShowArt={setShowArt} go={go} />}
         {!room && tab === 'collections' && (
           <CollectionsScreen player={player} catalogue={catalogue} onChoose={chooseCollection} />
@@ -969,6 +1016,7 @@ export default function Arena() {
             catalogue={catalogue}
             onOpenExpedition={openExpedition}
             onMissionAction={missionAction}
+            go={go}
           />
         )}
         {!room && tab === 'discovery' && <DiscoveryScreen player={player} topic={config.topic} go={go} />}
@@ -1000,6 +1048,10 @@ export default function Arena() {
         onShowArtChange={changeShowArt}
         canExport={player.loaded}
         onExport={player.exportAll}
+        onOpenMeasurement={() => {
+          setSettingsOpen(false);
+          go('analytics');
+        }}
         onReset={() => {
           setSettingsOpen(false);
           setClearOpen(true);
@@ -1025,8 +1077,10 @@ export default function Arena() {
             <AlertDialogTitle>Reset your local activity?</AlertDialogTitle>
             <AlertDialogDescription>
               This removes your Vault of facts and saved question issues, expedition progress, scores and
-              stamps, XP, gems and activity points, side quests and earned card finishes in this browser.
-              Export first to keep a copy. Theme, sound preferences and room coins are unaffected.
+              stamps, XP, gems and activity points, side quests and earned card finishes in this browser — and
+              the measurement record behind the Analytics screen: sessions, active days, the day-by-day
+              activity and the retention answer. Export first to keep a copy. Theme, sound preferences and
+              room coins are unaffected.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

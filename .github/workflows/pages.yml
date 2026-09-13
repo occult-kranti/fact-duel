@@ -1,0 +1,88 @@
+# Publishes two things to GitHub Pages from one site:
+#   /fact-duel/        the game, built as a fully offline single-page app (no server, no API)
+#   /fact-duel/deck/   the seed investor deck
+#
+# The game normally runs on Cloudflare Workers with a D1-backed duel API. Pages is static only, so
+# `pnpm build:static` swaps the duel client for an in-process implementation: bot duels, expeditions,
+# discovery, the vault and the events calendar all work in the browser. Two-device friend duels
+# genuinely need a server and are disabled there, which the build says on screen.
+name: Deploy game and deck to Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never cancel a half-finished deploy; queue instead.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.25.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check types and run the suite
+        run: |
+          pnpm exec tsc --noEmit
+          node --test tests/*.test.mjs
+
+      - name: Build the offline game
+        env:
+          STATIC_BASE: /fact-duel/
+        run: pnpm build:static
+
+      - name: Assemble the site
+        run: |
+          set -euo pipefail
+          rm -rf _site
+          mkdir -p _site/deck
+          cp -r dist-static/. _site/
+          cp public/product/investor/deck.html _site/deck/index.html
+          cp -r public/product/investor/charts _site/deck/charts
+          cp -r public/product/investor/shots _site/deck/shots
+          cp public/product/investor/factduel-seed-deck.pptx _site/deck/factduel-seed-deck.pptx
+          # Pages serves the artifact directly, but .nojekyll keeps any underscore-prefixed asset safe.
+          touch _site/.nojekyll
+          echo "Game entry:"; ls _site/index.html
+          echo "Deck entry:"; ls _site/deck/index.html
+          du -sh _site
+
+      - uses: actions/configure-pages@v5
+        with:
+          # Turns Pages on for this repository the first time this workflow runs, so no manual
+          # settings change is needed.
+          enablement: true
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

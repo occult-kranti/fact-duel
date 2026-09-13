@@ -14,6 +14,7 @@ import { useEffect, useState } from 'react';
 import { emptyProgression } from '@/lib/progression.mjs';
 import { SETTINGS_KEYS } from '../shell/settings-sheet';
 import { Passport } from '../passport';
+import { MeasurementLink } from './analytics/link-card';
 import { Achievements } from './player/achievements';
 import { LevelCard } from './player/level-card';
 import { Locker } from './player/locker';
@@ -24,7 +25,7 @@ import { StreakCard } from './player/streak-card';
 import type { PlayerScreenProps } from './types';
 import './player/player.css';
 
-export function PlayerScreen({ player, onOpenExpedition, onMissionAction }: PlayerScreenProps) {
+export function PlayerScreen({ player, onOpenExpedition, onMissionAction, go }: PlayerScreenProps) {
   const progression = player.progression ?? emptyProgression();
   const accent: string = progression.cosmetics.equipped.accent;
   const [name, setName] = useState('');
@@ -59,6 +60,9 @@ export function PlayerScreen({ player, onOpenExpedition, onMissionAction }: Play
         <RankCard progression={progression} />
         <StreakCard progression={progression} />
       </div>
+
+      {/* The Arena Rank card above says "on this device"; this is where that claim can be checked. */}
+      <MeasurementLink onOpen={() => go('analytics')} />
 
       <section className="fd-sec" aria-labelledby="fd-mastery-h">
         <div className="fd-sec-head">

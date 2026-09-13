@@ -1,0 +1,705 @@
+/* FACT//DUEL — Analytics (the measurement surface).
+ * Floodlight tokens only, every class `fd-` prefixed and scoped under `.fd-an`.
+ * Temperature: cool cyan — this is a reading surface, not a competition one (design bible §5).
+ * Mobile-first: one column on phones, multi-column from 600px. Nothing sets a min-width wider
+ * than the viewport; the only horizontally scrollable thing is the day table, in its own box. */
+
+.fd-an {
+  --fd-an-accent: var(--cyan);
+  --fd-an-accent-text: var(--cyan-text);
+  --fd-an-accent-soft: var(--cyan-soft);
+  --fd-an-sessions: var(--volt);
+  --fd-an-time: var(--cyan);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+/* Chart marks need their own light-theme step. The bright accent fills exist for CTAs on a light
+ * ground and clear barely 1.3:1 against the cream card, so in light the plots take the system's
+ * darker text twins — same hues, the step that clears 3:1 against the surface. Dark mode keeps the
+ * fills, which are already the high-contrast choice there. */
+:root[data-theme='light'] .fd-an {
+  --fd-an-sessions: var(--volt-text);
+  --fd-an-time: var(--cyan-text);
+}
+:root[data-theme='light'] .fd-an-comeback-card[data-state='back'] {
+  --fd-an-state: var(--volt-text);
+}
+:root[data-theme='light'] .fd-an-comeback-card[data-state='open'] {
+  --fd-an-state: var(--cyan-text);
+}
+
+/* ---------- header ---------- */
+.fd-an-head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-hero);
+  background: linear-gradient(180deg, var(--fd-an-accent-soft), transparent 62%), var(--bg-1);
+}
+.fd-an-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  margin-left: -6px;
+  padding: 0 6px;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: var(--fs-14);
+  font-weight: 650;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 160ms var(--ease-out);
+}
+.fd-an-back:hover {
+  color: var(--text);
+}
+.fd-an-back > svg {
+  width: 16px;
+  height: 16px;
+}
+.fd-an-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  color: var(--fd-an-accent-text);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+.fd-an-eyebrow > svg {
+  width: 13px;
+  height: 13px;
+}
+.fd-an-head h1 {
+  margin: 0;
+  font-size: var(--fs-28);
+  line-height: 1.1;
+}
+.fd-an-lede {
+  margin: 0;
+  max-width: 62ch;
+  color: var(--muted);
+  font-size: var(--fs-14);
+  line-height: 1.55;
+}
+/* The one caveat this screen must carry, and the loudest thing on it after the title. */
+.fd-an-caveat {
+  display: flex;
+  gap: 10px;
+  margin: 4px 0 0;
+  padding: 12px 14px;
+  border: 1px solid color-mix(in oklab, var(--gold) 42%, transparent);
+  border-radius: var(--r-card);
+  background: var(--gold-soft);
+  color: var(--text);
+  font-size: var(--fs-14);
+  font-weight: 600;
+  line-height: 1.5;
+}
+.fd-an-caveat > svg {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  color: var(--gold-text);
+}
+.fd-an-loading {
+  margin: 0;
+  padding: 24px 16px;
+  border: 1px dashed var(--line);
+  border-radius: var(--r-card);
+  color: var(--muted);
+  font-size: var(--fs-14);
+  text-align: center;
+}
+
+/* ---------- sections ---------- */
+.fd-an-sec {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--bg-1);
+  min-width: 0;
+}
+.fd-an-sec-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 12px;
+}
+.fd-an-sec-eyebrow {
+  margin: 0 0 2px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+.fd-an-sec-head h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: var(--fs-22);
+  line-height: 1.15;
+}
+.fd-an-sec-icon {
+  width: 18px;
+  height: 18px;
+  color: var(--fd-an-accent-text);
+}
+.fd-an-sec-head > span {
+  color: var(--muted);
+  font-size: var(--fs-12);
+}
+.fd-an-note {
+  margin: 0;
+  max-width: 68ch;
+  color: var(--muted);
+  font-size: var(--fs-12);
+  line-height: 1.6;
+}
+.fd-an-note b {
+  color: var(--text);
+  font-weight: 700;
+}
+
+/* ---------- activity: chart above the tiles, side by side once there is room ---------- */
+.fd-an-activity {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+
+/* ---------- fact tiles ---------- */
+.fd-an-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+  margin: 0;
+}
+.fd-an-facts > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-control);
+  background: var(--bg-2);
+  min-width: 0;
+}
+.fd-an-facts dt {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.fd-an-facts dd {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-18);
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+.fd-an-facts p {
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+/* ---------- comeback cards ---------- */
+.fd-an-comeback {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.fd-an-comeback-card {
+  --fd-an-state: var(--muted);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--fd-an-state);
+  border-radius: var(--r-control);
+  background: var(--bg-2);
+  min-width: 0;
+}
+.fd-an-comeback-card[data-state='back'] {
+  --fd-an-state: var(--volt);
+  background: linear-gradient(90deg, var(--volt-soft), transparent 55%), var(--bg-2);
+}
+.fd-an-comeback-card[data-state='open'] {
+  --fd-an-state: var(--cyan);
+  background: linear-gradient(90deg, var(--cyan-soft), transparent 55%), var(--bg-2);
+}
+.fd-an-comeback-card[data-state='unknown'] {
+  border-left-style: dashed;
+}
+.fd-an-comeback-day {
+  margin: 0;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.fd-an-comeback-state {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-18);
+  font-weight: 700;
+  line-height: 1.2;
+}
+.fd-an-comeback-card[data-state='back'] .fd-an-comeback-state {
+  color: var(--volt-text);
+}
+.fd-an-comeback-card[data-state='open'] .fd-an-comeback-state {
+  color: var(--cyan-text);
+}
+.fd-an-comeback-state > svg {
+  flex: 0 0 auto;
+  width: 17px;
+  height: 17px;
+}
+.fd-an-comeback-note {
+  margin: 0;
+  color: var(--muted);
+  font-size: var(--fs-12);
+  line-height: 1.5;
+}
+
+/* ---------- activity chart ---------- */
+.fd-an-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  min-width: 0;
+}
+.fd-an-chart-cap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 12px;
+}
+.fd-an-chart-title {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.fd-an-readout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: var(--fs-12);
+  font-variant-numeric: tabular-nums;
+}
+.fd-an-readout b {
+  color: var(--text);
+  font-weight: 700;
+}
+
+.fd-an-plot-row {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+.fd-an-plot-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+.fd-an-plot-label {
+  color: var(--text);
+  font-size: var(--fs-12);
+  font-weight: 650;
+}
+.fd-an-plot-max {
+  color: var(--muted);
+  font-size: 11px;
+}
+.fd-an-plot {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 2px;
+  height: 62px;
+  padding-bottom: 1px;
+  border-bottom: 1px solid var(--line);
+  min-width: 0;
+  touch-action: pan-y;
+}
+.fd-an-plot[data-tone='sessions'] {
+  --fd-an-bar: var(--fd-an-sessions);
+}
+.fd-an-plot[data-tone='time'] {
+  --fd-an-bar: var(--fd-an-time);
+}
+.fd-an-col {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-width: 0;
+  height: 100%;
+}
+/* Hover crosshair: a neutral band behind the whole day, so both plots read as one x axis. It is
+ * deliberately NOT tinted with the series colour — a coloured full-height band behind a zero day
+ * reads as a bar, which would be the chart claiming activity the record does not have. */
+.fd-an-col[data-hover='on']::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 3px;
+  background: color-mix(in oklab, var(--muted) 18%, transparent);
+}
+.fd-an-bar {
+  position: relative;
+  display: block;
+  width: 100%;
+  min-height: 3px;
+  border-radius: 3px 3px 0 0;
+  background: var(--fd-an-bar);
+}
+.fd-an-bar--zero {
+  height: 2px;
+  min-height: 2px;
+  border-radius: 1px;
+  background: var(--line);
+}
+.fd-an-axis {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.fd-an-table-wrap > summary {
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  color: var(--fd-an-accent-text);
+  font-size: var(--fs-12);
+  font-weight: 650;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.fd-an-table-scroll {
+  overflow-x: auto;
+  margin-top: 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-control);
+}
+.fd-an-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--fs-12);
+}
+.fd-an-table th,
+.fd-an-table td {
+  padding: 6px 10px;
+  text-align: right;
+  white-space: nowrap;
+}
+.fd-an-table thead th {
+  position: sticky;
+  top: 0;
+  background: var(--bg-2);
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.fd-an-table th:first-child,
+.fd-an-table tbody th {
+  text-align: left;
+  font-weight: 650;
+}
+.fd-an-table tbody tr + tr {
+  border-top: 1px solid var(--line);
+}
+.fd-an-table tbody tr[data-quiet='on'] {
+  color: var(--muted);
+}
+.fd-an-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- counted events ---------- */
+.fd-an-counted {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-control);
+  background: var(--bg-2);
+}
+.fd-an-counted-title {
+  margin: 0;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.fd-an-counted ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.fd-an-counted li {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+.fd-an-counted li > span:first-child {
+  font-family: var(--font-mono);
+  font-size: var(--fs-18);
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+.fd-an-counted li > span + span {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+/* ---------- funnel ---------- */
+.fd-an-funnel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: none;
+}
+.fd-an-funnel-step {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-control);
+  background: var(--bg-2);
+  min-width: 0;
+}
+.fd-an-funnel-dot {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+.fd-an-funnel-step[data-done='on'] .fd-an-funnel-dot {
+  border-color: color-mix(in oklab, var(--fd-an-accent) 55%, transparent);
+  background: var(--fd-an-accent-soft);
+  color: var(--fd-an-accent-text);
+}
+.fd-an-funnel-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex: 1 1 160px;
+  min-width: 0;
+}
+.fd-an-funnel-title {
+  font-size: var(--fs-14);
+  font-weight: 700;
+}
+.fd-an-funnel-note {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.45;
+}
+.fd-an-funnel-when {
+  flex: 0 0 auto;
+  color: var(--muted);
+  font-size: var(--fs-12);
+  white-space: nowrap;
+}
+.fd-an-funnel-step[data-done='on'] .fd-an-funnel-when {
+  color: var(--text);
+  font-weight: 650;
+}
+
+/* ---------- your data ---------- */
+.fd-an-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.fd-an-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex: 1 1 150px;
+  min-height: 46px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-control);
+  background: var(--bg-2);
+  color: var(--text);
+  font: inherit;
+  font-size: var(--fs-14);
+  font-weight: 650;
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    transform 120ms var(--ease-out),
+    border-color 160ms var(--ease-out),
+    background-color 160ms var(--ease-out);
+}
+.fd-an-btn:hover {
+  border-color: color-mix(in oklab, var(--fd-an-accent) 55%, transparent);
+}
+.fd-an-btn:active {
+  transform: scale(0.97);
+}
+.fd-an-btn > svg {
+  width: 17px;
+  height: 17px;
+}
+.fd-an-btn--danger {
+  color: var(--danger-text);
+}
+.fd-an-btn--danger:hover {
+  border-color: color-mix(in oklab, var(--danger) 55%, transparent);
+  background: var(--danger-soft);
+}
+.fd-an :is(.fd-an-btn, .fd-an-back, .fd-an-table-wrap > summary):focus-visible {
+  outline: 3px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.fd-an-privacy {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.fd-an-privacy li {
+  display: flex;
+  gap: 10px;
+  color: var(--muted);
+  font-size: var(--fs-12);
+  line-height: 1.55;
+}
+.fd-an-privacy svg {
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  color: var(--fd-an-accent-text);
+}
+
+/* ---------- wider screens ---------- */
+@media (min-width: 600px) {
+  .fd-an-head,
+  .fd-an-sec {
+    padding: 20px;
+  }
+  .fd-an-comeback {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .fd-an-plot {
+    height: 78px;
+  }
+  .fd-an-btn {
+    flex: 0 0 auto;
+  }
+}
+@media (min-width: 1080px) {
+  .fd-an-activity {
+    grid-template-columns: minmax(0, 1fr) 300px;
+    align-items: start;
+    gap: 20px;
+  }
+  .fd-an-facts--four {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 900px) {
+  .fd-an {
+    gap: 24px;
+  }
+  .fd-an-head h1 {
+    font-size: var(--fs-36);
+  }
+  .fd-an-plot {
+    height: 96px;
+    gap: 3px;
+  }
+}
+
+/* Reduced motion: the screen has no entrances, only the press spring — drop that too. */
+@media (prefers-reduced-motion: reduce) {
+  .fd-an-btn,
+  .fd-an-back {
+    transition: none;
+  }
+  .fd-an-btn:active {
+    transform: none;
+  }
+}
+:root[data-motion='off'] .fd-an-btn:active,
+:root[data-motion='reduced'] .fd-an-btn:active {
+  transform: none;
+}

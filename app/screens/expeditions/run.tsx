@@ -161,6 +161,10 @@ export function ExpeditionRun({
         epoch: player.profile.epoch,
         ...extra,
       });
+      /* Measurement (lib/analytics.mjs): one expedition card, counted where the card is actually
+       * answered. `locked` guards re-entrancy and the options are disabled once the card is
+       * answered, so this runs once per card and never on a re-render. */
+      if (type === 'journey-answer') player.noteCount({ cards: 1 });
     } finally {
       locked.current = false;
       setWriting(false);
