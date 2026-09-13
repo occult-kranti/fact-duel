@@ -5,6 +5,10 @@ import { transactProfile } from '@/lib/profile-store.mjs';
 import { readJournal } from '@/lib/journal.mjs';
 import { levelForXp } from '@/lib/progression.mjs';
 const VISIT_THROTTLE_MS = 60_000;
+// Engaged time is sampled every 15 s and only while the tab is on screen, so a tab left open in the
+// background adds nothing. lib/analytics.mjs clamps a single sample to its 30-minute session gap.
+const HEARTBEAT_MS = 15_000;
+type CountDelta = { rounds?: number; matches?: number; cards?: number; quests?: number };
 export function usePlayer(room: any, roomEpoch?: string) {
   const [profile, setProfile] = useState<any>(() => emptyProfile()),
     [loaded, setLoaded] = useState(false),
@@ -16,7 +20,8 @@ export function usePlayer(room: any, roomEpoch?: string) {
     storage = useRef(true),
     everStored = useRef(false),
     live = useRef(true),
-    lastVisit = useRef(0);
+    lastVisit = useRef(0),
+    lastBeat = useRef(0);
   const accept = useCallback((value: any, authoritativeReset = false) => {
     if (!live.current || (!authoritativeReset && value.revision < current.current.revision)) return;
     current.current = value;
@@ -123,6 +128,51 @@ export function usePlayer(room: any, roomEpoch?: string) {
     window.addEventListener('focus', onFocus);
     return () => window.removeEventListener('focus', onFocus);
   }, [loaded, visit]);
+  // Measurement, kept device-local: an open starts or continues a session, a beat credits engaged
+  // milliseconds, and a count records what a screen just did. None of it earns XP or leaves the device.
+  const noteOpen = useCallback(() => {
+    lastBeat.current = Date.now();
+    return dispatch({ type: 'analytics-open' });
+  }, [dispatch]);
+  const noteBeat = useCallback((ms: number) => dispatch({ type: 'analytics-beat', ms }), [dispatch]);
+  const noteCount = useCallback(
+    (delta: CountDelta) => void dispatch({ type: 'analytics-count', ...delta }),
+    [dispatch],
+  );
+  useEffect(() => {
+    if (!loaded) return;
+    let timer: ReturnType<typeof setInterval> | null = null;
+    const flush = () => {
+      const now = Date.now(),
+        ms = now - lastBeat.current;
+      lastBeat.current = now;
+      if (ms > 0) void noteBeat(ms);
+    };
+    const start = () => {
+      if (timer !== null) return;
+      lastBeat.current = Date.now();
+      timer = setInterval(flush, HEARTBEAT_MS);
+    };
+    const stop = () => {
+      if (timer === null) return;
+      clearInterval(timer);
+      timer = null;
+      flush(); // credit the part-interval up to the moment the tab went away
+    };
+    const onVisibility = () => {
+      if (document.visibilityState === 'visible') {
+        void noteOpen();
+        start();
+      } else stop();
+    };
+    void noteOpen();
+    if (document.visibilityState === 'visible') start();
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => {
+      document.removeEventListener('visibilitychange', onVisibility);
+      if (timer !== null) clearInterval(timer);
+    };
+  }, [loaded, noteOpen, noteBeat]);
   const buyCosmetic = useCallback((id: string) => void dispatch({ type: 'cosmetic-buy', id }), [dispatch]);
   const equipCosmetic = useCallback(
     (id: string) => void dispatch({ type: 'cosmetic-equip', id }),
@@ -183,6 +233,7 @@ export function usePlayer(room: any, roomEpoch?: string) {
     passport: profile.passport,
     summary: passportSummary(profile.passport),
     progression: profile.progression,
+    analytics: profile.analytics,
     level: levelForXp(profile.progression?.xp ?? 0),
     loaded,
     persistent,
@@ -195,6 +246,9 @@ export function usePlayer(room: any, roomEpoch?: string) {
     exportAll,
     report,
     visit,
+    noteOpen,
+    noteBeat,
+    noteCount,
     buyCosmetic,
     equipCosmetic,
   };
