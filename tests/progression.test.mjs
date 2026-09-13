@@ -521,7 +521,10 @@ test('expeditions: per-card XP, completion bonus, stamp paid once, and no double
   }
   const score = p.journeys[route.key].last.score; // 3 + 2 - 1 + 9 = 13
   assert.equal(score, 13);
-  assert.equal(logXp(p.progression, 'expedition-complete'), 100 + 13 * 5 + 150);
+  assert.equal(
+    logXp(p.progression, 'expedition-complete'),
+    XP.expeditionComplete + 13 * XP.expeditionScorePoint + XP.expeditionStamp,
+  );
   assert.equal(p.progression.counters.stamps, 1);
   assert.equal(p.progression.counters.expeditions, 1);
   p = start(p, 'run-2');
@@ -531,7 +534,14 @@ test('expeditions: per-card XP, completion bonus, stamp paid once, and no double
   }
   assert.equal(p.progression.counters.stamps, 1);
   assert.equal(p.progression.counters.expeditions, 2);
-  assert.equal(logXp(p.progression, 'expedition-complete'), 100 + 13 * 5 + 150 + 100 + 18 * 5);
+  assert.equal(
+    logXp(p.progression, 'expedition-complete'),
+    XP.expeditionComplete +
+      13 * XP.expeditionScorePoint +
+      XP.expeditionStamp +
+      XP.expeditionComplete +
+      18 * XP.expeditionScorePoint,
+  );
   assert.ok(p.progression.achievements['bold-master']);
   assert.equal(p.progression.counters.facts, 6);
   assert.deepEqual(readProfile(JSON.parse(JSON.stringify(p))), p);
@@ -792,11 +802,18 @@ test('level-ups pay 25 gems per level gained, including several levels in one re
     [{ kind: 'expedition-complete', routeId: 'space', score: 18, first: true }],
     DAY1,
   );
-  assert.equal(logXp(prog, 'expedition-complete'), 100 + 90 + 150);
+  assert.equal(
+    logXp(prog, 'expedition-complete'),
+    XP.expeditionComplete + 18 * XP.expeditionScorePoint + XP.expeditionStamp,
+  );
   const level = levelForXp(prog.xp).level;
   assert.ok(level >= 3);
   assert.equal(logGems(prog, 'level'), 25 * (level - 1));
-  assert.deepEqual(prog.log.find((e) => e.kind === 'level').meta, { from: 1, to: level });
+  // One entry per level crossed, newest first: together they must span the whole climb.
+  const levels = prog.log.filter((e) => e.kind === 'level').map((e) => e.meta);
+  assert.equal(levels.at(-1).from, 1);
+  assert.equal(levels[0].to, level);
+  assert.equal(levels.length, level - 1);
   assert.equal(prog.wallet.gems, prog.wallet.lifetimeGems);
 });
 test('cosmetics: buy and equip guards, level, achievement and rank unlocks, sanitized on reload', () => {

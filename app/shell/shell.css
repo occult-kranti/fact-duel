@@ -502,3 +502,33 @@
   transition: none;
   transform: none;
 }
+
+/* ---------- settings sheet: target sizes ---------- */
+.fd-sheet [data-slot='select-trigger'] {
+  min-height: 44px;
+}
+/* Radix renders a 16px icon close button and a 32x18 switch; both are below the 44px floor. The
+   switches keep their visual size and gain the hit area through a padded pseudo-element. */
+/* The sheet's built-in close button has no data-slot, only positioning classes. */
+.fd-sheet > button.absolute,
+.fd-sheet [data-slot='sheet-close'] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: var(--r-control);
+  top: 10px;
+  right: 10px;
+}
+.fd-sheet [data-slot='switch'] {
+  position: relative;
+}
+.fd-sheet [data-slot='switch']::after {
+  content: '';
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 56px;
+  height: 44px;
+  transform: translate(-50%, -50%);
+}
