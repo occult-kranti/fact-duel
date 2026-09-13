@@ -34,7 +34,7 @@ evidence notes can be edited and exported.
 - Deliberate changes to the v6 guardrails: streaks and daily quests are now in (white-hat, shielded);
   the Home hero may mount WebGL after a static poster; a live room still never mounts a renderer.
 
-## Phase 2 — Foundation 🔄 (G05–G07)
+## Phase 2 — Foundation ✅ (G05–G07)
 
 1. Tokens + fonts + Tailwind bridge; remove dead root palettes.
 2. App shell: top bar with streak/gems/level slots, bottom tab bar ≤ 900 px, rail ≥ 900 px, settings
@@ -42,44 +42,66 @@ evidence notes can be edited and exported.
 3. Decompose `app/arena.tsx` into `app/screens/*` with a typed `DuelController`; no behaviour change;
    end-to-end bot duel screenshots as proof.
 
-## Phase 3 — Progression engine 🔄 (G08–G14)
+## Phase 3 — Progression engine ✅ (G08–G14)
 
 Pure `lib/progression.mjs` hooked into the profile reducer tail (with the journey-answer recursion
 fixed via `applyPractice`), exactly-once XP from before/after diffs, streaks with shields, seeded daily
 quests, achievements, Arena Rank, gems and cosmetics, Wild Round multipliers, difficulty plumbing,
 `progressionDiff` for UI feedback. 20+ new tests.
 
-## Phase 4 — Juice 🔄 (G15–G18)
+## Phase 4 — Juice ✅ (G15–G18)
 
 Procedural Web Audio cues, pooled particle engine, confetti, shake, counters, float text, toasts,
 ceremonies, haptics, preferences (sound/volume/haptics/effects) and an `/fx-lab` audition page.
 
-## Phase 5 — 3D 🔄 (G19–G21)
+## Phase 5 — 3D ✅ (G19–G21)
 
 Knowledge Core hero, Reward Medal, Gem Vault (rapier, lazy), all client-only with WebGL and
 reduced-motion fallbacks, verified by build and headless screenshots on `/three-lab`.
 
-## Phase 6 — Screen rebuilds ⏳ (G22–G27)
+## Phase 6 — Screen rebuilds ✅ (G22–G27)
 
 Parallel screen agents, one directory each, all reading the skills:
 Home · Play · Room · Expeditions · Player (Passport, Rank, Locker) · Vault/Discovery/Collections.
 Each ships its own `fd-` CSS, uses `useJuice`, mounts lazy 3D where the bible says, and verifies with
 `scripts/screens.mjs` plus a screen-specific Playwright flow.
 
-## Phase 7 — Integration and advisor loop 1 ⏳ (G28, G29)
+## Phase 7 — Integration and advisor loop 1 🔄 (G28, G29)
 
 Progression feedback wiring (diff → toasts/ceremonies exactly once), then an independent advisor
 review (`gamification-advisor` skill) with scores per screen and a P0/P1/P2 fix list; fixes dispatched.
 
-## Phase 8 — Verification and advisor loop 2 ⏳ (G30)
+## Phase 8 — Verification and advisor loop 2 🔄 (G30)
 
 Release gate plus a screenshot sweep with and without reduced motion, end-to-end bot duel, bundle
 sizes; `verification.md`; advisor sign-off.
 
-## Phase 9 — Docs ⏳ (G31)
+## Phase 9 — Docs 🔄 (G31)
 
 README, decision record, roadmap sync, Studio rendering of the gamification record.
 
 ## Deferred (needs server work) ⛔ (G32, G33)
 
 Server-backed leagues/leaderboards (identity + settlement write) and bot personas with accuracy tiers.
+
+## What actually shipped (13 September 2026)
+
+The swarm ran as planned with one interruption: a spend limit on the model serving the first screen
+wave killed all six screen agents at spawn, and they were relaunched on a second model. Everything
+below is verified by the gates, not by intent.
+
+- **Foundation**: `app/theme/tokens.css`, self-hosted Bricolage Grotesque / Instrument Sans /
+  JetBrains Mono, `app/shell/*` (top bar with streak, gems and level chips; bottom tab bar under
+  900 px; rail above; settings sheet with sound, volume, haptics, effects and theme), and
+  `app/arena.tsx` cut from 2,027 to about 950 lines with ten presentational screens behind a typed
+  `DuelController`.
+- **Progression**: `lib/progression.mjs` with 26 new tests (94 total), wired through the profile
+  reducer and surfaced by `useProgressionFeedback`, which fires each toast and ceremony once and
+  stays silent for the whole live round.
+- **Juice**: 22 synthesised cues, a pooled particle engine, confetti, shake, counters, float text,
+  a queued ceremony host and gesture-gated haptics, auditioned at `/fx-lab`.
+- **3D**: knowledge core, reward medals, a Rapier gem tray and a stamp case, all lazy and
+  client-only, auditioned at `/three-lab`; the 2.2 MB physics chunk loads only when the Locker opens.
+- **Screens**: Home, Play, Room, Expeditions, Player and Vault/Discovery/Collections rebuilt, then
+  867 dead rules removed from the two legacy stylesheets.
+

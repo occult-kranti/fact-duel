@@ -1,6 +1,6 @@
 {
   "version": 5,
-  "asOf": "2026-09-12",
+  "asOf": "2026-09-13",
   "items": [
     {
       "id": "P01",
@@ -1198,7 +1198,7 @@
       "id": "G05",
       "milestone": "Floodlight gamification",
       "owner": "Foundation lead",
-      "status": "in_progress",
+      "status": "done",
       "priority": "P0",
       "dependencies": [
         "G03"
@@ -1213,7 +1213,7 @@
       "id": "G06",
       "milestone": "Floodlight gamification",
       "owner": "Foundation lead",
-      "status": "in_progress",
+      "status": "done",
       "priority": "P0",
       "dependencies": [
         "G05"
@@ -1228,7 +1228,7 @@
       "id": "G07",
       "milestone": "Floodlight gamification",
       "owner": "Foundation lead",
-      "status": "in_progress",
+      "status": "done",
       "priority": "P0",
       "dependencies": [
         "G06"
@@ -1243,7 +1243,7 @@
       "id": "G08",
       "milestone": "Floodlight gamification",
       "owner": "Engine lead",
-      "status": "in_progress",
+      "status": "done",
       "priority": "P0",
       "dependencies": [
         "G02"
@@ -1258,7 +1258,7 @@
       "id": "G09",
       "milestone": "Floodlight gamification",
       "owner": "Engine lead",
-      "status": "in_progress",
+      "status": "done",
       "priority": "P0",
       "dependencies": [
         "G08"
@@ -1273,7 +1273,7 @@
       "id": "G10",
       "milestone": "Floodlight gamification",
       "owner": "Engine lead",
-      "status": "in_progress",
+      "status": "done",
       "priority": "P0",
       "dependencies": [
         "G08"
@@ -1288,7 +1288,7 @@
       "id": "G11",
       "milestone": "Floodlight gamification",
       "owner": "Engine lead",
-      "status": "in_progress",
+      "status": "done",
       "priority": "P1",
       "dependencies": [
         "G08"
@@ -1303,7 +1303,7 @@
       "id": "G12",
       "milestone": "Floodlight gamification",
       "owner": "Engine lead",
-      "status": "in_progress",
+      "status": "done",
       "priority": "P1",
       "dependencies": [
         "G08"
@@ -1318,7 +1318,7 @@
       "id": "G13",
       "milestone": "Floodlight gamification",
       "owner": "Engine lead",
-      "status": "in_progress",
+      "status": "done",
       "priority": "P1",
       "dependencies": [
         "G08"
@@ -1333,7 +1333,7 @@
       "id": "G14",
       "milestone": "Floodlight gamification",
       "owner": "Engine lead",
-      "status": "in_progress",
+      "status": "done",
       "priority": "P1",
       "dependencies": [
         "G08"
@@ -1348,7 +1348,7 @@
       "id": "G15",
       "milestone": "Floodlight gamification",
       "owner": "Juice lead",
-      "status": "in_progress",
+      "status": "done",
       "priority": "P0",
       "dependencies": [
         "G03"
@@ -1363,7 +1363,7 @@
       "id": "G16",
       "milestone": "Floodlight gamification",
       "owner": "Juice lead",
-      "status": "in_progress",
+      "status": "done",
       "priority": "P0",
       "dependencies": [
         "G03"
@@ -1378,7 +1378,7 @@
       "id": "G17",
       "milestone": "Floodlight gamification",
       "owner": "Juice lead",
-      "status": "in_progress",
+      "status": "done",
       "priority": "P1",
       "dependencies": [
         "G15"
@@ -1393,7 +1393,7 @@
       "id": "G18",
       "milestone": "Floodlight gamification",
       "owner": "Juice lead",
-      "status": "in_progress",
+      "status": "done",
       "priority": "P0",
       "dependencies": [
         "G16"
@@ -1408,7 +1408,7 @@
       "id": "G19",
       "milestone": "Floodlight gamification",
       "owner": "3D lead",
-      "status": "in_progress",
+      "status": "done",
       "priority": "P1",
       "dependencies": [
         "G03"
@@ -1423,7 +1423,7 @@
       "id": "G20",
       "milestone": "Floodlight gamification",
       "owner": "3D lead",
-      "status": "in_progress",
+      "status": "done",
       "priority": "P1",
       "dependencies": [
         "G19"
@@ -1438,7 +1438,7 @@
       "id": "G21",
       "milestone": "Floodlight gamification",
       "owner": "3D lead",
-      "status": "in_progress",
+      "status": "done",
       "priority": "P2",
       "dependencies": [
         "G19"
@@ -1453,7 +1453,7 @@
       "id": "G22",
       "milestone": "Floodlight gamification",
       "owner": "Screens swarm",
-      "status": "planned",
+      "status": "done",
       "priority": "P0",
       "dependencies": [
         "G07",
@@ -1470,7 +1470,7 @@
       "id": "G23",
       "milestone": "Floodlight gamification",
       "owner": "Screens swarm",
-      "status": "planned",
+      "status": "done",
       "priority": "P0",
       "dependencies": [
         "G07"
@@ -1485,7 +1485,7 @@
       "id": "G24",
       "milestone": "Floodlight gamification",
       "owner": "Screens swarm",
-      "status": "planned",
+      "status": "done",
       "priority": "P0",
       "dependencies": [
         "G07",
@@ -1502,7 +1502,7 @@
       "id": "G25",
       "milestone": "Floodlight gamification",
       "owner": "Screens swarm",
-      "status": "planned",
+      "status": "done",
       "priority": "P0",
       "dependencies": [
         "G07"
@@ -1517,7 +1517,7 @@
       "id": "G26",
       "milestone": "Floodlight gamification",
       "owner": "Screens swarm",
-      "status": "planned",
+      "status": "done",
       "priority": "P0",
       "dependencies": [
         "G07",
@@ -1533,7 +1533,7 @@
       "id": "G27",
       "milestone": "Floodlight gamification",
       "owner": "Screens swarm",
-      "status": "planned",
+      "status": "done",
       "priority": "P1",
       "dependencies": [
         "G07"
@@ -1548,7 +1548,7 @@
       "id": "G28",
       "milestone": "Floodlight gamification",
       "owner": "Integration lead",
-      "status": "planned",
+      "status": "done",
       "priority": "P0",
       "dependencies": [
         "G22",
@@ -1566,7 +1566,7 @@
       "id": "G29",
       "milestone": "Floodlight gamification",
       "owner": "Advisor",
-      "status": "planned",
+      "status": "in_progress",
       "priority": "P0",
       "dependencies": [
         "G22",
@@ -1586,7 +1586,7 @@
       "id": "G30",
       "milestone": "Floodlight gamification",
       "owner": "Release lead",
-      "status": "planned",
+      "status": "in_progress",
       "priority": "P0",
       "dependencies": [
         "G29"
@@ -1601,7 +1601,7 @@
       "id": "G31",
       "milestone": "Floodlight gamification",
       "owner": "Docs lead",
-      "status": "planned",
+      "status": "in_progress",
       "priority": "P1",
       "dependencies": [
         "G30"
