@@ -15,6 +15,7 @@ import { X } from 'lucide-react';
 import { usePlayer } from './use-player';
 import { request } from '@/lib/duel-client';
 import { AppShell } from './shell/app-shell';
+import { useProgressionFeedback } from './screens/use-progression-feedback';
 import { SettingsSheet, SETTINGS_KEYS, type MotionPref } from './shell/settings-sheet';
 import { HomeScreen } from './screens/home-screen';
 import { PlayScreen } from './screens/play-screen';
@@ -92,6 +93,10 @@ export default function Arena() {
     [haptics, setHaptics] = useState(true),
     [motion, setMotion] = useState<MotionPref>('full');
   const player = usePlayer(room, credentials?.profileEpoch);
+  useProgressionFeedback(player.progression, {
+    toasts: !!room && ['scheduled', 'playing'].includes(room.phase) && !room.round?.result,
+    ceremonies: !!room && !room.settled,
+  });
   const { clear: clearJournal } = player;
   const playedCues = useRef(new Set<string>()),
     lastFocusKey = useRef<string | null>(null);
