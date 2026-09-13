@@ -50,9 +50,10 @@
   pointer-events: none;
   left: 16px;
   right: 16px;
-  /* Clear the bottom tab bar: a toast sitting on top of it swallows taps on the nav.
-     --nav-h is 0 inside a live room, where the shell hides the nav. */
-  bottom: calc(var(--nav-h, 56px) + 16px + env(safe-area-inset-bottom, 0px));
+  /* Clear the bottom tab bar and any sticky action bar: a toast on top of either swallows the tap
+     underneath it. --nav-h is 0 inside a live room, where the shell hides the nav, and
+     --fd-stick-h is published by screens that pin a bar above the nav (see below). */
+  bottom: calc(var(--nav-h, 56px) + var(--fd-stick-h, 0px) + 16px + env(safe-area-inset-bottom, 0px));
   align-items: center;
 }
 @media (min-width: 769px) {

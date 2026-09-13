@@ -839,6 +839,17 @@
   min-height: 54px;
   font-size: var(--fs-16);
 }
+/* Publish the sticky CTA's height so global overlays (the toast stack) clear it; a toast landing
+   on the CTA swallows the tap. :root cannot read a variable scoped to this screen, so the literal
+   matches the padded button height below. */
+:root:has(.fd-exp-brief > .fd-exp-cta) {
+  --fd-stick-h: 88px;
+}
+@media (min-width: 900px) {
+  :root:has(.fd-exp-brief > .fd-exp-cta) {
+    --fd-stick-h: 0px;
+  }
+}
 /* thumb zone: the brief's CTA stays reachable while the page scrolls */
 .fd-exp-brief > .fd-exp-cta {
   position: sticky;

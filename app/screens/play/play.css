@@ -657,6 +657,17 @@
 }
 
 /* ---------- launch ---------- */
+/* Publish the sticky bar's height so global overlays (the toast stack) can clear it. Without this
+   the first-visit streak toast lands on top of the primary CTA and swallows the tap. The literal
+   matches --fd-launch-h below; :root cannot read a variable scoped to .fd-play. */
+:root:has(.fd-play .fd-launch) {
+  --fd-stick-h: 104px;
+}
+@media (min-width: 900px) {
+  :root:has(.fd-play .fd-launch) {
+    --fd-stick-h: 0px;
+  }
+}
 .fd-play .fd-launch {
   position: fixed;
   left: 0;
