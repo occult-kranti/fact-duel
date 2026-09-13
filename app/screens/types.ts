@@ -1,6 +1,7 @@
 import type { RefObject } from 'react';
 import { Zap, Swords, Rocket, type LucideIcon } from 'lucide-react';
 import type { usePlayer } from '../use-player';
+import { MODE_DURATION } from '@/lib/server/room-engine.mjs';
 
 /* ---------- shared value types ---------- */
 export type Config = {
@@ -75,7 +76,7 @@ export const INITIAL_CONFIG: Config = {
   opponent: 'bot',
   mode: 'quick',
   stake: 0,
-  duration: 15,
+  duration: MODE_DURATION.quick,
   domain: 'all',
   region: 'all',
   topic: 'all',

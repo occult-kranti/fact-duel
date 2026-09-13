@@ -44,7 +44,7 @@ export function LaunchPanel({
       : !playerLoaded
         ? 'Loading your player…'
         : opponent === 'bot'
-          ? 'Play Lucky Guess'
+          ? `Play ${mode.name}`
           : 'Create friend duel';
   return (
     <div className="fd-launch">

@@ -27,6 +27,11 @@ For a bot duel, press Play now on Home or pick a format on Play. For two-screen 
 Quick Draw is one round; Triple Threat is up to three, first to two wins.
 The Gauntlet plays all five questions; final score decides. Untimed Recall Lab
 reviews already encountered facts from the local journal.
+The clock is 5, 7 or 10 seconds and belongs to the format: Quick Draw opens on 10,
+Triple Threat on 7, the Gauntlet on 5, and picking a format moves the timer with it.
+A round ends on whichever comes first — both answers locked, or the clock plus the
+transport grace. In Triple Threat and the Gauntlet the next round then starts on its
+own after a short window on the fact; Start now skips it and Keep reading cancels it.
 Coins are reserved once per match. A draw or cancelled match refunds the entry.
 Rooms expire in two hours. Leaving, hiding an active page, or reloading after
 reveal cancels the match. An invitation does not bypass private-site access.

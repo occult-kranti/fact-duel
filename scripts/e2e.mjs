@@ -83,8 +83,8 @@ try {
   await section('room', async () => {
     // --- a live room must never mount a renderer, and the question card must not animate in ---
     await page.waitForSelector('[data-nav="arena"]', { timeout: 20000 });
-    await clickUntil(page.locator('[data-nav="arena"]').first(), 'button:has-text("Play Lucky Guess")');
-    const launch = page.locator('button', { hasText: /Play Lucky Guess/i }).first();
+    await clickUntil(page.locator('[data-nav="arena"]').first(), 'button:has-text("Play Quick Draw")');
+    const launch = page.locator('button', { hasText: /Play Quick Draw/i }).first();
     await clickUntil(launch, '.question-card, .fd-qcard', 12000);
     await page.waitForTimeout(400);
 
@@ -151,6 +151,40 @@ try {
       after.options.join('|') === before ? '' : 'order changed',
     );
     check('room: no ceremony opens over the reveal', after.ceremonies === 0, `${after.ceremonies} open`);
+  });
+
+  await section('auto-advance', async () => {
+    // --- a multi-round match must reach round 2 with no click at all ---
+    await page.evaluate(() => sessionStorage.clear());
+    await page.goto(BASE, { waitUntil: 'networkidle' });
+    await page.waitForSelector('[data-nav="arena"]', { timeout: 20000 });
+    await clickUntil(page.locator('[data-nav="arena"]').first(), 'button:has-text("Play Quick Draw")');
+    await clickUntil(
+      page.locator('[role="radio"]', { hasText: /Triple Threat/i }).first(),
+      'button:has-text("Play Triple Threat")',
+    );
+    const timer = await page.evaluate(
+      () => document.querySelector('.fd-launch-terms')?.textContent?.match(/(\d+)s/)?.[1] ?? null,
+    );
+    check('auto-advance: Triple Threat opens on its own 7s clock', timer === '7', `timer=${timer}s`);
+    await clickUntil(
+      page.locator('button', { hasText: /Play Triple Threat/i }).first(),
+      '.question-card, .fd-qcard',
+      15000,
+    );
+    await page.locator('.answer-button, .fd-answer').first().click({ force: true });
+    await page.waitForSelector('.fd-auto', { timeout: 25000 });
+    const cta = (await page.locator('.fd-cta-label').first().textContent())?.trim() ?? '';
+    check('auto-advance: the between-round CTA reads as optional', /start now/i.test(cta), `cta="${cta}"`);
+    // Nothing is clicked from here. Round 2 has to arrive by itself.
+    await page.waitForFunction(
+      () => document.querySelector('.fd-room-chip')?.getAttribute('data-round') === '2',
+      undefined,
+      { timeout: 30000 },
+    );
+    check('auto-advance: round 2 starts without a click', true);
+    await page.waitForSelector('.question-card, .fd-qcard', { timeout: 25000 });
+    check('auto-advance: the round 2 question is served', true);
   });
 
   await section('expeditions', async () => {

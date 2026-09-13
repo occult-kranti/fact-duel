@@ -144,6 +144,86 @@
   opacity: 0.75;
 }
 
+/* Auto-advance between rounds. The CTA keeps its own shape and gains a drain that runs for exactly
+   the window RoomScreen armed, so the countdown is legible without reading the number. The fill is
+   a sibling behind the label, never a background-size animation on the button itself: the button is
+   the paint surface for the press state and must not be repainted 60 times a second. */
+.fd-room .fd-cta[data-slot='button'] {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.fd-room .fd-cta-label,
+.fd-room .fd-cta > svg {
+  position: relative;
+  z-index: 1;
+}
+.fd-room .fd-cta-fill {
+  position: absolute;
+  inset: 0;
+  transform-origin: left center;
+  background: color-mix(in oklab, var(--volt-ink) 16%, transparent);
+  animation: fd-cta-drain linear forwards;
+  z-index: 0;
+}
+@keyframes fd-cta-drain {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+.fd-room .fd-auto {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 32px;
+}
+.fd-room .fd-auto-note {
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+.fd-room .fd-auto-hold {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  background: var(--bg-1);
+  font-family: var(--font-ui);
+  font-size: var(--fs-12);
+  font-weight: 600;
+  color: var(--muted);
+  white-space: nowrap;
+  touch-action: manipulation;
+  transition:
+    color 140ms var(--ease-out),
+    border-color 140ms var(--ease-out);
+}
+.fd-room .fd-auto-hold:hover {
+  color: var(--text);
+  border-color: var(--volt);
+}
+.fd-room .fd-auto-hold:active {
+  transform: scale(0.97);
+}
+/* The fact panel between rounds is the one place a stray tap is meaningful: it cancels the clock,
+   so it must not look inert. */
+.fd-room .fd-review-hold {
+  display: contents;
+}
+@media (prefers-reduced-motion: reduce) {
+  .fd-room .fd-cta-fill {
+    animation: none;
+    transform: scaleX(1);
+    opacity: 0.5;
+  }
+}
+
 /* Primary action parked in the thumb zone on phones. */
 .fd-room .fd-sticky {
   position: sticky;
