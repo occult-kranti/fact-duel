@@ -1,22 +1,218 @@
 'use client';
-import {useState} from 'react';
-import {Button} from '@/components/ui/button';
-import {Input} from '@/components/ui/input';
-import {Atom,Flag,Orbit,Brain,Code,Activity,Goal,CircleDot,Target,ArrowUpRight,Search,Shuffle} from 'lucide-react';
-export const TOPIC_STYLE:any={
- Cricket:{icon:Flag,detail:'World Cup memories & legendary innings',color:'sport'},
- Football:{icon:Goal,detail:'Clubs, icons & the beautiful game',color:'sport'},
- Basketball:{icon:CircleDot,detail:'The players behind the numbers',color:'sport'},
- 'American football':{icon:Target,detail:'Super Bowl stories & NFL history',color:'sport'},
- Tennis:{icon:Activity,detail:'Majors, rivalries & defining moments',color:'sport'},
- Space:{icon:Orbit,detail:'Small questions. An enormous universe.',color:'science'},
- Physics:{icon:Atom,detail:'The rules behind the everyday',color:'science'},
- Biology:{icon:Brain,detail:'Life, cells & remarkable discoveries',color:'science'},
- Computing:{icon:Code,detail:'The ideas that made the digital world',color:'science'},
+/**
+ * Collections — pick the subject that feeds the duel configurator.
+ *
+ * A "Mixed bag" ticket comes first, then one card per topic: domain colour, sample-question count
+ * and three mastery mini-bars (encountered / opened / recalled) read from the passport. Choosing a
+ * card still calls `onChoose(domain, topic)`, which is what the Play screen listens for.
+ */
+import { useState } from 'react';
+import {
+  Activity,
+  ArrowUpRight,
+  Atom,
+  Brain,
+  CircleDot,
+  Code,
+  Flag,
+  Goal,
+  Layers,
+  Orbit,
+  Search,
+  Shuffle,
+  Target,
+} from 'lucide-react';
+import { Chip, MasteryBar, usePress } from './screens/vault';
+import './screens/vault/vault.css';
+
+export const TOPIC_STYLE: any = {
+  Cricket: { icon: Flag, detail: 'World Cup memories & legendary innings', color: 'sport' },
+  Football: { icon: Goal, detail: 'Clubs, icons & the beautiful game', color: 'sport' },
+  Basketball: { icon: CircleDot, detail: 'The players behind the numbers', color: 'sport' },
+  'American football': { icon: Target, detail: 'Super Bowl stories & NFL history', color: 'sport' },
+  Tennis: { icon: Activity, detail: 'Majors, rivalries & defining moments', color: 'sport' },
+  Space: { icon: Orbit, detail: 'Small questions. An enormous universe.', color: 'science' },
+  Physics: { icon: Atom, detail: 'The rules behind the everyday', color: 'science' },
+  Biology: { icon: Brain, detail: 'Life, cells & remarkable discoveries', color: 'science' },
+  Computing: { icon: Code, detail: 'The ideas that made the digital world', color: 'science' },
 };
-export function CollectionCover({domain,onSelect}:{domain:'sports'|'science';onSelect:()=>void}){return <button className={`collection-cover ${domain}`} onClick={onSelect}><img src={`/${domain==='sports'?'sports':'science'}-club.webp`} alt="" width="1536" height="1024" loading="lazy"/><span className="cover-copy"><span className="eyebrow">{domain==='sports'?'FOR THE FANS':'FOR THE CURIOUS'}</span><strong>{domain==='sports'?'The sporting life.':'A world of why.'}</strong><span>{domain==='sports'?'Explore sports':'Explore science'}<ArrowUpRight size={18}/></span></span></button>;}
-export default function Collections({catalogue,passport,onChoose}:{catalogue:any;passport:any;onChoose:(domain:string,topic:string)=>void}){
- const [domain,setDomain]=useState('all'),[search,setSearch]=useState('');
- const topics=catalogue?.topics?.filter((t:any)=>(domain==='all'||t.domain===domain)&&`${t.topic} ${TOPIC_STYLE[t.topic]?.detail||''}`.toLowerCase().includes(search.toLowerCase().trim()))||[];
- return <section><div className="section-heading"><div><p className="eyebrow">FIND YOUR PEOPLE. KNOW YOUR SUBJECT.</p><h1>Pick your home ground.</h1></div><span className="tag">{catalogue?.count??'…'} sample questions</span></div><p className="muted">Sport, science, or your specialist subject. Choose a collection, then pick your format. Each currently contains six sample questions.</p><div className="collection-worlds"><button aria-pressed={domain==='sports'} className="world-ticket sports" onClick={()=>setDomain('sports')}><img src="/sports-club.webp" alt="" width="1536" height="1024" loading="lazy"/><span><small>THE SPORTING WORLD</small><strong>For the fans.<br/>And the fanatics.</strong><em>Explore sports <ArrowUpRight size={18}/></em></span></button><button aria-pressed={domain==='science'} className="world-ticket science" onClick={()=>setDomain('science')}><img src="/science-club.webp" alt="" width="1536" height="1024" loading="lazy"/><span><small>THE SCIENTIFIC WORLD</small><strong>Big ideas.<br/>Beautiful questions.</strong><em>Explore science <ArrowUpRight size={18}/></em></span></button></div><div className="collection-toolbar"><div className="segmented">{[['all','All'],['sports','Sports'],['science','Science']].map(([id,label])=><Button key={id} variant="ghost" aria-pressed={id===domain} onClick={()=>setDomain(id)}>{label}</Button>)}</div><div className="search-field"><Search/><Input aria-label="Search collections" placeholder="Find your subject" value={search} onChange={e=>setSearch(e.target.value)}/></div></div><div className="collection-grid">{topics.map((t:any)=>{const style=TOPIC_STYLE[t.topic]||TOPIC_STYLE.Physics,Icon=style.icon,encountered=Object.values(passport?.facts||{}).filter((f:any)=>f.topic===t.topic).length;return <button className={`collection-card ${style.color}`} key={t.topic} onClick={()=>onChoose(t.domain,t.topic)}><span className="collection-icon"><Icon/></span><ArrowUpRight className="collection-arrow"/><h2>{t.topic}</h2><p>{style.detail}</p><span className="collection-count">{t.count} sample questions · {encountered} encountered</span><span className="collection-track" aria-hidden="true"><span style={{width:`${Math.min(100,100*encountered/t.count)}%`}}/></span></button>;})}</div>{catalogue&&topics.length===0&&<div className="empty-surface"><Search/><h2>No collection found.</h2><Button variant="outline" onClick={()=>{setSearch('');setDomain('all');}}>Show all collections</Button></div>}<div className="mix-strip"><Shuffle/><div><h2>A bit of everything?</h2><p>Start with the full sports and science sample.</p></div><Button variant="outline" onClick={()=>onChoose('all','all')}>Choose mixed bag<ArrowUpRight/></Button></div></section>;
+
+/* Kept for the Play lobby's picture tickets (legacy markup + CSS). */
+export function CollectionCover({
+  domain,
+  onSelect,
+}: {
+  domain: 'sports' | 'science';
+  onSelect: () => void;
+}) {
+  return (
+    <button className={`collection-cover ${domain}`} onClick={onSelect}>
+      <img
+        src={`/${domain === 'sports' ? 'sports' : 'science'}-club.webp`}
+        alt=""
+        width="1536"
+        height="1024"
+        loading="lazy"
+      />
+      <span className="cover-copy">
+        <span className="eyebrow">{domain === 'sports' ? 'FOR THE FANS' : 'FOR THE CURIOUS'}</span>
+        <strong>{domain === 'sports' ? 'The sporting life.' : 'A world of why.'}</strong>
+        <span>
+          {domain === 'sports' ? 'Explore sports' : 'Explore science'}
+          <ArrowUpRight size={18} />
+        </span>
+      </span>
+    </button>
+  );
+}
+
+const DOMAINS: { id: string; label: string }[] = [
+  { id: 'all', label: 'All' },
+  { id: 'sports', label: 'Sports' },
+  { id: 'science', label: 'Science' },
+];
+
+export default function Collections({
+  catalogue,
+  passport,
+  onChoose,
+}: {
+  catalogue: any;
+  passport: any;
+  onChoose: (domain: string, topic: string) => void;
+}) {
+  const press = usePress();
+  const [domain, setDomain] = useState('all'),
+    [search, setSearch] = useState('');
+  const query = search.toLowerCase().trim();
+  const topics =
+    catalogue?.topics?.filter(
+      (t: any) =>
+        (domain === 'all' || t.domain === domain) &&
+        `${t.topic} ${TOPIC_STYLE[t.topic]?.detail || ''}`.toLowerCase().includes(query),
+    ) || [];
+  const facts: any[] = Object.values(passport?.facts || {});
+  const mastery = (topic: string) => {
+    const mine = facts.filter((f: any) => f.topic === topic);
+    return {
+      encountered: mine.length,
+      opened: mine.filter((f: any) => f.opened).length,
+      recalled: mine.filter((f: any) => f.recalled).length,
+    };
+  };
+
+  return (
+    <section className="fd-learn fd-collections">
+      <header className="fd-learn__head">
+        <p className="fd-eyebrow">KNOW YOUR SUBJECT</p>
+        <div className="fd-learn__title">
+          <h1>Pick your home ground.</h1>
+          <span className="fd-tag fd-tag--cool">
+            <Layers />
+            {catalogue?.count ?? '…'} sample questions
+          </span>
+        </div>
+        <p className="fd-lede">
+          Sport, science, or your specialist subject. Choose a collection and the duel configurator follows
+          you back to Play. The mini-bars show what you have already met, opened and recalled.
+        </p>
+        <div className="fd-toolbar">
+          <div className="fd-chips">
+            {DOMAINS.map((d) => (
+              <Chip key={d.id} active={domain === d.id} onClick={() => setDomain(d.id)}>
+                {d.label}
+              </Chip>
+            ))}
+          </div>
+          <span className="fd-search">
+            <Search aria-hidden="true" />
+            <input
+              type="search"
+              aria-label="Search collections"
+              placeholder="Find your subject"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </span>
+        </div>
+      </header>
+
+      <div className="fd-coll-grid">
+        <button
+          type="button"
+          className="fd-coll fd-coll--mixed"
+          onPointerDown={press}
+          onClick={() => onChoose('all', 'all')}
+        >
+          <span className="fd-coll__top">
+            <span className="fd-coll__icon">
+              <Shuffle aria-hidden="true" />
+            </span>
+            <span className="fd-coll__title">
+              <strong>Mixed bag</strong>
+              <span>{catalogue?.count ?? '…'} questions · sports + science</span>
+            </span>
+            <ArrowUpRight className="fd-coll__go" aria-hidden="true" />
+          </span>
+          <span className="fd-coll__detail">
+            Everything in the sample bank, shuffled. The quickest way into a duel when you cannot pick.
+          </span>
+        </button>
+
+        {topics.map((t: any) => {
+          const style = TOPIC_STYLE[t.topic] || TOPIC_STYLE.Physics,
+            Icon = style.icon,
+            m = mastery(t.topic);
+          return (
+            <button
+              type="button"
+              key={t.topic}
+              className="fd-coll"
+              data-domain={t.domain}
+              onPointerDown={press}
+              onClick={() => onChoose(t.domain, t.topic)}
+            >
+              <span className="fd-coll__top">
+                <span className="fd-coll__icon">
+                  <Icon aria-hidden="true" />
+                </span>
+                <span className="fd-coll__title">
+                  <strong>{t.topic}</strong>
+                  <span>{t.count} sample questions</span>
+                </span>
+                <ArrowUpRight className="fd-coll__go" aria-hidden="true" />
+              </span>
+              <span className="fd-coll__detail">{style.detail}</span>
+              <span className="fd-mastery">
+                <MasteryBar label="Encountered" value={m.encountered} total={t.count} tone="cyan" />
+                <MasteryBar label="Opened" value={m.opened} total={t.count} tone="gold" />
+                <MasteryBar label="Recalled" value={m.recalled} total={t.count} tone="volt" />
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      {catalogue && topics.length === 0 && (
+        <div className="fd-empty">
+          <span className="fd-empty__badge">
+            <Search aria-hidden="true" />
+          </span>
+          <h2>No collection found.</h2>
+          <p>Nothing matches “{search}”. Clear the search to see every subject in the sample bank.</p>
+          <button
+            type="button"
+            className="fd-btn fd-btn--primary"
+            onPointerDown={press}
+            onClick={() => {
+              setSearch('');
+              setDomain('all');
+            }}
+          >
+            Show all collections
+          </button>
+        </div>
+      )}
+    </section>
+  );
 }

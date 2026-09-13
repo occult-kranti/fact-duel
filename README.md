@@ -1,15 +1,20 @@
-# FACT//DUEL — Clubhouse, Expeditions & Duels
+# FACT//DUEL — Duels, Expeditions & Progression
 
 A private sports and science knowledge club for friends or random practice bots.
 All coins are free, per-room simulations with no monetary value.
 
 ## Play
 
-The **Clubhouse** offers a featured expedition, saved Continue state, direct random-bot duels and your stamp case. **Expeditions** has nine narrow sports/science routes using the existing 54-question sample.
+**Home** is the arena hub: your level, XP, day streak, gems and Arena Rank, a one-tap duel against
+the practice bot, the day's three quests, and whichever expedition you have in progress.
+**Expeditions** has nine narrow sports and science routes using the existing 54-question sample.
+**Play** builds a duel, **Player** holds your record, badges, stamps and the Locker, and **Vault**
+keeps every fact you have met.
 
 An expedition is six untimed questions in three chapters. Choose **Steady** (+2 correct, 0 wrong) or **Bold** (+3 correct, −1 wrong) before each answer. Your first choice locks. Each answer saves locally; pause and resume any route. After all six, **Finish & collect stamp** records the result and awards the same commemorative stamp at any score. First-run and best practice scores are separate. Replay uses the same questions with freshly shuffled options; no general skill ranking is implied.
 
-For a bot duel, use any of the Clubhouse’s three direct mode buttons. To customize, open **Duels** or **Topics, timer & match settings**. For two-screen play, choose **Invite friend**:
+For a bot duel, press Play now on Home or pick a format on Play. For two-screen play, choose
+**Friend** on Play:
 
 1. Open the site on two screens with access to the private site.
 2. On the first screen, enter a name, choose a mode and filters, then create a duel.
@@ -65,8 +70,11 @@ regressions; browser and cross-location testing remain separate.
 
 ## Verification
 
-`node --test tests/*.test.mjs` runs engine, SQLite concurrency and HTTP-handler
-regressions. `node tests/stress.mjs /tmp/duel-stress.json` exercises the same room
+`node --test tests/*.test.mjs` runs engine, SQLite concurrency, progression and HTTP-handler
+regressions (94 tests). `pnpm e2e` drives a real browser against a running dev server and asserts
+the invariants unit tests cannot reach: the timing contract clauses, that no renderer or ceremony
+appears during live play, that answer order survives a reveal, and that sticky call-to-action
+buttons stay tappable. `node tests/stress.mjs /tmp/duel-stress.json` exercises the same room
 service over localhost HTTP, with a real in-memory SQLite adapter and virtual
 time. It does not measure Cloudflare D1, mobile devices, browser rendering or
 cross-region capacity. Run `pnpm exec tsc --noEmit` for type checking.
@@ -89,13 +97,13 @@ cannot prove a browser's physical display or input time.
 ## Duel experience and shared systems
 
 The default midnight/chartreuse identity and alternate cool light theme share
-semantic controls. The Clubhouse now pairs finite expeditions with direct bot
-duels; the full match configurator remains in Duels. Original sports/science
-covers support the routes, with metallic artwork in the duel area. Optional Three.js now lives in a
-separate showroom; static art loads first and every action works without WebGL.
-The scene caps DPR at 1.25, stops while hidden/offscreen, respects reduced motion
-and disposes resources on unmount. Its import itself cannot be cancelled after
-it starts. No renderer is mounted during a room.
+semantic controls, now expressed as one token set in `app/theme/tokens.css`: warm ember for the
+competitive surfaces, cool cyan for the learning ones, gold for rewards. Home pairs a live 3D hero
+with the day's quests and your record; the full match configurator lives on Play. Original sports
+and science covers still support the routes. Every 3D scene is loaded lazily in the browser only,
+after static art, and every action works without WebGL; scenes cap device pixel ratio, stop while
+hidden or offscreen, respect reduced motion and dispose on unmount. An import cannot be cancelled
+once it starts. No renderer is mounted during a room.
 
 The server retains at most five completed-round snapshots, written only at
 closure and exposing only the settled question, result and public receipt fields.
@@ -124,9 +132,69 @@ untimed attempts. It is not a mastery measure. First field notes, Field notes an
 the mode tour unlock deterministic Orbit, Grid and Rally card finishes. These do
 not affect answers, timing, coins or content access. Missions do not decay.
 
+## Progression, quests and the Locker
+
+`lib/progression.mjs` is a pure module that turns profile changes into progression. Its events are
+derived by diffing the profile before and after every reducer run, so a duel room projection that is
+re-delivered on each poll can never award XP twice. Everything it stores lives in the same
+device-local IndexedDB profile (still version 2, default-filled and sanitised on read) and is cleared
+by Reset. None of it is sent to a server, and none of it is a ranked or verified record.
+
+Levels use `xpToNext(level) = round(80 * level^1.55)` with a title band every five levels, from
+Rookie to Legend. XP comes from duel rounds (correctness, a speed bonus under two and four seconds,
+a difficulty multiplier, an in-match combo multiplier at two or more consecutive correct answers),
+match results, expedition cards and completions, first encounters with a fact, first explanation
+opened, first untimed recall, saving a fact, Discovery attempts, daily quests, streak days and
+achievement unlocks. Wild Rounds are decided deterministically from the round id and pay double or
+triple XP; they are announced during the countdown, never after the answer.
+
+Streaks count local calendar days on which you earned anything. A shield is granted every seventh
+consecutive day, up to two, and is spent automatically to cover a missed day before the streak
+resets. Three daily quests are generated from a seed made of your profile epoch and the date, so the
+same device gets the same set all day; they claim themselves when complete and pay a bonus when all
+three are done. Arena Rank is a device-local ladder from Bronze to Diamond whose points come from
+duel results, with a floor at each tier you reach so a losing run cannot demote you. Gems are earned
+from quests, levels and achievements, and are spent only when you choose to, in the Locker, on
+frames, titles, banners and accent colours. There is no purchase of any kind and no real currency.
+
+## Feel: motion, sound and effects
+
+`lib/fx` and `components/fx` provide the feedback layer: a Web Audio engine that synthesises every
+cue at runtime (there are no audio files), a pooled Canvas2D particle engine, confetti, element
+shake, animated number counters, floating text, a toast stack and a focus-trapped ceremony overlay
+used for level-ups, badges, stamps and streak milestones. Haptics mirror the sound layer through
+`navigator.vibrate` where the browser supports it.
+
+Sound now defaults to on but stays silent until your first tap, because browsers only allow audio
+after a gesture. Settings holds independent switches for sound, volume, haptics and effects; the
+effects setting offers full, reduced and off, and overrides the operating system preference in the
+direction of less motion. Under reduced motion there is no shake, confetti or parallax, particle
+bursts are small and short, and the 3D scenes render a single static frame. Every audio cue has a
+visible twin and every colour meaning also carries an icon or a shape, so nothing depends on hearing
+or on hue alone.
+
+The live question surface is deliberately quiet. The question card is still mounted hidden until the
+double animation-frame reveal marker, carries no entrance animation and causes no layout shift, the
+timer track still has no transition, answer order is fixed for the round, and no renderer is mounted
+inside a room. Press feedback happens on pointer down and never delays the click; the rest of the
+juice waits for the settled round result.
+
+## 3D scenes
+
+`components/three` holds React Three Fiber scenes that are loaded only in the browser, through a
+lazy wrapper, so no three.js code reaches the server bundle. The Home hero is a "knowledge core"
+whose rings and brightness scale with your level; ceremonies show a reward medal; the Locker has a
+Rapier physics gem tray whose WebAssembly chunk is fetched only when that section is opened. Scenes
+cap device pixel ratio, pause when off-screen or hidden, dispose their resources on unmount and fall
+back to static artwork when WebGL is missing or reduced motion is requested. The earlier standalone
+showroom remains.
+
 ## Product Studio and local records
 
-`/studio` contains current decisions, a searchable 32-observation review table
+`/studio` has a Gamification tab rendering the Floodlight release record (design bible, roadmap,
+decision record and research brief, generated from `public/product/gamification/*.md` by
+`pnpm docs:product`) and tracks the 33 issues of the "Floodlight gamification" milestone. It also
+contains current decisions, a searchable 32-observation review table
 covering eight selected apps, a more than 7,500-word combined report, 73 distinct
 source URLs, current and historical advisor reviews and a 73-issue roadmap. Historical v3 work
 remains explicitly labeled. Status and evidence notes are browser-local and
@@ -151,8 +219,8 @@ a failed previously persistent reset leaves the state and explains the failure.
 Opening blocked storage falls back after four seconds. Visit-only fallback is
 visible and exportable. No cross-device sync or import/restore UI is shipped.
 
-The current release gate is 68 automated tests, TypeScript checking and the
-production build; exact results are in `public/product/expeditions/verification.md`. The rivalry advisor independently inspected the changed source and repair paths;
+The current release gate is 94 automated tests, the browser invariant gate, TypeScript checking and
+the production build; exact results are in `public/product/expeditions/verification.md`. The rivalry advisor independently inspected the changed source and repair paths;
 the earlier v4 review independently ran 15 targeted tests. No physical-device,
 assistive-technology, GPU or WAN QA is claimed. Demand, content depth and production
 capacity remain observed gates. Private access and simulated coins are unchanged.

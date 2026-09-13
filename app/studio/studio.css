@@ -1,0 +1,162 @@
+/* Product Studio · Gamification tab: Floodlight release record and G-milestone progress. */
+.gam-progress {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px 26px;
+  margin: 0 0 25px;
+  box-shadow: 0 4px 0 var(--secondary);
+}
+.gam-progress > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px 15px;
+  font-size: 0.95rem;
+  margin-bottom: 18px;
+}
+.gam-progress > header > span {
+  color: var(--muted-foreground);
+  font-size: 0.8rem;
+}
+.gam-bar {
+  display: flex;
+  height: 10px;
+  border-radius: 9px;
+  overflow: hidden;
+  background: var(--secondary);
+}
+.gam-bar > span {
+  display: block;
+  height: 100%;
+  flex: 0 0 auto;
+  transition: width 240ms ease-out;
+}
+.gam-bar > .status-done {
+  background: var(--positive);
+}
+.gam-bar > .status-in_progress {
+  background: repeating-linear-gradient(135deg, var(--primary) 0 4px, transparent 4px 8px);
+}
+.gam-bar > .status-blocked {
+  background: var(--sport);
+}
+.gam-counts {
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+}
+.gam-counts > li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  column-gap: 9px;
+  row-gap: 2px;
+  min-width: 0;
+  padding: 13px 15px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--secondary);
+}
+.gam-counts svg {
+  grid-row: 1 / span 2;
+  color: var(--muted-foreground);
+}
+.gam-counts strong {
+  font-size: 1.45rem;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.gam-counts span {
+  color: var(--muted-foreground);
+  font-size: 0.8rem;
+}
+.gam-counts > .status-done :is(strong, svg) {
+  color: var(--positive-text);
+}
+.gam-counts > .status-in_progress :is(strong, svg) {
+  color: var(--primary-text);
+}
+.gam-counts > .status-blocked :is(strong, svg) {
+  color: var(--sport-text);
+}
+.gam-docnav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 30px 0 18px;
+}
+.gam-docnav > button {
+  min-height: 44px;
+  padding: 9px 16px;
+  border: 1px solid var(--input);
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--foreground);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 650;
+  line-height: 1.4;
+  cursor: pointer;
+}
+.gam-docnav > button[aria-pressed='true'] {
+  background: var(--accent);
+  border-color: var(--primary);
+  box-shadow: inset 0 0 0 1px var(--primary);
+}
+.gam-docnav > button:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+.gam-doc-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 18px;
+  margin-bottom: 6px;
+}
+.gam-doc-meta > .small-note {
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.gam-doc-meta > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 4px;
+  font-size: 0.85rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+@media (max-width: 600px) {
+  .gam-progress {
+    padding: 20px 18px;
+  }
+  .gam-counts {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .gam-counts > li {
+    grid-template-columns: 1fr;
+    row-gap: 4px;
+    padding: 11px 12px;
+  }
+  .gam-counts svg {
+    grid-row: auto;
+  }
+  .gam-counts strong {
+    font-size: 1.25rem;
+  }
+  .gam-docnav > button {
+    flex: 1 1 auto;
+    text-align: center;
+  }
+}

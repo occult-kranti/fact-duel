@@ -1,0 +1,534 @@
+/* FACT//DUEL app shell — topbar / main / nav. Mobile-first; 900px switches the nav from a
+ * bottom tab bar to a left icon rail; 1200px expands the rail with labels. */
+
+.fd-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--bg-0);
+  color: var(--text);
+}
+
+/* ---------- top bar ---------- */
+.fd-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: calc(var(--topbar-h) + var(--safe-top));
+  padding: var(--safe-top) max(var(--gutter), var(--safe-right)) 0 max(var(--gutter), var(--safe-left));
+  background: var(--bg-0);
+  border-bottom: 1px solid var(--line);
+}
+.fd-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 4px 0 0;
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  text-decoration: none;
+  color: var(--text);
+  white-space: nowrap;
+  border-radius: var(--r-control);
+}
+.fd-brand > svg {
+  width: 22px;
+  height: 22px;
+  color: var(--volt-text);
+  fill: var(--volt-text);
+}
+.fd-brand em {
+  font-style: normal;
+  color: var(--volt-text);
+}
+.fd-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  min-width: 0;
+}
+.fd-topbar-slots {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.fd-topbar-slots:empty {
+  display: none;
+}
+.fd-topbar-slot {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 10px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line);
+  background: var(--bg-1);
+  font-family: var(--font-mono);
+  font-size: var(--fs-12);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+  white-space: nowrap;
+}
+.fd-topbar-slot > svg {
+  width: 16px;
+  height: 16px;
+}
+.fd-topbar-slot--streak {
+  color: var(--magenta-text);
+}
+.fd-topbar-slot--gems,
+.fd-topbar-slot--level {
+  color: var(--gold-text);
+}
+.fd-private {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  margin-right: 6px;
+  font-size: var(--fs-12);
+  color: var(--muted);
+  white-space: nowrap;
+}
+.fd-iconbtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--r-control);
+  background: transparent;
+  color: var(--text);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color 120ms var(--ease-out),
+    transform 120ms var(--ease-out);
+}
+.fd-iconbtn > svg {
+  width: 20px;
+  height: 20px;
+}
+.fd-iconbtn:hover:not(:disabled) {
+  background: var(--bg-1);
+}
+.fd-iconbtn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+.fd-iconbtn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.fd-iconbtn[aria-pressed='true'] {
+  color: var(--volt-text);
+}
+
+/* ---------- frame + main ---------- */
+.fd-frame {
+  flex: 1 1 auto;
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+.fd-main {
+  display: block;
+  width: 100%;
+  max-width: var(--content-max);
+  min-width: 0;
+  margin: 0 auto;
+  padding: 20px max(var(--gutter), var(--safe-right)) calc(var(--nav-h) + var(--safe-bottom) + 28px)
+    max(var(--gutter), var(--safe-left));
+}
+.fd-shell--room {
+  /* The tab bar is not rendered during a live room, so anything spaced off it
+     (the toast stack, sticky CTAs) must not reserve its height. */
+  --nav-h: 0px;
+}
+.fd-shell--room .fd-main {
+  max-width: var(--room-max);
+  padding-bottom: calc(var(--safe-bottom) + 24px);
+}
+
+/* ---------- footer ---------- */
+.fd-shell .fd-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 18px;
+  margin: 0;
+  padding: 18px max(var(--gutter), var(--safe-right)) calc(18px + var(--nav-h) + var(--safe-bottom))
+    max(var(--gutter), var(--safe-left));
+  border-top: 1px solid var(--line);
+  background: var(--bg-1);
+  font-size: var(--fs-12);
+  color: var(--muted);
+}
+/* WCAG 2.5.8: the two footer controls were 19px tall. Grow the hit area, not the type. */
+.fd-shell .fd-footer a,
+.fd-shell .fd-footer .footer-rules {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: inherit;
+}
+.fd-shell .fd-footer .footer-rules {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+/* ---------- nav: bottom tab bar (default, ≤ 899px) ---------- */
+.fd-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  display: flex;
+  align-items: stretch;
+  height: calc(var(--nav-h) + var(--safe-bottom));
+  padding: 0 max(4px, var(--safe-right)) var(--safe-bottom) max(4px, var(--safe-left));
+  background: var(--bg-1);
+  border-top: 1px solid var(--line);
+}
+.fd-nav-btn {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-width: 0;
+  padding: 4px 2px;
+  border: 0;
+  border-radius: var(--r-control);
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    color 120ms var(--ease-out),
+    transform 120ms var(--ease-out);
+}
+.fd-nav-btn:active {
+  transform: scale(0.97);
+}
+.fd-nav-icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 28px;
+  border-radius: var(--r-pill);
+  transition: background-color 160ms var(--ease-out);
+}
+.fd-nav-icon > svg {
+  width: 22px;
+  height: 22px;
+}
+.fd-nav-btn:hover {
+  color: var(--text);
+}
+.fd-nav-btn[aria-current='page'] {
+  color: var(--volt-text);
+}
+.fd-nav-btn[aria-current='page'] .fd-nav-icon {
+  background: var(--volt-soft);
+}
+.fd-nav-btn:focus-visible {
+  outline: 3px solid var(--ring);
+  outline-offset: -3px;
+}
+
+/* ---------- ≥ 600: phone landscape ---------- */
+@media (min-width: 600px) {
+  .fd-private {
+    display: inline-flex;
+  }
+  .fd-main {
+    padding-top: 24px;
+  }
+}
+
+/* ---------- ≥ 900: left icon rail ---------- */
+@media (min-width: 900px) {
+  .fd-frame {
+    display: grid;
+    grid-template-columns: var(--rail-w) minmax(0, 1fr);
+    grid-template-rows: 1fr auto;
+  }
+  .fd-shell--room .fd-frame {
+    display: block;
+  }
+  .fd-nav {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    align-self: start;
+    position: sticky;
+    top: calc(var(--topbar-h) + var(--safe-top));
+    left: auto;
+    right: auto;
+    bottom: auto;
+    width: var(--rail-w);
+    height: calc(100vh - var(--topbar-h) - var(--safe-top));
+    height: calc(100dvh - var(--topbar-h) - var(--safe-top));
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+    padding: 14px 10px calc(14px + var(--safe-bottom)) max(10px, var(--safe-left));
+    border-top: 0;
+    border-right: 1px solid var(--line);
+    overflow-y: auto;
+  }
+  .fd-nav-btn {
+    flex: 0 0 auto;
+    min-height: 56px;
+    padding: 6px 2px;
+  }
+  .fd-nav-icon {
+    width: 44px;
+    height: 30px;
+  }
+  .fd-main {
+    grid-column: 2;
+    grid-row: 1;
+    padding: 28px 32px 48px;
+  }
+  .fd-shell .fd-footer {
+    grid-column: 2;
+    grid-row: 2;
+    padding: 18px 32px;
+  }
+}
+
+/* ---------- ≥ 1200: rail expands with labels ---------- */
+@media (min-width: 1200px) {
+  .fd-frame {
+    --rail-w: var(--rail-w-wide);
+  }
+  .fd-nav {
+    padding: 16px 12px calc(16px + var(--safe-bottom)) max(12px, var(--safe-left));
+  }
+  .fd-nav-btn {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 12px;
+    min-height: 48px;
+    padding: 0 12px 0 6px;
+    font-size: var(--fs-14);
+  }
+  .fd-nav-btn[aria-current='page'] {
+    background: var(--volt-soft);
+  }
+  .fd-nav-btn[aria-current='page'] .fd-nav-icon {
+    background: transparent;
+  }
+  .fd-nav-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--r-control);
+  }
+  .fd-main {
+    padding: 32px 40px 56px;
+  }
+  .fd-shell .fd-footer {
+    padding: 18px 40px;
+  }
+}
+
+/* ---------- settings sheet ---------- */
+.fd-sheet[data-slot='sheet-content'] {
+  inset: auto 0 0 0;
+  width: 100%;
+  max-width: 100%;
+  max-height: calc(100vh - 24px);
+  max-height: calc(100dvh - 24px);
+  padding: 20px max(var(--gutter), var(--safe-right)) calc(20px + var(--safe-bottom))
+    max(var(--gutter), var(--safe-left));
+  gap: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--line);
+  border-bottom: 0;
+  border-radius: var(--r-hero) var(--r-hero) 0 0;
+  background: var(--bg-1);
+  box-shadow: var(--shadow-sheet);
+}
+@supports (backdrop-filter: blur(12px)) or (-webkit-backdrop-filter: blur(12px)) {
+  .fd-sheet[data-slot='sheet-content'] {
+    background: color-mix(in oklab, var(--bg-1) 92%, transparent);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+  }
+}
+@media (min-width: 600px) {
+  .fd-sheet[data-slot='sheet-content'] {
+    inset: 0 0 0 auto;
+    width: min(440px, 100%);
+    max-height: none;
+    height: 100%;
+    border-radius: 0;
+    border: 0;
+    border-left: 1px solid var(--line);
+    padding-top: calc(20px + var(--safe-top));
+  }
+}
+.fd-sheet-grab {
+  width: 40px;
+  height: 4px;
+  margin: 0 auto 12px;
+  border-radius: var(--r-pill);
+  background: var(--line);
+}
+@media (min-width: 600px) {
+  .fd-sheet-grab {
+    display: none;
+  }
+}
+.fd-sheet [data-slot='sheet-header'] {
+  padding: 0 0 8px;
+}
+.fd-sheet [data-slot='sheet-title'] {
+  font-family: var(--font-display);
+  font-size: var(--fs-22);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.fd-sheet [data-slot='sheet-description'] {
+  color: var(--muted);
+  font-size: var(--fs-14);
+}
+.fd-setting-group {
+  padding: 14px 0 4px;
+}
+.fd-setting-group + .fd-setting-group {
+  border-top: 1px solid var(--line);
+}
+.fd-setting-eyebrow {
+  display: block;
+  margin: 0 0 4px;
+  font-size: var(--fs-12);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.fd-setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 52px;
+  padding: 6px 0;
+}
+.fd-setting-row > label,
+.fd-setting-row > .fd-setting-label {
+  font-size: var(--fs-16);
+  font-weight: 500;
+  color: var(--text);
+}
+.fd-setting-row > .fd-setting-label > small {
+  display: block;
+  font-size: var(--fs-12);
+  font-weight: 400;
+  color: var(--muted);
+}
+.fd-setting-row [data-slot='select-trigger'] {
+  min-width: 132px;
+}
+.fd-setting-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 6px 0 12px;
+}
+.fd-setting-stack [data-slot='slider'] {
+  margin: 8px 0 4px;
+}
+.fd-setting-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 4px 0 8px;
+}
+.fd-setting-note {
+  margin: 4px 0 12px;
+  font-size: var(--fs-14);
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+/* ---------- reduced motion (in-app preference or OS) ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .fd-iconbtn,
+  .fd-nav-btn,
+  .fd-nav-icon {
+    transition: none;
+  }
+}
+:root[data-motion='reduced'] .fd-iconbtn,
+:root[data-motion='reduced'] .fd-nav-btn,
+:root[data-motion='reduced'] .fd-nav-icon,
+:root[data-motion='off'] .fd-iconbtn,
+:root[data-motion='off'] .fd-nav-btn,
+:root[data-motion='off'] .fd-nav-icon {
+  transition: none;
+  transform: none;
+}
+
+/* ---------- settings sheet: target sizes ---------- */
+.fd-sheet [data-slot='select-trigger'] {
+  min-height: 44px;
+}
+/* Radix renders a 16px icon close button and a 32x18 switch; both are below the 44px floor. The
+   switches keep their visual size and gain the hit area through a padded pseudo-element. */
+/* The sheet's built-in close button has no data-slot, only positioning classes. */
+.fd-sheet > button.absolute,
+.fd-sheet [data-slot='sheet-close'] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: var(--r-control);
+  top: 10px;
+  right: 10px;
+}
+.fd-sheet [data-slot='switch'] {
+  position: relative;
+}
+.fd-sheet [data-slot='switch']::after {
+  content: '';
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 56px;
+  height: 44px;
+  transform: translate(-50%, -50%);
+}

@@ -1,1 +1,23 @@
-export async function request(body:any){const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),8000);try{const res=await fetch('/api/duel',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body),signal:controller.signal,cache:'no-store'});const data:any=await res.json();if(!res.ok){const error:any=new Error(data.error||'Connection interrupted. Try again.');error.code=data.code;error.status=res.status;throw error;}return data;}finally{clearTimeout(timeout);}}
+export async function request(body: any) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8000);
+  try {
+    const res = await fetch('/api/duel', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(body),
+      signal: controller.signal,
+      cache: 'no-store',
+    });
+    const data: any = await res.json();
+    if (!res.ok) {
+      const error: any = new Error(data.error || 'Connection interrupted. Try again.');
+      error.code = data.code;
+      error.status = res.status;
+      throw error;
+    }
+    return data;
+  } finally {
+    clearTimeout(timeout);
+  }
+}

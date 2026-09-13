@@ -1,0 +1,2462 @@
+{
+  "generatedAt": "2026-09-13T05:14:42.000Z",
+  "articles": [
+    {
+      "id": "design-bible",
+      "title": "Design bible",
+      "source": "/product/gamification/design-bible.md",
+      "nodes": [
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "FACT//DUEL Design Bible — \"Floodlight\" (gamification release, September 2026)"
+        },
+        {
+          "type": "paragraph",
+          "text": "This is the executive design record for the gamified FACT//DUEL. Every screen, component, sound and motion decision in this release traces back to a rule here. Sources: the research brief (`research-brief.md`), the UI and engine audits, and the books/talks cited in the brief (Octalysis, Hooked, Reality is Broken, The Art of Game Design, Game Feel, \"Juice it or lose it\", PENS/SDT, Duolingo's growth notes, Kahoot/QuizUp/Trivia Royale mechanics)."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "1. Promise and posture"
+        },
+        {
+          "type": "bullet",
+          "text": "**Promise:** \"Know it. Prove it.\" — a private knowledge arena where every answer feels like a play in a floodlit stadium and every fact you keep becomes part of your record."
+        },
+        {
+          "type": "bullet",
+          "text": "**Posture:** white-hat first. Progress, mastery, ownership and curiosity drive the long loop. Urgency (timers, streak-at-risk) is used only at the moment of play and at the daily return, never as punishment. Everything remains honest: bots are labelled bots, ranks and XP are \"on this device\", coins are free simulated coins, no fabricated near-misses, no fake competitors."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "2. The player fantasy"
+        },
+        {
+          "type": "paragraph",
+          "text": "You are a **Challenger** stepping onto a floodlit court. The arena hums (3D \"knowledge core\" hero); the scoreboard is alive (kinetic numbers); every correct answer lands like a point on a broadcast board. Between matches you run **Expeditions** into sports and science stories (field-notes texture, cool focus colours), collect **stamps**, fill your **Vault**, level up your **Passport**, climb the **Arena Rank** and dress your player card in the **Locker**."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "3. Core loops (Hooked → Octalysis mapping)"
+        },
+        {
+          "type": "table",
+          "rows": [
+            [
+              "Loop",
+              "Trigger",
+              "Action (≤ 2 taps)",
+              "Variable reward",
+              "Investment"
+            ],
+            [
+              "Daily return",
+              "Streak flame + 3 daily quests on Home",
+              "\"Play now\" (Quick Draw vs bot)",
+              "XP, gems, quest completion, occasional Wild Round (2–3× XP, ~1 in 6)",
+              "Streak grows, quests reset tomorrow"
+            ],
+            [
+              "Duel",
+              "\"Your next match\" card",
+              "Choose mode/opponent → Ready",
+              "Round win, combo, speed bonus, rank points, near-miss margin",
+              "Rematch, add fact to Vault, rank tier"
+            ],
+            [
+              "Expedition",
+              "\"Continue — 3/6 answered\" (Zeigarnik)",
+              "Resume route",
+              "Bold/steady payoff, chapter camps, stamp ceremony",
+              "Stamp case, best score, next route"
+            ],
+            [
+              "Collection",
+              "Vault count, achievement silhouettes",
+              "Open explanation, save, recall",
+              "+XP, badge unlocks, cosmetics",
+              "Passport level, titles, frames"
+            ]
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Octalysis coverage per screen (minimum one intrinsic drive on every screen): Home = Accomplishment + Unpredictability (Wild Round) + Ownership (player card). Play/Room = Empowerment (choice of mode, combo mastery) + Loss avoidance (timer decay, streak). Expeditions = Epic meaning (mapping the stories) + Empowerment (steady/bold). Player = Ownership + Accomplishment. Vault = Ownership + Curiosity."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "4. Progression systems (implemented in `lib/progression.mjs`)"
+        },
+        {
+          "type": "bullet",
+          "text": "**XP & Levels**: curve `xpToNext(l) = round(80·l^1.55)`; titles per 5-level band (Rookie → Legend). Level-up = ceremony (3D medal, confetti, fanfare) + gems."
+        },
+        {
+          "type": "bullet",
+          "text": "**Streak**: local calendar days with any XP event; shields earned every 7 days (max 2) auto-protect missed days (Duolingo learning: freezes reduce anxiety while keeping loss aversion)."
+        },
+        {
+          "type": "bullet",
+          "text": "**Daily quests**: three per day (easy/medium/hard), seeded by profile epoch + date, auto-claimed, bonus for all three. Quests name topics and modes to spread play (goal-gradient copy: \"1 more win\")."
+        },
+        {
+          "type": "bullet",
+          "text": "**Combos**: consecutive correct answers in a match multiply round XP (×1.25 … ×2 at 5). The combo meter sits next to the answers; at 3 and 5 the screen \"hit-stops\" 80 ms and bursts."
+        },
+        {
+          "type": "bullet",
+          "text": "**Speed**: correct under 2 s = +15, under 4 s = +8 — shown as a decaying speed bar under the timer."
+        },
+        {
+          "type": "bullet",
+          "text": "**Arena Rank** (device-local): rank points from duel results (+wins, −small on losses, floor per tier once reached); tiers Bronze → Silver → Gold → Platinum → Diamond; promotion ceremony."
+        },
+        {
+          "type": "bullet",
+          "text": "**Achievements**: ~30 badges in bronze/silver/gold, silhouettes for locked, two hidden."
+        },
+        {
+          "type": "bullet",
+          "text": "**Gems & Locker**: soft currency from quests, levels and achievements; spend on frames, titles, banners and accent colours. Nothing is ever auto-spent (autonomy). No real money anywhere."
+        },
+        {
+          "type": "bullet",
+          "text": "**Endowed progress**: a new player's first quest starts at 1/3 done after their first answer, and expedition routes show \"Camp 1 reached\" after the first card."
+        },
+        {
+          "type": "bullet",
+          "text": "**Near-miss, honestly**: match finish shows the true margin (\"Lost by one round — Q3 was 0.9 s slower\") with one-tap rematch. Never fabricated."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "5. Visual system — \"Floodlight\""
+        },
+        {
+          "type": "paragraph",
+          "text": "One system, two temperatures: **warm ember** for competition surfaces (duel lobby, room, rank), **cool cyan/teal** for learning surfaces (expeditions, vault, discovery). Volt stays the brand energy colour."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Palette (oklch, with hex fallbacks)"
+        },
+        {
+          "type": "table",
+          "rows": [
+            [
+              "Token",
+              "Value",
+              "Use"
+            ],
+            [
+              "`--bg-0`",
+              "`oklch(13% 0.02 255)` / `#0a0e14`",
+              "page ground (midnight court)"
+            ],
+            [
+              "`--bg-1`",
+              "`oklch(18% 0.025 255)` / `#121821`",
+              "panels"
+            ],
+            [
+              "`--bg-2`",
+              "`oklch(23% 0.03 255)` / `#1a222e`",
+              "raised cards"
+            ],
+            [
+              "`--line`",
+              "`oklch(35% 0.03 255 / .6)`",
+              "hairlines"
+            ],
+            [
+              "`--text`",
+              "`oklch(97% 0.01 95)` / `#f7f6ef`",
+              "primary text"
+            ],
+            [
+              "`--muted`",
+              "`oklch(72% 0.02 255)` / `#a6adba`",
+              "secondary text"
+            ],
+            [
+              "`--volt`",
+              "`oklch(92% 0.23 125)` / `#d4ff3a`",
+              "brand energy, primary CTA, correct"
+            ],
+            [
+              "`--ember`",
+              "`oklch(72% 0.19 45)` / `#ff7a2f`",
+              "competition accent, wrong (with icon), heat"
+            ],
+            [
+              "`--cyan`",
+              "`oklch(85% 0.14 200)` / `#4ee1ff`",
+              "learning accent, expeditions"
+            ],
+            [
+              "`--gold`",
+              "`oklch(86% 0.17 90)` / `#ffc83d`",
+              "rewards, gems, level"
+            ],
+            [
+              "`--magenta`",
+              "`oklch(68% 0.24 350)` / `#ff5ea8`",
+              "streak flame, rare"
+            ],
+            [
+              "`--danger`",
+              "`oklch(62% 0.2 25)` / `#ff4d4d`",
+              "destructive only"
+            ],
+            [
+              "Light theme",
+              "invert grounds to `oklch(97% 0.01 95)` / `oklch(93% 0.015 95)`, keep accents, raise text to `oklch(20% 0.02 255)`",
+              ""
+            ]
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Answer options are encoded by **shape + colour + position** (Kahoot lesson, colour-blind safe): 1 = triangle/ember, 2 = diamond/cyan, 3 = circle/gold, 4 = square/magenta. Correct always adds a check icon and volt outline; wrong adds a cross icon and a desaturated fill. Never hue alone."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Type"
+        },
+        {
+          "type": "bullet",
+          "text": "Display: **Bricolage Grotesque** (variable, 700–800, opsz) — headlines, mode names, ceremonies."
+        },
+        {
+          "type": "bullet",
+          "text": "UI/body: **Instrument Sans** (variable) — everything else."
+        },
+        {
+          "type": "bullet",
+          "text": "Numbers/timers/points: **JetBrains Mono**, `font-variant-numeric: tabular-nums`."
+        },
+        {
+          "type": "bullet",
+          "text": "Loaded from Google Fonts with `preconnect`; system fallback stacks (`Impact`-free: use `\"Bricolage Grotesque\", \"Archivo Black\", system-ui`), `font-display: swap`."
+        },
+        {
+          "type": "bullet",
+          "text": "Scale: 12 / 14 / 16 / 18 / 22 / 28 / 36 / 48 / 64 (clamp with `vw` for hero display)."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Shape & surface"
+        },
+        {
+          "type": "bullet",
+          "text": "Radius: 10 (controls) / 16 (cards) / 24 (hero panels) / pill for chips."
+        },
+        {
+          "type": "bullet",
+          "text": "Borders: 1px `--line`; hover/active lift via `translateY(-2px)` + shadow, never scale on layout."
+        },
+        {
+          "type": "bullet",
+          "text": "Glow: accent glows via `box-shadow: 0 0 0 1px accent/40, 0 8px 32px accent/25` used sparingly (CTA, combo)."
+        },
+        {
+          "type": "bullet",
+          "text": "Glass: only for overlays (sheets, toasts): `backdrop-filter: blur(12px)` with a solid fallback."
+        },
+        {
+          "type": "bullet",
+          "text": "Bento grid on Home (desktop 12 col, gap 16; mobile single column)."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Layout & mobile"
+        },
+        {
+          "type": "bullet",
+          "text": "App shell: top bar (brand, streak flame, gems, level ring, settings) + **bottom tab bar on ≤ 900px** (5 tabs, 56px tall + safe-area) / **left rail on desktop** (72px icon rail, expands on hover ≥ 1200px)."
+        },
+        {
+          "type": "bullet",
+          "text": "Room (live match) hides the nav; answers live in the bottom third (thumb zone); timer sits directly above the answers; ≥ 56px tall answer buttons with 8px gaps; `touch-action: manipulation`."
+        },
+        {
+          "type": "bullet",
+          "text": "Heights use `100dvh` with `100vh` fallback; side gutters 16px minimum; no horizontal scroll ever."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "6. Motion & juice (\"Juice it or lose it\" applied)"
+        },
+        {
+          "type": "bullet",
+          "text": "Every press: scale 0.97 on `pointerdown`, spring back; every enter: ease-out 180–260 ms; every exit: ease-in 120 ms."
+        },
+        {
+          "type": "bullet",
+          "text": "Correct: pop 1 → 1.06 → 1, volt flash, 14-particle burst from the button, rising chirp, light haptic."
+        },
+        {
+          "type": "bullet",
+          "text": "Wrong: 4px horizontal shake 300 ms, ember desaturate, soft thud, error haptic — gentle, not humiliating."
+        },
+        {
+          "type": "bullet",
+          "text": "Combo 3 / 5: 80 ms hit-stop, ring pulse, pitch-rising combo cue."
+        },
+        {
+          "type": "bullet",
+          "text": "Match win: confetti from the top, fanfare, score numbers count up (eased), rank bar animates."
+        },
+        {
+          "type": "bullet",
+          "text": "Level-up / stamp / achievement: full-screen ceremony with a 3D medal, confetti and a single Continue button."
+        },
+        {
+          "type": "bullet",
+          "text": "Timers count continuously (rAF), never in 1 s jumps; the speed bar decays smoothly."
+        },
+        {
+          "type": "bullet",
+          "text": "Reduced motion (OS or in-app \"Effects: full / reduced / off\"): no shake/parallax/confetti; fades only; 3D scenes render one static frame; sound stays unless muted."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "7. Sound (procedural, no files) & haptics"
+        },
+        {
+          "type": "paragraph",
+          "text": "All cues are synthesised in `lib/fx/sound.ts` (Web Audio): tap, correct (major arpeggio), wrong (soft descend), combo (pitch rises with n), countdown/go, reveal whoosh, win fanfare, loss, draw, level-up run, quest bell, gem ping, stamp thump, streak crackle, unlock chime, XP tick. Audio unlocks on the first gesture. Decision: sound defaults **on** for this release (it was off before) because the sound layer is half of the game feel; it stays silent until the first tap, and the top bar always shows a one-tap mute. Haptics (`navigator.vibrate`, Android) mirror the sound layer and have their own toggle."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "8. 3D (React Three Fiber)"
+        },
+        {
+          "type": "bullet",
+          "text": "Home hero: the **Knowledge Core** (glowing sphere, wire icosahedron, orbit rings with sport/science satellites) — grows rings and brightness with level; parallax to pointer; pauses offscreen."
+        },
+        {
+          "type": "bullet",
+          "text": "Ceremonies: **Reward Medal** (gold/silver/bronze/enamel stamp) flips in."
+        },
+        {
+          "type": "bullet",
+          "text": "Locker showpiece: **Gem Vault** — Rapier physics gems dropping into a tray; loaded only when opened."
+        },
+        {
+          "type": "bullet",
+          "text": "Rules: client-only dynamic import, dpr ≤ 1.5, low poly, no network assets, WebGL/reduced-motion fallbacks."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "9. Accessibility & honesty guardrails"
+        },
+        {
+          "type": "bullet",
+          "text": "WCAG 2.5.8 targets, 4.5:1 text contrast on all surfaces, focus rings visible (volt outline)."
+        },
+        {
+          "type": "bullet",
+          "text": "Overlays are `role=\"dialog\" aria-modal` with focus trap and Escape; score changes via `aria-live=\"polite\"`."
+        },
+        {
+          "type": "bullet",
+          "text": "Every audio cue has a visual twin; every colour meaning has an icon or shape twin."
+        },
+        {
+          "type": "bullet",
+          "text": "Copy never shames: losses are \"next time\" moments; streak-loss copy always offers the shield."
+        },
+        {
+          "type": "bullet",
+          "text": "\"On this device\" labels wherever XP/rank/gems appear in a comparative context."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "10. Screen-by-screen brief"
+        },
+        {
+          "type": "bullet",
+          "text": "**Home (Arena Hub)**: hero row (3D core + player card with level ring, XP bar, streak flame, gems), primary CTA \"Play now\", daily quests (3 cards with progress), Continue expedition (if any), featured expedition, Arena Rank strip, recent XP log."
+        },
+        {
+          "type": "bullet",
+          "text": "**Play (Duels)**: mode cards (Quick Draw / Triple Threat / The Gauntlet) with rewards preview, opponent picker (Lucky Guess bot / Friend / Join), topic chips, launch CTA fixed to the bottom on mobile."
+        },
+        {
+          "type": "bullet",
+          "text": "**Room**: lobby (ready states), countdown (giant kinetic numerals), question (timer + speed bar, shape-coded answers, combo meter), reveal (correct/wrong juice, explanation card, XP pop), match finish (verdict, margin, XP & rank deltas counting up, rematch / vault / quests touched)."
+        },
+        {
+          "type": "bullet",
+          "text": "**Expeditions**: route cards as field-notes with chapter camps; run screen with confidence toggle (steady/bold) as a satisfying switch, camp progress, finish ceremony with stamp."
+        },
+        {
+          "type": "bullet",
+          "text": "**Player**: level card, Arena Rank, streak calendar (last 14 days), mastery bars per topic, achievements gallery, stamp case, **Locker** (cosmetics + gems)."
+        },
+        {
+          "type": "bullet",
+          "text": "**Vault**: fact cards (difficulty-tinted finishes), recall lab with juice, saved and reported facts."
+        },
+        {
+          "type": "bullet",
+          "text": "**Settings sheet**: name, sound/volume/haptics/effects, theme."
+        },
+        {
+          "type": "bullet",
+          "text": "**Studio**: adds the gamification decision record, roadmap and advisor loops."
+        }
+      ]
+    },
+    {
+      "id": "roadmap",
+      "title": "Roadmap",
+      "source": "/product/gamification/roadmap.md",
+      "nodes": [
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "Floodlight gamification — roadmap and execution plan"
+        },
+        {
+          "type": "paragraph",
+          "text": "Status legend: ✅ done · 🔄 in progress · ⏳ planned · ⛔ blocked. Item ids (G01–G33) match the Studio roadmap (`lib/product/roadmap.json`, milestone \"Floodlight gamification\"), where status and evidence notes can be edited and exported."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Operating model"
+        },
+        {
+          "type": "bullet",
+          "text": "**Team lead / advisor** (this record's author) owns executive decisions, the design bible, the roadmap, dispatch of swarms, review loops and the release gate."
+        },
+        {
+          "type": "bullet",
+          "text": "**Swarms** are parallel agents with isolated file ownership: research, audit, engine, juice, 3D, foundation, screens (one per screen), integration, advisor, docs. Every swarm reads the skills in `.claude/skills/` (floodlight-design, juice, gamification-advisor) before writing code."
+        },
+        {
+          "type": "bullet",
+          "text": "**Loops**: build wave → advisor review → fix wave → verification. Two advisor loops are planned."
+        },
+        {
+          "type": "bullet",
+          "text": "**Gates** (must be green before any commit that touches app code): `node --test tests/*.test.mjs` (68 baseline + progression tests), `pnpm exec tsc --noEmit`, `pnpm build`, and `node scripts/screens.mjs` (zero horizontal overflow, zero console errors at 390 px and 1440 px)."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Phase 0 — Recon and research ✅ (G01, G02)"
+        },
+        {
+          "type": "bullet",
+          "text": "Three parallel audits: UI/UX screens and design debt; engine/data layer and tests; research brief (theory + stack + art directions). Baseline screenshots captured with headless Chromium."
+        },
+        {
+          "type": "bullet",
+          "text": "Findings that shaped everything: one 2,000-line monolith with three CSS generations; zero keyframes; sound off by default; desktop nav rendering as a stacked column; profile is a pure reducer with an identity contract; timing contract forbids animation on the question card before the reveal marker; no server identity for leaderboards."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Phase 1 — Design bible, roadmap, skills ✅ (G03, G04)"
+        },
+        {
+          "type": "bullet",
+          "text": "Executive decisions: keep the midnight/volt brand but rebuild it as \"Floodlight\" (warm competition, cool learning, gold rewards); Bricolage Grotesque / Instrument Sans / JetBrains Mono; shape-coded answers; streaks with shields; daily quests; combos; Arena Rank; gems + Locker; procedural sound default on; R3F hero and ceremonies; rapier only for the Locker showpiece."
+        },
+        {
+          "type": "bullet",
+          "text": "Deliberate changes to the v6 guardrails: streaks and daily quests are now in (white-hat, shielded); the Home hero may mount WebGL after a static poster; a live room still never mounts a renderer."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Phase 2 — Foundation ✅ (G05–G07)"
+        },
+        {
+          "type": "bullet",
+          "text": "Tokens + fonts + Tailwind bridge; remove dead root palettes."
+        },
+        {
+          "type": "bullet",
+          "text": "App shell: top bar with streak/gems/level slots, bottom tab bar ≤ 900 px, rail ≥ 900 px, settings sheet with sound/volume/haptics/effects/theme, hidden nav during a room."
+        },
+        {
+          "type": "bullet",
+          "text": "Decompose `app/arena.tsx` into `app/screens/*` with a typed `DuelController`; no behaviour change; end-to-end bot duel screenshots as proof."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Phase 3 — Progression engine ✅ (G08–G14)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Pure `lib/progression.mjs` hooked into the profile reducer tail (with the journey-answer recursion fixed via `applyPractice`), exactly-once XP from before/after diffs, streaks with shields, seeded daily quests, achievements, Arena Rank, gems and cosmetics, Wild Round multipliers, difficulty plumbing, `progressionDiff` for UI feedback. 20+ new tests."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Phase 4 — Juice ✅ (G15–G18)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Procedural Web Audio cues, pooled particle engine, confetti, shake, counters, float text, toasts, ceremonies, haptics, preferences (sound/volume/haptics/effects) and an `/fx-lab` audition page."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Phase 5 — 3D ✅ (G19–G21)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Knowledge Core hero, Reward Medal, Gem Vault (rapier, lazy), all client-only with WebGL and reduced-motion fallbacks, verified by build and headless screenshots on `/three-lab`."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Phase 6 — Screen rebuilds ✅ (G22–G27)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Parallel screen agents, one directory each, all reading the skills: Home · Play · Room · Expeditions · Player (Passport, Rank, Locker) · Vault/Discovery/Collections. Each ships its own `fd-` CSS, uses `useJuice`, mounts lazy 3D where the bible says, and verifies with `scripts/screens.mjs` plus a screen-specific Playwright flow."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Phase 7 — Integration and advisor loop 1 🔄 (G28, G29)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Progression feedback wiring (diff → toasts/ceremonies exactly once), then an independent advisor review (`gamification-advisor` skill) with scores per screen and a P0/P1/P2 fix list; fixes dispatched."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Phase 8 — Verification and advisor loop 2 🔄 (G30)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Release gate plus a screenshot sweep with and without reduced motion, end-to-end bot duel, bundle sizes; `verification.md`; advisor sign-off."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Phase 9 — Docs 🔄 (G31)"
+        },
+        {
+          "type": "paragraph",
+          "text": "README, decision record, roadmap sync, Studio rendering of the gamification record."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Deferred (needs server work) ⛔ (G32, G33)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Server-backed leagues/leaderboards (identity + settlement write) and bot personas with accuracy tiers."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "What actually shipped (13 September 2026)"
+        },
+        {
+          "type": "paragraph",
+          "text": "The swarm ran as planned with one interruption: a spend limit on the model serving the first screen wave killed all six screen agents at spawn, and they were relaunched on a second model. Everything below is verified by the gates, not by intent."
+        },
+        {
+          "type": "bullet",
+          "text": "**Foundation**: `app/theme/tokens.css`, self-hosted Bricolage Grotesque / Instrument Sans / JetBrains Mono, `app/shell/*` (top bar with streak, gems and level chips; bottom tab bar under 900 px; rail above; settings sheet with sound, volume, haptics, effects and theme), and `app/arena.tsx` cut from 2,027 to about 950 lines with ten presentational screens behind a typed `DuelController`."
+        },
+        {
+          "type": "bullet",
+          "text": "**Progression**: `lib/progression.mjs` with 26 new tests (94 total), wired through the profile reducer and surfaced by `useProgressionFeedback`, which fires each toast and ceremony once and stays silent for the whole live round."
+        },
+        {
+          "type": "bullet",
+          "text": "**Juice**: 22 synthesised cues, a pooled particle engine, confetti, shake, counters, float text, a queued ceremony host and gesture-gated haptics, auditioned at `/fx-lab`."
+        },
+        {
+          "type": "bullet",
+          "text": "**3D**: knowledge core, reward medals, a Rapier gem tray and a stamp case, all lazy and client-only, auditioned at `/three-lab`; the 2.2 MB physics chunk loads only when the Locker opens."
+        },
+        {
+          "type": "bullet",
+          "text": "**Screens**: Home, Play, Room, Expeditions, Player and Vault/Discovery/Collections rebuilt, then 867 dead rules removed from the two legacy stylesheets."
+        }
+      ]
+    },
+    {
+      "id": "decision-record",
+      "title": "Decision record",
+      "source": "/product/gamification/decision-record.md",
+      "nodes": [
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "Decision record — Floodlight gamification release"
+        },
+        {
+          "type": "paragraph",
+          "text": "Each decision lists the choice, the alternatives considered, the reason, and the guardrail that keeps it honest."
+        },
+        {
+          "type": "bullet",
+          "text": "**Evolve, don't replace, the brand.** Kept FACT//DUEL, the lightning bolt and volt/midnight; rebuilt everything else. Alternatives: \"Liquid Lab\" glass (contrast/perf risk on low-end Android) and a full \"Field Notes\" light theme (would lose the arena energy). Guardrail: contrast ≥ 4.5:1, solid fallbacks."
+        },
+        {
+          "type": "bullet",
+          "text": "**Two temperatures, one system.** Warm ember for competition, cool cyan for learning, gold for rewards (colour psychology in the brief). Guardrail: never hue alone — icons and shapes always accompany."
+        },
+        {
+          "type": "bullet",
+          "text": "**Streaks and daily quests are in.** The v6 record declined streaks citing coercion. This release adopts Duolingo's finding that shields/freezes keep the retention benefit while removing the anxiety. Guardrail: shields are earned automatically, copy always offers the shield, no notifications."
+        },
+        {
+          "type": "bullet",
+          "text": "**Progression is device-local and says so.** XP, level, rank, gems and badges live in the IndexedDB profile (version 2, default-filled, sanitised). Alternatives: server accounts (no identity exists yet). Guardrail: \"on this device\" labels in comparative contexts; no client value reaches the server."
+        },
+        {
+          "type": "bullet",
+          "text": "**Exactly-once economy.** XP derives from before/after profile diffs, not from raw actions, because the room projection is re-delivered on every poll. Guardrail: tests apply the same snapshot twice."
+        },
+        {
+          "type": "bullet",
+          "text": "**Arena Rank instead of a fake league.** A ladder computed from your own results with tier floors. Alternative: simulated competitors (rejected as fabricated presence). Guardrail: server leagues are a roadmap item gated on identity."
+        },
+        {
+          "type": "bullet",
+          "text": "**Variable reward, but transparent.** Wild Rounds (×2/×3 XP, deterministic from the round id) are announced during the countdown, never revealed after the fact. Guardrail: the multiplier is client XP only."
+        },
+        {
+          "type": "bullet",
+          "text": "**Sound defaults on, silent until the first tap.** Half of game feel is sound; the mute toggle is always one tap away and every cue has a visual twin. Alternative: keep default off (v6)."
+        },
+        {
+          "type": "bullet",
+          "text": "**Procedural everything.** No audio or image assets for feedback: Web Audio synthesis, Canvas2D particles, geometry-only 3D emblems. Reason: zero asset pipeline, tiny bundle, no network fetches on Workers."
+        },
+        {
+          "type": "bullet",
+          "text": "**3D where it delights, never where it competes.** R3F hero on Home after a static poster, medals in ceremonies, rapier gems only inside the Locker on demand (about 820 kB gz). A live room never mounts WebGL. Guardrail: dpr ≤ 1.5, offscreen pause, reduced-motion static frame, WebGL fallback."
+        },
+        {
+          "type": "bullet",
+          "text": "**The timing contract is untouchable.** The question card mounts hidden until the double-rAF reveal marker, timer track has no transition, answers lock on release or keys 1–4, option order is fixed. All juice happens on lock and on `round.result`."
+        },
+        {
+          "type": "bullet",
+          "text": "**Shape-coded answers.** Triangle/diamond/circle/square with four hues (Kahoot lesson) for colour-blind safety and faster recognition; keyboard hints stay."
+        },
+        {
+          "type": "bullet",
+          "text": "**Mobile is the primary layout.** Bottom tab bar, answers in the thumb zone, ≥ 56 px answer buttons, safe areas, `100dvh`. Desktop gets a rail and a bento Home."
+        },
+        {
+          "type": "bullet",
+          "text": "**Format the codebase.** The dense single-line style blocked parallel work; prettier now governs app, lib, hooks and tests. Verified token-equivalent; tests and types unchanged."
+        },
+        {
+          "type": "bullet",
+          "text": "**Decompose before restyling.** The monolith becomes an orchestrator plus presentational screens so six screen agents can work at once without touching networking or timing code."
+        },
+        {
+          "type": "bullet",
+          "text": "**Two advisor loops.** An independent reviewer scores every screen against the bible and theory before the release gate; fixes are dispatched, not deferred."
+        }
+      ]
+    },
+    {
+      "id": "research-brief",
+      "title": "Research brief",
+      "source": "/product/gamification/research-brief.md",
+      "nodes": [
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "Fact Duel redesign — research brief (Sept 2026)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Project facts verified in repo: Next 16.2.6 running on **vinext** + `@cloudflare/vite-plugin` (Workers, `nodejs_compat`), React 19.2.6, three 0.185.0 installed but unused, Tailwind 4.2. Sizes below are min+gzip, measured locally with esbuild (peers externalized) unless marked \"bundlephobia\"."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "A. Gamification theory digest"
+        },
+        {
+          "type": "paragraph",
+          "text": "**Octalysis (Yu-kai Chou)** — 8 core drives: Epic Meaning, Accomplishment, Empowerment/Feedback, Ownership, Social Influence, Scarcity, Unpredictability, Loss & Avoidance. Drives 1–3 are White Hat (empowering, slow), 6–8 Black Hat (urgent, anxiety-inducing). [framework](https://yukaichou.com/gamification-examples/octalysis-gamification-framework/) · [white vs black hat](https://yukaichou.com/gamification-video-course/beginners-guide-gamification-19-90-white-hat-black-hat-gamification/)"
+        },
+        {
+          "type": "bullet",
+          "text": "Rule: use Black Hat (timer, streak-at-risk, mystery box) only to create urgency at onboarding/daily-return moments; make the long-term loop White Hat (mastery stats, expedition narrative, creative loadouts)."
+        },
+        {
+          "type": "bullet",
+          "text": "Rule: every screen should hit at least one intrinsic drive (3, 5, 7) so it doesn't feel like a points treadmill (drives 2, 4, 6 alone = extrinsic burnout)."
+        },
+        {
+          "type": "bullet",
+          "text": "Rule: audit each feature for \"drift\" — if a feature only works via loss/scarcity, add an accomplishment or social payoff to it."
+        },
+        {
+          "type": "paragraph",
+          "text": "**Hooked (Nir Eyal)** — Trigger → Action → Variable Reward → Investment. [nirandfar.com](https://www.nirandfar.com/how-to-manufacture-desire/)"
+        },
+        {
+          "type": "bullet",
+          "text": "Pair every external trigger (push \"Your rival answered\", daily expedition) with an internal one (boredom, curiosity) — copy should name the feeling."
+        },
+        {
+          "type": "bullet",
+          "text": "The Action must be the simplest possible behaviour: one tap from lobby into a question in <2 s; no lobby modals before first play."
+        },
+        {
+          "type": "bullet",
+          "text": "Rewards of the Tribe (rank, rival reactions), Hunt (coins, rare questions), Self (mastery %); the Investment step (naming a rival, building a streak, customizing a deck) must load the next trigger."
+        },
+        {
+          "type": "paragraph",
+          "text": "**Reality is Broken (McGonigal)** — 4 traits of a game: goal, rules, feedback system, voluntary participation; 4 intrinsic rewards: satisfying work, hope of success, social connection, meaning (\"part of something bigger\" / epic wins). [SuperSummary](https://www.supersummary.com/reality-is-broken/summary/) · [NWP review](https://archive.nwp.org/cs/public/print/resource/3654)"
+        },
+        {
+          "type": "bullet",
+          "text": "Make expeditions collective: \"The community has mapped 61% of Astronomy\" — epic meaning with zero extra content."
+        },
+        {
+          "type": "bullet",
+          "text": "Feedback must be instant and visible per question (traits 3) — never wait for server confirmation to show \"correct\"."
+        },
+        {
+          "type": "bullet",
+          "text": "Voluntary participation: no forced daily punishment beyond streak; opt-in leagues."
+        },
+        {
+          "type": "paragraph",
+          "text": "**Art of Game Design (Schell)** — Lens of Flow: clear goals, no distractions, direct feedback, continuous challenge. Interest curve: hook, rising beats, climax at the end. Reward lens: right rewards, right amount, right time. [notes](https://notesbylex.com/the-art-of-game-design-a-book-of-lenses-2nd-edition-by-jesse-schell) · [interest curve](https://game-studies.fandom.com/wiki/Interest_Curve)"
+        },
+        {
+          "type": "bullet",
+          "text": "Design a duel as an interest curve: Q1 easy hook, difficulty rises, final question double points (QuizUp does this) as the climax."
+        },
+        {
+          "type": "bullet",
+          "text": "Adaptive difficulty per category keeps players in the flow channel; expose it as \"level 3 Physics\" for competence feedback."
+        },
+        {
+          "type": "bullet",
+          "text": "Mix fixed rewards (XP per correct) with variable ones (rare bonus question) — fixed = fairness, variable = excitement."
+        },
+        {
+          "type": "paragraph",
+          "text": "**Game Feel (Swink)** — three blocks: real-time control (respond within ~100 ms), simulated space, polish. [ch.1 PDF](http://mycours.es/gamedesign2014/files/2014/10/Game-Feel-Steve-Swink-chapter-1.pdf)"
+        },
+        {
+          "type": "bullet",
+          "text": "Rule: answer tap gets visual+audio+haptic acknowledgement in the same frame (optimistic UI); the server result arrives later and only *upgrades* the state."
+        },
+        {
+          "type": "bullet",
+          "text": "Rule: timers and counters must animate continuously (no 1 s jumps) — perception of a live system."
+        },
+        {
+          "type": "paragraph",
+          "text": "**Juice it or lose it (Jonasson & Purho, GDC 2012)** — [GDC Vault](https://www.gdcvault.com/play/1016487/Juice-It-or-Lose) · [summary](https://roblog.co.uk/2024/03/juicy-games/) · [web adaptation](https://valdemird.com/blog/game-feel-on-the-web/)"
+        },
+        {
+          "type": "bullet",
+          "text": "Concrete techniques: tween everything (ease-out on entry, ease-in on exit), squash & stretch on press/land, screen shake scaled to event and settling fast (<300 ms), impact flash on the hit target, particle burst + trail, hit-stop (freeze 60–100 ms on big hits), layered SFX per action, colour flash on state change."
+        },
+        {
+          "type": "bullet",
+          "text": "For trivia: correct = green flash + pop-scale 1→1.08→1 + 12-particle burst + rising chirp; wrong = 4 px horizontal shake + red desaturate + low thud; streak milestone = confetti + hit-stop + bass hit."
+        },
+        {
+          "type": "paragraph",
+          "text": "**Self-Determination Theory / PENS (Ryan, Rigby, Przybylski 2006)** — autonomy, competence, relatedness independently predict enjoyment and return play. [PENS](https://selfdeterminationtheory.org/player-experience-of-needs-satisfaction-pens/) · [paper](https://selfdeterminationtheory.org/SDT/documents/2006_RyanRigbyPrzybylski_MandE.pdf)"
+        },
+        {
+          "type": "bullet",
+          "text": "Autonomy: let players choose category weighting, expedition route, and cosmetics; never auto-spend their currency."
+        },
+        {
+          "type": "bullet",
+          "text": "Competence: per-category mastery bars, \"personal best\", clear cause of loss (\"you were 0.8 s slower on Q5\")."
+        },
+        {
+          "type": "bullet",
+          "text": "Relatedness: rematch button, emoji reactions in duels, small friend leagues (5–10 people) rather than global boards."
+        },
+        {
+          "type": "paragraph",
+          "text": "**Duolingo learnings** (Jorge Mazal, ex-CPO): leaderboards raised learning time 17% and tripled highly-engaged users, auto-opt-in; streak-saver notifications and streak freeze/repair drove a ~3x rise in 7+-day-streak DAU to >50% of DAU; CURR +21% ≈ 40% less daily churn. Gems earned via specific actions and spent on streak freezes / hearts. Engineering auto-freezes streaks during outages (\"Big Red Button\", 2M+ streaks protected). [Lenny's Newsletter](https://www.lennysnewsletter.com/p/how-duolingo-reignited-user-growth) · [Duolingo blog](https://blog.duolingo.com/protecting-streaks-from-site-issues/)"
+        },
+        {
+          "type": "bullet",
+          "text": "Rules: streak = the retention core; sell/earn freezes (reduces anxiety, keeps loss aversion); weekly small leagues with promotion/relegation; protect streaks from your own bugs."
+        },
+        {
+          "type": "paragraph",
+          "text": "**Trivia mechanics that work**"
+        },
+        {
+          "type": "bullet",
+          "text": "Kahoot: points = 1000 × (1 − (responseTime/timer)/2), max points if <0.5 s; answer-streak bonus; answers encoded by shape **and** colour. [How points work](https://support.kahoot.com/hc/en-us/articles/115002303908-How-points-work)"
+        },
+        {
+          "type": "bullet",
+          "text": "QuizUp: 7 questions, 10 s each, 20 pts minus 1 per second, last question double. [review](https://www.gamezebo.com/reviews/quizup-review/)"
+        },
+        {
+          "type": "bullet",
+          "text": "Trivia Crack: category wheel (chance), 3 lives refilling 1/hr, power-ups (Bomb 50/50, Double Chance, Skip, Extra Time) bought with coins, crowns as progression. [Play Store](https://play.google.com/store/apps/details?id=com.etermax.preguntados.lite) · [Grokipedia](https://grokipedia.com/page/Trivia_Crack)"
+        },
+        {
+          "type": "bullet",
+          "text": "Trivia Royale (QuizUp team): daily 10-round elimination, one wrong = out, limited revives, Hint/50-50/Time Freeze, daily streak + leaderboards. [App Store](https://apps.apple.com/us/app/trivia-royale-quiz-game/id6766182512) · [Engadget](https://www.engadget.com/battle-royale-quiz-game-trivia-royale-quizup-130038696.html)"
+        },
+        {
+          "type": "bullet",
+          "text": "HQ Trivia: 12 Qs, 10 s, extra lives via referral, live-show framing + chat. [UsabilityGeek](https://medium.com/usabilitygeek/what-hq-trivia-can-teach-us-about-ux-fdbefb60782e)"
+        },
+        {
+          "type": "bullet",
+          "text": "Rules for Fact Duel: speed-weighted scoring with a visible decaying bar; combos at 3/5/7 correct; 2–3 power-ups max, earned not only bought; expeditions use lives + elimination tension; final-question multiplier."
+        },
+        {
+          "type": "paragraph",
+          "text": "**Behavioural effects → one implementation each**"
+        },
+        {
+          "type": "bullet",
+          "text": "Variable-ratio reinforcement (Skinner): a \"Wild Question\" appears on a random ~1-in-6 basis with a random 2–5× multiplier. [review](https://www.teachboston.org/variable-reward-schedules-gambling/)"
+        },
+        {
+          "type": "bullet",
+          "text": "Loss aversion (Kahneman & Tversky): hearts in expeditions + a purchasable/earnable streak freeze; copy frames risk (\"12-day streak at stake\") but always offers the freeze."
+        },
+        {
+          "type": "bullet",
+          "text": "Endowed progress (Nunes & Drèze 2006: 34% vs 19% completion with 2 free stamps): new accounts start the weekly league meter at 2/10 and expedition maps with camp 1 already reached. [study](https://siliconcanals.com/t-car-wash-loyalty-cards-endowed-progress/)"
+        },
+        {
+          "type": "bullet",
+          "text": "Goal-gradient (Kivetz, Urminsky & Zheng 2006): as the expedition nears its end, ticks get louder/faster, the map zooms in, and the lobby shows \"2 wins to promote\". [summary](https://yukaichou.com/behavioral-analysis/goal-gradient-hypothesis-hull-kivetz-motivation-acceleration/)"
+        },
+        {
+          "type": "bullet",
+          "text": "Zeigarnik effect (1927): allow quitting mid-expedition and pin a \"Resume — 3/7 answered\" card at the top of the lobby. [Product Philosophy](https://productphilosophy.com/articles/goal-gradient-progress-mechanics)"
+        },
+        {
+          "type": "bullet",
+          "text": "Near-miss effect (slot research; Clark et al.): post-duel screen shows margin (\"Lost by 1 pt — Q3 cost you 0.9 s\") with a one-tap rematch. Use only as honest feedback; fabricated near-misses are a gambling technique. [J. Gambling Studies](https://link.springer.com/article/10.1007/s10899-019-09891-8)"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "B. Web 3D / physics / motion stack (2026)"
+        },
+        {
+          "type": "table",
+          "rows": [
+            [
+              "Package",
+              "Latest",
+              "License",
+              "Size (gz)",
+              "React 19 / Next 16"
+            ],
+            [
+              "`three`",
+              "0.186.0 (0.185 installed)",
+              "MIT",
+              "180 kB full (bundlephobia); ~128 kB for a renderer+mesh subset",
+              "fine; client-only"
+            ],
+            [
+              "`@react-three/fiber`",
+              "9.7.0",
+              "MIT",
+              "52 kB",
+              "peer `react >=19 <19.3` — **do not bump to React 19.3 until fiber updates**"
+            ],
+            [
+              "`@react-three/drei`",
+              "10.7.8",
+              "MIT",
+              "tree-shakes: `Float` 0.8 kB; Float+Environment+ContactShadows+Text 64 kB",
+              "peer react ^19, fiber ^9"
+            ],
+            [
+              "`@react-three/rapier`",
+              "2.2.0",
+              "MIT ([repo](https://github.com/pmndrs/react-three-rapier))",
+              "**~820 kB incl. inlined WASM**",
+              "fiber 9 / React 19 ok — but too heavy for a trivia game"
+            ],
+            [
+              "`@react-three/postprocessing`",
+              "3.1.1",
+              "MIT",
+              "EffectComposer+Bloom 28 kB",
+              "peer fiber ≥9.7"
+            ],
+            [
+              "`cannon-es`",
+              "0.20.0 (2022)",
+              "MIT",
+              "34 kB",
+              "unmaintained-ish; skip"
+            ],
+            [
+              "`matter-js`",
+              "0.20.0",
+              "MIT",
+              "25 kB",
+              "2D physics; ok for coin drops if needed"
+            ],
+            [
+              "`motion` (`motion/react`)",
+              "13.2.0",
+              "MIT",
+              "full `motion`+`AnimatePresence` 42 kB; `LazyMotion`+`m`+`domAnimation` 27 kB; vanilla `animate` 23 kB; `motion/mini` animate 3 kB",
+              "peer react ^18‖^19; v13 only breaking change: dropped `@emotion/is-prop-valid` ([upgrade guide](https://motion.dev/docs/react-upgrade-guide))"
+            ],
+            [
+              "`gsap` + `@gsap/react`",
+              "3.15.0 / 2.1.2",
+              "free \"no-charge\" standard licence incl. all plugins since 3.13 ([CSS-Tricks](https://css-tricks.com/gsap-is-now-completely-free-even-for-commercial-use/))",
+              "27 kB core + 0.7 kB hook",
+              "fine"
+            ],
+            [
+              "`lenis`",
+              "1.3.26",
+              "MIT",
+              "5 kB",
+              "fine; not needed for an app-shell game"
+            ],
+            [
+              "`@rive-app/react-canvas` (-lite)",
+              "4.34.2",
+              "MIT",
+              "65 kB (lite 58 kB), files 10–15× smaller than Lottie, state machines ([Rive](https://rive.app/blog/rive-as-a-lottie-alternative))",
+              "react ^19 ok"
+            ],
+            [
+              "`lottie-web` / `@lottiefiles/dotlottie-react`",
+              "5.13.0 / 0.19.16",
+              "MIT",
+              "79 kB / 37 kB",
+              "playback only, no state machine"
+            ],
+            [
+              "`@theatre/core`",
+              "0.7.2 (2024)",
+              "Apache-2.0",
+              "31 kB",
+              "1.0 being built in a private repo ([GitHub](https://github.com/theatre-js/theatre)); skip"
+            ],
+            [
+              "`@react-spring/web`",
+              "10.1.2",
+              "MIT",
+              "20 kB",
+              "fine, redundant with motion"
+            ],
+            [
+              "`@formkit/auto-animate`",
+              "0.10.0",
+              "MIT",
+              "3 kB",
+              "nice for list reorders (leaderboards)"
+            ],
+            [
+              "`canvas-confetti`",
+              "1.9.4",
+              "ISC",
+              "4 kB",
+              "fine; `disableForReducedMotion: true` option"
+            ],
+            [
+              "`@tsparticles/confetti` / `slim`",
+              "4.4.0",
+              "MIT",
+              "37 kB / 30 kB",
+              "overkill"
+            ],
+            [
+              "`howler`",
+              "2.2.4 (2023)",
+              "MIT",
+              "10 kB",
+              "file-oriented; skip"
+            ],
+            [
+              "`tone`",
+              "15.1.22",
+              "MIT",
+              "60 kB (Synth+Transport)",
+              "only if you want music"
+            ],
+            [
+              "`zzfx`",
+              "1.3.2",
+              "MIT",
+              "**1 kB**, 20-param procedural SFX ([GitHub](https://github.com/KilledByAPixel/ZzFX))",
+              "fine"
+            ],
+            [
+              "raw Web Audio",
+              "—",
+              "—",
+              "0 kB",
+              "fine"
+            ]
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "CSS usable now ([webstatus.dev](https://webstatus.dev), [MDN @property](https://developer.mozilla.org/en-US/docs/Web/CSS/@property)): container queries (widely, Aug 2025), `color-mix()` (widely, Nov 2025), `oklch()` (Chrome 111/Firefox 113/Safari 15.4), `@property` (Baseline Jul 2024), `dvh/svh` (Chrome 108/Safari 15.4/Firefox 101), same-document View Transitions (Baseline newly Oct 2025, Firefox 144). **Not** Baseline: cross-document view transitions (no Firefox), scroll-driven animations (Safari 26 only, Firefox behind flag) — use motion's `useScroll` if needed."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Recommended minimal stack"
+        },
+        {
+          "type": "bullet",
+          "text": "**Hero 3D (home/lobby):** `@react-three/fiber` 9.7 + drei `Float`/`ContactShadows` (+`MeshTransmissionMaterial` only on desktop) on the already-installed three. ~55 kB over three. `frameloop=\"demand\"` when idle; `dpr={[1, 1.5]}`; no postprocessing on touch devices (Bloom is a full-screen pass). Under `prefers-reduced-motion`: render one static frame or the SVG poster. Skip Rapier (820 kB); fake \"physics\" with motion springs; if a real coin-drop is needed, matter-js on a 2D canvas (25 kB) lazily loaded."
+        },
+        {
+          "type": "bullet",
+          "text": "**Juice:** `motion/react` via `LazyMotion` + `m` (27 kB) for presence/layout/springs; CSS keyframes + `@property` for screen shake (`translate` on the game wrapper, 180 ms, amplitude by event), card flips (`transform-style: preserve-3d; backface-visibility`), number counters (`@property --n; transition: --n 600ms; counter-reset: n var(--n)` or `animate()` from `motion/mini`, 3 kB); `canvas-confetti` (4 kB); `auto-animate` for leaderboard reorders. Don't ship GSAP *and* motion; pick GSAP only if you need complex timeline sequencing."
+        },
+        {
+          "type": "bullet",
+          "text": "**Sound without files:** a `useSfx()` hook over raw Web Audio: `OscillatorNode` + `GainNode` with 5 ms ramps (avoids clicks), white-noise buffer through a swept lowpass for whooshes; or `zzfx` (1 kB) with presets tuned in the ZzFX designer. Create the `AudioContext` lazily and `resume()` inside the first `pointerdown`/`keydown` (iOS suspends until a gesture); re-resume on `visibilitychange`. [Web Audio unlock](https://www.mattmontag.com/web/unlock-web-audio-in-safari-for-ios-and-macos) · [procedural cues](https://velocaption.com/blog/procedural-audio-in-the-browser/)"
+        },
+        {
+          "type": "bullet",
+          "text": "**Haptics:** `navigator.vibrate?.([10])` on correct, `[30,40,30]` on wrong — Android Chrome/Samsung only; Safari/iOS and Firefox 129+ do not support it ([caniuse](https://caniuse.com/vibration), [W3C thread](https://lists.w3.org/Archives/Public/public-css-archive/2026Mar/0919.html)). Optional iOS hack: toggling a hidden `<input type=\"checkbox\" switch>` via its label fires a system haptic (Safari 17.4+/iOS 18; `ios-haptics` / `web-haptics` on npm), reportedly patched in iOS 26.5 — treat as best-effort. [ios-haptics](https://github.com/tijnjh/ios-haptics) · [Ionic issue](https://github.com/ionic-team/ionic-framework/issues/29942)"
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Cloudflare Workers / SSR gotchas"
+        },
+        {
+          "type": "bullet",
+          "text": "This repo deploys via vinext + Cloudflare Vite plugin (`nodejs_compat`), not OpenNext; same rules apply: no `window`/`document`/`AudioContext`/`matchMedia` at module scope, only in effects/handlers. `'use client'` components still render on the server."
+        },
+        {
+          "type": "bullet",
+          "text": "Load the R3F scene with `next/dynamic(() => import('./Hero'), { ssr: false })` **from a client component** (Next 16 disallows `ssr:false` in Server Components); render a CSS/SVG poster as `loading`. [FlowQL guide](https://www.flowql.com/en/blog/guides/nextjs-window-is-not-defined-fix/)"
+        },
+        {
+          "type": "bullet",
+          "text": "Keep three out of the server bundle entirely: Workers script limits are 3 MiB gz free / 10 MiB paid ([OpenNext docs](https://opennext.js.org/cloudflare)); client chunks are static assets and don't count, but SSR-importing three inflates the Worker."
+        },
+        {
+          "type": "bullet",
+          "text": "Avoid libraries that need WASM at SSR time; Rapier's `-compat` build inlines WASM as base64 (that's why it's 820 kB)."
+        },
+        {
+          "type": "bullet",
+          "text": "Web Audio/vibrate need a user gesture; gate them behind the first tap and a persisted user toggle."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "C. Visual direction"
+        },
+        {
+          "type": "paragraph",
+          "text": "**2026 trends:** Apple's *Liquid Glass* (WWDC25) made refraction/translucency the default premium look ([Apple](https://developer.apple.com/videos/play/wwdc2025/219/)); glassmorphism returned but restrained (overlays, menus); neo-brutalism = bold type, stark contrast, visible grid; bento grids as \"active\" interactive tiles; kinetic/viewport-scaled typography replacing hero images; oklch-native palettes. [Pixelmatters](https://www.pixelmatters.com/insights/7-UI-design-trends-to-watch-in-2026) · [Fireart](https://fireart.studio/blog/the-best-web-design-trends/)"
+        },
+        {
+          "type": "paragraph",
+          "text": "**Colour psychology:** displays of red increase the actor's competitive approach and the perceiver's withdrawal ([Ten Velden et al. 2012](https://www.sciencedirect.com/science/article/abs/pii/S0022103112000698)); warm hues prompt fast decisions, cool blues/greens promote calm and focus for learning ([Affective](https://weareaffective.com/learning-centre/what-colours-psychology-should-i-use-in-my-app-design), [eLearning](https://www.dyndevice.com/en/news/color-psychology-in-elearning-how-colors-influence-learning-ELN-2141/)). → Warm accents for duel/arena surfaces; cool accents for expedition/learning surfaces; never rely on hue alone (see E)."
+        },
+        {
+          "type": "paragraph",
+          "text": "**Trivia UIs to learn from:** Kahoot (shape+colour answer buttons, giant countdown, podium), QuizUp (dark, typographic, 10 s decay bar, topic tiles), Trivia Crack (mascots per category, wheel spin), HQ Trivia (TV-show framing, 3D animated transitions, chat), Trivia Royale (elimination tension, revive moment), Duolingo (mascot reactions, streak flame, calendar)."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Three candidate art directions (all fonts verified on Google Fonts)"
+        },
+        {
+          "type": "bullet",
+          "text": "**Stadium Lights** — broadcast scoreboard × neo-brutalism. Dark court `oklch(18% 0.02 260)`, surface `oklch(24% 0.03 260)`, hot orange `oklch(72% 0.19 45)` (sport), electric teal `oklch(80% 0.14 200)` (science), lime win `oklch(88% 0.22 130)`, magenta streak `oklch(65% 0.24 350)`, text `oklch(96% 0.01 90)`. Type: **Anton** (display, all-caps scores) + **Instrument Sans** (UI) + **JetBrains Mono** (timers/points, `font-variant-numeric: tabular-nums`). Mood: ticker tape, chunky borders, kinetic type slams, crowd-noise SFX. Why: warm competitive arousal, scoreboard literacy for sports users, thick strokes survive low-end screens and need no blur."
+        },
+        {
+          "type": "bullet",
+          "text": "**Field Notes** — expedition journal. Paper `oklch(97% 0.01 85)`, ink `oklch(25% 0.02 60)`, forest `oklch(45% 0.12 155)`, ochre `oklch(75% 0.15 80)`, rust danger `oklch(58% 0.18 35)`, sky `oklch(70% 0.10 230)`. Type: **Fraunces** (variable, optical-size display) + **Plus Jakarta Sans** (UI) + **Space Mono** (numbers). Mood: maps, stamps, badges, torn-paper reveals, pencil-line progress. Why: cool/earthy focus for learning, light theme readable outdoors, tactile \"collectible\" juice (stamps, badges) with cheap CSS; distinct from every dark neon quiz app."
+        },
+        {
+          "type": "bullet",
+          "text": "**Liquid Lab** — liquid-glass sci-arena. Void `oklch(14% 0.03 280)`, glass panels `color-mix(in oklch, white 8%, transparent)` + 12 px backdrop blur, violet `oklch(65% 0.25 300)`, cyan `oklch(85% 0.15 200)`, hot pink `oklch(68% 0.25 350)`, gold `oklch(85% 0.17 90)`. Type: **Syne** (display) + **Geist** (UI) + **Geist Mono** (numbers). Mood: refracting 3D hero (`MeshTransmissionMaterial`), gradient meshes, particle trails. Why: showcases the three.js investment and the 2026 zeitgeist; risk: backdrop-filter cost on low-end Android and contrast on glass — needs a \"solid\" fallback for reduced-data/low-end."
+        },
+        {
+          "type": "paragraph",
+          "text": "Recommendation: Stadium Lights for duels, with Field Notes texture for expeditions (one type system: Anton/Instrument Sans/JetBrains Mono; only palette shifts by mode) — keeps one design system while encoding \"compete\" vs \"learn\" in colour temperature."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "D. Mobile game UX rules"
+        },
+        {
+          "type": "bullet",
+          "text": "Thumb zones: Hoober's 1,333-user field study — 49% one-handed thumb, 36% cradled, 15% two thumbs; put answer buttons and primary CTA in the bottom third, secondary actions top. [UXmatters](https://www.uxmatters.com/mt/archives/2013/02/how-do-users-really-hold-mobile-devices.php) · [Smashing](https://www.smashingmagazine.com/2016/09/the-thumb-zone-designing-for-mobile-users/)"
+        },
+        {
+          "type": "bullet",
+          "text": "Targets: Apple HIG 44×44 pt, Material 48×48 dp, WCAG 2.5.8 AA floor 24 px (2.5.5 AAA 44 px). Answer buttons ≥56 px tall, 8 px gaps. [TestParty](https://testparty.ai/blog/wcag-target-size-guide)"
+        },
+        {
+          "type": "bullet",
+          "text": "Bottom nav / bottom sheets (vaul is already installed); keep the timer near the answers, not the top."
+        },
+        {
+          "type": "bullet",
+          "text": "Safe areas: `viewport-fit=cover` + `padding-bottom: env(safe-area-inset-bottom)`; full-height screens use `min-height: 100dvh` with a `100vh` fallback first (`svh` for stable lobby, `dvh` for game). [OpenReplay](https://blog.openreplay.com/fix-100vh-mobile-viewport/) · [modern-css](https://modern-css.com/mobile-viewport-height-without-100vh-hack/)"
+        },
+        {
+          "type": "bullet",
+          "text": "Touch latency: `touch-action: manipulation` on buttons (kills 300 ms delay), respond on `pointerdown` for scoring, `user-select: none`, `-webkit-tap-highlight-color: transparent`, avoid layout-triggering animations (only `transform`/`opacity`)."
+        },
+        {
+          "type": "bullet",
+          "text": "Haptics: see B4; always paired with a user toggle."
+        },
+        {
+          "type": "bullet",
+          "text": "Reduced data: `prefers-reduced-data` has no browser implementation ([MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-data)); use the `Save-Data` request header / `navigator.connection.saveData` + `deviceMemory`/`hardwareConcurrency` to skip the 3D hero and HDR maps."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "E. Accessibility for juicy UIs"
+        },
+        {
+          "type": "bullet",
+          "text": "Reduced motion: WCAG 2.3.3 (AAA) — under `@media (prefers-reduced-motion: reduce)` replace shake/parallax/zoom with opacity/colour changes, cut durations, stop the 3D loop, pass `disableForReducedMotion` to canvas-confetti, `MotionConfig reducedMotion=\"user\"` in motion. Provide an in-app \"Effects: full / reduced / off\" setting that overrides the OS. [Pope Tech](https://blog.pope.tech/2025/12/08/design-accessible-animation-and-movement/) · [OpenReplay](https://blog.openreplay.com/prefers-reduced-motion-accessible-animation/)"
+        },
+        {
+          "type": "bullet",
+          "text": "Sound: default off until first gesture; separate SFX/music toggles persisted; every audio cue has a visual twin."
+        },
+        {
+          "type": "bullet",
+          "text": "Colour-blind safety: never encode correct/wrong by red/green alone — add icon (check/cross), shape (Kahoot-style triangle/diamond/circle/square per option), and motion; test palettes with Okabe-Ito references (e.g. `#E69F00` orange vs `#0072B2` blue instead of red/green). [Okabe-Ito](https://scifig.ai/blog/okabe-ito-color-palette-hex-codes) · [Game Accessibility Guidelines](https://www.abratabia.com/game-accessibility/accessibility-guidelines.php)"
+        },
+        {
+          "type": "bullet",
+          "text": "Focus management for result overlays/power-up sheets: use native `<dialog>` (`showModal()` traps focus, Escape closes, background inert) or `role=\"dialog\" aria-modal=\"true\"` + `inert` on the app root; move focus to the heading on open, return it to the trigger on close; announce score changes via `aria-live=\"polite\"`, and the countdown via a throttled live region (every 5 s, then each of the last 3). [MDN aria-modal](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-modal) · [accessibility.build](https://accessibility.build/guides/accessible-dialog)"
+        },
+        {
+          "type": "bullet",
+          "text": "Contrast on glass/dark: check text on glass panels at ≥4.5:1 in oklch; provide a high-contrast/solid-surface toggle."
+        }
+      ]
+    },
+    {
+      "id": "advisor-loop1",
+      "title": "Advisor loop 1",
+      "source": "/product/gamification/advisor-loop1.md",
+      "nodes": [
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "Advisor loop 1 — independent review of the \"Floodlight\" gamification release"
+        },
+        {
+          "type": "paragraph",
+          "text": "**Reviewer:** independent advisor (did not build any of this). **Method:** read the design bible, roadmap and both skills, then walked the running build with Playwright at 390×844 and 1440×900 — Home, Play, Expeditions (atlas → brief → run → finish), Player (incl. the Locker), Vault, Discovery, Collections, the Settings sheet, a full Quick Draw bot duel, a Triple Threat for the between-rounds panel, a five-round Gauntlet, a complete expedition, `/fx-lab` and `/three-lab`, plus light theme and `reducedMotion: 'reduce'` passes. Screenshots were read, not just taken. Code was read where the pixels raised a question."
+        },
+        {
+          "type": "paragraph",
+          "text": "**Gates as found:** `node --test tests/*.test.mjs` → 94/94 pass. Zero horizontal overflow and zero console errors on all five tabs at both widths, dark and light. One console **warning** that turns out to be the single most damaging bug in the release (P0-2)."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Verdict: **FIX FIRST**"
+        },
+        {
+          "type": "paragraph",
+          "text": "This is a genuinely good build. The timing contract is intact and I could verify every clause of it. The honesty layer is the best I have reviewed in a gamified product — the bot's actual algorithm is printed on the lobby card, receipts distinguish \"Browser-reported time\" from \"Scheduled bot time\", and the match margin is computed from real rounds. The Play funnel is two taps. The answer buttons carry shape + colour + position + keyboard hint + a screen-reader shape name."
+        },
+        {
+          "type": "paragraph",
+          "text": "It is not shippable yet, because **the reward layer — the thing this whole release exists to add — is broken in the two places a player actually meets it**: full-screen ceremonies land on top of the correct-answer reveal, and none of them render the 3D medal they were built around. Neither is visible in code review or in the test suite; both are obvious the moment you play a round."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "The three biggest wins to make"
+        },
+        {
+          "type": "bullet",
+          "text": "**Let the reveal finish before anything celebrates, and stop stacking modals.** A five-round bot match currently opens **six** full-screen ceremonies, two of them while the question card is still on screen showing the result. Gate ceremonies on the room screen's reveal hold, and collapse a burst of rewards into one summary ceremony plus toasts."
+        },
+        {
+          "type": "bullet",
+          "text": "**Move `useProgressionFeedback` inside `<FxProvider>`.** It sits one level above the provider, so `useJuice()` silently falls back to the raw event bus, which drops the `slot` prop. Every level-up, achievement, rank-up and streak ceremony therefore renders a flat lucide icon instead of the `LazyRewardMedal` — while the expedition stamp ceremony, which *is* inside the provider, renders its medal perfectly. One import move restores the entire R3F ceremony layer (G20)."
+        },
+        {
+          "type": "bullet",
+          "text": "**Unblock the expedition run on a phone.** After every answer the primary CTA is rendered under the fixed tab bar with 41 of its 54 px covered; a tap at its centre activates the **Play** tab and abandons the run. Expeditions are unusable at 390 px today."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Scores (1–5)"
+        },
+        {
+          "type": "table",
+          "rows": [
+            [
+              "Screen",
+              "Hook",
+              "Feedback",
+              "Progress",
+              "Autonomy",
+              "Honesty",
+              "Craft",
+              "Mobile",
+              "A11y",
+              "Perf",
+              "Timing",
+              "Avg"
+            ],
+            [
+              "---",
+              ":--:",
+              ":--:",
+              ":--:",
+              ":--:",
+              ":--:",
+              ":--:",
+              ":--:",
+              ":--:",
+              ":--:",
+              ":--:",
+              ":--:"
+            ],
+            [
+              "**Home** (Arena Hub)",
+              "5",
+              "3",
+              "4",
+              "4",
+              "5",
+              "3",
+              "4",
+              "4",
+              "4",
+              "—",
+              "**4.0**"
+            ],
+            [
+              "**Play** (Duels)",
+              "5",
+              "4",
+              "3",
+              "5",
+              "5",
+              "4",
+              "3",
+              "4",
+              "5",
+              "—",
+              "**4.2**"
+            ],
+            [
+              "**Room** (live match)",
+              "5",
+              "3",
+              "4",
+              "4",
+              "5",
+              "4",
+              "4",
+              "4",
+              "5",
+              "**5**",
+              "**4.3**"
+            ],
+            [
+              "**Expeditions**",
+              "4",
+              "4",
+              "4",
+              "5",
+              "5",
+              "3",
+              "**2**",
+              "3",
+              "5",
+              "—",
+              "**3.9**"
+            ],
+            [
+              "**Player** (+ Locker)",
+              "**2**",
+              "3",
+              "3",
+              "5",
+              "5",
+              "**2**",
+              "3",
+              "3",
+              "3",
+              "—",
+              "**3.2**"
+            ],
+            [
+              "**Vault** (+ Discovery, Collections)",
+              "4",
+              "3",
+              "3",
+              "5",
+              "4",
+              "3",
+              "4",
+              "3",
+              "5",
+              "—",
+              "**3.8**"
+            ],
+            [
+              "**Settings sheet**",
+              "4",
+              "4",
+              "—",
+              "5",
+              "**3**",
+              "3",
+              "4",
+              "4",
+              "5",
+              "—",
+              "**4.0**"
+            ]
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Criteria: 1 Hook · 2 Feedback · 3 Progress · 4 Autonomy & ownership · 5 Honesty · 6 Craft · 7 Mobile · 8 A11y · 9 Performance · 10 Timing contract (scored only where a timed surface exists)."
+        },
+        {
+          "type": "paragraph",
+          "text": "**Timing contract: 5/5, verified in the DOM.** The question card mounts `visibility: hidden` and is revealed by the double-rAF marker in `app/arena.tsx:421-441`; `.fd-track.timer-track` and its fill both carry `transition: none` (`app/screens/room/room.css:672-687`), as does the speed bar; `.fd-qcard` sets `animation: none; transform: none`; option order is a plain `question.options.map` with stable keys and no shuffle; `data-state` is `'live'` for every option until `rd.result` exists. The only canvas in a room is the Canvas2D particle layer, whose rAF loop is only scheduled while live particles exist — no WebGL context is created in a room. **This part of the release is exemplary; do not let the fixes below regress it.**"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Prioritised fix list"
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "P0 — blocks ship"
+        },
+        {
+          "type": "paragraph",
+          "text": "**P0-1 · Progression ceremonies and toasts fire on top of the correct-answer reveal**"
+        },
+        {
+          "type": "bullet",
+          "text": "**Where:** `app/arena.tsx:97-102` (the `quiet` gate) against `app/screens/room-screen.tsx:23,60-70` (`REVEAL_MS = 1900`, `revealing`)."
+        },
+        {
+          "type": "bullet",
+          "text": "**Why:** Design bible §6 and the comment on the gate itself both say ceremonies must be held through the live round *including the reveal window*; the room screen keeps the question stage mounted for 1.9 s after a result precisely so the correct answer, the XP float and the burst land on the button that was pressed. The gate is `!!room && !room.settled && room.phase !== 'between'`, and the server flips `settled`/`phase` on the same tick the result arrives — so the gate opens *before* the reveal hold ends. Measured: `stage=question` with a `BRONZE BADGE` ceremony already open at +300 ms after the answer, and a `LEVEL UP` ceremony over the reveal at +900 ms. The player never sees which answer was right. Game Feel: the single most important feedback moment in the product is covered by a modal."
+        },
+        {
+          "type": "bullet",
+          "text": "**How:** have the room expose its reveal state (it already computes `revealing`) and feed it into the quiet gate — e.g. lift `holdId`/`revealing` into the controller and use `ceremonies: !!room && (revealing || (!room.settled && room.phase !== 'between'))`, with the same term added to `toasts`. Add a test that a diff produced during a round does not flush until `revealing` is false."
+        },
+        {
+          "type": "paragraph",
+          "text": "**P0-2 · `useProgressionFeedback` runs outside `<FxProvider>`, so every ceremony loses its 3D medal**"
+        },
+        {
+          "type": "bullet",
+          "text": "**Where:** `app/arena.tsx:18,97` calls the hook; `app/shell/app-shell.tsx` mounts `<FxProvider>` *inside* `AppShell`, which `arena.tsx` renders. `components/fx/use-juice.ts:227-241` is the fallback path; `app/screens/use-progression-feedback.tsx:29,56-64` passes `slot: <LazyRewardMedal …/>`."
+        },
+        {
+          "type": "bullet",
+          "text": "**Why:** with no context, `juice.ceremony()` takes the bus path, which rebuilds the payload from `{kind, kicker, title, subtitle, rewards, continueLabel, silent}` and **drops `slot`**. Confirmed three ways: the console logs `[fx] useJuice(): no <FxProvider> found`; the open ceremony's hero contains `lucide-chevrons-up` and `canvases: 0` even after 4 s; and in the same session the expedition stamp ceremony (raised from `app/screens/expeditions/finish.tsx`, which *is* inside the provider) reports `canvases: 1` and shows its medal. So roadmap item G20 (Reward Medal in ceremonies) ships dead for level-ups, achievements, rank-ups and streak milestones — every reward except stamps. `stringIcon` silently drops non-string toast icons on the same path."
+        },
+        {
+          "type": "bullet",
+          "text": "**How:** move `<FxProvider>` up so it wraps `arena.tsx`'s tree (or move the `useProgressionFeedback` call into a small component rendered as a child of `AppShell`). Then make the fallback loud: in dev, `console.error` and throw in tests rather than `console.warn` once, so this class of bug fails a gate."
+        },
+        {
+          "type": "paragraph",
+          "text": "**P0-3 · Expedition run: the primary CTA renders under the fixed bottom tab bar on phones**"
+        },
+        {
+          "type": "bullet",
+          "text": "**Where:** `app/screens/expeditions/run.tsx:108-117` (`scrollIntoView({ block: 'nearest' })`) and `:313-330` (`.fd-exp-next`); nav height is `--nav-h: 56px`."
+        },
+        {
+          "type": "bullet",
+          "text": "**Why:** measured at 390×844 after answering card 1: the CTA occupies y 775–829 and the nav occupies y 788–844 — **41 of 54 px covered**. `document.elementFromPoint` at the button's centre returns a nav tab icon, and a tap there navigates to **Play**, destroying the run. Reproduced every time on phone; the same flow completes all six cards at 1440×900, where there is no bottom bar. Design bible §5: \"side gutters 16px minimum; no horizontal scroll ever\" and thumb-zone CTAs — a CTA you cannot press is worse than one off-screen. The code comment claims it brings the Next button \"into the thumb zone\"."
+        },
+        {
+          "type": "bullet",
+          "text": "**How:** scroll the CTA (not the feedback block) into view with `block: 'end'`, and give `.fd-exp-next` `scroll-margin-bottom: calc(var(--nav-h) + var(--gutter) + env(safe-area-inset-bottom))`. Also raise the button to `min-height: 56px` (it is 54 px) to match the bible's control floor."
+        },
+        {
+          "type": "paragraph",
+          "text": "**P0-4 · Ceremony pile-up: six full-screen modals in one five-round bot match**"
+        },
+        {
+          "type": "bullet",
+          "text": "**Where:** `app/screens/use-progression-feedback.tsx:53-124` (one `ceremonyQueue` push per event) and `components/fx/fx-provider.tsx:92-105` (queue, one at a time)."
+        },
+        {
+          "type": "bullet",
+          "text": "**Why:** a single Gauntlet against Lucky Guess produced, in order: `Night owl` badge, `Level 2`, then at the finish `Level 3`, `First duel`, `First win`, `Speed demon` — four of them stacked back to back *before the match result is visible at all*. Each needs its own Continue tap. Two of the six landed mid-reveal (P0-1). Octalysis/Game Feel: reward salience collapses when rewards queue; the match verdict, XP count-up and rank bar — the actual payoff — are buried under four modals. Worse, the level ceremonies are near-identical: `xpToNext` (`lib/progression.mjs:65`) and the 5-level title band (`:83`) mean a new player levels 1→4 in one session and reads \"Rookie · keep the floodlights on\" three times."
+        },
+        {
+          "type": "bullet",
+          "text": "**How:** cap ceremonies at one per \"moment\". Fire a ceremony only for the headline event (highest level reached, or a gold badge) and render the rest as reward chips inside that one card (`CeremonyOptions.rewards` already supports this) or as toasts. Coalesce multi-level gains into a single \"Level 2 → 4\" ceremony — `diff.leveledUp` already carries `{from, to}`."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "P1 — before advisor loop 2"
+        },
+        {
+          "type": "paragraph",
+          "text": "**P1-1 · Player XP card says \"into level 1\" when you are working toward level 2** `app/screens/player/level-card.tsx:86` renders `{into} / {toNext} into level {level.level}` → \"10 / 80 into level 1\". Home says \"XP to level 2 — 10/80\" for the same state. Use `level.level + 1`. While there, drop one of the three restatements of the same number (\"10 XP\", \"10/80 into level…\", \"70 XP to level 2\", \"13%\" all in one card)."
+        },
+        {
+          "type": "paragraph",
+          "text": "**P1-2 · Light theme turns every accent into a fill colour it was not designed for** `app/theme/tokens.css:94-150` drops all accents to ~58 % lightness so they pass as *text*. But the same token paints surfaces: the \"Play now\" CTA becomes a dark olive slab with white ink, the timer track becomes olive, `--gold` becomes brown so answer option 3's chip no longer reads as gold and sits too close to option 1's ember. Design bible §5 explicitly says light theme should \"keep accents\". Split the token: keep `--volt` etc. bright for fills and add `--volt-text` / `--gold-text` (the current dark values) for text-on-light, then audit which of the two each rule wants. Also check the Home hero: the dark poster/orb composite reads as a dark rectangle pasted onto a light page."
+        },
+        {
+          "type": "paragraph",
+          "text": "**P1-3 · On desktop, the progression toast covers the exact topbar chips it is reporting** `components/fx/fx.css:56-65` pins the toast stack to `top: 20px; right: 20px`; the topbar is 0–60 px and the toast is 20–80 px with an opaque background. A \"Day 1 streak +10 XP\" toast therefore hides the streak flame, gems and level ring for its whole lifetime. Move the stack below the topbar (`top: calc(var(--topbar-h) + 12px)`), or anchor it bottom-right on desktop too."
+        },
+        {
+          "type": "paragraph",
+          "text": "**P1-4 · Play: the sticky launch bar and the tab bar cover \"Pick your subject\"** At 390 px, `elementFromPoint` on the first topic chips returns `fd-launch-btn` / `fd-nav-btn` (`app/screens/play/play.css`, `launch-panel`). The chips are reachable after scrolling, but the section heading and first row are occluded at the default position. Add bottom padding to the Play column equal to the launch bar height + `--nav-h`, the way the other four tabs already do."
+        },
+        {
+          "type": "paragraph",
+          "text": "**P1-5 · The between-rounds \"moment to learn\" puts the CTA between the headline and the fact** `app/screens/room-screen.tsx:74-101` + `RoundReview`. The panel says \"The explanation is right below. Take it in, then start the next round\", but at 390 px the sticky \"Start round 2\" bar sits over the rival's receipt and the explanation card is a full screen below it. Either move the fact above the receipts so it is the first thing under the headline, or make the CTA non-sticky on this phase."
+        },
+        {
+          "type": "paragraph",
+          "text": "**P1-6 · Match finish: \"Play again\" is below the fold** `app/rivalry-widgets.tsx:248-260`. At 390×844 only ~19 px of the primary CTA is visible under four stat tiles and a note. This is the highest-intent moment in the loop (Hooked: the variable reward is the trigger for the next action). Move the action row directly under the verdict/score block, or make it a sticky bar for the finish stage."
+        },
+        {
+          "type": "paragraph",
+          "text": "**P1-7 · Duplicate coins disclaimer on the finish screen** `app/rivalry-widgets.tsx:225-245`: the COINS tile says \"Free simulated coins. No monetary value.\" and `v.detail` immediately under it says \"Free match. No coins spent.\" Bible §9: one disclaimer slot per screen. Keep the tile, drop the repeat from the verdict detail."
+        },
+        {
+          "type": "paragraph",
+          "text": "**P1-8 · Broken copy in the Vault header** `app/journal.tsx:320`: \"Activity is not measured mastery.\" Intended, presumably, \"Activity is not a measure of mastery.\" It is the first paragraph on the screen."
+        },
+        {
+          "type": "paragraph",
+          "text": "**P1-9 · The Settings sheet describes storage using names the product no longer uses** `app/shell/settings-sheet.tsx:165`: \"Expedition progress and stamps, **journal**, saved question issues, **passport points**, **missions** and **card finishes** stay in this browser.\" The UI calls these Vault, XP, quests and Locker frames. This is the one place a player goes to understand what is kept on their device, so the drift is an honesty problem, not just a naming one. Rewrite in current names; also rename the \"Showroom artwork\" toggle, which points at a screen that is not in the nav."
+        },
+        {
+          "type": "paragraph",
+          "text": "**P1-10 · Expedition brief: the stamp line breaks into a three-line column** `app/screens/expeditions/brief.tsx:55-58` inside `.fd-exp-contract` (`app/expeditions.css:808-819`), which is `display: flex`. The `<strong>{route.stamp}</strong>` becomes its own flex item and collapses to a narrow column (\"World / Cup / stories\") with \"stamp.\" stranded beside it. Wrap the sentence in a single `<span>`, or use `display: grid; grid-template-columns: auto 1fr`."
+        },
+        {
+          "type": "paragraph",
+          "text": "**P1-11 · The achievements gallery is thirty identical grey discs with no progress** `app/screens/player/*` + `lib/progression.mjs:380-417`. Locked badges all render the same silhouette; tier is text only (`BRONZE · +50 XP · +10 GEMS`), and nothing shows how close you are (\"Win 200 duels\" reads the same at 0 and at 199). Octalysis drive 2 / goal-gradient: show tier in the silhouette (bronze / silver / gold rim), and add a progress bar to the countable ones — the predicate closures already have the profile, so most can expose `current/target` cheaply. Leave the two hidden ones as `???`."
+        },
+        {
+          "type": "paragraph",
+          "text": "**P1-12 · Tap targets under the 44 px the bible claims (WCAG 2.5.8)** Measured at 390 px: Expeditions filter segments `.fd-exp-seg-btn` 116×**40**; Player chips `.fd-chip` 68×**36**, 105×36, 98×36; `.fd-cos-action` 178×**40**; the footer \"Research & roadmap\" link 115×**19** on every screen. Raise to 44 px minimum (padding, not font size)."
+        },
+        {
+          "type": "paragraph",
+          "text": "**P1-13 · Expedition and Discovery answers lack the a11y and keyboard affordances the room has** `app/screens/expeditions/run.tsx:217-244` and `app/discovery.tsx`: the shape glyph is there, but there is no `<span class=\"fd-sr\">Triangle, option 1</span>` twin and no `1–4` `kbd` hint — both of which the room provides (`app/screens/room/question-stage.tsx:196-220`). A screen-reader user gets colour-and-shape coding they cannot perceive on two of the three answering surfaces. Extract the room's answer button into a shared component and use it on all three."
+        },
+        {
+          "type": "paragraph",
+          "text": "**P1-14 · The expedition economy pays more for clicking through than for playing well** `lib/progression.mjs:30-35`: `expeditionComplete: 100` + `expeditionStamp: 150` + `5/point`. Observed: **+260 XP for answering 1 of 6 correctly** — more than double a Gauntlet *win* (`matchWin.gauntlet: 120`). Combined with `xpToNext` (80, 234, 436, 686…) a new player reaches level 3–4 in ten minutes without knowing anything, then hits a wall. SDT: competence feedback that does not track competence stops meaning anything. Rebalance so completion is a modest floor and score/boldness carries the payout, and flatten the first four level steps so the three level-up ceremonies are not all \"Rookie\"."
+        },
+        {
+          "type": "paragraph",
+          "text": "**P1-15 · The Locker downloads the Rapier physics chunk to render an empty bowl** `app/screens/player/locker.tsx:117-131` mounts `LazyGemVault` whenever the disclosure opens, including at `gems === 0`. That is ~2.2 MB (decision record §10) to show nothing. Gate on `gems > 0` and render `GemVaultFallback` (or a static poster) otherwise. Also, cosmetics are bought blind — the preview is a small coloured ring with no live preview on the player card; add one before asking for 60 gems."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "P2 — backlog"
+        },
+        {
+          "type": "bullet",
+          "text": "**Desktop rail is 224 px with labels**, not the specified 76 px icon rail that expands at 1200 px (`app/shell/shell.css`, bible §5). It also leaves ~3,900 px of empty column on Player."
+        },
+        {
+          "type": "bullet",
+          "text": "**Home player card has ~100 px of dead space** between \"Level 1 · Rookie\" and the XP bar at 1440 px — the card stretches to the hero's height and the content does not redistribute."
+        },
+        {
+          "type": "bullet",
+          "text": "**The hero poster stays visible behind the orb** (`app/screens/home/hero-stage.tsx:17-24`): the WebGL core floats over a dark basketball photograph, so two hero images compete. Fade the poster out once `onReady` fires."
+        },
+        {
+          "type": "bullet",
+          "text": "**Route maps draw five waypoints for three chapters** (Expeditions atlas cards) — the graphic contradicts \"Three chapters. Six cards.\" right beside it."
+        },
+        {
+          "type": "bullet",
+          "text": "**Chapter labels truncate on desktop** (\"BEYOND THE HIG…\", \"OLD-SCHOOL DET…\") where there is room."
+        },
+        {
+          "type": "bullet",
+          "text": "**Six different back-button labels** for the same gesture: \"Home\", \"All expeditions\", \"Pause & browse\", \"Leave\", \"Back to play.\", \"Back to Play\". Pick one pattern; on phone, drop the redundant ones entirely (the tab bar is right there) — on Expeditions the \"← Home\" button takes the top 60 px of the screen."
+        },
+        {
+          "type": "bullet",
+          "text": "**Five names for reward tracks** across two screens: \"Daily quests\" (Home), \"Side quests & finishes\" and \"Continue mission\" (Player), \"Achievements\", \"Card finishes\". Bible §\"Copy tone\": same words everywhere."
+        },
+        {
+          "type": "bullet",
+          "text": "**Score and timer are never announced.** `.fd-clock` and `.fd-speed-row` are `aria-hidden`, the HUD score has no live region, and the only `aria-live=\"polite\"` region (`app/arena.tsx:822`) carries errors only. Bible §9 asks for score via `aria-live`. Announce the score on change, and the clock at 10/5/3 s."
+        },
+        {
+          "type": "bullet",
+          "text": "**Expeditions and Vault card titles are not headings** — the atlas has exactly one heading for nine route cards, the Vault two for a long card list. Make card titles `h3`."
+        },
+        {
+          "type": "bullet",
+          "text": "**Combo has no hit-stop and does not sit next to the answers.** Bible §4: \"the combo meter sits next to the answers; at 3 and 5 the screen hit-stops 80 ms and bursts.\" Today it is a HUD chip (`app/rivalry-widgets.tsx:109-114`) and `question-stage.tsx:130-135` fires a ring pulse, cue and haptic but no hit-stop."
+        },
+        {
+          "type": "bullet",
+          "text": "**Player is 8,096 px tall at 390 px** with no section nav or collapse. Consider tabs (Record / Mastery / Badges / Stamps / Locker)."
+        },
+        {
+          "type": "bullet",
+          "text": "**Two stamp cases on Player**: an unlabelled 3D case (which renders an empty box at 0/9) directly above the 2D stamp grid that carries the actual information. Keep one."
+        },
+        {
+          "type": "bullet",
+          "text": "**Vault fact cards reveal the answer immediately**, which undercuts the recall framing; consider blurring it behind a tap on the default tab."
+        },
+        {
+          "type": "bullet",
+          "text": "**Raw hex in `app/screens/player/player.css`** (`--tier-bronze/silver/platinum/diamond`, `--fd-accent: #ff8a6b`, `#11151c/#05070a` gradients) and `accent=\"#ffc83d\"` in `locker.tsx:124`. Promote the tier ramp into `app/theme/tokens.css`."
+        },
+        {
+          "type": "bullet",
+          "text": "**Quest cards lead with a bare numeral** (\"0\") that reads as an orphan until you have progress; make it a ring or `0/1`."
+        },
+        {
+          "type": "bullet",
+          "text": "**Topic label truncates in the room** (\"GREEN BAY PACK…\") — allow two lines or shorten the subtopic."
+        },
+        {
+          "type": "bullet",
+          "text": "**The 54-question sample bank skews hard.** Five consecutive facts in my Vault were EXPERT/EXTREME; a new player loses most rounds to a 25 % random bot, which reads as unfair rather than difficult. Worth a difficulty ramp for the first N rounds (the difficulty field is already plumbed)."
+        },
+        {
+          "type": "bullet",
+          "text": "**`.fd-exp-answer` has a staggered entrance animation** (`animationDelay: i*45ms`) while the room's does not. Correct per the timing contract, but it makes the two surfaces feel like different products; make the difference deliberate rather than incidental."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "What is genuinely good — keep it"
+        },
+        {
+          "type": "bullet",
+          "text": "**The timing contract is real, and it is defended in code and in comments.** Double-rAF reveal marker, `visibility: hidden` mount, `transition: none` on both the timer track and the speed bar, `animation: none; transform: none` on the card, fixed option order, correctness styling that cannot exist before `rd.result`, no WebGL in a room and a particle loop that only runs when particles exist. The `REVEAL_MS` hold in `room-screen.tsx` — keeping the card mounted so the burst lands on the button that was pressed — is a genuinely thoughtful piece of game feel."
+        },
+        {
+          "type": "bullet",
+          "text": "**The honesty layer is exceptional.** \"Random 25% guesser · answers after 1–14.5s and never reacts to yours\" on the lobby card; \"Browser-reported time\" vs \"Scheduled bot time\" on receipts; \"Rank points are counted on this device and never verify skill\"; \"Only today and your last credited day are stored, so earlier dots stay hollow\" under a streak calendar that will never fill; \"Scores describe local practice; stamps do not certify expertise\"; Wild Rounds announced in the countdown, never after the fact; a margin line computed from real rounds. Nothing here is fabricated presence and nothing is oversold."
+        },
+        {
+          "type": "bullet",
+          "text": "**Answer coding.** Triangle/diamond/circle/square × ember/cyan/gold/magenta × fixed position × `1–4` keyboard hint × an `fd-sr` shape name, plus a check/cross icon on the result. Four redundant channels; colour is never load-bearing alone."
+        },
+        {
+          "type": "bullet",
+          "text": "**The Play funnel.** Format → opponent → subject → one sticky launch control, with the reward preview (\"Win: +120 XP · +40 RP\") on the card you are choosing. Two taps from lobby to question, exactly as the bible promised."
+        },
+        {
+          "type": "bullet",
+          "text": "**The room's status line** carries the whole XP breakdown as text — \"+65 XP · speed +15 · ×1.5 combo\" — which is simultaneously the visual twin for the audio cue and the accessible announcement. Focus moving to it on lock (instead of falling to `<body>`) is a nice catch."
+        },
+        {
+          "type": "bullet",
+          "text": "**Reduced motion is genuinely respected**: no confetti, no sunburst rays, 3D poses a static frame, and the `scrollIntoView` behaviour switches to `auto`. Three independent controls (OS, in-app Effects, sound/haptics) rather than one blunt switch."
+        },
+        {
+          "type": "bullet",
+          "text": "**The Knowledge Core hero and the stamp medal** are lovely, and the Rapier gem tray genuinely delights once it has gems in it. The `SceneFrame` wrapper — WebGL probe, dpr clamp, IntersectionObserver pause, error boundary to fallback, context disposal on unmount — is the right abstraction."
+        },
+        {
+          "type": "bullet",
+          "text": "**Autonomy is well protected.** Nothing is auto-spent, the Locker states its price and its lock reason, export and reset are one tap from Settings, and there is no dark pattern anywhere in the funnel."
+        },
+        {
+          "type": "bullet",
+          "text": "**Craft floor:** zero horizontal overflow and zero console errors at both widths in both themes, one `h1` per screen, no duplicate ids, no missing `alt`, a visible 3 px volt focus ring with offset, and a ceremony dialog with a real focus trap, Escape, scroll lock and focus restore."
+        }
+      ]
+    },
+    {
+      "id": "advisor-loop2",
+      "title": "Advisor loop 2",
+      "source": "/product/gamification/advisor-loop2.md",
+      "nodes": [
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "Advisor loop 2 — re-review of the \"Floodlight\" gamification release"
+        },
+        {
+          "type": "paragraph",
+          "text": "**Reviewer:** the same independent advisor as loop 1 (did not build any of this). **Scope:** verify every loop-1 P0 and P1 fix **in the running app**, then hunt for what the fix wave broke or what loop 1 missed. **Method:** read `advisor-loop1.md`, the design bible, the advisor skill and the two fix commits (`9334d2a` P0s, `5221371` P1s), then drove `http://localhost:5173` with Playwright at **390×844** and **1440×900**, in **dark and light**, and with **`reducedMotion: 'reduce'`**. Two complete bot duels (Quick Draw, Triple Threat), two complete expeditions, the five tabs, the Settings sheet, the Locker and the ceremony overlay. Measurements are DOM/geometry probes (`getBoundingClientRect`, `getComputedStyle`, `document.elementFromPoint`, real `mouse.click` at measured coordinates, per-frame `requestAnimationFrame` sampling), plus screenshots that were **read, not just taken**."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Verdict: **FIX FIRST**"
+        },
+        {
+          "type": "paragraph",
+          "text": "All four loop-1 P0s are genuinely fixed, and 14 of the 15 loop-1 P1s are fixed or materially improved. The timing contract survived a 30-file CSS-and-component rewrite intact — I re-verified every clause of it at runtime and it is still exemplary. The light theme is now a real light theme. The reward burst is now one ceremony plus toasts instead of six modals. This is a much better build than loop 1."
+        },
+        {
+          "type": "paragraph",
+          "text": "It still cannot ship, because **fixing P0-2 exposed a worse bug in the same component**: the 3D medal now renders — at almost three times the size of the slot it was given. It covers the ceremony's title, covers the reward chips, and sits on top of the **Continue** button, where it eats the tap. A player who levels up sees a giant coin, cannot read what level they reached, and taps Continue in the middle with nothing happening. This is the release's centrepiece screen and it is broken on both viewports, in both themes, and with reduced motion on."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "The three biggest wins to make"
+        },
+        {
+          "type": "bullet",
+          "text": "**Give the ceremony medal the height of its slot, and stop it eating the tap.** `.fx-ceremony-hero` is `132 × 132` (`components/fx/fx.css:246-249`). `RewardMedal` defaults to `height = 380` (`components/three/reward-medal.tsx:404`) and `app/screens/use-progression-feedback.tsx:69,98,114,137` passes no `height` — so the canvas measures **135 × 384**. `finish.tsx:89` passes `height={132}`, which is exactly why the stamp ceremony looked right in loop 1 and the level ceremony did not once it started rendering."
+        },
+        {
+          "type": "bullet",
+          "text": "**Extend the ceremony quiet gate beyond rooms.** A \"LEVEL UP\" ceremony still opens on top of a live expedition card. Its body scroll lock also defeats the new Next-button scroll, which is the one way the P0-3 fix still fails."
+        },
+        {
+          "type": "bullet",
+          "text": "**Add the gate test loop 1 asked for.** `tests/` has no test that a progression diff raised during a round does not flush, and none that a ceremony's slot survives the provider. Both P0s of loop 1 were invisible to 94 passing tests; so is the new one."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Scores (1–5) — loop 2, with loop 1 in brackets"
+        },
+        {
+          "type": "table",
+          "rows": [
+            [
+              "Screen",
+              "Hook",
+              "Feedback",
+              "Progress",
+              "Autonomy",
+              "Honesty",
+              "Craft",
+              "Mobile",
+              "A11y",
+              "Perf",
+              "Timing",
+              "Avg"
+            ],
+            [
+              "---",
+              ":--:",
+              ":--:",
+              ":--:",
+              ":--:",
+              ":--:",
+              ":--:",
+              ":--:",
+              ":--:",
+              ":--:",
+              ":--:",
+              ":--:"
+            ],
+            [
+              "**Home** (Arena Hub)",
+              "5 (5)",
+              "3 (3)",
+              "4 (4)",
+              "4 (4)",
+              "5 (5)",
+              "**4** (3)",
+              "4 (4)",
+              "4 (4)",
+              "4 (4)",
+              "—",
+              "**4.1** (4.0)"
+            ],
+            [
+              "**Play** (Duels)",
+              "5 (5)",
+              "4 (4)",
+              "**4** (3)",
+              "5 (5)",
+              "5 (5)",
+              "4 (4)",
+              "**4** (3)",
+              "4 (4)",
+              "5 (5)",
+              "—",
+              "**4.4** (4.2)"
+            ],
+            [
+              "**Room** (live match)",
+              "5 (5)",
+              "**4** (3)",
+              "4 (4)",
+              "4 (4)",
+              "5 (5)",
+              "4 (4)",
+              "4 (4)",
+              "4 (4)",
+              "5 (5)",
+              "**5** (5)",
+              "**4.4** (4.3)"
+            ],
+            [
+              "**Expeditions**",
+              "4 (4)",
+              "4 (4)",
+              "4 (4)",
+              "5 (5)",
+              "5 (5)",
+              "**4** (3)",
+              "**4** (2)",
+              "**4** (3)",
+              "5 (5)",
+              "—",
+              "**4.3** (3.9)"
+            ],
+            [
+              "**Player** (+ Locker)",
+              "**3** (2)",
+              "3 (3)",
+              "**4** (3)",
+              "5 (5)",
+              "5 (5)",
+              "**3** (2)",
+              "3 (3)",
+              "**4** (3)",
+              "**4** (3)",
+              "—",
+              "**3.8** (3.2)"
+            ],
+            [
+              "**Vault** (+ Discovery)",
+              "4 (4)",
+              "3 (3)",
+              "3 (3)",
+              "5 (5)",
+              "**5** (4)",
+              "**4** (3)",
+              "4 (4)",
+              "**4** (3)",
+              "5 (5)",
+              "—",
+              "**4.1** (3.8)"
+            ],
+            [
+              "**Settings sheet**",
+              "4 (4)",
+              "4 (4)",
+              "—",
+              "5 (5)",
+              "**4** (3)",
+              "3 (3)",
+              "**2** (4)",
+              "**3** (4)",
+              "5 (5)",
+              "—",
+              "**3.8** (4.0)"
+            ],
+            [
+              "**Ceremony overlay** *(new row)*",
+              "3",
+              "**2**",
+              "3",
+              "**2**",
+              "5",
+              "**1**",
+              "**1**",
+              "3",
+              "3",
+              "—",
+              "**2.6**"
+            ]
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Criteria: 1 Hook · 2 Feedback · 3 Progress · 4 Autonomy & ownership · 5 Honesty · 6 Craft · 7 Mobile · 8 A11y · 9 Performance · 10 Timing contract (scored only where a timed surface exists)."
+        },
+        {
+          "type": "paragraph",
+          "text": "The ceremony overlay gets its own row this loop because it is no longer a component detail: it is now the surface every reward lands on, and it is the worst screen in the product. Settings drops because the P1-12 target sweep stopped at the tab screens and never entered the sheet."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Timing contract: still 5/5, re-verified at runtime"
+        },
+        {
+          "type": "paragraph",
+          "text": "Every clause, measured in the running app rather than read in the source:"
+        },
+        {
+          "type": "table",
+          "rows": [
+            [
+              "Clause",
+              "Measurement"
+            ],
+            [
+              "Hidden mount",
+              "Per-frame sampling of `.fd-qcard` caught it at `visibility: hidden` for the first **2 frames (≈19 ms)**, then `visible` — the double-rAF marker in `app/arena.tsx:415-435` driving the inline style at `question-stage.tsx:165`."
+            ],
+            [
+              "No entrance animation",
+              "`.fd-qcard` `animationName: none`, `transform: none`, `transitionDuration: 0s`."
+            ],
+            [
+              "Timer track",
+              "`.fd-track.timer-track` and its fill: `transitionProperty: none`, `transitionDuration: 0s`. Speed-bar fill `.fd-speed > span`: `transitionProperty: none`."
+            ],
+            [
+              "Fixed option order",
+              "Option text read in DOM order across rounds, `data-state` `live` on all four until a result exists; `animationName: none`, `animationDelay: 0s` on every option."
+            ],
+            [
+              "No WebGL in a room",
+              "Max canvases while a question was on screen: **1**, and `getContext('webgl2'‖'webgl')` on it: **false** (the Canvas2D particle layer). Max WebGL contexts in a room across two full matches: **0**."
+            ],
+            [
+              "Click not deferred",
+              "Real click → buttons `disabled` and the status line reading \"Received. Your answer is sealed.\" in **17 ms** (one frame)."
+            ],
+            [
+              "Answer height",
+              "56 px on all four options at 390 px."
+            ]
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "**Do not let the ceremony fix regress this.** The room's DOM is byte-for-byte what it was; the shared `AnswerButton` refactor (`app/screens/answer-button.tsx`) kept that promise and I could not find a single regression in the room."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Loop-1 P0s — all four fixed"
+        },
+        {
+          "type": "table",
+          "rows": [
+            [
+              "Item",
+              "Status",
+              "Evidence in the running app"
+            ],
+            [
+              "**P0-1** ceremonies/toasts over the reveal",
+              "**Fixed**",
+              "Gate is now `ceremonies: !!room` (`app/arena.tsx:788`), i.e. held for the *whole* room rather than only the reveal window. Quick Draw: **0** ceremonies in-room, **0** over a question, **0** toasts while a question was live. Triple Threat (3 rounds): the same, **0/0/0**."
+            ],
+            [
+              "**P0-2** `useProgressionFeedback` outside `<FxProvider>`",
+              "**Fixed**",
+              "`AppShell` now takes an `effects` slot rendered inside the provider (`app/shell/app-shell.tsx:21-23,55-58`) and `arena.tsx` passes `<ProgressionFeedback>`. The open ceremony contains **1 canvas, 132 × 378, `getContext('webgl2') === true`, `data-scene-frame=\"ready\"`** — a real 3D medal, not a lucide icon. No `[fx] useJuice(): no <FxProvider> found` warning anywhere. *(But see P0-A: the medal that now renders is the new bug.)*"
+            ],
+            [
+              "**P0-3** expedition CTA under the tab bar",
+              "**Fixed, with one exception**",
+              "`scroll-margin-bottom: calc(var(--nav-h) + var(--gutter) + env(safe-area-inset-bottom))` (`app/expeditions.css:1924-1928`) plus `block: 'end'` (`run.tsx:110-121`). Measured on every card of a six-card run at 390×844: CTA settles at **y 716–772**, nav top **788**, **0 px covered**, and `elementFromPoint` at the button's centre returns `.fd-exp-next` itself. Exception in P0-B below."
+            ],
+            [
+              "**P0-4** six modals per match",
+              "**Fixed**",
+              "`ceremonyQueue` is ranked `level > badge > rank > streak` and only the headline opens; the rest become silent toasts (`use-progression-feedback.tsx:168-176`). Measured after a Quick Draw and after a Triple Threat: **exactly 1 ceremony + 4 toasts** each (\"Play any duel\", \"First duel\", \"First win\", \"Speed demon\")."
+            ]
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "P0 — blocks ship"
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "P0-A · The 3D medal is 3× its slot: it hides the ceremony title and swallows the Continue tap"
+        },
+        {
+          "type": "bullet",
+          "text": "**Where:** `components/fx/fx.css:246-249` (`.fx-ceremony-hero` is `width: 132px; height: 132px; display: grid; place-items: center`, no `overflow`), `components/three/reward-medal.tsx:404` (`height = 380` default), `app/screens/use-progression-feedback.tsx:69, 98, 114, 137` (four `LazyRewardMedal` slots, none passing `height`)."
+        },
+        {
+          "type": "bullet",
+          "text": "**Why it matters:** measured on the LEVEL UP ceremony at **1440×900**: hero box `132 px` tall, scene wrapper `380 px`, canvas `135 × 384`. Overlap with the title **28 px (100 % of it)**, with the reward chips **36 px (100 %)**, with the Continue button **48 px (100 %)**. `document.elementFromPoint` at the Continue button's centre returns **`CANVAS`**, and a real `mouse.click` there **does not close the ceremony**; a click 18 px in from the button's left edge does. Identical at **390×844**, and identical with `reducedMotion: 'reduce'` (the medal poses a static frame — at the same wrong size). Reading the screenshot: the words \"Level 2\" are completely invisible behind the coin, and the subtitle reads \"Rookie · kee———odlights on\". Design bible §6 asks for \"a full-screen ceremony with a 3D medal, confetti and **a single Continue button**\"; §9 asks for 4.5:1 text contrast — text hidden behind a canvas has no contrast at all. WCAG 2.5.8 as well: the only control on the dialog is unreachable across the middle 132 px of its 376 px width."
+        },
+        {
+          "type": "bullet",
+          "text": "**Why loop 1 did not see it:** the medal never rendered. The one ceremony that did render its medal in loop 1 — the expedition stamp — is raised from `app/screens/expeditions/finish.tsx:89`, which is the only call site that passes `height={132}`. So the release has always had exactly one correctly sized ceremony and four wrongly sized ones; P0-2 made the other four visible."
+        },
+        {
+          "type": "bullet",
+          "text": "**How:** pass `height={132}` (and drop `size` to match) on all four `LazyRewardMedal` slots in `use-progression-feedback.tsx`; then make the slot defensive so this cannot recur — add `overflow: hidden` and `pointer-events: none` to `.fx-ceremony-hero`, and give `.fx-ceremony-card button` a `position: relative; z-index: 1`. Add a test or a screenshot check that the ceremony's Continue button is the top element at its own centre."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "P0-B · Ceremonies still open on top of a live expedition card, and their scroll lock strands the CTA"
+        },
+        {
+          "type": "bullet",
+          "text": "**Where:** `app/arena.tsx:784-789` — `ceremonies: !!room` covers rooms only; the expedition run is a tab screen, not a room. `components/fx/fx-provider.tsx` `CeremonyDialog` sets `document.body.style.overflow = 'hidden'` for its lifetime."
+        },
+        {
+          "type": "bullet",
+          "text": "**Why:** measured on a six-card expedition at 390×844: after answering card 4 a full-screen **\"LEVEL UP · Level 2\"** ceremony opened with the answered card and its explanation still mounted behind it (`runVisible: true`, `document.body.style.overflow === 'hidden'`). Because the body was locked, the `scrollIntoView` at `run.tsx:110-121` did nothing: the \"Begin chapter 3\" CTA stayed at **y 1127–1181** in an 844 px viewport — 339 px below the fold — with `scrollY` pinned at 0, exactly the P0-3 failure mode. It recovers only after the player finds and taps Continue (which, per P0-A, does not work at the button's centre). Cards 1, 2, 3 and 6 — with no ceremony — all settled correctly at y ≈ 718. This is loop-1 P0-1 on the other answering surface: the bible's rule is that a ceremony never covers the moment a player is learning from, not that it never covers a *room*."
+        },
+        {
+          "type": "bullet",
+          "text": "**How:** make the quiet gate name the surface, not the room — e.g. `ceremonies: !!room || expeditionRunActive`, flushed when the player reaches the finish screen (where the stamp ceremony already lives). While there, re-run the deferred `scrollIntoView` when a ceremony closes."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "P1 — before ship"
+        },
+        {
+          "type": "paragraph",
+          "text": "**P1-A · The ceremony scene never leaves `loading` for the second and later ceremonies of a session.** At the expedition finish, both the LEVEL UP and the STAMP COLLECTED cards held `data-scene-frame=\"loading\"` for the whole of their life (sampled to 3.4 s), with a stale 150 px canvas and **no medal drawn** — the card shows only the flat gradient disc. The first ceremony of a session (after a duel) reached `ready` in ~1.8 s. Observed under software WebGL (SwiftShader), so the timing may differ on a real GPU, but the state machine sticking at `loading` is not a frame-rate artefact. Worth an explicit timeout → `SceneSkeleton`/fallback in `components/three/lazy-scene.tsx` so a stuck scene degrades to the 2D medal instead of an empty disc."
+        },
+        {
+          "type": "paragraph",
+          "text": "**P1-B · The Settings sheet was not part of the P1-12 target sweep.** Measured at 390 px inside `.fd-sheet`: **Close 16 × 16**, four switches **32 × 18**, the Effects segment \"Full\" **132 × 36**, the name field **356 × 36**. The five tab screens are now clean (0 targets under 44 px at 390 px), which makes the sheet the last WCAG 2.5.8 hole — and the 16 × 16 close control is the worst target in the product. `app/shell/settings-sheet.tsx` + the `Switch`/`SheetContent` primitives."
+        },
+        {
+          "type": "paragraph",
+          "text": "**P1-C · The expedition economy is unchanged (loop-1 P1-14, not attempted).** `lib/progression.mjs:30-35` still has `expeditionComplete: 100`, `expeditionStamp: 150`, `expeditionScorePoint: 5`. Measured this loop: **+250 XP for 0 of 6 correct** and **+260 XP for 1 of 6** — still more than double a Gauntlet *win* (`matchWin.gauntlet: 120`). Combined with `xpToNext`, a player who guesses their way through two expeditions is level 3 before they have answered a question correctly, which is precisely why the level-up ceremonies I triggered all read \"Rookie\". SDT: competence feedback that does not track competence stops meaning anything. This was the one loop-1 P1 the fix wave did not touch, and it is the one that most affects what the numbers mean."
+        },
+        {
+          "type": "paragraph",
+          "text": "**P1-D · Play: the sticky launch bar still covers \"Pick your subject\" at the default scroll position.** The fix added `padding-bottom: 84px` to the Play column, so the chips are now reachable — but at `scrollY: 0` on a 390 px phone, `elementFromPoint` on the \"Pick your subject\" heading returns `.fd-launch-btn` and on the first two subject chips returns `.fd-nav-btn`. Loop-1 P1-4 is half fixed: reachability yes, first impression no. Either shorten the format/opponent blocks or let the launch bar collapse to a compact pill once the player scrolls past the opponent picker."
+        },
+        {
+          "type": "paragraph",
+          "text": "**P1-E · The expedition CTA is 54 px, not the 56 px control floor.** `app/expeditions.css:1276-1280` still sets `min-height: 54px` on `.fd-exp-next` while the answer buttons on the same screen are 56 px (measured). Bible §5. One line."
+        },
+        {
+          "type": "paragraph",
+          "text": "**P1-F · Settings storage copy is current but still not the product's vocabulary.** `app/shell/settings-sheet.tsx:160-168` now reads \"your Vault of facts and saved question issues, expedition progress and stamps, XP, gems and activity points, side quests and card finishes\" — the \"journal / passport points / missions\" drift loop 1 flagged is gone. Remaining: \"activity points\", \"side quests\" and \"card finishes\" are not names the UI uses (it says XP, Achievements/Daily quests and Locker frames), and the toggle is now \"Arena object in 3D\", which is clearer but still names nothing a player has seen. This is the screen where a player learns what is kept on their device, so vocabulary here is an honesty question."
+        },
+        {
+          "type": "paragraph",
+          "text": "**P1-G · Still no live region for score or timer.** `app/arena.tsx` exposes two `aria-live=\"polite\"` regions; in a live match both were empty for the whole round and the only content either ever carried was a progression toast. The clock and speed row remain `aria-hidden`. Bible §9 asks for score via `aria-live`. Carried from loop-1 P2 — promoted, because it is now the largest remaining a11y gap after the target sweep landed."
+        },
+        {
+          "type": "paragraph",
+          "text": "**P1-H · No test covers either failure class.** 94 tests pass and none of them would have caught P0-1, P0-2, P0-A or P0-B. Two cheap ones: (a) a progression diff raised while `quiet.ceremonies` is true does not call `juice.ceremony` until the gate opens; (b) a rendered ceremony's Continue button is the element returned by `elementFromPoint` at its own centre."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Loop-1 P1s — item by item"
+        },
+        {
+          "type": "table",
+          "rows": [
+            [
+              "#",
+              "Loop-1 item",
+              "Status",
+              "Evidence"
+            ],
+            [
+              "P1-1",
+              "\"into level 1\"",
+              "**Fixed**",
+              "Player level card reads \"10 XP · **10 / 80 to level 2**\"; the three restatements are down to two."
+            ],
+            [
+              "P1-2",
+              "Light theme kills accents",
+              "**Fixed**",
+              "Tokens split into fill and text (`--volt` `oklch(92% .23 125)` stays vivid; `--volt-text` `oklch(46% .115 125)` for ink). Light \"Play now\" is bright volt with dark ink; the hero is a light surface, not a dark slab. Contrast sweep over the five tabs in light: no confirmed failure."
+            ],
+            [
+              "P1-3",
+              "Desktop toast covers the topbar chips",
+              "**Fixed**",
+              "Topbar 0–60 px, toast 63–121 px, overlap **0 px** at 1440×900."
+            ],
+            [
+              "P1-4",
+              "Launch bar covers the subject picker",
+              "**Partial**",
+              "84 px bottom padding added; chips reachable by scroll, heading and first row still occluded at rest. See P1-D."
+            ],
+            [
+              "P1-5",
+              "CTA between headline and fact",
+              "**Fixed**",
+              "Between-rounds DOM order is now: \"A MOMENT TO LEARN\" → verdict → \"The answer and its explanation are right below\" → question → explanation → \"Here's how it was decided.\" → receipts → CTA."
+            ],
+            [
+              "P1-6",
+              "\"Play again\" below the fold",
+              "**Fixed**",
+              "At 390×844 the primary CTA sits at **y 570–624** of 844, fully visible without scrolling."
+            ],
+            [
+              "P1-7",
+              "Duplicate coins disclaimer",
+              "**Fixed**",
+              "One tile disclaimer (\"Free simulated coins. No monetary value.\"); the verdict detail now reads \"Free play\"."
+            ],
+            [
+              "P1-8",
+              "\"Activity is not measured mastery\"",
+              "**Fixed**",
+              "Now \"Meeting a fact is not the same as knowing it.\""
+            ],
+            [
+              "P1-9",
+              "Settings storage names",
+              "**Mostly**",
+              "See P1-F."
+            ],
+            [
+              "P1-10",
+              "Stamp line breaks into a column",
+              "**Fixed**",
+              "Renders as one sentence: \"Complete six cards, at any score, to collect the World Cup stories stamp.\""
+            ],
+            [
+              "P1-11",
+              "Thirty identical grey discs",
+              "**Fixed**",
+              "30 badges, `data-tier` bronze/silver/gold with **3 distinct rim colours**, and **21 of 30** locked badges now show progress (\"0 / 10 wins\", \"0 / 50 wins\")."
+            ],
+            [
+              "P1-12",
+              "Sub-44 px targets",
+              "**Fixed on the five tabs**, missed in the Settings sheet — see P1-B.",
+              ""
+            ],
+            [
+              "P1-13",
+              "Expedition/Discovery answers lack a11y twins",
+              "**Fixed**",
+              "One shared `app/screens/answer-button.tsx` used by the room, `expeditions/run.tsx:248` and `vault/choices.tsx:74` (Discovery + Recall Lab). Measured on an expedition card: `.fd-sr` twins \"Triangle, option 1\"…\"Square, option 4\", `kbd` hints 1–4, 56 px tall, inline shape SVG. The room's markup is unchanged."
+            ],
+            [
+              "P1-14",
+              "Expedition economy",
+              "**Not attempted** — see P1-C.",
+              ""
+            ],
+            [
+              "P1-15",
+              "Locker downloads Rapier at 0 gems",
+              "**Fixed**",
+              "Opening the Locker at `gems === 0` requests only `gem-vault-fallback`; the physics module is not fetched."
+            ]
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "P2 — backlog (carried and new)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Carried from loop 1, still true:"
+        },
+        {
+          "type": "bullet",
+          "text": "Desktop rail is 224 px with labels at 1440 px (bible: 76 px icon rail that expands **on hover** ≥ 1200)."
+        },
+        {
+          "type": "bullet",
+          "text": "Home player card still has ~100 px of dead space between \"Level 1 · Rookie\" and the XP bar at 1440 px."
+        },
+        {
+          "type": "bullet",
+          "text": "The hero poster is still visible behind the orb in dark theme (a basketball on the right edge)."
+        },
+        {
+          "type": "bullet",
+          "text": "Route maps still draw five waypoints for three chapters."
+        },
+        {
+          "type": "bullet",
+          "text": "Six back-button labels for the same gesture; on Expeditions \"← Home\" still takes the top ~60 px of a phone screen while the tab bar is right there."
+        },
+        {
+          "type": "bullet",
+          "text": "Expeditions and Vault card titles are still not headings (Expeditions: 72 card elements, **0 `h3`**)."
+        },
+        {
+          "type": "bullet",
+          "text": "Combo has no 80 ms hit-stop and still sits in the HUD rather than beside the answers (bible §4)."
+        },
+        {
+          "type": "bullet",
+          "text": "Two stamp cases on Player (an unlabelled 3D case above the 2D grid that carries the information)."
+        },
+        {
+          "type": "bullet",
+          "text": "Vault fact cards still reveal the answer immediately."
+        },
+        {
+          "type": "bullet",
+          "text": "Raw hex remains in `app/screens/player/player.css` (tier ramp) and `locker.tsx`."
+        },
+        {
+          "type": "bullet",
+          "text": "Quest cards still lead with a bare \"0\"."
+        },
+        {
+          "type": "bullet",
+          "text": "The 54-question bank still skews hard for a new player against a 25 % bot."
+        },
+        {
+          "type": "bullet",
+          "text": "`.fd-exp-answer` keeps its 45 ms staggered entrance while the room's has none — still incidental rather than deliberate."
+        },
+        {
+          "type": "paragraph",
+          "text": "New this loop:"
+        },
+        {
+          "type": "bullet",
+          "text": "**Player is now 8,623 px tall at 390 px** (8,096 px in loop 1) with no section nav — the achievements and progress work made a long screen longer. Tabs (Record / Mastery / Badges / Stamps / Locker) would pay for themselves."
+        },
+        {
+          "type": "bullet",
+          "text": "**`lint` is red and got redder.** 259 problems (237 errors, 22 warnings) against a pre-gamification baseline of 183 (145 errors, 38 warnings): +92 errors, 188 of the 259 are `@typescript-eslint/no-explicit-any`, 220 of the errors are in `app/`. It was already red, so this is not a regression *of policy* — but the release roughly doubled the debt, and `progression: any` threaded through every screen is the reason."
+        },
+        {
+          "type": "bullet",
+          "text": "**The expedition finish can still stack two ceremonies** (LEVEL UP, then STAMP COLLECTED). That is by design — `finish.tsx:55-59` deliberately waits for a free overlay — and two is not six, but it is two Continue taps between the player and their scorecard."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "What is genuinely good — keep it"
+        },
+        {
+          "type": "bullet",
+          "text": "**The timing contract survived the rewrite.** Thirty files changed under it, including a full extraction of the answer button into a shared component, and every clause still measures clean. The comment block at the top of `answer-button.tsx` explaining *why* the room's DOM must not move is the reason it survived; keep writing those."
+        },
+        {
+          "type": "bullet",
+          "text": "**The reward-burst coalescing is exactly right.** Ranked `level > badge > rank > streak`, one ceremony, the rest as silent toasts. One ceremony and four toasts after a match is the correct shape, and the toasts now clear the topbar chips they are reporting."
+        },
+        {
+          "type": "bullet",
+          "text": "**The honesty layer is still the best I have reviewed, and the fix wave did not erode it.** Re-verified in this pass: \"Random 25% guesser · answers after 1–14.5s and never reacts to yours\" on the lobby card; \"VS BOT\" on the HUD; \"Browser-reported time\" vs \"Scheduled bot time\" on both receipts; \"Rank points are counted on this device and never verify skill\"; \"Free simulated coins. No monetary value.\"; \"Your stamp marks completion, regardless of score… scores are local practice, not a ranking\"; \"Meeting a fact is not the same as knowing it.\" I searched the running DOM for fabricated presence (\"N players online\") and manufactured near-misses (\"you almost won\") and found **none**. The margin line is still computed from real rounds (\"Both correct. Your reported time was 7.718 s faster. The bot time is a simulation.\")."
+        },
+        {
+          "type": "bullet",
+          "text": "**The light theme is now a design, not an inversion.** Splitting each accent into a fill token and a text token was the right call and it shows: the CTA is vivid volt with dark ink, the timer bar keeps its colour, and the four answer accents are still four distinguishable hues."
+        },
+        {
+          "type": "bullet",
+          "text": "**The achievements gallery went from a wall of grey discs to a readable ladder** — tiered rims and 21 of 30 locked badges showing `current / target`. Goal-gradient, cheaply earned."
+        },
+        {
+          "type": "bullet",
+          "text": "**Reduced motion is still honoured end to end.** With `prefers-reduced-motion: reduce`: 0 animated elements on Home, 0 confetti nodes and 0 shake animations across a whole match, 3D posed as a static frame, `scrollIntoView` switched to `auto`."
+        },
+        {
+          "type": "bullet",
+          "text": "**Craft floor held:** 0 px horizontal overflow and 0 console errors on all five tabs at 390 and 1440, in dark **and** light, and in the reduced-motion pass; one `h1` per screen; a 3 px volt focus ring with 4 px offset on keyboard focus; the ceremony is a real `role=\"dialog\" aria-modal=\"true\"` with a focus trap, Escape, scroll lock and focus restore (which is the only reason P0-A is not a dead end — a keyboard user can still press Escape)."
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "Verification",
+      "source": "/product/gamification/verification.md",
+      "nodes": [
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "Gamification release (\"Floodlight\") — verification and limits"
+        },
+        {
+          "type": "paragraph",
+          "text": "13 September 2026. Recorded by the advisor at the end of review loop 2, against the working tree at `5221371` (loop-1 P1 fixes) on Node v22.22.2 / pnpm 11.25.0. Every row below is a command that was actually run this turn and its actual output. The release is **not** cleared to publish: loop 2 found two P0s (see `advisor-loop2.md`), so this record describes what has been verified, not a green gate."
+        },
+        {
+          "type": "table",
+          "rows": [
+            [
+              "Gate",
+              "Command",
+              "Result"
+            ],
+            [
+              "Automated suite",
+              "`node --test tests/*.test.mjs`",
+              "**94 pass, 0 fail**, 0 skipped, 0 todo, 0 cancelled, `duration_ms 636.96`, exit 0. 9 test files. Covers the duel engine, bot scheduling, timing and coin invariants, HTTP and profile paths, the expedition progression paths and the journal/difficulty additions."
+            ],
+            [
+              "TypeScript",
+              "`pnpm exec tsc --noEmit`",
+              "**Clean.** No diagnostics, exit 0."
+            ],
+            [
+              "Production build",
+              "`pnpm build`",
+              "**Succeeds**, exit 0. Five environments built (`✓ built in 1.20s / 4.58s / 815ms / 5.11s / 2.80s`), 1147 modules transformed for SSR, \"Build complete.\" One standing warning: `(!) Some chunks are larger than 500 kB after minification` — the Rapier/Three chunks. Routes classified: `/`, `/api/duel`, `/fx-lab`, `/studio`, `/three-lab`."
+            ],
+            [
+              "Lint",
+              "`pnpm lint` (`eslint . --ignore-pattern dist --ignore-pattern .next`)",
+              "**Red, and redder than before the release: 259 problems (237 errors, 22 warnings)**, exit 1. Baseline measured this turn by extracting `76f16aa` — the last commit before any gamification source — into a clean tree and running the same eslint binary: **183 problems (145 errors, 38 warnings)**. So the release added **+76 problems / +92 errors** and resolved 16 warnings. 188 of the 259 are `@typescript-eslint/no-explicit-any`; 220 of the errors are under `app/`, 13 under `components/`, 3 under `lib/`, 2 under `tests/`. Lint was already failing before this release and still fails; nothing in this release was gated on it."
+            ],
+            [
+              "Screenshots (default motion)",
+              "`node scripts/screens.mjs <dir>`",
+              "24 PNGs (6 screens × phone 390×844 and desktop 1440×900, fold and full-page). Script output: `phone: horizontal overflow 0px; console errors: 0` / `desktop: horizontal overflow 0px; console errors: 0`."
+            ],
+            [
+              "Screenshots (reduced motion)",
+              "`REDUCED=1 node scripts/screens.mjs <dir>`",
+              "24 PNGs. `phone: horizontal overflow 0px; console errors: 0` / `desktop: horizontal overflow 0px; console errors: 0`."
+            ],
+            [
+              "Screenshots (light theme)",
+              "Advisor script, same five tabs at both sizes with `data-theme=light`",
+              "`light phone: overflow 0px errors 0` / `light desktop: overflow 0px errors 0`."
+            ],
+            [
+              "End-to-end bot duel — Quick Draw",
+              "Playwright, 390×844, dark",
+              "Completed Home → \"Play now\" → countdown → question → reveal → finish. Result screen rendered a real verdict (\"YOU WIN · You take the match 1–0\", `+10 XP`, `ARENA RANK Bronze +20`), both receipts (\"Browser-reported time\" 0.612 s vs \"Scheduled bot time\" 8.330 s) and the explanation. **0** ceremonies opened while the room was open; **0** toasts while a question was live; **1** ceremony + **4** toasts after leaving. Console errors: 0."
+            ],
+            [
+              "End-to-end bot duel — Triple Threat",
+              "Playwright, 390×844, dark",
+              "Three rounds plus the between-rounds panel. **0** ceremonies in-room, **0** over a question. Between-rounds order verified: headline → verdict → \"The answer and its explanation are right below\" → question → explanation → receipts → CTA. After leaving: **1** ceremony (LEVEL UP, with a WebGL canvas) + **4** toasts. Console errors: 0."
+            ],
+            [
+              "End-to-end expedition",
+              "Playwright, 390×844, dark",
+              "Full six-card run of \"World Cup folklore\" (brief → chapters 1–3 → finish → stamp). Finish screen showed stamp earned, run score, first-vs-best and the six-fact recap. The Next/Finish CTA cleared the tab bar on every card without a ceremony open (settled y ≈ 716–772 against nav top 788, 0 px covered); it did **not** clear it on the card where a ceremony opened (see the P0-B finding in `advisor-loop2.md`)."
+            ],
+            [
+              "Timing contract",
+              "Per-frame Playwright sampling in a live room",
+              "Question card hidden for the first 2 frames (≈19 ms) then visible; `animationName: none`, `transform: none` on the card; `transitionProperty: none` on the timer track, its fill and the speed-bar fill; option order stable with `animationName: none` and `animationDelay: 0s`; **0** WebGL contexts in a room (1 Canvas2D particle canvas); click → locked in 17 ms."
+            ],
+            [
+              "Client bundle — lazy 3D",
+              "`find dist/client -name \"*.js\"`",
+              "36 JS files, 4,601,271 bytes total. Largest: **`gem-vault` 2,264,122 B (2.16 MiB)** — lazy; **`three.module` 734,640 B (717 KiB)** — reached only through a lazy scene; `studio` 344,990 B; `arena` 301,997 B; `shared` (R3F + drei) 216,827 B — statically imports `three.module` and is itself only reachable from a lazy scene; `framework` 190,154 B; `index` 181,401 B; `fx` 162,247 B; `input` 81,403 B. The four scene chunks are each behind `lazyScene(() => import(…))` in `components/three/index.ts`: **`gem-vault` 2,264,122 B**, **`reward-medal` 10,102 B**, **`hero-orb` 7,927 B**, **`stamp-case-3d` 5,723 B**. Verified at runtime on the dev server that opening the Locker at `gems === 0` requests only the 2D fallback and never the physics module."
+            ]
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "What these numbers do and do not mean"
+        },
+        {
+          "type": "bullet",
+          "text": "The suite count (94) is the same as at loop 1. **No test was added for either class of bug loop 1 found**, and none covers the two P0s loop 2 found. A green suite here is evidence about the engine, not about the reward layer."
+        },
+        {
+          "type": "bullet",
+          "text": "`pnpm build` succeeding is a packaging result. It is not a performance measurement and the large-chunk warning is not a device measurement."
+        },
+        {
+          "type": "bullet",
+          "text": "The lint baseline was reconstructed from a git archive of `76f16aa` with the repo's own eslint and config, in a tree with `node_modules` symlinked. It is a like-for-like comparison of the same rules, not of the same files: the release adds most of `app/screens/**`, so part of the +92 is volume rather than a drop in standards. It is still a doubling of the error count and it is reported as such."
+        },
+        {
+          "type": "bullet",
+          "text": "The bundle figures are the built artefacts' byte sizes on disk, uncompressed. No transfer size, no parse/execute time, no measurement of what any of it costs on a phone."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Explicitly NOT verified"
+        },
+        {
+          "type": "bullet",
+          "text": "**Physical devices.** Everything was measured in headless Chromium at emulated viewports with `isMobile`/`hasTouch` set. No real phone, no real touch, no real thumb, no notch or home-indicator safe area, no on-screen keyboard, no browser chrome resizing the viewport, no iOS Safari, no Android Chrome, no Firefox, no desktop Safari."
+        },
+        {
+          "type": "bullet",
+          "text": "**Assistive technology.** No screen reader was run. Screen-reader affordances were verified as DOM facts (`.fd-sr` shape twins, `kbd` hints, `aria-live` regions, `role=\"dialog\" aria-modal=\"true\"`, heading counts, focus order and the focus ring) — not as announcements a VoiceOver, NVDA, JAWS or TalkBack user would actually hear. No switch-control, voice-control or 200 % zoom testing. The contrast figures come from computed styles converted from OKLCH plus reading the screenshots, not from a certified contrast tool."
+        },
+        {
+          "type": "bullet",
+          "text": "**Real GPUs.** All 3D ran on SwiftShader (`--use-gl=angle --use-angle=swiftshader --enable-unsafe-swiftshader`). The \"scene stuck at `data-scene-frame=loading`\" finding in `advisor-loop2.md` (P1-A) is reported under that caveat. No frame rate, no thermal behaviour, no measurement on integrated or mobile GPUs, no WebGL-context-limit testing, and no verification of the dpr clamp on a high-DPI display."
+        },
+        {
+          "type": "bullet",
+          "text": "**Wide-area network.** Everything ran against `localhost:5173` on the dev server. No latency, no packet loss, no two-device match across a WAN, no measurement of the bot's scheduled times against a real human's round trip, no offline or flaky-connection behaviour, no production build served through Wrangler."
+        },
+        {
+          "type": "bullet",
+          "text": "**Cloudflare D1 at scale.** No D1 instance was exercised in this pass, at any size. No concurrency testing, no migration rehearsal, no quota or throughput measurement, no multi-tab or multi-device contention on the local stores either."
+        },
+        {
+          "type": "bullet",
+          "text": "**Observed player behaviour.** No user session, no retention or learning study, no A/B test, no telemetry. Every claim about hooks, goal-gradient, reward salience or \"the player never sees which answer was right\" is an inference from the design literature plus what the instrumented DOM did — not an observation of a person."
+        },
+        {
+          "type": "bullet",
+          "text": "**Content.** No question-bank audit, no fact-checking of the 54 questions, no editorial or source review beyond noticing that difficulty still skews hard for a new player."
+        },
+        {
+          "type": "bullet",
+          "text": "**Security and privacy.** No review of export/reset completeness against real stored data, no storage quota testing, no audit of what a shared device leaks between profiles."
+        },
+        {
+          "type": "bullet",
+          "text": "**Sound and haptics.** Audio was never unlocked (headless Chromium logged `The AudioContext was not allowed to start` throughout). The procedural cue layer and `navigator.vibrate` were not heard or felt; only their call sites were read."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Addendum — release state, 13 September 2026 (recorded by the team lead)"
+        },
+        {
+          "type": "paragraph",
+          "text": "The record above was written during advisor loop 2, against the tree at `5221371`. Loop 2's two P0s and several of its P1s were fixed afterwards. Re-run against `68e88d9`:"
+        },
+        {
+          "type": "table",
+          "rows": [
+            [
+              "Gate",
+              "Result"
+            ],
+            [
+              "`node --test tests/*.test.mjs`",
+              "**94 pass, 0 fail**"
+            ],
+            [
+              "`pnpm exec tsc --noEmit`",
+              "clean"
+            ],
+            [
+              "`pnpm build`",
+              "succeeds"
+            ],
+            [
+              "`pnpm e2e` (new)",
+              "**12 of 12 browser invariants hold**"
+            ],
+            [
+              "`node scripts/screens.mjs`",
+              "0 px horizontal overflow, 0 console errors, phone and desktop"
+            ],
+            [
+              "`REDUCED=1 node scripts/screens.mjs`",
+              "0 px horizontal overflow, 0 console errors"
+            ],
+            [
+              "`pnpm lint`",
+              "259 problems (237 errors, 22 warnings); 188 are `no-explicit-any`. Still red, as it was before this release (183 problems / 145 errors)"
+            ],
+            [
+              "Client bundle",
+              "4.39 MB across 36 files; the largest, `gem-vault` at 2.16 MB, is lazy and is not fetched at zero gems"
+            ]
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Fixed after the loop-2 review"
+        },
+        {
+          "type": "bullet",
+          "text": "Ceremony medals now pass the hero slot height, and the hero clips its contents, so a 3D slot can no longer cover a ceremony's title, rewards or Continue button."
+        },
+        {
+          "type": "bullet",
+          "text": "Full-screen ceremonies are held while the player is on any playing surface, expeditions included."
+        },
+        {
+          "type": "bullet",
+          "text": "Expedition rewards were rebalanced toward the run score: finishing with nothing correct pays 118 rather than 250, against 120 for winning a Gauntlet; a flawless bold run pays 352."
+        },
+        {
+          "type": "bullet",
+          "text": "Every control in the settings sheet now meets the 44 px target floor."
+        },
+        {
+          "type": "bullet",
+          "text": "Writing `scripts/e2e.mjs` exposed a real defect the screenshot sweep could not see: the first-visit streak toast covered the sticky Play launch bar and the expedition brief's CTA on phones, swallowing the tap. Screens with a pinned bar now publish its height and the toast stack clears it."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "What is still open"
+        },
+        {
+          "type": "bullet",
+          "text": "**Lint.** The release added about 92 errors to an already failing lint run, almost all `no-explicit-any` in the new screen components. Nothing is gated on lint, and it was red before; it is real debt and it is not fixed."
+        },
+        {
+          "type": "bullet",
+          "text": "**Loop-2 backlog.** A duel score and the countdown are still not announced to screen readers, and a re-mounted scene can stay in its loading state within a session."
+        },
+        {
+          "type": "bullet",
+          "text": "**Never verified here.** Physical devices, assistive technology, real GPUs (every 3D check ran on a software rasteriser), wide-area networks, Cloudflare D1 at any scale, sound and haptics (headless Chromium never unlocks an AudioContext), and any observed player behaviour whatsoever. The progression numbers in this release are a designer's first guess, not a tuned economy."
+        }
+      ]
+    }
+  ]
+}

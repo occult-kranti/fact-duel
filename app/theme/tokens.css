@@ -1,0 +1,321 @@
+/* FACT//DUEL — "Floodlight" design tokens.
+ * Imported FIRST (app/layout.tsx) so every later sheet resolves against these values.
+ * Rules: components use tokens, never raw hex. Legacy aliases (--primary, --background, …)
+ * are kept during the migration so shadcn and the older screen CSS keep working. */
+
+/* ---------- 1. Dark (default) ---------- */
+:root,
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  /* grounds */
+  --bg-0: #0a0e14;
+  --bg-1: #121821;
+  --bg-2: #1a222e;
+  --line: rgba(82, 92, 108, 0.6);
+  --text: #f7f6ef;
+  --muted: #a6adba;
+
+  /* accents */
+  --volt: #d4ff3a;
+  --ember: #ff7a2f;
+  --cyan: #4ee1ff;
+  --gold: #ffc83d;
+  --magenta: #ff5ea8;
+  --danger: #ff4d4d;
+
+  /* the accent as TEXT. In dark it is the accent itself; the light theme replaces these with
+     darker twins (>= 4.5:1 on every light ground) while the tokens above stay the true fills. */
+  --volt-text: var(--volt);
+  --ember-text: var(--ember);
+  --cyan-text: var(--cyan);
+  --gold-text: var(--gold);
+  --magenta-text: var(--magenta);
+  --danger-text: var(--danger);
+
+  /* text on the accent */
+  --volt-ink: #0d1400;
+  --ember-ink: #1c0a02;
+  --cyan-ink: #03161c;
+  --gold-ink: #1d1400;
+  --magenta-ink: #2a0415;
+  --danger-ink: #2a0505;
+
+  /* 12% tints for fills */
+  --volt-soft: rgba(212, 255, 58, 0.12);
+  --ember-soft: rgba(255, 122, 47, 0.12);
+  --cyan-soft: rgba(78, 225, 255, 0.12);
+  --gold-soft: rgba(255, 200, 61, 0.12);
+  --magenta-soft: rgba(255, 94, 168, 0.12);
+  --danger-soft: rgba(255, 77, 77, 0.12);
+
+  /* glows (used sparingly: CTA, combo, rewards) */
+  --glow-volt: 0 0 0 1px rgba(212, 255, 58, 0.4), 0 8px 32px rgba(212, 255, 58, 0.25);
+  --glow-ember: 0 0 0 1px rgba(255, 122, 47, 0.4), 0 8px 32px rgba(255, 122, 47, 0.25);
+  --glow-gold: 0 0 0 1px rgba(255, 200, 61, 0.4), 0 8px 32px rgba(255, 200, 61, 0.25);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.28);
+  --shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.32), 0 16px 40px rgba(0, 0, 0, 0.4);
+  --shadow-sheet: 0 -8px 40px rgba(0, 0, 0, 0.5);
+
+  /* FX palette for particles / counters. `--fx-N` paints fills (the XP pop, particles);
+     `--fx-N-text` is the same colour where the juice layer draws ink on a light card. */
+  --fx-1: var(--volt);
+  --fx-2: var(--gold);
+  --fx-3: var(--cyan);
+  --fx-4: var(--magenta);
+  --fx-5: var(--text);
+  --fx-1-text: var(--volt-text);
+  --fx-2-text: var(--gold-text);
+  --fx-3-text: var(--cyan-text);
+  --fx-4-text: var(--magenta-text);
+  --fx-5-text: var(--text);
+  --fx-gold: var(--gold-text);
+}
+
+@supports (color: oklch(0% 0 0)) {
+  :root,
+  :root[data-theme='dark'] {
+    --bg-0: oklch(13% 0.02 255);
+    --bg-1: oklch(18% 0.025 255);
+    --bg-2: oklch(23% 0.03 255);
+    --line: oklch(35% 0.03 255 / 0.6);
+    --text: oklch(97% 0.01 95);
+    --muted: oklch(72% 0.02 255);
+    --volt: oklch(92% 0.23 125);
+    --ember: oklch(72% 0.19 45);
+    --cyan: oklch(85% 0.14 200);
+    --gold: oklch(86% 0.17 90);
+    --magenta: oklch(68% 0.24 350);
+    --danger: oklch(62% 0.2 25);
+    --volt-ink: oklch(16% 0.05 125);
+    --ember-ink: oklch(16% 0.05 45);
+    --cyan-ink: oklch(16% 0.04 200);
+    --gold-ink: oklch(18% 0.05 90);
+    --magenta-ink: oklch(18% 0.07 350);
+    --danger-ink: oklch(16% 0.06 25);
+    --volt-soft: oklch(92% 0.23 125 / 0.12);
+    --ember-soft: oklch(72% 0.19 45 / 0.12);
+    --cyan-soft: oklch(85% 0.14 200 / 0.12);
+    --gold-soft: oklch(86% 0.17 90 / 0.12);
+    --magenta-soft: oklch(68% 0.24 350 / 0.12);
+    --danger-soft: oklch(62% 0.2 25 / 0.12);
+    --glow-volt: 0 0 0 1px oklch(92% 0.23 125 / 0.4), 0 8px 32px oklch(92% 0.23 125 / 0.25);
+    --glow-ember: 0 0 0 1px oklch(72% 0.19 45 / 0.4), 0 8px 32px oklch(72% 0.19 45 / 0.25);
+    --glow-gold: 0 0 0 1px oklch(86% 0.17 90 / 0.4), 0 8px 32px oklch(86% 0.17 90 / 0.25);
+  }
+}
+
+/* ---------- 2. Light ---------- */
+/* Grounds invert. Accents keep their dark-theme vividness, because the same token paints FILLS —
+ * the Play CTA, the timer bar, the gold option chip — and a fill dropped to text lightness reads
+ * olive/brown (advisor loop 1, P1-2). The accent-as-text job moved to the `--*-text` twins below:
+ * the same hue at a lightness that clears 4.5:1 on --bg-0, --bg-1 and --bg-2. */
+:root[data-theme='light'] {
+  color-scheme: light;
+  --bg-0: #f7f6ef;
+  --bg-1: #ecebe1;
+  --bg-2: #fdfdf9;
+  --line: rgba(92, 102, 118, 0.35);
+  --text: #1e2530;
+  --muted: #515963;
+
+  /* fills — identical to dark, so nothing painted with an accent goes muddy */
+  --volt: #d4ff3a;
+  --ember: #ff7a2f;
+  --cyan: #4ee1ff;
+  --gold: #ffc83d;
+  --magenta: #ff5ea8;
+  --danger: #ff4d4d;
+
+  /* the same hues as text on a light ground — dark enough to clear 4.5:1 on --bg-0/1/2 *and*
+     on the matching `-soft` tint, which is the ground under most accent text */
+  --volt-text: #496201;
+  --ember-text: #9e3f00;
+  --cyan-text: #00686c;
+  --gold-text: #6f5803;
+  --magenta-text: #ac0070;
+  --danger-text: #b7001b;
+
+  /* text on the accent fill: the fills are bright here too, so the inks stay dark */
+  --volt-ink: #0d1400;
+  --ember-ink: #1c0a02;
+  --cyan-ink: #03161c;
+  --gold-ink: #1d1400;
+  --magenta-ink: #2a0415;
+  --danger-ink: #2a0505;
+
+  /* tints sit behind accent TEXT, so they are mixed from the text twin, not the fill */
+  --volt-soft: rgba(73, 98, 1, 0.14);
+  --ember-soft: rgba(158, 63, 0, 0.12);
+  --cyan-soft: rgba(0, 104, 108, 0.12);
+  --gold-soft: rgba(111, 88, 3, 0.14);
+  --magenta-soft: rgba(172, 0, 112, 0.12);
+  --danger-soft: rgba(183, 0, 27, 0.12);
+
+  /* a bright fill needs an edge on a cream page: the 1px ring is the text twin */
+  --glow-volt: 0 0 0 1px rgba(73, 98, 1, 0.55), 0 8px 24px rgba(212, 255, 58, 0.45);
+  --glow-ember: 0 0 0 1px rgba(158, 63, 0, 0.5), 0 8px 24px rgba(255, 122, 47, 0.35);
+  --glow-gold: 0 0 0 1px rgba(111, 88, 3, 0.5), 0 8px 24px rgba(255, 200, 61, 0.4);
+  --shadow-card: 0 1px 2px rgba(20, 24, 32, 0.08), 0 8px 24px rgba(20, 24, 32, 0.08);
+  --shadow-lift: 0 2px 4px rgba(20, 24, 32, 0.1), 0 16px 40px rgba(20, 24, 32, 0.14);
+  --shadow-sheet: 0 -8px 40px rgba(20, 24, 32, 0.18);
+}
+
+@supports (color: oklch(0% 0 0)) {
+  :root[data-theme='light'] {
+    --bg-0: oklch(97% 0.01 95);
+    --bg-1: oklch(93% 0.015 95);
+    --bg-2: oklch(99.5% 0.005 95);
+    --line: oklch(45% 0.03 255 / 0.35);
+    --text: oklch(20% 0.02 255);
+    --muted: oklch(46% 0.02 255);
+    /* fills: the dark-theme accents, unchanged */
+    --volt: oklch(92% 0.23 125);
+    --ember: oklch(72% 0.19 45);
+    --cyan: oklch(85% 0.14 200);
+    --gold: oklch(86% 0.17 90);
+    --magenta: oklch(68% 0.24 350);
+    --danger: oklch(62% 0.2 25);
+    /* text twins: same hue, inside sRGB, >= 4.5:1 on every light ground and on its own tint */
+    --volt-text: oklch(46% 0.115 125);
+    --ember-text: oklch(49% 0.14 45);
+    --cyan-text: oklch(47% 0.08 200);
+    --gold-text: oklch(47% 0.095 90);
+    --magenta-text: oklch(49% 0.205 350);
+    --danger-text: oklch(49% 0.2 25);
+    --volt-soft: oklch(46% 0.115 125 / 0.14);
+    --ember-soft: oklch(49% 0.14 45 / 0.12);
+    --cyan-soft: oklch(47% 0.08 200 / 0.12);
+    --gold-soft: oklch(47% 0.095 90 / 0.14);
+    --magenta-soft: oklch(49% 0.205 350 / 0.12);
+    --danger-soft: oklch(49% 0.2 25 / 0.12);
+  }
+}
+
+/* ---------- 3. Theme-independent: radii, type, layout ---------- */
+:root {
+  /* radii */
+  --r-control: 10px;
+  --r-card: 16px;
+  --r-hero: 24px;
+  --r-pill: 999px;
+
+  /* type */
+  --font-display: 'Bricolage Grotesque', 'Archivo Black', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-ui: 'Instrument Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --display: var(--font-display); /* legacy alias used by rivalry.css */
+
+  /* fluid scale 12 / 14 / 16 / 18 / 22 / 28 / 36 / 48 / 64 */
+  --fs-12: 0.75rem;
+  --fs-14: 0.875rem;
+  --fs-16: 1rem;
+  --fs-18: 1.125rem;
+  --fs-22: clamp(1.25rem, 1.15rem + 0.5vw, 1.375rem);
+  --fs-28: clamp(1.5rem, 1.3rem + 1vw, 1.75rem);
+  --fs-36: clamp(1.8rem, 1.45rem + 1.7vw, 2.25rem);
+  --fs-48: clamp(2.15rem, 1.6rem + 2.6vw, 3rem);
+  --fs-64: clamp(2.6rem, 1.8rem + 3.8vw, 4rem);
+
+  /* layout */
+  --nav-h: 56px;
+  --rail-w: 76px;
+  --rail-w-wide: 224px;
+  --topbar-h: 60px;
+  --gutter: 16px;
+  --content-max: 1440px;
+  --room-max: 1000px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+
+  /* motion */
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --dur-enter: 220ms;
+  --dur-exit: 120ms;
+}
+
+/* ---------- 4. Legacy aliases (shadcn + v3–v6 screen CSS) ---------- */
+:root,
+:root[data-theme='dark'],
+:root[data-theme='light'] {
+  --background: var(--bg-0);
+  --foreground: var(--text);
+  --card: var(--bg-1);
+  --card-foreground: var(--text);
+  --popover: var(--bg-2);
+  --popover-foreground: var(--text);
+  --primary: var(--volt);
+  --primary-foreground: var(--volt-ink);
+  /* accent-as-text twins for the legacy sheets (see §1/§2: fills stay vivid, text darkens) */
+  --primary-text: var(--volt-text);
+  --positive-text: var(--volt-text);
+  --negative-text: var(--ember-text);
+  --sport-text: var(--ember-text);
+  --science-text: var(--cyan-text);
+  --rival-text: var(--cyan-text);
+  --destructive-text: var(--danger-text);
+  --secondary: var(--bg-2);
+  --secondary-foreground: var(--text);
+  --muted-foreground: var(--muted);
+  --accent: var(--volt-soft);
+  --accent-foreground: var(--text);
+  --destructive: var(--danger);
+  --border: var(--line);
+  --input: color-mix(in oklab, var(--muted) 45%, transparent);
+  --ring: var(--volt);
+  --radius: var(--r-control);
+  --positive: var(--volt);
+  --negative: var(--ember);
+  --sport: var(--ember);
+  --science: var(--cyan);
+  --rival: var(--cyan);
+  --sidebar: var(--bg-1);
+  --sidebar-foreground: var(--text);
+  --sidebar-primary: var(--volt);
+  --sidebar-primary-foreground: var(--volt-ink);
+  --sidebar-accent: var(--bg-2);
+  --sidebar-accent-foreground: var(--volt-text);
+  --sidebar-border: var(--line);
+  --sidebar-ring: var(--volt);
+  --chart-1: var(--fx-1);
+  --chart-2: var(--fx-2);
+  --chart-3: var(--fx-3);
+  --chart-4: var(--fx-4);
+  --chart-5: var(--fx-5);
+}
+
+/* ---------- 5. Base type ---------- */
+body {
+  font-family: var(--font-ui);
+  font-size: var(--fs-16);
+  line-height: 1.6;
+  background: var(--bg-0);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+h1,
+h2,
+h3,
+.fd-display {
+  font-family: var(--font-display);
+  font-variation-settings: 'opsz' 96;
+}
+h1 {
+  font-weight: 800;
+}
+h2,
+h3 {
+  font-weight: 700;
+}
+.fd-mono,
+kbd,
+code,
+.count-timer,
+.hud-score,
+.live-run-score {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}

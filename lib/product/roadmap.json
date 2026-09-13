@@ -1,6 +1,6 @@
 {
-  "version": 4,
-  "asOf": "2026-09-12",
+  "version": 5,
+  "asOf": "2026-09-13",
   "items": [
     {
       "id": "P01",
@@ -1136,6 +1136,511 @@
       "criteria": "Archive old first/best summaries and frozen receipts; distinguish changed facts from new item families; define migration and reset/export compatibility.",
       "evidence": "Current route keys contain version 1; snapshots are frozen, but future retired-version archive is not implemented.",
       "next": "Design and test a v1-to-v2 migration before changing or removing a route key."
+    },
+    {
+      "id": "G01",
+      "milestone": "Floodlight gamification",
+      "owner": "Research lead",
+      "status": "done",
+      "priority": "P0",
+      "dependencies": [],
+      "title": "Research gamification theory and the 2026 web 3D stack",
+      "goal": "Ground every design decision in primary sources.",
+      "criteria": "Octalysis, Hooked, Reality is Broken, Art of Game Design, Game Feel, Juice it or lose it, SDT/PENS, Duolingo notes, Kahoot/QuizUp/Trivia Royale mechanics; measured bundle sizes for R3F, drei, rapier, motion.",
+      "evidence": "public/product/gamification/research-brief.md with URLs and locally measured gzip sizes.",
+      "next": "Refresh when React 19.3 or fiber 10 ships (peer range)."
+    },
+    {
+      "id": "G02",
+      "milestone": "Floodlight gamification",
+      "owner": "Audit swarm",
+      "status": "done",
+      "priority": "P0",
+      "dependencies": [],
+      "title": "Audit the current UI and engine",
+      "goal": "Know every screen, token, reducer, test and constraint before touching anything.",
+      "criteria": "Screen inventory, design-system debt, profile schema, reducer identity contract, timing contract, tests that pin behaviour.",
+      "evidence": "Two audit reports; baseline screenshots at 390 and 1440 px (desktop nav was rendering as a stacked column).",
+      "next": "Re-audit after the screen rebuild."
+    },
+    {
+      "id": "G03",
+      "milestone": "Floodlight gamification",
+      "owner": "Team lead",
+      "status": "done",
+      "priority": "P0",
+      "dependencies": [
+        "G01",
+        "G02"
+      ],
+      "title": "Write the Floodlight design bible",
+      "goal": "One system, two temperatures: warm competition, cool learning; volt brand energy.",
+      "criteria": "Palette (oklch), type (Bricolage Grotesque / Instrument Sans / JetBrains Mono), shape-coded answers, motion vocabulary, sound map, 3D rules, honesty guardrails, screen briefs.",
+      "evidence": "public/product/gamification/design-bible.md.",
+      "next": "Revise after advisor loop 1."
+    },
+    {
+      "id": "G04",
+      "milestone": "Floodlight gamification",
+      "owner": "Team lead",
+      "status": "done",
+      "priority": "P0",
+      "dependencies": [
+        "G03"
+      ],
+      "title": "Create swarm skills",
+      "goal": "Every agent builds from the same card.",
+      "criteria": "floodlight-design, juice, gamification-advisor skills under .claude/skills.",
+      "evidence": "Skills committed.",
+      "next": "Extend with component recipes as they land."
+    },
+    {
+      "id": "G05",
+      "milestone": "Floodlight gamification",
+      "owner": "Foundation lead",
+      "status": "done",
+      "priority": "P0",
+      "dependencies": [
+        "G03"
+      ],
+      "title": "Ship tokens and fonts",
+      "goal": "Replace three generations of CSS variables with one token set.",
+      "criteria": "app/theme/tokens.css with legacy aliases; Google Fonts with system fallbacks; Tailwind bridge updated; dead plum/coral root removed.",
+      "evidence": "Pending foundation report.",
+      "next": "Delete legacy aliases once every screen uses fd- classes."
+    },
+    {
+      "id": "G06",
+      "milestone": "Floodlight gamification",
+      "owner": "Foundation lead",
+      "status": "done",
+      "priority": "P0",
+      "dependencies": [
+        "G05"
+      ],
+      "title": "Build the responsive app shell",
+      "goal": "Bottom tab bar on phones, icon rail on desktop, hidden during a live room.",
+      "criteria": "Top bar with streak/gems/level slots, 5 tabs with data-nav hooks, settings sheet with sound, volume, haptics, effects, theme; 100dvh; safe areas; zero overflow at 390 px.",
+      "evidence": "Pending.",
+      "next": "Add view transitions when Firefox support settles."
+    },
+    {
+      "id": "G07",
+      "milestone": "Floodlight gamification",
+      "owner": "Foundation lead",
+      "status": "done",
+      "priority": "P0",
+      "dependencies": [
+        "G06"
+      ],
+      "title": "Decompose the arena monolith",
+      "goal": "Let screen teams work in parallel without breaking the timing contract.",
+      "criteria": "app/arena.tsx keeps state, networking, reveal marker and keyboard; app/screens/* are presentational with a typed DuelController; 68 tests, tsc and build stay green; end-to-end bot duel screenshots.",
+      "evidence": "Pending.",
+      "next": "Consider a router with history once screens are stable."
+    },
+    {
+      "id": "G08",
+      "milestone": "Floodlight gamification",
+      "owner": "Engine lead",
+      "status": "done",
+      "priority": "P0",
+      "dependencies": [
+        "G02"
+      ],
+      "title": "Progression engine: XP and levels",
+      "goal": "Exactly-once XP from before/after profile diffs.",
+      "criteria": "lib/progression.mjs pure; profile stays version 2 with default-fill; xpToNext(l)=round(80·l^1.55); titles per band; identity-preserving no-ops; tests.",
+      "evidence": "Pending engine report.",
+      "next": "Tune the curve after observed play."
+    },
+    {
+      "id": "G09",
+      "milestone": "Floodlight gamification",
+      "owner": "Engine lead",
+      "status": "done",
+      "priority": "P0",
+      "dependencies": [
+        "G08"
+      ],
+      "title": "Streaks with shields",
+      "goal": "Daily return loop without punishment.",
+      "criteria": "Local day keys; shield every 7 days (max 2) auto-protects gaps; visit action on load; streak XP bonus.",
+      "evidence": "Pending.",
+      "next": "Offer a shield purchase in the Locker if players ask."
+    },
+    {
+      "id": "G10",
+      "milestone": "Floodlight gamification",
+      "owner": "Engine lead",
+      "status": "done",
+      "priority": "P0",
+      "dependencies": [
+        "G08"
+      ],
+      "title": "Daily quests",
+      "goal": "Three seeded quests per day that spread play across modes and topics.",
+      "criteria": "Deterministic seed from epoch+date; easy/medium/hard templates; auto-claim; all-three bonus.",
+      "evidence": "Pending.",
+      "next": "Weekly quests after the daily loop is observed."
+    },
+    {
+      "id": "G11",
+      "milestone": "Floodlight gamification",
+      "owner": "Engine lead",
+      "status": "done",
+      "priority": "P1",
+      "dependencies": [
+        "G08"
+      ],
+      "title": "Achievements",
+      "goal": "About 30 badges in bronze/silver/gold with two hidden.",
+      "criteria": "Unlock exactly once; XP and gems on unlock; sanitised ids.",
+      "evidence": "Pending.",
+      "next": "Add route-specific badges when the bank grows."
+    },
+    {
+      "id": "G12",
+      "milestone": "Floodlight gamification",
+      "owner": "Engine lead",
+      "status": "done",
+      "priority": "P1",
+      "dependencies": [
+        "G08"
+      ],
+      "title": "Arena Rank (device-local)",
+      "goal": "A ladder without a server: rank points from duel results with tier floors.",
+      "criteria": "Bronze to Diamond thresholds; demotion protection; rank-up log entries.",
+      "evidence": "Pending.",
+      "next": "Replace with server-backed leagues when identity exists (G32)."
+    },
+    {
+      "id": "G13",
+      "milestone": "Floodlight gamification",
+      "owner": "Engine lead",
+      "status": "done",
+      "priority": "P1",
+      "dependencies": [
+        "G08"
+      ],
+      "title": "Gems and the Locker",
+      "goal": "Ownership: earn gems, spend on frames, titles, banners, accents; nothing auto-spent.",
+      "criteria": "Wallet, cosmetics catalogue, buy/equip guards, unlock by level, achievement or rank.",
+      "evidence": "Pending.",
+      "next": "Passport card finishes could join the Locker later."
+    },
+    {
+      "id": "G14",
+      "milestone": "Floodlight gamification",
+      "owner": "Engine lead",
+      "status": "done",
+      "priority": "P1",
+      "dependencies": [
+        "G08"
+      ],
+      "title": "Difficulty plumbing",
+      "goal": "Difficulty-weighted XP needs difficulty in journaled rounds.",
+      "criteria": "difficulty added to retained round snapshots and practice/expedition cards; optional in validFact; tests unchanged.",
+      "evidence": "Pending.",
+      "next": "Persist region/domain too if per-region mastery is wanted."
+    },
+    {
+      "id": "G15",
+      "milestone": "Floodlight gamification",
+      "owner": "Juice lead",
+      "status": "done",
+      "priority": "P0",
+      "dependencies": [
+        "G03"
+      ],
+      "title": "Procedural sound engine",
+      "goal": "Every action answers back in sound with zero audio assets.",
+      "criteria": "Web Audio synth with 20+ cues, gesture unlock, prefs, throttling, loudness normalised.",
+      "evidence": "Pending juice report.",
+      "next": "Tune cue mix after listening sessions."
+    },
+    {
+      "id": "G16",
+      "milestone": "Floodlight gamification",
+      "owner": "Juice lead",
+      "status": "done",
+      "priority": "P0",
+      "dependencies": [
+        "G03"
+      ],
+      "title": "Particles, confetti, shake, counters",
+      "goal": "Juice it or lose it, on the web.",
+      "criteria": "Pooled Canvas2D engine with physics; bursts, confetti, float text, ring pulse; NumberCounter; shake; reduced-motion paths.",
+      "evidence": "Pending.",
+      "next": "GPU particle path if profiling shows need."
+    },
+    {
+      "id": "G17",
+      "milestone": "Floodlight gamification",
+      "owner": "Juice lead",
+      "status": "done",
+      "priority": "P1",
+      "dependencies": [
+        "G15"
+      ],
+      "title": "Haptics and effect preferences",
+      "goal": "Mirror sound on Android; user control over motion.",
+      "criteria": "navigator.vibrate patterns; fact-duel-haptics and fact-duel-motion keys; settings wiring.",
+      "evidence": "Pending.",
+      "next": "iOS switch-haptic hack only if Safari keeps it."
+    },
+    {
+      "id": "G18",
+      "milestone": "Floodlight gamification",
+      "owner": "Juice lead",
+      "status": "done",
+      "priority": "P0",
+      "dependencies": [
+        "G16"
+      ],
+      "title": "Toasts and ceremonies",
+      "goal": "Level-ups, badges, stamps and streak milestones deserve a stage.",
+      "criteria": "Stacked aria-live toasts; focus-trapped ceremony overlay with a 3D slot and Continue button; queueing.",
+      "evidence": "Pending.",
+      "next": "Share-card export from a ceremony later."
+    },
+    {
+      "id": "G19",
+      "milestone": "Floodlight gamification",
+      "owner": "3D lead",
+      "status": "done",
+      "priority": "P1",
+      "dependencies": [
+        "G03"
+      ],
+      "title": "3D Knowledge Core hero",
+      "goal": "A living arena object on Home that grows with level.",
+      "criteria": "R3F client-only; wire icosahedron, glowing core, orbit rings, sprites; dpr ≤1.5; pauses offscreen; reduced-motion static frame; no network assets.",
+      "evidence": "Pending 3D report.",
+      "next": "Add level-based colour shifts and seasonal variants."
+    },
+    {
+      "id": "G20",
+      "milestone": "Floodlight gamification",
+      "owner": "3D lead",
+      "status": "done",
+      "priority": "P1",
+      "dependencies": [
+        "G19"
+      ],
+      "title": "3D Reward Medal",
+      "goal": "Ceremonies get a physical object.",
+      "criteria": "Gold/silver/bronze/enamel variants, spring flip-in, sparkles, geometry-only emblem.",
+      "evidence": "Pending.",
+      "next": "Route-specific stamp emblems."
+    },
+    {
+      "id": "G21",
+      "milestone": "Floodlight gamification",
+      "owner": "3D lead",
+      "status": "done",
+      "priority": "P2",
+      "dependencies": [
+        "G19"
+      ],
+      "title": "Gem Vault physics showpiece",
+      "goal": "Real physics where it delights: gems dropping into a tray in the Locker.",
+      "criteria": "Rapier loaded only on demand (about 820 kB gz), instanced bodies, sleep, nudge on tap, CSS fallback.",
+      "evidence": "Pending.",
+      "next": "Consider matter-js 2D if rapier weight hurts low-end phones."
+    },
+    {
+      "id": "G22",
+      "milestone": "Floodlight gamification",
+      "owner": "Screens swarm",
+      "status": "done",
+      "priority": "P0",
+      "dependencies": [
+        "G07",
+        "G08",
+        "G16"
+      ],
+      "title": "Rebuild Home (Arena Hub)",
+      "goal": "One glance: who you are, what to do next, what you will earn.",
+      "criteria": "Hero with 3D core + player card (level ring, XP, streak, gems); Play now; 3 daily quests; Continue expedition; featured route; rank strip; XP log.",
+      "evidence": "Not started.",
+      "next": "A/B copy on the primary CTA after observation."
+    },
+    {
+      "id": "G23",
+      "milestone": "Floodlight gamification",
+      "owner": "Screens swarm",
+      "status": "done",
+      "priority": "P0",
+      "dependencies": [
+        "G07"
+      ],
+      "title": "Rebuild Play (duel builder)",
+      "goal": "Two taps from lobby to question.",
+      "criteria": "Mode cards with reward preview, opponent picker, topic chips, sticky launch CTA on phones, honest bot labelling.",
+      "evidence": "Not started.",
+      "next": "Power-ups only after the core loop is observed."
+    },
+    {
+      "id": "G24",
+      "milestone": "Floodlight gamification",
+      "owner": "Screens swarm",
+      "status": "done",
+      "priority": "P0",
+      "dependencies": [
+        "G07",
+        "G15",
+        "G16"
+      ],
+      "title": "Rebuild the Room (lobby, countdown, question, reveal, finish)",
+      "goal": "Broadcast-grade feel without touching the timing contract.",
+      "criteria": "Kinetic countdown with Wild Round call-out; shape-coded answers; speed bar; combo meter; result juice after round.result only; verdict with true margin, XP and rank deltas counting up; rematch.",
+      "evidence": "Not started.",
+      "next": "Spectator/replay view later."
+    },
+    {
+      "id": "G25",
+      "milestone": "Floodlight gamification",
+      "owner": "Screens swarm",
+      "status": "done",
+      "priority": "P0",
+      "dependencies": [
+        "G07"
+      ],
+      "title": "Rebuild Expeditions",
+      "goal": "Field-notes texture, chapter camps, endowed progress, stamp ceremony.",
+      "criteria": "Route cards, satisfying steady/bold switch, camp progress, goal-gradient intensity near the end, finish ceremony with 3D stamp.",
+      "evidence": "Not started.",
+      "next": "Community mapping meter when a server exists."
+    },
+    {
+      "id": "G26",
+      "milestone": "Floodlight gamification",
+      "owner": "Screens swarm",
+      "status": "done",
+      "priority": "P0",
+      "dependencies": [
+        "G07",
+        "G08"
+      ],
+      "title": "Rebuild Player (Passport, Rank, Locker)",
+      "goal": "Ownership and accomplishment on one screen.",
+      "criteria": "Level card, Arena Rank, 14-day streak calendar, per-topic mastery bars, achievements gallery with silhouettes, stamp case, Locker with gems.",
+      "evidence": "Not started.",
+      "next": "Shareable player card image."
+    },
+    {
+      "id": "G27",
+      "milestone": "Floodlight gamification",
+      "owner": "Screens swarm",
+      "status": "done",
+      "priority": "P1",
+      "dependencies": [
+        "G07"
+      ],
+      "title": "Rebuild Vault, Discovery and Collections",
+      "goal": "Learning surfaces in the cool palette with juice.",
+      "criteria": "Fact cards tinted by difficulty, recall lab feedback, saved/flagged views, topic tickets with mastery.",
+      "evidence": "Not started.",
+      "next": "Spaced-repetition scheduling later."
+    },
+    {
+      "id": "G28",
+      "milestone": "Floodlight gamification",
+      "owner": "Integration lead",
+      "status": "done",
+      "priority": "P0",
+      "dependencies": [
+        "G22",
+        "G24",
+        "G26",
+        "G18"
+      ],
+      "title": "Wire progression feedback everywhere",
+      "goal": "Every XP, quest, badge, level, rank and streak change is felt once.",
+      "criteria": "usePlayer exposes progression; a hook diffs before/after and dispatches toasts/ceremonies exactly once; question surface stays quiet.",
+      "evidence": "Not started.",
+      "next": "Batch toasts during rapid sequences."
+    },
+    {
+      "id": "G29",
+      "milestone": "Floodlight gamification",
+      "owner": "Advisor",
+      "status": "done",
+      "priority": "P0",
+      "dependencies": [
+        "G22",
+        "G23",
+        "G24",
+        "G25",
+        "G26",
+        "G27"
+      ],
+      "title": "Advisor loop 1",
+      "goal": "Independent review against the bible and theory.",
+      "criteria": "Scores per screen, prioritised P0/P1/P2 list, fixes dispatched and verified.",
+      "evidence": "Not started.",
+      "next": "Loop 2 after fixes."
+    },
+    {
+      "id": "G30",
+      "milestone": "Floodlight gamification",
+      "owner": "Release lead",
+      "status": "done",
+      "priority": "P0",
+      "dependencies": [
+        "G29"
+      ],
+      "title": "Verification and advisor loop 2",
+      "goal": "Release gate for the gamified build.",
+      "criteria": "Tests, tsc, build, screenshot sweep at 390/1440 with and without reduced motion, end-to-end bot duel, bundle sizes; verification.md; advisor sign-off.",
+      "evidence": "Not started.",
+      "next": "Physical-device QA remains an observed gate."
+    },
+    {
+      "id": "G31",
+      "milestone": "Floodlight gamification",
+      "owner": "Docs lead",
+      "status": "done",
+      "priority": "P1",
+      "dependencies": [
+        "G30"
+      ],
+      "title": "Docs and Studio update",
+      "goal": "Keep README, product docs and the Studio roadmap truthful.",
+      "criteria": "README sections for progression, juice, 3D and settings; decision record; roadmap.json synced in lib and public; Studio renders the gamification record.",
+      "evidence": "Not started.",
+      "next": "Archive superseded v6 guardrails with rationale."
+    },
+    {
+      "id": "G32",
+      "milestone": "Floodlight gamification",
+      "owner": "Server lead",
+      "status": "planned",
+      "priority": "P2",
+      "dependencies": [
+        "G12"
+      ],
+      "title": "Server-backed leagues and leaderboards",
+      "goal": "Real relatedness needs identity and a settlement-time write.",
+      "criteria": "New D1 table; attribution via authenticated user id at settlement; read action; small friend leagues; never derived from client XP.",
+      "evidence": "Blocked by account identity; device-local rank ships first.",
+      "next": "Design after the private pilot observes demand."
+    },
+    {
+      "id": "G33",
+      "milestone": "Floodlight gamification",
+      "owner": "Server lead",
+      "status": "planned",
+      "priority": "P2",
+      "dependencies": [
+        "G24"
+      ],
+      "title": "Bot personas with accuracy tiers",
+      "goal": "A ladder of labelled practice bots.",
+      "criteria": "Planner accepts an accuracy parameter; plans stay fixed and hidden; timing tests extended; UI labels every persona as BOT.",
+      "evidence": "Not started; Lucky Guess remains the only bot.",
+      "next": "Ship after the rank loop is observed."
     }
   ]
 }

@@ -1,0 +1,167 @@
+/* app/fx-lab/fx-lab.css — layout for the FX audition page. Phone-first, no horizontal overflow. */
+.lab {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 20px 16px calc(200px + env(safe-area-inset-bottom, 0px));
+}
+@media (min-width: 769px) {
+  .lab {
+    padding-bottom: 80px;
+  }
+}
+.lab-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+  margin-bottom: 8px;
+}
+.lab-head h1 {
+  font-size: clamp(1.7rem, 6vw, 2.4rem);
+}
+.lab-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border, #574b61);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.lab-status {
+  position: sticky;
+  top: 8px;
+  z-index: 30;
+  margin: 12px 0 4px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: var(--card, #2a2533);
+  border: 1px solid var(--border, #574b61);
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.lab-section {
+  margin-top: 26px;
+}
+.lab-section h2 {
+  font-size: 1.1rem;
+  margin-bottom: 4px;
+}
+.lab-section .muted {
+  font-size: 0.85rem;
+  margin-bottom: 12px;
+}
+.lab-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 8px;
+}
+.lab-grid--narrow {
+  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+}
+.lab-btn {
+  min-height: 44px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border, #574b61);
+  background: var(--card, #2a2533);
+  color: inherit;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 650;
+  text-align: center;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+  transition:
+    transform 100ms ease,
+    background 120ms ease;
+}
+.lab-btn:hover {
+  background: var(--accent, #453341);
+}
+.lab-btn:active {
+  transform: scale(0.97);
+}
+.lab-btn[aria-pressed='true'],
+.lab-btn--primary {
+  background: var(--primary, #f99479);
+  color: var(--primary-foreground, #2c1820);
+  border-color: transparent;
+}
+.lab-btn small {
+  display: block;
+  font-weight: 500;
+  opacity: 0.7;
+  font-size: 0.75rem;
+}
+.lab-prefs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 8px;
+  align-items: stretch;
+}
+.lab-range {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 44px;
+  padding: 6px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border, #574b61);
+  background: var(--card, #2a2533);
+  font-size: 0.8rem;
+  grid-column: 1 / -1;
+}
+.lab-range input {
+  width: 100%;
+  min-height: 28px;
+  accent-color: var(--primary, #f99479);
+}
+.lab-card {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 14px;
+  border: 1px solid var(--border, #574b61);
+  background: var(--card, #2a2533);
+  margin-bottom: 10px;
+}
+.lab-score {
+  position: relative;
+  display: inline-block;
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+.lab-target {
+  min-height: 44px;
+  display: grid;
+  place-items: center;
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: 1px dashed var(--border, #574b61);
+  font-size: 0.85rem;
+}
+.lab-slot {
+  display: grid;
+  place-items: center;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.22);
+  font-weight: 900;
+  font-size: 1.6rem;
+  letter-spacing: -0.04em;
+}
+.lab-grid--narrow .lab-btn {
+  padding: 8px 6px;
+  font-size: 0.84rem;
+}
