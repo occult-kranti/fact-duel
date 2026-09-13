@@ -152,6 +152,11 @@
   padding: 20px max(var(--gutter), var(--safe-right)) calc(var(--nav-h) + var(--safe-bottom) + 28px)
     max(var(--gutter), var(--safe-left));
 }
+.fd-shell--room {
+  /* The tab bar is not rendered during a live room, so anything spaced off it
+     (the toast stack, sticky CTAs) must not reserve its height. */
+  --nav-h: 0px;
+}
 .fd-shell--room .fd-main {
   max-width: var(--room-max);
   padding-bottom: calc(var(--safe-bottom) + 24px);

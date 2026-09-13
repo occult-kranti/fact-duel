@@ -96,7 +96,9 @@ export default function Arena() {
   const player = usePlayer(room, credentials?.profileEpoch);
   useProgressionFeedback(player.progression, {
     toasts: !!room && ['scheduled', 'playing'].includes(room.phase) && !room.round?.result,
-    ceremonies: !!room && !room.settled,
+    // Hold full-screen ceremonies through the whole live round, including the reveal window:
+    // celebrating a badge on top of the correct answer hides it and misreads a wrong answer.
+    ceremonies: !!room && !room.settled && room.phase !== 'between',
   });
   const { clear: clearJournal } = player;
   const playedCues = useRef(new Set<string>()),
