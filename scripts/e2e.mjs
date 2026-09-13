@@ -162,6 +162,52 @@ try {
     check('room: no ceremony opens over the reveal', after.ceremonies === 0, `${after.ceremonies} open`);
   });
 
+  await section('celebration', async () => {
+    // --- the loss beat exists, is never a dialog, and never appears on a win ---
+    // The bot's answer is random, so the assertions are written to hold for every outcome rather
+    // than to depend on losing: a loss must carry the block, a win must not, and neither may open
+    // a modal. A full-screen overlay after a loss is the shape of a consolation prize.
+    await page.evaluate(() => sessionStorage.clear());
+    await page.goto(BASE, { waitUntil: 'networkidle' });
+    await page.waitForSelector('[data-nav="arena"]', { timeout: 20000 });
+    await clickUntil(page.locator('[data-nav="arena"]').first(), 'button:has-text("Play Quick Draw")');
+    await clickUntil(
+      page.locator('button', { hasText: /Play Quick Draw/i }).first(),
+      '.question-card, .fd-qcard',
+      15000,
+    );
+    await page.locator('.answer-button, .fd-answer').first().click({ force: true });
+    await page.waitForSelector('.fd-finish', { timeout: 30000 });
+    await page.waitForTimeout(1600);
+    const end = await page.evaluate(() => ({
+      verdict: document.querySelector('.fd-finish')?.getAttribute('data-verdict') ?? null,
+      keep: !!document.querySelector('.fd-keep'),
+      title: document.querySelector('.fd-keep-title')?.textContent?.trim() ?? null,
+      bullets: [...document.querySelectorAll('.fd-keep-list li')].map((li) => li.textContent.trim()),
+      dialogs: document.querySelectorAll('[role="dialog"]').length,
+      // Exit must stay at least as reachable as replay, on any outcome.
+      exits: [...document.querySelectorAll('.fd-finish button')].filter((b) =>
+        /vault|facts|done/i.test(b.textContent || ''),
+      ).length,
+    }));
+    check(
+      'celebration: the loss beat renders on a loss and only on a loss',
+      end.keep === (end.verdict === 'loss'),
+      `verdict=${end.verdict} keep=${end.keep}`,
+    );
+    check('celebration: the loss beat is never a dialog', end.dialogs === 0, `${end.dialogs} open`);
+    check(
+      'celebration: every kept line carries a real number',
+      !end.keep || (end.bullets.length > 0 && end.bullets.every((b) => /\d/.test(b))),
+      end.bullets.join(' | '),
+    );
+    check(
+      'celebration: a way out of the loop is offered on any outcome',
+      end.exits >= 1,
+      `${end.exits} exits`,
+    );
+  });
+
   await section('auto-advance', async () => {
     // --- a multi-round match must reach round 2 with no click at all ---
     await page.evaluate(() => sessionStorage.clear());
