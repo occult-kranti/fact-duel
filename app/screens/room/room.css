@@ -239,6 +239,79 @@
   background: linear-gradient(to top, var(--bg-0) 58%, transparent);
 }
 
+/* WHAT YOU KEEP — the loss beat. Cyan (the learning temperature), never gold and never a medal:
+   the vocabulary is collecting, not comforting. Inline and non-blocking by design — a full-screen
+   overlay after a loss is the shape of a consolation prize. Chips rise into the stack; nothing here
+   moves downwards, and there is no confetti path at any intensity. */
+.fd-finish .fd-keep {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  border: 1px solid color-mix(in oklab, var(--cyan, #4ee1ff) 34%, var(--line));
+  border-radius: var(--r-card);
+  background: color-mix(in oklab, var(--cyan, #4ee1ff) 7%, var(--bg-1));
+}
+.fd-finish .fd-keep-kicker {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-12);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--cyan-text, var(--muted));
+}
+.fd-finish .fd-keep-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-20);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  color: var(--text);
+}
+.fd-finish .fd-keep-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.fd-finish .fd-keep-list li {
+  padding-inline-start: 16px;
+  position: relative;
+  font-size: var(--fs-14);
+  line-height: 1.5;
+  color: var(--text);
+  animation: fd-keep-rise 280ms var(--ease-out) both;
+  animation-delay: calc(var(--fd-keep-i, 0) * 90ms);
+}
+.fd-finish .fd-keep-list li::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 2px;
+  top: 0.62em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--cyan, #4ee1ff);
+}
+@keyframes fd-keep-rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fd-finish .fd-keep-list li {
+    animation: none;
+  }
+}
+
 /* ---------------------------------------------------------------- 2. chrome */
 .fd-room .fd-room-bar {
   display: flex;

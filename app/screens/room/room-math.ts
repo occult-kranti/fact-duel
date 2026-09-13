@@ -120,6 +120,122 @@ export function matchRank(room: any, progression: any): MatchRank {
   return { ...rankForPoints(points), points, delta: held ? 0 : delta, held };
 }
 
+/**
+ * How loud this win is allowed to be.
+ *
+ * Confetti on every win is ten confetti storms in a session, which is habituation, which ends with
+ * the player turning sound off. The tier is decided by what was actually at stake, never randomised:
+ * an unpredictable *intensity* is a reinforcement schedule, whereas unpredictable *true content* is
+ * a reason to read the screen.
+ */
+export type WinTier = 'routine' | 'notable' | 'ceremonial';
+
+/** Log kinds that already open the full-screen ceremony; confetti must never stack behind one. */
+const CEREMONIAL_KINDS = new Set(['level', 'achievement', 'rank']);
+
+export function winTier(room: any, player: any): WinTier {
+  const since = Number.isFinite(room?.createdAt) ? room.createdAt : 0;
+  const log = player?.progression?.log;
+  if (
+    since &&
+    Array.isArray(log) &&
+    log.some((e: any) => e && CEREMONIAL_KINDS.has(e.kind) && Number.isFinite(e.at) && e.at >= since)
+  )
+    return 'ceremonial';
+  const human = !isBotMatch(room);
+  // A first duel against a human is a milestone whatever the scoreline looked like.
+  if (human && (player?.progression?.counters?.humanMatches ?? 0) <= 1) return 'ceremonial';
+  if (human || room?.config?.mode !== 'quick') return 'notable';
+  return bestCombo(room) >= 3 ? 'notable' : 'routine';
+}
+
+/** The longest run of correct answers by the local seat in this match. */
+export function bestCombo(room: any): number {
+  let run = 0,
+    best = 0;
+  for (const r of orderedRounds(room)) {
+    run = r.receipts?.[room.seat]?.correct === true ? run + 1 : 0;
+    if (run > best) best = run;
+  }
+  return best;
+}
+
+export type KeepBlock = { title: string; bullets: string[] };
+
+/**
+ * What a lost match actually left behind, with every number read off this room and this profile.
+ *
+ * The rule is that encouragement names what happened and hands over what was earned; it never rates
+ * the player and never claims a hold that did not occur. Two bullets in particular are gated on the
+ * hold really happening: the rank floor only absorbs a loss when the points were already at it (a
+ * Gold player on 300 who loses goes to 290 — ten real points, no protection), and the daily streak is
+ * credited once per day on any activity, so on the second match of a day this loss held nothing.
+ * Every line below renders only when it is true, title lines included.
+ */
+export function whatYouKeep(room: any, player: any): KeepBlock {
+  const seat = room.seat;
+  const rounds = orderedRounds(room).filter((r: any) => r.result?.reason !== 'timing-inconsistent');
+  const n = rounds.length;
+  const mine = rounds.map((r: any) => r.receipts?.[seat] ?? null);
+  const correct = mine.filter((a: any) => a?.correct).length;
+  const plural = n === 1 ? 'fact' : 'facts';
+
+  // Title: first true case wins.
+  let title = `${n} ${plural} you have now answered at least once.`;
+  if (correct === 0 && n > 0) title = `${n} ${plural}, then. That is the trade.`;
+  if (n > 0 && correct === n) title = 'You were right every time. They were faster.';
+  else {
+    // A topic that accounts for the losses is a controllable, unstable cause — the kind of
+    // attribution the persistence literature says sustains a next attempt.
+    const byTopic = new Map<string, { lost: number; total: number }>();
+    for (const r of rounds) {
+      const topic = r.question?.topic;
+      if (!topic) continue;
+      const slot = byTopic.get(topic) ?? { lost: 0, total: 0 };
+      slot.total += 1;
+      if (!r.receipts?.[seat]?.correct) slot.lost += 1;
+      byTopic.set(topic, slot);
+    }
+    const lost = n - correct;
+    for (const [topic, slot] of byTopic)
+      // "Accounts for" is two-thirds of the losses or more, concentrated in a topic that is not
+      // simply the whole match — otherwise the line says nothing the scoreline did not.
+      if (lost >= 2 && slot.lost >= 2 && slot.lost * 3 >= lost * 2 && slot.total < n) {
+        title = `${topic} is where this went. ${slot.lost} of ${slot.total} ${topic} rounds got away.`;
+        break;
+      }
+  }
+
+  const bullets: string[] = [];
+  if (n > 0) bullets.push(`${n} ${plural} in your Vault`);
+
+  const fastest = rounds
+    .map((r: any, i: number) => ({ ms: r.receipts?.[seat]?.correct ? r.receipts[seat].elapsedMs : null, i }))
+    .filter((x: any) => Number.isFinite(x.ms))
+    .sort((a: any, b: any) => a.ms - b.ms)[0];
+  if (fastest)
+    bullets.push(`Fastest correct answer: ${(fastest.ms / 1000).toFixed(2)} s, round ${fastest.i + 1}`);
+
+  const since = Number.isFinite(room?.createdAt) ? room.createdAt : 0;
+  const log = player?.progression?.log;
+  const creditedStreak =
+    since &&
+    Array.isArray(log) &&
+    log.some((e: any) => e && e.kind === 'streak' && Number.isFinite(e.at) && e.at >= since);
+  const day = player?.progression?.streak?.current ?? 0;
+  if (creditedStreak && day > 0) bullets.push(`Day ${day} streak held`);
+
+  const xp = matchXp(player, room);
+  if (xp > 0) bullets.push(`+${xp} XP`);
+
+  const rank = matchRank(room, player?.progression);
+  if (rank.held) bullets.push(`Arena Rank protected at the ${rank.label} floor`);
+  else if (rank.delta !== 0)
+    bullets.push(`${rank.delta > 0 ? '+' : ''}${rank.delta} rank points · still ${rank.label}`);
+
+  return { title, bullets };
+}
+
 /** Rounds won, and for a loss the true per-round time gap read straight off the receipts. */
 export function marginLine(room: any): string {
   const seat = room.seat;
