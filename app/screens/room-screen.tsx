@@ -28,7 +28,7 @@ import './room/room.css';
  * leaves the manual button and its error in place rather than retrying forever — and any deliberate
  * touch inside the fact panel, or the Keep reading control, cancels it for that round. */
 const REVEAL_MS = 1900;
-const AUTO_ADVANCE_MS = 6000;
+const AUTO_ADVANCE_MS = 5000;
 
 export function RoomScreen({ duel, player }: RoomScreenProps) {
   const {

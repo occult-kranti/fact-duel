@@ -18,6 +18,7 @@ import {
   XpPop,
   setPref,
   sound,
+  TRIM,
   useJuice,
   usePrefs,
   useReducedMotion,
@@ -69,6 +70,15 @@ function Lab() {
 
   useEffect(() => {
     document.title = 'FX Lab — FACT//DUEL';
+    // The lab is the only page that exposes the engine on `window`. scripts/measure-cues.mjs
+    // drives `render()` from here to regenerate lib/fx/sound-levels.ts; nothing ships to a
+    // player's route, and nothing on this page depends on the handle existing.
+    (window as unknown as { __fdSound?: typeof sound }).__fdSound = sound;
+    (window as unknown as { __fdTrim?: typeof TRIM }).__fdTrim = TRIM;
+    return () => {
+      delete (window as unknown as { __fdSound?: typeof sound }).__fdSound;
+      delete (window as unknown as { __fdTrim?: typeof TRIM }).__fdTrim;
+    };
   }, []);
 
   const say = (s: string) => setStatus(s);

@@ -8,18 +8,23 @@
 import { useCallback, useId } from 'react';
 import { ArrowRight, Check, Compass, Flame, Shield } from 'lucide-react';
 import { useJuice } from '@/components/fx';
+import { gatePress } from '@/lib/fx/press-gate';
 import { EXPEDITIONS, expeditionStatus } from '@/lib/expeditions.mjs';
 import { TOPIC_STYLE } from '../../collections';
 
 export const signed = (n: number) => (n > 0 ? `+${n}` : String(n));
 
-/** Press feedback for any pressable element: tap cue + light haptic on pointerdown. */
+/** Press feedback for any pressable element: tap cue + light haptic, gated so a scroll is silent. */
 export function useTap() {
   const juice = useJuice();
-  return useCallback(() => {
-    juice.sound('tap');
-    juice.haptic('light');
-  }, [juice]);
+  return useCallback(
+    (event?: unknown) =>
+      gatePress(event, () => {
+        juice.sound('tap');
+        juice.haptic('light');
+      }),
+    [juice],
+  );
 }
 
 /* ---------------------------------------------------------------- route art */
@@ -40,7 +45,10 @@ function seeded(seed: number) {
 }
 
 function geometry(route: any) {
-  const index = Math.max(0, EXPEDITIONS.findIndex((r: any) => r.id === route.id));
+  const index = Math.max(
+    0,
+    EXPEDITIONS.findIndex((r: any) => r.id === route.id),
+  );
   const rand = seeded(index * 2654435761 + 1013904223);
   // Kept inside the middle band so a `slice` crop on wide hero panels never loses a camp.
   const ys = CAMP_X.map(() => 40 + rand() * 52);
@@ -61,7 +69,15 @@ function geometry(route: any) {
 }
 
 /** Procedural route map: contour lines, a dashed route and three camps. */
-export function RouteArt({ route, cursor = 0, className }: { route: any; cursor?: number; className?: string }) {
+export function RouteArt({
+  route,
+  cursor = 0,
+  className,
+}: {
+  route: any;
+  cursor?: number;
+  className?: string;
+}) {
   const gid = `fdexp${useId().replace(/[^a-zA-Z0-9]/g, '')}`;
   const { path, ys, contours } = geometry(route);
   return (
