@@ -178,7 +178,7 @@ Per-correctness bands, enumerated exhaustively:
 run.answers[i] = { choice: 0..3, confidence: 'steady' | 'bold' | 'called' }
 ```
 
-`validRun` (`:157-177`) already validates `Object.hasOwn(CONFIDENCE, a.confidence)`, so adding the key to `CONFIDENCE` is the whole change. `'unknown'`, `'constructor'` and `'__proto__'` stay rejected (`tests/expeditions.test.mjs:108-109`).
+`validRun` (`:157-177`) already validates `Object.hasOwn(CONFIDENCE, a.confidence)`, so adding the key to `CONFIDENCE` is the whole change. `'unknown'`, `'constructor'` and `'__proto__'` stay rejected (`tests/expeditions.test.mjs:111-112`).
 
 #### 1.5.2 New export: `runTally(run)`
 
@@ -610,7 +610,7 @@ that contain Steady cards gives nine of them, including `3 Steady + 3 Called = 1
 predicate (`e.correct === 6 && e.score >= 18`) awarded a gold badge worth 300 XP and 50 gems for "nothing
 below Bold" to a run that was half Steady. Using `stakes.steady.n === 0` makes the description literally
 true. The `?? 6` and `?? 0` fallbacks exist for exactly one caller:
-`tests/progression.test.mjs:800-812` feeds `reduceProgression` a **synthetic** event
+`tests/progression.test.mjs:799-812` feeds `reduceProgression` a **synthetic** event
 `{ kind: 'expedition-complete', routeId: 'space', score: 18, first: true }` with no `correct` and no
 `stakes`; under a strict predicate the achievement never fires, XP drops 554 → 254,
 `levelForXp(xp).level` drops 3 → 2, and `assert.ok(level >= 3)` at `:810` fails. Real events always carry
@@ -1075,16 +1075,20 @@ needs no new write path. On every other surface the explanation is only shown *a
 
 #### 3.2.6 Caps, measured storage cost, and the measured read cost
 
-**Bytes at rest** (measured by serialising realistic records; see `scratchpad/bench.mjs` in §10.8):
+**Bytes at rest.** Measured with the benchmark that ships as `scripts/bench-journal.mjs` (§10.8), on
+**padded synthetic entries** —
+120-character questions, 200-character explanations — which are longer than the real bank (~507 B per
+round, ~399 B per card). The synthetic figures are therefore an **upper bound**, and every timing below
+is conservative for the same reason.
 
-| Collection | Today | Proposed | Per entry | At the 54-fact bank | Saturated |
+| Collection | Today | Proposed | Per entry (measured) | At the 54-fact bank | Saturated |
 |---|---|---|---|---|---|
-| `journal.rounds` | 200 | **200, unchanged** | 507 B | 101 KB | 101 KB |
-| `journal.matches` | 100 | 100, unchanged | ~80 B | 8 KB | 8 KB |
-| `journal.cards` | — | 300 | 630 B | 34 KB (54) | 189 KB |
-| `journal.facts` | — | 300 | 286 B | 15 KB (54) | 86 KB |
-| `journal.attempts` | — | **12 per fact, 600 global** | 235 B | 141 KB | 141 KB |
-| **Journal total** | **168 KB** | | **≈ 299 KB** | **≈ 525 KB** |
+| `journal.rounds` + `saved` | 200 + 200 | **unchanged** | 765 B / round | 159 KB | 159 KB |
+| `journal.matches` | 100 | 100, unchanged | ~85 B | 9 KB | 9 KB |
+| `journal.cards` | — | 300 | 630 B | 34 KB (54 facts) | 189 KB |
+| `journal.facts` | — | 300 | 286 B | 15 KB (54 facts) | 86 KB |
+| `journal.attempts` | — | **12 per fact, 600 global** | 235 B | 141 KB (600) | 141 KB |
+| **Journal total, measured** | **168 KB** | | **≈ 358 KB** | **≈ 584 KB** |
 
 **The cost that actually matters is not disk, and revision 1 measured the wrong thing.**
 `lib/profile-store.mjs:65` runs `readProfile(read.result)` inside **every** readwrite transaction, and
@@ -1099,7 +1103,7 @@ address it.
 
 | | Today | Revision 2 |
 |---|---|---|
-| Journal bytes | 167,816 | 583,639 (saturated) |
+| Journal bytes (measured) | 167,816 | 583,639 (saturated) |
 | `JSON.stringify` + `JSON.parse` leg | **1.136 ms** | 4.358 ms |
 | Validation of `rounds`/`matches`/`saved` | 0.417 ms | 0.417 ms |
 | Validation of `cards`/`facts`/`attempts` | — | **0.617 ms** |
@@ -1128,7 +1132,8 @@ exceed that, the caps are the tuning knob and this table is the instrument.
 Aggregates in `facts` are never evicted, so the *statistics* stay complete after old attempts age out of
 the rolling tail — and with `firstMissAt` / `recoveredAt` that is now true of §3.6's claim tile too.
 
-`exportAll` pretty-prints (`app/use-player.ts:215`): a saturated profile downloads at roughly 1.2 MB.
+`exportAll` pretty-prints (`app/use-player.ts:215`): a saturated profile downloads at roughly 1.3 MB
+(584 KB of journal, pretty-printed, plus progression and analytics).
 Acceptable; note it in the README.
 
 ### 3.3 Information architecture
@@ -2225,15 +2230,15 @@ deliberately changes; none of them is a behaviour contract.
 | Test | Line | From | To | Cause |
 |---|---|---|---|---|
 | `tests/progression.test.mjs` — "expeditions: per-card XP…" | `:508` | `assert.equal(logXp(…,'expedition-answer'), 18)` | `…, XP.expeditionCorrect)` → **12** | Tier-neutral per-card XP (R2, §1.6.4). |
-| same | `:516` | `…, 18 + 12 + 3)` | `…, XP.expeditionCorrect * 2 + XP.expeditionWrong)` → **27** | Same. |
-| same | `:545-553` | `… + XP.expeditionComplete + 18 * XP.expeditionScorePoint` | `… + XP.expeditionComplete + 5 * XP.expeditionScorePoint` | Replay score-XP is improvement-only; run-2 scores 18 against a previous best of 13 (§1.6.4). |
+| same | `:517` | `…, 18 + 12 + 3)` | `…, XP.expeditionCorrect * 2 + XP.expeditionWrong)` → **27** | Same. |
+| same | `:537-544` (the `18 *` term on `:543`) | `… + XP.expeditionComplete + 18 * XP.expeditionScorePoint` | `… + XP.expeditionComplete + 5 * XP.expeditionScorePoint` | Replay score-XP is improvement-only; run-2 scores 18 against a previous best of 13 (§1.6.4). |
 | `tests/progression.test.mjs` — "cosmetics…" | `:820-821` | `assert.equal(COSMETICS.length, 23)` ×2 | **29** ×2 | The catalogue grows by six (§1.8, D13). |
 
 **Everything else in that test is unaffected** and was checked line by line: `:507` (log kinds after one
-card), `:509` (`counters.recalls`), `:510` (`passportSummary` points), `:519-537` (the 13-point run-1 and
-its completion award), `:539-540` (`stamps`, `expeditions`), `:554` (`bold-master`, which still fires —
-run-2 is all-Bold so `stakes.steady.n === 0`), `:555` (`counters.facts === 6`, a passport ledger this
-spec does not touch) and `:556` (the `readProfile` identity round trip).
+card), `:509` (`counters.recalls`), `:510` (`passportSummary` points), `:518-533` (the 13-point run-1 and its
+completion award), `:535-536` (`stamps`, `expeditions`), `:545` (`bold-master`, which still fires —
+run-2 is all-Bold so `stakes.steady.n === 0`), `:546` (`counters.facts === 6`, a passport ledger this
+spec does not touch) and `:547` (the `readProfile` identity round trip).
 
 ### 10.1 Tests that must keep passing unchanged (verified by inspection)
 
@@ -2242,7 +2247,7 @@ spec does not touch) and `:556` (the `readProfile` identity round trip).
 | `tests/expeditions.test.mjs:85` — the p = 0.5 indifference identity | Steady and Bold payouts are byte-identical. |
 | `tests/expeditions.test.mjs:78, 84` — `assert.deepEqual(runResult(...), { score, correct, bold })` | `runResult`'s return shape is unchanged; tallies live in `runTally`. |
 | `tests/expeditions.test.mjs:87-100` — all-Bold 6/6 = 18, all-Bold 0/6 = −6 | Unchanged payouts. |
-| `tests/expeditions.test.mjs:108-109` — `'unknown'`, `'constructor'`, `'__proto__'` rejected | `Object.hasOwn(CONFIDENCE, …)` is untouched. |
+| `tests/expeditions.test.mjs:111-112` — `'unknown'`, `'constructor'`, `'__proto__'` rejected | `Object.hasOwn(CONFIDENCE, …)` is untouched. |
 | `tests/expeditions.test.mjs:133, 155` — `readProfile` identity round trips | `folded` / `foldedDay` are in the `readExpeditions` literal (§1.5.5); every new journal cap is enforced by the writer as well as the sanitiser (R4). |
 | `tests/expeditions.test.mjs:135-155` — resume, mixed run scoring 9 | Unchanged payouts. |
 | `tests/expeditions.test.mjs` replay test — `first` immutable, `best.score === 18` | Correctness-first ordering picks the 6/6 run (§1.5.8). |
@@ -2252,8 +2257,8 @@ spec does not touch) and `:556` (the `readProfile` identity round trip).
 | `tests/progression.test.mjs:565` — `assert.strictEqual(act(p, {type:'open', …}), p)` | **The `open` action is byte-identical. No `opens` counter is added** (§3.2.2). |
 | `tests/progression.test.mjs:584-612` — daily quests deterministic, one per tier | The test pins tier composition and determinism, **not template ids**, so adding `review-5` and relabelling `bold-4` (same id, same tier) both pass. |
 | `tests/progression.test.mjs:757` — `ACHIEVEMENTS.length === 30` | **No achievement is added anywhere in this spec.** |
-| `tests/progression.test.mjs:800-812` — synthetic `expedition-complete` at score 18 reaches level ≥ 3 | `bold-master`'s `(e.correct ?? 6)` and `(e.stakes?.steady.n ?? 0)` fallbacks keep it firing on a fixture with neither field; `expeditionScorePoint` and the `e.first` branch are unchanged, so the 18 × 8 term is unchanged (§1.7). |
-| `tests/journal.test.mjs:87` — `readJournal('{"version":2}')` → empty | `journal.version` stays 1; `readJournal(raw)`'s signature is unchanged by the `readJournalValue` split. |
+| `tests/progression.test.mjs:799-812` — synthetic `expedition-complete` at score 18 (`:802`) reaches level ≥ 3 (`:810`) | `bold-master`'s `(e.correct ?? 6)` and `(e.stakes?.steady.n ?? 0)` fallbacks keep it firing on a fixture with neither field; `expeditionScorePoint` and the `e.first` branch are unchanged, so the 18 × 8 term is unchanged (§1.7). |
+| `tests/journal.test.mjs:87` — `assert.deepEqual(readJournal('{"version":2}'), fresh())` | `journal.version` stays 1; `readJournal(raw)`'s signature is unchanged by the `readJournalValue` split; and the assertion is `deepEqual`, not `strictEqual`, so returning two distinct factory objects instead of two aliases of one singleton passes (`fresh = () => readJournal(null)` at `:4`). |
 | `tests/journal.test.mjs:89-101` — 200/100 caps | `rounds` and `matches` caps are unchanged. |
 | `tests/passport.test.mjs:88`, `tests/events.test.mjs:501`, `tests/analytics.test.mjs:374` — identity | R4 plus the `readExpeditions` literal. |
 | `tests/events.test.mjs:405` — `LOG_KINDS.includes('event')` | Adding `'review'` is additive. |
@@ -2306,7 +2311,7 @@ spec does not touch) and `:556` (the `readProfile` identity round trip).
 37. **`firstMissAt` / `recoveredAt` are write-once and day-ordered** — a fact missed and recovered on the same local day has `recoveredAt === null`; recovered the next day, it is set and never moves again. The claim tile's `n` and `m` are computed from these fields with **no attempt in the window**, and stay correct after the per-fact cap evicts the miss.
 38. **Recall Lab now records** — dispatching `review` twice on the same fact produces two attempts and two `seen` increments (the current `onRecall` produces zero after the first).
 39. **Vault actions resolve past the 200-round window** — a fact whose round has rolled out is still savable and openable via `journal.cards`.
-40. **Round-trip size and read cost** — a saturated journal (300 cards, 300 facts, 600 attempts) serialises under 700 KB, and `readJournalValue` on it completes in under 4 ms on CI (§3.2.6's instrument, run as a soft budget with a logged number).
+40. **Round-trip size and read cost** — a saturated journal (300 cards, 300 facts, 600 attempts) serialises under 700 KB (measured 584 KB on padded synthetic text), and `readJournalValue` on it completes in under 4 ms on CI (§3.2.6's instrument, run as a soft budget with a logged number).
 
 ### 10.5 New unit tests — `tests/honesty.test.mjs` (new file)
 
