@@ -27,11 +27,39 @@ export function hapticsSupported(): boolean {
 }
 
 /**
+ * Browsers reject `navigator.vibrate` until the document has seen a real user gesture, and
+ * Chromium logs a console error for every rejected call. We therefore stay silent until the
+ * first trusted pointer/key/touch event, which costs nothing: no haptic is wanted before the
+ * player has touched the page anyway.
+ */
+let gestureSeen = false;
+
+function armGestureListener(): void {
+  if (typeof window === 'undefined' || gestureSeen) return;
+  const arm = () => {
+    gestureSeen = true;
+    for (const type of ['pointerdown', 'keydown', 'touchstart']) {
+      window.removeEventListener(type, arm, true);
+    }
+  };
+  for (const type of ['pointerdown', 'keydown', 'touchstart']) {
+    window.addEventListener(type, arm, { capture: true, passive: true });
+  }
+}
+
+armGestureListener();
+
+/** True once the document has seen a user gesture, so vibration calls are allowed. */
+export function hapticsUnlocked(): boolean {
+  return gestureSeen;
+}
+
+/**
  * Trigger a vibration. Returns true when a pattern was handed to the browser (which may
  * still ignore it — e.g. before any user activation).
  */
 export function haptic(kind: HapticKind): boolean {
-  if (!hapticsSupported() || !getPrefs().haptics) return false;
+  if (!gestureSeen || !hapticsSupported() || !getPrefs().haptics) return false;
   const pattern = HAPTIC_PATTERNS[kind];
   if (!pattern) return false;
   try {
@@ -43,7 +71,7 @@ export function haptic(kind: HapticKind): boolean {
 
 /** Cancel any ongoing vibration. */
 export function stopHaptics(): void {
-  if (!hapticsSupported()) return;
+  if (!gestureSeen || !hapticsSupported()) return;
   try {
     navigator.vibrate(0);
   } catch {

@@ -32,7 +32,14 @@ export { shake, SHAKE_DURATION_MS } from './shake';
 export { usePrefs, useReducedMotion, useMounted } from './use-prefs';
 
 export { sound, SoundEngine, CUES, CUE_THROTTLE_MS, TRIM, type Cue, type PlayOptions } from '@/lib/fx/sound';
-export { haptic, stopHaptics, hapticsSupported, HAPTIC_PATTERNS, type HapticKind } from '@/lib/fx/haptics';
+export {
+  haptic,
+  stopHaptics,
+  hapticsSupported,
+  hapticsUnlocked,
+  HAPTIC_PATTERNS,
+  type HapticKind,
+} from '@/lib/fx/haptics';
 export {
   particles,
   ParticleEngine,
