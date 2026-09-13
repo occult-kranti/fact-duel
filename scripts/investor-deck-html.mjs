@@ -86,10 +86,21 @@ const nav = plan.slides
   .map((s) => `<a href="#s${s.n}"><span>${esc(label(s))}</span>${esc(s.kicker || s.title.slice(0, 30))}</a>`)
   .join('\n');
 
-const html = `<title>FACT//DUEL Seed Round</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
+// Two font sources, chosen by where the page will live. On the published site the repository's own
+// woff2 files sit one directory up, so the page has no external dependency at all; a standalone copy
+// (e.g. an artifact host) has no such files and falls back to Google Fonts.
+const SELF_HOSTED = process.argv.includes('--self-hosted');
+const fontHead = SELF_HOSTED
+  ? `<link rel="icon" href="../favicon.svg">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../fonts/bricolage-grotesque-latin-normal-500-800.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../fonts/instrument-sans-latin-normal-400-700.woff2">
+<link rel="stylesheet" href="../fonts/fonts.css">`
+  : `<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap">`;
+
+const html = `<title>FACT//DUEL Seed Round</title>
+${fontHead}
 <style>
 /* One committed dark identity: the product's own Floodlight palette, and the charts are dark-ground
    images that would fight a light page. Every colour is painted explicitly. */
@@ -199,5 +210,6 @@ footer.end{padding-block:44px 72px;color:var(--dim);font-family:var(--mono);font
 </div>
 `;
 
-writeFileSync('public/product/investor/deck.html', html);
-console.log('wrote', html.length, 'chars |', core.length, 'core +', appendix.length, 'appendix slides');
+const outPath = SELF_HOSTED ? 'public/product/investor/deck.site.html' : 'public/product/investor/deck.html';
+writeFileSync(outPath, html);
+console.log('wrote', outPath, html.length, 'chars |', core.length, 'core +', appendix.length, 'appendix slides');
