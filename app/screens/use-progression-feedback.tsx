@@ -19,6 +19,9 @@ type LogEntry = { id: string; at: number; kind: string; xp?: number; gems?: numb
 type Diff = ReturnType<typeof progressionDiff> & { logEntries: LogEntry[] };
 type Quiet = { toasts: boolean; ceremonies: boolean };
 
+/** The ceremony hero slot is a 132px circle; without this the medal canvas covers the card. */
+const MEDAL_HEIGHT = 132;
+
 const STREAK_MILESTONES = new Set([3, 7, 14, 30, 50, 100]);
 const TOASTED_KINDS = new Set(['quest', 'quests-bonus', 'streak', 'rank', 'cosmetic', 'expedition-complete']);
 
@@ -66,7 +69,7 @@ export function useProgressionFeedback(progression: any, quiet: Quiet) {
             title: `Level ${to}`,
             subtitle: `${info.title} · keep the floodlights on`,
             rewards: [{ label: 'Gems', icon: '💎', value: `+${25 * (to - diff.leveledUp!.from)}` }],
-            slot: <LazyRewardMedal variant="level" replayKey={to} size={1.1} />,
+            slot: <LazyRewardMedal variant="level" replayKey={to} size={1.1} height={MEDAL_HEIGHT} />,
           }),
       });
     }
@@ -95,7 +98,9 @@ export function useProgressionFeedback(progression: any, quiet: Quiet) {
               { label: 'XP', icon: '⚡', value: `+${a.xp}` },
               { label: 'Gems', icon: '💎', value: `+${a.gems}` },
             ],
-            slot: <LazyRewardMedal variant="achievement" tier={a.tier} replayKey={a.id} />,
+            slot: (
+              <LazyRewardMedal variant="achievement" tier={a.tier} replayKey={a.id} height={MEDAL_HEIGHT} />
+            ),
           }),
       });
     }
@@ -134,7 +139,7 @@ export function useProgressionFeedback(progression: any, quiet: Quiet) {
               current >= 7
                 ? 'A shield is yours for the next missed day.'
                 : 'Come back tomorrow to keep it alight.',
-            slot: <LazyRewardMedal variant="streak" replayKey={current} />,
+            slot: <LazyRewardMedal variant="streak" replayKey={current} height={MEDAL_HEIGHT} />,
           }),
       });
     }

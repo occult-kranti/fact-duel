@@ -783,9 +783,10 @@ export default function Arena() {
             progression={player.progression}
             quiet={{
               // Toasts stay out of the way while a question is on screen; full-screen ceremonies
-              // wait for the room to close entirely, so nothing ever covers a round or its reveal.
+              // wait until the player is off every playing surface, so nothing ever covers a round,
+              // a reveal or an expedition card (a ceremony also locks body scroll while open).
               toasts: !!room && ['scheduled', 'playing'].includes(room.phase) && !room.round?.result,
-              ceremonies: !!room,
+              ceremonies: !!room || tab === 'journeys',
             }}
           />
         }
