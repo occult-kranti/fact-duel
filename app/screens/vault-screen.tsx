@@ -2,7 +2,7 @@
 import { Journal } from '../journal';
 import type { VaultScreenProps } from './types';
 
-/* Vault tab: the journal (facts, recall lab, flagged questions, match history). */
+/* Vault tab: the journal (facts, Recall Lab, flagged questions, match history). */
 export function VaultScreen({ player, go }: VaultScreenProps) {
   return (
     <Journal
@@ -15,6 +15,8 @@ export function VaultScreen({ player, go }: VaultScreenProps) {
       onExport={player.exportAll}
       epoch={player.profile.epoch}
       loaded={player.loaded}
+      passport={player.passport}
+      summary={player.summary}
       onPlay={() => go('discovery')}
     />
   );
