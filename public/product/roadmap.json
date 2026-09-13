@@ -1641,6 +1641,49 @@
       "criteria": "Planner accepts an accuracy parameter; plans stay fixed and hidden; timing tests extended; UI labels every persona as BOT.",
       "evidence": "Not started; Lucky Guess remains the only bot.",
       "next": "Ship after the rank loop is observed."
+    },
+    {
+      "id": "G34",
+      "milestone": "Floodlight gamification",
+      "owner": "Research + engine lead",
+      "status": "done",
+      "priority": "P1",
+      "dependencies": [
+        "G08"
+      ],
+      "title": "Curated events calendar",
+      "goal": "Tie the app to what is actually happening in sport and science.",
+      "criteria": "Every date and result found and independently re-checked against a primary or reference source; static data with the verification date shown to players; no live feed implied.",
+      "evidence": "62 events across nine topics; 64 of 64 survived independent verification; two dropped for having no matching question topic.",
+      "next": "Refresh monthly using the checklist and the health-check script."
+    },
+    {
+      "id": "G35",
+      "milestone": "Floodlight gamification",
+      "owner": "Engine lead",
+      "status": "done",
+      "priority": "P1",
+      "dependencies": [
+        "G34"
+      ],
+      "title": "Monthly limited-time modes",
+      "goal": "A reason to come back that changes with the world, not with a timer.",
+      "criteria": "Deterministic per month and dataset; eight templates across live, upcoming and past; sets an exact duel; pays a flat bonus and mints a badge once.",
+      "evidence": "23 engine tests; verified across five timezones; badge paid once across replays.",
+      "next": "Watch whether players actually play the mode rather than the topic."
+    },
+    {
+      "id": "G36",
+      "milestone": "Floodlight gamification",
+      "owner": "Research lead",
+      "status": "done",
+      "priority": "P1",
+      "dependencies": [],
+      "title": "Seed investor evidence base and deck",
+      "goal": "Argue the opportunity with numbers that survive checking.",
+      "criteria": "Bottom-up TAM/SAM/SOM; competitor figures from filings and store listings; projections labelled as plans; every number sourced; unverifiable claims quarantined.",
+      "evidence": "119 of 127 claims verified independently; 26-slide deck; an adversarial pass raised 119 problems across 14 slides, all corrected or deleted.",
+      "next": "Replace benchmark inputs with observed cohort data once the product has users."
     }
   ]
 }

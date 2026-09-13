@@ -6,6 +6,7 @@ import type { PlayScreenProps } from './types';
 import { LaunchPanel } from './play/launch-panel';
 import { MatchSettings } from './play/match-settings';
 import { ModeCards } from './play/mode-cards';
+import { ModesRow } from './events/modes-row';
 import { JoinForm, OpponentPicker } from './play/opponent-picker';
 import { usePlayJuice } from './play/press';
 import { TopicChips } from './play/topic-chips';
@@ -16,8 +17,18 @@ import './play/play.css';
  * DuelController; every piece of state still lives in arena.tsx. */
 export function PlayScreen({ duel, player, catalogue, joinView, joinLink }: PlayScreenProps) {
   const { config, name, busy, modeInfo, MODES, actions } = duel;
-  const { go, change, create, join, setName, setJoinView, setJoinLink, clearFilters, chooseCollection } =
-    actions;
+  const {
+    go,
+    change,
+    create,
+    join,
+    setName,
+    setJoinView,
+    setJoinLink,
+    clearFilters,
+    chooseCollection,
+    chooseEventMode,
+  } = actions;
   const { press } = usePlayJuice();
   const facets = catalogue?.facets || [];
   const pool = useMemo(
@@ -77,6 +88,8 @@ export function PlayScreen({ duel, player, catalogue, joinView, joinLink }: Play
 
       <div className="fd-play-grid">
         <div className="fd-play-col">
+          {!joinView && <ModesRow activeId={duel.eventModeId} onChoose={chooseEventMode} go={go} />}
+
           {!joinView && (
             <section id="formats" tabIndex={-1} className="fd-block" aria-labelledby="match-setup">
               <div className="fd-block-head">

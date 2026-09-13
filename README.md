@@ -5,7 +5,9 @@ All coins are free, per-room simulations with no monetary value.
 
 ## Play
 
-**Home** is the arena hub: your level, XP, day streak, gems and Arena Rank, a one-tap duel against
+**Events** carries a curated calendar of real sports and science events — just finished, on right
+now, and coming up — and turns them into limited-time modes that rotate every month. **Home** is the
+arena hub: your level, XP, day streak, gems and Arena Rank, a one-tap duel against
 the practice bot, the day's three quests, and whichever expedition you have in progress.
 **Expeditions** has nine narrow sports and science routes using the existing 54-question sample.
 **Play** builds a duel, **Player** holds your record, badges, stamps and the Locker, and **Vault**
@@ -188,6 +190,37 @@ Rapier physics gem tray whose WebAssembly chunk is fetched only when that sectio
 cap device pixel ratio, pause when off-screen or hidden, dispose their resources on unmount and fall
 back to static artwork when WebGL is missing or reduced motion is requested. The earlier standalone
 showroom remains.
+
+## Events and limited-time modes
+
+`lib/events-data.mjs` holds a hand-curated calendar of real sports and science events. Every date and
+result in it was found by one research pass and independently re-checked by another against a primary
+or reference source, and each entry carries the URL it was checked against. It is **static data in the
+repository**: there is no feed, no scores service and no results API anywhere in the app, and every
+events surface says so along with the date a human last verified the list.
+
+`lib/events.mjs` decides an event's status by whole local days (verified identical across five
+timezones), groups the calendar into live, coming up and recently finished, and derives up to four
+limited-time modes per month. The rotation is deterministic from the month and the dataset, so a new
+month brings new modes with nothing to schedule or deploy. Each mode pairs an event with one of eight
+templates — Final whistle and Mission window while something is on, Countdown and Prize watch before
+it, Replay and Field report after it — and sets up that exact duel: mode, timer and topic.
+
+Clearing a mode pays a small flat XP bonus times the template's multiplier and mints its badge the
+first time only. Replaying is welcome and simply never pays the bonus twice. `pnpm exec node
+scripts/events-check.mjs` reports the calendar's age, what is live, how many modes are open and which
+topics are thin, and exits non-zero when the month needs a refresh; `public/product/events-calendar.md`
+is the checklist for doing it.
+
+## Investor material
+
+`public/product/investor/` holds the seed deck (`factduel-seed-deck.pptx`, 26 slides with seven
+plots), the same content as markdown for review in git, the scripts that regenerate both, and the
+evidence behind every number: a bottom-up TAM/SAM/SOM, competitor figures taken from filings and
+store listings, published benchmarks, a three-year model whose every figure is marked (P) as a plan
+rather than a forecast, and an explicit register of what could not be verified. Claims that failed
+verification are kept in their own file so they are never reused. The deck states plainly that the
+product has no users and no revenue.
 
 ## Product Studio and local records
 
