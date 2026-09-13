@@ -1,37 +1,23 @@
 'use client';
 /**
- * Small shared pieces for the Room screen: the colour-blind-safe answer glyphs, the shared
- * press-feedback handler and the ready/connection indicators.
+ * Small shared pieces for the Room screen: the shared press-feedback handler and the
+ * ready/connection indicators.
  *
- * Shape coding (design bible §"Answer buttons"): 1 triangle/ember, 2 diamond/cyan,
- * 3 circle/gold, 4 square/magenta — inline SVG so the shape survives a colour-blind palette.
+ * The answer button, its glyphs and the shape names now live in `app/screens/answer-button.tsx`
+ * so the expedition run and the learning surfaces can carry the same a11y coding; they are
+ * re-exported here because the room modules have always imported them from this file.
  */
 import { useCallback } from 'react';
 import { useJuice } from '@/components/fx';
 
-export const OPTION_SHAPES = ['triangle', 'diamond', 'circle', 'square'] as const;
-export const OPTION_ACCENTS = ['ember', 'cyan', 'gold', 'magenta'] as const;
-export const OPTION_SHAPE_NAMES = ['Triangle', 'Diamond', 'Circle', 'Square'] as const;
-
-/** Inline glyph for answer option `index` (0–3). Decorative: the option text carries the meaning. */
-export function AnswerGlyph({ index, size = 20 }: { index: number; size?: number }) {
-  const i = ((index % 4) + 4) % 4;
-  return (
-    <svg
-      className="fd-glyph"
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      aria-hidden="true"
-      focusable="false"
-    >
-      {i === 0 && <path d="M12 3.2 22 20.4H2Z" />}
-      {i === 1 && <path d="M12 2.2 21.8 12 12 21.8 2.2 12Z" />}
-      {i === 2 && <circle cx="12" cy="12" r="9.2" />}
-      {i === 3 && <rect x="3.2" y="3.2" width="17.6" height="17.6" rx="3" />}
-    </svg>
-  );
-}
+export {
+  AnswerButton,
+  AnswerGlyph,
+  AnswerShapeName,
+  OPTION_ACCENTS,
+  OPTION_SHAPES,
+  OPTION_SHAPE_NAMES,
+} from '../answer-button';
 
 /**
  * Press feedback for any control: a tap cue plus a light haptic on pointer *down*.

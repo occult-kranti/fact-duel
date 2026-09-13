@@ -4,7 +4,9 @@
 
 .fd-home {
   --fd-orb-h: 196px;
+  /* the learning accent, split like the tokens: fill vs text (app/theme/tokens.css §2) */
   --fd-cool: var(--cyan);
+  --fd-cool-text: var(--cyan-text);
   display: flex;
   flex-direction: column;
   gap: 18px;
@@ -86,7 +88,7 @@
 .fd-home .fd-hub-btn--cool {
   border-color: color-mix(in oklab, var(--fd-cool) 55%, transparent);
   background: var(--cyan-soft);
-  color: var(--fd-cool);
+  color: var(--fd-cool-text);
 }
 .fd-home .fd-hub-btn--cool:hover {
   background: color-mix(in oklab, var(--fd-cool) 20%, transparent);
@@ -154,14 +156,14 @@
   font-size: var(--fs-12);
   font-weight: 750;
   letter-spacing: 0.09em;
-  color: var(--volt);
+  color: var(--volt-text);
 }
 .fd-home .fd-hub-eyebrow > svg {
   width: 14px;
   height: 14px;
 }
 .fd-home .fd-hub-eyebrow--cool {
-  color: var(--fd-cool);
+  color: var(--fd-cool-text);
 }
 .fd-home .fd-hub-section-head {
   display: flex;
@@ -183,7 +185,7 @@
   color: var(--muted);
 }
 .fd-home .fd-hub-section-note b {
-  color: var(--gold);
+  color: var(--gold-text);
   font-weight: 700;
 }
 .fd-home .fd-hub-empty {
@@ -245,7 +247,7 @@
   font-size: var(--fs-12);
   font-weight: 700;
   letter-spacing: 0.06em;
-  color: var(--volt);
+  color: var(--volt-text);
 }
 
 /* ---------- player card ---------- */
@@ -290,7 +292,7 @@
   font-size: var(--fs-22);
   font-weight: 800;
   line-height: 1;
-  color: var(--fd-accent);
+  color: var(--fd-accent-text);
 }
 .fd-home .fd-hub-player-card[data-frame='chartreuse-ring'] .fd-hub-avatar {
   box-shadow:
@@ -350,7 +352,7 @@
   background: color-mix(in oklab, var(--fd-accent) 16%, transparent);
   font-size: var(--fs-12);
   font-weight: 700;
-  color: var(--fd-accent);
+  color: var(--fd-accent-text);
 }
 .fd-home .fd-hub-player-go {
   width: 20px;
@@ -428,17 +430,17 @@
   color: var(--muted);
 }
 .fd-home .fd-hub-stat--streak {
-  color: var(--magenta);
+  color: var(--magenta-text);
   border-color: color-mix(in oklab, var(--magenta) 32%, transparent);
   background: var(--magenta-soft);
 }
 .fd-home .fd-hub-stat--gems {
-  color: var(--gold);
+  color: var(--gold-text);
   border-color: color-mix(in oklab, var(--gold) 32%, transparent);
   background: var(--gold-soft);
 }
 .fd-home .fd-hub-stat--rank {
-  color: var(--ember);
+  color: var(--ember-text);
   border-color: color-mix(in oklab, var(--ember) 32%, transparent);
   background: var(--ember-soft);
 }
@@ -450,7 +452,7 @@
   display: inline-flex;
   align-items: center;
   gap: 2px;
-  color: var(--magenta);
+  color: var(--magenta-text);
 }
 .fd-home .fd-hub-shields > svg {
   width: 12px;
@@ -492,6 +494,8 @@
   font-weight: 600;
   opacity: 0.82;
 }
+/* The one place an accent is ink on a DARK chip inside the volt CTA: it wants the fill, not the
+   light-theme text twin. */
 .fd-home .fd-hub-bot {
   padding: 1px 6px;
   border-radius: var(--r-pill);
@@ -516,7 +520,7 @@
 .fd-home .fd-hub-cta-note > svg {
   width: 14px;
   height: 14px;
-  color: var(--gold);
+  color: var(--gold-text);
 }
 .fd-home .fd-hub-cta-note > svg:last-of-type {
   color: var(--muted);
@@ -610,11 +614,11 @@
 }
 .fd-home .fd-hub-chip--xp {
   background: var(--volt-soft);
-  color: var(--volt);
+  color: var(--volt-text);
 }
 .fd-home .fd-hub-chip--gem {
   background: var(--gold-soft);
-  color: var(--gold);
+  color: var(--gold-text);
 }
 .fd-home .fd-hub-quest-label {
   font-size: var(--fs-14);
@@ -642,7 +646,7 @@
   color: var(--muted);
 }
 .fd-home .fd-hub-quest[data-done] .fd-hub-quest-foot small {
-  color: var(--volt);
+  color: var(--volt-text);
 }
 
 /* ---------- expedition (cool surface) ---------- */
@@ -734,7 +738,7 @@
   background: var(--cyan-soft);
 }
 .fd-home .fd-hub-camps li[data-state='current'] > span {
-  color: var(--fd-cool);
+  color: var(--fd-cool-text);
 }
 .fd-home .fd-hub-expedition-foot {
   display: flex;
@@ -766,7 +770,7 @@
   border-radius: var(--r-control);
   border: 1px solid currentColor;
   background: color-mix(in oklab, currentColor 12%, transparent);
-  color: var(--ember);
+  color: var(--ember-text);
 }
 .fd-home .fd-hub-rank-badge > svg {
   width: 22px;
@@ -776,13 +780,13 @@
   color: var(--muted);
 }
 .fd-home .fd-hub-rank-badge[data-tier='gold'] {
-  color: var(--gold);
+  color: var(--gold-text);
 }
 .fd-home .fd-hub-rank-badge[data-tier='platinum'] {
-  color: var(--cyan);
+  color: var(--cyan-text);
 }
 .fd-home .fd-hub-rank-badge[data-tier='diamond'] {
-  color: var(--magenta);
+  color: var(--magenta-text);
 }
 .fd-home .fd-hub-rank-body {
   display: grid;
@@ -810,7 +814,7 @@
 .fd-home .fd-hub-rank-points {
   font-size: var(--fs-14);
   font-weight: 700;
-  color: var(--ember);
+  color: var(--ember-text);
 }
 .fd-home .fd-hub-rank-note {
   font-size: var(--fs-12);
@@ -867,19 +871,19 @@
 }
 .fd-home .fd-hub-log-list li[data-tone='gold'] .fd-hub-log-icon {
   background: var(--gold-soft);
-  color: var(--gold);
+  color: var(--gold-text);
 }
 .fd-home .fd-hub-log-list li[data-tone='cyan'] .fd-hub-log-icon {
   background: var(--cyan-soft);
-  color: var(--cyan);
+  color: var(--cyan-text);
 }
 .fd-home .fd-hub-log-list li[data-tone='magenta'] .fd-hub-log-icon {
   background: var(--magenta-soft);
-  color: var(--magenta);
+  color: var(--magenta-text);
 }
 .fd-home .fd-hub-log-list li[data-tone='ember'] .fd-hub-log-icon {
   background: var(--ember-soft);
-  color: var(--ember);
+  color: var(--ember-text);
 }
 .fd-home .fd-hub-log-label {
   font-size: var(--fs-14);
@@ -897,14 +901,14 @@
   font-size: var(--fs-12);
   font-weight: 700;
   white-space: nowrap;
-  color: var(--volt);
+  color: var(--volt-text);
 }
 .fd-home .fd-hub-log-gain em {
   display: inline-flex;
   align-items: center;
   gap: 2px;
   font-style: normal;
-  color: var(--gold);
+  color: var(--gold-text);
 }
 .fd-home .fd-hub-log-gain em > svg {
   width: 11px;
@@ -955,12 +959,12 @@
   border-style: solid;
   border-color: color-mix(in oklab, var(--fd-cool) 55%, transparent);
   background: var(--cyan-soft);
-  color: var(--fd-cool);
+  color: var(--fd-cool-text);
 }
 .fd-home .fd-hub-stamp[data-earned][data-domain='sports'] {
   border-color: color-mix(in oklab, var(--ember) 55%, transparent);
   background: var(--ember-soft);
-  color: var(--ember);
+  color: var(--ember-text);
 }
 .fd-home .fd-hub-stamp:hover {
   border-color: currentColor;

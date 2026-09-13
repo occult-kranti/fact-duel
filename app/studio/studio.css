@@ -77,13 +77,13 @@
   font-size: 0.8rem;
 }
 .gam-counts > .status-done :is(strong, svg) {
-  color: var(--positive);
+  color: var(--positive-text);
 }
 .gam-counts > .status-in_progress :is(strong, svg) {
-  color: var(--primary);
+  color: var(--primary-text);
 }
 .gam-counts > .status-blocked :is(strong, svg) {
-  color: var(--sport);
+  color: var(--sport-text);
 }
 .gam-docnav {
   display: flex;

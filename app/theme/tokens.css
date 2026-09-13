@@ -24,6 +24,15 @@
   --magenta: #ff5ea8;
   --danger: #ff4d4d;
 
+  /* the accent as TEXT. In dark it is the accent itself; the light theme replaces these with
+     darker twins (>= 4.5:1 on every light ground) while the tokens above stay the true fills. */
+  --volt-text: var(--volt);
+  --ember-text: var(--ember);
+  --cyan-text: var(--cyan);
+  --gold-text: var(--gold);
+  --magenta-text: var(--magenta);
+  --danger-text: var(--danger);
+
   /* text on the accent */
   --volt-ink: #0d1400;
   --ember-ink: #1c0a02;
@@ -48,12 +57,19 @@
   --shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.32), 0 16px 40px rgba(0, 0, 0, 0.4);
   --shadow-sheet: 0 -8px 40px rgba(0, 0, 0, 0.5);
 
-  /* FX palette for particles / counters */
+  /* FX palette for particles / counters. `--fx-N` paints fills (the XP pop, particles);
+     `--fx-N-text` is the same colour where the juice layer draws ink on a light card. */
   --fx-1: var(--volt);
   --fx-2: var(--gold);
   --fx-3: var(--cyan);
   --fx-4: var(--magenta);
   --fx-5: var(--text);
+  --fx-1-text: var(--volt-text);
+  --fx-2-text: var(--gold-text);
+  --fx-3-text: var(--cyan-text);
+  --fx-4-text: var(--magenta-text);
+  --fx-5-text: var(--text);
+  --fx-gold: var(--gold-text);
 }
 
 @supports (color: oklch(0% 0 0)) {
@@ -90,7 +106,10 @@
 }
 
 /* ---------- 2. Light ---------- */
-/* Grounds invert; accents keep their hue but drop lightness so they stay legible as text. */
+/* Grounds invert. Accents keep their dark-theme vividness, because the same token paints FILLS —
+ * the Play CTA, the timer bar, the gold option chip — and a fill dropped to text lightness reads
+ * olive/brown (advisor loop 1, P1-2). The accent-as-text job moved to the `--*-text` twins below:
+ * the same hue at a lightness that clears 4.5:1 on --bg-0, --bg-1 and --bg-2. */
 :root[data-theme='light'] {
   color-scheme: light;
   --bg-0: #f7f6ef;
@@ -98,32 +117,45 @@
   --bg-2: #fdfdf9;
   --line: rgba(92, 102, 118, 0.35);
   --text: #1e2530;
-  --muted: #5c6674;
+  --muted: #515963;
 
-  --volt: #5f8f00;
-  --ember: #c2500c;
-  --cyan: #0080a0;
-  --gold: #9a7400;
-  --magenta: #c21c70;
-  --danger: #c62b2b;
+  /* fills — identical to dark, so nothing painted with an accent goes muddy */
+  --volt: #d4ff3a;
+  --ember: #ff7a2f;
+  --cyan: #4ee1ff;
+  --gold: #ffc83d;
+  --magenta: #ff5ea8;
+  --danger: #ff4d4d;
 
-  --volt-ink: #f8ffe8;
-  --ember-ink: #fff4ec;
-  --cyan-ink: #ebfbff;
-  --gold-ink: #fff8e6;
-  --magenta-ink: #fff0f6;
-  --danger-ink: #fff0f0;
+  /* the same hues as text on a light ground — dark enough to clear 4.5:1 on --bg-0/1/2 *and*
+     on the matching `-soft` tint, which is the ground under most accent text */
+  --volt-text: #496201;
+  --ember-text: #9e3f00;
+  --cyan-text: #00686c;
+  --gold-text: #6f5803;
+  --magenta-text: #ac0070;
+  --danger-text: #b7001b;
 
-  --volt-soft: rgba(95, 143, 0, 0.12);
-  --ember-soft: rgba(194, 80, 12, 0.12);
-  --cyan-soft: rgba(0, 128, 160, 0.12);
-  --gold-soft: rgba(154, 116, 0, 0.14);
-  --magenta-soft: rgba(194, 28, 112, 0.12);
-  --danger-soft: rgba(198, 43, 43, 0.12);
+  /* text on the accent fill: the fills are bright here too, so the inks stay dark */
+  --volt-ink: #0d1400;
+  --ember-ink: #1c0a02;
+  --cyan-ink: #03161c;
+  --gold-ink: #1d1400;
+  --magenta-ink: #2a0415;
+  --danger-ink: #2a0505;
 
-  --glow-volt: 0 0 0 1px rgba(95, 143, 0, 0.35), 0 8px 32px rgba(95, 143, 0, 0.2);
-  --glow-ember: 0 0 0 1px rgba(194, 80, 12, 0.35), 0 8px 32px rgba(194, 80, 12, 0.2);
-  --glow-gold: 0 0 0 1px rgba(154, 116, 0, 0.35), 0 8px 32px rgba(154, 116, 0, 0.2);
+  /* tints sit behind accent TEXT, so they are mixed from the text twin, not the fill */
+  --volt-soft: rgba(73, 98, 1, 0.14);
+  --ember-soft: rgba(158, 63, 0, 0.12);
+  --cyan-soft: rgba(0, 104, 108, 0.12);
+  --gold-soft: rgba(111, 88, 3, 0.14);
+  --magenta-soft: rgba(172, 0, 112, 0.12);
+  --danger-soft: rgba(183, 0, 27, 0.12);
+
+  /* a bright fill needs an edge on a cream page: the 1px ring is the text twin */
+  --glow-volt: 0 0 0 1px rgba(73, 98, 1, 0.55), 0 8px 24px rgba(212, 255, 58, 0.45);
+  --glow-ember: 0 0 0 1px rgba(158, 63, 0, 0.5), 0 8px 24px rgba(255, 122, 47, 0.35);
+  --glow-gold: 0 0 0 1px rgba(111, 88, 3, 0.5), 0 8px 24px rgba(255, 200, 61, 0.4);
   --shadow-card: 0 1px 2px rgba(20, 24, 32, 0.08), 0 8px 24px rgba(20, 24, 32, 0.08);
   --shadow-lift: 0 2px 4px rgba(20, 24, 32, 0.1), 0 16px 40px rgba(20, 24, 32, 0.14);
   --shadow-sheet: 0 -8px 40px rgba(20, 24, 32, 0.18);
@@ -136,19 +168,27 @@
     --bg-2: oklch(99.5% 0.005 95);
     --line: oklch(45% 0.03 255 / 0.35);
     --text: oklch(20% 0.02 255);
-    --muted: oklch(48% 0.02 255);
-    --volt: oklch(58% 0.19 125);
-    --ember: oklch(58% 0.19 45);
-    --cyan: oklch(55% 0.12 200);
-    --gold: oklch(60% 0.14 90);
-    --magenta: oklch(55% 0.22 350);
-    --danger: oklch(52% 0.2 25);
-    --volt-soft: oklch(58% 0.19 125 / 0.12);
-    --ember-soft: oklch(58% 0.19 45 / 0.12);
-    --cyan-soft: oklch(55% 0.12 200 / 0.12);
-    --gold-soft: oklch(60% 0.14 90 / 0.14);
-    --magenta-soft: oklch(55% 0.22 350 / 0.12);
-    --danger-soft: oklch(52% 0.2 25 / 0.12);
+    --muted: oklch(46% 0.02 255);
+    /* fills: the dark-theme accents, unchanged */
+    --volt: oklch(92% 0.23 125);
+    --ember: oklch(72% 0.19 45);
+    --cyan: oklch(85% 0.14 200);
+    --gold: oklch(86% 0.17 90);
+    --magenta: oklch(68% 0.24 350);
+    --danger: oklch(62% 0.2 25);
+    /* text twins: same hue, inside sRGB, >= 4.5:1 on every light ground and on its own tint */
+    --volt-text: oklch(46% 0.115 125);
+    --ember-text: oklch(49% 0.14 45);
+    --cyan-text: oklch(47% 0.08 200);
+    --gold-text: oklch(47% 0.095 90);
+    --magenta-text: oklch(49% 0.205 350);
+    --danger-text: oklch(49% 0.2 25);
+    --volt-soft: oklch(46% 0.115 125 / 0.14);
+    --ember-soft: oklch(49% 0.14 45 / 0.12);
+    --cyan-soft: oklch(47% 0.08 200 / 0.12);
+    --gold-soft: oklch(47% 0.095 90 / 0.14);
+    --magenta-soft: oklch(49% 0.205 350 / 0.12);
+    --danger-soft: oklch(49% 0.2 25 / 0.12);
   }
 }
 
@@ -209,6 +249,14 @@
   --popover-foreground: var(--text);
   --primary: var(--volt);
   --primary-foreground: var(--volt-ink);
+  /* accent-as-text twins for the legacy sheets (see §1/§2: fills stay vivid, text darkens) */
+  --primary-text: var(--volt-text);
+  --positive-text: var(--volt-text);
+  --negative-text: var(--ember-text);
+  --sport-text: var(--ember-text);
+  --science-text: var(--cyan-text);
+  --rival-text: var(--cyan-text);
+  --destructive-text: var(--danger-text);
   --secondary: var(--bg-2);
   --secondary-foreground: var(--text);
   --muted-foreground: var(--muted);
@@ -229,7 +277,7 @@
   --sidebar-primary: var(--volt);
   --sidebar-primary-foreground: var(--volt-ink);
   --sidebar-accent: var(--bg-2);
-  --sidebar-accent-foreground: var(--volt);
+  --sidebar-accent-foreground: var(--volt-text);
   --sidebar-border: var(--line);
   --sidebar-ring: var(--volt);
   --chart-1: var(--fx-1);

@@ -2,9 +2,10 @@
 /**
  * Level card — the ownership piece of the Player screen (design bible 10.5).
  * Monogram avatar inside the equipped frame, the SVG level ring, the band title from
- * LEVEL_TITLES, and the XP bar with a counting total and the goal-gradient line
- * ("N XP to level M"). The equipped banner tints the card; the equipped accent drives
- * every highlight through --fd-accent.
+ * LEVEL_TITLES, and the XP bar. The bar states the goal-gradient fact exactly once
+ * ("10 / 80 to level 2", the same phrasing Home uses) next to the lifetime XP total.
+ * The equipped banner tints the card; the equipped accent drives every highlight
+ * through --fd-accent.
  */
 import { Sparkles } from 'lucide-react';
 import { NumberCounter } from '@/components/fx';
@@ -37,7 +38,6 @@ export function LevelCard({
   const title = cosmeticById(equipped.title) as { name: string } | undefined;
   const frame = cosmeticById(equipped.frame) as { name: string } | undefined;
   const banner = cosmeticById(equipped.banner) as { name: string } | undefined;
-  const remaining = Math.max(0, level.toNext - level.into);
   const display = name.trim() || 'Your player card';
   // The shell's default player name is "Challenger", which is also the default title cosmetic:
   // show the title chip only when it says something the name does not.
@@ -83,16 +83,10 @@ export function LevelCard({
             <NumberCounter value={progression.xp} /> XP
           </b>
           <span>
-            {level.into.toLocaleString()} / {level.toNext.toLocaleString()} into level {level.level}
+            {level.into.toLocaleString()} / {level.toNext.toLocaleString()} to level {level.level + 1}
           </span>
         </div>
-        <Meter value={level.progress} label={`Level ${level.level} progress`} />
-        <div className="fd-xp-row">
-          <span>
-            {remaining.toLocaleString()} XP to level {level.level + 1}
-          </span>
-          <span>{Math.round(level.progress * 100)}%</span>
-        </div>
+        <Meter value={level.progress} label={`Progress to level ${level.level + 1}`} />
       </div>
       <dl className="fd-record">
         {record.map(([label, value]) => (

@@ -42,7 +42,7 @@ export function FactCard({ fact, saved, openAwards, onOpen, onSave }: FactCardPr
             onSave(fact.question);
             if (adding) {
               juice.burst(el, 'gem');
-              juice.floatText(el, `+${XP.save} XP`, 'var(--gold)');
+              juice.floatText(el, `+${XP.save} XP`, 'var(--gold-text)');
             }
           }}
         >

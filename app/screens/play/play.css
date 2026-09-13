@@ -3,12 +3,15 @@
  * Tokens only; every class is `fd-` prefixed and scoped under `.fd-play`. */
 
 .fd-play {
+  /* Height of the sticky launch bar on phones: 10px + 54px button + 6px gap + terms line +
+     12px + hairline. The column reserves this plus the tab bar so the last section
+     ("Pick your subject") can always be scrolled clear of both. */
+  --fd-launch-h: 104px;
   display: flex;
   flex-direction: column;
   gap: 22px;
   min-width: 0;
-  /* room for the sticky launch bar that floats above the tab bar */
-  padding-bottom: 100px;
+  padding-bottom: calc(var(--fd-launch-h) + var(--nav-h) + var(--safe-bottom));
 }
 
 /* ---------- header ---------- */
@@ -157,7 +160,7 @@
   padding: 0 2px;
   border: 0;
   background: none;
-  color: var(--volt);
+  color: var(--volt-text);
   font-family: var(--font-ui);
   font-size: var(--fs-14);
   font-weight: 650;
@@ -269,7 +272,7 @@
   font-family: var(--font-mono);
   font-size: 11px;
   font-variant-numeric: tabular-nums;
-  color: var(--gold);
+  color: var(--gold-text);
 }
 .fd-play .fd-mode-mark {
   display: grid;
@@ -320,7 +323,7 @@
 .fd-play .fd-seg-btn[aria-pressed='true'] {
   background: var(--bg-2);
   box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--volt) 40%, transparent);
-  color: var(--volt);
+  color: var(--volt-text);
 }
 .fd-play .fd-rival {
   flex-direction: row;
@@ -341,10 +344,10 @@
   border-radius: var(--r-pill);
   border: 1px solid var(--line);
   background: var(--bg-2);
-  color: var(--ember);
+  color: var(--ember-text);
 }
 .fd-play .fd-rival[data-seat='friend'] .fd-rival-avatar {
-  color: var(--cyan);
+  color: var(--cyan-text);
 }
 .fd-play .fd-rival-avatar > svg {
   width: 22px;
@@ -370,7 +373,7 @@
   padding: 2px 7px;
   border-radius: var(--r-pill);
   background: var(--ember-soft);
-  color: var(--ember);
+  color: var(--ember-text);
   font-family: var(--font-mono);
   font-size: 10px;
   font-style: normal;
@@ -379,7 +382,7 @@
 }
 .fd-play .fd-rival[data-seat='friend'] .fd-rival-badge {
   background: var(--cyan-soft);
-  color: var(--cyan);
+  color: var(--cyan-text);
 }
 .fd-play .fd-rival-body > small {
   font-size: var(--fs-12);
@@ -556,7 +559,7 @@
 .fd-play .fd-opt[aria-pressed='true'] {
   border-color: var(--volt);
   background: var(--volt-soft);
-  color: var(--volt);
+  color: var(--volt-text);
 }
 
 /* ---------- pool + warning ---------- */
@@ -588,7 +591,7 @@
   color: var(--text);
 }
 .fd-play .fd-warn .fd-link {
-  color: var(--ember);
+  color: var(--ember-text);
 }
 
 /* ---------- record strip ---------- */
@@ -622,12 +625,12 @@
 .fd-play .fd-form-dot[data-outcome='win'] {
   border-color: color-mix(in oklab, var(--volt) 55%, transparent);
   background: var(--volt-soft);
-  color: var(--volt);
+  color: var(--volt-text);
 }
 .fd-play .fd-form-dot[data-outcome='loss'] {
   border-color: color-mix(in oklab, var(--ember) 55%, transparent);
   background: var(--ember-soft);
-  color: var(--ember);
+  color: var(--ember-text);
 }
 .fd-play .fd-form-empty {
   font-size: var(--fs-14);
@@ -819,7 +822,7 @@
     margin-top: 2px;
     font-family: var(--font-mono);
     font-variant-numeric: tabular-nums;
-    color: var(--gold);
+    color: var(--gold-text);
   }
   .fd-play .fd-launch-terms {
     justify-content: flex-start;

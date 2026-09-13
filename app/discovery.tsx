@@ -248,7 +248,7 @@ export default function Discovery({
                       player.save(fact.question);
                       if (adding) {
                         juice.burst(el, 'gem');
-                        juice.floatText(el, `+${XP.save} XP`, 'var(--gold)');
+                        juice.floatText(el, `+${XP.save} XP`, 'var(--gold-text)');
                       }
                     }}
                   >

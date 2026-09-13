@@ -4,7 +4,8 @@
  * money anywhere). Four tabs, one card per cosmetic, and the honest status straight from
  * `cosmeticStatus`: equipped / owned / available / buyable / locked. A locked card is disabled and
  * says exactly what would unlock it. The physics gem vault is only mounted while the Locker is
- * open, and only when the browser can draw it.
+ * open, only when the browser can draw it, and only when there is at least one gem to draw —
+ * at zero it is the static fallback pile, not a 2.2 MB physics chunk around an empty bowl.
  */
 import { useState } from 'react';
 import { Check, ChevronDown, Gem, Lock, Sparkles, Vault } from 'lucide-react';
@@ -117,7 +118,8 @@ export function Locker({ player }: { player: any }) {
       {open && (
         <div className="fd-locker-body" id="fd-locker-body">
           <figure className="fd-locker-vault">
-            {webgl ? (
+            {/* An empty vault is a static pile: never pay ~2.2 MB of physics to draw nothing. */}
+            {webgl && gems > 0 ? (
               <LazyGemVault
                 count={Math.min(gems, 120)}
                 maxGems={120}

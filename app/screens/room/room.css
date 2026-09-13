@@ -72,17 +72,7 @@
   line-height: 1.55;
   color: var(--muted);
 }
-.fd-room .fd-sr {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  padding: 0;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-  border: 0;
-}
+/* .fd-sr (the answer buttons' screen-reader shape name) is global — see app/globals.css. */
 
 /* Shared press feedback. `:active` never defers a click the way a JS-gated class can. */
 .fd-room .fd-btn[data-slot='button'] {
@@ -217,10 +207,10 @@
   color: var(--muted);
 }
 .fd-room .fd-room-conn[data-on='true'] > svg {
-  color: var(--volt);
+  color: var(--volt-text);
 }
 .fd-room .fd-room-conn[data-on='false'] {
-  color: var(--ember);
+  color: var(--ember-text);
 }
 
 /* ---------------------------------------------------------------- 3. HUD */
@@ -262,10 +252,10 @@
   font-family: var(--font-display);
   font-size: var(--fs-16);
   font-weight: 800;
-  color: var(--volt);
+  color: var(--volt-text);
 }
 .fd-room .fd-hud-rival .fd-hud-avatar {
-  color: var(--cyan);
+  color: var(--cyan-text);
 }
 .fd-room .fd-hud-id {
   display: flex;
@@ -304,10 +294,10 @@
   font-variant-numeric: tabular-nums;
 }
 .fd-room .fd-hud-nums b:first-child {
-  color: var(--volt);
+  color: var(--volt-text);
 }
 .fd-room .fd-hud-nums b:last-child {
-  color: var(--cyan);
+  color: var(--cyan-text);
 }
 .fd-room .fd-hud-nums i {
   font-style: normal;
@@ -354,7 +344,7 @@
   border-color: transparent;
 }
 .fd-room .fd-rail > span[data-status='loss'] {
-  color: var(--ember);
+  color: var(--ember-text);
   background: var(--ember-soft);
   border-color: var(--ember);
 }
@@ -362,7 +352,7 @@
   color: var(--text);
 }
 .fd-room .fd-rail > span[data-status='current'] {
-  color: var(--volt);
+  color: var(--volt-text);
   border-color: var(--volt);
   box-shadow: 0 0 0 1px var(--volt-soft);
 }
@@ -384,7 +374,7 @@
   font-size: var(--fs-12);
   font-weight: 700;
   letter-spacing: 0.08em;
-  color: var(--gold);
+  color: var(--gold-text);
   white-space: nowrap;
 }
 .fd-room .fd-combo b {
@@ -393,7 +383,7 @@
 .fd-room .fd-combo[data-hot='true'] {
   border-color: var(--magenta);
   background: var(--magenta-soft);
-  color: var(--magenta);
+  color: var(--magenta-text);
   box-shadow: 0 0 0 1px var(--magenta-soft);
 }
 
@@ -469,10 +459,10 @@
   font-family: var(--font-display);
   font-size: var(--fs-18);
   font-weight: 800;
-  color: var(--volt);
+  color: var(--volt-text);
 }
 .fd-room .fd-seat[data-you='false'] .fd-seat-avatar {
-  color: var(--cyan);
+  color: var(--cyan-text);
 }
 .fd-room .fd-seat small {
   font-family: var(--font-mono);
@@ -497,7 +487,7 @@
   color: var(--muted);
 }
 .fd-room .fd-seat-ready[data-on='true'] {
-  color: var(--volt);
+  color: var(--volt-text);
 }
 .fd-room .fd-ready-dot {
   display: grid;
@@ -564,7 +554,7 @@
   font-variant-numeric: tabular-nums;
   line-height: 0.92;
   letter-spacing: -0.05em;
-  color: var(--volt);
+  color: var(--volt-text);
   text-shadow: 0 0 44px color-mix(in oklab, var(--volt) 35%, transparent);
   animation: fd-count-in 460ms var(--ease-out) both;
 }
@@ -590,7 +580,7 @@
   font-size: var(--fs-12);
   font-weight: 700;
   letter-spacing: 0.14em;
-  color: var(--gold);
+  color: var(--gold-text);
   animation: fd-wild-in 420ms var(--ease-out) both;
 }
 @keyframes fd-count-in {
@@ -662,10 +652,10 @@
   color: var(--muted);
 }
 .fd-room .fd-clock[data-hot='true'] {
-  color: var(--ember);
+  color: var(--ember-text);
 }
 .fd-room .fd-clock[data-hot='true'] small {
-  color: var(--ember);
+  color: var(--ember-text);
 }
 
 /* The timer track never transitions: the bar must not lag the number next to it. */
@@ -724,7 +714,7 @@
   font-size: 0.625rem;
   font-weight: 700;
   letter-spacing: 0.12em;
-  color: var(--gold);
+  color: var(--gold-text);
 }
 .fd-room .fd-speed[data-spent='true'] + .fd-speed-label {
   color: var(--muted);
@@ -761,7 +751,7 @@
   color: var(--muted);
 }
 .fd-room .fd-qtag b {
-  color: var(--ember);
+  color: var(--ember-text);
   text-transform: uppercase;
 }
 .fd-room .fd-qtag i {
@@ -808,6 +798,7 @@
 }
 .fd-room .fd-answer {
   --opt: var(--muted);
+  --opt-text: var(--muted);
   display: grid;
   grid-template-columns: auto auto 1fr auto;
   align-items: center;
@@ -836,15 +827,19 @@
 }
 .fd-room .fd-answer[data-opt='0'] {
   --opt: var(--ember);
+  --opt-text: var(--ember-text);
 }
 .fd-room .fd-answer[data-opt='1'] {
   --opt: var(--cyan);
+  --opt-text: var(--cyan-text);
 }
 .fd-room .fd-answer[data-opt='2'] {
   --opt: var(--gold);
+  --opt-text: var(--gold-text);
 }
 .fd-room .fd-answer[data-opt='3'] {
   --opt: var(--magenta);
+  --opt-text: var(--magenta-text);
 }
 .fd-room .fd-answer-mark {
   display: grid;
@@ -852,8 +847,9 @@
   width: 30px;
   height: 30px;
   border-radius: 8px;
-  background: color-mix(in oklab, var(--opt) 15%, transparent);
-  color: var(--opt);
+  /* the tint keeps the vivid hue, the glyph takes the text twin so it reads on a cream card */
+  background: color-mix(in oklab, var(--opt) 18%, transparent);
+  color: var(--opt-text);
 }
 .fd-room .fd-glyph {
   fill: currentColor;
@@ -897,7 +893,7 @@
   background: color-mix(in oklab, var(--opt) 14%, var(--bg-2));
 }
 .fd-room .fd-answer[data-chosen='true'] .fd-answer-end {
-  color: var(--opt);
+  color: var(--opt-text);
 }
 .fd-room .fd-answer[data-state='live'][data-chosen='false']:disabled {
   opacity: 0.55;
@@ -911,7 +907,7 @@
   opacity: 1;
 }
 .fd-room .fd-answer[data-state='correct'] .fd-answer-end {
-  color: var(--volt);
+  color: var(--volt-text);
 }
 .fd-room .fd-answer[data-state='correct'][data-chosen='true'] {
   animation: fd-pop 420ms var(--ease-out);
@@ -923,7 +919,7 @@
   opacity: 1;
 }
 .fd-room .fd-answer[data-state='wrong'] .fd-answer-end {
-  color: var(--ember);
+  color: var(--ember-text);
 }
 .fd-room .fd-answer[data-state='muted'] {
   opacity: 0.45;
@@ -972,14 +968,14 @@
   background: var(--volt-soft);
 }
 .fd-room .fd-status[data-tone='correct'] strong {
-  color: var(--volt);
+  color: var(--volt-text);
 }
 .fd-room .fd-status[data-tone='wrong'] {
   border-color: color-mix(in oklab, var(--ember) 50%, var(--line));
   background: var(--ember-soft);
 }
 .fd-room .fd-status[data-tone='wrong'] strong {
-  color: var(--ember);
+  color: var(--ember-text);
 }
 .fd-room .fd-retry {
   align-self: center;
@@ -1063,13 +1059,13 @@
   height: 28px;
 }
 .fd-room .fd-finish[data-verdict='win'] .fd-medallion {
-  color: var(--gold);
+  color: var(--gold-text);
   border-color: var(--gold);
   background: var(--gold-soft);
   box-shadow: var(--glow-gold);
 }
 .fd-room .fd-finish[data-verdict='loss'] .fd-medallion {
-  color: var(--ember);
+  color: var(--ember-text);
   border-color: color-mix(in oklab, var(--ember) 55%, var(--line));
 }
 .fd-room .fd-verdict h1 {
@@ -1102,10 +1098,10 @@
   color: var(--muted);
 }
 .fd-room .fd-scorenum {
-  color: var(--volt);
+  color: var(--volt-text);
 }
 .fd-room .fd-scorenum-rival {
-  color: var(--cyan);
+  color: var(--cyan-text);
 }
 .fd-room .fd-margin {
   max-width: 44ch;
@@ -1122,6 +1118,7 @@
 }
 .fd-room .fd-tile {
   --accent: var(--muted);
+  --accent-text: var(--muted);
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -1132,15 +1129,19 @@
 }
 .fd-room .fd-tile[data-accent='gold'] {
   --accent: var(--gold);
+  --accent-text: var(--gold-text);
 }
 .fd-room .fd-tile[data-accent='volt'] {
   --accent: var(--volt);
+  --accent-text: var(--volt-text);
 }
 .fd-room .fd-tile[data-accent='cyan'] {
   --accent: var(--cyan);
+  --accent-text: var(--cyan-text);
 }
 .fd-room .fd-tile[data-accent='ember'] {
   --accent: var(--ember);
+  --accent-text: var(--ember-text);
 }
 .fd-room .fd-tile small {
   font-family: var(--font-mono);
@@ -1158,7 +1159,7 @@
   font-weight: 800;
   letter-spacing: -0.02em;
   line-height: 1.1;
-  color: var(--accent);
+  color: var(--accent-text);
 }
 .fd-room .fd-tile strong i {
   font-style: normal;
@@ -1167,10 +1168,10 @@
   color: var(--muted);
 }
 .fd-room .fd-tile strong i[data-dir='up'] {
-  color: var(--volt);
+  color: var(--volt-text);
 }
 .fd-room .fd-tile strong i[data-dir='down'] {
-  color: var(--ember);
+  color: var(--ember-text);
 }
 .fd-room .fd-tile > span {
   font-size: var(--fs-12);
@@ -1249,10 +1250,10 @@
   font-weight: 700;
 }
 .fd-room .fd-review-tab > span[data-status='win'] {
-  color: var(--volt);
+  color: var(--volt-text);
 }
 .fd-room .fd-review-tab > span[data-status='loss'] {
-  color: var(--ember);
+  color: var(--ember-text);
 }
 .fd-room .fd-reason {
   display: flex;
@@ -1265,7 +1266,7 @@
 }
 .fd-room .fd-reason > svg {
   margin-top: 2px;
-  color: var(--cyan);
+  color: var(--cyan-text);
 }
 .fd-room .fd-reason p {
   margin: 0;
@@ -1305,10 +1306,10 @@
   font-size: var(--fs-16);
 }
 .fd-room .fd-receipt[data-ok='true'] strong {
-  color: var(--volt);
+  color: var(--volt-text);
 }
 .fd-room .fd-receipt[data-ok='false'] strong {
-  color: var(--ember);
+  color: var(--ember-text);
 }
 .fd-room .fd-receipt-time {
   font-family: var(--font-mono);
@@ -1344,7 +1345,7 @@
   font-size: var(--fs-12);
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--cyan);
+  color: var(--cyan-text);
 }
 .fd-room .fd-fact-top i {
   font-style: normal;
@@ -1371,7 +1372,7 @@
 }
 .fd-room .fd-fact-answer > svg {
   flex: none;
-  color: var(--volt);
+  color: var(--volt-text);
 }
 .fd-room .fd-fact-why {
   border-top: 1px solid var(--line);
@@ -1387,7 +1388,7 @@
   list-style: none;
   font-size: var(--fs-14);
   font-weight: 700;
-  color: var(--cyan);
+  color: var(--cyan-text);
 }
 .fd-room .fd-fact-why > summary::-webkit-details-marker {
   display: none;
@@ -1417,7 +1418,7 @@
   color: var(--muted);
 }
 .fd-room .fd-fact-actions > a:hover {
-  color: var(--cyan);
+  color: var(--cyan-text);
 }
 .fd-room .fd-timing > summary {
   display: flex;

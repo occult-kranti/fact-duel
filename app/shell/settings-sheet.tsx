@@ -152,7 +152,7 @@ export function SettingsSheet({
             <Switch id="theme-setting" checked={light} onCheckedChange={onLightChange} />
           </div>
           <div className="fd-setting-row">
-            <Label htmlFor="art-setting">Showroom artwork</Label>
+            <Label htmlFor="art-setting">Arena object in 3D</Label>
             <Switch id="art-setting" checked={showArt} onCheckedChange={onShowArtChange} />
           </div>
         </section>
@@ -162,8 +162,9 @@ export function SettingsSheet({
             Your local activity
           </span>
           <p className="fd-setting-note">
-            Expedition progress and stamps, journal, saved question issues, passport points, missions and card
-            finishes stay in this browser. Export them before resetting. Theme and sound preferences are kept.
+            Everything you earn lives in this browser: your Vault of facts and saved question issues,
+            expedition progress and stamps, XP, gems and activity points, side quests and card finishes.
+            Export them before resetting. Theme and sound preferences are kept.
           </p>
           <div className="fd-setting-actions">
             <Button variant="outline" disabled={!canExport} onClick={onExport}>

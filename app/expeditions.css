@@ -22,6 +22,8 @@
 .fd-exp,
 .fd-club {
   --fd-a: var(--cyan);
+  /* the same accent at text lightness: --fd-a paints fills, --fd-a-text paints ink and strokes */
+  --fd-a-text: var(--cyan-text);
   --fd-a-soft: var(--cyan-soft);
   --fd-a-ink: var(--cyan-ink);
   --fd-line: color-mix(in oklab, var(--cyan) 22%, var(--line));
@@ -72,7 +74,7 @@
   letter-spacing: 0.14em;
   line-height: 1.4;
   text-transform: uppercase;
-  color: var(--fd-a);
+  color: var(--fd-a-text);
 }
 .fd-exp-lede {
   color: var(--muted);
@@ -144,7 +146,7 @@
 .fd-exp-secondary {
   background: var(--fd-a-soft);
   border-color: color-mix(in oklab, var(--cyan) 45%, transparent);
-  color: var(--fd-a);
+  color: var(--fd-a-text);
 }
 .fd-exp-secondary:hover:not(:disabled) {
   background: color-mix(in oklab, var(--cyan) 20%, transparent);
@@ -168,7 +170,7 @@
   font-weight: 600;
 }
 .fd-exp-quiet:hover {
-  color: var(--fd-a);
+  color: var(--fd-a-text);
 }
 .fd-exp-primary:active:not(:disabled),
 .fd-exp-secondary:active:not(:disabled),
@@ -225,7 +227,8 @@
   align-items: center;
   justify-content: center;
   gap: 7px;
-  min-height: 40px;
+  /* WCAG 2.5.8: 44px minimum on every tap target. Padding, never font size. */
+  min-height: 44px;
   padding: 0 12px;
   border: 0;
   border-radius: var(--r-pill);
@@ -237,13 +240,13 @@
   transition: color 160ms var(--ease-out);
 }
 .fd-exp-seg-btn[aria-pressed='true'] {
-  color: var(--fd-a);
+  color: var(--fd-a-text);
 }
 .fd-exp-seg-btn:hover {
   color: var(--text);
 }
 .fd-exp-seg-btn[aria-pressed='true']:hover {
-  color: var(--fd-a);
+  color: var(--fd-a-text);
 }
 
 /* ------------------------------------------------------------------------- 5. route art ------ */
@@ -251,7 +254,7 @@
   display: block;
   width: 100%;
   height: 100%;
-  color: var(--fd-a);
+  color: var(--fd-a-text);
 }
 /* the art is sliced to fill boxes of very different aspect ratios: keep the ink weight constant */
 .fd-exp-art path,
@@ -290,10 +293,10 @@
 }
 .fd-exp-art-camp.is-done .fd-exp-art-camp-ring {
   opacity: 1;
-  stroke: var(--gold);
+  stroke: var(--gold-text);
 }
 .fd-exp-art-camp.is-done .fd-exp-art-camp-core {
-  fill: var(--gold);
+  fill: var(--gold-text);
   opacity: 1;
 }
 
@@ -330,7 +333,7 @@
   border-color: var(--gold);
   border-style: solid;
   background: var(--gold-soft);
-  color: var(--gold);
+  color: var(--gold-text);
   box-shadow: var(--glow-gold);
 }
 
@@ -390,17 +393,17 @@
 .fd-exp-rail li.is-current .fd-exp-rail-camp {
   border-style: solid;
   border-color: var(--fd-a);
-  color: var(--fd-a);
+  color: var(--fd-a-text);
   box-shadow: 0 0 0 4px var(--fd-a-soft);
 }
 .fd-exp-rail li.is-current .fd-exp-rail-text small {
-  color: var(--fd-a);
+  color: var(--fd-a-text);
 }
 .fd-exp-rail li.is-done .fd-exp-rail-camp {
   border-style: solid;
   border-color: var(--gold);
   background: var(--gold-soft);
-  color: var(--gold);
+  color: var(--gold-text);
 }
 /* list variant: dashed vertical trail between camps */
 .fd-exp-rail--list li:not(:last-child)::before {
@@ -510,7 +513,7 @@
   right: 10px;
   font-family: var(--font-mono);
   letter-spacing: 0.06em;
-  color: var(--fd-a);
+  color: var(--fd-a-text);
 }
 .fd-exp-card-flag {
   left: 10px;
@@ -576,7 +579,7 @@
   white-space: nowrap;
 }
 .fd-exp-camp.is-current .fd-exp-camp-label {
-  color: var(--fd-a);
+  color: var(--fd-a-text);
 }
 .fd-exp-card-foot {
   display: flex;
@@ -612,14 +615,14 @@
   background: color-mix(in oklab, var(--muted) 60%, transparent);
 }
 .fd-exp-status.is-continue {
-  color: var(--fd-a);
+  color: var(--fd-a-text);
 }
 .fd-exp-status.is-continue .fd-exp-status-dot {
   background: var(--fd-a);
   box-shadow: 0 0 0 4px var(--fd-a-soft);
 }
 .fd-exp-status.is-complete {
-  color: var(--gold);
+  color: var(--gold-text);
 }
 .fd-exp-status.is-complete .fd-exp-status-dot {
   background: var(--gold);
@@ -628,7 +631,7 @@
   border-bottom-color: color-mix(in oklab, var(--gold) 35%, var(--line));
 }
 .fd-exp-card.is-complete .fd-exp-art {
-  color: var(--gold);
+  color: var(--gold-text);
 }
 .fd-exp-card.is-continue {
   border-color: color-mix(in oklab, var(--cyan) 35%, var(--line));
@@ -723,7 +726,7 @@
   color: var(--muted);
 }
 .fd-exp-hero-stamp.is-earned small {
-  color: var(--gold);
+  color: var(--gold-text);
 }
 .fd-exp-brief-grid {
   display: grid;
@@ -792,10 +795,10 @@
   color: var(--muted);
 }
 .fd-exp-stake--steady .fd-exp-stake-top {
-  color: var(--fd-a);
+  color: var(--fd-a-text);
 }
 .fd-exp-stake--bold .fd-exp-stake-top {
-  color: var(--gold);
+  color: var(--gold-text);
 }
 .fd-exp-stake--steady.is-active {
   border-color: color-mix(in oklab, var(--cyan) 50%, transparent);
@@ -819,7 +822,7 @@
 }
 .fd-exp-contract > svg {
   flex: 0 0 auto;
-  color: var(--gold);
+  color: var(--gold-text);
 }
 .fd-exp-cta {
   display: flex;
@@ -890,7 +893,7 @@
   font-size: var(--fs-22);
   font-weight: 700;
   line-height: 1.1;
-  color: var(--fd-a);
+  color: var(--fd-a-text);
 }
 .fd-exp-question {
   display: flex;
@@ -924,7 +927,7 @@
   color: var(--muted);
 }
 .fd-exp-qmeta > span:first-child {
-  color: var(--fd-a);
+  color: var(--fd-a-text);
 }
 .fd-exp-question > h2 {
   font-size: var(--fs-22);
@@ -1002,10 +1005,10 @@
   transition: color 180ms var(--ease-out);
 }
 .fd-exp-switch-btn:nth-child(2)[aria-pressed='true'] {
-  color: var(--fd-a);
+  color: var(--fd-a-text);
 }
 .fd-exp-switch-btn:nth-child(3)[aria-pressed='true'] {
-  color: var(--gold);
+  color: var(--gold-text);
 }
 .fd-exp-conf:disabled .fd-exp-switch-btn {
   cursor: default;
@@ -1027,6 +1030,7 @@
 }
 .fd-exp-answer {
   --shape: var(--muted);
+  --shape-text: var(--muted);
   display: flex;
   align-items: center;
   gap: 12px;
@@ -1050,23 +1054,44 @@
 }
 .fd-exp-answer.o1 {
   --shape: var(--ember);
+  --shape-text: var(--ember-text);
 }
 .fd-exp-answer.o2 {
   --shape: var(--cyan);
+  --shape-text: var(--cyan-text);
 }
 .fd-exp-answer.o3 {
   --shape: var(--gold);
+  --shape-text: var(--gold-text);
 }
 .fd-exp-answer.o4 {
   --shape: var(--magenta);
+  --shape-text: var(--magenta-text);
 }
 .fd-exp-shape {
   flex: 0 0 auto;
   width: 26px;
   height: 26px;
+  /* vivid fill inside, text-weight outline: the shape stays legible on a cream ground */
   fill: color-mix(in oklab, var(--shape) 30%, transparent);
-  stroke: var(--shape);
+  stroke: var(--shape-text);
   stroke-width: 1.6;
+}
+/* The 1–4 key hint, matching the room's. Muted so it never competes with the option text. */
+.fd-exp-answer > kbd {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  min-width: 22px;
+  height: 22px;
+  padding-inline: 5px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--bg-1);
+  font-family: var(--font-mono);
+  font-size: var(--fs-12);
+  font-weight: 700;
+  color: var(--muted);
 }
 .fd-exp-answer-text {
   flex: 1 1 auto;
@@ -1094,7 +1119,7 @@
   box-shadow: inset 0 0 0 1px var(--volt);
 }
 .fd-exp-answer.is-key .fd-exp-answer-mark {
-  color: var(--volt);
+  color: var(--volt-text);
 }
 .fd-exp-answer.is-chosen:not(.is-key) {
   border-color: var(--ember);
@@ -1102,7 +1127,7 @@
   filter: saturate(0.75);
 }
 .fd-exp-answer.is-chosen:not(.is-key) .fd-exp-answer-mark {
-  color: var(--ember);
+  color: var(--ember-text);
 }
 @keyframes fd-exp-rise {
   from {
@@ -1120,7 +1145,7 @@
   color: var(--muted);
 }
 .fd-exp-run.is-goal .fd-exp-contract-line {
-  color: var(--fd-a);
+  color: var(--fd-a-text);
 }
 
 /* explanation */
@@ -1155,10 +1180,10 @@
   letter-spacing: -0.015em;
 }
 .fd-exp-feedback.is-correct .fd-exp-feedback-top strong {
-  color: var(--volt);
+  color: var(--volt-text);
 }
 .fd-exp-feedback.is-wrong .fd-exp-feedback-top strong {
-  color: var(--ember);
+  color: var(--ember-text);
 }
 .fd-exp-feedback-top span {
   flex: 0 0 auto;
@@ -1181,7 +1206,7 @@
   min-height: 44px;
   font-size: var(--fs-14);
   font-weight: 700;
-  color: var(--fd-a);
+  color: var(--fd-a-text);
   cursor: pointer;
   list-style: none;
 }
@@ -1228,11 +1253,11 @@
 }
 .fd-exp-tools > a:hover,
 .fd-exp-tools > button:hover {
-  color: var(--fd-a);
+  color: var(--fd-a-text);
   border-color: var(--fd-line);
 }
 .fd-exp-tools > button.is-on {
-  color: var(--gold);
+  color: var(--gold-text);
   border-color: color-mix(in oklab, var(--gold) 45%, transparent);
   background: var(--gold-soft);
 }
@@ -1246,7 +1271,7 @@
   font-size: var(--fs-12);
   font-weight: 600;
   line-height: 1.5;
-  color: var(--fd-a);
+  color: var(--fd-a-text);
 }
 .fd-exp-next {
   width: 100%;
@@ -1294,7 +1319,7 @@
 }
 .fd-exp-award .fd-exp-eyebrow {
   margin: 6px 0 0;
-  color: var(--gold);
+  color: var(--gold-text);
 }
 .fd-exp-award h1:focus-visible {
   outline: 3px solid var(--ring);
@@ -1307,7 +1332,7 @@
   padding: 6px 13px;
   border-radius: var(--r-pill);
   background: var(--gold-soft);
-  color: var(--gold);
+  color: var(--gold-text);
   font-size: var(--fs-12);
   font-weight: 700;
 }
@@ -1340,7 +1365,7 @@
   font-size: var(--fs-28);
   font-weight: 800;
   line-height: 1.1;
-  color: var(--fd-a);
+  color: var(--fd-a-text);
 }
 .fd-exp-scorecard small {
   font-size: var(--fs-12);
@@ -1393,7 +1418,7 @@
   font-size: var(--fs-18);
 }
 .fd-exp-recap > h2 > svg {
-  color: var(--fd-a);
+  color: var(--fd-a-text);
 }
 .fd-exp-recap details {
   border-bottom: 1px dashed var(--line);
@@ -1426,11 +1451,11 @@
 }
 .fd-exp-hit {
   background: var(--volt-soft);
-  color: var(--volt);
+  color: var(--volt-text);
 }
 .fd-exp-miss {
   background: var(--ember-soft);
-  color: var(--ember);
+  color: var(--ember-text);
 }
 .fd-exp-recap summary > strong {
   flex: 0 0 auto;
@@ -1455,7 +1480,7 @@
   align-items: center;
   gap: 6px;
   min-height: 44px;
-  color: var(--fd-a);
+  color: var(--fd-a-text);
   font-size: var(--fs-12);
   font-weight: 700;
 }
@@ -1477,7 +1502,7 @@
   color: var(--muted);
 }
 .fd-exp-count strong {
-  color: var(--gold);
+  color: var(--gold-text);
 }
 .fd-exp-case-grid {
   display: grid;
@@ -1557,7 +1582,7 @@
   height: 38px;
   border-radius: 50%;
   background: var(--fd-a-soft);
-  color: var(--fd-a);
+  color: var(--fd-a-text);
   font-family: var(--font-display);
   font-size: var(--fs-18);
   font-weight: 800;
@@ -1599,7 +1624,7 @@
 }
 .fd-club-duels .fd-exp-eyebrow {
   margin: 0;
-  color: var(--ember);
+  color: var(--ember-text);
 }
 .fd-club-duel-list {
   display: flex;
@@ -1731,7 +1756,7 @@
 }
 .fd-club-tools > button > svg {
   flex: 0 0 auto;
-  color: var(--fd-a);
+  color: var(--fd-a-text);
 }
 .fd-club-tools > button > span {
   display: flex;

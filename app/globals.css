@@ -1,6 +1,20 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @import '../vendor/shadcn-tailwind-4.13.0.css';
+
+/* Visually-hidden text. Global because every answering surface uses it for the shape + position
+   name that pairs with the answer glyphs (app/screens/answer-button.tsx). */
+.fd-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -214,11 +228,11 @@ button[data-slot='button']:disabled {
 .brand > svg {
   width: 23px;
   height: 23px;
-  fill: var(--primary);
-  color: var(--primary);
+  fill: var(--primary-text);
+  color: var(--primary-text);
 }
 .brand > span > span {
-  color: var(--primary);
+  color: var(--primary-text);
 }
 
 .lobby-heading > .tag {
@@ -273,7 +287,7 @@ button[data-slot='button']:disabled {
   height: 38px;
   border: 1px solid var(--border);
   border-radius: 10px;
-  color: var(--primary);
+  color: var(--primary-text);
 }
 .mode-icon > svg {
   width: 20px;
@@ -395,10 +409,10 @@ button[data-slot='button']:disabled {
 }
 
 .collection-card.sport .collection-icon {
-  color: var(--sport);
+  color: var(--sport-text);
 }
 .collection-card.science .collection-icon {
-  color: var(--science);
+  color: var(--science-text);
 }
 
 .room-screen {
@@ -423,7 +437,7 @@ button[data-slot='button']:disabled {
   color: var(--muted-foreground);
 }
 .connection.disconnected {
-  color: var(--sport);
+  color: var(--sport-text);
 }
 
 .player-card {
@@ -466,7 +480,7 @@ button[data-slot='button']:disabled {
 }
 .rival .avatar {
   background: var(--secondary);
-  color: var(--science);
+  color: var(--science-text);
   border: 1px solid var(--border);
 }
 
@@ -478,7 +492,7 @@ button[data-slot='button']:disabled {
 }
 
 .ready-indicator.ready {
-  color: var(--positive);
+  color: var(--positive-text);
   border-color: var(--positive);
 }
 
@@ -594,7 +608,7 @@ button[data-slot='button']:disabled {
 .empty-surface > svg {
   width: 36px;
   height: 36px;
-  color: var(--primary);
+  color: var(--primary-text);
   margin: 0 auto 22px;
 }
 .empty-surface h2 {
@@ -620,7 +634,7 @@ button[data-slot='button']:disabled {
   font-size: 0.8rem;
 }
 .outcome.win {
-  color: var(--positive);
+  color: var(--positive-text);
 }
 .study-surface > .section-heading {
   margin-top: 27px;
@@ -686,7 +700,7 @@ button[data-slot='button']:disabled {
   margin: 30px 0;
 }
 .protocol-note > svg {
-  color: var(--primary);
+  color: var(--primary-text);
   width: 25px;
   height: 25px;
 }
@@ -1074,7 +1088,7 @@ textarea:focus-visible,
   min-height: 80px;
 }
 .studio-header > .brand > span {
-  color: var(--primary);
+  color: var(--primary-text);
   margin: 0 -5px;
 }
 .studio-label {
@@ -1116,7 +1130,7 @@ textarea:focus-visible,
   margin: 18px 0 23px;
 }
 .studio-hero h1 > span {
-  color: var(--primary);
+  color: var(--primary-text);
 }
 .studio-hero > p:last-child {
   max-width: 720px;
@@ -1209,7 +1223,7 @@ textarea:focus-visible,
 }
 .studio-summary svg {
   display: block;
-  color: var(--primary);
+  color: var(--primary-text);
   margin-bottom: 20px;
   width: 24px;
 }
@@ -1281,7 +1295,7 @@ textarea:focus-visible,
   margin: 12px 0;
 }
 .research-article a {
-  color: var(--primary);
+  color: var(--primary-text);
   text-decoration: underline;
   overflow-wrap: anywhere;
 }
@@ -1421,7 +1435,7 @@ textarea:focus-visible,
   box-shadow: inset 0 0 0 1px var(--primary);
 }
 .milestone-overview small {
-  color: var(--primary);
+  color: var(--primary-text);
   font-size: 0.75rem;
   font-weight: 700;
 }
@@ -1529,13 +1543,13 @@ textarea:focus-visible,
   flex-shrink: 0;
 }
 .status-dot.status-done {
-  color: var(--positive);
+  color: var(--positive-text);
 }
 .status-dot.status-in_progress {
-  color: var(--primary);
+  color: var(--primary-text);
 }
 .status-dot.status-blocked {
-  color: var(--sport);
+  color: var(--sport-text);
 }
 .issue-summary {
   display: flex;
@@ -1568,13 +1582,13 @@ textarea:focus-visible,
   color: var(--muted-foreground);
 }
 .status-pill.status-done {
-  color: var(--positive);
+  color: var(--positive-text);
 }
 .status-pill.status-blocked {
-  color: var(--sport);
+  color: var(--sport-text);
 }
 .status-pill.status-in_progress {
-  color: var(--primary);
+  color: var(--primary-text);
 }
 .issue-body {
   padding: 25px 30px 27px 73px;
@@ -1642,7 +1656,7 @@ textarea:focus-visible,
   margin: 14px 0;
 }
 .source-list h3 > a {
-  color: var(--primary);
+  color: var(--primary-text);
   text-decoration: none;
   overflow-wrap: anywhere;
 }
@@ -1943,7 +1957,7 @@ button[data-variant='outline'] {
 }
 .arcade-shell .brand > svg {
   fill: none;
-  color: var(--primary);
+  color: var(--primary-text);
   width: 25px;
 }
 .arcade-shell .edition-label {
@@ -2013,7 +2027,7 @@ button[data-variant='outline'] {
 }
 .arcade-mode.selected svg,
 .arcade-mode.selected b {
-  color: var(--primary);
+  color: var(--primary-text);
 }
 
 .arcade-builder .setup-summary .eyebrow {
@@ -2133,7 +2147,7 @@ button[data-variant='outline'] {
   height: 41px;
   border-radius: 50%;
   border: 1px dashed var(--science);
-  color: var(--science);
+  color: var(--science-text);
   flex-shrink: 0;
   transform: rotate(-13deg);
 }
@@ -2172,7 +2186,7 @@ button[data-variant='outline'] {
 }
 
 .featured-topic.science > svg:first-child {
-  color: var(--science);
+  color: var(--science-text);
 }
 
 .arcade-shell .section-heading h1 {
@@ -2273,7 +2287,7 @@ button[data-variant='outline'] {
 }
 .arcade-shell .rival .avatar {
   background: var(--accent);
-  color: var(--primary);
+  color: var(--primary-text);
 }
 .arcade-shell .ready-panel,
 .arcade-shell .countdown-panel,

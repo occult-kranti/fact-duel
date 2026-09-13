@@ -17,7 +17,7 @@ import { useEffect, useRef, useState } from 'react';
 import { particles, useJuice } from '@/components/fx';
 import { FORMAT_COPY } from '@/lib/duel-presentation.mjs';
 import { Lock } from 'lucide-react';
-import { AnswerGlyph, OPTION_SHAPE_NAMES, usePress } from './room-bits';
+import { AnswerButton, usePress } from './room-bits';
 import { comboAt, roundXp, speedBonus } from './room-math';
 
 const HOT_MS = 3000;
@@ -177,48 +177,43 @@ export function QuestionStage({
             const isCorrect = result && question.correctIndex === i;
             const state = !result ? 'live' : isCorrect ? 'correct' : isChosen ? 'wrong' : 'muted';
             return (
-              <button
+              <AnswerButton
                 key={`${question.id}-${i}`}
-                ref={(el) => {
+                buttonRef={(el) => {
                   optionRefs.current[i] = el;
                 }}
-                type="button"
+                index={i}
+                label={option}
                 className="fd-answer"
-                data-opt={i}
-                data-state={state}
-                data-chosen={isChosen ? 'true' : 'false'}
-                aria-pressed={isChosen}
+                markClassName="fd-answer-mark"
+                textClassName="fd-answer-text"
+                hint
+                state={state}
+                chosen={isChosen}
                 disabled={!shown || isLocked || remaining <= 0}
                 onPointerDown={press}
                 onClick={() => onAnswer(i)}
-              >
-                <span className="fd-answer-mark" aria-hidden="true">
-                  <AnswerGlyph index={i} />
-                </span>
-                <kbd aria-hidden="true">{i + 1}</kbd>
-                <span className="fd-answer-text">{option}</span>
-                <span className="fd-answer-end" aria-hidden="true">
-                  {isChosen && !result && <Lock size={16} />}
-                  {result && isCorrect && (
-                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor">
-                      <path
-                        d="m4 12.6 5.2 5.2L20 6.6"
-                        strokeWidth="3"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  )}
-                  {result && state === 'wrong' && (
-                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor">
-                      <path d="M6 6l12 12M18 6 6 18" strokeWidth="3" strokeLinecap="round" />
-                    </svg>
-                  )}
-                </span>
-                <span className="fd-sr">
-                  {OPTION_SHAPE_NAMES[i]}, option {i + 1}
-                </span>
-              </button>
+                end={
+                  <span className="fd-answer-end" aria-hidden="true">
+                    {isChosen && !result && <Lock size={16} />}
+                    {result && isCorrect && (
+                      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor">
+                        <path
+                          d="m4 12.6 5.2 5.2L20 6.6"
+                          strokeWidth="3"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    )}
+                    {result && state === 'wrong' && (
+                      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor">
+                        <path d="M6 6l12 12M18 6 6 18" strokeWidth="3" strokeLinecap="round" />
+                      </svg>
+                    )}
+                  </span>
+                }
+              />
             );
           })}
         </div>

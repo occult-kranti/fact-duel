@@ -20,6 +20,8 @@
   --_fx-surface: var(--fx-surface, var(--popover, #2a2533));
   --_fx-text: var(--fx-text, var(--popover-foreground, #f9f3e8));
   --_fx-accent: var(--fx-accent, var(--primary, #f99479));
+  /* the accent as ink on the toast/ceremony card, which is a light surface in the light theme */
+  --_fx-accent-ink: var(--fx-1-text, var(--fx-accent, var(--primary, #f99479)));
   --_fx-accent-text: var(--fx-accent-text, var(--primary-foreground, #1b1720));
   --_fx-gold: var(--fx-gold, #ffc83d);
   --_fx-radius: var(--fx-radius, var(--radius, 14px));
@@ -56,7 +58,9 @@
 @media (min-width: 769px) {
   .fx-toasts {
     left: auto;
-    top: 20px;
+    /* Below the sticky topbar: a toast pinned at the top covers the very streak / gems / level
+       chips it is reporting on. --topbar-h is the app shell's bar height. */
+    top: calc(var(--topbar-h, 60px) + env(safe-area-inset-top, 0px) + 12px);
     right: 20px;
     bottom: auto;
     width: 360px;
@@ -64,7 +68,7 @@
   }
 }
 .fx-toast {
-  --_kind: var(--_fx-accent);
+  --_kind: var(--_fx-accent-ink);
   position: relative;
   pointer-events: auto;
   width: min(100%, 420px);
@@ -85,10 +89,10 @@
   line-height: 1.35;
 }
 .fx-toast[data-kind='xp'] {
-  --_kind: var(--fx-1, #d4ff3a);
+  --_kind: var(--fx-1-text, var(--fx-1, #d4ff3a));
 }
 .fx-toast[data-kind='quest'] {
-  --_kind: var(--fx-3, #4ee1ff);
+  --_kind: var(--fx-3-text, var(--fx-3, #4ee1ff));
 }
 .fx-toast[data-kind='achievement'] {
   --_kind: var(--_fx-gold);
@@ -97,10 +101,10 @@
   --_kind: #ff7a3d;
 }
 .fx-toast[data-kind='gem'] {
-  --_kind: var(--fx-4, #ff5ea8);
+  --_kind: var(--fx-4-text, var(--fx-4, #ff5ea8));
 }
 .fx-toast[data-kind='info'] {
-  --_kind: var(--_fx-accent);
+  --_kind: var(--_fx-accent-ink);
 }
 .fx-toast-icon {
   width: 40px;
@@ -202,13 +206,13 @@
     inset 0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 .fx-ceremony-card[data-kind='level'] {
-  --_kind: var(--fx-1, #d4ff3a);
+  --_kind: var(--fx-1-text, var(--fx-1, #d4ff3a));
 }
 .fx-ceremony-card[data-kind='achievement'] {
   --_kind: var(--_fx-gold);
 }
 .fx-ceremony-card[data-kind='stamp'] {
-  --_kind: var(--fx-4, #ff5ea8);
+  --_kind: var(--fx-4-text, var(--fx-4, #ff5ea8));
 }
 .fx-ceremony-card[data-kind='streak'] {
   --_kind: #ff7a3d;

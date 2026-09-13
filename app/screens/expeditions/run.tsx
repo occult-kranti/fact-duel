@@ -25,6 +25,7 @@ import { CONFIDENCE, runResult } from '@/lib/expeditions.mjs';
 import { XP } from '@/lib/progression.mjs';
 import { QuestionIssue } from '../../rivalry-widgets';
 import { ExpeditionFinish } from './finish';
+import { AnswerButton } from '../answer-button';
 import { AnswerShape, RouteRail, signed, useTap } from './parts';
 
 const STAKE_COPY: Record<string, string> = {
@@ -66,6 +67,7 @@ export function ExpeditionRun({
     card = useRef<HTMLDivElement | null>(null),
     feedback = useRef<HTMLDivElement | null>(null),
     nextButton = useRef<HTMLButtonElement | null>(null),
+    optionRefs = useRef<(HTMLButtonElement | null)[]>([]),
     timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   // Answers already on screen when this run mounted have had their feedback: never replay them.
   const celebrated = useRef(new Set<number>(run.answers.map((_: any, i: number) => i)));
@@ -124,6 +126,27 @@ export function ExpeditionRun({
     focusKey.current = key;
     heading.current?.focus();
   }, [index, answered]);
+
+  /* 1–4 answers this card, the way it does in the room — the buttons advertise the key, so it has
+   * to work. Clicking the button is what actually answers: the key just forwards to it. */
+  const keyable = !answered && !writing && player.loaded;
+  useEffect(() => {
+    if (!keyable) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      const target = e.target as HTMLElement | null;
+      if (target && (/^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName) || target.isContentEditable)) return;
+      const i = Number(e.key) - 1;
+      if (!Number.isInteger(i) || i < 0 || i > 3) return;
+      const button = optionRefs.current[i];
+      if (!button || button.disabled) return;
+      e.preventDefault();
+      burstTarget.current = button;
+      button.click();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [keyable, index]);
 
   async function act(type: string, extra: any = {}) {
     if (locked.current || !player.loaded) return;
@@ -222,26 +245,35 @@ export function ExpeditionRun({
             const chosen = answer?.choice === i;
             const isKey = !!answer && i === fact.correctIndex;
             return (
-              <button
-                type="button"
+              <AnswerButton
                 key={`${index}-${i}`}
+                buttonRef={(el) => {
+                  optionRefs.current[i] = el;
+                }}
+                index={i}
+                label={option}
                 className={`fd-exp-answer o${i + 1}${chosen ? ' is-chosen' : ''}${
                   isKey ? ' is-key' : ''
                 }${answer && !chosen && !isKey ? ' is-dim' : ''}`}
+                textClassName="fd-exp-answer-text"
+                glyph={<AnswerShape index={i} />}
+                hint
                 style={{ animationDelay: `${i * 45}ms` }}
                 disabled={!!answer || writing || !player.loaded}
-                aria-pressed={chosen}
+                chosen={chosen}
+                state={answer ? (isKey ? 'correct' : chosen ? 'wrong' : 'muted') : 'live'}
                 onPointerDown={(e) => {
                   burstTarget.current = e.currentTarget;
                   tap();
                 }}
                 onClick={() => void act('journey-answer', { choice: i, confidence })}
-              >
-                <AnswerShape index={i} />
-                <span className="fd-exp-answer-text">{option}</span>
-                {isKey && <Check size={19} aria-hidden="true" className="fd-exp-answer-mark" />}
-                {chosen && !isKey && <X size={19} aria-hidden="true" className="fd-exp-answer-mark" />}
-              </button>
+                end={
+                  <>
+                    {isKey && <Check size={19} aria-hidden="true" className="fd-exp-answer-mark" />}
+                    {chosen && !isKey && <X size={19} aria-hidden="true" className="fd-exp-answer-mark" />}
+                  </>
+                }
+              />
             );
           })}
         </div>

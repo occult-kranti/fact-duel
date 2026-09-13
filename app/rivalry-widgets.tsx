@@ -147,6 +147,16 @@ export function MatchFinish({
   const rank = matchRank(room, player.progression);
   const level = levelForXp(player.progression?.xp ?? 0);
   const settledOk = room.phase === 'complete';
+  const notes = [
+    scored.length > mine.length
+      ? `${scored.length - mine.length} completed rounds had no answer from you.`
+      : '',
+    rounds.length < room.roundIndex + (room.round?.result ? 1 : 0)
+      ? 'Earlier round details may be unavailable for an older room.'
+      : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
   useEffect(() => {
     if (v.key !== 'win' || celebrated.current === room.id) return;
     celebrated.current = room.id;
@@ -187,6 +197,24 @@ export function MatchFinish({
         </div>
         <p className="fd-margin">{marginLine(room)}</p>
       </section>
+
+      {/* Highest-intent moment in the loop: the next action sits straight under the verdict, not
+          under four stat tiles where only ~19px of it was visible at 390x844. */}
+      <div className="fd-finish-actions">
+        <Button className="fd-btn fd-cta" onPointerDown={press} onClick={onReplay}>
+          {room.config.opponent === 'bot' ? 'Play again' : 'Set up rematch'}
+          <ArrowRight size={18} />
+        </Button>
+        <div className="fd-finish-secondary">
+          <Button variant="outline" className="fd-btn" onPointerDown={press} onClick={onVault}>
+            <BookOpen size={16} />
+            Review my facts
+          </Button>
+          <Button variant="ghost" className="fd-btn" onPointerDown={press} onClick={onFinish}>
+            Done for now
+          </Button>
+        </div>
+      </div>
 
       <div className="fd-tiles">
         <div className="fd-tile" data-accent="gold">
@@ -235,36 +263,24 @@ export function MatchFinish({
         </div>
       </div>
 
-      <p className="fd-note">
-        {v.detail}{' '}
-        {scored.length > mine.length
-          ? `${scored.length - mine.length} completed rounds had no answer from you.`
-          : ''}
-        {rounds.length < room.roundIndex + (room.round?.result ? 1 : 0)
-          ? ' Earlier round details may be unavailable for an older room.'
-          : ''}
-      </p>
-
-      <div className="fd-finish-actions">
-        <Button className="fd-btn fd-cta" onPointerDown={press} onClick={onReplay}>
-          {room.config.opponent === 'bot' ? 'Play again' : 'Set up rematch'}
-          <ArrowRight size={18} />
-        </Button>
-        <div className="fd-finish-secondary">
-          <Button variant="outline" className="fd-btn" onPointerDown={press} onClick={onVault}>
-            <BookOpen size={16} />
-            Review my facts
-          </Button>
-          <Button variant="ghost" className="fd-btn" onPointerDown={press} onClick={onFinish}>
-            Done for now
-          </Button>
-        </div>
-      </div>
+      {/* One disclaimer slot per screen (bible §9): the coins line lives on the COINS tile, so
+          `v.detail` — which repeats it word for word — is not printed again here. */}
+      {!!notes && <p className="fd-note">{notes}</p>}
     </div>
   );
 }
 
-export function RoundReview({ room, player }: { room: any; player: any }) {
+export function RoundReview({
+  room,
+  player,
+  factFirst = false,
+}: {
+  room: any;
+  player: any;
+  /** Between rounds the fact and its explanation lead, so the learning moment is not below the
+   *  sticky "Start round N" bar. On the finish stage the match breakdown leads as before. */
+  factFirst?: boolean;
+}) {
   const press = usePress();
   const rounds = completedRounds(room),
     [selected, setSelected] = useState<string | null>(null),
@@ -276,8 +292,8 @@ export function RoundReview({ room, player }: { room: any; player: any }) {
     my = r.receipts?.[room.seat],
     rival = r.receipts?.[1 - room.seat];
   const received = player.profile.issues?.some((i: any) => i.fact.id === r.id);
-  return (
-    <section className="fd-review">
+  const breakdown = (
+    <>
       <div className="fd-review-top">
         <h2>{rounds.length > 1 ? 'The match, question by question.' : 'Here’s how it was decided.'}</h2>
         <span className="fd-review-count">
@@ -339,57 +355,69 @@ export function RoundReview({ room, player }: { room: any; player: any }) {
           </div>
         ))}
       </div>
-      <article className="fd-fact">
-        <div className="fd-fact-top">
-          <span>
-            {q.topic} <i aria-hidden="true">/</i> {q.subtopic}
-          </span>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="fd-btn"
-            aria-label={saved ? 'Remove saved fact' : 'Save this fact'}
-            aria-pressed={saved}
-            onPointerDown={press}
-            onClick={() => player.save(q.question)}
-          >
-            <Bookmark fill={saved ? 'currentColor' : 'none'} />
-          </Button>
-        </div>
-        <h3>{q.question}</h3>
-        <p className="fd-fact-answer">
-          <Check size={18} />
-          {q.options[q.correctIndex]}
-        </p>
-        <details
-          key={r.id}
-          className="fd-fact-why"
-          onToggle={(e) => {
-            if (e.currentTarget.open) player.open(r.id);
-          }}
+    </>
+  );
+  const factCard = (
+    <article className="fd-fact">
+      <div className="fd-fact-top">
+        <span>
+          {q.topic} <i aria-hidden="true">/</i> {q.subtopic}
+        </span>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="fd-btn"
+          aria-label={saved ? 'Remove saved fact' : 'Save this fact'}
+          aria-pressed={saved}
+          onPointerDown={press}
+          onClick={() => player.save(q.question)}
         >
-          <summary>
-            Why this is the answer
-            <ChevronDown size={16} />
-          </summary>
-          <p>{q.explanation}</p>
-        </details>
-        <div className="fd-fact-actions">
-          <a href={q.sourceUrl} target="_blank" rel="noopener noreferrer">
-            {q.sourceLabel}
-            <ExternalLink size={14} />
-          </a>
-          <Button
-            variant="ghost"
-            className="fd-btn"
-            onPointerDown={press}
-            onClick={() => setReportOpen(true)}
-          >
-            <Flag size={15} />
-            {received ? 'Issue saved locally' : 'Question an answer'}
-          </Button>
-        </div>
-      </article>
+          <Bookmark fill={saved ? 'currentColor' : 'none'} />
+        </Button>
+      </div>
+      <h3>{q.question}</h3>
+      <p className="fd-fact-answer">
+        <Check size={18} />
+        {q.options[q.correctIndex]}
+      </p>
+      <details
+        key={r.id}
+        className="fd-fact-why"
+        onToggle={(e) => {
+          if (e.currentTarget.open) player.open(r.id);
+        }}
+      >
+        <summary>
+          Why this is the answer
+          <ChevronDown size={16} />
+        </summary>
+        <p>{q.explanation}</p>
+      </details>
+      <div className="fd-fact-actions">
+        <a href={q.sourceUrl} target="_blank" rel="noopener noreferrer">
+          {q.sourceLabel}
+          <ExternalLink size={14} />
+        </a>
+        <Button variant="ghost" className="fd-btn" onPointerDown={press} onClick={() => setReportOpen(true)}>
+          <Flag size={15} />
+          {received ? 'Issue saved locally' : 'Question an answer'}
+        </Button>
+      </div>
+    </article>
+  );
+  return (
+    <section className="fd-review">
+      {factFirst ? (
+        <>
+          {factCard}
+          {breakdown}
+        </>
+      ) : (
+        <>
+          {breakdown}
+          {factCard}
+        </>
+      )}
       <details className="fd-timing">
         <summary>
           Timing &amp; coin details

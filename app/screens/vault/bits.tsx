@@ -9,12 +9,21 @@ import type { LucideIcon } from 'lucide-react';
 import { usePress } from './press';
 
 export type Tone = 'cyan' | 'gold' | 'volt' | 'magenta' | 'ember';
+/* Two halves of one accent: the fill paints the rule down the tile, the text twin paints the icon
+ * so it survives the light theme (tokens.css §2). */
 const TONE_VAR: Record<Tone, string> = {
   cyan: 'var(--cyan)',
   gold: 'var(--gold)',
   volt: 'var(--volt)',
   magenta: 'var(--magenta)',
   ember: 'var(--ember)',
+};
+const TONE_TEXT_VAR: Record<Tone, string> = {
+  cyan: 'var(--cyan-text)',
+  gold: 'var(--gold-text)',
+  volt: 'var(--volt-text)',
+  magenta: 'var(--magenta-text)',
+  ember: 'var(--ember-text)',
 };
 
 /** A header stat: icon, count-up number, label. */
@@ -30,7 +39,10 @@ export function StatTile({
   tone?: Tone;
 }) {
   return (
-    <article className="fd-stat" style={{ '--tone': TONE_VAR[tone] } as React.CSSProperties}>
+    <article
+      className="fd-stat"
+      style={{ '--tone': TONE_VAR[tone], '--tone-text': TONE_TEXT_VAR[tone] } as React.CSSProperties}
+    >
       <span className="fd-stat__icon">
         <Icon aria-hidden="true" />
       </span>

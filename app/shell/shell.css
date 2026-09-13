@@ -42,12 +42,12 @@
 .fd-brand > svg {
   width: 22px;
   height: 22px;
-  color: var(--volt);
-  fill: var(--volt);
+  color: var(--volt-text);
+  fill: var(--volt-text);
 }
 .fd-brand em {
   font-style: normal;
-  color: var(--volt);
+  color: var(--volt-text);
 }
 .fd-topbar-right {
   display: flex;
@@ -86,11 +86,11 @@
   height: 16px;
 }
 .fd-topbar-slot--streak {
-  color: var(--magenta);
+  color: var(--magenta-text);
 }
 .fd-topbar-slot--gems,
 .fd-topbar-slot--level {
-  color: var(--gold);
+  color: var(--gold-text);
 }
 .fd-private {
   display: none;
@@ -133,7 +133,7 @@
   cursor: default;
 }
 .fd-iconbtn[aria-pressed='true'] {
-  color: var(--volt);
+  color: var(--volt-text);
 }
 
 /* ---------- frame + main ---------- */
@@ -177,8 +177,23 @@
   font-size: var(--fs-12);
   color: var(--muted);
 }
-.fd-shell .fd-footer a {
+/* WCAG 2.5.8: the two footer controls were 19px tall. Grow the hit area, not the type. */
+.fd-shell .fd-footer a,
+.fd-shell .fd-footer .footer-rules {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   color: inherit;
+}
+.fd-shell .fd-footer .footer-rules {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
 }
 
 /* ---------- nav: bottom tab bar (default, ≤ 899px) ---------- */
@@ -242,7 +257,7 @@
   color: var(--text);
 }
 .fd-nav-btn[aria-current='page'] {
-  color: var(--volt);
+  color: var(--volt-text);
 }
 .fd-nav-btn[aria-current='page'] .fd-nav-icon {
   background: var(--volt-soft);

@@ -46,15 +46,18 @@ export function ExpeditionBrief({
           <h2 className="fd-exp-panel-title">How points work</h2>
           <ScoringCards />
           <p className="fd-exp-panel-note">
-            Choose before every card. These points score this run only — they are separate from XP, coins
-            and activity points.
+            Choose before every card. These points score this run only — they are separate from XP, coins and
+            activity points.
           </p>
         </section>
       </div>
 
       <p className="fd-exp-contract">
         <Stamp size={18} aria-hidden="true" />
-        Complete six cards, at any score, to collect the <strong>{route.stamp}</strong> stamp.
+        {/* One flex item, or the <strong> becomes a column of its own and the sentence breaks apart. */}
+        <span>
+          Complete six cards, at any score, to collect the <strong>{route.stamp}</strong> stamp.
+        </span>
       </p>
 
       <div className="fd-exp-cta">

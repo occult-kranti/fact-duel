@@ -7,6 +7,8 @@
 /* ---------- 1. Accent cosmetic (equipped accent drives every highlight on this screen) ---------- */
 :root {
   --fd-accent: var(--volt);
+  /* the equipped accent as text: --fd-accent paints fills, --fd-accent-text paints ink */
+  --fd-accent-text: var(--volt-text);
   --fd-accent-soft: var(--volt-soft);
   --fd-accent-ink: var(--volt-ink);
   --fd-accent-glow: var(--glow-volt);
@@ -18,38 +20,45 @@
 }
 :root[data-accent='volt'] {
   --fd-accent: var(--volt);
+  --fd-accent-text: var(--volt-text);
   --fd-accent-soft: var(--volt-soft);
   --fd-accent-ink: var(--volt-ink);
   --fd-accent-glow: var(--glow-volt);
 }
 :root[data-accent='coral'] {
   --fd-accent: #ff8a6b;
+  --fd-accent-text: #ff8a6b;
   --fd-accent-soft: rgba(255, 138, 107, 0.14);
   --fd-accent-ink: #2b0c04;
   --fd-accent-glow: 0 0 0 1px rgba(255, 138, 107, 0.4), 0 8px 32px rgba(255, 138, 107, 0.25);
 }
 :root[data-accent='cyan'] {
   --fd-accent: var(--cyan);
+  --fd-accent-text: var(--cyan-text);
   --fd-accent-soft: var(--cyan-soft);
   --fd-accent-ink: var(--cyan-ink);
   --fd-accent-glow: 0 0 0 1px rgba(78, 225, 255, 0.4), 0 8px 32px rgba(78, 225, 255, 0.25);
 }
 :root[data-accent='magenta'] {
   --fd-accent: var(--magenta);
+  --fd-accent-text: var(--magenta-text);
   --fd-accent-soft: var(--magenta-soft);
   --fd-accent-ink: var(--magenta-ink);
   --fd-accent-glow: 0 0 0 1px rgba(255, 94, 168, 0.4), 0 8px 32px rgba(255, 94, 168, 0.25);
 }
 :root[data-accent='gold'] {
   --fd-accent: var(--gold);
+  --fd-accent-text: var(--gold-text);
   --fd-accent-soft: var(--gold-soft);
   --fd-accent-ink: var(--gold-ink);
   --fd-accent-glow: var(--glow-gold);
 }
+/* coral is a bought cosmetic, not a token: give it the same fill / text split by hand. */
 :root[data-theme='light'][data-accent='coral'] {
-  --fd-accent: #b64516;
-  --fd-accent-soft: rgba(182, 69, 22, 0.12);
-  --fd-accent-ink: #fff3ee;
+  --fd-accent: #ff8a6b;
+  --fd-accent-text: #b03c12;
+  --fd-accent-soft: rgba(176, 60, 18, 0.12);
+  --fd-accent-ink: #2b0c04;
 }
 
 /* ---------- 2. Screen scaffold ---------- */
@@ -156,7 +165,8 @@
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: var(--meter, var(--fd-accent));
+  /* a meter is data, not decoration: it takes the text twin so it survives the light theme */
+  background: var(--meter, var(--fd-accent-text));
   transition: width 420ms var(--ease-out);
 }
 
@@ -268,7 +278,7 @@
   stroke: color-mix(in oklab, var(--muted) 30%, transparent);
 }
 .fd-avatar-ring .fd-ring-fill {
-  stroke: var(--fd-accent);
+  stroke: var(--fd-accent-text);
   stroke-linecap: round;
   transition: stroke-dashoffset 600ms var(--ease-out);
 }
@@ -380,7 +390,7 @@
   border-radius: var(--r-pill);
   background: var(--fd-accent-soft);
   border: 1px solid color-mix(in oklab, var(--fd-accent) 42%, transparent);
-  color: var(--fd-accent);
+  color: var(--fd-accent-text);
   font-size: var(--fs-12);
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -499,7 +509,7 @@
   width: 14px;
   height: 14px;
   margin-top: 2px;
-  color: var(--fd-accent);
+  color: var(--fd-accent-text);
 }
 
 /* --- streak card --- */
@@ -517,7 +527,7 @@
   border-radius: 50%;
   background: var(--magenta-soft);
   border: 1px solid color-mix(in oklab, var(--magenta) 40%, transparent);
-  color: var(--magenta);
+  color: var(--magenta-text);
 }
 .fd-flame > svg {
   width: 26px;
@@ -538,7 +548,7 @@
 .fd-streak-figures b {
   font-size: var(--fs-36);
   line-height: 1;
-  color: var(--magenta);
+  color: var(--magenta-text);
 }
 .fd-streak-figures span {
   font-size: var(--fs-12);
@@ -568,7 +578,7 @@
   height: 13px;
 }
 .fd-pill--shield {
-  color: var(--cyan);
+  color: var(--cyan-text);
   border-color: color-mix(in oklab, var(--cyan) 40%, transparent);
   background: var(--cyan-soft);
 }
@@ -638,15 +648,17 @@
   }
 }
 .fd-mastery-card[data-domain='sports'] {
-  --meter: var(--ember);
+  --meter: var(--ember-text);
   --domain: var(--ember);
+  --domain-text: var(--ember-text);
 }
 .fd-mastery-card[data-domain='science'] {
-  --meter: var(--cyan);
+  --meter: var(--cyan-text);
   --domain: var(--cyan);
+  --domain-text: var(--cyan-text);
 }
 .fd-mastery-card .fd-card-label {
-  color: var(--domain);
+  color: var(--domain-text, var(--domain));
 }
 .fd-topic {
   display: grid;
@@ -683,7 +695,8 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  min-height: 36px;
+  /* WCAG 2.5.8: 44px minimum on every tap target. Padding, never font size. */
+  min-height: 44px;
   padding: 0 14px;
   border-radius: var(--r-pill);
   border: 1px solid var(--line);
@@ -697,7 +710,7 @@
 .fd-chip[aria-selected='true'] {
   background: var(--fd-accent-soft);
   border-color: color-mix(in oklab, var(--fd-accent) 55%, transparent);
-  color: var(--fd-accent);
+  color: var(--fd-accent-text);
 }
 .fd-chip > b {
   font-family: var(--font-mono);
@@ -748,8 +761,15 @@
   height: 52px;
   color: var(--tier);
 }
+/* Locked tiles are silhouettes, but they still say which tier they are: the rim, the wash and the
+   medal all carry --tier, so bronze / silver / gold read apart at a glance. */
+.fd-badge[data-locked='true'] {
+  border-color: color-mix(in oklab, var(--tier) 45%, var(--line));
+  background: linear-gradient(180deg, color-mix(in oklab, var(--tier) 10%, transparent), var(--bg-1) 58%);
+}
 .fd-badge[data-locked='true'] .fd-badge-medal {
-  color: color-mix(in oklab, var(--muted) 45%, transparent);
+  color: color-mix(in oklab, var(--tier) 72%, var(--muted));
+  opacity: 0.68;
   filter: none;
 }
 .fd-badge[data-locked='false'] .fd-badge-medal {
@@ -773,6 +793,21 @@
   font-size: var(--fs-12);
   font-variant-numeric: tabular-nums;
   color: var(--tier);
+}
+/* Goal gradient: how close this badge is, from the same counters its rule reads. */
+.fd-badge-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+  margin-top: 2px;
+}
+.fd-badge-progress > b {
+  font-family: var(--font-mono);
+  font-size: var(--fs-12);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
 }
 .fd-badge-tier {
   font-family: var(--font-mono);
@@ -827,7 +862,7 @@
   place-items: center;
   border-radius: var(--r-control);
   background: var(--gold-soft);
-  color: var(--gold);
+  color: var(--gold-text);
 }
 .fd-locker-toggle > div {
   min-width: 0;
@@ -852,7 +887,7 @@
   border-radius: var(--r-pill);
   border: 1px solid color-mix(in oklab, var(--gold) 42%, transparent);
   background: var(--gold-soft);
-  color: var(--gold);
+  color: var(--gold-text);
   font-family: var(--font-mono);
   font-size: var(--fs-14);
   font-weight: 700;
@@ -970,10 +1005,10 @@
   height: 13px;
 }
 .fd-cos-price[data-tone='gold'] {
-  color: var(--gold);
+  color: var(--gold-text);
 }
 .fd-cos-price[data-tone='accent'] {
-  color: var(--fd-accent);
+  color: var(--fd-accent-text);
 }
 .fd-cos-action {
   display: inline-flex;
@@ -1102,7 +1137,7 @@
   align-items: center;
   gap: 7px;
   font-size: var(--fs-12);
-  color: var(--gold);
+  color: var(--gold-text);
 }
 .fd-quest-reward > svg {
   width: 15px;
@@ -1200,7 +1235,7 @@
   flex: 0 0 auto;
   width: 17px;
   height: 17px;
-  color: var(--fd-accent);
+  color: var(--fd-accent-text);
 }
 .fd-player-footnote p {
   margin: 0;
@@ -1228,7 +1263,7 @@
   height: 15px;
 }
 .fd-chip-top--streak {
-  color: var(--magenta);
+  color: var(--magenta-text);
   border-color: color-mix(in oklab, var(--magenta) 35%, transparent);
 }
 .fd-chip-top--streak[data-lit='false'] {
@@ -1236,13 +1271,13 @@
   border-color: var(--line);
 }
 .fd-chip-top--gems {
-  color: var(--gold);
+  color: var(--gold-text);
   border-color: color-mix(in oklab, var(--gold) 35%, transparent);
 }
 .fd-chip-top--level {
   gap: 7px;
   padding-left: 4px;
-  color: var(--fd-accent);
+  color: var(--fd-accent-text);
   border-color: color-mix(in oklab, var(--fd-accent) 35%, transparent);
 }
 .fd-chip-ring {
@@ -1255,7 +1290,7 @@
   stroke: color-mix(in oklab, var(--muted) 32%, transparent);
 }
 .fd-chip-ring .fd-ring-fill {
-  stroke: var(--fd-accent);
+  stroke: var(--fd-accent-text);
   stroke-linecap: round;
   transition: stroke-dashoffset 600ms var(--ease-out);
 }
@@ -1378,7 +1413,7 @@
   padding: 0;
   border: 0;
   background: none;
-  color: var(--fd-accent);
+  color: var(--fd-accent-text);
   font: inherit;
   font-weight: 700;
   text-decoration: underline;
@@ -1403,7 +1438,7 @@
   color: var(--muted);
 }
 .fd-cos-action[data-kind='ghost'] {
-  min-height: 40px;
+  min-height: 44px;
   background: var(--bg-1);
   border-color: var(--line);
   color: var(--text);
@@ -1411,7 +1446,7 @@
 }
 .fd-cos-action[data-kind='ghost']:hover {
   border-color: color-mix(in oklab, var(--fd-accent) 50%, transparent);
-  color: var(--fd-accent);
+  color: var(--fd-accent-text);
 }
 
 /* level card: compact lifetime record */

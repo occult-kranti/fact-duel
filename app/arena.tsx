@@ -948,9 +948,9 @@ export default function Arena() {
           <AlertDialogHeader>
             <AlertDialogTitle>Reset your local activity?</AlertDialogTitle>
             <AlertDialogDescription>
-              This removes expedition progress, scores and stamps, the journal, saved facts, saved question
-              issues, passport points, missions and earned card finishes in this browser. Export first to keep
-              a copy. Theme, sound preferences and room coins are unaffected.
+              This removes your Vault of facts and saved question issues, expedition progress, scores and
+              stamps, XP, gems and activity points, side quests and earned card finishes in this browser.
+              Export first to keep a copy. Theme, sound preferences and room coins are unaffected.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

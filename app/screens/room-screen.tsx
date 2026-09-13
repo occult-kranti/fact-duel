@@ -90,8 +90,8 @@ export function RoomScreen({ duel, player }: RoomScreenProps) {
                 ? 'That round is yours.'
                 : 'A fact for next time.',
           body: mine?.correct
-            ? 'Your answer was correct. Read the receipt below, then start the next round.'
-            : 'The explanation is right below. Take it in, then start the next round.',
+            ? 'Your answer was correct. The fact is right below — take it in, then start the next round.'
+            : 'The answer and its explanation are right below. Take them in, then start the next round.',
         }
       : {
           eyebrow: 'THE CHALLENGE IS SET',
@@ -130,7 +130,9 @@ export function RoomScreen({ duel, player }: RoomScreenProps) {
           onCopyInvite={copyInvite}
           onAddBot={addBot}
           headline={headline}
-          review={phase === 'between' && rd?.result ? <RoundReview room={room} player={player} /> : null}
+          review={
+            phase === 'between' && rd?.result ? <RoundReview room={room} player={player} factFirst /> : null
+          }
         />
       )}
       {counting && <CountdownStage countdown={countdown} roundId={rd?.id} />}

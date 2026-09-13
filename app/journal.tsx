@@ -317,7 +317,8 @@ export function Journal({
         </div>
         <p className="fd-lede">
           Match history and every fact you have met, stored in this browser. Revisit an explanation, bookmark
-          the ones worth keeping, then practise recall whenever you like. Activity is not measured mastery.
+          the ones worth keeping, then practise recall whenever you like. Meeting a fact is not the same as
+          knowing it.
         </p>
         <div className="fd-stats">
           <StatTile icon={BookOpen} tone="cyan" value={facts.length} label="Facts encountered" />
