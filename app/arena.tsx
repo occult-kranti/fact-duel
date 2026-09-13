@@ -26,14 +26,18 @@ import { VaultScreen } from './screens/vault-screen';
 import { DiscoveryScreen } from './screens/discovery-screen';
 import { CollectionsScreen } from './screens/collections-screen';
 import { ExpeditionsScreen } from './screens/expeditions-screen';
+import { EventsScreen } from './screens/events-screen';
 import { RulesScreen } from './screens/rules-screen';
 import { ShowroomScreen } from './screens/showroom-screen';
+import { eventModeEvent } from '@/lib/progression.mjs';
 import {
   INITIAL_CONFIG,
   MODES,
+  type ArmedMode,
   type Config,
   type Credentials,
   type DuelController,
+  type EventMode,
   type PendingAnswer,
   type StartMark,
 } from './screens/types';
@@ -86,6 +90,9 @@ export default function Arena() {
     [connected, setConnected] = useState(true),
     [copied, setCopied] = useState(false);
   const [selectedExpedition, setSelectedExpedition] = useState<string | null>(null);
+  /* The limited-time event mode currently armed, if any. It holds the duel it stands for so the
+   * settle handler can check the match that actually ran was that duel before paying the badge. */
+  const [eventMode, setEventMode] = useState<ArmedMode | null>(null);
   const [settingsOpen, setSettingsOpen] = useState(false),
     [clearOpen, setClearOpen] = useState(false),
     [chosen, setChosen] = useState<number | null>(null),
@@ -109,7 +116,8 @@ export default function Arena() {
     createDraft = useRef<any>(null),
     joinDraft = useRef<any>(null),
     alive = useRef(true),
-    recovered = useRef(false);
+    recovered = useRef(false),
+    eventPaid = useRef<string | null>(null);
   const signal = useCallback(
     (type: string) => {
       if (!sound || volume <= 0 || document.hidden) return;
@@ -722,6 +730,60 @@ export default function Arena() {
     if (intent === 'friend') change({ opponent: 'friend' });
     go('arena');
   };
+  /* Arming a limited-time mode is a configurator change and nothing else: the same `change` the
+   * mode cards and topic chips use, then Play with the launch control in view. No new networking
+   * path, no room, no timing involved. */
+  const chooseEventMode = (mode: EventMode | null) => {
+    if (!mode) {
+      setEventMode(null);
+      return;
+    }
+    setEventMode({
+      id: mode.id,
+      name: mode.template.name,
+      badge: mode.badge,
+      xpBonus: mode.xpBonus,
+      duel: mode.duel,
+    });
+    change({
+      mode: mode.duel.mode,
+      duration: mode.duel.duration,
+      topic: mode.duel.topic,
+      domain: mode.duel.domain,
+      subtopic: 'all',
+      region: 'all',
+      difficulty: 'all',
+    });
+    setJoinView(false);
+    go('arena');
+    requestAnimationFrame(() => {
+      const bar = document.querySelector<HTMLElement>('.fd-play .fd-launch');
+      if (!bar) return;
+      const box = bar.getBoundingClientRect();
+      // On a phone the launch bar is fixed above the tab bar and already in view; only scroll
+      // when it genuinely is not (the desktop right column).
+      if (box.top >= 0 && box.bottom <= window.innerHeight) return;
+      bar.scrollIntoView({
+        block: 'center',
+        behavior: document.documentElement.dataset.motion === 'full' ? 'smooth' : 'instant',
+      });
+    });
+  };
+  /* One settled match pays one event badge, at most once per room. The config check keeps it
+   * honest: if the player re-picked the format or the topic after arming a mode, the match that
+   * ran was not that mode and nothing is claimed. The reducer then pays a badge only once ever. */
+  useEffect(() => {
+    const armed = eventMode;
+    if (!room?.settled || !armed || !player.loaded || eventPaid.current === room.id) return;
+    const c = room.config || {};
+    if (c.mode !== armed.duel.mode || c.duration !== armed.duel.duration || c.topic !== armed.duel.topic)
+      return;
+    eventPaid.current = room.id;
+    void player.dispatch({
+      type: 'event-mode',
+      ...eventModeEvent({ badge: armed.badge, modeId: armed.id, xpBonus: armed.xpBonus }),
+    });
+  }, [room?.settled, room?.id, room?.config, eventMode, player.loaded, player.dispatch]);
   const duel: DuelController = {
     room,
     phase: phase ?? '',
@@ -743,6 +805,7 @@ export default function Arena() {
     matchMode,
     MODES,
     credentials,
+    eventModeId: eventMode?.id ?? '',
     startMark,
     pendingAnswer: pending,
     actions: {
@@ -773,6 +836,7 @@ export default function Arena() {
       },
       clearFilters,
       chooseCollection,
+      chooseEventMode,
     },
   };
   return (
@@ -882,6 +946,17 @@ export default function Arena() {
             catalogue={catalogue}
             joinView={joinView}
             joinLink={joinLink}
+          />
+        )}
+        {!room && tab === 'events' && (
+          <EventsScreen
+            player={player}
+            ready={player.loaded && !!catalogue && !!name.trim()}
+            busy={busy}
+            onDuel={quickDuel}
+            onMode={chooseEventMode}
+            activeModeId={eventMode?.id ?? ''}
+            go={go}
           />
         )}
         {!room && tab === 'showroom' && <ShowroomScreen showArt={showArt} onShowArt={setShowArt} go={go} />}

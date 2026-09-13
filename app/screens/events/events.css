@@ -1,0 +1,1039 @@
+/* FACT//DUEL — Events (curated calendar + limited-time modes).
+ * Floodlight tokens only, every class `fd-` prefixed and scoped under `.fd-events`, so the same
+ * sheet dresses the screen, the Home strip and the Play row without leaking into either host.
+ * Temperature follows the domain (design bible §5): sports = ember, science = cyan, rewards = gold.
+ * Mobile-first; one column on phones, two from 700px, three from 1200px. */
+
+.fd-events {
+  --fd-ev-accent: var(--ember);
+  --fd-ev-accent-text: var(--ember-text);
+  --fd-ev-accent-soft: var(--ember-soft);
+  min-width: 0;
+}
+.fd-events [data-domain='sports'] {
+  --fd-ev-accent: var(--ember);
+  --fd-ev-accent-text: var(--ember-text);
+  --fd-ev-accent-soft: var(--ember-soft);
+}
+.fd-events [data-domain='science'] {
+  --fd-ev-accent: var(--cyan);
+  --fd-ev-accent-text: var(--cyan-text);
+  --fd-ev-accent-soft: var(--cyan-soft);
+}
+
+/* ---------- shared atoms ---------- */
+.fd-events .fd-ev-pressable {
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+  transition:
+    transform 120ms var(--ease-out),
+    border-color 160ms var(--ease-out),
+    background-color 160ms var(--ease-out),
+    box-shadow 160ms var(--ease-out);
+}
+.fd-events .fd-ev-pressable:active:not(:disabled) {
+  transform: scale(0.97);
+}
+.fd-events .fd-ev-pressable:focus-visible,
+.fd-events a:focus-visible {
+  outline: 3px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.fd-events .fd-ev-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 100%;
+  padding: 3px 9px;
+  border: 1px solid color-mix(in oklab, var(--fd-ev-accent) 45%, transparent);
+  border-radius: var(--r-pill);
+  background: var(--fd-ev-accent-soft);
+  color: var(--fd-ev-accent-text);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.5;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.fd-events .fd-ev-chip > svg {
+  flex: 0 0 auto;
+  width: 13px;
+  height: 13px;
+}
+
+.fd-events .fd-ev-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+  color: var(--ember-text);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.fd-events .fd-ev-live-dot {
+  display: block;
+  width: 8px;
+  height: 8px;
+  flex: 0 0 auto;
+  border-radius: var(--r-pill);
+  background: currentColor;
+  animation: fd-ev-pulse 1600ms var(--ease-out) infinite;
+}
+@keyframes fd-ev-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.7);
+  }
+}
+
+.fd-events .fd-ev-when {
+  flex: 0 0 auto;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.fd-events .fd-ev-source {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 44px;
+  padding: 0 2px;
+  color: var(--muted);
+  font-size: var(--fs-12);
+  font-weight: 650;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.fd-events .fd-ev-source > svg {
+  width: 13px;
+  height: 13px;
+}
+.fd-events .fd-ev-source:hover {
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.fd-events .fd-ev-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border: 1px solid color-mix(in oklab, var(--gold) 45%, transparent);
+  border-radius: var(--r-pill);
+  background: var(--gold-soft);
+  color: var(--gold-text);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.fd-events .fd-ev-count > svg {
+  width: 13px;
+  height: 13px;
+}
+
+/* The one control that starts something. `mode` is the primary action (volt, per the bible);
+   `topic` is the quieter fallback on a live event the month built no mode from. */
+.fd-events .fd-ev-play {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1 1 190px;
+  min-width: 0;
+  min-height: 52px;
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-control);
+  background: var(--bg-2);
+  color: var(--text);
+  font-family: var(--font-ui);
+  text-align: left;
+}
+.fd-events .fd-ev-play > svg {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+}
+.fd-events .fd-ev-play[data-kind='mode'] {
+  border-color: transparent;
+  background: var(--volt);
+  color: var(--volt-ink);
+  box-shadow: var(--glow-volt);
+}
+.fd-events .fd-ev-play[data-kind='mode']:hover:not(:disabled) {
+  filter: brightness(1.06);
+}
+.fd-events .fd-ev-play[data-kind='topic']:hover:not(:disabled) {
+  border-color: color-mix(in oklab, var(--volt) 50%, var(--line));
+  background: var(--bg-1);
+}
+.fd-events .fd-ev-play[data-armed] {
+  border-color: var(--volt);
+  background: var(--volt-soft);
+  color: var(--volt-text);
+  box-shadow: none;
+}
+.fd-events .fd-ev-play:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+.fd-events .fd-ev-play-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.3;
+}
+.fd-events .fd-ev-play-body > strong {
+  font-size: var(--fs-14);
+  font-weight: 750;
+}
+.fd-events .fd-ev-play-body > small {
+  font-size: 11px;
+  opacity: 0.82;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.fd-events .fd-ev-play-spark {
+  flex: 0 0 auto;
+  width: 15px;
+  height: 15px;
+  margin-left: auto;
+  opacity: 0.7;
+}
+
+/* ---------- the screen ---------- */
+.fd-events-screen {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+.fd-events .fd-ev-head {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-hero);
+  background:
+    radial-gradient(120% 90% at 0% 0%, var(--ember-soft), transparent 58%),
+    radial-gradient(120% 90% at 100% 0%, var(--cyan-soft), transparent 58%), var(--bg-1);
+}
+.fd-events .fd-ev-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  min-height: 44px;
+  padding: 0 2px;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font-family: var(--font-ui);
+  font-size: var(--fs-12);
+  font-weight: 650;
+}
+.fd-events .fd-ev-back > svg {
+  width: 15px;
+  height: 15px;
+}
+.fd-events .fd-ev-back:hover {
+  color: var(--text);
+}
+.fd-events .fd-ev-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: var(--fs-12);
+  font-weight: 750;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+.fd-events .fd-ev-eyebrow > svg {
+  width: 14px;
+  height: 14px;
+}
+.fd-events .fd-ev-head h1 {
+  margin: 0;
+  font-size: var(--fs-36);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+}
+.fd-events .fd-ev-lede {
+  margin: 0;
+  max-width: 62ch;
+  font-size: var(--fs-14);
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.fd-events .fd-ev-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 4px 0 0;
+}
+.fd-events .fd-ev-stats > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-control);
+  background: var(--bg-2);
+}
+.fd-events .fd-ev-stats dt {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.fd-events .fd-ev-stats dd {
+  margin: 0;
+  font-size: var(--fs-22);
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--text);
+}
+
+.fd-events .fd-ev-asof {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-control);
+  background: var(--bg-0);
+  font-size: var(--fs-12);
+  line-height: 1.55;
+  color: var(--muted);
+}
+.fd-events .fd-ev-asof > svg {
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  color: var(--gold-text);
+}
+.fd-events .fd-ev-asof b {
+  color: var(--text);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* ---------- sections ---------- */
+.fd-events .fd-ev-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+.fd-events .fd-ev-section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 2px 10px;
+  min-width: 0;
+}
+.fd-events .fd-ev-section-head h2 {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0;
+  min-width: 0;
+  font-size: var(--fs-22);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+.fd-events .fd-ev-section-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--r-control);
+  border: 1px solid var(--line);
+  background: var(--bg-2);
+  color: var(--volt-text);
+}
+.fd-events .fd-ev-section-icon > svg {
+  width: 16px;
+  height: 16px;
+}
+.fd-events .fd-ev-section-note {
+  font-size: var(--fs-12);
+  color: var(--muted);
+}
+.fd-events .fd-ev-section-lede {
+  margin: -2px 0 0;
+  max-width: 68ch;
+  font-size: var(--fs-12);
+  line-height: 1.55;
+  color: var(--muted);
+}
+.fd-events .fd-ev-empty {
+  margin: 0;
+  padding: 16px;
+  border: 1px dashed var(--line);
+  border-radius: var(--r-card);
+  background: var(--bg-1);
+  font-size: var(--fs-14);
+  color: var(--muted);
+}
+
+.fd-events .fd-ev-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  min-width: 0;
+}
+/* Compact rows keep each card at its own height rather than stretching the short ones into
+   half-empty boxes; the live and mode grids do stretch, so their CTAs line up across a row. */
+.fd-events .fd-ev-grid--tight {
+  align-items: start;
+}
+
+/* ---------- event card ---------- */
+.fd-events .fd-ev-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--bg-1);
+  box-shadow: var(--shadow-card);
+  transition:
+    transform 160ms var(--ease-out),
+    border-color 160ms var(--ease-out),
+    box-shadow 160ms var(--ease-out);
+}
+.fd-events .fd-ev-card[data-variant='live'] {
+  background: linear-gradient(180deg, var(--fd-ev-accent-soft), transparent 44%), var(--bg-1);
+}
+.fd-events .fd-ev-card:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in oklab, var(--fd-ev-accent) 40%, var(--line));
+  box-shadow: var(--shadow-lift);
+}
+.fd-events .fd-ev-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+}
+.fd-events .fd-ev-name {
+  margin: 0;
+  font-size: var(--fs-18);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+.fd-events .fd-ev-card[data-variant='compact'] .fd-ev-name {
+  font-size: var(--fs-16);
+}
+.fd-events .fd-ev-dates {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  margin: 0;
+  font-size: var(--fs-12);
+  color: var(--muted);
+}
+.fd-events .fd-ev-dates > svg {
+  flex: 0 0 auto;
+  width: 14px;
+  height: 14px;
+}
+.fd-events .fd-ev-dates b {
+  color: var(--fd-ev-accent-text);
+  font-weight: 700;
+}
+.fd-events .fd-ev-blurb {
+  margin: 0;
+  font-size: var(--fs-14);
+  line-height: 1.55;
+  color: var(--muted);
+}
+.fd-events .fd-ev-headline {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  padding: 8px 10px;
+  border-radius: var(--r-control);
+  background: var(--bg-2);
+  font-size: var(--fs-12);
+  line-height: 1.5;
+  color: var(--text);
+}
+.fd-events .fd-ev-headline > svg {
+  flex: 0 0 auto;
+  width: 14px;
+  height: 14px;
+  margin-top: 2px;
+  color: var(--gold-text);
+}
+.fd-events .fd-ev-card-foot {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  margin-top: auto;
+  min-width: 0;
+}
+/* A compact card ends on one line: the dates on the left, the source on the right. */
+.fd-events .fd-ev-card[data-variant='compact'] .fd-ev-card-foot {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0 10px;
+  width: 100%;
+}
+/* The CTA takes the whole card width and sits at the bottom (thumb zone) so its sub-label —
+   which names the exact duel about to start — never has to be truncated. */
+.fd-events .fd-ev-card-foot .fd-ev-play {
+  flex: 0 0 auto;
+  width: 100%;
+  margin-top: 4px;
+}
+
+/* ---------- limited-mode card ---------- */
+.fd-events .fd-ev-mode {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--bg-1);
+  box-shadow: var(--shadow-card);
+}
+.fd-events .fd-ev-mode[data-open] {
+  background: linear-gradient(180deg, var(--fd-ev-accent-soft), transparent 40%), var(--bg-1);
+}
+.fd-events .fd-ev-mode:not([data-open]) {
+  border-style: dashed;
+}
+.fd-events .fd-ev-mode[data-armed] {
+  border-color: var(--volt);
+  box-shadow: var(--glow-volt);
+}
+.fd-events .fd-ev-mode-head {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.fd-events .fd-ev-mode-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fd-ev-accent-text);
+}
+.fd-events .fd-ev-mode:not([data-open]) .fd-ev-mode-kicker {
+  color: var(--muted);
+}
+.fd-events .fd-ev-mode-kicker > svg {
+  width: 13px;
+  height: 13px;
+}
+.fd-events .fd-ev-mode h3 {
+  margin: 0;
+  font-size: var(--fs-22);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+}
+.fd-events .fd-ev-mode-tagline {
+  margin: 0;
+  font-size: var(--fs-14);
+  color: var(--muted);
+}
+.fd-events .fd-ev-mode-event {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 8px;
+  min-width: 0;
+}
+.fd-events .fd-ev-mode-event-name {
+  min-width: 0;
+  font-size: var(--fs-12);
+  font-weight: 650;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+.fd-events .fd-ev-specs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-control);
+  background: var(--bg-2);
+}
+.fd-events .fd-ev-specs > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.fd-events .fd-ev-specs dt {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.fd-events .fd-ev-specs dt > svg {
+  width: 11px;
+  height: 11px;
+}
+.fd-events .fd-ev-specs dd {
+  margin: 0;
+  font-size: var(--fs-14);
+  font-weight: 700;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.fd-events .fd-ev-rewards {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.fd-events .fd-ev-rewards li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 0;
+}
+.fd-events .fd-ev-rewards li > svg {
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  margin-top: 1px;
+  color: var(--gold-text);
+}
+/* An earned badge stops being a reward preview and becomes a receipt. */
+.fd-events .fd-ev-rewards[data-earned] li > svg,
+.fd-events .fd-ev-rewards[data-earned] b {
+  color: var(--volt-text);
+}
+.fd-events .fd-ev-rewards li > span {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  font-size: var(--fs-12);
+  line-height: 1.4;
+  color: var(--muted);
+}
+.fd-events .fd-ev-rewards b {
+  color: var(--gold-text);
+  font-size: var(--fs-14);
+  font-weight: 750;
+}
+.fd-events .fd-ev-rewards small {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.fd-events .fd-ev-mode-foot {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: auto;
+  min-width: 0;
+}
+/* The column foot: `flex` on .fd-ev-play sizes the MAIN axis, which here is height — pin it. */
+.fd-events .fd-ev-mode-foot .fd-ev-play {
+  flex: 0 0 auto;
+}
+.fd-events .fd-ev-locked {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0;
+  min-height: 52px;
+  padding: 8px 12px;
+  border: 1px dashed var(--line);
+  border-radius: var(--r-control);
+  background: var(--bg-2);
+}
+.fd-events .fd-ev-locked > svg {
+  flex: 0 0 auto;
+  width: 17px;
+  height: 17px;
+  color: var(--muted);
+}
+.fd-events .fd-ev-locked > span {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.3;
+}
+.fd-events .fd-ev-locked strong {
+  font-size: var(--fs-14);
+  font-weight: 750;
+  color: var(--text);
+}
+.fd-events .fd-ev-locked small {
+  font-size: 11px;
+  color: var(--muted);
+}
+.fd-events .fd-ev-window {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  margin: 0;
+  font-size: 11px;
+  color: var(--muted);
+}
+.fd-events .fd-ev-window > svg {
+  flex: 0 0 auto;
+  width: 13px;
+  height: 13px;
+}
+.fd-events .fd-ev-window b {
+  color: var(--volt-text);
+  font-weight: 700;
+}
+
+/* ---------- Home: the "On the calendar" strip ---------- */
+.fd-events.fd-ev-strip {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--bg-1);
+}
+.fd-events .fd-ev-strip-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  min-width: 0;
+}
+.fd-events .fd-ev-strip-head h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: var(--fs-18);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.fd-events .fd-ev-strip-head h2 > svg {
+  width: 18px;
+  height: 18px;
+  color: var(--cyan-text);
+}
+.fd-events .fd-ev-strip-all,
+.fd-events .fd-ev-row-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: auto;
+  min-height: 44px;
+  padding: 0 2px;
+  border: 0;
+  background: none;
+  color: var(--volt-text);
+  font-family: var(--font-ui);
+  font-size: var(--fs-12);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.fd-events .fd-ev-strip-all > svg,
+.fd-events .fd-ev-row-all > svg {
+  width: 14px;
+  height: 14px;
+}
+.fd-events .fd-ev-strip-all:hover,
+.fd-events .fd-ev-row-all:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.fd-events .fd-ev-strip-list,
+.fd-events .fd-ev-row-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  min-width: 0;
+}
+.fd-events .fd-ev-strip-item,
+.fd-events .fd-ev-row-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+  min-height: 56px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-control);
+  background: var(--bg-2);
+  color: var(--text);
+  font-family: var(--font-ui);
+  text-align: left;
+}
+.fd-events .fd-ev-strip-item:hover,
+.fd-events .fd-ev-row-item:hover {
+  border-color: color-mix(in oklab, var(--fd-ev-accent) 45%, var(--line));
+}
+.fd-events .fd-ev-strip-icon,
+.fd-events .fd-ev-row-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--r-control);
+  background: var(--fd-ev-accent-soft);
+  color: var(--fd-ev-accent-text);
+}
+.fd-events .fd-ev-strip-icon > svg,
+.fd-events .fd-ev-row-icon > svg {
+  width: 18px;
+  height: 18px;
+}
+.fd-events .fd-ev-strip-body,
+.fd-events .fd-ev-row-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  line-height: 1.3;
+}
+.fd-events .fd-ev-strip-kicker {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.fd-events .fd-ev-strip-kicker .fd-ev-live-dot {
+  width: 7px;
+  height: 7px;
+  color: var(--ember-text);
+}
+.fd-events .fd-ev-strip-kicker em {
+  font-style: normal;
+  letter-spacing: 0.02em;
+  color: var(--fd-ev-accent-text);
+}
+.fd-events .fd-ev-strip-body > strong {
+  font-size: var(--fs-14);
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.fd-events .fd-ev-strip-body > small {
+  font-size: 11px;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.fd-events .fd-ev-strip-go {
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  margin-left: auto;
+  color: var(--muted);
+}
+.fd-events .fd-ev-strip-empty {
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px dashed var(--line);
+  border-radius: var(--r-control);
+  background: var(--bg-2);
+  font-size: var(--fs-12);
+  color: var(--muted);
+}
+.fd-events .fd-ev-strip-note,
+.fd-events .fd-ev-row-note {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* ---------- Play: the "Event modes" row ---------- */
+.fd-events.fd-ev-row {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.fd-events .fd-ev-row-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 28px;
+  min-width: 0;
+}
+.fd-events .fd-ev-row-head h2 {
+  margin: 0;
+  font-size: var(--fs-18);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+.fd-events .fd-ev-row-list > li {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.fd-events .fd-ev-row-item {
+  min-height: 64px;
+}
+.fd-events .fd-ev-row-item[data-armed] {
+  border-color: var(--volt);
+  background: var(--volt-soft);
+}
+.fd-events .fd-ev-row-item[data-armed] .fd-ev-row-icon {
+  background: var(--volt);
+  color: var(--volt-ink);
+}
+.fd-events .fd-ev-row-body > strong {
+  font-size: var(--fs-14);
+  font-weight: 750;
+}
+.fd-events .fd-ev-row-body > small {
+  font-size: 11px;
+  color: var(--muted);
+}
+.fd-events .fd-ev-row-event {
+  font-style: normal;
+  font-size: 11px;
+  color: var(--fd-ev-accent-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.fd-events .fd-ev-row-xp {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  flex: 0 0 auto;
+  margin-left: auto;
+  color: var(--gold-text);
+  font-size: var(--fs-14);
+  font-weight: 700;
+}
+.fd-events .fd-ev-row-xp > svg {
+  width: 14px;
+  height: 14px;
+}
+.fd-events .fd-ev-row-window {
+  padding-left: 4px;
+  font-size: 10px;
+  color: var(--muted);
+}
+
+/* ---------- ≥ 700: two columns ---------- */
+@media (min-width: 700px) {
+  .fd-events .fd-ev-grid,
+  .fd-events .fd-ev-row-list,
+  .fd-events .fd-ev-strip-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .fd-events .fd-ev-head {
+    padding: 22px;
+  }
+  .fd-events .fd-ev-stats {
+    max-width: 460px;
+  }
+}
+
+/* ---------- ≥ 1200: three columns ---------- */
+@media (min-width: 1200px) {
+  .fd-events .fd-ev-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .fd-events .fd-ev-grid--modes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ---------- reduced motion: no pulse, no lift ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .fd-events .fd-ev-live-dot {
+    animation: none;
+  }
+  .fd-events .fd-ev-card,
+  .fd-events .fd-ev-pressable {
+    transition: none;
+  }
+  .fd-events .fd-ev-card:hover {
+    transform: none;
+  }
+  .fd-events .fd-ev-pressable:active:not(:disabled) {
+    transform: none;
+  }
+}
+:root[data-motion='reduced'] .fd-events .fd-ev-live-dot,
+:root[data-motion='off'] .fd-events .fd-ev-live-dot {
+  animation: none;
+}
+:root[data-motion='reduced'] .fd-events .fd-ev-card:hover,
+:root[data-motion='off'] .fd-events .fd-ev-card:hover {
+  transform: none;
+}
+:root[data-motion='reduced'] .fd-events .fd-ev-pressable:active:not(:disabled),
+:root[data-motion='off'] .fd-events .fd-ev-pressable:active:not(:disabled) {
+  transform: none;
+}

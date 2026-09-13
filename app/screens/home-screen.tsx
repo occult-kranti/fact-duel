@@ -15,6 +15,7 @@ import { QuestBoard } from './home/quest-board';
 import { ExpeditionCard } from './home/expedition-card';
 import { RankStrip } from './home/rank-strip';
 import { StampShelf, XpLog, type LogEntry, type StampRoute } from './home/activity';
+import { LiveStrip } from './events/live-strip';
 import { accentOf, questRoute, untilReset, type QuestItem } from './home/util';
 import { usePress } from './home/press';
 import { useNow } from './home/use-now';
@@ -116,6 +117,9 @@ export function HomeScreen({ player, name, ready, busy, onRoute, onDuel, onSetup
           Bots are always labelled.
         </p>
       </div>
+
+      {/* The calendar, one line above the quests: what is on, what is next, how many modes are open. */}
+      <LiveStrip go={go} />
 
       <QuestBoard items={quests} resetIn={now ? untilReset(now) : ''} onOpen={openQuest} />
 

@@ -25,11 +25,50 @@ export type Tab =
   | 'arena'
   | 'passport'
   | 'journal'
+  | 'events'
   | 'collections'
   | 'discovery'
   | 'showroom'
   | 'rules'
   | 'timing';
+
+/* ---------- the curated calendar (lib/events.mjs, which is plain JS) ---------- */
+/** One sanitised entry from `readEvents`. Nothing is optional except the verified `headline`. */
+export type CalendarEvent = {
+  id: string;
+  name: string;
+  domain: string;
+  topic: string;
+  /** ISO 'YYYY-MM-DD' ends, inclusive. */
+  start: string;
+  end: string;
+  startDay: number;
+  endDay: number;
+  blurb: string;
+  whyQuiz: string;
+  sourceUrl: string;
+  /** The only field allowed to carry a result, and only when the dataset supplies it. */
+  headline?: string;
+};
+/** One limited-time mode from `monthlyModes`: an event, a template, a window and a duel config. */
+export type EventMode = {
+  id: string;
+  monthKey: string;
+  event: CalendarEvent;
+  template: { id: string; name: string; tagline: string; when: string; domain: string };
+  window: { start: string; end: string };
+  duel: { mode: string; duration: number; topic: string; domain: string };
+  xpBonus: number;
+  badge: string;
+};
+/** What arena.tsx keeps armed while a limited mode is being played. */
+export type ArmedMode = {
+  id: string;
+  name: string;
+  badge: string;
+  xpBonus: number;
+  duel: EventMode['duel'];
+};
 
 export const INITIAL_CONFIG: Config = {
   opponent: 'bot',
@@ -85,6 +124,11 @@ export type DuelActions = {
   setJoinLink: (link: string) => void;
   clearFilters: () => void;
   chooseCollection: (domain: string, topic: string) => void;
+  /**
+   * Arm a limited-time event mode: writes its duel config through `change`, moves to Play and
+   * brings the launch control into view. `null` disarms without touching the config.
+   */
+  chooseEventMode: (mode: EventMode | null) => void;
 };
 
 export type DuelController = {
@@ -112,6 +156,8 @@ export type DuelController = {
   matchMode: Mode;
   MODES: Mode[];
   credentials: Credentials | null;
+  /** The armed limited-time mode's id, or '' — the Play row marks it as chosen. */
+  eventModeId: string;
   /** Reveal marker ref read by RoundClock every 50 ms. */
   startMark: RefObject<StartMark | null>;
   /** The locked-but-unsent answer, if any (drives the retry button). */
@@ -167,6 +213,19 @@ export type ExpeditionsScreenProps = {
   onSelect: (id: string | null) => void;
   onDuel: (mode: string, topic?: string) => void;
   signal: (type: string) => void;
+  go: (tab: string) => void;
+};
+export type EventsScreenProps = {
+  player: Player;
+  /** The player can start a duel right now (catalogue loaded, name set) — same gate as Home. */
+  ready: boolean;
+  busy: boolean;
+  /** Quick Draw on a topic: the path Home's quest cards already use. */
+  onDuel: (mode: string, topic?: string) => void;
+  /** Arm a limited-time mode and move to Play. */
+  onMode: (mode: EventMode) => void;
+  /** The armed mode's id, or '' when nothing is armed. */
+  activeModeId: string;
   go: (tab: string) => void;
 };
 export type RulesScreenProps = {

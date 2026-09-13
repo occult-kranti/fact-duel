@@ -14,8 +14,17 @@ import { useEffect, useRef } from 'react';
 import { useJuice, type ToastInput } from '@/components/fx';
 import { LazyRewardMedal } from '@/components/three';
 import { achievementById, levelForXp, progressionDiff, RANK_TIERS } from '@/lib/progression.mjs';
+import { badgeLabel } from './events/util';
 
-type LogEntry = { id: string; at: number; kind: string; xp?: number; gems?: number; label?: string };
+type LogEntry = {
+  id: string;
+  at: number;
+  kind: string;
+  xp?: number;
+  gems?: number;
+  label?: string;
+  meta?: { badge?: string };
+};
 type Diff = ReturnType<typeof progressionDiff> & { logEntries: LogEntry[] };
 type Quiet = { toasts: boolean; ceremonies: boolean };
 
@@ -23,7 +32,15 @@ type Quiet = { toasts: boolean; ceremonies: boolean };
 const MEDAL_HEIGHT = 132;
 
 const STREAK_MILESTONES = new Set([3, 7, 14, 30, 50, 100]);
-const TOASTED_KINDS = new Set(['quest', 'quests-bonus', 'streak', 'rank', 'cosmetic', 'expedition-complete']);
+const TOASTED_KINDS = new Set([
+  'quest',
+  'quests-bonus',
+  'streak',
+  'rank',
+  'cosmetic',
+  'expedition-complete',
+  'event',
+]);
 
 const rankTiers = RANK_TIERS as ReadonlyArray<{ id: string; label: string; min: number }>;
 const rankLabel = (id: string) => rankTiers.find((t) => t.id === id)?.label ?? id;
@@ -161,14 +178,16 @@ export function useProgressionFeedback(progression: any, quiet: Quiet) {
               ? 'streak'
               : entry.kind === 'cosmetic'
                 ? 'gem'
-                : entry.kind === 'rank'
+                : entry.kind === 'rank' || entry.kind === 'event'
                   ? 'achievement'
                   : 'xp';
+        // A cleared limited mode leads with the badge it minted; the log label becomes the body.
+        const badge = entry.kind === 'event' && entry.meta?.badge ? badgeLabel(entry.meta.badge) : '';
         juice.toast({
           id: `prog:${entry.id}`,
           kind,
-          title: entry.label || entry.kind,
-          body: body || undefined,
+          title: badge ? `${badge} badge` : entry.label || entry.kind,
+          body: (badge ? [entry.label, body].filter(Boolean).join(' · ') : body) || undefined,
         });
       }
     }

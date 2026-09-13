@@ -1,0 +1,518 @@
+{
+  "deck": {
+    "title": "FACT//DUEL",
+    "subtitle": "A 1v1 sports-and-science knowledge duel, built as a daily habit before it is built as a business.",
+    "date": "September 2026",
+    "confidentiality": "Confidential. Prepared for the named recipient only; not for distribution or publication. Every number carries its source. Figures marked (P) are a plan, not a forecast. FACT//DUEL has no users and no revenue."
+  },
+  "slides": [
+    {
+      "n": 1,
+      "kind": "title",
+      "title": "FACT//DUEL — the 1v1 knowledge duel, rebuilt as a daily habit",
+      "kicker": "SEED ROUND — SEPTEMBER 2026",
+      "body": [
+        "A 3-4 minute head-to-head duel on sports and science, wrapped in a loop designed to bring you back tomorrow.",
+        "Private beta today: no accounts, no server-side progression, 54 sample questions.",
+        "Zero users outside a private playtest. Zero revenue. Stated here so it is never a discovery later.",
+        "Raising $1.2M for 18 months to buy one thing: the retention data this deck does not have."
+      ],
+      "chart": null,
+      "image": null,
+      "table": null,
+      "sources": [
+        "FACT//DUEL internal: public/product/investor/numbers.md — status paragraph and §5.15 (company disclosure)",
+        "https://www.ycombinator.com/library/4A-a-guide-to-seed-fundraising"
+      ],
+      "notes": "Sequoia's rule is one declarative sentence defining the company; Hale's is legible, simple, obvious. DocSend gives this slide 26 seconds, so it does exactly two jobs: name the thing, and pre-empt the only question that matters. Say the zero out loud in the first fifteen seconds of any meeting. DocSend's strongest negative finding is that VCs spend 80% more time on the traction of decks that failed — ambiguity invites the digging that kills the round, so we remove the ambiguity on page one. The $1.2M and 18 months come from YC's own arithmetic (4 engineers x $15,000/month x 18 = $1,080,000), derived in numbers.md §4.5. Add founder name and contact details before sending; do not add anything else."
+    },
+    {
+      "n": 2,
+      "kind": "chart",
+      "title": "Hundreds of millions of people played the 1v1 trivia duel. Nobody maintains it now.",
+      "kicker": "THE PROBLEM — THE VACUUM",
+      "body": [
+        "Trivia Crack: 267,939,837 lifetime Android installs. Its listing is now retitled around a FOX TV tie-in.",
+        "QuizDuel's owner MAG Interactive: group DAU -14% and MAU -13% YoY; 3.51 stars from 78 US iOS ratings.",
+        "Wayground's iOS and Android apps: last updated 14 Nov 2025. Psych!'s iOS build: untouched since 25 Aug 2023.",
+        "Everything still marketing itself as live 1v1: Quizion, 10+ downloads. TRIVIA GO!, 10K+, stale since 22 May 2025.",
+        "The format is proven and abandoned. That gap is the entire reason to keep reading."
+      ],
+      "chart": "vacuum",
+      "image": null,
+      "table": null,
+      "sources": [
+        "https://play.google.com/store/apps/details?id=com.etermax.preguntados.lite&hl=en_US&gl=US",
+        "https://storage.mfn.se/8d863483-ccc8-4f02-b0c5-d37d899b23e8/mag-interim-report-eng-2025-26-q3.pdf",
+        "https://itunes.apple.com/lookup?id=1484354626&country=de",
+        "https://itunes.apple.com/lookup?id=1160249042&country=us",
+        "https://play.google.com/store/apps/details?id=com.wb.goog.ellen.psych&hl=en_US&gl=US",
+        "https://play.google.com/store/apps/details?id=com.quizion.app&hl=en_US"
+      ],
+      "notes": "CRV asks for a traction teaser in the first two or three slides. We have no traction, so the credibility hook has to be evidence instead: this slide plus slide 3. All five lines are store data or a filed interim report, verified 13 Sep 2026, not analyst estimates. Caveats to volunteer rather than be caught on: the 267,939,837 figure is Google Play's internal install count (the store displays '100M+'), it is lifetime installs and not users, and the widely-quoted '600 million downloads' for Trivia Crack is PR-originated and does not survive checking (numbers.md §5.4) — we deliberately use the smaller, verifiable number. MAG's DAU/MAU are group-level across its whole portfolio, not QuizDuel standalone; MAG does not break QuizDuel out. Expect the obvious challenge: 'maybe the format is dead for a reason.' The answer is slide 3, and the honest version is that we agree the reason exists and we have named it."
+    },
+    {
+      "n": 3,
+      "kind": "chart",
+      "title": "It did not die of distribution. It died of monetisation and long-tail retention.",
+      "kicker": "THE GRAVEYARD",
+      "body": [
+        "Trivia Royale: 2.5M downloads in about three weeks on a budget under $500,000 — blended under $0.20 per download.",
+        "45% day-one iOS retention, around 30 minutes of use a day. Closed eight months after launch; all 16 staff let go.",
+        "HQ Trivia: 2.38M peak concurrent (28 Mar 2018), then 67,000 installs in Jan 2020 — 3.35% of its Feb 2018 rate.",
+        "QuizUp: about $32.4M of equity raised; sold to Glu in 2016 for $7.5M of cancelled notes, booked at $3.2M fair value.",
+        "Free installs and elite D1 were necessary and demonstrably not sufficient. Nobody solved day 30 or the dollar."
+      ],
+      "chart": "graveyard",
+      "image": null,
+      "table": null,
+      "sources": [
+        "https://techcrunch.com/2020/07/10/how-thor-fridrikssons-trivia-royale-earned-2-5m-downloads-in-3-weeks/",
+        "https://www.sec.gov/Archives/edgar/data/1717682/000171768218000001/primary_doc.xml",
+        "https://techcrunch.com/2020/02/14/hq-trivia-shuts-down/",
+        "https://www.sec.gov/Archives/edgar/data/1734125/000173412518000001/xslFormDX01/primary_doc.xml",
+        "https://www.sec.gov/Archives/edgar/data/1366246/000155837017001621/gluu-20161231x10k.htm"
+      ],
+      "notes": "This is the slide that decides whether an investor trusts the rest of the deck. Trivia Royale is the cleanest natural experiment in the category: it was built by QuizUp's own founder, it acquired 2.5M users at effectively zero cost, it posted 45% D1 — roughly the 90th percentile of all mobile games — and it was gone in eight months because revenue was insufficient and funding talks collapsed. Two caveats to state: the sub-$0.20 figure is blended cost per download including organic and viral, not a paid CPI, and the 45% D1 is company-reported to TechCrunch, not audited. Glu's $3.2M fair-value mark on QuizUp is the honest ceiling anyone should attach to a large unmonetised trivia audience. The takeaway line to say out loud: any pitch in this category that leads with 'we will go viral' is arguing the case that was already settled and ignoring the case that killed everyone. If asked what we would do differently, do not answer with features — answer with slide 4."
+    },
+    {
+      "n": 4,
+      "kind": "statement",
+      "title": "So the bet is sequencing: build the habit loop first, prove retention, then monetise.",
+      "kicker": "THE SOLUTION",
+      "body": [
+        "A duel is a 3-4 minute unit. The median mobile game session is 3.1-3.5 minutes; North America's is 3.64.",
+        "Around the duel: XP and levels, day streaks with shields, three daily quests, achievements, a rank, gems, cosmetics.",
+        "Solo expeditions and a curated calendar of real events carry the days when nobody wants a live opponent.",
+        "Nothing in the product monetises today. That is deliberate, and it is the opposite of how this category usually fails.",
+        "The order is the product decision. Retention is the gate; monetisation is downstream of a number we do not yet have."
+      ],
+      "chart": null,
+      "image": "/tmp/claude-0/-home-user-fact-duel/ebdb1205-a08d-56c2-9dfe-5856a1ecc14f/scratchpad/shots/release/phone-arena.png",
+      "table": null,
+      "sources": [
+        "https://www.gameanalytics.com/reports/2026-mobile-pc-gaming-benchmarks",
+        "FACT//DUEL internal: public/product/investor/numbers.md §3.2 and §4.4"
+      ],
+      "notes": "The session-length line is a design argument, not a traction claim, and must be framed that way: GameAnalytics' 2026 benchmark set (16,000+ games, nine regions, iOS and Android, CY2025) puts the median session at 3.1-3.5 minutes and North America at 3.64 minutes across 4.23 sessions a day. A duel is that unit by construction, which is why the duel and not the quiz-show format is the atom here. The long-tail apparatus — streaks, quests, achievements, a ladder, cosmetics — is the part every dead competitor either skipped or bolted on late. Be explicit that we are copying a known-good loop rather than inventing one; the honest claim is sequencing discipline, not novelty. Do not claim retention benefits from these mechanics: we have not measured any, and slide 9 says so."
+    },
+    {
+      "n": 5,
+      "kind": "product",
+      "title": "The loop is shipped and playable. The measurement layer is the thing that is not.",
+      "kicker": "PRODUCT — THE DAILY LOOP",
+      "body": [
+        "Home is the whole loop on one screen: level and XP, day streak, gems, rank, the day's quests, one-tap duel.",
+        "The duel itself: fixed answer order, a reveal marker, an atomic answer write, and an inspectable round receipt.",
+        "The practice opponent is labelled BOT and its planner never receives the question, the answer key or your response.",
+        "Progression lives in IndexedDB on the device. There are no accounts and none of it reaches a server.",
+        "That is the honest boundary of this build: we can ship the loop; we cannot yet measure whether it holds."
+      ],
+      "chart": null,
+      "image": "/tmp/claude-0/-home-user-fact-duel/ebdb1205-a08d-56c2-9dfe-5856a1ecc14f/scratchpad/shots/release/phone-home.png",
+      "table": null,
+      "sources": [
+        "FACT//DUEL internal: public/product/investor/numbers.md — status paragraph and §5.15 (company disclosure)"
+      ],
+      "notes": "Product is the second-longest dwell at 59 seconds, so this slide and slide 6 have to be readable in a glance each. Walk the screenshot rather than the feature list. The bot-integrity detail is here on purpose and not only on the risks slide: in a 1v1 product the first question a serious investor asks after Skillz v. AviaGames is 'is my opponent real', and the answer should already be visible in the product. Two things to volunteer: device-local progression means a cleared browser clears the profile, and it means D1/D7/D30 are not merely unmeasured but architecturally unmeasurable — which is exactly why milestone one on slide 9 is accounts and server-side progression. If asked about scale: the current transport polls at 500ms while a room is active and is sized for a bounded private pilot, not for public matchmaking. A founder may add verified shipped counts (routes, quests, achievements, tests) here, but only counts they can point at in the repository."
+    },
+    {
+      "n": 6,
+      "kind": "product",
+      "title": "A calendar of real sports and science events gives the app a reason to exist on a Tuesday.",
+      "kicker": "PRODUCT — THE RETENTION SURFACE",
+      "body": [
+        "Monthly limited-time modes open on real fixtures and announcements, then close when the window closes.",
+        "Solo expeditions are short untimed routes with a Steady-or-Bold risk choice locked in before each answer.",
+        "The calendar is static and hand-verified, with its verification date shown in the UI. No live feed, no scores API.",
+        "This is the surface for the days nobody wants a live opponent — precisely the days the graveyard lost.",
+        "The bank is 54 sourced questions today. Growing it is a funded milestone on slide 14, not a claim on this slide."
+      ],
+      "chart": null,
+      "image": "/tmp/claude-0/-home-user-fact-duel/ebdb1205-a08d-56c2-9dfe-5856a1ecc14f/scratchpad/shots/release/desktop-journeys.png",
+      "table": null,
+      "sources": [
+        "FACT//DUEL internal: public/product/investor/numbers.md — status paragraph and §5.15 (company disclosure)"
+      ],
+      "notes": "The strategic point of this slide is that the thing that killed the category is the empty day, and a static curated calendar is a cheap, low-risk answer to it that needs no rights deal, no live data vendor and no scores licence. Be precise about what is not here: there is no live feed, no results service and no partnership with any league, broadcaster or rights holder — none is claimed anywhere in this deck. State 54 plainly rather than saying 'a growing bank'; a soft label here is the kind of ambiguity DocSend found invites 80% more scrutiny. The honest framing of content is that it is an operating cost with a known rate, which is why it appears as a line in the use of funds rather than as a feature."
+    },
+    {
+      "n": 7,
+      "kind": "chart",
+      "title": "$1.69bn – $2.83bn, counted bottom-up from people we can name.",
+      "kicker": "MARKET",
+      "body": [
+        "216.8M US adults use a phone as a second screen during live sport, 2026 (EMARKETER estimate).",
+        "216.8M x $7.80-$13.07 revenue per active user per year = $1.69bn - $2.83bn.",
+        "Both ends of that band are measured: Duolingo's FY2025 filing and MAG Interactive's interim report."
+      ],
+      "chart": "tam-sam-som",
+      "image": null,
+      "table": null,
+      "sources": [
+        "https://www.emarketer.com/content/second-screen-engagement-during-live-sports",
+        "https://www.sec.gov/Archives/edgar/data/1562088/000162828026012246/q4fy25duolingo12-31x25shar.htm",
+        "https://storage.mfn.se/8d863483-ccc8-4f02-b0c5-d37d899b23e8/mag-interim-report-eng-2025-26-q3.pdf",
+        "https://members.thefsga.org/news/Details/new-fsga-research-details-growing-role-of-ai-prediction-markets-in-fantasy-sports-and-sports-betting-341850",
+        "https://paulgraham.com/convince.html",
+        "https://a16z.com/16-more-startup-metrics/"
+      ],
+      "notes": "This slide gets 29 seconds — third-least-read in the deck — so it carries one number and one arithmetic line and nothing else. Everything below lives in the appendix and in the answers. Method: Paul Graham's definition used literally, x customers x $y per year, with no penetration percentage anywhere in TAM or SAM, which is exactly a16z's toothbrush failure case avoided. The ARPU band is derived, not assumed: Duolingo $1,037.6M FY2025 revenue / 133.1M MAU = $7.80; MAG Interactive $21.563M of nine-month net sales / 2.2M MAU, annualised, = $13.07. MAG's figure is group-level across its whole portfolio, not QuizDuel standalone. SAM is the 90.3M North American adults who did fantasy sports or sports betting in the past year (FSGA 2026), giving $704M-$1.18bn — a bloc where 66% of 13-20-year-old season-long players update lineups daily at a $100 median annual spend. SOM is 0.14%-0.23% of SAM, and it is a chosen target with zero company data behind it, not a projection. We deliberately exclude Europe, Latin America and every science-audience bloc (followers and visits are not people, and they overlap the sports blocs), which makes the number smaller — say so, it is a credibility asset. If pushed on the global number, TAM-B of $9.49-15.90bn is in the appendix with the reason it is directional only: it applies US ARPU to a South Asian population, and Newzoo's own regional split contradicts that. One line worth saying: two paid research firms size game-based learning 3.93x apart for the identical year, so no vendor top-down number can discipline this plan."
+    },
+    {
+      "n": 8,
+      "kind": "bullets",
+      "title": "Why now: the incumbents walked away, and the habit-subscription model got proven at $1bn scale.",
+      "kicker": "WHY NOW",
+      "body": [
+        "Trivia Crack's listing is now built around a FOX TV tie-in. The largest installed base in the category left the duel.",
+        "Duolingo turned a streak, XP and quest loop into $1,037.6M of FY2025 revenue and 12.7M paid subscribers.",
+        "Trivia converts worst of about 38 iOS categories — 5.2% page-view-to-install against an 8.56% all-category average.",
+        "Being web-first sidesteps that funnel entirely. It is an AppTweak estimate, and it does not transfer automatically.",
+        "Nothing here depends on a new technology. It depends on a category that has been left unattended."
+      ],
+      "chart": null,
+      "image": null,
+      "table": null,
+      "sources": [
+        "https://play.google.com/store/apps/details?id=com.etermax.preguntados.lite&hl=en_US&gl=US",
+        "https://www.sec.gov/Archives/edgar/data/1562088/000162828026012246/q4fy25duolingo12-31x25shar.htm",
+        "https://www.sec.gov/Archives/edgar/data/1562088/000162828026053299/q2fy26duolingo6-30x26share.htm",
+        "https://www.apptweak.com/"
+      ],
+      "notes": "Least-read slide in the deck at 23 seconds, so it makes one point: the timing argument is behavioural and competitive, not technological. Resist any temptation to invent an AI or platform-shift narrative — we do not have one and a fabricated one is the fastest way to lose a reader. The store-conversion line needs its caveat attached in the same breath: this figure was established during our own verification pass, it replaces a widely-circulated claim that turned out to be inverted (the 8.2% iOS figure in circulation is wrong), and it is measured on app-store listings, so the web-first advantage is a plausible argument and not a measured one. Duolingo's 12.7M paid subscribers and 140.6M MAU are from the Q2 2026 filing; the $1,037.6M is FY2025. Both are audited filings, which is why they carry the slide."
+    },
+    {
+      "n": 9,
+      "kind": "chart",
+      "title": "Zero users. Zero revenue. Retention currently unmeasurable by design — and that is what the round fixes.",
+      "kicker": "TRACTION — STATED PLAINLY",
+      "body": [
+        "No accounts, no server-side progression, 54 sample questions, zero users outside a private playtest, zero revenue.",
+        "Shipped: the duel engine with atomic writes, device-local progression, expeditions, the event calendar, the feel layer.",
+        "Milestone 1 — ship accounts and server-side progression. Nothing else is measurable until this lands.",
+        "Milestone 2 — publish D1/D7/D30 against GameAnalytics North American medians: 23.28% / 4.97% / 1.18%.",
+        "Target — beat the 4.97% NA median D7 on a cohort of at least 1,000 players. Falsifiable, benchmark visible."
+      ],
+      "chart": "retention-bar",
+      "image": null,
+      "table": null,
+      "sources": [
+        "FACT//DUEL internal: public/product/investor/numbers.md — status paragraph, §4.4 and §5.15 (company disclosure)",
+        "https://www.gameanalytics.com/reports/2026-mobile-pc-gaming-benchmarks",
+        "https://www.sec.gov/Archives/edgar/data/1562088/000162828026053299/q2fy26duolingo6-30x26share.htm",
+        "https://www.sporcle.com/memberships/",
+        "https://www.sec.gov/Archives/edgar/data/1801661/000180166124000100/sklz-20231231.htm",
+        "https://web.archive.org/web/20240302210508/https://www.docsend.com/blog/what-vcs-really-want-to-see-inside-your-seed-deck/"
+      ],
+      "notes": "DocSend's finding is that VCs spend 80% more time on the traction of decks that failed: a vague traction slide invites the inspection that kills the round, so the honest move is to state zero and move on. Say it in one sentence and do not soften it — no waitlist presented as users, no playtest presented as a cohort, no pilot presented as revenue. Progression is device-local, so we cannot measure D1/D7/D30 at all today: not 'have not yet' but cannot, architecturally, which is why milestone one is the account layer. The remaining milestones from numbers.md §4.4: grow the question bank from 54 with a stated production rate; ship an opponent-integrity answer before monetisation (Skillz v. AviaGames, $42.9M, bots run against paying humans); and validate exactly one monetisation route — the subscription cross-check at $43.99/yr against a 9% MAU-to-paid target, the only route with comparables behind it. Every milestone is chosen to be falsifiable against a published benchmark, because that is the only kind of pre-traction milestone worth presenting. The GameAnalytics medians are third-party estimates measured on app-store installs; note that we will be reporting a web product against them, which is the caveat on slide 12."
+    },
+    {
+      "n": 10,
+      "kind": "chart",
+      "title": "We copy the habit subscription, not trivia IAP — and here is the cross-check that keeps us honest.",
+      "kicker": "BUSINESS MODEL",
+      "body": [
+        "Trivia IAP is the dead end: the top three true trivia apps on US iOS grossed $102.5K/week — $5.33M/yr, pre-Apple cut.",
+        "Habit subscriptions are not: Duolingo $1,037.6M FY2025 at 9.03% MAU-to-paid; Kahoot $146.0M FY2022 at 95% margin.",
+        "Our cross-check at base-case Year-3 scale (P): 105,900 MAU x 9.03% = 9,563 subs x $43.99 = $420,666.",
+        "The install-economics route gives $1,630,517 (P) at the same scale — 3.88x more. So we present $0.4M - $1.6M (P).",
+        "$43.99 is Sporcle's individual annual price. 9.03% is Duolingo's filed conversion. Neither is our number yet."
+      ],
+      "chart": "where-money-is",
+      "image": null,
+      "table": null,
+      "sources": [
+        "https://sensortower.com/blog/2025-q2-ios-top-5-trivia%20games-revenue-us-604118ed241bc16eb8b8453a",
+        "https://www.sec.gov/Archives/edgar/data/1562088/000162828026053299/q2fy26duolingo6-30x26share.htm",
+        "https://www.sec.gov/Archives/edgar/data/1562088/000162828026012246/q4fy25duolingo12-31x25shar.htm",
+        "https://kahoot.com/files/2023/02/4Q22_Kahoot_quarterly_report.pdf",
+        "https://www.sporcle.com/memberships/",
+        "https://www.appsflyer.com/resources/reports/app-marketing-monetization-report/",
+        "https://www.gameanalytics.com/reports/2026-mobile-pc-gaming-benchmarks"
+      ],
+      "notes": "This is the longest-dwell slide in a seed deck at 64 seconds, so it is the densest page here and the one to rehearse hardest. The argument in one breath: the category does monetise, just not as consumer trivia IAP. Sensor Tower's Q2 2025 US iOS estimates put Kahoot at a $38.5K/week peak falling to $28.2K, Trivia Crack Premium at about $33K and GeoGuessr at $31K falling to $28.7K — $102.5K a week combined, $5.33M a year gross before Apple's 15-30% cut, and these are modelled estimates rather than audited revenue. Against that, Kahoot collected $146.0M in FY2022 at a 95% gross margin through subscriptions and Duolingo collects over a billion dollars a year from a streak-and-quest loop that is mechanically the same shape as ours. The cross-check is the point of the slide and it argues against us: at base-case Year-3 MAU of 105,900, a Duolingo-rate subscription at Sporcle's price yields $420,666, while our install-economics model yields $1,630,517 — a 3.88x divergence, which is why the honest Year-3 band is $0.4M-$1.6M and not $1.6M. In the conservative case the two routes land within 8% of each other, which is the reason to trust the conservative case and distrust the base case. Two ceilings to state before being asked: base-case revenue per MAU of $15.40/yr already exceeds both real anchors (MAG $13.07, Duolingo $7.80), and break-even blended cost per install is $1.36 in the base case against Trivia Royale's sourced sub-$0.20 — necessary, and demonstrably not sufficient. We have no verified CAC or genre ARPDAU benchmark and we will not quote one. All scenario figures are (P): plans built on third-party benchmarks, with zero company data behind them."
+    },
+    {
+      "n": 11,
+      "kind": "table",
+      "title": "Scale without maintenance, or maintenance without scale. Nobody currently holds both.",
+      "kicker": "LANDSCAPE",
+      "body": [
+        "The products that own the installed base have left the duel. The products still running the duel have no base.",
+        "Skillz is the adjacent warning: ARPPU held at about $61.70/month while paying MAU fell from 513,000 to 141,000.",
+        "Competitive play monetises extraordinarily well and churns extraordinarily hard. Both halves are the plan.",
+        "Our axis is not features. It is being the maintained 1v1 duel that also gives you a reason to come back tomorrow."
+      ],
+      "chart": null,
+      "image": null,
+      "table": {
+        "headers": ["Product", "Installed base", "Money", "Live 1v1 duel?", "Latest signal"],
+        "rows": [
+          ["Trivia Crack (etermax)", "267,939,837 Android installs", "~$33K/week US iOS (est.)", "Pivoted away", "Listing retitled around a FOX TV tie-in"],
+          ["QuizDuel (MAG Interactive)", "2.2M group MAU, -13% YoY", "$21.563M 9-month group net sales", "Yes", "3.51 stars / 78 US iOS ratings"],
+          ["Kahoot!", "100,263,409 Android installs", "$146.0M FY2022, 95% gross margin", "No — classroom/B2B", "Private since 23 Jan 2024"],
+          ["Wayground (ex-Quizizz)", "10M+ Android installs", "$44M disclosed raised, no valuation", "No", "Apps last updated 14 Nov 2025"],
+          ["Quizion / TRIVIA GO!", "10+ / 10K+ downloads", "None disclosed", "Yes", "TRIVIA GO! stale since 22 May 2025"],
+          ["FACT//DUEL", "Zero users", "Zero revenue", "Yes", "Private beta, 54 questions"]
+        ]
+      },
+      "sources": [
+        "https://play.google.com/store/apps/details?id=com.etermax.preguntados.lite&hl=en_US&gl=US",
+        "https://sensortower.com/blog/2025-q2-ios-top-5-trivia%20games-revenue-us-604118ed241bc16eb8b8453a",
+        "https://storage.mfn.se/8d863483-ccc8-4f02-b0c5-d37d899b23e8/mag-interim-report-eng-2025-26-q3.pdf",
+        "https://itunes.apple.com/lookup?id=1484354626&country=de",
+        "https://play.google.com/store/apps/details?id=no.mobitroll.kahoot.android&hl=en_US&gl=US",
+        "https://kahoot.com/files/2023/02/4Q22_Kahoot_quarterly_report.pdf",
+        "https://newsweb.oslobors.no/message/608893",
+        "https://www.prnewswire.com/news-releases/quizizz-gains-momentum-raises-31-5-million-to-motivate-every-student-301322655.html",
+        "https://itunes.apple.com/lookup?id=1160249042&country=us",
+        "https://play.google.com/store/apps/details?id=com.quizion.app&hl=en_US",
+        "https://www.sec.gov/Archives/edgar/data/1801661/000180166126000019/q425skillzex991-earningsre.htm",
+        "https://www.sec.gov/Archives/edgar/data/1801661/000180166123000003/ex991_fy22q4-8xkxearningsr.htm"
+      ],
+      "notes": "Competition gets 34 seconds, so the table has to do the work and the bullets only frame it. Putting our own row in with zeroes is deliberate: it is the row an investor would otherwise add themselves, and adding it first is worth more than the space it costs. Caveats: Trivia Crack's weekly figure is a Sensor Tower model, not disclosed revenue; MAG's MAU and net sales are group-level across its whole portfolio; Kahoot has published no audited consolidated group figures since delisting on 23 Jan 2024, so FY2022 is the last comparable full year (the parent-only Norwegian statutory accounts showing USD 112.824M for FY2025 are not group results and must not be compared like-for-like); and Wayground's frequently-cited ~$300M valuation appears in no primary source and is deliberately absent from this table. Skillz's FY2021-to-FY2025 collapse is the single most useful adjacent data point in the deck: $380.2M to $104.5M of revenue, 513,000 to 141,000 paying MAU, with monthly ARPPU essentially flat at about $62 throughout."
+    },
+    {
+      "n": 12,
+      "kind": "bullets",
+      "title": "The risks that emptied this category are the first two on this list, and they set the milestones.",
+      "kicker": "RISKS",
+      "body": [
+        "Long-tail retention. Trivia Royale had 45% D1 and died in eight months. Median D30 in this category is 0.68-0.79%.",
+        "Opponent integrity. Skillz won $42.9M against AviaGames over bots run against paying humans in cash games.",
+        "Benchmark transfer. Every retention, session and conversion figure here is measured on app-store installs, not web.",
+        "Content depth. 54 questions is a demo bank. Production capacity is a funded line item, not an assumption.",
+        "Model honesty. Our base case implicitly out-monetises a Duolingo-rate subscription by 3.88x. We flag it, not hide it."
+      ],
+      "chart": null,
+      "image": null,
+      "table": null,
+      "sources": [
+        "https://techcrunch.com/2020/07/10/how-thor-fridrikssons-trivia-royale-earned-2-5m-downloads-in-3-weeks/",
+        "https://www.gameanalytics.com/reports/2026-mobile-pc-gaming-benchmarks",
+        "https://www.sec.gov/Archives/edgar/data/1801661/000180166124000100/sklz-20231231.htm",
+        "https://www.appsflyer.com/resources/reports/app-marketing-monetization-report/",
+        "https://www.sec.gov/Archives/edgar/data/1562088/000162828026053299/q2fy26duolingo6-30x26share.htm"
+      ],
+      "notes": "Each risk has a named response rather than a reassurance. Long-tail retention: the structural fact is that at a median D30 of 0.68-0.79% a game's MAU is almost entirely the current month's new installs — in our own base case the retained resident base is 5,900 of 105,900 MAU, 5.6% — so retention is not a metric in this category, it is the business, and that is why the entire raise is pointed at it. Opponent integrity: the AviaGames trial evidence described bots named 'Cucumbers' and 'Guides' run against paying humans, and the $42.9M willful-infringement verdict landed on 9 Feb 2024; in a 1v1 product this is a legal and existential issue rather than a feature, which is why our practice bot is labelled BOT in the UI, its planner never receives a question, answer key or human response, and all round plans are fixed and persisted before play. Benchmark transfer is the largest methodological risk in the whole model and is stated rather than buried: we have no verified benchmark for web-first game retention, web-first acquisition cost or web-first payer conversion, and the milestone-one cohort is what replaces the assumption with data. Content depth and model honesty are the two we control. If an investor adds a risk we have not listed, that is a good outcome — write it down and answer it in the follow-up, not on the spot."
+    },
+    {
+      "n": 13,
+      "kind": "statement",
+      "title": "TO BE COMPLETED BY THE FOUNDER",
+      "kicker": "TEAM",
+      "body": [
+        "TO BE COMPLETED BY THE FOUNDER. No team member, hire, advisor, partner or customer is claimed in this deck.",
+        "The plan funds four engineers over 18 months. This slide must name them, with agreement in writing, before sending.",
+        "Roles the milestone list requires: backend — accounts, server-side progression and analytics instrumentation.",
+        "Client and game engineering for the duel and progression surfaces; content and question production at a stated rate.",
+        "Plus the founder's own earned insight into this category — the one input no benchmark in this deck can supply."
+      ],
+      "chart": null,
+      "image": null,
+      "table": null,
+      "sources": [
+        "FACT//DUEL internal: public/product/investor/numbers.md §4.4 and §4.5",
+        "https://www.ycombinator.com/library/4A-a-guide-to-seed-fundraising",
+        "https://www.ycombinator.com/library/4T-how-to-design-a-better-pitch-deck"
+      ],
+      "notes": "This slide is intentionally unfinished and must not be filled in by anyone but the founder. YC's own framing is that investors invest in teams, not slides, and its first DON'T is 'be dishonest in any way' — a fabricated advisor or an unagreed hire is the single fastest unrecoverable failure in a seed process, and this deck's whole credibility strategy is that every claim survives checking. The role list is derived from the funded milestones rather than from an org chart: milestone one is the account and analytics layer, which is why backend leads the list. The four-engineer shape comes from the ask arithmetic on slide 14. DocSend gives this section 38 seconds; a blank placeholder sent to an investor spends all 38 of them badly, so the deck is not sendable until this page is real."
+    },
+    {
+      "n": 14,
+      "kind": "ask",
+      "title": "$1.2M for 18 months, to buy the one number this deck does not have.",
+      "kicker": "THE ASK",
+      "body": [
+        "4 engineers x $15,000/month x 18 months = $1,080,000. Raising about $1.2M, inside YC's $500k-$1.5M band.",
+        "At Carta's Q3 2025 median seed pre-money of $16.0M: $1.2M into $17.2M post = 6.98% dilution.",
+        "At a $24.0M post-money, Carta's Q4 2025 all-time high: 5.00%. Both under YC's 'as little as 10% is wonderful'.",
+        "It buys: accounts and instrumentation, a published D1/D7/D30 cohort of 1,000+, and a larger question bank.",
+        "Plus an opponent-integrity answer and one validated monetisation route. Then we come back with data, not benchmarks."
+      ],
+      "chart": null,
+      "image": null,
+      "table": null,
+      "sources": [
+        "https://www.ycombinator.com/library/4A-a-guide-to-seed-fundraising",
+        "https://carta.com/data/state-of-private-markets-q3-2025/",
+        "https://www.gameanalytics.com/reports/2026-mobile-pc-gaming-benchmarks",
+        "FACT//DUEL internal: public/product/investor/numbers.md §4.4 and §4.5"
+      ],
+      "notes": "The ask uses YC's structure — N months x team x cost = $X, with dilution against published medians — and the arithmetic is shown so it can be checked in the 32 seconds this slide gets. The caveat to volunteer rather than defend: YC's $15,000 per engineer per month and its $500k-$1.5M band are undated editorial rules of thumb, not measured or inflation-indexed 2026 figures, and are very likely understated today; we use the structure and expect to substitute a current, defensible cost base when the team on slide 13 is real. Carta's $16.0M is the Q3 2025 median seed pre-money, up 14% YoY, in a quarter with about 17% down rounds; the $24.0M post-money is Carta's Q4 2025 all-time high across all sectors, with no consumer split published, so it is an upper anchor rather than a comparable. Base-case Year-1 revenue of $101,907 (P) is immaterial to runway and should be described that way — the raise buys 18 months to produce the retention data we do not have, which is the entire thesis of the round. No detailed financial model belongs in this conversation: a16z, YC and CRV all put three-to-five-year projections in the appendix or the data room, and ours is in appendix slide 16 where it can be interrogated rather than performed."
+    },
+    {
+      "n": 15,
+      "kind": "appendix",
+      "title": "Appendix A — the ~1,000x gap between the category's claimed size and its observed revenue.",
+      "kicker": "APPENDIX — MARKET STRUCTURE",
+      "body": [
+        "Top-down vendors size the nearest categories at $3.0bn (second-screen sports apps) to $8.09bn (fan engagement).",
+        "Observed: the top three true trivia apps on US iOS grossed $5.33M/yr. The gap is roughly three orders of magnitude.",
+        "Thesis reading: the category is structurally under-monetised — 267,939,837 Trivia Crack installs, product abandoned.",
+        "Risk reading: trivia audiences do not pay and this is the ceiling. HQ, QuizUp and Trivia Royale all died with audiences.",
+        "The reconciliation is slide 10: the category monetises through habit subscriptions, not consumer trivia IAP."
+      ],
+      "chart": "the-gap",
+      "image": null,
+      "table": null,
+      "sources": [
+        "https://www.factmr.com/report/second-screen-sports-apps-market",
+        "https://www.thebusinessresearchcompany.com/report/fan-engagement-global-market-report",
+        "https://market.us/report/fan-engagement-market/",
+        "https://www.marketsandmarkets.com/Market-Reports/game-based-learning-market-169115901.html",
+        "https://www.imarcgroup.com/game-based-learning-market",
+        "https://sensortower.com/blog/2025-q2-ios-top-5-trivia%20games-revenue-us-604118ed241bc16eb8b8453a",
+        "https://play.google.com/store/apps/details?id=com.etermax.preguntados.lite&hl=en_US&gl=US",
+        "https://www.sensortower.com/blog/state-of-mobile-2026"
+      ],
+      "notes": "Present both readings and let the investor pick; a deck that only presents the thesis reading of a 1,000x gap has not understood it. The vendor disagreement is itself evidence: IMARC sizes game-based learning at $24.5bn for the same year MarketsandMarkets sizes it at $6.23bn, a 3.93x spread, and market.us sizes fan engagement at 2.00x The Business Research Company's figure. When two paid research firms differ by four times on the same market in the same year, neither number can discipline a business plan, which is the empirical case for the bottom-up construction on slide 7. Note also that our own TAM-A of $1.69-2.83bn sits below the top-down range, because we count only US second-screen adults at observed per-user revenue while the vendors count sponsorship, ticketing, merchandising and B2B platform spend we will never touch. All Sensor Tower figures are modelled estimates of gross consumer spend, before Apple's 15-30% cut."
+    },
+    {
+      "n": 16,
+      "kind": "appendix",
+      "title": "Appendix B — three-year scenarios, all figures (P): plans built on third-party benchmarks.",
+      "kicker": "APPENDIX — THE MODEL",
+      "body": [
+        "One model, three input sets. Only D30 retention, payer rate and install volume change between scenarios.",
+        "Install volumes are chosen assumptions with no company data behind them. That is stated, not softened.",
+        "Even the optimistic case assumes only median casual per-install monetisation; all optimism sits in volume.",
+        "Subscription cross-check: conservative agrees within 8%; base diverges 3.88x; optimistic 5.26x.",
+        "Break-even blended cost per install: $0.37 / $1.36 / $1.89. Trivia Royale's was under $0.20 — and it still died."
+      ],
+      "chart": "scenarios",
+      "image": null,
+      "table": {
+        "headers": ["Scenario (P)", "Y3 installs", "Rev / install", "Y3 revenue", "Y3 steady MAU", "Subscription cross-check"],
+        "rows": [
+          ["Conservative", "250,000", "$0.3688", "$92,202", "21,542", "$85,570 — agrees within 8%"],
+          ["Base", "1,200,000", "$1.3588", "$1,630,517", "105,900", "$420,666 — 3.88x divergence"],
+          ["Optimistic", "4,000,000", "$1.8902", "$7,560,784", "361,667", "$1,436,647 — 5.26x divergence"]
+        ]
+      },
+      "sources": [
+        "https://www.gameanalytics.com/reports/2026-mobile-pc-gaming-benchmarks",
+        "https://www.appsflyer.com/resources/reports/app-marketing-monetization-report/",
+        "https://www.sec.gov/Archives/edgar/data/1562088/000162828026053299/q2fy26duolingo6-30x26share.htm",
+        "https://www.sporcle.com/memberships/",
+        "https://techcrunch.com/2020/07/10/how-thor-fridrikssons-trivia-royale-earned-2-5m-downloads-in-3-weeks/",
+        "https://a16z.com/the-insiders-guide-to-data-rooms-what-to-know-before-you-raise/",
+        "FACT//DUEL internal: public/product/investor/numbers.md §4.1-§4.3"
+      ],
+      "notes": "This page exists only because someone asked for it. a16z lists detailed three-to-five-year projections among the things not to include, wants 12-18 month milestones instead, and its anchoring rule cannot even be satisfied here because we have no historical data to anchor to — which is itself the most honest sentence on the page. Inputs, all third-party: D30 retention of 0.68% / 1.18% / 1.70% (global median low, North American median, global P75 from GameAnalytics); install-to-payer of 5.08% / 11.14% / 18.46% (AppsFlyer NA repeat payer, NA one-time payer, and a derived $1.34/$7.26 ratio used only as an optimistic ceiling and labelled derived); ARPPU held at AppsFlyer's casual D90 $7.26 in all three; ad revenue per install $0.00 in the conservative case because we are a web app with no mediation stack today. Monthly churn of the retained base is fixed at 20% across all scenarios — an unsourced modelling assumption, held constant so it cannot flatter any scenario. Three stress tests all point the same way: the conservative case is genuinely conservative, and the base case is not. Base-case revenue per MAU of $15.40 exceeds both real anchors (MAG $13.07, Duolingo $7.80), so any scenario that out-monetises Duolingo per active user is a ceiling and not a target. Per-MAU revenue also looks high partly because high churn makes annual installs about 11x steady-state MAU — throughput, not intensity."
+    },
+    {
+      "n": 17,
+      "kind": "appendix",
+      "title": "Appendix C — TAM, SAM and SOM in full, including the number we chose not to put on the slide.",
+      "kicker": "APPENDIX — MARKET SIZING",
+      "body": [
+        "No penetration percentage appears anywhere in TAM or SAM. Every haircut lives in SOM, where it belongs.",
+        "TAM-B adds the 1bn+ global cricket bloc but applies US ARPU to a South Asian population — directional only.",
+        "Newzoo contradicts that directly: APAC generated $95.0bn of 2025 games revenue against North America's $54.0bn.",
+        "Excluded on purpose: Europe, Latin America, and every science-audience bloc. Followers and visits are not people.",
+        "SOM is 0.14%-0.23% of SAM. A seed-stage SOM that is a fraction of one percent is what honest arithmetic produces."
+      ],
+      "chart": null,
+      "image": null,
+      "table": {
+        "headers": ["Layer", "Population", "x ARPU", "Result", "Source of population"],
+        "rows": [
+          ["TAM-A (on the slide)", "216.8M US second-screen adults", "$7.80 - $13.07", "$1.69bn - $2.83bn", "EMARKETER, 2026"],
+          ["SAM", "90.3M NA fantasy/betting adults", "$7.80 - $13.07", "$704M - $1.18bn", "FSGA / Angus Reid, 2026"],
+          ["SOM (P)", "~106,000 steady-state MAU", "base-case model", "$0.4M - $1.6M (P)", "Chosen Year-3 plan target"],
+          ["TAM-B (appendix only)", "1,216.8M incl. cricket bloc", "$7.80 - $13.07", "$9.49bn - $15.90bn", "ICC, 1bn+ fans aged 16-69"]
+        ]
+      },
+      "sources": [
+        "https://www.emarketer.com/content/second-screen-engagement-during-live-sports",
+        "https://members.thefsga.org/news/Details/new-fsga-research-details-growing-role-of-ai-prediction-markets-in-fantasy-sports-and-sports-betting-341850",
+        "https://members.thefsga.org/news/Details/new-fsga-research-highlights-industry-stability-and-next-generation-growth-in-fantasy-sports-and-sports-betting-305937",
+        "https://www.icc-cricket.com/media-releases/first-global-market-research-project-unveils-more-than-one-billion-cricket-fans",
+        "https://www.nielsen.com/news-center/2025/the-future-of-sport-nielsens-2025-report-reveals-growth-drivers/",
+        "https://newzoo.com/articles/global-games-market-2025",
+        "https://paulgraham.com/convince.html",
+        "https://a16z.com/16-more-startup-metrics/"
+      ],
+      "notes": "Two flaws to disclose before anyone finds them. First, a nesting inconsistency: TAM-A is US-only at 216.8M while SAM includes Canada at 90.3M (82.8M US plus about 7.5M Canadian), so roughly 7.5M people sit in SAM but not TAM-A. It is immaterial and it is flagged rather than smoothed over. Second, TAM-B is in this deck only as an upper bound with its own refutation attached. Why SAM is genuinely addressable rather than merely large, both from FSGA 2026: 66% of 13-20-year-old season-long fantasy players update lineups daily, with an average starting age of 14 and a $100 median annual spend, and 51% of participants do both fantasy and betting, up from 49%. That is a daily-habit, already-spending, competitively-motivated audience — the behavioural profile a 1v1 duel is built for. Nielsen's '51% of people globally are fans of football' is deliberately not converted to a headcount because we have no verified population denominator for it; we use only its 62M US soccer fans and the ICC's 1bn+ cricket figure. Aggregator fan-base numbers circulating for other sports failed verification and are excluded."
+    },
+    {
+      "n": 18,
+      "kind": "appendix",
+      "title": "Appendix D — the graveyard in full, with capital raised and what it ended up worth.",
+      "kicker": "APPENDIX — WHAT HAPPENED BEFORE",
+      "body": [
+        "Every row is from a filing or contemporaneous reporting. No estimate in this table is ours.",
+        "The pattern: large audiences, cheap acquisition, no durable day-30 behaviour and no working price.",
+        "QuizUp's $3.2M fair-value mark is the honest ceiling for a large unmonetised trivia audience.",
+        "Skillz is the live adjacent case: the money is real, and so is the churn."
+      ],
+      "chart": null,
+      "image": null,
+      "table": {
+        "headers": ["Product", "Peak", "Capital", "Ending"],
+        "rows": [
+          ["HQ Trivia", "2.38M concurrent players, 28 Mar 2018", "$12,539,999 sold of $15,000,001 offered", "67,000 installs in Jan 2020; shut 14 Feb 2020, 25 staff"],
+          ["QuizUp", "~20M users claimed 19 May 2014; 1bn+ matches", "~$32.4M equity per SEC Form Ds", "Sold to Glu for $7.5M of cancelled notes, booked at $3.2M"],
+          ["Trivia Royale", "2.5M downloads in ~3 weeks; 45% D1 iOS", "$9,155,139 + $1,499,913 per SEC Form Ds", "Closed 23 Feb 2021, eight months after launch, 16 staff"],
+          ["Skillz (live, adjacent)", "FY2021: $380.2M revenue, 513,000 paying MAU", "Public (NYSE: SKLZ)", "FY2025: $104.5M revenue, 141,000 paying MAU"]
+        ]
+      },
+      "sources": [
+        "https://techcrunch.com/2020/02/14/hq-trivia-shuts-down/",
+        "https://www.sec.gov/Archives/edgar/data/1734125/000173412518000001/xslFormDX01/primary_doc.xml",
+        "https://www.sec.gov/Archives/edgar/data/1366246/000155837017001621/gluu-20161231x10k.htm",
+        "https://www.sec.gov/Archives/edgar/data/1366246/000155837016010604/gluu-20161215x8k.htm",
+        "https://techcrunch.com/2020/07/10/how-thor-fridrikssons-trivia-royale-earned-2-5m-downloads-in-3-weeks/",
+        "https://www.sec.gov/Archives/edgar/data/1717682/000171768218000001/primary_doc.xml",
+        "https://www.sec.gov/Archives/edgar/data/1801661/000180166123000003/ex991_fy22q4-8xkxearningsr.htm",
+        "https://www.sec.gov/Archives/edgar/data/1801661/000180166126000019/q425skillzex991-earningsre.htm"
+      ],
+      "notes": "Precision notes that matter if challenged. QuizUp's '20 million users' is a company statement from 19 May 2014 describing a six-month registration milestone, not a measured peak — we quote it as claimed, attributed and dated. HQ Trivia's decline figure is the comparison of 67,000 installs in January 2020 against roughly 2 million a month in February 2018, which is 3.35%; it relaunched on 29 Mar 2020, played its last game on 17 Nov 2022 and was delisted from stores on 5 Aug 2023. Trivia Royale's 45% D1 and sub-$500,000 budget are company statements to TechCrunch, not audited, and the sub-$0.20 per download is blended including organic and viral rather than a paid CPI. Skillz's monthly ARPPU was $61.75 in FY2021 (derived) and $61.70 in FY2025 (stated) — essentially flat while the paying base fell 73%, which is the cleanest available evidence that competitive-play users monetise well and churn hard."
+    },
+    {
+      "n": 19,
+      "kind": "appendix",
+      "title": "Appendix E — what we do not know, and what would settle each of it.",
+      "kicker": "APPENDIX — LIMITS OF THE EVIDENCE",
+      "body": [
+        "Everything about FACT//DUEL: no DAU, no D1/D7/D30, no session length, no conversion, no CAC, no LTV, no revenue.",
+        "Whether app-store benchmarks transfer to a web product with no install step and no push notifications. They may not.",
+        "CAC or CPI for trivia in 2025-26: no verified benchmark of any kind exists in our evidence base.",
+        "Genre ARPDAU: the circulated bands failed verification as citation laundering and are excluded from this deck.",
+        "Whether consumer trivia can monetise at scale at all. Our own paid cohort after milestone 1 is what settles it."
+      ],
+      "chart": null,
+      "image": null,
+      "table": null,
+      "sources": [
+        "FACT//DUEL internal: public/product/investor/numbers.md §5 (failed verification and unresolved items)",
+        "https://storage.mfn.se/8d863483-ccc8-4f02-b0c5-d37d899b23e8/mag-interim-report-eng-2025-26-q3.pdf",
+        "https://techcrunch.com/2020/07/10/how-thor-fridrikssons-trivia-royale-earned-2-5m-downloads-in-3-weeks/",
+        "https://www.apptweak.com/"
+      ],
+      "notes": "This page is a credibility instrument, not an apology. Specific exclusions an investor may expect to see and will not: no genre ARPDAU band (traced to one consultant's blog, relabelled as a benchmark by a secondary source; the only company-reported figure in our base is MAG Interactive's 9.0 US cents group ARPDAU for the nine months to May 2026); no Trivia Crack '600 million downloads' or '150 million active users' (PR-originated, and the second describes etermax company-wide); no ~$300M Wayground valuation (no primary source); no Sensor Tower puzzle-genre revenue figures (gated report, secondary summary, and the framing is wrong twice over); no IPM figures for trivia (gated, unverified); and no aggregator global fan-base counts, one of which is contradicted by the sport's own governing body. On store conversion we corrected a claim in our own favour's opposite direction and kept the correction. The single largest methodological risk is benchmark transfer to web, and the only thing that resolves it is our own instrumented cohort — which is what the raise funds."
+    },
+    {
+      "n": 20,
+      "kind": "appendix",
+      "title": "Appendix F — the shipped surfaces, for anyone who would rather play it than read about it.",
+      "kicker": "APPENDIX — PRODUCT",
+      "body": [
+        "Player record, badges, stamps and the Locker: the long-tail progression surface, all of it device-local.",
+        "Every visual effect is generated at runtime — procedural audio with no audio files, and 3D loaded lazily.",
+        "Every action works without WebGL; reduced-motion settings override the effects layer toward less motion.",
+        "None of this is a ranked or verified record, and none of it is sent to a server. Reset clears it.",
+        "A private playtest link is available on request. It is the fastest way to check every claim on slides 5 and 6."
+      ],
+      "chart": null,
+      "image": "/tmp/claude-0/-home-user-fact-duel/ebdb1205-a08d-56c2-9dfe-5856a1ecc14f/scratchpad/shots/release/desktop-passport.png",
+      "table": null,
+      "sources": [
+        "FACT//DUEL internal: public/product/investor/numbers.md — status paragraph and §5.15 (company disclosure)"
+      ],
+      "notes": "Offer the playtest link rather than describing the product a third time; a founder who hands over a working link at this point converts more than one who adds a slide. Be exact about what the playtest is and is not: it is a private beta with no accounts, no server-side progression and 54 sample questions, it produces no retention data, and the people in it are not users in any sense this deck would count. If asked about engineering rigour, the repository's own release record is the place to point — it lists the automated regression suites, the TypeScript and production-build gates, and, just as importantly, the checks that were not performed, including physical-device play, assistive-technology evaluation and any WAN or capacity testing. Quote specific counts from that record only if you have re-read it that day."
+    }
+  ]
+}
