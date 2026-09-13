@@ -13,7 +13,9 @@
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "db:generate": "drizzle-kit generate",
     "docs:product": "node scripts/product-docs.mjs",
-    "e2e": "node scripts/e2e.mjs"
+    "e2e": "node scripts/e2e.mjs",
+    "build:static": "vite build --config vite.config.static.ts",
+    "preview:static": "vite preview --config vite.config.static.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
