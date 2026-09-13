@@ -16,6 +16,7 @@ import { usePlayer } from './use-player';
 import { request } from '@/lib/duel-client';
 import { AppShell } from './shell/app-shell';
 import { useProgressionFeedback } from './screens/use-progression-feedback';
+import { GemsChip, LevelRing, StreakChip } from './screens/player/topbar-chips';
 import { SettingsSheet, SETTINGS_KEYS, type MotionPref } from './shell/settings-sheet';
 import { HomeScreen } from './screens/home-screen';
 import { PlayScreen } from './screens/play-screen';
@@ -787,6 +788,9 @@ export default function Arena() {
         skin={player.passport.skin}
         onNavigate={go}
         topbar={{
+          streak: <StreakChip progression={player.progression} />,
+          gems: <GemsChip progression={player.progression} />,
+          level: <LevelRing progression={player.progression} level={player.level} />,
           sound,
           onToggleSound: () => setSound((v) => !v),
           onOpenSettings: () => setSettingsOpen(true),

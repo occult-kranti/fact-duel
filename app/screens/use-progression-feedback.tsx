@@ -132,7 +132,7 @@ export function useProgressionFeedback(progression: any, quiet: Quiet) {
       const entries = toastQueue.current.splice(0);
       for (const entry of entries) {
         const xp = entry.xp ? `+${entry.xp} XP` : '';
-        const gems = entry.gems ? `+${entry.gems} gems` : '';
+        const gems = entry.gems ? `${entry.gems > 0 ? '+' : '−'}${Math.abs(entry.gems)} gems` : '';
         const body = [xp, gems].filter(Boolean).join(' · ');
         const kind =
           entry.kind === 'quest' || entry.kind === 'quests-bonus'

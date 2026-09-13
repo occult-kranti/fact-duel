@@ -115,7 +115,12 @@ function CeremonyDialog({ item, reduced, onClose }: DialogProps) {
       }
     };
     const onFocusIn = (e: FocusEvent) => {
-      if (cardRef.current && !cardRef.current.contains(e.target as Node)) focusFirst();
+      if (!cardRef.current || cardRef.current.contains(e.target as Node)) return;
+      // Another ceremony may be mounted at the same time (two badges at once). Whoever the focus
+      // lands in keeps it; pulling it back here would make the two handlers recurse forever.
+      const target = e.target as Element | null;
+      if (target?.closest?.('.fx-ceremony-card')) return;
+      focusFirst();
     };
     document.addEventListener('keydown', onKeyDown, true);
     document.addEventListener('focusin', onFocusIn);

@@ -1,18 +1,29 @@
 'use client';
-import { Button } from '@/components/ui/button';
-import { ArrowRight, Check, Compass, BookOpen, Orbit, Lock, Sparkles, Flag, Layers } from 'lucide-react';
-import { TOPIC_STYLE } from './collections';
-const FINISHES = [
+/**
+ * Side quests & finishes — the three finite legacy missions from `passportSummary` and the four
+ * card finishes they unlock. This is the calm, deadline-free half of the Player screen: it sits
+ * under the XP / rank / badge systems and never competes with them.
+ *
+ * `Passport` is the section rendered by app/screens/player-screen.tsx; `MissionStrip` is the
+ * one-line "next side quest" teaser other screens can embed; `FINISHES` names the four card
+ * finishes (ids match `passportSummary().skins`).
+ */
+import { ArrowRight, Check, Compass, BookOpen, Lock, Sparkles, Flag } from 'lucide-react';
+import { usePress } from './screens/player/shared';
+
+export const FINISHES = [
   { id: 'classic', name: 'Original', copy: 'Yours from the start.' },
   { id: 'orbit', name: 'Orbit', copy: 'Complete First field notes.' },
   { id: 'grid', name: 'Field grid', copy: 'Complete Field notes.' },
   { id: 'rally', name: 'Rally', copy: 'Complete The mode tour.' },
 ];
+
 export function MissionStrip({ summary, onOpen }: { summary: any; onOpen: () => void }) {
+  const press = usePress();
   const mission = summary.missions.find((m: any) => !m.complete) || summary.missions[0],
     done = mission.steps.filter((s: any) => s.done).length;
   return (
-    <button className="mission-strip" onClick={onOpen}>
+    <button className="mission-strip fd-btn" onPointerDown={press} onClick={onOpen}>
       <span className="mini-stamp">
         <Compass />
       </span>
@@ -27,188 +38,153 @@ export function MissionStrip({ summary, onOpen }: { summary: any; onOpen: () => 
     </button>
   );
 }
+
 export function Passport({
   player,
-  catalogue,
   onAction,
 }: {
   player: any;
-  catalogue: any;
+  catalogue?: any;
   onAction: (s: string) => void;
 }) {
   const { passport: p, summary: s } = player;
-  const next = s.next,
-    percent = next ? Math.min(100, (100 * (s.points - s.tier.at)) / (next.at - s.tier.at)) : 100;
+  const press = usePress();
   return (
-    <section className={`passport-page skin-${p.skin}`}>
-      <div className="section-heading">
-        <div>
-          <p className="eyebrow">NO DEADLINES. JUST A LITTLE DIRECTION.</p>
-          <h1>Your player passport.</h1>
-        </div>
-        <Button variant="outline" onClick={player.exportAll}>
-          <BookOpen />
-          Export activity
-        </Button>
-      </div>
-      <p className="muted">
-        Finite missions and card finishes, earned by exploring. Saved in this browser. No streak to lose, and
-        no advantage in a duel.
-      </p>
-      <div className="passport-id">
-        <div className="passport-emblem">
-          <Orbit />
-          <span>FD</span>
-        </div>
-        <div>
-          <p className="eyebrow">PLAYER CARD</p>
-          <h2>{s.tier.name}</h2>
-          <p>
-            {s.points} activity points · {s.facts} distinct facts encountered
-          </p>
-          <div className="passport-meter">
-            <span style={{ width: `${percent}%` }} />
+    <>
+      <div className="fd-sec">
+        <div className="fd-sec-head">
+          <div>
+            <p className="fd-eyebrow">NO DEADLINES. JUST A LITTLE DIRECTION.</p>
+            <h2>Side quests &amp; finishes</h2>
           </div>
-          <small>
-            {next
-              ? `${next.at - s.points} more activity points to ${next.name}`
-              : 'The last activity title is yours. There is no timer to maintain it.'}
-          </small>
-        </div>
-        <span className="passport-stamp">
-          PLAY IT
-          <br />
-          YOUR WAY
-        </span>
-      </div>
-      <p className="small-note">
-        10 points per new fact, 5 for its first explanation opening, 5 for its first untimed attempt. Points
-        are local activity—not verified skill. Your earlier journal stays here. Activity counts are local to
-        this browser.
-      </p>
-      <div className="passport-section-heading">
-        <h2>Choose a side quest.</h2>
-        <span>
-          {s.complete} / {s.missions.length} complete
-        </span>
-      </div>
-      <div className="mission-grid">
-        {s.missions.map((m: any, i: number) => (
-          <article className={`mission-card ${m.complete ? 'mission-complete' : ''}`} key={m.id}>
-            <div className="mission-card-top">
-              <span>0{i + 1}</span>
-              {m.complete ? (
-                <span className="tag">
-                  <Check size={14} />
-                  Complete
-                </span>
-              ) : (
-                <span className="tag">At your pace</span>
-              )}
-            </div>
-            <h3>{m.name}</h3>
-            <p>{m.description}</p>
-            <ul>
-              {m.steps.map((step: any, j: number) => (
-                <li key={j}>
-                  <span className={`task-check ${step.done ? 'checked' : ''}`}>
-                    {step.done ? <Check size={13} /> : j + 1}
-                  </span>
-                  <span>{step.label}</span>
-                </li>
-              ))}
-            </ul>
-            <div className="mission-reward">
-              <Sparkles size={17} />
-              {m.reward}
-            </div>
-            <Button
-              variant={m.complete ? 'outline' : 'default'}
-              disabled={m.complete}
-              onClick={() => onAction(m.steps.find((step: any) => !step.done)?.action || 'play')}
-            >
-              {m.complete ? 'Finish unlocked' : 'Continue mission'}
-              {m.complete ? <Check /> : <ArrowRight />}
-            </Button>
-          </article>
-        ))}
-      </div>
-      <div className="passport-section-heading">
-        <h2>Make the card yours.</h2>
-        <span>Cosmetics only</span>
-      </div>
-      <div className="finish-grid">
-        {FINISHES.map((f) => {
-          const unlocked = s.skins.includes(f.id);
-          return (
+          <span className="fd-sec-aside">
+            <span>
+              {s.complete} / {s.missions.length} complete
+            </span>
             <button
-              className={`finish-card skin-${f.id} ${p.skin === f.id ? 'finish-selected' : ''}`}
-              key={f.id}
-              aria-pressed={p.skin === f.id}
-              disabled={!unlocked || !player.loaded}
-              onClick={() => player.skin(f.id)}
+              type="button"
+              className="fd-cos-action fd-btn"
+              data-kind="ghost"
+              onPointerDown={press}
+              onClick={player.exportAll}
             >
-              <span className="finish-preview">
-                <span>
-                  FACT
-                  <br />
-                  //DUEL
-                </span>
-                {!unlocked ? (
-                  <Lock size={18} />
-                ) : p.skin === f.id ? (
-                  <Check size={18} />
-                ) : (
-                  <Sparkles size={18} />
-                )}
-              </span>
-              <strong>{f.name}</strong>
-              <small>{p.skin === f.id ? 'Equipped' : unlocked ? 'Tap to equip' : f.copy}</small>
+              <BookOpen aria-hidden="true" />
+              Export activity
             </button>
-          );
-        })}
-      </div>
-      <div className="passport-section-heading">
-        <h2>Your collection stamps.</h2>
-        <span>Encountered, not mastered</span>
-      </div>
-      <div className="collection-passport">
-        {(catalogue?.topics || []).map((topic: any) => {
-          const facts = Object.values(p.facts).filter((f: any) => f.topic === topic.topic),
-            opened = facts.filter((f: any) => f.opened).length,
-            recalled = facts.filter((f: any) => f.recalled).length,
-            Icon = TOPIC_STYLE[topic.topic]?.icon || Layers;
-          return (
-            <article key={topic.topic}>
-              <Icon />
-              <div>
-                <h3>{topic.topic}</h3>
-                <p>
-                  {facts.length} distinct facts encountered · {topic.count} in today’s sample
-                </p>
-                <small>
-                  {opened} explanations opened · {recalled} untimed attempts on distinct facts
-                </small>
+          </span>
+        </div>
+        <p className="fd-player-note">
+          Finite missions with no timer to maintain. They unlock card finishes and nothing else — never
+          answers, extra time or an advantage in a duel.
+        </p>
+        <div className="fd-quests">
+          {s.missions.map((m: any, i: number) => (
+            <article className="fd-card fd-quest" data-complete={m.complete} key={m.id}>
+              <div className="fd-quest-top">
+                <span>0{i + 1}</span>
+                <span className="fd-pill">
+                  {m.complete ? (
+                    <>
+                      <Check size={13} aria-hidden="true" />
+                      Complete
+                    </>
+                  ) : (
+                    'At your pace'
+                  )}
+                </span>
               </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                aria-label={`Choose ${topic.topic}`}
-                onClick={() => onAction(`topic:${topic.topic}`)}
+              <h3>{m.name}</h3>
+              <p>{m.description}</p>
+              <ul>
+                {m.steps.map((step: any, j: number) => (
+                  <li key={j}>
+                    <span className="fd-check" data-done={!!step.done} aria-hidden="true">
+                      {step.done ? <Check size={12} /> : j + 1}
+                    </span>
+                    <span>{step.label}</span>
+                  </li>
+                ))}
+              </ul>
+              <span className="fd-quest-reward">
+                <Sparkles aria-hidden="true" />
+                {m.reward}
+              </span>
+              <button
+                type="button"
+                className="fd-cos-action fd-btn"
+                data-kind={m.complete ? 'equipped' : 'equip'}
+                disabled={m.complete}
+                onPointerDown={m.complete ? undefined : press}
+                onClick={() => onAction(m.steps.find((step: any) => !step.done)?.action || 'play')}
               >
-                <ArrowRight />
-              </Button>
+                {m.complete ? (
+                  <>
+                    <Check aria-hidden="true" /> Finish unlocked
+                  </>
+                ) : (
+                  <>
+                    Continue mission <ArrowRight aria-hidden="true" />
+                  </>
+                )}
+              </button>
             </article>
-          );
-        })}
+          ))}
+        </div>
       </div>
-      <div className="passport-footnote">
-        <Flag />
+
+      <div className="fd-sec">
+        <div className="fd-sec-head">
+          <div>
+            <p className="fd-eyebrow">MAKE THE CARD YOURS</p>
+            <h2>Card finishes</h2>
+          </div>
+          <span>Cosmetics only</span>
+        </div>
+        <div className="fd-finishes">
+          {FINISHES.map((f) => {
+            const unlocked = s.skins.includes(f.id),
+              equipped = p.skin === f.id;
+            return (
+              <button
+                type="button"
+                className="fd-finish fd-btn"
+                data-finish={f.id}
+                key={f.id}
+                aria-pressed={equipped}
+                disabled={!unlocked || !player.loaded}
+                onPointerDown={!unlocked || !player.loaded ? undefined : press}
+                onClick={() => player.skin(f.id)}
+              >
+                <span className="fd-finish-art">
+                  <span>
+                    FACT
+                    <br />
+                    //DUEL
+                  </span>
+                  {!unlocked ? (
+                    <Lock aria-hidden="true" />
+                  ) : equipped ? (
+                    <Check aria-hidden="true" />
+                  ) : (
+                    <Sparkles aria-hidden="true" />
+                  )}
+                </span>
+                <strong>{f.name}</strong>
+                <small>{equipped ? 'Equipped' : unlocked ? 'Tap to equip' : f.copy}</small>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="fd-player-footnote">
+        <Flag aria-hidden="true" />
         <p>
           All game modes and collections are available from the start. Missions never unlock answers, extra
-          time or coins. You can pause here and return whenever you want.
+          time or coins. You can pause here and return whenever you want. Everything on this page is stored in
+          this browser, so export your activity before you clear it.
         </p>
       </div>
-    </section>
+    </>
   );
 }

@@ -4,7 +4,6 @@
 
 .fd-home {
   --fd-orb-h: 196px;
-  --fd-accent: var(--volt);
   --fd-cool: var(--cyan);
   display: flex;
   flex-direction: column;

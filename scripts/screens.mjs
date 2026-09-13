@@ -24,6 +24,16 @@ const navs = [
   { id: 'collections', via: 'arena' },
 ];
 
+/** Toasts and ceremonies can cover the phone tab bar; clear them before navigating. */
+async function dismissOverlays(page) {
+  await page.evaluate(() => {
+    for (const sel of ['.fx-ceremony-card button', '.fx-toast-close']) {
+      for (const el of document.querySelectorAll(sel)) el.click();
+    }
+  });
+  await page.waitForTimeout(150);
+}
+
 const browser = await chromium.launch({
   executablePath: exe,
   args: ['--no-sandbox', '--use-gl=swiftshader'],
@@ -51,6 +61,7 @@ for (const vp of viewports) {
     }
     const btn = page.locator(`[data-nav="${id}"]`).first();
     if (await btn.count()) {
+      await dismissOverlays(page);
       await btn.click({ force: true });
       await page.waitForTimeout(900);
     } else if (id !== 'home') {
