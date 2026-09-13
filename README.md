@@ -1,15 +1,20 @@
-# FACT//DUEL — Clubhouse, Expeditions & Duels
+# FACT//DUEL — Duels, Expeditions & Progression
 
 A private sports and science knowledge club for friends or random practice bots.
 All coins are free, per-room simulations with no monetary value.
 
 ## Play
 
-The **Clubhouse** offers a featured expedition, saved Continue state, direct random-bot duels and your stamp case. **Expeditions** has nine narrow sports/science routes using the existing 54-question sample.
+**Home** is the arena hub: your level, XP, day streak, gems and Arena Rank, a one-tap duel against
+the practice bot, the day's three quests, and whichever expedition you have in progress.
+**Expeditions** has nine narrow sports and science routes using the existing 54-question sample.
+**Play** builds a duel, **Player** holds your record, badges, stamps and the Locker, and **Vault**
+keeps every fact you have met.
 
 An expedition is six untimed questions in three chapters. Choose **Steady** (+2 correct, 0 wrong) or **Bold** (+3 correct, −1 wrong) before each answer. Your first choice locks. Each answer saves locally; pause and resume any route. After all six, **Finish & collect stamp** records the result and awards the same commemorative stamp at any score. First-run and best practice scores are separate. Replay uses the same questions with freshly shuffled options; no general skill ranking is implied.
 
-For a bot duel, use any of the Clubhouse’s three direct mode buttons. To customize, open **Duels** or **Topics, timer & match settings**. For two-screen play, choose **Invite friend**:
+For a bot duel, press Play now on Home or pick a format on Play. For two-screen play, choose
+**Friend** on Play:
 
 1. Open the site on two screens with access to the private site.
 2. On the first screen, enter a name, choose a mode and filters, then create a duel.
@@ -89,13 +94,13 @@ cannot prove a browser's physical display or input time.
 ## Duel experience and shared systems
 
 The default midnight/chartreuse identity and alternate cool light theme share
-semantic controls. The Clubhouse now pairs finite expeditions with direct bot
-duels; the full match configurator remains in Duels. Original sports/science
-covers support the routes, with metallic artwork in the duel area. Optional Three.js now lives in a
-separate showroom; static art loads first and every action works without WebGL.
-The scene caps DPR at 1.25, stops while hidden/offscreen, respects reduced motion
-and disposes resources on unmount. Its import itself cannot be cancelled after
-it starts. No renderer is mounted during a room.
+semantic controls, now expressed as one token set in `app/theme/tokens.css`: warm ember for the
+competitive surfaces, cool cyan for the learning ones, gold for rewards. Home pairs a live 3D hero
+with the day's quests and your record; the full match configurator lives on Play. Original sports
+and science covers still support the routes. Every 3D scene is loaded lazily in the browser only,
+after static art, and every action works without WebGL; scenes cap device pixel ratio, stop while
+hidden or offscreen, respect reduced motion and dispose on unmount. An import cannot be cancelled
+once it starts. No renderer is mounted during a room.
 
 The server retains at most five completed-round snapshots, written only at
 closure and exposing only the settled question, result and public receipt fields.
