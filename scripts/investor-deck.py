@@ -922,13 +922,13 @@ def render_bullets(slide, s, top, accent):
 
 
 # --------------------------------------------------------------------------- #
-# appended appendix pages (G, H, I) — transcribed from numbers.md §3-§4
+# appended appendix pages (H, I, J) — transcribed from numbers.md §3-§4
 # --------------------------------------------------------------------------- #
 
-APPENDIX_G = {
+APPENDIX_MODEL = {
     "kind": "table",
     "kicker": "APPENDIX — THE MODEL, YEAR BY YEAR",
-    "title": "Appendix G — the whole model on one page. Every figure is (P).",
+    "title": "Appendix H — the whole model on one page. Every figure is (P).",
     "body": [
         "Revenue(year) = Installs x [ payer rate x ARPPU ] + Installs x ad revenue per install.",
         "Steady-state MAU = monthly installs + ( monthly installs x D30 / monthly churn ), churn fixed at 20%.",
@@ -968,17 +968,17 @@ APPENDIX_G = {
         "identical, ARPPU is held at AppsFlyer's casual D90 $7.26 in all three, and monthly churn "
         "of the retained base is held at 20% everywhere so it cannot flatter one case. Second, the "
         "install volumes are chosen assumptions with no company data behind them, which is why "
-        "appendix H lists them as assumptions rather than inputs. Revenue per MAU rises across "
+        "appendix I lists them as assumptions rather than inputs. Revenue per MAU rises across "
         "scenarios only because higher churn makes annual installs about 11x steady-state MAU — "
         "that is throughput, not better monetisation, and it is the reason the subscription "
         "cross-check on slide 10 exists."
     ),
 }
 
-APPENDIX_H = {
+APPENDIX_INPUTS = {
     "kind": "table",
     "kicker": "APPENDIX — INPUTS AND ASSUMPTIONS",
-    "title": "Appendix H — every input, every assumption, and which of them has no source.",
+    "title": "Appendix I — every input, every assumption, and which of them has no source.",
     "body": [
         "Two rows in this table are not sourced: monthly churn, and the install volumes. Both are labelled.",
         "The 18.46% payer rate is arithmetic on two published AppsFlyer figures, used only as a ceiling.",
@@ -1050,7 +1050,7 @@ def build_source_register_slides(plan, kinds):
         slides.append({
             "kind": "table",
             "kicker": "APPENDIX — SOURCE REGISTER (%d OF %d)" % (i + 1, len(chunks)),
-            "title": "Appendix I — every source cited in this deck, and what kind of evidence it is.",
+            "title": "Appendix J — every source cited in this deck, and what kind of evidence it is.",
             "body": ([
                 "%d distinct sources across %d slides. Full URLs are in the speaker notes of every slide."
                 % (len(rows), len(plan["slides"])),
@@ -1113,8 +1113,8 @@ def build(plan, kinds):
     layout = prs.slide_layouts[5]  # Title Only
 
     slides = list(plan["slides"]) + [
-        dict(APPENDIX_G, n=len(plan["slides"]) + 1),
-        dict(APPENDIX_H, n=len(plan["slides"]) + 2),
+        dict(APPENDIX_MODEL, n=len(plan["slides"]) + 1),
+        dict(APPENDIX_INPUTS, n=len(plan["slides"]) + 2),
     ]
     for i, extra in enumerate(build_source_register_slides(plan, kinds)):
         slides.append(dict(extra, n=len(plan["slides"]) + 3 + i))

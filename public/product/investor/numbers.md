@@ -584,3 +584,54 @@ Practical consequences:
 1. **We have no users and no revenue, and we say so** — the evidence base here is entirely third-party, and the plan in §4 is a plan, never a forecast.
 2. **The bottom-up TAM is $1.69–2.83bn (216.8M × $7.80–13.07) and the honest SOM is 0.14–0.23% of SAM** — every other market number in the deck is a vendor estimate that disagrees with its nearest rival by 2–4×.
 3. **The 1v1 duel format has a proven installed base in the hundreds of millions and no maintained incumbent — and every previous attempt died of retention and monetisation, not distribution.** Which is why the only milestones worth funding are the ones that produce retention data we currently cannot even measure.
+---
+
+## 7. Addendum — what shipped on 13 September 2026, and what it changes
+
+This section is dated and additive. Nothing above is retracted except where stated here explicitly.
+
+### 7.1 §5.15 is no longer true as written
+
+§5.15 said: *"Device-local progression with no accounts means retention is currently unmeasurable in
+principle."* That sentence described a real architectural gap, and the gap has been closed.
+
+What now exists in the product, on `main`:
+
+| Capability | Where | Evidence |
+|---|---|---|
+| Install day, active days, session count, engaged time, and the four in-app counters (duel rounds, matches, expedition cards, quests) recorded per device | `lib/analytics.mjs`, wired through the profile reducer | 24 tests, green across five timezones |
+| Per-device D1 / D7 / D30 — did this device come back on day 1, 7, 30 | `retention()` in the same module | returns `true`, `false`, or `null` while the window is still open; a test asserts an unfinished window never reads as a miss |
+| A player-facing view of the entire record, with JSON and CSV export and erase | `/analytics` in the app | browser-verified at two widths in both themes |
+| A cohort **rate** across devices, from an opt-in anonymous daily ping | `cohort-ping` / `cohort-report` in `lib/server/duel-service.mjs`, table `cohort_days` | 20 tests; aggregate-only report, no per-device row, buckets under five devices suppressed |
+
+**What is still true:** there are no players yet, so there is no cohort, so there is still no retention
+rate to quote. The difference is that the instrument now exists and is tested, rather than the
+measurement being impossible. The honest claim for the deck is: *"the instrument is built; the round
+buys the cohort to point it at."*
+
+**Deliberate limitation, stated plainly:** one device can only ever produce a boolean. The app never
+computes a rate from a single device, and the screen says so in its own copy. A rate requires the
+opt-in cohort, and that requires players.
+
+### 7.2 The product is now publicly playable, with no install and no account
+
+`pnpm build:static` produces a build that runs the entire game in a browser with no server: bot duels
+in all three modes, expeditions, discovery, the vault, the passport, the events calendar and the
+limited modes. It does this by keeping the real duel engine and replacing only the storage beneath it;
+14 differential tests run each scenario against both the in-memory store and the real D1-backed store
+and compare every return value, every thrown error and the rows left behind.
+
+Two-device friend duels genuinely need a server and are disabled in that build, with an on-screen
+notice saying so.
+
+**Why this matters to the deck:** the traction slide no longer has to be an argument. An investor can
+play a complete duel in about fifteen seconds from a link, on a phone, without installing anything —
+which is also the distribution claim the product makes about itself.
+
+### 7.3 What this does NOT change
+
+- No users, no revenue, no cohort, no CAC, no LTV, no ARPDAU. Every figure in §4 remains a plan (P).
+- §5.14 stands: every retention benchmark in §3 is measured on app-store installs, and there is still
+  no verified benchmark for web-first game retention. Our own instrument is now the route to one.
+- The question bank is still 54 questions.
+- Everything in §5.1–§5.13 is unchanged.

@@ -14,9 +14,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 # Never cancel a half-finished deploy; queue instead.
 concurrency:
@@ -57,7 +55,7 @@ jobs:
           rm -rf _site
           mkdir -p _site/deck
           cp -r dist-static/. _site/
-          cp public/product/investor/deck.html _site/deck/index.html
+          cp public/product/investor/deck.site.html _site/deck/index.html
           cp -r public/product/investor/charts _site/deck/charts
           cp -r public/product/investor/shots _site/deck/shots
           cp public/product/investor/factduel-seed-deck.pptx _site/deck/factduel-seed-deck.pptx
@@ -67,22 +65,21 @@ jobs:
           echo "Deck entry:"; ls _site/deck/index.html
           du -sh _site
 
-      - uses: actions/configure-pages@v5
-        with:
-          # Turns Pages on for this repository the first time this workflow runs, so no manual
-          # settings change is needed.
-          enablement: true
-
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: _site
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+      # Publish by committing the built site to the gh-pages branch. The Pages API route
+      # (configure-pages / deploy-pages) needs a token that can create a Pages site, which the
+      # workflow token is not permitted to do here; pushing a branch needs only contents: write.
+      - name: Publish to the gh-pages branch
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          cd _site
+          git init -q
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Publish the offline game and the investor deck from ${GITHUB_SHA::7}"
+          git push -q --force "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:gh-pages
+          echo "Published. Live once Pages source is set to the gh-pages branch:"
+          echo "  game https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}/"
+          echo "  deck https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}/deck/"

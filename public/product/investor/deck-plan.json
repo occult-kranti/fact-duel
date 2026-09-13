@@ -13,7 +13,7 @@
       "kicker": "SEED ROUND — SEPTEMBER 2026",
       "body": [
         "A head-to-head duel on sports and science, designed as a 3-4 minute unit against the 3.1-3.5 minute median mobile session (GameAnalytics estimate).",
-        "Private beta today: no accounts, no server-side progression, 54 sample questions.",
+        "Playable now in a browser at https://occult-kranti.github.io/fact-duel/: no install, no account, no server, 54 sample questions.",
         "Zero users outside a private playtest. Zero revenue. Stated here so it is never a discovery later.",
         "Raising about $1.2M for 18 months to buy one thing: the retention data this deck does not have."
       ],
@@ -26,9 +26,10 @@
         "https://www.ycombinator.com/library/4T-how-to-design-a-better-pitch-deck",
         "https://www.gameanalytics.com/reports/2026-mobile-pc-gaming-benchmarks",
         "https://web.archive.org/web/20260622084020/https://www.docsend.com/blog/what-vcs-really-want-to-see-inside-your-seed-deck/",
-        "https://web.archive.org/web/20240302210508/https://www.docsend.com/blog/what-vcs-really-want-to-see-inside-your-seed-deck/"
+        "https://web.archive.org/web/20240302210508/https://www.docsend.com/blog/what-vcs-really-want-to-see-inside-your-seed-deck/",
+        "FACT//DUEL internal: public/product/investor/numbers.md §7.1 and §7.2 (company disclosure)"
       ],
-      "notes": "YC/Hale's rule for a title page is legible, simple, obvious. DocSend estimates 26 seconds on the company-purpose section (third-party estimate, numbers.md §4.6), so this page does exactly two jobs: name the thing, and pre-empt the only question that matters. Say the zero out loud in the first fifteen seconds of any meeting. DocSend's strongest negative finding, quoted as published: \"VCs spend 80 percent more time evaluating the traction of companies that didn't raise money successfully\" (third-party estimate) — that is a finding about companies that did not raise, not about decks, and it is why the ambiguity is removed on page one. The ask applies YC's $15k-per-engineer-per-month rule of thumb to our own four-engineer plan: 4 x $15,000 x 18 = $1,080,000, rounded up to a raise of about $1.2M inside YC's $500k-$1.5M band (numbers.md §4.5). YC's own worked example is five engineers (15k x 5 x 18 = $1.35mm); the four-engineer headcount is ours, not YC's, and the $15k figure is YC's undated editorial rule of thumb, very likely understated today — that caveat is on slide 14 and should be volunteered, not defended. The 3-4 minute duel is a design target set against GameAnalytics' median session, not an observed FACT//DUEL session length: we have never measured one (numbers.md §5.15). Add founder name and contact details before sending; do not add anything else."
+      "notes": "YC/Hale's rule for a title page is legible, simple, obvious. DocSend estimates 26 seconds on the company-purpose section (third-party estimate, numbers.md §4.6), so this page does exactly two jobs: name the thing, and pre-empt the only question that matters. Say the zero out loud in the first fifteen seconds of any meeting. DocSend's strongest negative finding, quoted as published: \"VCs spend 80 percent more time evaluating the traction of companies that didn't raise money successfully\" (third-party estimate) — that is a finding about companies that did not raise, not about decks, and it is why the ambiguity is removed on page one. The ask applies YC's $15k-per-engineer-per-month rule of thumb to our own four-engineer plan: 4 x $15,000 x 18 = $1,080,000, rounded up to a raise of about $1.2M inside YC's $500k-$1.5M band (numbers.md §4.5). YC's own worked example is five engineers (15k x 5 x 18 = $1.35mm); the four-engineer headcount is ours, not YC's, and the $15k figure is YC's undated editorial rule of thumb, very likely understated today — that caveat is on slide 14 and should be volunteered, not defended. The 3-4 minute duel is a design target set against GameAnalytics' median session, not an observed FACT//DUEL session length: we have never measured one (numbers.md §5.15). Since 13 September 2026 the product is publicly playable in a browser with no install and no account (numbers.md §7.2), so the link is on page one and is the fastest way for a reader to check every product claim in this deck for themselves — it serves the static build published from the repository's own Pages workflow, and it is live once the repository owner has pointed Pages at the gh-pages branch. Two-device friend duels need a server and are disabled in that build, with an on-screen notice. Publishing the link changes nothing about the zeroes on the line below it: no accounts, no users, no revenue. Add founder name and contact details before sending; do not add anything else."
     },
     {
       "n": 2,
@@ -88,7 +89,7 @@
       "kicker": "THE SOLUTION",
       "body": [
         "GameAnalytics estimates the median mobile game session at 3.1-3.5 min and North America at 3.64 min (CY2025, iOS and Android installs — not web).",
-        "A duel is designed as a 3-4 minute unit. We have measured no session length of our own (numbers.md §5.15).",
+        "A duel is designed as a 3-4 minute unit. The app now records sessions and engaged time, but with no players we have measured no session length of our own (numbers.md §5.15, §7.1).",
         "Around the duel, product description rather than audited fact: XP and levels, day streaks, daily quests, achievements, a device-local rank, gems, cosmetics.",
         "Solo expeditions and a static event calendar are intended to cover the days when nobody wants a live opponent. No retention benefit has been measured.",
         "Zero revenue today (numbers.md status paragraph, §5.15). Monetisation is sequenced last by choice, and that choice is unproven.",
@@ -100,31 +101,34 @@
       "sources": [
         "https://www.gameanalytics.com/reports/2026-mobile-pc-gaming-benchmarks",
         "FACT//DUEL internal: public/product/investor/numbers.md §3.2, status paragraph and §5.15 (company disclosure)",
-        "FACT//DUEL internal: repository — product code, unaudited"
+        "FACT//DUEL internal: repository — product code, unaudited",
+        "FACT//DUEL internal: public/product/investor/numbers.md §7.1 and §7.2 (company disclosure)"
       ],
-      "notes": "The session-length line is a design argument, not a traction claim, and the slide now says so on its face: GameAnalytics' 2026 benchmark set (16,000+ games, nine regions, iOS and Android, calendar year 2025) estimates the median session at 3.1-3.5 minutes and North America at 3.64 minutes across 4.23 sessions a day — all of it measured on app-store installs rather than on the web, which numbers.md §5.14 calls the single largest methodological risk in the model. We have measured no session length of our own; §5.15 lists it among the things we do not know. The loop around the duel is product description taken from our own repository, not an audited inventory and not a retention claim: do not attach a retention benefit to any of these mechanics, because we have not measured one and cannot until milestone 1 lands. Nothing in the evidence base shows that deferring monetisation avoids this category's failure mode — §2.3 says the comparables died of monetisation and long-tail retention, and sequencing is our response to that, untested. The honest claim is sequencing discipline, not novelty: we are copying a known-good loop rather than inventing one. Files an investor can open for the product description: lib/progression.mjs, lib/expeditions.mjs, lib/events-data.mjs, app/screens/play/opponent-picker.tsx."
+      "notes": "The session-length line is a design argument, not a traction claim, and the slide now says so on its face: GameAnalytics' 2026 benchmark set (16,000+ games, nine regions, iOS and Android, calendar year 2025) estimates the median session at 3.1-3.5 minutes and North America at 3.64 minutes across 4.23 sessions a day — all of it measured on app-store installs rather than on the web, which numbers.md §5.14 calls the single largest methodological risk in the model. We have measured no session length of our own: since 13 September 2026 the app records session count and engaged time per device (lib/analytics.mjs, numbers.md §7.1), but there are no players, so there is nothing to report — the recorder exists, the sample does not. The loop around the duel is product description taken from our own repository, not an audited inventory and not a retention claim: do not attach a retention benefit to any of these mechanics, because we have not measured one: the instrument that would measure it shipped on 13 September 2026, and what is missing now is players rather than the ability to count them. Nothing in the evidence base shows that deferring monetisation avoids this category's failure mode — §2.3 says the comparables died of monetisation and long-tail retention, and sequencing is our response to that, untested. The honest claim is sequencing discipline, not novelty: we are copying a known-good loop rather than inventing one. Files an investor can open for the product description: lib/progression.mjs, lib/expeditions.mjs, lib/events-data.mjs, app/screens/play/opponent-picker.tsx."
     },
     {
       "n": 5,
       "kind": "product",
-      "title": "The loop is playable in private beta. The measurement layer is the thing that is not.",
-      "kicker": "PRODUCT — THE DAILY LOOP",
+      "title": "Playable now in a browser — no install, no account, no server. A full duel in about fifteen seconds.",
+      "kicker": "PRODUCT — PLAY IT, DO NOT TAKE OUR WORD FOR IT",
       "body": [
-        "A private-beta web app with a device-local progression loop and 54 sample questions (numbers.md status paragraph, §5.15).",
-        "Zero users outside a private playtest and zero revenue: nothing on this page is a traction claim.",
-        "Progression is device-local. There are no accounts, and none of it reaches a server.",
+        "Open https://occult-kranti.github.io/fact-duel/ on a phone or a laptop: no download, no signup, no server call.",
+        "Fifteen seconds: pick a mode, answer the first question, finish a complete bot duel and see the result screen.",
+        "The static build carries bot duels in all three modes, expeditions, discovery, the vault, the passport, the events calendar and the limited modes (numbers.md §7.2).",
+        "Two-device friend duels genuinely need a server and are disabled in that build, with an on-screen notice saying so.",
+        "Progression stays device-local with no accounts, and /analytics shows the player their own record with JSON and CSV export and erase (§7.1).",
         "The practice opponent carries a BOT badge in the opponent picker. A full opponent-integrity answer is milestone 5 in numbers.md §4.4 — it ships before monetisation.",
-        "That is the honest boundary of this build: we can ship the loop; we cannot measure whether it holds — architecturally, not yet."
+        "54 sample questions, zero users, zero revenue: nothing on this page is a traction claim."
       ],
       "chart": null,
       "image": "/tmp/claude-0/-home-user-fact-duel/ebdb1205-a08d-56c2-9dfe-5856a1ecc14f/scratchpad/shots/release/phone-home.png",
       "table": null,
       "sources": [
-        "FACT//DUEL internal: public/product/investor/numbers.md — status paragraph, §4.4 and §5.15 (company disclosure)",
+        "FACT//DUEL internal: public/product/investor/numbers.md — status paragraph, §4.4 and §7.1-§7.2 (company disclosure)",
         "FACT//DUEL internal: repository — product code, unaudited",
         "https://web.archive.org/web/20260622084020/https://www.docsend.com/blog/what-vcs-really-want-to-see-inside-your-seed-deck/"
       ],
-      "notes": "Product is the second-longest dwell in DocSend's per-section estimates at 59 seconds (third-party estimate, numbers.md §4.6), so this slide and slide 6 have to be readable at a glance. Walk the screenshots rather than the feature list. Two things to volunteer: device-local progression means a cleared browser clears the profile, and it means D1/D7/D30 are not merely unmeasured but architecturally unmeasurable — not 'we haven't yet' but cannot — which is exactly why milestone one on slide 9 is accounts and server-side progression. On opponents: the practice opponent carries a BOT badge in the opponent picker (app/screens/play/opponent-picker.tsx), and the full answer to 'is my opponent real' is milestone five in numbers.md §4.4, which ships before monetisation. Do not assert anything about how the bot is implemented, how progression is stored or how the transport is sized that an investor cannot open the repository and check for themselves — after Skillz v. AviaGames this is the area where an unverifiable claim does the most damage. Do not present the build as released: it is a private beta with zero users outside a private playtest. A founder may add shipped counts here, but only counts they can point at in the repository."
+      "notes": "Product is the second-longest dwell in DocSend's per-section estimates at 59 seconds (third-party estimate, numbers.md §4.6), and this is now the only slide in the deck an investor can verify without us: hand over the link and stop talking. Do it live if the room allows — https://occult-kranti.github.io/fact-duel/, on a phone, one thumb, a complete bot duel in about fifteen seconds (numbers.md §7.2). The build behind it is `pnpm build:static`, which keeps the real duel engine and replaces only the storage beneath it; differential tests run each scenario against both the in-memory store and the real D1-backed store and compare every return value, every thrown error and the rows left behind, which is why the offline build is presented as the same game rather than a demo of it. The link is served by the repository's own Pages workflow from the gh-pages branch and is live once the repository owner has pointed Pages at that branch — check it yourself the morning of a meeting rather than assuming. Volunteer the boundaries before they are found: two-device friend duels need a server and are disabled in that build with an on-screen notice; progression is device-local, so a cleared browser clears the profile; there are still no accounts. On opponents: the practice opponent carries a BOT badge in the opponent picker (app/screens/play/opponent-picker.tsx), and the full answer to 'is my opponent real' is milestone five in numbers.md §4.4, which ships before monetisation. Do not assert anything about how the bot is implemented, how progression is stored or how the transport is sized that an investor cannot open the repository and check for themselves — after Skillz v. AviaGames this is the area where an unverifiable claim does the most damage. Playable is not released and it is certainly not traction: zero users, zero revenue, 54 sample questions, and the traction slide says so in the same words."
     },
     {
       "n": 6,
@@ -135,7 +139,7 @@
         "Solo expeditions are short untimed routes with a Steady-or-Bold risk choice locked in before each answer (lib/expeditions.mjs).",
         "Limited-time modes are derived from the calendar: one opens on a real fixture or announcement and closes when its window closes (lib/events.mjs).",
         "The calendar is static and hand-checked, and the date it was last verified is printed in the app. No live feed, no scores API, no rights deal (lib/events-data.mjs).",
-        "No cadence and no retention effect is claimed for any of it: with zero users, retention is unmeasurable in principle (numbers.md §5.15).",
+        "No cadence and no retention effect is claimed for any of it. The instrument that would measure one shipped on 13 Sep 2026; the players it needs have not (numbers.md §7.1).",
         "The graveyard died of monetisation and long-tail retention (§2.3). This surface is our untested answer to the second of those.",
         "The bank is 54 sample questions today. Growing it is milestone 4: a target and a production rate we have not set yet."
       ],
@@ -145,9 +149,10 @@
       "sources": [
         "FACT//DUEL internal: public/product/investor/numbers.md — status paragraph and §5.15 (company disclosure)",
         "FACT//DUEL internal: public/product/investor/numbers.md §2.3, §4.3 and §4.4 (company disclosure)",
-        "FACT//DUEL internal: repository — product code, unaudited"
+        "FACT//DUEL internal: repository — product code, unaudited",
+        "FACT//DUEL internal: public/product/investor/numbers.md §7.1 and §7.2 (company disclosure)"
       ],
-      "notes": "The strategic point of this slide is a hypothesis, not a finding. numbers.md §2.3 concludes that the binding constraints in this category were monetisation and long-tail retention rather than distribution, and nothing in the evidence base identifies an 'empty day' as the cause of any shutdown; this surface is our untested answer to the long-tail half of that diagnosis. Be precise about what is not here: no live feed, no results service, and no partnership with any league, broadcaster or rights holder — none is claimed anywhere in this deck. The calendar is hand-assembled and the date it was last checked is printed in the app (lib/events-data.mjs, app/screens/events-screen.tsx), which is the part an investor can verify without taking our word for it. We have no content production cost, no curation rate and no vendor quote anywhere in the evidence base, so do not describe the calendar as cheap or low-risk: describe it as unpriced. State 54 plainly rather than saying 'a growing bank' — §4.4 milestone 4 requires us to state 54, then set a target and a production rate, and we have set neither. There is no content line in the use of funds: §4.5 funds four engineers and nothing else."
+      "notes": "The strategic point of this slide is a hypothesis, not a finding, and it is now a falsifiable one: since 13 September 2026 the app records per-device active days and engaged time (numbers.md §7.1), so once there is a cohort we can say whether the non-duel surface earns a return visit instead of arguing that it should. numbers.md §2.3 concludes that the binding constraints in this category were monetisation and long-tail retention rather than distribution, and nothing in the evidence base identifies an 'empty day' as the cause of any shutdown; this surface is our untested answer to the long-tail half of that diagnosis. Be precise about what is not here: no live feed, no results service, and no partnership with any league, broadcaster or rights holder — none is claimed anywhere in this deck. The calendar is hand-assembled and the date it was last checked is printed in the app (lib/events-data.mjs, app/screens/events-screen.tsx), which is the part an investor can verify without taking our word for it. We have no content production cost, no curation rate and no vendor quote anywhere in the evidence base, so do not describe the calendar as cheap or low-risk: describe it as unpriced. State 54 plainly rather than saying 'a growing bank' — §4.4 milestone 4 requires us to state 54, then set a target and a production rate, and we have set neither. There is no content line in the use of funds: §4.5 funds four engineers and nothing else."
     },
     {
       "n": 7,
@@ -197,24 +202,28 @@
     {
       "n": 9,
       "kind": "chart",
-      "title": "Zero users. Zero revenue. Retention unmeasurable — architecturally, not just not yet. That is what the round fixes.",
+      "title": "Zero users. Zero revenue. No cohort. The instrument that measures retention is built, tested and shipped — the round buys the cohort to point it at.",
       "kicker": "TRACTION — STATED PLAINLY",
       "body": [
-        "No accounts, no server-side progression, 54 sample questions, zero users outside a private playtest, zero revenue.",
-        "Milestone 1 — ship accounts and server-side progression. Nothing else is measurable until this lands.",
+        "No users outside a private playtest, no revenue, no cohort, 54 sample questions. Nothing on this page is a traction claim.",
+        "Shipped 13 Sep 2026: install day, active days, sessions, engaged time and per-device D1/D7/D30, with a player-facing /analytics screen, JSON and CSV export and erase (24 tests, numbers.md §7.1).",
+        "Also shipped: an opt-in anonymous daily ping whose report is aggregate-only, with buckets under five devices suppressed — a cohort rate becomes computable the day there are players (20 tests).",
+        "One device can only ever answer yes, no, or not-yet. A rate needs a cohort; that is what is missing, and that is what the round buys.",
+        "Milestone 1 existed because nothing was measurable without accounts. Measurement landed without them, so milestones 1 and 2 are de-risked from build-then-measure to simply run the cohort.",
         "Milestone 2 — publish D1/D7/D30 against GameAnalytics estimates (16,000+ mobile games, iOS and Android, CY2025): NA medians 23.28% / 4.97% / 1.18%.",
         "Target — beat that 4.97% NA median D7 on a cohort of at least 1,000 players. The benchmark is measured on app-store installs and we are a web app, so transfer is unproven.",
-        "Milestones 4-6 — grow the bank from 54 questions, ship an opponent-integrity answer before monetisation, validate exactly one monetisation route."
+        "Milestones 4-6 are untouched: grow the bank from 54 questions, ship an opponent-integrity answer before monetisation, validate exactly one monetisation route."
       ],
       "chart": "retention-bar",
       "image": null,
       "table": null,
       "sources": [
-        "FACT//DUEL internal: public/product/investor/numbers.md — status paragraph, §4.4 and §5.15 (company disclosure)",
+        "FACT//DUEL internal: public/product/investor/numbers.md — status paragraph, §4.4 and §7.1 (company disclosure)",
+        "FACT//DUEL internal: repository — product code, unaudited",
         "https://www.gameanalytics.com/reports/2026-mobile-pc-gaming-benchmarks",
         "https://web.archive.org/web/20240302210508/https://www.docsend.com/blog/what-vcs-really-want-to-see-inside-your-seed-deck/"
       ],
-      "notes": "DocSend's finding is that VCs spend 80 percent more time evaluating the traction of companies that didn't raise money successfully: a vague traction slide invites the inspection that kills the round, so the honest move is to state zero and move on. Say it in one sentence and do not soften it — no waitlist presented as users, no playtest presented as a cohort, no pilot presented as revenue. Progression is device-local, so we cannot measure D1/D7/D30 at all today: not 'have not yet' but cannot, architecturally, which is a consequence of the build rather than a design goal, and it is why milestone one is the account layer. The three GameAnalytics medians are a vendor benchmark — 16,000+ mobile games, nine regions, iOS and Android, calendar year 2025, published 24 Aug 2026 — labelled as estimates on the slide face, and every one of them is measured on app-store installs while we are a browser product with no install step and no push notifications. numbers.md §5.14 calls that the single largest methodological risk in the model; slide 12 carries it as a named risk. The chart plots only those benchmark bars: there is no FACT//DUEL retention bar because there is no FACT//DUEL retention number. The remaining milestones from §4.4 are on the slide; their supporting figures — the Skillz v. AviaGames verdict, Sporcle's $43.99/yr and the 9% MAU-to-paid target — are sourced on slides 12 and 10, where they are printed, rather than here."
+      "notes": "DocSend's finding is that VCs spend 80 percent more time evaluating the traction of companies that didn't raise money successfully: a vague traction slide invites the inspection that kills the round, so the honest move is to state zero and move on. Say it in one sentence and do not soften it — no waitlist presented as users, no playtest presented as a cohort, no pilot presented as revenue, and the shipped measurement layer presented as a capability rather than a result. What changed on 13 September 2026 is documented in numbers.md §7.1 and it retires this deck's previous claim that retention was unmeasurable in principle: the app now records install day, active days, session count, engaged time and four in-app counters per device and computes that device's own D1/D7/D30, returning true, false, or null while a window is still open, so an unfinished window can never read as a miss; there is a player-facing /analytics screen with JSON and CSV export and erase; and an opt-in anonymous daily ping (cohort-ping / cohort-report) makes a cohort rate computable, with an aggregate-only report, no per-device row, and every bucket describing fewer than five devices suppressed. Twenty-four tests cover the device-local module and twenty the cohort endpoints. State the deliberate limitation before anyone finds it: one device is a sample of one and can only ever produce a boolean; the app never computes a rate from a single device and the screen says so in its own copy. So the sentence to say out loud is the instrument is built, the cohort is what the round buys. On the milestones: §4.4's milestone one was 'ship accounts and server-side progression' because nothing was measurable without them, and measurement arrived without accounts — that is a de-risking of milestones one and two, not their completion, and accounts remain unbuilt. The three GameAnalytics medians are a vendor benchmark — 16,000+ mobile games, nine regions, iOS and Android, calendar year 2025, published 24 Aug 2026 — labelled as estimates on the slide face, and every one of them is measured on app-store installs while we are a browser product with no install step and no push notifications. numbers.md §5.14 calls that the single largest methodological risk in the model and §7.3 confirms it still stands; slide 12 carries it as a named risk, alongside the fact that an opt-in cohort is a consenting-device denominator rather than a whole-population one. The chart plots only the benchmark bars: there is no FACT//DUEL retention bar because there is still no FACT//DUEL retention number. The remaining milestones' supporting figures — the Skillz v. AviaGames verdict, Sporcle's $43.99/yr and the 9% MAU-to-paid target — are sourced on slides 12 and 10, where they are printed, rather than here. Appendix G documents the measurement design in full for anyone who wants to interrogate it."
     },
     {
       "n": 10,
@@ -255,19 +264,61 @@
         "Of the products that own the installed base, the one that ran the duel has left it; the rest never ran one.",
         "Skillz FY2021 to FY2025: monthly ARPPU essentially flat — $61.75 (derived) to $61.70 (stated) — while paying MAU fell from 513,000 to 141,000.",
         "Competitive-play users monetise extraordinarily well per payer and churn extraordinarily hard — in a real-money cash-tournament product, and Skillz has never been profitable.",
-        "Our axis is being the maintained 1v1 duel, with a long-tail loop built to earn a return visit. That is untested, and milestone 1 is what tests it."
+        "Our axis is being the maintained 1v1 duel, with a long-tail loop built to earn a return visit. That is untested; the cohort the round buys is what tests it."
       ],
       "chart": null,
       "image": null,
       "table": {
-        "headers": ["Product", "Scale (metric as stated)", "Money", "Live 1v1 duel?", "Latest signal"],
+        "headers": [
+          "Product",
+          "Scale (metric as stated)",
+          "Money",
+          "Live 1v1 duel?",
+          "Latest signal"
+        ],
         "rows": [
-          ["Trivia Crack (etermax)", "267,939,837 lifetime Android installs (Play internal; store shows 100M+)", "~$33K/wk, Trivia Crack Premium, US iOS gross, Q2 2025 (est.)", "Pivoted away", "Listing retitled around a FOX TV tie-in"],
-          ["MAG Interactive (owner of QuizDuel)", "2.2M group MAU, 9-mo avg to May 2026, -13% YoY", "$21.563M group net sales, 9 months to May 2026", "Duel — live status not verified", "iOS build updated 10 Sep 2026; 3.51 stars / 78 US ratings"],
-          ["Kahoot!", "100,263,409 lifetime Android installs", "$146.0M FY2022, 95% gross margin, B2B/education", "No — classroom/B2B", "Private since 23 Jan 2024; Play build 3 Sep 2026"],
-          ["Wayground (ex-Quizizz)", "10M+ Android installs", "$31.5M Series B; ~$44M across disclosed rounds, no valuation", "No", "iOS app last updated 14 Nov 2025"],
-          ["Quizion / TRIVIA GO!", "10+ / 10K+ Android downloads", "None disclosed", "Yes", "Quizion updated 13 Aug 2026; TRIVIA GO! stale since 22 May 2025"],
-          ["FACT//DUEL", "Zero users", "Zero revenue", "Yes — private beta, bot practice opponent", "Private beta, 54 sample questions"]
+          [
+            "Trivia Crack (etermax)",
+            "267,939,837 lifetime Android installs (Play internal; store shows 100M+)",
+            "~$33K/wk, Trivia Crack Premium, US iOS gross, Q2 2025 (est.)",
+            "Pivoted away",
+            "Listing retitled around a FOX TV tie-in"
+          ],
+          [
+            "MAG Interactive (owner of QuizDuel)",
+            "2.2M group MAU, 9-mo avg to May 2026, -13% YoY",
+            "$21.563M group net sales, 9 months to May 2026",
+            "Duel — live status not verified",
+            "iOS build updated 10 Sep 2026; 3.51 stars / 78 US ratings"
+          ],
+          [
+            "Kahoot!",
+            "100,263,409 lifetime Android installs",
+            "$146.0M FY2022, 95% gross margin, B2B/education",
+            "No — classroom/B2B",
+            "Private since 23 Jan 2024; Play build 3 Sep 2026"
+          ],
+          [
+            "Wayground (ex-Quizizz)",
+            "10M+ Android installs",
+            "$31.5M Series B; ~$44M across disclosed rounds, no valuation",
+            "No",
+            "iOS app last updated 14 Nov 2025"
+          ],
+          [
+            "Quizion / TRIVIA GO!",
+            "10+ / 10K+ Android downloads",
+            "None disclosed",
+            "Yes",
+            "Quizion updated 13 Aug 2026; TRIVIA GO! stale since 22 May 2025"
+          ],
+          [
+            "FACT//DUEL",
+            "Zero users",
+            "Zero revenue",
+            "Yes — bot practice opponent",
+            "Publicly playable in a browser, 54 sample questions"
+          ]
         ]
       },
       "sources": [
@@ -285,9 +336,10 @@
         "https://play.google.com/store/apps/details?id=live.trivia&hl=en_US",
         "https://www.sec.gov/Archives/edgar/data/1801661/000180166126000019/q425skillzex991-earningsre.htm",
         "https://www.sec.gov/Archives/edgar/data/1801661/000180166123000003/ex991_fy22q4-8xkxearningsr.htm",
-        "FACT//DUEL internal: public/product/investor/numbers.md — status paragraph and §5.15 (company disclosure)"
+        "FACT//DUEL internal: public/product/investor/numbers.md — status paragraph and §5.15 (company disclosure)",
+        "FACT//DUEL internal: public/product/investor/numbers.md §7.1 and §7.2 (company disclosure)"
       ],
-      "notes": "Competition gets 34 seconds in DocSend's estimates, so the table has to do the work and the bullets only frame it. Putting our own row in with zeroes is deliberate: it is the row an investor would otherwise add themselves. Read the column headings literally — lifetime installs are cumulative store installs, not users and not an active base, and Trivia Crack's 267,939,837 is Google Play's internal count against a store display of '100M+'. Caveats: Trivia Crack's weekly figure is a Sensor Tower modelled estimate for the Trivia Crack Premium SKU in Q2 2025, not disclosed revenue and not current; MAG's MAU and net sales are group-level across its whole portfolio and the MAU figure is a nine-month average for Sep 2025 to May 2026, which is why the row is labelled MAG Interactive rather than QuizDuel; nothing in the evidence base establishes whether QuizDuel's duel is live or turn-based, so the cell says the status is not verified; Kahoot has published no audited consolidated group figures since delisting on 23 Jan 2024, so FY2022 is the last comparable full year and the parent-only Norwegian statutory accounts are not group results; Wayground's $44M is a sum across disclosed rounds of which only the $31.5M Series B has a source URL in our evidence base, and the frequently-cited ~$300M valuation appears in no primary source and is deliberately absent. Both large-base rows that say 'No' never ran a 1v1 duel at all, which is why the first bullet says the one that ran it has left it rather than that they all walked away. Skillz is the adjacent warning and it cuts both ways: revenue fell from $380.2M to $104.5M and paying MAU from 513,000 to 141,000 while monthly ARPPU held at about $62, and the company posted net losses of $187.9M in FY2021 and $70.4M in FY2025 — per-payer monetisation is not the same thing as a profitable business, and Skillz is a real-money cash-tournament product, which a free knowledge duel is not."
+      "notes": "Competition gets 34 seconds in DocSend's estimates, so the table has to do the work and the bullets only frame it. Putting our own row in with zeroes is deliberate: it is the row an investor would otherwise add themselves, and the zeroes are unchanged by the product having become publicly playable on 13 September 2026 (numbers.md §7.2) — playable is not users. Read the column headings literally — lifetime installs are cumulative store installs, not users and not an active base, and Trivia Crack's 267,939,837 is Google Play's internal count against a store display of '100M+'. Caveats: Trivia Crack's weekly figure is a Sensor Tower modelled estimate for the Trivia Crack Premium SKU in Q2 2025, not disclosed revenue and not current; MAG's MAU and net sales are group-level across its whole portfolio and the MAU figure is a nine-month average for Sep 2025 to May 2026, which is why the row is labelled MAG Interactive rather than QuizDuel; nothing in the evidence base establishes whether QuizDuel's duel is live or turn-based, so the cell says the status is not verified; Kahoot has published no audited consolidated group figures since delisting on 23 Jan 2024, so FY2022 is the last comparable full year and the parent-only Norwegian statutory accounts are not group results; Wayground's $44M is a sum across disclosed rounds of which only the $31.5M Series B has a source URL in our evidence base, and the frequently-cited ~$300M valuation appears in no primary source and is deliberately absent. Both large-base rows that say 'No' never ran a 1v1 duel at all, which is why the first bullet says the one that ran it has left it rather than that they all walked away. Skillz is the adjacent warning and it cuts both ways: revenue fell from $380.2M to $104.5M and paying MAU from 513,000 to 141,000 while monthly ARPPU held at about $62, and the company posted net losses of $187.9M in FY2021 and $70.4M in FY2025 — per-payer monetisation is not the same thing as a profitable business, and Skillz is a real-money cash-tournament product, which a free knowledge duel is not."
     },
     {
       "n": 12,
@@ -298,7 +350,8 @@
         "Long-tail retention. Trivia Royale reported 45% D1 iOS — company-stated to TechCrunch, not audited — and closed eight months after launch, on 23 Feb 2021.",
         "Global median D30 across 16,000+ mobile games is 0.68-0.79% (GameAnalytics est., CY2025); the North American median is 1.18%.",
         "Opponent integrity. Skillz won a $42.9M jury verdict against AviaGames for willful patent infringement (9 Feb 2024); trial evidence showed bots run against paying humans.",
-        "Benchmark transfer. Every retention, session and per-install monetisation benchmark in our model is measured on app-store installs, not web.",
+        "Benchmark transfer. Every retention, session and per-install monetisation benchmark in our model is measured on app-store installs, not web. Our own instrument is now the route to a web-first number (§5.14, §7.3).",
+        "Measurement selection. The cohort rate comes only from devices that opt in to the anonymous daily ping, so its denominator is consenting devices, not all of them. We will publish it as exactly that.",
         "Content depth. 54 sample questions is a demo bank. The ask funds four engineers and no separate content line; the target and production rate are still to be set (§4.4).",
         "Model honesty. Our base case (P) implicitly out-monetises a 9.03%-conversion subscription at Sporcle's $43.99/yr by 3.88x. We flag it, not hide it."
       ],
@@ -312,9 +365,10 @@
         "https://www.sporcle.com/memberships/",
         "https://www.sec.gov/Archives/edgar/data/1562088/000162828026053299/q2fy26duolingo6-30x26share.htm",
         "FACT//DUEL internal: public/product/investor/numbers.md §2.3, §4.3 and §4.4 (company disclosure)",
-        "FACT//DUEL internal: public/product/investor/numbers.md §3.5, §5.2 and §5.14 (company disclosure)"
+        "FACT//DUEL internal: public/product/investor/numbers.md §3.5, §5.2 and §5.14 (company disclosure)",
+        "FACT//DUEL internal: public/product/investor/numbers.md §7.1 and §7.2 (company disclosure)"
       ],
-      "notes": "Each risk has a named response rather than a reassurance. Long-tail retention: the structural fact is that at a median D30 of 0.68-0.79% a game's MAU is almost entirely the current month's new installs — in our own base case the retained resident base is 5,900 of 105,900 MAU (P), 5.6% — so retention is not a metric in this category, it is the business, and that is why the entire raise is pointed at it. Note that the 0.68-0.79% band is GameAnalytics' global all-genre median, not a trivia-specific figure, and that the model's base case uses the North American 1.18%. Trivia Royale's 45% D1 is a company statement to TechCrunch, not audited; its closure was announced on 23 Feb 2021 (numbers.md §2.3). Opponent integrity: the $42.9M award was a jury verdict for willful infringement of a Skillz platform patent, not damages awarded for running bots — the bots named 'Cucumbers' and 'Guides' were trial evidence — and it is a verdict rather than a collected settlement. Our own answer to it is milestone five in numbers.md §4.4: an opponent-integrity answer ships before monetisation. Do not describe bot internals that an investor cannot verify in the repository. Benchmark transfer is the largest methodological risk in the whole model and is stated rather than buried: we have no verified benchmark for web-first game retention, web-first acquisition cost or web-first payer conversion, and the milestone-one cohort is what replaces the assumption with data. Note the scope — it is every benchmark in numbers.md §3; Duolingo's 9.03% MAU-to-paid and Sporcle's $43.99/yr web price are not store-measured. Content depth: there is no separate content budget in §4.5, which funds four engineers and nothing else, and §4.4 milestone 4 still requires us to set a target and a production rate. If an investor adds a risk we have not listed, that is a good outcome — write it down and answer it in the follow-up, not on the spot."
+      "notes": "Each risk has a named response rather than a reassurance. Long-tail retention: the structural fact is that at a median D30 of 0.68-0.79% a game's MAU is almost entirely the current month's new installs — in our own base case the retained resident base is 5,900 of 105,900 MAU (P), 5.6% — so retention is not a metric in this category, it is the business, and that is why the entire raise is pointed at it. Note that the 0.68-0.79% band is GameAnalytics' global all-genre median, not a trivia-specific figure, and that the model's base case uses the North American 1.18%. Trivia Royale's 45% D1 is a company statement to TechCrunch, not audited; its closure was announced on 23 Feb 2021 (numbers.md §2.3). Opponent integrity: the $42.9M award was a jury verdict for willful infringement of a Skillz platform patent, not damages awarded for running bots — the bots named 'Cucumbers' and 'Guides' were trial evidence — and it is a verdict rather than a collected settlement. Our own answer to it is milestone five in numbers.md §4.4: an opponent-integrity answer ships before monetisation. Do not describe bot internals that an investor cannot verify in the repository. Benchmark transfer is the largest methodological risk in the whole model and is stated rather than buried: we have no verified benchmark for web-first game retention, web-first acquisition cost or web-first payer conversion, numbers.md §7.3 confirms §5.14 stands unchanged, and the cohort the round buys is what replaces the assumption with data — our own instrument is now the route to a web-first number rather than a request for one. Measurement selection is a risk we are raising against ourselves rather than waiting to be asked about: the cohort report is built on an opt-in anonymous daily ping (numbers.md §7.1), so its denominator is devices that consented, an opt-in sample is not a whole-population one, and the honest presentation of the first cohort number names the consent rate next to the retention rate. Do not offer a correction factor: we have no evidence base for one. The countervailing design choices are worth saying in the same breath — aggregate-only reporting, no per-device row, and suppression of any bucket describing fewer than five devices — because they are the reason the ping can be opt-in and anonymous at all, and appendix G documents them. Note the scope — it is every benchmark in numbers.md §3; Duolingo's 9.03% MAU-to-paid and Sporcle's $43.99/yr web price are not store-measured. Content depth: there is no separate content budget in §4.5, which funds four engineers and nothing else, and §4.4 milestone 4 still requires us to set a target and a production rate. If an investor adds a risk we have not listed, that is a good outcome — write it down and answer it in the follow-up, not on the spot."
     },
     {
       "n": 13,
@@ -325,7 +379,7 @@
         "TO BE COMPLETED BY THE FOUNDER. No team member, hire, advisor, partner or customer is claimed in this deck.",
         "The plan (P) budgets four engineers at YC's $15,000/engineer/month rule of thumb over 18 months = $1,080,000 (numbers.md §4.5) — a rule of thumb, not a measured 2026 cost base.",
         "This slide must name those four, with agreement in writing, before the deck is sent.",
-        "Roles the milestone list requires: backend — accounts, server-side progression and analytics instrumentation; client and game engineering for the duel and progression surfaces.",
+        "Roles the milestone list requires: backend — accounts, server-side progression and the cohort service behind the shipped measurement layer; client and game engineering for the duel and progression surfaces.",
         "Content and question production is an unbudgeted role beyond the four-engineer line; the target and production rate are still to be set (§4.4, milestone 4).",
         "Founder background — TO BE COMPLETED BY THE FOUNDER."
       ],
@@ -350,7 +404,8 @@
         "$15,000 is YC's own rule of thumb for an all-in engineer month — undated editorial guidance, not a measured or inflation-indexed 2026 cost base.",
         "Illustrative, not a price: at Carta's Q3 2025 median seed pre-money of $16.0M, $1.2M into $17.2M post would be 6.98% dilution (P).",
         "YC's full sentence: 'as little as 10%... is wonderful, but most rounds will require up to 20% dilution and you should try to avoid more than 25%.'",
-        "It buys: accounts and instrumentation; a published D1/D7/D30 cohort of 1,000+ players; growth of the bank from its current 54 questions, to a target and rate we must still set.",
+        "It buys: a published D1/D7/D30 cohort of 1,000+ players; growth of the bank from its current 54 questions, to a target and rate we must still set.",
+        "It no longer has to buy the measurement layer: that shipped on 13 Sep 2026, tested, with a player-facing screen and an aggregate-only cohort report (numbers.md §7.1).",
         "Plus an opponent-integrity answer and one validated monetisation route. Then we come back with data, not benchmarks."
       ],
       "chart": null,
@@ -360,9 +415,10 @@
         "https://www.ycombinator.com/library/4A-a-guide-to-seed-fundraising",
         "https://carta.com/data/state-of-private-markets-q3-2025/",
         "https://news.crunchbase.com/venture/average-seed-funding-amounts-deals-grew-2025/",
-        "FACT//DUEL internal: public/product/investor/numbers.md §4.4, §4.5 and §5.8"
+        "FACT//DUEL internal: public/product/investor/numbers.md §4.4, §4.5 and §5.8",
+        "FACT//DUEL internal: public/product/investor/numbers.md §7.1 and §7.3 (company disclosure)"
       ],
-      "notes": "The ask uses YC's structure — N months x team x cost = $X, with dilution against a published median — and the arithmetic is shown so it can be checked in the 32 seconds this slide gets. Caveats to volunteer rather than defend. YC's $15,000 per engineer per month and its $500k-$1.5M band are undated editorial rules of thumb, not measured or inflation-indexed 2026 figures, and are very likely understated today; we use the structure and expect to substitute a current, defensible cost base once the team on slide 13 is real. Both the $1,080,000 and the ~$1.2M are therefore marked (P). Carta's $16.0M is the Q3 2025 median seed pre-money, up 14% YoY, in a quarter with about 17% down rounds; the 6.98% is what a $1.2M round would cost at that median, which is an illustration rather than a price, and it is an optimistic illustration — Crunchbase reports that more than half of 2025 US seed dollars went into rounds of $10M or larger, so that median is set by rounds an order of magnitude bigger than this ask. We do not quote Carta's Q4 2025 all-time-high post-money: our evidence base contains no primary Carta Q4 2025 source, the figure is all-sector with no consumer split, and Carta's own Q1 2026 note says early-stage primary valuations softened (numbers.md §5.8). Quote YC's dilution sentence in full — the second half, that most rounds require up to 20%, is the part that makes 6.98% unremarkable rather than exceptional. On the question bank: state 54 as the baseline and say plainly that the target and production rate are still to be set (§4.4 milestone 4), rather than promising 'a larger bank'. Base-case Year-1 revenue of $101,907 (P) is immaterial to runway and should be described that way — the raise buys 18 months to produce the retention data we do not have, which is the entire thesis of the round. No detailed financial model belongs in this conversation: a16z, YC and CRV all put three-to-five-year projections in the appendix or the data room, and ours is in appendix slide 16 where it can be interrogated rather than performed."
+      "notes": "The ask uses YC's structure — N months x team x cost = $X, with dilution against a published median — and the arithmetic is shown so it can be checked in the 32 seconds this slide gets. Caveats to volunteer rather than defend. YC's $15,000 per engineer per month and its $500k-$1.5M band are undated editorial rules of thumb, not measured or inflation-indexed 2026 figures, and are very likely understated today; we use the structure and expect to substitute a current, defensible cost base once the team on slide 13 is real. Both the $1,080,000 and the ~$1.2M are therefore marked (P). Carta's $16.0M is the Q3 2025 median seed pre-money, up 14% YoY, in a quarter with about 17% down rounds; the 6.98% is what a $1.2M round would cost at that median, which is an illustration rather than a price, and it is an optimistic illustration — Crunchbase reports that more than half of 2025 US seed dollars went into rounds of $10M or larger, so that median is set by rounds an order of magnitude bigger than this ask. We do not quote Carta's Q4 2025 all-time-high post-money: our evidence base contains no primary Carta Q4 2025 source, the figure is all-sector with no consumer split, and Carta's own Q1 2026 note says early-stage primary valuations softened (numbers.md §5.8). Quote YC's dilution sentence in full — the second half, that most rounds require up to 20%, is the part that makes 6.98% unremarkable rather than exceptional. On the question bank: state 54 as the baseline and say plainly that the target and production rate are still to be set (§4.4 milestone 4), rather than promising 'a larger bank'. The one change since the last version of this deck is a de-risking rather than a result: the measurement layer no longer has to be built with this money, because it shipped on 13 September 2026 (numbers.md §7.1), so the round buys the cohort rather than the instrument. Say it in one sentence and do not inflate it — there is still no cohort, no rate and no revenue, and §7.3 is explicit that every figure in §4 remains a plan. Base-case Year-1 revenue of $101,907 (P) is immaterial to runway and should be described that way — the raise buys 18 months to produce the retention data we do not have, which is the entire thesis of the round. No detailed financial model belongs in this conversation: a16z, YC and CRV all put three-to-five-year projections in the appendix or the data room, and ours is in appendix slide 16 where it can be interrogated rather than performed."
     },
     {
       "n": 15,
@@ -406,11 +462,39 @@
       "chart": "scenarios",
       "image": null,
       "table": {
-        "headers": ["Scenario (P)", "Y3 installs", "Rev / install", "Y3 revenue", "Y3 steady MAU", "Subscription cross-check"],
+        "headers": [
+          "Scenario (P)",
+          "Y3 installs",
+          "Rev / install",
+          "Y3 revenue",
+          "Y3 steady MAU",
+          "Subscription cross-check"
+        ],
         "rows": [
-          ["Conservative", "250,000", "$0.3688", "$92,202", "21,542", "$85,570 — agrees within 8%"],
-          ["Base", "1,200,000", "$1.3588", "$1,630,517", "105,900", "$420,666 — 3.88x divergence"],
-          ["Optimistic", "4,000,000", "$1.8902", "$7,560,784", "361,667", "$1,436,647 — 5.26x divergence"]
+          [
+            "Conservative",
+            "250,000",
+            "$0.3688",
+            "$92,202",
+            "21,542",
+            "$85,570 — agrees within 8%"
+          ],
+          [
+            "Base",
+            "1,200,000",
+            "$1.3588",
+            "$1,630,517",
+            "105,900",
+            "$420,666 — 3.88x divergence"
+          ],
+          [
+            "Optimistic",
+            "4,000,000",
+            "$1.8902",
+            "$7,560,784",
+            "361,667",
+            "$1,436,647 — 5.26x divergence"
+          ]
         ]
       },
       "sources": [
@@ -439,12 +523,42 @@
       "chart": null,
       "image": null,
       "table": {
-        "headers": ["Layer", "Population", "x ARPU", "Result", "Source of population"],
+        "headers": [
+          "Layer",
+          "Population",
+          "x ARPU",
+          "Result",
+          "Source of population"
+        ],
         "rows": [
-          ["TAM-A (on the slide)", "216.8M US second-screen adults", "$7.80 - $13.07", "$1.69bn - $2.83bn", "EMARKETER, 2026"],
-          ["SAM", "90.3M NA fantasy/betting adults", "$7.80 - $13.07", "$704M - $1.18bn", "FSGA / Angus Reid, 2026"],
-          ["SOM (P)", "~106,000 steady-state MAU", "base-case model", "$0.4M - $1.6M (P)", "Chosen Year-3 plan target"],
-          ["TAM-B (appendix only)", "1,216.8M incl. cricket bloc", "$7.80 - $13.07", "$9.49bn - $15.90bn", "ICC, 1bn+ fans aged 16-69"]
+          [
+            "TAM-A (on the slide)",
+            "216.8M US second-screen adults",
+            "$7.80 - $13.07",
+            "$1.69bn - $2.83bn",
+            "EMARKETER, 2026"
+          ],
+          [
+            "SAM",
+            "90.3M NA fantasy/betting adults",
+            "$7.80 - $13.07",
+            "$704M - $1.18bn",
+            "FSGA / Angus Reid, 2026"
+          ],
+          [
+            "SOM (P)",
+            "~106,000 steady-state MAU",
+            "base-case model",
+            "$0.4M - $1.6M (P)",
+            "Chosen Year-3 plan target"
+          ],
+          [
+            "TAM-B (appendix only)",
+            "1,216.8M incl. cricket bloc",
+            "$7.80 - $13.07",
+            "$9.49bn - $15.90bn",
+            "ICC, 1bn+ fans aged 16-69"
+          ]
         ]
       },
       "sources": [
@@ -473,12 +587,37 @@
       "chart": null,
       "image": null,
       "table": {
-        "headers": ["Product", "Peak", "Capital", "Ending"],
+        "headers": [
+          "Product",
+          "Peak",
+          "Capital",
+          "Ending"
+        ],
         "rows": [
-          ["HQ Trivia", "2.38M concurrent players, 28 Mar 2018", "$12,539,999 sold of $15,000,001 offered", "67,000 installs in Jan 2020; shut 14 Feb 2020, 25 staff"],
-          ["QuizUp", "~20M users claimed 19 May 2014; 1bn+ matches", "~$32.4M equity per SEC Form Ds", "Sold to Glu for $7.5M of cancelled notes, booked at $3.2M"],
-          ["Trivia Royale", "2.5M downloads in ~3 weeks; 45% D1 iOS", "$9,155,139 + $1,499,913 per SEC Form Ds", "Closed 23 Feb 2021, eight months after launch, 16 staff"],
-          ["Skillz (live, adjacent)", "FY2021: $380.2M revenue, 513,000 paying MAU", "Public (NYSE: SKLZ)", "FY2025: $104.5M revenue, 141,000 paying MAU"]
+          [
+            "HQ Trivia",
+            "2.38M concurrent players, 28 Mar 2018",
+            "$12,539,999 sold of $15,000,001 offered",
+            "67,000 installs in Jan 2020; shut 14 Feb 2020, 25 staff"
+          ],
+          [
+            "QuizUp",
+            "~20M users claimed 19 May 2014; 1bn+ matches",
+            "~$32.4M equity per SEC Form Ds",
+            "Sold to Glu for $7.5M of cancelled notes, booked at $3.2M"
+          ],
+          [
+            "Trivia Royale",
+            "2.5M downloads in ~3 weeks; 45% D1 iOS",
+            "$9,155,139 + $1,499,913 per SEC Form Ds",
+            "Closed 23 Feb 2021, eight months after launch, 16 staff"
+          ],
+          [
+            "Skillz (live, adjacent)",
+            "FY2021: $380.2M revenue, 513,000 paying MAU",
+            "Public (NYSE: SKLZ)",
+            "FY2025: $104.5M revenue, 141,000 paying MAU"
+          ]
         ]
       },
       "sources": [
@@ -499,11 +638,11 @@
       "title": "Appendix E — what we do not know, and what would settle each of it.",
       "kicker": "APPENDIX — LIMITS OF THE EVIDENCE",
       "body": [
-        "Everything about FACT//DUEL: no DAU, no D1/D7/D30, no session length, no conversion, no CAC, no LTV, no revenue.",
+        "Every number about FACT//DUEL: no DAU, no D1/D7/D30 rate, no session length, no conversion, no CAC, no LTV, no revenue. The measurement layer shipped; the players did not (§7.1).",
         "Whether app-store benchmarks transfer to a web product with no install step and no push notifications. They may not.",
         "CAC or CPI for trivia in 2025-26: no verified benchmark of any kind exists in our evidence base.",
         "Genre ARPDAU: the circulated bands failed verification as citation laundering and are excluded from this deck.",
-        "Whether consumer trivia can monetise at scale at all. Our own paid cohort after milestone 1 is what settles it."
+        "Whether consumer trivia can monetise at scale at all. Our own paid cohort is what settles it, and the round buys it."
       ],
       "chart": null,
       "image": null,
@@ -512,7 +651,8 @@
         "FACT//DUEL internal: public/product/investor/numbers.md §5 (failed verification and unresolved items)",
         "https://storage.mfn.se/8d863483-ccc8-4f02-b0c5-d37d899b23e8/mag-interim-report-eng-2025-26-q3.pdf",
         "https://techcrunch.com/2020/07/10/how-thor-fridrikssons-trivia-royale-earned-2-5m-downloads-in-3-weeks/",
-        "https://www.apptweak.com/"
+        "https://www.apptweak.com/",
+        "FACT//DUEL internal: public/product/investor/numbers.md §7.1 and §7.3 (company disclosure)"
       ],
       "notes": "This page is a credibility instrument, not an apology. Specific exclusions an investor may expect to see and will not: no genre ARPDAU band (traced to one consultant's blog, relabelled as a benchmark by a secondary source; the only company-reported figure in our base is MAG Interactive's 9.0 US cents group ARPDAU for the nine months to May 2026); no Trivia Crack '600 million downloads' or '150 million active users' (PR-originated, and the second describes etermax company-wide); no ~$300M Wayground valuation (no primary source); no Sensor Tower puzzle-genre revenue figures (gated report, secondary summary, and the framing is wrong twice over); no IPM figures for trivia (gated, unverified); and no aggregator global fan-base counts, one of which is contradicted by the sport's own governing body. On store conversion we corrected a claim in our own favour's opposite direction and kept the correction. The single largest methodological risk is benchmark transfer to web, and the only thing that resolves it is our own instrumented cohort — which is what the raise funds."
     },
@@ -526,15 +666,38 @@
         "Every visual effect is generated at runtime — procedural audio with no audio files, and 3D loaded lazily.",
         "Every action works without WebGL; reduced-motion settings override the effects layer toward less motion.",
         "None of this is a ranked or verified record, and none of it is sent to a server. Reset clears it.",
-        "A private playtest link is available on request. It is the fastest way to check every claim on slides 5 and 6."
+        "Play it rather than reading about it: https://occult-kranti.github.io/fact-duel/ — no install, no account, no server, no request to us."
       ],
       "chart": null,
       "image": "/tmp/claude-0/-home-user-fact-duel/ebdb1205-a08d-56c2-9dfe-5856a1ecc14f/scratchpad/shots/release/desktop-passport.png",
       "table": null,
       "sources": [
-        "FACT//DUEL internal: public/product/investor/numbers.md — status paragraph and §5.15 (company disclosure)"
+        "FACT//DUEL internal: public/product/investor/numbers.md — status paragraph, §7.1 and §7.2 (company disclosure)",
+        "FACT//DUEL internal: repository — product code, unaudited"
       ],
-      "notes": "Offer the playtest link rather than describing the product a third time; a founder who hands over a working link at this point converts more than one who adds a slide. Be exact about what the playtest is and is not: it is a private beta with no accounts, no server-side progression and 54 sample questions, it produces no retention data, and the people in it are not users in any sense this deck would count. If asked about engineering rigour, the repository's own release record is the place to point — it lists the automated regression suites, the TypeScript and production-build gates, and, just as importantly, the checks that were not performed, including physical-device play, assistive-technology evaluation and any WAN or capacity testing. Quote specific counts from that record only if you have re-read it that day."
+      "notes": "Open the link rather than describing the product a third time; since 13 September 2026 it costs nothing to hand over, because the build is public, runs entirely in the browser and needs no install, no account and no server (numbers.md §7.2). Be exact about what it is and is not: there are no accounts and no server-side progression, the bank is 54 sample questions, two-device friend duels are disabled in that build with an on-screen notice, it produces no retention data on its own, and nobody who opens it is a user in any sense this deck would count. The link is served from the repository's own Pages workflow and is live once the repository owner has pointed Pages at the gh-pages branch, so check it the morning of a meeting rather than assuming. Appendix G covers what the app does measure and what it deliberately does not. If asked about engineering rigour, the repository's own release record is the place to point — it lists the automated regression suites, the TypeScript and production-build gates, and, just as importantly, the checks that were not performed, including physical-device play, assistive-technology evaluation and any WAN or capacity testing. Quote specific counts from that record only if you have re-read it that day."
+    },
+    {
+      "n": 21,
+      "kind": "appendix",
+      "title": "Appendix G — how retention is measured, what is deliberately not measured, and why the rate still needs players.",
+      "kicker": "APPENDIX — THE MEASUREMENT LAYER",
+      "body": [
+        "Per device: install day, active days, session count, engaged time, and four counters — duel rounds, matches, expedition cards, quests (lib/analytics.mjs, 24 tests).",
+        "Per device: D1 / D7 / D30 as true, false, or null while the window is still open. A test asserts that an unfinished window can never read as a miss.",
+        "One device is a sample of one. No export is shaped like a rate, and the screen says so in its own copy — a rate needs a cohort.",
+        "Privacy: no third-party SDK, nothing personal, and the analytics module makes no network call. The player sees the whole record at /analytics and can export it as JSON or CSV, or erase it.",
+        "The cohort rate comes from an opt-in anonymous daily ping (cohort-ping / cohort-report, table cohort_days, 20 tests). The report is aggregate-only: no per-device row, and buckets under five devices are suppressed.",
+        "What none of this gives us today: a retention rate. That needs players. The instrument is what shipped; the cohort is what the round buys."
+      ],
+      "chart": null,
+      "image": null,
+      "table": null,
+      "sources": [
+        "FACT//DUEL internal: public/product/investor/numbers.md §7.1 and §7.3 (company disclosure)",
+        "FACT//DUEL internal: repository — product code, unaudited"
+      ],
+      "notes": "This page exists so that the claim on slide 9 can be interrogated rather than believed. It is numbers.md §7.1 in slide form and it should be read as a design, not as a result. The device-local half is a pure module with no storage, no network call and no third-party SDK, which is why the privacy properties are checkable by reading one file rather than by trusting a vendor: it records install day, the days the device was active, session count under a stated inactivity threshold that the app names on screen, engaged time counted only while the app is on screen, and four in-app counters, then answers whether this device came back on day 1, 7 or 30. Both of those conventions are chosen rather than standard and the app names them on screen; say so before someone asks how a session is defined. The null return is the part worth dwelling on with a numerate investor — a window that has not finished reads as null rather than as a miss, which is the single easiest way to flatter or wreck an early retention number, and a test asserts it. The cohort half is the only part that can ever produce a rate, it is opt-in, the identifier is anonymous, the report can return no per-device row by construction, and any bucket describing fewer than five devices is suppressed rather than rounded — which is also a real limit on how early the first number can be published, and it is deliberate. The corresponding weakness is on slide 12 as a named risk: an opt-in denominator is consenting devices, not all devices, and the first published cohort figure has to carry its consent rate next to it. Twenty-four tests cover the device module and twenty the cohort endpoints; quote those two counts only, because they are the two that numbers.md §7.1 records. Finally, the honest close: none of this is traction and none of it is a number. §7.3 is explicit that there are still no users, no revenue, no cohort, no CAC, no LTV and no ARPDAU, and that every figure in §4 remains a plan."
     }
   ]
 }
