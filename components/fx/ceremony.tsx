@@ -84,7 +84,18 @@ function CeremonyDialog({ item, reduced, onClose }: DialogProps) {
     body.style.overflow = 'hidden';
     if (scrollbar > 0) body.style.paddingRight = `${scrollbar}px`;
 
-    const focusFirst = () => (buttonRef.current ?? cardRef.current)?.focus();
+    // During an AnimatePresence swap two ceremony dialogs are mounted at once, each with a
+    // document-level focusin listener. Without these guards they pull focus from one another
+    // until the stack overflows, so a leaving dialog never grabs focus back.
+    let refocusing = false;
+    const focusFirst = () => {
+      const card = cardRef.current;
+      const target = buttonRef.current ?? card;
+      if (refocusing || !card || !card.isConnected || !target) return;
+      refocusing = true;
+      target.focus();
+      refocusing = false;
+    };
     const raf = requestAnimationFrame(focusFirst);
 
     const onKeyDown = (e: KeyboardEvent) => {
@@ -115,7 +126,8 @@ function CeremonyDialog({ item, reduced, onClose }: DialogProps) {
       }
     };
     const onFocusIn = (e: FocusEvent) => {
-      if (!cardRef.current || cardRef.current.contains(e.target as Node)) return;
+      const card = cardRef.current;
+      if (!card || !card.isConnected || card.contains(e.target as Node)) return;
       // Another ceremony may be mounted at the same time (two badges at once). Whoever the focus
       // lands in keeps it; pulling it back here would make the two handlers recurse forever.
       const target = e.target as Element | null;

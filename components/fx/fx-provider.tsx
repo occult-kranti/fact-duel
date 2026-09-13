@@ -11,7 +11,16 @@
  * - exposes `FxContext` (`useFx()`) with the toast / ceremony state and controls.
  */
 'use client';
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react';
 import { fx } from '@/lib/fx/bus';
 import { particles } from '@/lib/fx/particles';
 import { sound } from '@/lib/fx/sound';
@@ -57,6 +66,9 @@ export function FxProvider({ children, maxToasts = TOAST_MAX_VISIBLE }: FxProvid
   const reduced = useReducedMotion();
   const [toasts, setToasts] = useState<ToastItem[]>([]);
   const [ceremony, setCeremony] = useState<CeremonyItem | null>(null);
+  // A single commit can raise several ceremonies (a stamp plus a level-up, two badges at once).
+  // They queue and play one at a time instead of overwriting each other.
+  const queuedCeremonies = useRef<CeremonyItem[]>([]);
 
   const toast = useCallback((input: ToastInput): string => {
     const id = input.id ?? nextId('toast');
@@ -79,11 +91,18 @@ export function FxProvider({ children, maxToasts = TOAST_MAX_VISIBLE }: FxProvid
 
   const openCeremony = useCallback((input: CeremonyInput): string => {
     const id = nextId('ceremony');
-    setCeremony({ ...input, id });
+    const item: CeremonyItem = { ...input, id };
+    setCeremony((current) => {
+      if (current) {
+        queuedCeremonies.current.push(item);
+        return current;
+      }
+      return item;
+    });
     return id;
   }, []);
 
-  const closeCeremony = useCallback(() => setCeremony(null), []);
+  const closeCeremony = useCallback(() => setCeremony(queuedCeremonies.current.shift() ?? null), []);
 
   // Unlock audio on the first user gesture (and re-resume after interruptions).
   useEffect(() => {

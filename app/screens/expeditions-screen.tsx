@@ -1,8 +1,8 @@
 'use client';
-import Expeditions from '../expeditions';
+import Expeditions from './expeditions';
 import type { ExpeditionsScreenProps } from './types';
 
-/* Expeditions tab: atlas, brief, run and finish views live inside the Expeditions module. */
+/* Expeditions tab: atlas, brief, run and finish views live in app/screens/expeditions/. */
 export function ExpeditionsScreen({
   player,
   selected,
