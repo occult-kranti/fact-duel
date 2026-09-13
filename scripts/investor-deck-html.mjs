@@ -25,10 +25,19 @@ const host = (u) => {
   }
 };
 
-const core = plan.slides.filter((s) => s.n <= 14);
-const appendix = plan.slides.filter((s) => s.n > 14);
+/* A slide belongs to the appendix when it says so, not because of where it happens to sit — the
+   same rule scripts/investor-deck.py uses, so the two renderers cannot disagree about the split
+   when the body is cut down. */
+const isAppendix = (s) => s.kind === 'appendix' || String(s.kicker ?? '').startsWith('APPENDIX');
+const core = plan.slides.filter((s) => !isAppendix(s));
+const appendix = plan.slides.filter(isAppendix);
 const APPENDIX_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
-const label = (s) => (s.n <= 14 ? String(s.n).padStart(2, '0') : (APPENDIX_LETTERS[s.n - 15] ?? String(s.n)));
+const label = (s) => {
+  const i = appendix.indexOf(s);
+  return i < 0
+    ? String(core.indexOf(s) + 1).padStart(2, '0')
+    : (APPENDIX_LETTERS[i] ?? String(s.n));
+};
 
 const section = (s) => {
   const parts = [];

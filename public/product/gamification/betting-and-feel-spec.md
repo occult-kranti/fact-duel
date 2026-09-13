@@ -1,18 +1,20 @@
 # FACT//DUEL — Betting, Knowledge Record, Vault, Brain Hero, Sound & Celebrations
 
 **One implementable specification, revision 2.** Six specialist reports were reconciled into revision 1;
-four adversarial reviewers then attacked revision 1 and found 11 blockers and 22 serious defects. Every
+four adversarial reviewers then attacked revision 1 and found 11 distinct blockers, 26 serious defects and 8 minor ones. Every
 one of those is fixed here, in place, with the numbers re-derived and re-measured against the repo.
 Section 11 lists each finding and its disposition.
 
-**Status:** specification, not yet built. Verified against the repo at 175/175 tests passing
-(`node --test tests/*.test.mjs`).
+**Status:** specification, not yet built. Verified against the repo at **177/177** tests passing
+(`node --test tests/*.test.mjs`, run on this working tree at `cc805e5`). The brief quoted 175; commit
+`cc805e5` (the 5/7/10 s clock and self-advancing rounds) added two, and none of them touches anything in
+this spec. Every line reference below was re-checked against that commit.
 
 **Test-count honesty, up front.** Revision 1 claimed "175 tests still pass, nothing changes". That was
 false: the economy changes this spec requires are *encoded* in four assertions. Exactly four assertion
 lines change, all in `tests/progression.test.mjs`, all of them inventory or economy constants rather
 than behaviour contracts. They are enumerated in §10.0 and nowhere else in the suite moves. The count
-stays 175 tests; four `assert` arguments inside three of them are updated.
+stays 177 tests; four `assert` arguments inside three of them are updated.
 
 ---
 
@@ -146,7 +148,7 @@ Per-correctness bands, enumerated exhaustively:
 **The consequence, and it is bigger than revision 1 admitted.** The 5/6 and 6/6 bands overlap by 8 points. **19 of the 28 possible tier splits of a 6/6 run score below 20**, including a 6/6 all-Bold run at 18 — the current shipped maximum. So score alone is not a ranking of knowledge, and two things that use it have to change:
 
 - `bold-master` — see §1.7.
-- **`record.best`, which is the number the finish screen prints to the player.** `reduceExpeditions` (`lib/expeditions.mjs:283-292`) picks best by `result.score > record.best.score`, so a 5/6 run at 20 would permanently outrank the player's own flawless 6/6 at 18. Fixed by R3, §1.5.8.
+- **`record.best`, which is the number the finish screen prints to the player.** `reduceExpeditions` (`lib/expeditions.mjs:294`) picks best by `result.score > record.best.score`, so a 5/6 run at 20 would permanently outrank the player's own flawless 6/6 at 18. Fixed by R3, §1.5.8.
 
 ### 1.4 Resolution, pause and abandon
 
@@ -270,7 +272,7 @@ through: **recompute-from-tally is what keeps that test honest, and that is why 
 
 #### 1.5.5 `readExpeditions` — the object literal must carry the new fields
 
-`readExpeditions` (`:220-235`) builds a **fresh object literal** `{ run, first, best, last, completions }` and
+`readExpeditions` (`:224-235`) builds a **fresh object literal** `{ run, first, best, last, completions }` and
 never spreads `record`. Any field not listed there is silently dropped on every load. Revision 1 added
 `record.folded` without adding it to this literal, which would have broken the `folded` flag *and* the
 identity contract asserted at `tests/expeditions.test.mjs:133`, `tests/progression.test.mjs:547`,
@@ -290,7 +292,7 @@ result[route.key] = {
 };
 ```
 
-Also extend the completed-run consistency check from `['score','correct','bold']` to compare
+Also extend the completed-run consistency check at `:211-219` from `['score','correct','bold']` to compare
 `last.stakes` against `runTally(run)` when `last.stakes` is present. Absent `stakes` on a legacy record
 is not a mismatch.
 
@@ -308,7 +310,7 @@ record.foldedDay: string | null    // NEW, YYYY-MM-DD of the last fold on this r
    explicitly**: `{ ...record, folded: false, run: {...} }`. Relying on the spread carries `folded: true`
    into the fresh run, which makes every run after the first fold unresumable and silently destructible.
    `foldedDay` is *not* reset — it is the per-day cap and must survive.
-3. **`journey-next` completion branch** (`:283-292`) — also a fresh literal that does not spread
+3. **`journey-next` completion branch** (`:289-297`) — also a fresh literal that does not spread
    `record`. It must carry `folded: false, foldedDay: record.foldedDay`.
 4. **New action `{ type: 'journey-fold', routeId, runId, at }`** — identity unless
    `run && run.id === action.runId && run.cursor < 6 && run.answers.length >= 1 && date(action.at)`
@@ -341,7 +343,7 @@ const better = (a, b) => !b || a.correct > b.correct || (a.correct === b.correct
 ```
 
 - `reduceExpeditions` completion branch: `best: better(result, record.best) ? result : record.best`.
-- `readExpeditions`: `const baseline = first && better(last, first) ? last : first;` and
+- `readExpeditions` (`:210-212`): `const baseline = first && better(last, first) ? last : first;` and
   `const best = first && validResult(record.best) && !better(baseline, record.best) ? record.best : baseline;`
 
 This also removes the cross-table comparison problem: a pre-update best of 18 was scored on a two-tier
@@ -350,7 +352,7 @@ table, and correctness-first comparison is meaningful across both tables while r
 **Verified against the two tests that touch `best`:**
 `tests/expeditions.test.mjs:217-219` corrupts `best.correct = 0` on a 6/6 record; the corrupted result
 now fails `validResult` outright (tally recompute) and falls back to the baseline with `correct: 6`. ✓
-`tests/expeditions.test.mjs:~140` finishes run-1 all-wrong (0/6, −6) then run-2 all-right (6/6, 18) and
+`tests/expeditions.test.mjs:135-155` (the replay test) finishes run-1 all-wrong (0/6, −6) then run-2 all-right (6/6, 18) and
 asserts `best.score === 18`; correctness-first picks run-2. ✓
 
 ### 1.6 Data model — `lib/progression.mjs`
@@ -1086,7 +1088,7 @@ needs no new write path. On every other surface the explanation is only shown *a
 
 **The cost that actually matters is not disk, and revision 1 measured the wrong thing.**
 `lib/profile-store.mjs:65` runs `readProfile(read.result)` inside **every** readwrite transaction, and
-`lib/passport.mjs:51` implements that as `readJournal(JSON.stringify(value.journal))` — a full
+`lib/passport.mjs:52` implements that as `readJournal(JSON.stringify(value.journal))` — a full
 stringify + parse of the entire journal on every single write. `app/use-player.ts:10` sets
 `HEARTBEAT_MS = 15_000`, so that cost lands every 15 seconds while the app is open, including mid-duel
 against the 50 ms timer tick at `app/screens/room/question-stage.tsx:86`, on a timer track that has no
@@ -1112,8 +1114,8 @@ export function readJournal(raw) {
 }
 ```
 
-`lib/passport.mjs:51` then calls `readJournalValue(value.journal)` directly, and the `issues` check at
-`:47` calls `readJournalValue({ version: 1, rounds: [i.fact] })`. `readJournalValue` wraps its own body
+`lib/passport.mjs:52` then calls `readJournalValue(value.journal)` directly; the `issues` check at `:49`
+and the `applyPractice` self-check at `:319` become `readJournalValue({ version: 1, rounds: [...] })`. `readJournalValue` wraps its own body
 in `try/catch` so a structured-clone value with a cycle or an exotic type degrades to the empty journal
 exactly as the string path does; every field is already type-checked (`typeof === 'string'`,
 `Number.isFinite`, `Array.isArray`), so a `Date` or a `Map` arriving from IndexedDB fails the same checks
@@ -1559,3 +1561,937 @@ Zero new npm dependencies. No network assets. No `BufferGeometryUtils` import.
 **Offscreen pausing unchanged:** `frameloop='never'` when out of view or the tab is hidden (`scene-frame.tsx:162-163`). Gate the geometry build on `useSceneState().inView` if you want it airtight.
 
 **The real hot spot is not the brain.** `Particles` (`hero-orb.tsx:375-386`) rewrites up to 260 Y-coordinates and sets `needsUpdate = true` every frame — a full `bufferSubData` of 3,120 B per frame — and the five orbit rings are `TorusGeometry(r, 0.016, 8, 128)` = **2,048 triangles each, 10,240 total**. If frame time on a mid phone is ever a problem, drop `tubularSegments` 128 → 64 **before** touching the brain.
+
+---
+
+## 5. Sound
+
+### 5.1 The chosen path, and why
+
+**Keep procedural synthesis. Rebuild the three interaction cues. Ship zero audio files.**
+
+Sampled files would buy a better onset transient and cost: a Safari format twin (Opus is *partial* on Safari desktop 11–26.6 and full on iOS Safari only from 18.4+, so a phone-first game needs an AAC/`.m4a` sibling plus format negotiation), a new `__STATIC_BASE__`-aware runtime URL path in `vite.config.static.ts:26-56, 94` that does not exist today, first-gesture fetch+decode latency where `sound.unlock()` (`sound.ts:579-583`) is currently instantaneous, and a licence/provenance surface in `public/licenses/`. **And they would not fix the actual complaint** — a sampled click played bit-identically 200 times per session has exactly the identical-repetition signature that makes the current cues read as fake. Round-robin variation is the fix; it is free in synthesis and N× in bytes with samples.
+
+This also keeps `README.md:141` and `design-bible.md:122` true: **there are no audio files anywhere.** The base64-embedded-transient hybrid is explicitly **out of scope for this release**.
+
+### 5.2 Priority 0 — the wiring bug, which is what the owner is actually hearing
+
+**There is no scroll sound in this product.** Call-site audit:
+
+| Cue | Real call sites (excluding `sound.ts`) |
+|---|---|
+| `tap` | 9 helpers → **100 `onPointerDown` bindings across 36 files** |
+| `select` | 5 |
+| `tick` | 1 |
+| `hover` | **0** — defined at `sound.ts:251-253`, trimmed at `:444`, never played |
+| `whoosh` | **0** |
+
+What the owner hears while scrolling is `tap`, because all six press helpers fire it unconditionally on `pointerdown`, and on a touch screen the `pointerdown` that *begins a scroll fling* lands on whatever card is under the finger. **Every scroll gesture clicks at you.** No resynthesis fixes that; it is a gating problem.
+
+Fix the six helpers, not the 100 call sites:
+
+- `app/screens/home/press.ts:10-16`
+- `app/screens/vault/press.ts:12-18`
+- `app/screens/play/press.tsx:19-25`
+- `app/screens/events/press.ts:17-24`
+- `app/screens/room/room-bits.tsx:26-32`
+- `app/screens/expeditions/parts.tsx:17-22` (`useTap`)
+
+```
+pointerdown:   record { pointerId, x, y, t }; if pointerType === 'mouse' → play now
+               (a mouse-down is never a scroll)
+pointermove:   travel > 10 px → cancel
+pointerup:     not cancelled && elapsed < 600 ms → play tap + haptic
+pointercancel: cancel
+```
+
+Cost: 40–90 ms of *cue* latency on touch. The comments at `home/press.ts:4` and `room/room-bits.tsx:23-24` justify `pointerdown` as "never delays the click" — the **click** still fires from React's `onClick` and is not delayed; only the sound moves.
+
+**This does not touch the live-duel timing contract.** `app/screens/room/question-stage.tsx` plays `correct`/`wrong` at `:125-128` *after* the reveal and contains no `tap` call at all.
+
+Also drop `tap` from `info` toasts (`components/fx/toast-stack.tsx:38, 78`) — a toast the player did not trigger should not click at them.
+
+### 5.3 Why the three cues sound synthetic — the DSP diagnosis
+
+A transient audit of every builder:
+
+```
+tap         tone=1 noise=0   <-- NO transient layer
+hover       tone=1 noise=0   <-- NO transient layer
+select      tone=2 noise=0   <-- NO transient layer
+correct     tone=1 noise=1
+combo       tone=3 noise=1
+win         tone=5 noise=1
+levelUp     tone=4 noise=1
+stamp       tone=2 noise=1
+```
+
+**The three cues the owner dislikes are exactly the three interaction cues with no noise layer.**
+
+1. **No onset transient.** `sound.ts:248-257` calls `v.tone()` only. A real contact sound has a broadband onset spanning 2–3 octaves in the first 5 ms; an oscillator has none.
+2. **Single-oscillator purity.** `tap` and `hover` are one `sine` each — a single spectral line, zero bandwidth. `select` is two sines.
+3. **A pitch sweep at onset.** `tap` (`sound.ts:249`) is `freq: 1300, to: 720, glide: 0.03` — `1200·log₂(1300/720) = 1023 cents`, **a 10.2-semitone downward chirp in 30 ms**, begun by `exponentialRampToValueAtTime` (`:162`) *during* the 2 ms attack. Physical objects fix their pitch at onset and damp in *amplitude*.
+4. **Bit-identical repetition.** `Voice.tone()` (`:148-192`) computes `f0` deterministically and `detune` is a constant — **no per-trigger randomisation anywhere in the tone path.** `Voice.noise()` *does* randomise its buffer offset (`:223-225`), which is exactly why the noise-bearing cues sound better. This is the dominant defect.
+5. **No body, no space.** No cue has a resonant tail; there is no `ConvolverNode`, no delay, nothing.
+6. **The limiter is a compressor and every tap rides its knee.** `buildChain()` sets `threshold −14, knee 12, ratio 4, attack 3 ms` (`:510-514`). `tap` peaks at `0.5 × TRIM 1.15 × volume 0.35 = 0.201` ≈ **−13.9 dBFS — exactly on the threshold, inside a 12 dB knee.**
+7. **`select` is heard as two beeps, not one timbre.** Its two sines are 60 ms apart (`at: 0.06`), above the ~30 ms auditory fusion threshold.
+
+### 5.4 Engine changes
+
+**`sound.ts:130-229` (`Voice`)** — add `jit?: { cents?: number; ms?: number; vel?: number }` to `ToneParams`, applied at the `f0` computation (`:158`), the start time (`:150`) and `peak` (`:155`). Add `transient(p)`, a thin wrapper over `noise()` permitting sub-millisecond attacks. Add `send?: number` on both, routing a parallel tap to the space bus.
+
+**`sound.ts:507-519` (`buildChain`)** — two changes:
+- Add the space bus: `spaceSend: GainNode → ConvolverNode → spaceLevel: GainNode → master`.
+- Make the compressor a **safety limiter**: `threshold −8, knee 6, ratio 6, attack 0.001, release 0.08`.
+
+**`sound.ts:533`** — cache the IR buffer next to `this.noise`.
+
+**Zero-byte impulse response:**
+
+```
+makeSpace(ac): 0.16 s, 2 channels generated independently (decorrelated → width)
+  t   = i / sampleRate
+  env = (1 - t/dur)^2.4
+  gate = t < 0.025 ? (Math.random() < 0.12 ? 1 : 0) : 1    // sparse early reflections
+  data[i] = (Math.random()*2-1) * env * gate
+  then one-pole lowpass the whole buffer at ~5 kHz so the tail is dark
+```
+
+**Anti-repeat primitives:**
+
+```
+shuffleBag(items) → next(): cycles a shuffled copy, reshuffles on exhaustion, rejecting a
+                    first element equal to the previous cycle's last
+jitterCents(spread, last) → uniform(-spread, spread), redrawn once if
+                            |value - last| < spread * 0.25
+```
+
+Use a **shuffle bag, not modulo** — modulo round-robin produces an audible 4-beat pattern.
+
+**Make `CUE_THROTTLE_MS` per-cue** (`:84`, consumed at `:608`): `tap 45`, `hover/tick 60`, `select 90`, everything else keeps 40.
+
+### 5.5 Per-cue parameters
+
+**TAP** (`sound.ts:248-250`) — target 35–55 ms. A soft dry "tok".
+
+| Layer | Spec |
+|---|---|
+| L1 transient (**new**) | Bandpass white noise, centre **2400–3600 Hz** randomised per trigger, Q 0.8–1.2; attack **0.3–0.8 ms**, hold 1–2 ms, release 6–14 ms; peak 0.10–0.16 |
+| L2 body | **triangle**, not sine. f0 **640–760 Hz** from a 4-entry shuffle bag ±60 cents. **Delete the 1023-cent glide** — either none, or 1.04× down over 12 ms (≈68 cents). Attack 1.5–2.5 ms, decay to 0.35 over 18–26 ms, release 20–30 ms; lowpass 2600–3400 Hz Q 0.5; peak 0.14–0.20 |
+| L3 resonance | Bandpass noise at f0 × **2.02–2.06** (deliberately *not* an exact octave), Q 6–10; attack 1 ms, dur 8 ms, release 40–70 ms; peak 0.03–0.05 |
+| Space send | 0.06–0.10 |
+| Variation | pitch ±50 cents with anti-repeat; velocity × `uniform(0.86, 1.06)`; L2 offset jitter 0–1.2 ms; L3 offset 1–3 ms |
+| Loudness target | **−24 to −26 dBFS RMS** over the active window |
+
+**SCROLL / HOVER TICK** (`sound.ts:251-253`) — **recommendation: ship no continuous scroll sound at all.** `hover` has zero call sites today. If a *detent* tick is wanted:
+
+| Layer | Spec |
+|---|---|
+| Pure transient, **no body layer** | Highpass white noise, corner **4000–5200 Hz** ±8% per trigger, Q 0.7; attack 0.2–0.4 ms, dur 1.5–3 ms, release 8–16 ms; peak 0.035–0.055 → **−34 to −38 dBFS** |
+| Space send | **0** — a tick with reverb sounds like a drip |
+| Throttle | **55–70 ms** |
+| Trigger | Discrete snap events only, never per scroll frame |
+
+**SELECT** (`sound.ts:254-257`) — target 120–180 ms, reading as a mechanism engaging.
+
+| Layer | Spec |
+|---|---|
+| L1 detent | Bandpass noise, centre 1800–2600 Hz, Q 1.0–1.4; attack 0.4 ms, dur 2–3 ms, release 12–20 ms; peak 0.12–0.18 |
+| L2 note | **Two detuned partials** — triangle at f0 (peak 0.11) plus a second triangle at **+7 to +13 cents** (peak 0.08). f0 from a bag of {587.3, 622.3, 659.3} ±25 cents. Attack 2–3 ms, decay to 0.4 over 40–60 ms, release 90–130 ms. **Lowpass sweeping 3000 → 1800 Hz over 120 ms, Q 0.6** |
+| L3 confirming partial | Sine at f0 × **2.98–3.02**; onset at **+18 to +26 ms** — inside the fusion threshold, which converts "two beeps" into "one timbre". Attack 1.5 ms, dur 20 ms, release 60–90 ms; peak 0.045–0.065 |
+| Space send | 0.14–0.20. Throttle 90 ms |
+
+**The conviction switch must not use `select`.** The Steady / Bold / Called buttons take a **neutral detent at identical pitch, identical gain and identical timbre for all three tiers**. If tapping Called sounds like a small win, the app is paying you to bet. Ship a dedicated `detent` cue with the tick parameters above and no per-tier variation of any kind.
+
+**Retune `TRIM`** (`sound.ts:442-465`) for the new peaks — start at `tap 0.55`, `hover 0.35`, `select 0.70`, then re-measure with `sound.render()` (`:634-648`) driven from `/fx-lab` (`app/fx-lab/page.tsx:196-220`). **Default master volume stays `0.35`** (`lib/fx/prefs.ts:44`). Nothing gets louder.
+
+### 5.6 New cue: `kept`
+
+The loss celebration needs a cue that is neither `win` nor `loss`. Add to the `Cue` type (`:26-48`), `CUES` (`:54-79`), `BUILDERS` (`:247`) and `TRIM` (`:442`) at **`kept: 0.78`** — below `TRIM.win` (0.88), in the code block itself.
+
+Revision 1 wrote `kept: 0.9`, which is **greater** than `TRIM.win = 0.88` and therefore violated its own §6.2 ceiling 3, then filed the correction as a TODO ("must be retuned below `win` before ship") inside a document whose §8 preamble says a build that violates any acceptance criterion does not ship. A ship-blocking TODO in a spec is a defect in the spec.
+
+```ts
+kept: (v) => {
+  v.tone({ type: 'triangle', freq: A4,  a: 0.010, dur: 0.09, r: 0.13, peak: 0.26, lp: 1100 });
+  v.tone({ type: 'triangle', freq: D5, at: 0.13, a: 0.010, dur: 0.12, r: 0.20, peak: 0.24, lp: 1100 });
+  v.noise({ at: 0.13, a: 0.002, dur: 0.018, r: 0.05, peak: 0.10,
+            filter: { type: 'bandpass', from: 2200, q: 1.4 } });
+},
+```
+
+Two soft triangle taps a rising fourth apart, low-passed, with a paper tick — ascending but quiet, reading as *"noted"*, not *"won"*, not *"lost"*. **~0.33 s, deliberately less than half the `win` cue's 0.77 s.**
+
+### 5.7 TRIM is not a loudness measurement, and the ceiling test must stop pretending it is
+
+`sound.ts:245` says it plainly: *"Peaks are 'as composed'; the TRIM table below normalises loudness."*
+`TRIM[cue]` multiplies gain at `:619`, so it is **inversely** related to the composed peak —
+`hover: 1.6 // designed very soft (≈ -24 dB)` and `tick: 1.5 // designed subtle` are the loudest entries
+in the table and two of the quietest cues in the app. An assertion that `TRIM.loss < TRIM.win` proves
+nothing about output level: two cues at TRIM 0.7 and 0.88 can come out in either order depending on what
+they were composed at. Today it happens to hold because `loss` peaks ≈0.30 and `win` ≈0.48 at the C6
+chord — by luck, not by the test.
+
+**The ceiling is measured on the output, once, and frozen.** `sound.render(cue)` already renders into an
+`OfflineAudioContext`. Add `lib/fx/sound-levels.ts`:
+
+```ts
+/** True-peak and RMS of each cue as rendered at master gain 1, measured offline and frozen.
+ *  Regenerate with `pnpm fx:levels` (scripts/measure-cues.mjs) whenever a builder changes. */
+export const CUE_LEVEL = Object.freeze({ /* cue: { peak, rms } */ });
+export const outputLevel = (cue: Cue) => CUE_LEVEL[cue].rms * TRIM[cue];
+```
+
+and assert `outputLevel('loss') < outputLevel('win')` and `outputLevel('kept') < outputLevel('win')` in
+`tests/honesty.test.mjs` by parsing both frozen tables. That is a test of the thing the rule is about.
+
+### 5.8 Constraint check
+
+No test touches `lib/fx/sound.ts` today — `grep -rln "sound" tests/` returns nothing; §5.7 adds the first one, and it reads two frozen tables rather than running audio. Zero audio files added, so `vite.config.static.ts` and the offline build are untouched. Profile version 2 untouched. The live-duel timing contract is untouched. Reduced motion is unaffected; prefs gating at `sound.ts:600-609` still applies.
+
+---
+
+## 6. Win and loss celebrations
+
+**The asymmetry is the message: a win interrupts you; a loss hands you something and gets out of the way.** The loss moment is never a modal — a full-screen overlay after a loss is the shape of a consolation prize, and consolation prizes patronise.
+
+This is also the highest-risk request in the list, because "celebrate a loss" is the literal definition of a **loss disguised as a win**. Dixon et al. (2013) found celebratory sound on losses-disguised-as-wins drove win *overestimation* from 15% to 24%. The product currently does the right thing: `app/rivalry-widgets.tsx:160-164` fires confetti only on `v.key === 'win'`, and `lib/fx/sound.ts:453` trims `loss: 0.7` with the comment *"deliberately gentle"*.
+
+**The line: encouragement names what actually happened and offers what was actually earned. Manipulation makes the loss feel like a win.**
+
+### 6.1 Side by side
+
+| | **WIN** | **LOSS** |
+|---|---|---|
+| **Tone** | Arrival. Bright, upward, short, loud. | Settling. A card placed on a table. Warm, quiet, unhurried. The vocabulary of *collecting*, not of comforting. |
+| **Surface** | Medallion + confetti; at ceremonial tier, the existing `<Ceremony>` overlay. | **Inline block below the verdict.** Non-blocking, scrolled into view. No dialog, no `aria-modal`, no forced dismissal. |
+| **Palette** | Gold / volt. | **Cyan — the learning temperature (design-bible §5). Never gold, never a medal.** |
+| **Motion** | Confetti `from:'top'`, count 160 (`use-juice.ts:191-193`); medallion 0.8 → 1.06 → 1; 80 ms hit-stop; scoreline counts up. | **No confetti, no shake, no downward motion.** 2–4 fact chips slide **up** and stack into a card (`translateY(16px) → 0`, stagger 90 ms). One cyan ring pulse r = 70. Second beat at +400 ms. |
+| **Sound** | `win` (0.77 s). | `loss`, then `kept` (0.33 s) on the second beat. |
+
+### 6.2 Three ceilings, enforced by test
+
+If any of these inverts, it is a loss disguised as a win:
+
+1. `lossCeremonyMs <= winCeremonyMs`
+2. `lossPeakParticles <= 0.25 * winPeakParticles`
+3. **`outputLevel('loss') < outputLevel('win')` and `outputLevel('kept') < outputLevel('win')`**, measured
+   on the rendered output per §5.7 — not on `TRIM` alone, which is an inverse gain and measures nothing.
+
+All three hold with the values shipped in this spec; none is a TODO.
+
+### 6.3 The verdict always lands first
+
+`lib/duel-presentation.mjs:64-66` already produces `RIVAL WINS` plus the true score. **Nothing may render above it and no animation may begin before it is on screen and in the `aria-live` region.** The verdict title and subtitle are not softened. You do not soften the verdict; you give it a second beat that becomes the last word.
+
+The margin stays true. `marginLine` (`app/screens/room/room-math.ts:126-161`) already reports the real per-round time gap and returns the plain line when there is none. **Never** "so close" on a 5–0.
+
+### 6.4 Exact loss copy — duel, with every number templated
+
+A new block below `marginLine` in `MatchFinish` (`app/rivalry-widgets.tsx:198`). `n = orderedRounds.length`, `k` = of those, how many facts were new to `passport.facts` before this match.
+
+```
+WHAT YOU KEEP
+
+<title line — first TRUE case wins:>
+1. all answers correct, lost on speed → "You were right every time. They were faster."
+2. a topic accounts for the losses    → "Physics is where this went. 2 of 3 Physics rounds got away."
+3. no correct answers                 → "{n} facts, then. That is the trade."
+4. default                            → "{n} facts you have now answered at least once."
+
+· {n} facts in your Vault{, k of them new}         <- the ", k of them new" clause is dropped when k === 0
+· Fastest correct answer: {t} s, round {i}
+· Day {d} streak held                              <- only when THIS match credited the streak
+· +{xp} XP
+· -10 rank points · still {tier}                   <- the true delta
+· Arena Rank protected at the {tier} floor         <- ONLY when demotion protection actually fired
+
+[ Open the {n} facts ]        [ Rematch ]
+```
+
+**Revision 1 hardcoded three of these and two were false in most modes.**
+`lib/server/room-engine.mjs:1` is `MODE_ROUNDS = { quick: 1, trilogy: 3, gauntlet: 5 }`, and trilogy ends
+early at 2–0 (`:320-321`). "Three new facts, then" is wrong after a Quick Draw (one round), wrong after a
+Gauntlet (five), and wrong after a 0–2 trilogy (two). "Ten minutes ago" is invented — a Quick Draw duel is
+one question, so the phrase is **deleted**. And "facts you did not have" is false on any repeat: the bank
+is 54 questions and `lib/journal.mjs:75` journals a round whether or not the fact is already in the Vault,
+which is why novelty is split into the `k` clause and dropped when `k === 0`.
+
+**The two bullets that claimed a hold where a real loss occurred are gated on the hold actually happening.**
+
+- *Rank.* `lib/progression.mjs:1032-1033` is `points = Math.max(rank.floor, rank.points + delta)` with
+  `XP.rankLoss = -10`, and `floor` is the min of the **best** tier reached (0/100/250/500/900). A Gold
+  player at 300 who loses goes to **290**: demotion protection never engaged, ten real points were lost,
+  and the tier did not move — so revision 1's "Arena Rank held at the Gold floor" was false twice. The
+  protection line now renders **only when `rank.points + delta < rank.floor`**; otherwise the screen
+  prints the true delta.
+- *Streak.* Credit is once per day on any activity (`:1105-1122`, gated on `streak.lastDay !== today`). On
+  the second and every later match of a day the loss held nothing — it was secured hours earlier. The
+  bullet renders **only when `before.streak.lastDay !== dayKey(at)`**.
+
+**Every bullet and every title line renders only when true.** That rule now applies to the title lines,
+which is where revision 1's false numbers lived.
+
+### 6.5 Exact loss copy — expedition, and the ceremony that must not fire
+
+A new block in `finish.tsx` above the recap (line 187), built from `runTally(run)`:
+
+```
+YOUR CALL vs THE CARDS
+
+Steady   3 of 3 right      calibrated
+Bold     1 of 1 right      +3
+Called   0 of 2 right      -6
+
+<if the lower tiers were right:>
+"You were right about what you knew — and right about what you did not.
+ The two Called cards are the two facts worth re-reading."
+<else:>
+"Your calls ran ahead of your knowledge this time.
+ Four of the six are worth a second look."
+
+[ Re-read those two ]        [ Back to expeditions ]
+```
+
+And at a negative run score, the §2.5 line:
+`{score} points. Every one of these six is in your Vault, untimed, whenever you want it.`
+
+**The stamp ceremony is gated on a non-negative score.** `finish.tsx:63-94` currently opens the
+full-screen `<Ceremony>` unconditionally on the first completion of a route, with
+`kicker: 'STAMP COLLECTED'` and `rewards: [{ label: 'Run score', value: signed(result.score) }, …]`. With
+a −18 floor, a new player who calls Called on all six and misses all six would get a gold-family
+`aria-modal` dialog announcing **"STAMP COLLECTED / Run score −18 / Completion XP +100"** — a win-shaped
+ceremony minted by losing, inverting §6.2 ceilings 1 and 2 and landing squarely on C7 and C8.
+
+- `result.score < 0`: **no `juice.ceremony` call at all.** The stamp renders inline in the cyan/learning
+  family with the `kept` cue, and the calibration block above is the first beat.
+- `result.score >= 0`: the ceremony fires as today, and the `Run score` reward chip is present.
+- **The stamp itself is still unconditional** (§1.4). What is conditional is the celebration around it.
+
+**Cooling after a bad run.** If a run finishes below zero, the primary button on `finish.tsx:166-185` becomes **"Re-read the cards you called wrong"**; `Replay for practice` stays, demoted to ghost. This is not paternalism: loss-chasing is re-entering *immediately after* a loss, and this replaces it with re-entering *after* the thing that actually makes the next run better.
+
+### 6.6 Why this shape and not a consolation
+
+Breines & Chen (2012, *PSPB*) ran four experiments: a self-compassion condition beat a **self-esteem** condition on incremental beliefs about a weakness, on motivation to make amends, and — Experiment 3 — participants **spent more time studying for a difficult test after an initial failure**. The condition that propped up esteem ("you're still great!") did *worse*. The attribution literature descending from Weiner is consistent that failure feedback pointing at **controllable and temporally unstable** causes sustains persistence, while feedback pointing at ability or luck does not.
+
+Hence: **name one controllable thing, hand over one thing gained, never rate the person.**
+
+**Banned from the loss moment:** "So close!", "Everyone has an off day", "Don't give up", "You'll get it next time", "unlucky", "the bot got lucky", "you're due", any mascot pity face, any downward animation, any red X placed on the player rather than on an answer, any countdown, any streak or shield urgency, any auto-rematch or auto-advance, and any Rematch button larger than the exit.
+
+### 6.7 Keeping the win from becoming noise
+
+`rivalry-widgets.tsx:160-164` fires `juice.confetti('win')` on **every** win, guarded only by room id. Ten matches a session is ten confetti storms → habituation → sound off. Four rules:
+
+1. **Tier the win by what was at stake.** Add `winTier(room, player)` to `room-math.ts`:
+   - *Routine* — bot, Quick Draw, no rank tier change, no combo ≥ 3: **no confetti.** Medallion pop + `win` cue at `gain: 0.7` + counter. ~700 ms.
+   - *Notable* — human opponent, or Triple Threat / Gauntlet, or combo ≥ 3, or a personal best: current confetti + full `win` cue.
+   - *Ceremonial* — rank promotion, level-up, achievement, first human win: the `<Ceremony>` overlay **only**. Never stack a ceremony on confetti. **A conviction promotion is not on this list** — see §6.8.
+2. **Decay within a session.** Nth consecutive routine bot win: `gain = max(0.55, 1 − 0.12·(n−1))`, and after 3 identical celebrations the 4th is medallion + counter only.
+3. **Never celebrate the same thing twice.** `finish.tsx:55-94` already implements the "wait for a free overlay, re-arm if replaced" pattern — reuse it verbatim.
+4. **Vary the content, never the volume.** Unpredictability is served by *which true fact* the win screen surfaces, not by randomising intensity. Randomised intensity is a reinforcement schedule; randomised true content is a reason to read the screen.
+
+### 6.8 The conviction badge promotion — inline, never a ceremony
+
+A conviction promotion can only happen on an expedition card (R1 makes it impossible anywhere else), i.e. **mid-run**. A full-screen gold-family `<Ceremony>` opening on top of the run would steal focus from the heading `run.tsx:135-141` just focused, collide with the `scrollIntoView` fired 280 ms after an answer (`run.tsx:113-120`), and land a celebration immediately after a successful high-risk call, adjacent to the next stake choice. `arena.tsx:897` (`ceremonies: !!room || tab === 'journeys'`) already prevents the overlay from opening during the run — but it queues it, and it would then ambush the player on the next screen.
+
+**So there is no conviction ceremony.** The reducer pays the gems (exactly-once is correct there); the presentation is:
+
+- **On the finish scorecard**, inline, below the calibration block, in the cyan family, cue `unlock` at `gain: 0.8`:
+
+```
+CONVICTION · {tier label}
+Calls above Steady: {landed} of {riskCalls} right, over {calls} distinct facts.
+Earned at {bestAt} of 2000, on this device.
++{gems} gems
+```
+
+- **If the player never reaches a finish screen** (they paused after the promoting card), a single toast when `quiet.ceremonies` opens: `Conviction: {tier label}` / `{landed} of {riskCalls} calls above Steady`.
+- **Never** with `0 of 0`: `CONVICTION_MIN_CALLS` makes that state unreachable, and the renderer still guards the zero denominator.
+
+**Exit is always as prominent as replay.** On both win and loss, the primary-weight action set must include at least one action that leaves the loop (Done / Vault), matching the pattern already at `finish.tsx:167-186`.
+
+---
+
+## 7. Copy changes
+
+### 7.1 "Play Lucky Guess" → the mode, not the bot
+
+`MODE_NAMES.quick` is **already** `'Quick Draw'` (`lib/progression.mjs:11-15`). `Lucky Guess` is the bot's name. The defect is that the primary CTA labels itself with the opponent instead of the mode — and it does so even when the selected mode is Triple Threat or The Gauntlet.
+
+**`app/screens/play/launch-panel.tsx:47`**
+
+```diff
+-          ? 'Play Lucky Guess'
++          ? `Play ${mode.name}`
+```
+
+So the button reads **Play Quick Draw** / **Play Triple Threat** / **Play The Gauntlet**, matching the mode actually selected. `mode.name` is already in scope (it is used at `:54`).
+
+**`lib/duel-client-static.ts:58`**
+
+```diff
+-'Friend duels need a server to pass the room between two devices, so they are off in this offline
+- demo build. Play Lucky Guess (bot), an expedition or an event instead.'
++'Friend duels need a server to pass the room between two devices, so they are off in this offline
++ demo build. Play Quick Draw against Lucky Guess (BOT), an expedition or an event instead.'
+```
+
+**Leave every other occurrence alone — they are all correct.** In each of these the bot name is doing the bot's job (naming the opponent), which is required by the honesty posture:
+
+| File | Line | Text | Verdict |
+|---|---|---|---|
+| `app/screens/play/launch-panel.tsx` | 56 | `vs Lucky Guess (BOT)` | correct — opponent |
+| `app/screens/home-screen.tsx` | 99 | `Quick Draw · one question vs Lucky Guess BOT` | correct — mode **and** opponent |
+| `app/screens/events/event-card.tsx` | 114 | `Quick Draw · {topic} · vs Lucky Guess (BOT)` | correct |
+| `app/screens/play/opponent-picker.tsx` | 74 | `Lucky Guess` | correct — it is the opponent picker |
+| `app/screens/room-screen.tsx` | 102 | `Lucky Guess is ready. Its choices and response times are random.` | correct |
+| `app/rivalry-widgets.tsx` | 345 | `Lucky Guess · BOT` | correct |
+| `lib/server/room-engine.mjs` | 101 | `name: 'Lucky Guess · BOT'` | correct — the seat's name |
+
+**Rule to carry forward:** a mode name names the format; the bot name names the seat. Never substitute one for the other. Wherever both are relevant, print both, with `BOT` attached to the bot.
+
+### 7.2 Every other string that changes
+
+| Site | From | To |
+|---|---|---|
+| `player-screen.tsx:71` | `Mastery` | **`Topic record`** |
+| `player-screen.tsx:70` (eyebrow) | `WHERE YOU ARE STRONG` | **`WHAT YOU HAVE ANSWERED`** |
+| `player-screen.tsx:73` (aside) | `Correct answers ÷ rounds played` | **`Duel rounds only`** |
+| `player/mastery.tsx:50-52` | `…a duel or an expedition in any {domain} topic starts these bars.` | **`Nothing recorded yet — a duel round in any {domain} topic starts these bars. Expedition cards are recorded in your Vault and your Conviction, not here.`** (the current sentence is false; expeditions have never fed `byTopic`) |
+| `expeditions/run.tsx:223` (legend) | `How sure are you?` | **`How well do you know this one?`** |
+| `expeditions/run.tsx:31-34` | 2-entry `STAKE_COPY` | the 3-entry table in §2.5, ASCII minus, with `aria-label` payouts |
+| `expeditions/run.tsx:194-200` | `RUN SCORE {signed(result.score)}` | **`CARDS RIGHT {correct} / {answered}`** plus `CALLS LANDED {landed} / {riskCalls}`; see §7.4 |
+| `expeditions/run.tsx` (new, above the fieldset) | — | `Call it. Steady +2 / 0 · Bold +3 / −1 · Called +4 / −3.` / `Points in this run only. Nothing is spent and nothing can be bought.` |
+| `expeditions/run.tsx:298` (feedback strong) | `That's the one.` / `A fact for the vault.` | per-tier lines, §7.3 |
+| `expeditions/finish.tsx:161-164` | current note | the §2.5 replacement note |
+| `expeditions/finish.tsx:154-176` (compare row) | — | add the §3.5 replay caveat, **and render best as `{correct}/6 · {signed(score)} pts`** so the correctness-first ordering (R3) is legible |
+| `expeditions/finish.tsx:134-142` | `BOLD PICKS n/6` from `result.bold` | **`CALLS ABOVE STEADY n/6`, computed as `runTally(run).bold.n + runTally(run).called.n`** — `result.bold` is the bold-TIER count and would render `0 / 6` for a run of six Called cards (§1.5.3) |
+| `app/journal.tsx` (Vault header) | — | **`Your history, on this device. Every fact you've answered, with your recent attempts on each.`** |
+| `app/journal.tsx` (per fact, when trimmed) | — | **`Showing your last 12 attempts · {seen} total.`** |
+| `app/journal.tsx:225` | `You remembered.` / `One to revisit.` | keep — both are true and neither praises the player |
+| `hero-orb.tsx:456` / `hero-stage.tsx:30` | current orb label | the §4.7 brain label, **state-appropriate under reduced motion** |
+| `hero-stage.tsx` (new visible line) | — | the §4.7 text twin |
+| `README.md:16` | expedition paragraph | append the wallet sentence from §2.5 and the three-tier table |
+| `README.md:133` | `It is not a mastery measure.` | append the Conviction definition and the first-encounter rule |
+| `README.md` Verification | — | **the no-rollback window from §1.6** |
+| `README.md:141` | "no audio files" | unchanged — §5 keeps it true |
+
+### 7.3 Per-tier answer feedback (`run.tsx:298`)
+
+| | Correct | Wrong |
+|---|---|---|
+| **Steady** | `That's the one. +2` | `A fact for the vault. 0 points - you called it Steady.` |
+| **Bold** | `Called it. +3` | `Bold, and wrong. -1. The fact is yours now.` |
+| **Called** | `You knew it. +4` | `Called, and wrong. -3. That is the price of the call - and this is the card most worth re-reading.` |
+
+ASCII hyphen-minus throughout, because these strings land in a `role="status"` region and are read aloud.
+
+The Called-and-wrong line is the most important string in the betting product: it prices the loss truthfully **and** points at the highest-value thing that just happened.
+
+### 7.4 Pacing and default rules that are copy-adjacent
+
+- **The conviction control is untimed** and stays changeable until the answer lands. No timer is ever added to that fieldset.
+- **The default resets to `steady` on every card.** `run.tsx:103-107` already does `setConfidence('steady')` on `[index]`; **keep it exactly as it is.** Revision 1 changed it to carry the last tier forward, which is the remembered-stake pattern rule 5 forbids in its own words ("never remember 'your usual'") and C2 calls the single most harmful pattern on the list — and it was asymmetric, since revision 1 simultaneously forbade auto-de-escalation, so one Called card would have pre-selected the −3 tier as the neutral default on every subsequent card and into the next run, escapable only by a manual tap every card. Rule 5 stands unedited and unadjudicated.
+- **No stake prompt between cards.** The control belongs to the card, not to a transition.
+- **No nudge copy anywhere.** No "you're on a roll", no "go Bold", no suggested tier.
+- **No live signed cumulative run total.** The run header shows `CARDS RIGHT {correct} / {answered}` and `CALLS LANDED {landed} / {riskCalls}`; the per-card feedback shows that card's `+4` / `−3`; the signed run total appears once, on the finish scorecard, where §6.5's calibration block gives it context.
+
+  *Why.* The spec refuses cross-card bankrolls, parlays and "any mechanic where card 6 is worth more because of card 1" — and a live signed total manufactures exactly that pressure without a mechanic. Concretely: three Called cards missed leaves the player staring at `RUN SCORE −9` with three cards left, where all-Steady caps the run at −3 and the only route back to positive is Called on the remaining three. The deeper you are down, the higher the tier you must select to break even. At today's −1 worst case the hole is −3 and this is harmless; at −3 per card it is −15 after five cards and it is chasing, generated by a number the app is holding up in front of you. §7.4's "the default never moves on its own" protects against the app escalating; it does nothing about the player escalating.
+
+---
+
+## 8. Hard rules — acceptance criteria
+
+The honesty reviewer's numbered list, **verbatim**. Every one is an acceptance criterion; a build that violates any of them does not ship. Adjudications where this spec extends a rule are listed separately in §8.6 and never edit the rule itself. **Every rule this spec touches now appears in §8.6 — revision 1 left rules 5, 15 and 36 unadjudicated while violating all three.**
+
+### 8.1 Betting with simulated currency (rules 1–12)
+
+1. **No expedition stake may use coins, gems, or any balance.** The expedition bet is points-at-risk within the run only — the existing `CONFIDENCE` table at `lib/expeditions.mjs:111-112`, possibly renamed and re-skinned. Introducing a persistent expedition wager would require inventing the global wallet the product says it does not have.
+2. **Nothing may ever be spent to obtain, increase, refill or protect a stake.** No IAP, no ad-for-coins, no gems→coins conversion, no rewarded video, no "top up".
+3. **Room stakes stay the fixed ladder `[0, 10, 25, 50, 100]`** (`lib/server/room-engine.mjs:29`). No new tier, no custom amount, no "all in".
+4. **`0` stays the default and stays first.** `app/screens/types.ts:77` and `app/screens/play/match-settings.tsx:10`. The free option must keep the label `Free`.
+5. **The stake selector never changes itself.** Never pre-select a higher stake after a loss, never remember "your usual", never suggest a stake. Default resets to `0` on every new room.
+6. **No randomness may multiply a stake.** Wild Rounds are acceptable because they multiply *XP*, which is not at risk. Variable-ratio reward may **add** to what you earn, never **multiply what you risked**.
+7. **Balance exhaustion must be a dead end, not a hook.** The existing `'Not enough demo coins.'` plus "start a new room". **No refill timer, no countdown, no "free coins in 2:00", no daily coin grant.**
+8. **Losing may not be made cheaper or reversible.** No insurance, no "protect this bet", no undo, no double-or-nothing.
+9. **Bet and reveal are never adjacent to a reward animation.** No renderer, ceremony, particle burst or escalating cue may run between the confidence choice and the answer reveal on the expedition run screen.
+10. **The disclaimer travels with the mechanic.** Every surface where a stake is chosen or settled carries the simulated-money line. Expedition betting adds one more — it is not exempt because the points are not coins.
+11. **Never use casino vocabulary.** Banned anywhere in UI copy, asset names, class names or analytics events: *wager, chips, pot, jackpot, odds, payout, house, spin, cash out, all in, double down, ante, streak bonus multiplier*. Use *call, confidence, at risk, points*.
+12. **Age framing is a decision, not a default.** The store listing must not target a family or child audience, and no ad creative may depict the betting mechanic.
+
+### 8.2 "Knowledge level" (rules 13–18)
+
+13. **Never ship the phrase "Knowledge Level."** Also banned: *Knowledge Score, IQ, Mastery Level, Rating, Percentile, Top N%, Certified, Verified, Proven, Accuracy Rank*, and *Expert/Master* as an earned personal status.
+14. **The honest new measure is calibration, not knowledge.** "How often your Bold calls landed" is a true statement about self-knowledge and claims nothing about what the player knows. Ship it under the name **Conviction**.
+15. **Every numeric claim appears with its denominator and its scope**, in the same visual unit, never in a tooltip. A bare "Conviction 74%" is a false credential; "Bold calls landed: 14 of 19 · on this device" is a fact.
+16. **Below 20 resolved Bold calls, show the raw fraction and no percentage at all.**
+17. **It cannot decay and cannot fall on a schedule.** A number that drains while you are away is a return-pressure device, not a measure.
+18. **Rename the existing "Mastery" section.** Rename to **"Topic record"**.
+
+### 8.3 "Community badge" (rules 19–24)
+
+19. **Truthful today (zero users):** only first-person, device-scoped facts, each carrying *on this device*.
+20. **Truthful once ≥5 opted-in devices exist:** aggregate cohort rates on `/analytics` only, each with `n`, each suppressed below `COHORT.minBucket = 5`. **These never move onto the player profile.**
+21. **Never computable, therefore never shippable:** "You beat X% of players", "Top 10% in Physics", global or weekly leaderboards, ranked ladders, head-to-head standings.
+22. **Fabricated presence is banned outright:** player counts, "N online now", activity feeds, bot-seeded leaderboards, "your friends", invented rivals, "trending" anything.
+23. **A badge name may not imply a peer group it cannot verify.** Refused: *Community Champion, Top Scholar, Elite, #1, Verified Expert, Founding Member*. Permitted: names describing your own act.
+24. **If the owner wants a badge on the profile today, it is a completion badge**, minted by the device from the device's own record. Do not call it a community badge until there is a community.
+
+### 8.4 Celebrating a loss (rules 25–31)
+
+25. **The outcome is stated first, plainly, before any reward renders.**
+26. **The loss ceremony must be a different family, not a dimmer win.** Different palette (cyan/learning, never gold), different particle behaviour, different cue, no confetti, no fanfare, no medal.
+27. **Three measurable ceilings, enforced by test:** loss ceremony duration ≤ win duration; loss peak particle count ≤ 25% of win; loss cue level ≤ win cue level.
+28. **Only genuinely-earned things may appear on a loss screen.** **Nothing may be minted for losing** — no consolation gems, no "participation" badge, no pity XP, no coin rebate.
+29. **The margin stays true.** Never round a margin down to look closer, never say "so close" on a 5–0.
+30. **The loss screen must never:** use "you" in a congratulatory sentence; imply the loss was luck; imply the next attempt is owed; count down; attach urgency to the streak or a shield; auto-rematch or auto-advance; make Rematch the largest or only action; or appear more often than the win screen.
+31. **Exit is always as prominent as replay.**
+
+### 8.5 Accessibility and consent (rules 32–38)
+
+32. **Hard ceiling on the hero pulse: 3 Hz, design ceiling 1.5 Hz.** Any "pulses faster" coupling must be `clamp(rate, 0.27, 1.5)` Hz, with the ±25% emissive amplitude **not** increased alongside it.
+33. **The pulse rate may track an earned state, never a pending stake.** Permitted inputs: player level, lifetime Bold calls landed, Vault size, cumulative run score. **Forbidden input: the stake currently selected, or the stake amount at risk.**
+34. **The reduced-motion static path is not optional for the brain.**
+35. **A brain is a health-adjacent symbol. It may not be used to make a claim.**
+36. **Every visual state has a text twin.** The pulse rate must be readable as text on the same screen.
+37. **"Better sound" must not mean "louder".** Default master volume stays `0.35`. No cue may get louder as a stake rises.
+38. **Sampled audio changes the consent surface.** Keep procedural synthesis; nothing about consent, licensing or the static build changes.
+
+### 8.6 Adjudications — where this spec extends a rule (the rules above are unedited)
+
+| Rule | Extension | Why it is still satisfied |
+|---|---|---|
+| 1 | `CONFIDENCE` gains a third tier, `called: +4 / −3`. | The rule requires "no coins, gems, or any balance", and explicitly allows renaming and re-skinning. The stake is still run points only. |
+| **5** | **None. Revision 1's carry-forward default is withdrawn; `run.tsx:103-107` keeps `setConfidence('steady')` on every card.** | A remembered tier is a remembered stake, which the rule forbids in its own words. Listed here because revision 1 violated it silently (§7.4). |
+| 11 / 3 | Tier names are Steady / Bold / **Called**. | "Call" is on the rule's own permitted list. Room stakes are untouched. |
+| 13 | The number shown is called **Conviction**. | Rule 14 names Conviction explicitly. The word "Rating" never appears in UI copy. |
+| **15** | **The rating is printed only as `Conviction now: {rating} of 2000 — the average points your calls have scored, on this device.`, in the same visual unit as the fractions above it, never as a bare number beside the tier label.** | A bare four-digit number with a 1000 baseline and a six-rung ladder reads as Elo/MMR, which implies a cross-player scale that cannot exist with zero users and a cohort payload carrying no correctness data. Revision 1 printed exactly that and never adjudicated rule 15. |
+| 16 | Percentages are suppressed below 20 resolved calls above Steady; the badge tier is suppressed below 30 distinct called cards **and** below 20 calls above Steady. | Stricter than the rule in both directions. |
+| 17 | The badge label never demotes; the live rating does move down. | The rule forbids decay *on a schedule* — a number that drains while you are away. This one moves only when you place another call, and both the high-water label and the live number are shown together with one line explaining the difference (§2.5). |
+| 24 | A **Conviction badge** ships alongside the existing route stamps. | Minted by the device from the device's own record, labelled "not a comparison against other players". The phrase "community badge" appears nowhere. |
+| 27 | The new `kept` cue is added to the loss moment, and the ceiling is measured on rendered output rather than on `TRIM`. | `outputLevel('kept') < outputLevel('win')` with the frozen level table (§5.7); `kept` is ~0.33 s against `win`'s ~0.77 s; it is neither `win`, `levelUp` nor `unlock`. |
+| 28 | Conviction badge tiers pay cumulative one-off gems. | Paid for crossing a threshold in your own call record, exactly like an achievement — never for losing, never on a loss screen, never inside a run's settlement. And §6.5 removes the one place revision 1 *did* mint a win-shaped celebration from a loss. |
+| 32 / 33 | Heat drives rate 0.27 → 1.50 Hz. | Amplitude is held constant at ±25%. Heat reads only calls that **landed**; a missed call can never raise it, and `<BrainCore>` receives a pre-computed number, so the selected tier and every room stake are structurally unavailable to the component. |
+| **36** | **The text twin is a visible line under the hero badge: `BRAIN AWAKE · 12 of your last 20 expedition calls landed above Steady`, plus a state-appropriate `aria-label`.** | Revision 1 supplied only an `aria-label` that named no number and described motion to users for whom §4.6 makes the scene static. Listed here because the rule was quoted as an unedited criterion and not met. |
+
+### 8.7 Mechanics refused outright
+
+| # | Mechanic | Why |
+|---|---|---|
+| C1 | "Win it back" / double-or-nothing after a loss | Textbook loss-chasing prompt. |
+| C2 | Stake selector auto-raising, remembering or recommending a higher stake after a loss | The single most harmful pattern on the list. |
+| C3 | Random multiplier on the stake | Variable-ratio reinforcement applied to the amount at risk. |
+| C4 | Coin purchase, gem→coin conversion, rewarded ads, any IAP touching a stake | Puts expenditure into a betting loop. |
+| C5 | Coin refill timer or daily coin grant on a zero balance | The core social-casino retention hook. |
+| C6 | Expedition "bet" drawing on gems or any persistent balance | Requires inventing the global wallet the product says does not exist. |
+| C7 | Confetti, fanfare, gold or a medal on a loss screen | Loss disguised as a win. **Includes the first-completion stamp ceremony at a negative run score (§6.5).** |
+| C8 | Any reward minted *because* the player lost | Teaches that losing pays. |
+| C9 | "You were so close" on a result that was not close; fabricated near-misses | Clark et al. (2009): near-misses were rated *less pleasant yet increased desire to play*, and the effect held **only when the player had chosen their own icon** — player agency is exactly what our bet supplies. |
+| C10 | Hero pulse rate driven by the selected tier or any stake | Stake-conditioned arousal escalation dressed as a brain. |
+| **C10b** | **Hero pulse rate driven by calls *placed* rather than calls *landed*** | A one-card-delayed proxy for stake size: it makes the brain run hotter for a player losing repeatedly at the top tier, which is C10 with a delay. |
+| C11 | Pulse above 1.5 Hz, or amplitude raised alongside rate | WCAG 2.3.1 risk. |
+| C12 | Any cue that gets louder or higher-pitched as the tier rises | Same conditioning mechanism in the audio channel. |
+| C13 | "Knowledge Level", a percentile, or any accuracy figure without its denominator | False credential from a 54-item bank. |
+| C14 | A level, rating or badge that decays or demotes on a schedule | Return-pressure device. |
+| C15 | Leaderboards, ranks, percentiles, "you beat X%", any player comparison | Zero users; the cohort payload carries no correctness data. |
+| C16 | Player counts, "N online", activity feeds, seeded rivals, "trending route" | Fabricated presence. |
+| C17 | A badge named for a peer group | Claims a verified population that does not exist. |
+| C18 | Any cohort figure shown on the profile as a personal badge | An aggregate about opt-in devices is not a statement about the viewer. |
+| C19 | Auto-rematch, auto-advance, or a rematch button larger than the exit | Session-extension dark pattern. |
+| C20 | Streak-loss or shield urgency attached to a loss result | Punishment framing at the worst moment. |
+| C21 | Removing or de-emphasising the `Free` (0) stake | The zero-stake path stays the default. |
+| C22 | Casino vocabulary in copy, asset names, CSS classes or analytics event names | Names migrate into store listings and decks. |
+| C23 | Marketing or store creative depicting the betting mechanic | Google Play Families Policy. |
+| C24 | A cross-card bankroll, parlay, streak multiplier or whole-route escrow | Couples card 6 to card 1 and destroys the proper-scoring-rule property the badge depends on. |
+| C25 | A losing streak that locks the player out of calling | The death spiral. |
+| C26 | Sunk-cost framing ("four cards in — don't waste them") | Pausing stays one tap and free. |
+| C27 | A "Pass"/insurance mechanic that withdraws a call after seeing the question | Structurally close to casino insurance. |
+| **C28** | **A live signed cumulative run total on the expedition run screen** | Manufactures the chasing pressure of a bankroll without a bankroll: the further down you are, the higher the tier you need to break even, and the app is holding the number up in front of you (§7.4). |
+| **C29** | **Any quest, achievement or cosmetic that keys on the confidence tier *selected* rather than the outcome** | Pays the player to over-call, which is precisely the miscalibration the Conviction rating exists to detect — the quest system would corrupt the badge beside it, on a daily deadline (§1.7). |
+| **C30** | **Any per-card reward that pays more for one tier than another** | The XP channel silently re-prices the bet and moves the crossovers the stake table advertises (§1.6.4, R2). |
+
+---
+
+## 9. File-by-file work plan
+
+Six work streams. **Streams A–F touch disjoint files except where noted**, so they can be built in parallel by different people. The only cross-stream dependencies are that **A1 lands before A2**, and that **B depends on A2's selectors existing** (one shared edit to `lib/progression.mjs`).
+
+### Stream A — expedition betting engine (blocks B; nothing else)
+
+| # | File | Change |
+|---|---|---|
+| A0 | `lib/journal.mjs` | **Move `pad`, `DAY_RE`, `dayKey`, `dayDiff` here** from `lib/progression.mjs` (§1.5.6), so `lib/expeditions.mjs` can day-key a fold without an import cycle. `lib/progression.mjs` re-exports both functions verbatim. **Do this first; C1 also edits this file, so A0 and C1 must be sequenced or merged by hand.** |
+| A1 | `lib/expeditions.mjs` | `CONFIDENCE` gains `called`; add `CONFIDENCE_ORDER`; add `runTally()`; rewrite `validResult` with the tally branch + legacy branch; extend the completion cross-check; **add `folded` and `foldedDay` to the `readExpeditions` object literal and to the `journey-next` completion literal**; `journey-start` sets `folded: false` explicitly; new `journey-fold` action with the one-per-route-per-day guard; `expeditionStatus` handles folded; **`best` and the baseline order by correctness first (R3)**. `runResult()`'s return shape is untouched. |
+| A2 | `lib/progression.mjs` | `emptyProgression().conviction` (six counts + `counted` + `recent` + `best` + `bestAt`); the `readProgression` conviction block; `COUNTER_KEYS += 'reviews'` (**no `convictionCards`**); `XP` — delete `expeditionBoldCorrect`, add `expeditionRepeat`, `reviewCorrect`, `review`, and the **total** `convictionTierGems` map; `CONVICTION_TIERS` / `CONVICTION_CODES` / `CONVICTION_WINDOW` / `CONVICTION_MIN_CARDS` / `CONVICTION_MIN_CALLS` / `convictionRating` / `convictionTier` / `convictionIndex` / `convictionPoints` / `convictionCalls` / `convictionRiskCalls` / `convictionRiskLanded`; the reducer's `expedition-answer` branch (first-encounter ledger, `recent` ring, cumulative promotion bonus with `?? 0`) and `expedition-complete` branch (improvement-only replay score-XP); **`conviction` added to the achievement `draft` literal and to the reducer's return literal**; `LOG_KINDS += 'review'` and the `review` branch; `deriveEvents` — `factId` on `expedition-answer`, `stakes` + `previousBest` on `expedition-complete`, the new `review` kind; `progressionDiff` gains `convictionUp`; `bold-master` predicate + description; `bold-4` retargeted to accuracy; new `review-5` quest; `COSMETICS` + `unlockMet()` + `canEquip` + **the `reduceCosmetics` buy gate**. |
+| A3 | `lib/passport.mjs` | `applyPractice` receives and forwards `confidence` and the chosen option text; the `journey-` branch passes `run.answers[index].confidence`; route `journey-fold` through `reduceExpeditions`; the new `review` action; **`readProfile` calls `readJournalValue(value.journal)` instead of `readJournal(JSON.stringify(...))`** (§3.2.6); `open`/`recall`/`save`/`report` fall back to `journal.cards` (§3.3.4). |
+| A4 | `app/use-player.ts` | New `fold(routeId, runId)` and `review(...)` dispatchers beside the existing `journey-` calls. |
+
+### Stream B — betting + conviction UI (depends on A2 only for the selectors)
+
+| # | File | Change |
+|---|---|---|
+| B1 | `app/screens/expeditions/run.tsx` | Three-way `fieldset` with per-tier `aria-label` payouts in words (`:222-245`); `STAKE_COPY` with ASCII minus (`:31-34`); `aria-live="polite"` on the stake line; legend (`:223`); **keep `setConfidence('steady')` at `:103-107`**; per-tier feedback strings (`:298`); **flat per-card XP in the result-juice effect (`:85-101`) — no `XP.expeditionBoldCorrect`**; the §2.5 disclaimer above the control; the feedback line under the switch; **header replaced with `CARDS RIGHT` / `CALLS LANDED` (`:194-200`)**; `Fold this run` beside `Pause expedition` (`:377-393`), shown only from card 2 and only when today's fold is unused. |
+| B2 | `app/screens/expeditions/finish.tsx` | `BOLD PICKS` tile → `CALLS ABOVE STEADY` **from `runTally(run)`**; the `YOUR CALL vs THE CARDS` calibration block; the §2.5 note replacement; the replay caveat and `{correct}/6 · {signed(score)}` on the compare row; `Take your {n} misses to the Vault`; below-zero cooling CTA swap; **the stamp ceremony gated on `result.score >= 0`**; the inline conviction promotion block (§6.8). |
+| B3 | `app/screens/expeditions/parts.tsx` | Third switch state + icon (`Target`) and its styles; `signed()` unchanged (it already emits ASCII). |
+| B4 | `app/screens/player-screen.tsx` | Fourth hero card (Conviction); section rename + eyebrow + aside. |
+| B5 | `app/screens/player/conviction-card.tsx` | **New.** Badge label, `bestAt`, live rating with its scope sentence, raw fractions with zero-denominator guards, provisional state, the replay/first-encounter caveat, the Steady-only line. |
+| B6 | `app/screens/player/mastery.tsx` | Fix the false empty-state sentence at `:50-52`. |
+| B7 | `app/screens/expeditions/expeditions.css` | Three-state switch geometry (the current `[data-on]` thumb is two-position); 44 px targets at 320 px. |
+
+### Stream C — Vault capture and IA (independent of A and B except A0)
+
+| # | File | Change |
+|---|---|---|
+| C1 | `lib/journal.mjs` | `emptyJournal()` factory + frozen `EMPTY_JOURNAL`; `cards` / `facts` / `attempts`; `readJournalValue` split out of `readJournal`; sanitise and cap all three with the prepend ordering rule; `recordRoom` also takes `.choice` and emits a duel attempt; **fix `uniqueFacts` ordering** (`:115-121`). |
+| C2 | `lib/journal-review.mjs` | **New.** The box ladder (1/3/7/16/35), lapse rule, retire rule, `dueToday(journal, at, cap)`, `seedDeck(factIds, at)`, and the shared `trimAttempts(list)` that both the writer and the sanitiser call (R4). Pure, no I/O. |
+| C3 | `lib/passport.mjs` | (shared with A3 — land A3 first or merge by hand) the `review` action, attempt emission for expedition/discovery, `facts` updates including `firstMissAt` / `recoveredAt`. |
+| C4 | `app/journal.tsx` | Recall Lab dispatches `review` instead of the write-nothing `onRecall`, passing session-local `revealed`; sections (Due / Shaky / Everything / Runs & matches); four new filter chips; the Runs timeline replacing `:429-470`; the Vault header copy; the per-fact trim disclosure; the terminal empty state (§3.4). |
+| C5 | `app/screens/vault/fact-card.tsx` | **Card face becomes a prompt, not an answer sheet** — remove the always-visible correct answer at `:53-56`, add the `Choices` prompt, keep a secondary "just show me" that sets `revealed` and never advances a box. **No `opens` counter; the `open` dispatch is byte-identical.** Reward juice moves inside the dispatch promise (§3.3.4). |
+| C6 | `app/use-player.ts` | (shared with A4) `review(...)` dispatcher. |
+
+### Stream D — brain hero (fully independent)
+
+| # | File | Change |
+|---|---|---|
+| D1 | `lib/heat.mjs` | **New, tiny.** `convictionHeat(progression)` and `landedRecent(progression)` — the §4.4 formulas, pure, no three import. Depends on A2 for `conviction.recent`; until A2 lands, `recent` reads as `[]` and heat is 0, so D can be built and tested against a stub. |
+| D2 | `components/three/brain-core.tsx` | **New.** Icosphere subdivider, perlin, brain field, cavity + `aFlow` bake, module cache, material + `onBeforeCompile`, pulse `useFrame`, ceremony timeline, `invalidate` effect. |
+| D3 | `components/three/hero-orb.tsx` | Delete `Core` (`:63-108`); wire shell `1.0` → `1.12` (`:113, :119`); add `modesPlayed` / `heat` to both prop interfaces; swap `<Core>` → `<BrainCore>` (`:434`); state-appropriate `label` (`:456`). |
+| D4 | `app/screens/home/hero-stage.tsx` | Compute `modesPlayed` from `player.progression.counters` and `heat` from `lib/heat.mjs`; pass through; add the `BRAIN n/4` chip **and its visible sentence**; add the awake text twin; reduced-motion label variant. |
+| D5 | `app/screens/home/home.css` | `.fd-hub-hero-chip` and `.fd-hub-hero-note` beside `.fd-hub-hero-badge` (`:238`). |
+| D6 | `app/three-lab/page.tsx` | Heat / modes / detail sliders (`:128`). |
+
+### Stream E — sound (fully independent)
+
+| # | File | Change |
+|---|---|---|
+| E1 | `lib/fx/press-gate.ts` | **New.** The shared pointerdown → pointerup gate with the 10 px / 600 ms cancel. |
+| E2 | the six press helpers | **Priority 0.** All six call `press-gate`. |
+| E3 | `lib/fx/sound.ts` | `Voice` jitter + `transient()` + `send`; `buildChain` space bus + limiter retune; module-level IR cache; `shuffleBag` / `jitterCents`; rebuild `tap` / `hover` / `select`; new `detent` and `kept` (**TRIM 0.78**) cues; per-cue `CUE_THROTTLE_MS`; re-measured `TRIM`. |
+| E4 | `lib/fx/sound-levels.ts` + `scripts/measure-cues.mjs` | **New.** The frozen offline-measured `CUE_LEVEL` table and `outputLevel()`, plus the `pnpm fx:levels` script that regenerates it (§5.7). |
+| E5 | `components/fx/toast-stack.tsx` | Drop `tap` from `info` toasts (`:38, :78`). |
+| E6 | `app/fx-lab/page.tsx` | RMS readout per cue (`:196-220`). |
+
+### Stream F — celebrations (depends on E3 for `kept` and E4 for the ceiling test)
+
+| # | File | Change |
+|---|---|---|
+| F1 | `app/screens/room/room-math.ts` | New `winTier(room, player)`; new `whatYouKeep(room, journal, progressionBefore)` returning the §6.4 title case and **only the bullets that are true**, including the two gated ones. |
+| F2 | `app/rivalry-widgets.tsx` | Tiered win celebration replacing the unconditional `juice.confetti('win')` (`:160-164`); the `WHAT YOU KEEP` block below `marginLine` (`:198`). **Do not widen the `v.key !== 'win'` guard.** |
+| F3 | `components/fx/use-juice.ts` | New `settle(target)` helper: the upward chip stack + one cyan ring pulse + `kept` + `light`/`tick` haptics. No confetti path. |
+| F4 | `app/screens/room/room.css` · `app/screens/expeditions/expeditions.css` | `.fd-keep` block styles; the stagger keyframes. |
+| F5 | `components/fx/ceremony.tsx` | No change. |
+
+### Stream G — docs and release (do last, after A–F land)
+
+| File | Change |
+|---|---|
+| `public/product/gamification/design-bible.md` | §9 gains rules 1–38 as bullets; §1 Posture gains "simulated stakes are points-or-room-coins only; no expenditure path exists or will be built". |
+| `README.md` | `:16` wallet sentence + three-tier table; `:133` Conviction definition + first-encounter rule; the export-size line; **the no-rollback window (§1.6)**; `:141` unchanged and still true. |
+| release checklist | Cache-busting deploy; no-rollback window recorded with the date and the first release tag that writes Called-tier results. |
+| `public/product/pitch/*` | Regenerate with the Conviction definition and the honest-badge framing. |
+
+### 9.1 Parallelism summary
+
+```
+A0 ──▶ A1 ──▶ A2 ──▶ A3 ──▶ A4 ──▶ B1..B7
+ │                     └──────────▶ (B needs A2 selectors only)
+ └──▶ C1 ──▶ C2 ──▶ C3 ──▶ C4/C5/C6      (A0 and C1 share lib/journal.mjs: sequence them)
+                     ▲
+                     └── A3 also edits lib/passport.mjs: land A3 before C3
+
+D1 ──▶ D2 ──▶ D3 ──▶ D4/D5/D6            independent (D1 stubs `recent` until A2 lands)
+
+E1 ──▶ E2                                 independent of everything
+E3 ──▶ E4 ──▶ F3                          F needs `kept` and the level table
+E3 ──▶ E5/E6
+
+F1 ──▶ F2 ──▶ F4
+```
+
+**Four people can work simultaneously: A+B, C, D, E+F.** Three files are touched by more than one stream and are called out above: `lib/journal.mjs` (A0 + C1), `lib/passport.mjs` (A3 + C3) and `app/use-player.ts` (A4 + C6 — two independent dispatchers). Land the A-side edit first in each case.
+
+---
+
+## 10. Test plan
+
+Baseline: **177/177 passing today** (`node --test tests/*.test.mjs` at `cc805e5`; the brief's 175 predates
+the duel-clock commit, which this spec does not touch).
+
+### 10.0 The four assertion lines that change, and why
+
+Nothing else in the suite moves. Each of these encodes an economy or inventory constant that this spec
+deliberately changes; none of them is a behaviour contract.
+
+| Test | Line | From | To | Cause |
+|---|---|---|---|---|
+| `tests/progression.test.mjs` — "expeditions: per-card XP…" | `:508` | `assert.equal(logXp(…,'expedition-answer'), 18)` | `…, XP.expeditionCorrect)` → **12** | Tier-neutral per-card XP (R2, §1.6.4). |
+| same | `:516` | `…, 18 + 12 + 3)` | `…, XP.expeditionCorrect * 2 + XP.expeditionWrong)` → **27** | Same. |
+| same | `:545-553` | `… + XP.expeditionComplete + 18 * XP.expeditionScorePoint` | `… + XP.expeditionComplete + 5 * XP.expeditionScorePoint` | Replay score-XP is improvement-only; run-2 scores 18 against a previous best of 13 (§1.6.4). |
+| `tests/progression.test.mjs` — "cosmetics…" | `:820-821` | `assert.equal(COSMETICS.length, 23)` ×2 | **29** ×2 | The catalogue grows by six (§1.8, D13). |
+
+**Everything else in that test is unaffected** and was checked line by line: `:507` (log kinds after one
+card), `:509` (`counters.recalls`), `:510` (`passportSummary` points), `:519-537` (the 13-point run-1 and
+its completion award), `:539-540` (`stamps`, `expeditions`), `:554` (`bold-master`, which still fires —
+run-2 is all-Bold so `stakes.steady.n === 0`), `:555` (`counters.facts === 6`, a passport ledger this
+spec does not touch) and `:556` (the `readProfile` identity round trip).
+
+### 10.1 Tests that must keep passing unchanged (verified by inspection)
+
+| Test | Why it survives |
+|---|---|
+| `tests/expeditions.test.mjs:85` — the p = 0.5 indifference identity | Steady and Bold payouts are byte-identical. |
+| `tests/expeditions.test.mjs:78, 84` — `assert.deepEqual(runResult(...), { score, correct, bold })` | `runResult`'s return shape is unchanged; tallies live in `runTally`. |
+| `tests/expeditions.test.mjs:87-100` — all-Bold 6/6 = 18, all-Bold 0/6 = −6 | Unchanged payouts. |
+| `tests/expeditions.test.mjs:108-109` — `'unknown'`, `'constructor'`, `'__proto__'` rejected | `Object.hasOwn(CONFIDENCE, …)` is untouched. |
+| `tests/expeditions.test.mjs:133, 155` — `readProfile` identity round trips | `folded` / `foldedDay` are in the `readExpeditions` literal (§1.5.5); every new journal cap is enforced by the writer as well as the sanitiser (R4). |
+| `tests/expeditions.test.mjs:135-155` — resume, mixed run scoring 9 | Unchanged payouts. |
+| `tests/expeditions.test.mjs` replay test — `first` immutable, `best.score === 18` | Correctness-first ordering picks the 6/6 run (§1.5.8). |
+| `tests/expeditions.test.mjs:199-203` — three corruption tuples rejected | Recompute-from-tally rejects all three. **`{score:1, correct:1, bold:0}` is arithmetically reachable under three tiers, so a bounds-only validator would not.** |
+| `tests/expeditions.test.mjs:212-219` — corrupt `last.runId`, corrupt `best.correct` | The corrupted `best` fails `validResult` outright and falls back to a baseline with `correct: 6`. |
+| `tests/progression.test.mjs:547` — profile identity after a full expedition | As above. |
+| `tests/progression.test.mjs:565` — `assert.strictEqual(act(p, {type:'open', …}), p)` | **The `open` action is byte-identical. No `opens` counter is added** (§3.2.2). |
+| `tests/progression.test.mjs:584-612` — daily quests deterministic, one per tier | The test pins tier composition and determinism, **not template ids**, so adding `review-5` and relabelling `bold-4` (same id, same tier) both pass. |
+| `tests/progression.test.mjs:757` — `ACHIEVEMENTS.length === 30` | **No achievement is added anywhere in this spec.** |
+| `tests/progression.test.mjs:800-812` — synthetic `expedition-complete` at score 18 reaches level ≥ 3 | `bold-master`'s `(e.correct ?? 6)` and `(e.stakes?.steady.n ?? 0)` fallbacks keep it firing on a fixture with neither field; `expeditionScorePoint` and the `e.first` branch are unchanged, so the 18 × 8 term is unchanged (§1.7). |
+| `tests/journal.test.mjs:87` — `readJournal('{"version":2}')` → empty | `journal.version` stays 1; `readJournal(raw)`'s signature is unchanged by the `readJournalValue` split. |
+| `tests/journal.test.mjs:89-101` — 200/100 caps | `rounds` and `matches` caps are unchanged. |
+| `tests/passport.test.mjs:88`, `tests/events.test.mjs:501`, `tests/analytics.test.mjs:374` — identity | R4 plus the `readExpeditions` literal. |
+| `tests/events.test.mjs:405` — `LOG_KINDS.includes('event')` | Adding `'review'` is additive. |
+| all `tests/duel.test.mjs`, `tests/bot.test.mjs`, `tests/http.test.mjs` | No server, room-engine or timing change anywhere in this spec. |
+
+### 10.2 New unit tests — `tests/expeditions.test.mjs`
+
+1. **Called tier scores exactly.** 6 Called correct = 24; all wrong = −18; mixed matches the table.
+2. **The 2/3 indifference invariant**, asserted the way `:85` asserts the 1/2 one.
+3. **`runTally` counts per tier and never mutates the run.**
+4. **`validResult` tally branch** — a result whose `stakes` disagree by one is rejected; a consistent one round-trips as identity. **A result with a malformed `stakes` deletes the whole route record, not just the field.**
+5. **`validResult` legacy branch** — no `stakes`, score 18/correct 6/bold 6 survives; score 19 does not; `{score:1, correct:1, bold:0}` with no `stakes` is still rejected on the old algebra.
+6. **Score-18-is-not-perfect** — a 5/6 run reaching exactly 18 produces a valid result and does **not** award `bold-master`. Also: a 6/6 run of 3 Steady + 3 Called scoring 18 does **not** award it, and a 6/6 run of 4 Called + 2 Steady scoring 20 does **not**.
+7. **`record.best` is correctness-first** — a 5/6 at 20 does not displace a stored 6/6 at 18, in both `reduceExpeditions` and the `readExpeditions` baseline.
+8. **Fold** — sets `folded`; `expeditionStatus` stops returning `'continue'`; a fresh `journey-start` is accepted **and the new record has `folded === false`**; answering two cards of that new run leaves `expeditionStatus === 'continue'` and a second `journey-start` returns the same reference; a fold on a completed run, a zero-answer run, a wrong `runId`, or a second fold on the same route the same day are all identity; `folded` and `foldedDay` survive `readProfile(JSON.parse(JSON.stringify(p)))`; a folded run produces no `expedition-complete`, no stamp and no `completions` increment.
+9. **Abandon costs nothing** — resolved answers keep their journal entries and conviction tallies after the route is replaced.
+
+### 10.3 New unit tests — `tests/progression.test.mjs`
+
+10. **`convictionRating` ties where EV ties** — Steady vs Bold at p = 0.5 both give 1200; Bold vs Called at p = 2/3 both give 1333; an empty record gives exactly 1000.
+11. **XP never prefers a tier (R2).** For the same `{ correct }` outcome, the `expedition-answer` XP of a Steady, a Bold and a Called card are **equal**. And: total XP EV crosses over at exactly p = 0.5 and p = 2/3, computed from the exported constants — the assertion that keeps §1.2's copy true.
+12. **First-encounter ledger (R1).** Replaying a route six times moves `conviction` exactly once per fact; `convictionCalls` after five replays of one route is **6, not 30**; the repeat cards pay `XP.expeditionRepeat`; `conviction.counted` holds six ids and is deduped and capped.
+13. **Replay score-XP is improvement-only** — a repeat completion at or below the previous best pays `XP.expeditionComplete` and nothing more; beating it pays the difference.
+14. **`convictionTier` gates** — 29 distinct cards at rating 1800 returns `provisional`; 30 cards with 19 calls above Steady returns at most `hunch`; the 20th risk call promotes.
+15. **The badge label never demotes, and `bestAt` is preserved** — after reaching `sharp` at 1510, a long run of missed Called cards drops the rating below 1300 while `best === 'sharp'` and `bestAt === 1510`.
+16. **Tier gems are cumulative and paid exactly once** — a single promotion `provisional → deadeye` pays **160**; replaying the events pays nothing more; **`XP.convictionTierGems` is total over `CONVICTION_TIERS` and no wallet value is ever `NaN`** (assert `Number.isSafeInteger` on `gems` and `lifetimeGems` after a `hunch` promotion).
+17. **`readProgression` sanitisation** — negative counts, `NaN`, `Infinity`, strings, `correct > n`, an unknown `best` id, an out-of-range `bestAt`, non-whitelisted `recent` codes, duplicate and malformed `counted` ids, and a missing `conviction` block all normalise; `readProgression` is **identity** on a valid profile.
+18. **`conviction` survives the reduce** — a reduce that moves the tally returns a profile whose `conviction` is the moved one (the regression test for the `draft` / return-literal omission).
+19. **`PROGRESSION_VERSION` is still 1 and the profile is still version 2** after a full write → serialise → `readProfile` cycle with conviction data present.
+20. **No log entry ever has `xp < 0`** — assert over the whole log after a run of six missed Called cards.
+21. **`progressionDiff().convictionUp`** is non-null exactly when `best` advanced, and carries `rating`.
+22. **Cosmetic gating** — a priced `unlock.conviction` item cannot be **bought** below its tier (`reduceCosmetics` returns the same reference) and cannot be equipped; both succeed after promotion. `field-notes` is buyable at any tier.
+23. **`review` pays only for due, schedule-moving attempts** — an off-queue re-attempt and a `revealed: true` attempt both record an attempt and pay 0; the daily ceiling is 12 × `XP.reviewCorrect`.
+
+### 10.4 New unit tests — `tests/journal.test.mjs` and a new `tests/review.test.mjs`
+
+24. **`emptyJournal()` is a factory** — mutating `readJournal(null).cards` does not affect a second `readJournal(null)`, and does not affect `emptyProfile()`. (Fails today against a shallow-spread singleton.)
+25. **`readJournalValue` and `readJournal` agree** — for any object `v`, `readJournalValue(v)` deep-equals `readJournal(JSON.stringify(v))`.
+26. **`readJournal` default-fills** `cards` / `facts` / `attempts` on an old journal and stays identity on a valid new one.
+27. **Caps, writer and sanitiser together (R4)** — 15 attempts on one fact through the *writer* leave exactly 12; 700 attempts through the writer leave exactly 600; and in both cases `readProfile(JSON.parse(JSON.stringify(p)))` deep-equals `p`. The `facts` aggregates are **not** reduced by the eviction.
+28. **Ordering is prepend, not sort** — 20 attempts all dispatched with `at: 1000` come back in dispatch order, newest first.
+29. **Sanitisation** — `__proto__` / `constructor` / `prototype` fact ids dropped from `cards` and `facts`; an attempt with `surface: 'hack'`, `stake: 37`, `confidence: 'allin'` or a 900-character `chose` is dropped, not repaired.
+30. **`chose` survives a reshuffle** — the same fact answered in two runs with different option orders records the two option *texts* the player actually picked; rendering never consults an index.
+31. **`uniqueFacts` ordering** — the most recently attempted fact sorts first (this fails today).
+32. **Box ladder** — correct advances 0→1→2→3→4→5 with `due` at +1/+3/+7/+16/+35 days computed on local midnights via `dayKey`; a miss drops exactly two boxes (never below 0), sets `due = at + 1 day` and increments `lapses`.
+33. **`revealed` blocks advancement** — an attempt with `revealed: true` records but does not change `box` or `due`, and pays no XP.
+34. **Retire** — box 5 with `days >= 3` sets `retiredAt` and removes it from `dueToday`; it reappears once at +90 days.
+35. **Daily cap** — `dueToday` returns at most 12, `boldWrong` first, then `lastCorrect === false`, then oldest `due`.
+36. **`days` counts distinct local days**, not attempts.
+37. **`firstMissAt` / `recoveredAt` are write-once and day-ordered** — a fact missed and recovered on the same local day has `recoveredAt === null`; recovered the next day, it is set and never moves again. The claim tile's `n` and `m` are computed from these fields with **no attempt in the window**, and stay correct after the per-fact cap evicts the miss.
+38. **Recall Lab now records** — dispatching `review` twice on the same fact produces two attempts and two `seen` increments (the current `onRecall` produces zero after the first).
+39. **Vault actions resolve past the 200-round window** — a fact whose round has rolled out is still savable and openable via `journal.cards`.
+40. **Round-trip size and read cost** — a saturated journal (300 cards, 300 facts, 600 attempts) serialises under 700 KB, and `readJournalValue` on it completes in under 4 ms on CI (§3.2.6's instrument, run as a soft budget with a logged number).
+
+### 10.5 New unit tests — `tests/honesty.test.mjs` (new file)
+
+**There is currently no test asserting any honesty string. This is the cheapest durable guard against drift.**
+
+41. **Banned vocabulary** — a `grep`-equivalent over `app/**` and `lib/**` finds none of: `wager`, `jackpot`, `payout`, `cash out`, `all in`, `double down`, `ante`, `Knowledge Level`, `Knowledge Score`, `Mastery Level`, `Top 10%`, `Community Rank`, `Community Badge`, `Founding Member` (case-insensitive, excluding this spec file and `node_modules`).
+42. **The word `Mastery` no longer appears as a section heading** in `app/screens/player-screen.tsx`.
+43. **Cue output levels** — `outputLevel('loss') < outputLevel('win')` and `outputLevel('kept') < outputLevel('win')`, parsed from the frozen `CUE_LEVEL` and `TRIM` tables (§5.7). **Not** a bare `TRIM` comparison.
+44. **`matchVerdict` loss output** contains no exclamation mark and none of `['great', 'amazing', 'so close', 'unlucky', 'nice try', "you're due"]` (case-insensitive).
+45. **No stake outside `[0, 10, 25, 50, 100]` is constructible** through `room-engine`.
+46. **The default stake is `0`** in `app/screens/types.ts` and `match-settings.tsx`.
+47. **No `CONFIDENCE` tier costs or pays any currency field** — the tier objects have exactly the keys `{ name, correct, wrong, order }`.
+48. **The conviction badge copy contains `on this device`** and does not contain `community`.
+49. **No announced string contains U+2212.** Scan `STAKE_COPY`, the per-tier feedback strings and every `aria-label` literal in `app/screens/expeditions/**` for `−`; it is permitted only inside `aria-hidden` JSX text.
+50. **No quest or achievement predicate references `confidence`** (C29) — a source scan of `QUEST_TEMPLATES` and `ACHIEVEMENTS` in `lib/progression.mjs`.
+
+### 10.6 Browser invariants (`pnpm e2e`)
+
+51. **The live-duel timing contract is untouched.** Re-run the existing assertions: question card mounts hidden until the double-rAF reveal marker; the timer track has no CSS transition; option order is fixed; **no renderer is mounted during a room**. Any regression here is a release blocker.
+52. **Scroll does not click.** A 200 px scroll fling starting on a pressable card fires **zero** `tap` cues. A genuine tap fires exactly one.
+53. **Tap latency.** The `onClick` navigation still fires within the existing budget; only the cue is deferred.
+54. **Reduced motion, hero.** With `prefers-reduced-motion: reduce`, sample the canvas twice 1 s apart and assert identical pixels; assert `emissiveIntensity === brightness * 0.30` exactly.
+55. **Reduced motion, label.** The hero `aria-label` says "brightens", not "pulses faster", and the visible text twin is present.
+56. **Reduced motion, celebrations.** No confetti path runs; the loss block appears without motion.
+57. **Pulse rate ceiling.** Drive `heat = 1` in `/three-lab` and assert the computed rate is `<= 1.5` Hz and the emissive depth is exactly `0.25`.
+58. **Heat has no stake input, and no miss input.** Static check that `<BrainCore>` receives no prop derived from `room.config.stake` or the selected tier, plus a runtime assertion that (a) changing the selected tier mid-card does not change `heat`, and (b) resolving a **missed** Called card does not increase `heat`.
+59. **Loss ceremony ceilings.** Loss ceremony duration ≤ win duration; loss peak particle count ≤ 25% of win.
+60. **No ceremony at a negative expedition score.** Finish a first run at a negative score and assert no `role="dialog"` node appears.
+61. **The verdict lands first.** On a loss, the `aria-live` region contains `RIVAL WINS` before any `WHAT YOU KEEP` node exists in the DOM.
+62. **Loss bullets are true.** A Gold player at 300 points losing a bot duel shows `-10 rank points · still Gold` and **no** "protected at the floor" line; a second loss on the same day shows **no** streak-held bullet; a Quick Draw loss says "1 fact", never "Three".
+63. **Exit prominence.** On both win and loss screens, at least one primary-weight action leaves the loop, and Rematch is never the largest control.
+64. **Three-state switch at 320 px.** The Steady / Bold / Called control reflows without horizontal page scroll and every hit target is ≥ 44 px.
+65. **The stake payout is in the accessible name.** Each tier button's computed accessible name contains the words "plus" and "minus" and the two numbers.
+66. **No live signed run total.** The expedition run screen contains no signed cumulative score node (C28).
+67. **Vault card is a prompt.** The correct answer is **not** in the DOM of a Vault fact card before an option is chosen.
+68. **No juice before a dispatch resolves.** Saving a fact whose round has rolled out of the window either succeeds (and bursts) or is disabled — never bursts on a no-op.
+
+### 10.7 Edge cases that must be covered explicitly
+
+| # | Case | Expected |
+|---|---|---|
+| 69 | A run paused mid-card, browser closed, profile reloaded days later | `cursor` and `answers` restored exactly; no bet is "open"; resuming costs nothing |
+| 70 | A profile written by the current shipped build (no `stakes`, no `conviction`, no `cards`/`facts`/`attempts`) | Loads clean, default-fills, `readProfile` identity on the result, no invented history |
+| 71 | A profile written by **this** build read by the **previous** build | Called-tier results are deleted and persisted. This is the documented no-rollback window (§1.6); the test exists to prove the failure mode is understood, and the release checklist is the mitigation |
+| 72 | A hand-edited profile with `conviction.best = 'deadeye'` but tallies supporting `hunch` | The whitelist keeps `deadeye` (high-water marks never fall), `bestAt` is repaired to the live rating, and the card renders both numbers with the explaining line |
+| 73 | `conviction.steady.correct > conviction.steady.n` | Clamped to `n`, exactly as `byTopic` is |
+| 74 | `conviction.called.n = Number.MAX_SAFE_INTEGER` | `nat()` caps it; the rating stays inside 0..2000; no `Infinity` or `NaN` escapes |
+| 75 | `conviction.counted` at 1200 entries, a new fact arrives | Oldest id evicted; that fact then counts as fresh a second time. **Documented, and unreachable with a 54-fact bank** — revisit if the bank passes 1200 |
+| 76 | Two tabs answering the same expedition card | The existing revision/epoch guard rejects the second; no double tally, no double gems |
+| 77 | Fold, then immediately start a new run, then restore the old profile from an export | The folded run does not resurrect as `'continue'`; `foldedDay` still blocks a second fold that day |
+| 78 | A route replayed 50 times | `completions` caps at 1,000,000; `best` never regresses; `conviction` never moves after the first run; `attempts` roll at 12 per fact while `facts.seen` keeps counting |
+| 79 | Journal at exactly 600 attempts, one more arrives | Oldest is evicted by the writer; `facts` aggregates unchanged; identity holds |
+| 80 | A fact whose `factId` disappears from the bank | `journal.cards[factId]` keeps the snapshot so the Vault still renders it; `dueToday` still returns it |
+| 81 | All 54 facts retired | The terminal empty state renders with the audit date; no nag count on the hero |
+| 82 | WebGL context lost during the brain ceremony | The existing static-art fallback takes over; no unhandled rejection; the `localStorage` flag is still written |
+| 83 | Brain hero mounted offscreen at page load | Geometry build happens once behind the skeleton; `frameloop='never'` keeps the pulse paused; scrolling into view starts at the resting phase, not a peak |
+| 84 | `heat` changes while `prefers-reduced-motion` is on | `invalidate()` repaints exactly one new static frame; no animation loop starts |
+| 85 | Audio context suspended (iOS, before first gesture) | `sound.unlock()` still resolves instantly; the press gate does not leak listeners across unmounts |
+| 86 | 100 rapid taps in 2 s | Per-cue throttle (`tap 45 ms`) holds; no compressor pumping; no listener leak; the shuffle bag never repeats the same variant twice in a row |
+| 87 | A player who only ever plays Steady, 200 cards, 100% correct | Badge stays **Provisional**; the card renders `No calls above Steady yet.` without dividing by zero; the Steady-only line explains it; no `caller` / `called-it` cosmetic unlocks |
+| 88 | A player at exactly 20 resolved calls above Steady | The percentage appears for the first time; at 19 it must not |
+| 89 | A heartbeat transaction lands during a live duel question | `readProfile` on a saturated profile completes within budget (§3.2.6); the 50 ms timer tick shows no dropped frame in the e2e trace |
+| 90 | Offline static build (`vite.config.static.ts`) | No new network request of any kind; no audio file; the brain chunk lazy-loads from the `/fact-duel/` base correctly |
+
+### 10.8 The measurement harness
+
+Two numbers in this spec are measured, not estimated, and both must be reproducible:
+
+- **`scripts/bench-journal.mjs`** — builds a realistic journal at today's shape and at the revision-2
+  caps, times `JSON.stringify` + `JSON.parse`, the existing validation and the new-collection
+  sanitisation, and prints the §3.2.6 table. Run it before changing any cap.
+- **`scripts/measure-cues.mjs`** (`pnpm fx:levels`) — renders every cue through an `OfflineAudioContext`
+  and regenerates `lib/fx/sound-levels.ts`. Run it whenever a builder changes; test 43 reads its output.
+
+---
+
+## 11. Changes made after adversarial review
+
+Four reviewers attacked revision 1 — an economy lens, an implementation adversary working against the
+real reducers and the 175-test suite, a claims audit, and a hostile/discouraged-player lens. They
+filed 15 blocker entries (11 distinct defects — the badge farm was found three times and the brain
+heat twice), 29 serious entries (26 distinct) and 10 minor entries (8 distinct). **Every blocker and
+every serious finding is fixed. All eight minor findings are fixed.** Eight places where this revision
+deliberately departs from a reviewer's proposed remedy are set out in §11.4, each with the reason.
+
+### 11.1 Blockers
+
+| # | Finding | What changed |
+|---|---|---|
+| B1 | **The Conviction badge is farmable to Dead eye in ~3 minutes on one route.** Raised independently by the economy, claims and hostile-player lenses. Replay the same six cards five times calling everything Called from memory: 30 cards, rating exactly 1800. Revision 1's two stated guards were both satisfied by the exploit. | **R1, the first-encounter ledger** (§0.3, §1.6.6, §2.3). Only a fact's first expedition answer moves `conviction`; `progression.conviction.counted` is the ledger; the denominator is bounded by the 54-fact bank; `CONVICTION_MIN_CARDS = 30` now genuinely means thirty distinct facts. The §3.5 replay caveat is also carried onto the Conviction card verbatim, and §2.3 documents the residual "studied elsewhere first" path on the card itself rather than hiding it. |
+| B2 | **Tiered per-card XP destroys the proper-scoring-rule claim.** With `bold 18` / `called 24` / `wrong 3`, the real XP crossovers are p = 0.3636 and p = 0.5333, not the 0.5 and 0.667 advertised in the stake table, `STAKE_COPY` and §2.2 — and `Math.max(0, score)` makes Called *strictly dominant* on a losing run, including a blind guess. | **R2.** `expeditionBoldCorrect` is deleted, `expeditionCalledCorrect` is never added, per-card XP is `expeditionCorrect 12` / `expeditionWrong 3` at every tier (§1.6.4), with an algebraic proof that no tiered table can preserve the crossovers without paying negative XP for a confident miss. Verified numerically: crossovers land at exactly 0.500 and 0.667. The clamp's remaining cost — tier *indifference*, never inversion, on a run that cannot finish positive — is stated rather than elided. New test 11 asserts both properties. |
+| B3 | **`COSMETICS.length === 23` is asserted at `tests/progression.test.mjs:820-821`** and revision 1 added five cosmetics while claiming 175/175. | Adjudicated openly as **D13** and listed in §10.0: the catalogue grows to **29** and both assertions change. `ACHIEVEMENTS.length` stays 30 because no achievement is added. The spec now opens with a test-count honesty note rather than a false claim. |
+| B4 | **The new `bold-master` predicate breaks `tests/progression.test.mjs:800-812`**, which feeds a synthetic `expedition-complete` with no `correct` field; XP drops 554 → 254 and `assert.ok(level >= 3)` fails. | Predicate is `e.score >= 18 && (e.correct ?? 6) === 6 && (e.stakes?.steady.n ?? 0) === 0` (§1.7). The fixture passes; real events always carry both fields; and the `stakes` term also fixes the separate finding that "nothing below Bold" fired on runs containing three Steady cards. |
+| B5 | **An `opens` counter on the `open` action breaks `tests/progression.test.mjs:565`** (`assert.strictEqual(act(p, {type:'open'}), p)`) and turns a disclosure widget into an unbounded write per toggle. | `opens` and `lastOpenAt` are **removed from the design entirely**; the `open` action is byte-identical (§3.2.2). This also resolved the separate `revealed` finding — see S10. |
+| B6 | **Fold was broken twice over.** `readExpeditions` builds a fresh literal and would have dropped `folded` on every load, breaking five identity assertions; and `journey-start` spreads `record`, so every run after the first fold was born folded, unresumable, and silently destructible. | §1.5.5 adds `folded` and `foldedDay` to the `readExpeditions` literal **and** to the `journey-next` completion literal (also a fresh literal, which revision 1 missed); §1.5.6 makes `journey-start` set `folded: false` explicitly; test 8 covers fold → start → answer → `'continue'` and the second-start identity. |
+| B7 | **Fold is an unguarded repeater for everything an expedition card pays** — a ~4-second, one-card loop. | Two guards, both shipped: **R1** reduces a repeated card to `XP.expeditionRepeat` (4), and fold is capped at **one per route per local day** via `record.foldedDay`, with a minimum of one answered card (§1.4, §1.5.6). |
+| B8 | **The storage argument measured disk, not the code path.** `readProfile` runs `readJournal(JSON.stringify(value.journal))` inside every readwrite transaction, on a 15 s heartbeat, potentially mid-duel against a 50 ms timer tick. | Measured, then fixed at the cause (§3.2.6): the sanitiser is split into `readJournalValue(object)` and `readJournal(raw)`, and `readProfile` calls the object form — deleting the 1.1–4.4 ms stringify+parse leg. Caps cut to 300 / 300 / 12-per-fact-600. **Measured result: a saturated revision-2 journal reads in 1.03 ms against today's 1.55 ms** — the profile gets faster, not slower. `readJournal(raw)`'s public signature is unchanged, so no test moves. A benchmark script ships as the instrument (§10.8). |
+| B9 | **`attempts[].choice` is meaningless**: options are reshuffled per run (`room-engine.mjs:61`, `duel-service.mjs:377-388`), so an index against one stored snapshot would print an answer the player never picked — and §3.5/§3.6's "same options" copy contradicts `README.md:16` and the code. | The attempt stores **`chose`, the option text** (§3.2.1). The copy is corrected everywhere to "the same six questions, with the options reshuffled each run", which is the true and slightly stronger caveat. Test 30 covers it. |
+| B10 | **The brain's label said "land", the formula counted calls *placed*.** Twenty missed Called cards gave 1.11 Hz; twenty correct Steady cards gave 0.64 Hz — the brain ran 73% faster for the player who bet big and lost twenty times. | `heat` is computed from **landed** calls only (§4.4): `recent` entries `b1` and `c1`. A missed call contributes nothing. The label is now true as written, C10b is added to the refusal list, and rules 32/33 are re-adjudicated in §8.6 on the corrected term. |
+| B11 | **The Vault pays nothing.** The surface the spec calls "where learning happens" awarded 0 XP and 0 quest progress, while revision 1 paid 376 XP for re-tapping memorised expedition answers. | §3.7: `LOG_KINDS` gains `review`, `COUNTER_KEYS` gains `reviews`, `XP.reviewCorrect 6` / `XP.review 3`, paid **only** for a due attempt that moved the schedule (ceiling 72 XP/day against the 12-card cap), plus a `review-5` medium quest. The quest-seed tests pin tier composition, not ids, so they pass. |
+
+### 11.2 Serious
+
+| # | Finding | What changed |
+|---|---|---|
+| S1 | `record.best` orders by score alone, so a 5/6 run at 20 permanently outranks a 6/6 at 18 — **19 of 28 6/6 splits score below 20**. | **R3** (§1.5.8): `better()` orders by `correct` first, `score` as tiebreak, in both `reduceExpeditions` and the `readExpeditions` baseline; the finish screen renders `{correct}/6 · {signed(score)} pts` so the ordering is legible. Verified against both `best`-touching tests. |
+| S2 | The tier-gem bonus was non-cumulative, so "160 lifetime" was unreachable and the reward was **inverted** — the fastest player got 75, a plodder got 160. | §1.6.6 pays cumulatively for every tier crossed in one promotion. Test 16 asserts a single `provisional → deadeye` promotion pays exactly 160. |
+| S3 | §1.8's gem arithmetic was wrong (claimed ~250 tightening; the real figure was 360), and every new priced item was gated, so the over-supply persisted for exactly the cautious player it was meant to fix. | §1.8 is recomputed and itemised: new sink **640**, new supply **160**, net **480**, month-1 balance **+55 → −425**. One **ungated** 120-gem banner is added so the sink reaches the Steady-only player (−65 for them). |
+| S4 | Memorised replay was the XP-optimal activity by 3–4× per minute. | Replay score-XP is **improvement-only** (§1.6.4), and R1 drops repeat cards to 4 XP. The same memorised replay goes from 376 XP to 64. One assertion line changes (§10.0). |
+| S5 | `boldShare` from the 40-entry shared progression log is unreachable in practice — measured at 6 entries after one run, 0 after a few duels. "No schema change" was a cost, not a virtue. | `progression.conviction.recent` — twenty whitelisted codes in a block the sanitiser already visits (§1.6.1, §4.4). |
+| S6 | `EMPTY_JOURNAL` is a shallow-spread module singleton; a keyed-map write would leak into every later profile, including the one `reset` mints. | `emptyJournal()` factory, frozen `EMPTY_JOURNAL` kept for the existing import, copy-on-write stated for `cards`/`facts` (§3.2). Test 24 covers it. |
+| S7 | `XP.convictionTierGems[tier]` was `undefined` for `hunch` → `NaN` in the wallet → silent total gem wipe on the next `nat()`; and `conviction` was missing from the reducer's `draft` and return literals. | The map is **total over `CONVICTION_TIERS`**, every read is `?? 0`, and §1.6.6 shows both literals explicitly. Tests 16 and 18 cover both. |
+| S8 | Caps enforced only in the sanitiser break the identity contract the moment a writer exceeds them. | **R4** (§3.2.4): the writer applies the identical caps in the identical order, prepending rather than sorting (because `at` ties are routine in the tests). Tests 27 and 28. |
+| S9 | `revealed` was defined as a 60-second window against a record with no open timestamp — it could never be anything but `false`. | `revealed` is supplied by the review session's own state and passed in the action (§3.2.5). Simpler, stricter, no new write path, and it composes with B5. |
+| S10 | "Nothing lost if you are not" is false on a screen whose badge the card demonstrably moves. | The Steady line, §1.2 and §2.2 are rewritten to the true version: *Steady never costs you run points; every card, at every tier, counts in your Conviction average.* |
+| S11 | An all-Steady player reached **Edge** and unlocked a title called **Caller** and a banner called **Called it** with `0 of 0` calls; §6.8 congratulated them on "0 of 0 above Steady". | `CONVICTION_MIN_CALLS = 20` gates every tier above Hunch (§2.4); the zero-denominator string is guarded; the ceremony is replaced by an inline block that cannot render `0 of 0`. |
+| S12 | The badge label and the live rating could assert two different tiers with nothing explaining it (`Dead eye · 1313`). | `conviction.bestAt` is stored at promotion; the card prints **both**, labelled, plus one explaining line (§2.5). Test 15. |
+| S13 | Rule 15 was quoted as an unedited acceptance criterion and violated by a bare four-digit number that reads as Elo. | §2.5 prints the rating only with its scale, its meaning and its scope in the same visual unit; **rule 15 is now adjudicated in §8.6**. |
+| S14 | Loss copy hardcoded "Three facts" and "ten minutes ago" — false in Quick Draw (1 round), Gauntlet (5) and a 0–2 trilogy (2). | §6.4 templates `n` from `orderedRounds.length`, deletes "ten minutes ago", and splits novelty into a `k` clause dropped when `k === 0`. The "renders only when true" rule now covers title lines, not just bullets. |
+| S15 | Two loss bullets reported a hold where a real loss occurred: "Arena Rank held at the {tier} floor" fires when a Gold player at 300 drops to 290 without protection engaging; "Day n streak held" credits the loss for something secured hours earlier. | Both are gated on the hold actually happening (§6.4); otherwise the screen prints the true delta or omits the bullet. E2E test 62. |
+| S16 | `kept: 0.9 > TRIM.win 0.88` violated the spec's own ceiling and was filed as a ship-blocking TODO; and `TRIM` is an inverse gain that measures nothing about output level. | `kept: 0.78` is in the code block (§5.6). §5.7 adds a frozen offline-measured `CUE_LEVEL` table and `outputLevel()`, and §6.2 ceiling 3 and test 43 assert on **rendered output**, not on `TRIM`. |
+| S17 | The Vault's headline claim tile — "n of the m facts you missed have since been answered correctly on a later day" — was not computable from the fact record, and would have guessed high. | `firstMissAt` and `recoveredAt`, write-once and day-ordered (§3.2.2). The tile is computed from those fields and **never** from `attempts`, so §3.2.6's "the statistics stay complete" is true as written. Test 37. |
+| S18 | §7.4's carry-forward stake default is the remembered-stake pattern rule 5 forbids and C2 calls the most harmful on the list — and it was asymmetric with the no-de-escalation rule. | Withdrawn. `run.tsx:103-107` keeps `setConfidence('steady')` on every card, and **rule 5 is adjudicated in §8.6** as "no extension". |
+| S19 | A live signed cumulative run total manufactures chasing pressure without a mechanic: at −9 with three cards left, only Called can get you back. | The run header becomes `CARDS RIGHT` / `CALLS LANDED`; the signed total appears once, on the finish scorecard. Added to the refusal list as **C28** (§7.4). |
+| S20 | The conviction ceremony fires mid-run, stealing focus from the run heading and landing a celebration immediately after a successful high-risk call. | There is **no conviction ceremony** (§6.8). The gems are paid in the reducer; the presentation is an inline block on the finish scorecard, or a single toast. |
+| S21 | The stake control announces `aria-pressed` and nothing about the payout, so a screen-reader user places a −3 call with no disclosure; and U+2212 is commonly announced as nothing. | Per-tier `aria-label` with the payout in **words**, `aria-live="polite"` on the stake line, and **ASCII-only in every announced string** (§2.5, §7.3); U+2212 permitted only in `aria-hidden` text. Tests 49 and 65. |
+| S22 | `bold-4` paid 80 XP + 15 gems on a daily deadline for *choosing a higher tier* — direct pressure to over-call, which is the miscalibration the rating exists to detect. | Retargeted to accuracy, tier-neutral, same id and tier so the seed sequence is unchanged (§1.7). **C29** is added: no quest, achievement or cosmetic may key on the tier selected. Test 50 scans for it. |
+| S23 | The first-completion stamp ceremony fires unconditionally, so a −18 run gets a gold `aria-modal` dialog reading "STAMP COLLECTED / Run score −18". | The ceremony is gated on `result.score >= 0` (§6.5); below zero the stamp renders inline in cyan with the `kept` cue. The stamp itself stays unconditional. Added to **C7**. E2E test 60. |
+| S24 | The Vault header promised "every question you've answered" under a per-fact attempt cap. | Header corrected to "Every fact you've answered, with your recent attempts on each", plus a per-fact "Showing your last 12 attempts · {seen} total" disclosure (§3.6). |
+| S25 | `open`/`recall`/`save`/`report` resolve through the 200-round window while the new Vault lists up to 300 facts, so a Save would no-op while the UI fired reward juice. | The lookup falls back to `journal.cards`, `save` accepts a `factId`, and **reward juice moves inside the dispatch promise** (§3.3.4). Tests 39 and 68. |
+| S26 | An accurate Steady-only player is permanently locked out of two tiers and 125 of the 160 gems, and the rating ranks a 70% caller above a 90% Steady player. | Made an explicit, stated design position rather than a silent ranking (§2.4): Conviction is a calibration-**under-risk** measure, Steady-only play stays Provisional, and the card says exactly that and exactly how to move it. Plus the ungated cosmetic from S3. |
+
+### 11.3 Minor
+
+| # | Finding | What changed |
+|---|---|---|
+| M1 | §1.5.4 and §1.5.7 gave opposite rules for a bad `stakes` ("dropped entirely" vs "invalid, not repaired"), and `tests/expeditions.test.mjs:206` only holds under one of them. | One rule, stated once, in both places: a present `stakes` that fails validation or contradicts the scalars **invalidates the whole result** (§1.5.4, §1.5.7). |
+| M2 | `convictionCards` (a `COUNTER_KEYS` entry) and `convictionCalls(c)` were two independently sanitised denominators for the same quantity. | `convictionCards` is **not added**. There is one denominator, `convictionCalls(c)` (§1.6.1). |
+| M3 | Pinning the profile version is forward-compatible and backward-destructive: an old bundle deletes every Called-tier result and persists the deletion. | Owned rather than asserted away (§1.6): a cache-busting deploy and a **documented no-rollback window**, in the README and the release checklist, with edge case 71 as the proof the failure mode is understood. |
+| M4 | `CALLED ABOVE STEADY n/6` was to be rendered from `result.bold`, which is the bold-**tier** count — six Called cards would render `0 / 6`. | Computed from `runTally(run).bold.n + runTally(run).called.n` (§1.5.3, §7.2). |
+| M5 | The brain chip read `BRAIN 3/4` with a tooltip saying "3 of the 6 ways to play" — two fractions of two things, with the explanation in a `title` that is invisible on touch. | The chip carries a **visible sentence**; nothing meaningful lives in a `title` on this product (§4.5). |
+| M6 | Rule 36 ("every visual state has a text twin") was quoted as an unedited criterion and never met — only an `aria-label`, which also described motion to reduced-motion users. | A **visible** text twin under the hero badge, and a state-appropriate `aria-label` (§4.7). **Rule 36 is now adjudicated in §8.6.** |
+| M7 | The terminal state — all 54 facts retired, "Due today" permanently empty — was never described. | Written and shipped with the feature, with the audit date and two onward actions; §3.4 states the queue is finite by design against the current bank. Edge case 81. |
+| M8 | `bold-4`'s new label dropped "correctly" while the predicate kept `e.correct`. | Superseded by S22 — the quest is now honest about being an accuracy quest. |
+
+### 11.4 Where this revision does not do what a reviewer suggested, and why
+
+1. **The score-XP offset `(score + 18) * 4` is not adopted.** The reviewer proposed it alongside flat
+   per-card XP to stop `Math.max(0, score)` flattening the downside. Flat per-card XP alone is
+   sufficient: in the clamped region every tier pays *identically*, so the XP channel is indifferent, not
+   inverted, and the tier still moves the run score, which is the proper scoring rule. The offset would
+   additionally rewrite two score-XP assertions that this spec otherwise leaves alone, and it pays XP for
+   a −18 run, which sits awkwardly beside rule 28. The residual indifference is documented in §1.6.4
+   instead of being hidden.
+2. **`cards` / `facts` / `attempts` stay in the profile blob rather than moving to separate IndexedDB
+   object stores.** Separate stores mean a DB version bump, a second read path outside the single
+   readwrite transaction that currently guarantees atomicity, and `deriveEvents` losing its
+   before/after view of the data it must diff — a large change to the purity and identity contracts the
+   whole profile layer rests on. Deleting the JSON round trip achieves more, measured: **1.03 ms against
+   today's 1.55 ms** on a saturated journal. If a future bank makes that budget fail, the caps are the
+   knob and §10.8's benchmark is the instrument; separate stores remain the escape hatch.
+3. **The attempt stores `chose` (option text), not `order: [int,int,int,int]`.** The client never sees the
+   canonical bank order — `duel-service.mjs` and `room-engine.mjs` shuffle server-side and hand the
+   client only the permuted `options` array — so the client cannot compute `order` relative to anything
+   stable. Storing the text is self-contained, survives a bank edit, and is the only version of this fix
+   the client can actually produce.
+4. **The conviction ledger is `conviction.counted`, not `!before.passport.facts[factId]`.**
+   `passport.facts` is written by duels and Discovery as well, so gating on it would mean a fact first met
+   in a duel could **never** contribute to Conviction — which would make the badge a measure of which
+   mode you happened to meet a fact in. A dedicated expedition-only ledger is one bounded, sanitised
+   array and says exactly what it means.
+5. **`boldShare` is derived from `conviction.recent`, not from `journal.attempts`.** The attempt stream
+   would work, but it would make the Home hero depend on scanning up to 600 attempts on every render and
+   would couple Stream D to Stream C, destroying the parallelism §9 is built on. Twenty three-character
+   codes in a block the sanitiser already visits costs ~80 bytes.
+6. **`bold-4` is retargeted to accuracy rather than having `e.correct` dropped.** The reviewer offered
+   dropping `e.correct` as the alternative; that would make it farmable in four taps a day *and* would
+   pay for tier selection, which C29 now forbids outright.
+7. **The Conviction rating number stays on the profile card** rather than being removed, as one reviewer
+   preferred. Removing it would leave the badge tier as an unexplained six-rung ladder with no way for a
+   player to see where they sit inside a band or why the tier is what it is. Rule 15 is satisfied by
+   printing it with its scale, its meaning and its scope in the same visual unit — which is what the rule
+   actually asks for — and §8.6 now carries that adjudication explicitly.
+8. **The one finding not adopted.** The hostile-player lens argued that a `boldWrong`-first review queue
+   plus the "You're ready to re-run" prompt pushes the player back into a farm. With R1 in place the
+   re-run cannot move the Conviction badge, pays 4 XP per card and pays completion XP only on
+   improvement, so the loop is a genuine study loop with nothing left to farm. §3.5 states that
+   dependency explicitly, so the prompt must not ship before R1.

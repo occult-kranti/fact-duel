@@ -28,6 +28,9 @@ const check = (name, ok, detail = '') => {
 const clickUntil = async (locator, expected, timeout = 8000, attempts = 6) => {
   await locator.waitFor({ state: 'visible', timeout: 20000 });
   for (let i = 0; i < attempts; i++) {
+    // `force` skips the actionability wait but still clicks the element's own centre point, so a
+    // control parked under the fixed launch bar would hand the tap to the bar instead. Scroll first.
+    await locator.scrollIntoViewIfNeeded().catch(() => {});
     if (await locator.isEnabled().catch(() => true)) await locator.click({ force: true });
     try {
       await locator.page().waitForSelector(expected, { timeout });
