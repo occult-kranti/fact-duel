@@ -7,7 +7,7 @@ import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Volume2 } from 'lucide-react';
+import { Database, Volume2 } from 'lucide-react';
 
 /** Persisted as localStorage['fact-duel-motion']. */
 export type MotionPref = 'full' | 'reduced' | 'off';
@@ -43,6 +43,8 @@ export type SettingsSheetProps = {
   canExport: boolean;
   onExport: () => void;
   onReset: () => void;
+  /** Opens the Analytics screen: what this device records, and the JSON/CSV exports of it. */
+  onOpenMeasurement: () => void;
 };
 
 /* Settings live in a sheet: a bottom sheet on phones, a right-hand panel from 600px. The
@@ -68,6 +70,7 @@ export function SettingsSheet({
   canExport,
   onExport,
   onReset,
+  onOpenMeasurement,
 }: SettingsSheetProps) {
   const mobile = useIsMobile();
   return (
@@ -157,14 +160,30 @@ export function SettingsSheet({
           </div>
         </section>
 
+        <section className="fd-setting-group" aria-labelledby="settings-measurement">
+          <span className="fd-setting-eyebrow" id="settings-measurement">
+            Measurement
+          </span>
+          <p className="fd-setting-note">
+            Sessions, active days and whether you came back on day 1, 7 or 30 are recorded on this device and
+            nowhere else. The Analytics screen shows all of it, in full, and exports it as JSON or CSV.
+          </p>
+          <div className="fd-setting-actions">
+            <Button variant="outline" onClick={onOpenMeasurement}>
+              <Database />
+              Measurement and your data
+            </Button>
+          </div>
+        </section>
         <section className="fd-setting-group" aria-labelledby="settings-storage">
           <span className="fd-setting-eyebrow" id="settings-storage">
             Your local activity
           </span>
           <p className="fd-setting-note">
             Everything you earn lives in this browser: your Vault of facts and saved question issues,
-            expedition progress and stamps, XP, gems and activity points, side quests and card finishes.
-            Export them before resetting. Theme and sound preferences are kept.
+            expedition progress and stamps, XP, gems and activity points, side quests and card finishes — and
+            the measurement record behind the Analytics screen. Export them before resetting. Theme and sound
+            preferences are kept.
           </p>
           <div className="fd-setting-actions">
             <Button variant="outline" disabled={!canExport} onClick={onExport}>
