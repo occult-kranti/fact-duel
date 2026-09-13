@@ -2,11 +2,20 @@ import { DatabaseSync } from 'node:sqlite';
 import { readFileSync } from 'node:fs';
 import { setImmediate } from 'node:timers/promises';
 
+/**
+ * Every drizzle migration, in the order drizzle-kit recorded them in the journal, so a new table
+ * ships as a new numbered file (the way `pnpm db:generate` emits it) and the tests still see the
+ * whole schema without anyone editing the loader again.
+ */
+const MIGRATIONS = JSON.parse(readFileSync(new URL('../drizzle/meta/_journal.json', import.meta.url), 'utf8'))
+  .entries.sort((a, b) => a.idx - b.idx)
+  .map((entry) => readFileSync(new URL(`../drizzle/${entry.tag}.sql`, import.meta.url), 'utf8'));
+
 /** Test-only D1 interface over real SQLite. This is not Cloudflare's network/runtime. */
 export class LocalD1 {
   constructor({ yieldIO = true } = {}) {
     this.sqlite = new DatabaseSync(':memory:');
-    this.sqlite.exec(readFileSync(new URL('../drizzle/0000_natural_venus.sql', import.meta.url), 'utf8'));
+    for (const sql of MIGRATIONS) this.sqlite.exec(sql);
     this.yieldIO = yieldIO;
     this.metrics = { statements: 0, conflicts: 0, guardedWriteMisses: 0 };
   }
