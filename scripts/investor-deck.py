@@ -22,7 +22,6 @@ code re-checks the finished file for overflow.
 
 from __future__ import annotations
 
-import copy
 import json
 import os
 import re
@@ -102,7 +101,7 @@ PARA_GAP_RATIO = 0.55  # paragraph gap as a fraction of font size
 
 CELL_PAD_X = 0.07
 CELL_PAD_Y = 0.045
-MIN_ROW_H = 0.24
+MIN_ROW_H = 0.20
 
 MONEY_RE = re.compile(r"\$[\d][\d,.]*(?:bn|m|M|K|k)?")
 PLAN_RE = re.compile(r"\(P\)")
@@ -283,18 +282,24 @@ SOURCE_LABELS = {
         "MAG Interactive — Q3 2025/26 interim report",
     "https://itunes.apple.com/lookup?id=1484354626&country=de":
         "Apple lookup API — QuizDuel listing",
+    "https://itunes.apple.com/lookup?id=1484354626&country=us":
+        "Apple lookup API — QuizDuel listing (US storefront)",
     "https://itunes.apple.com/lookup?id=1160249042&country=us":
         "Apple lookup API — Wayground listing",
     "https://play.google.com/store/apps/details?id=com.wb.goog.ellen.psych&hl=en_US&gl=US":
         "Google Play — Psych! listing",
     "https://play.google.com/store/apps/details?id=com.quizion.app&hl=en_US":
-        "Google Play — Quizion / TRIVIA GO! listings",
+        "Google Play — Quizion listing",
+    "https://play.google.com/store/apps/details?id=live.trivia&hl=en_US":
+        "Google Play — TRIVIA GO! listing",
     "https://techcrunch.com/2020/07/10/how-thor-fridrikssons-trivia-royale-earned-2-5m-downloads-in-3-weeks/":
         "TechCrunch — Trivia Royale, 2.5M downloads in 3 weeks",
     "https://www.sec.gov/Archives/edgar/data/1717682/000171768218000001/primary_doc.xml":
         "SEC Form D — Teatime Games (Trivia Royale)",
     "https://techcrunch.com/2020/02/14/hq-trivia-shuts-down/":
         "TechCrunch — HQ Trivia shuts down",
+    "https://techcrunch.com/2018/08/14/hq-trivia-apple-tv/":
+        "TechCrunch — HQ Trivia peak concurrent record",
     "https://www.sec.gov/Archives/edgar/data/1734125/000173412518000001/xslFormDX01/primary_doc.xml":
         "SEC Form D — HQ Trivia",
     "https://www.sec.gov/Archives/edgar/data/1366246/000155837017001621/gluu-20161231x10k.htm":
@@ -309,6 +314,8 @@ SOURCE_LABELS = {
         "SEC — Duolingo FY2025 shareholder letter",
     "https://www.sec.gov/Archives/edgar/data/1562088/000162828026053299/q2fy26duolingo6-30x26share.htm":
         "SEC — Duolingo Q2 FY2026 shareholder letter",
+    "https://www.sec.gov/Archives/edgar/data/1562088/000162828026053603/duol-20260630.htm":
+        "SEC — Duolingo Q2 FY2026 10-Q (user counts at 30 Jun 2026)",
     "https://members.thefsga.org/news/Details/new-fsga-research-details-growing-role-of-ai-prediction-markets-in-fantasy-sports-and-sports-betting-341850":
         "FSGA / Angus Reid 2026 — participation research",
     "https://members.thefsga.org/news/Details/new-fsga-research-highlights-industry-stability-and-next-generation-growth-in-fantasy-sports-and-sports-betting-305937":
@@ -327,6 +334,8 @@ SOURCE_LABELS = {
         "SEC 10-K — Skillz FY2023 (Skillz v. AviaGames)",
     "https://web.archive.org/web/20240302210508/https://www.docsend.com/blog/what-vcs-really-want-to-see-inside-your-seed-deck/":
         "DocSend — what VCs want inside a seed deck",
+    "https://web.archive.org/web/20260622084020/https://www.docsend.com/blog/what-vcs-really-want-to-see-inside-your-seed-deck/":
+        "DocSend — per-section dwell times",
     "https://sensortower.com/blog/2025-q2-ios-top-5-trivia%20games-revenue-us-604118ed241bc16eb8b8453a":
         "Sensor Tower — Q2 2025 US iOS trivia revenue (est.)",
     "https://kahoot.com/files/2023/02/4Q22_Kahoot_quarterly_report.pdf":
@@ -345,6 +354,8 @@ SOURCE_LABELS = {
         "SEC 8-K — Skillz FY2022 results (FY2021 peak)",
     "https://carta.com/data/state-of-private-markets-q3-2025/":
         "Carta — State of Private Markets, Q3 2025",
+    "https://news.crunchbase.com/venture/average-seed-funding-amounts-deals-grew-2025/":
+        "Crunchbase — US seed funding, 2025",
     "https://www.factmr.com/report/second-screen-sports-apps-market":
         "Fact.MR — second-screen sports apps market",
     "https://www.thebusinessresearchcompany.com/report/fan-engagement-global-market-report":
@@ -368,6 +379,8 @@ SOURCE_LABELS = {
 # kinds for the handful of sources with no matching entry in verified-claims.json
 SOURCE_KIND_OVERRIDE = {
     "https://www.apptweak.com/": "third-party-estimate",
+    "https://itunes.apple.com/lookup?id=1484354626&country=us": "company-disclosure",
+    "https://play.google.com/store/apps/details?id=live.trivia&hl=en_US": "company-disclosure",
 }
 
 KIND_SHORT = {
@@ -543,70 +556,74 @@ def add_picture_fit(slide, path, x, y, w, h, align="center", valign="middle"):
 NO_STYLE_NO_GRID = "{2D5ABB26-0587-4C30-8999-92F81FD0307C}"
 
 
-def table_widths(headers, rows, total_w, size):
-    cols = len(headers)
-    nat = []
+def table_grid(headers, rows, emphasis_rows=()):
+    """(text, bold) for every cell, including the header row — the single source of
+    truth for measurement and for painting, so the two can never disagree."""
+    grid = [[(h, True) for h in headers]]
+    for ri, row in enumerate(rows):
+        emph = ri in emphasis_rows
+        grid.append([(txt, bool(emph or ci == 0)) for ci, txt in enumerate(row)])
+    return grid
+
+
+def table_widths(grid, total_w, size):
+    """Column widths, or None when the columns cannot hold their longest words."""
+    cols = len(grid[0])
+    nat, need = [], []
     for c in range(cols):
-        cells = [headers[c]] + [r[c] for r in rows]
-        w = max(tw(headers[c], size, True), *[tw(r[c], size) for r in rows]) if rows \
-            else tw(headers[c], size, True)
-        nat.append(w + 2 * CELL_PAD_X)
-    tot = sum(nat)
-    if tot <= total_w:
-        widths = [n + (total_w - tot) * n / tot for n in nat]
-    else:
-        widths = [n * total_w / tot for n in nat]
-    # a column must at least hold its longest single word
-    for _ in range(3):
-        need = []
-        for c in range(cols):
-            lw = max([longest_word(headers[c], size, True)] +
-                     [longest_word(r[c], size) for r in rows] or [0.0]) + 2 * CELL_PAD_X
-            need.append(lw)
-        deficit = sum(max(0.0, need[c] - widths[c]) for c in range(cols))
-        if deficit <= 1e-6:
-            break
-        slack_total = sum(max(0.0, widths[c] - need[c]) for c in range(cols))
-        if slack_total <= 1e-6:
-            break
-        take = min(deficit, slack_total)
-        for c in range(cols):
-            if widths[c] > need[c]:
-                widths[c] -= take * (widths[c] - need[c]) / slack_total
-        for c in range(cols):
-            if widths[c] < need[c]:
-                widths[c] = need[c]
-        s = sum(widths)
-        widths = [w * total_w / s for w in widths]
-    return widths
+        col = [row[c] for row in grid]
+        nat.append(max(tw(t, size, b) for t, b in col) + 2 * CELL_PAD_X)
+        need.append(max(longest_word(t, size, b) for t, b in col) + 2 * CELL_PAD_X)
+    if sum(need) > total_w:
+        return None
+    if sum(nat) <= total_w:
+        extra, s = total_w - sum(nat), sum(nat)
+        return [n + extra * n / s for n in nat]
+    remain = total_w - sum(need)
+    appetite = [nat[c] - need[c] for c in range(cols)]
+    total_ap = sum(appetite)
+    if total_ap <= 1e-9:
+        return [n + remain / cols for n in need]
+    return [need[c] + remain * appetite[c] / total_ap for c in range(cols)]
 
 
-def table_row_heights(headers, rows, widths, size):
+def table_row_heights(grid, widths, size):
     lh = size * 1.14 / 72.0
     heights = []
-    for cells, bold in [(headers, True)] + [(r, False) for r in rows]:
+    for row in grid:
         n = 1
-        for c, txt in enumerate(cells):
+        for c, (txt, bold) in enumerate(row):
             n = max(n, len(wrap(txt, widths[c] - 2 * CELL_PAD_X, size, bold)))
         heights.append(max(MIN_ROW_H, n * lh + 2 * CELL_PAD_Y))
     return heights
 
 
-def fit_table(headers, rows, total_w, max_h, start=SZ_TABLE, floor=SZ_TABLE_MIN):
-    size = start
-    while size > floor:
-        widths = table_widths(headers, rows, total_w, size)
-        heights = table_row_heights(headers, rows, widths, size)
-        if sum(heights) <= max_h:
-            return size, widths, heights
+def fit_table(grid, total_w, max_h, start=SZ_TABLE, floor=SZ_TABLE_MIN):
+    size, best = start, None
+    while size >= floor:
+        widths = table_widths(grid, total_w, size)
+        if widths is not None:
+            heights = table_row_heights(grid, widths, size)
+            if best is None:
+                best = (size, widths, heights)
+            if sum(heights) <= max_h:
+                return size, widths, heights
         size = round(size - 0.5, 2)
-    widths = table_widths(headers, rows, total_w, floor)
-    heights = table_row_heights(headers, rows, widths, floor)
-    return floor, widths, heights
+    if best is not None:
+        return best
+    widths = table_widths(grid, total_w, floor) or [total_w / len(grid[0])] * len(grid[0])
+    return floor, widths, table_row_heights(grid, widths, floor)
 
 
 def add_table(slide, headers, rows, x, y, w, max_h, start=SZ_TABLE, emphasis_rows=()):
-    size, widths, heights = fit_table(headers, rows, w, max_h, start)
+    grid = table_grid(headers, rows, emphasis_rows)
+    size, widths, heights = fit_table(grid, w, max_h, start)
+    natural = sum(heights)
+    # a short table looks stranded in a tall band: grow the rows to fill it, but
+    # never past 1.8x their natural height, and never past the band
+    target = min(max_h, natural * 1.8)
+    if natural > 0 and target > natural:
+        heights = [h * target / natural for h in heights]
     total_h = sum(heights)
     gf = slide.shapes.add_table(len(rows) + 1, len(headers), Inches(x), Inches(y),
                                 Inches(w), Inches(total_h))
@@ -641,18 +658,14 @@ def add_table(slide, headers, rows, x, y, w, max_h, start=SZ_TABLE, emphasis_row
         r.text = text
         style_run(r, size, color, bold=bold)
 
-    for c, htxt in enumerate(headers):
-        paint(tbl.cell(0, c), htxt, True, VOLT, PANEL)
-    for ri, row in enumerate(rows):
+    for c, (txt, bold) in enumerate(grid[0]):
+        paint(tbl.cell(0, c), txt, bold, VOLT, PANEL)
+    for ri, row in enumerate(grid[1:]):
         fill = PANEL if ri % 2 == 0 else PANEL_ALT
         emph = ri in emphasis_rows
-        for c, txt in enumerate(row):
-            color = TEXT
-            if emph:
-                color = VOLT
-            elif txt.strip().startswith("$"):
-                color = GOLD
-            paint(tbl.cell(ri + 1, c), txt, emph or c == 0, color, fill)
+        for c, (txt, bold) in enumerate(row):
+            color = VOLT if emph else (GOLD if txt.strip().startswith("$") else TEXT)
+            paint(tbl.cell(ri + 1, c), txt, bold, color, fill)
     return total_h
 
 
@@ -660,29 +673,44 @@ def add_table(slide, headers, rows, x, y, w, max_h, start=SZ_TABLE, emphasis_row
 # slide renderers
 # --------------------------------------------------------------------------- #
 
-SHOTS = "/tmp/claude-0/-home-user-fact-duel/ebdb1205-a08d-56c2-9dfe-5856a1ecc14f/scratchpad/shots/release"
+SHOT_DIRS = [os.path.join(INV, "shots")]  # in-repo copies; the plan's own paths are the fallback
+
+
+def shot(name, spec=None):
+    """Resolve a screenshot by file name: repo copy first, then the plan's own path."""
+    for d in SHOT_DIRS:
+        cand = os.path.join(d, name)
+        if os.path.exists(cand):
+            return cand
+    if spec:
+        cand = os.path.join(os.path.dirname(spec), name)
+        if os.path.exists(cand):
+            return cand
+    return None
+
 
 # each plan image is shown next to its counterpart on the other form factor
 IMAGE_PAIRS = {
     "phone-arena.png": [
-        (os.path.join(SHOTS, "desktop-arena.png"),
-         "Choosing a format and an opponent. Every bot is labelled BOT before you play."),
-        (os.path.join(SHOTS, "phone-arena.png"), "The same choice on a phone."),
+        ("desktop-arena.png",
+         "Choosing a format and an opponent. The practice opponent carries a BOT badge "
+         "(app/screens/play/opponent-picker.tsx)."),
+        ("phone-arena.png", "The same choice on a phone."),
     ],
     "phone-home.png": [
-        (os.path.join(SHOTS, "desktop-home.png"),
+        ("desktop-home.png",
          "Home: level and XP, day streak, gems, Arena Rank, the day's quests, one-tap duel."),
-        (os.path.join(SHOTS, "phone-home.png"), "Home on a phone."),
+        ("phone-home.png", "Home on a phone."),
     ],
     "desktop-journeys.png": [
-        (os.path.join(SHOTS, "desktop-journeys.png"),
+        ("desktop-journeys.png",
          "Expeditions: short untimed routes, a Steady-or-Bold choice, a stamp for finishing one."),
-        (os.path.join(SHOTS, "phone-journeys.png"), "Expeditions on a phone."),
+        ("phone-journeys.png", "Expeditions on a phone."),
     ],
     "desktop-passport.png": [
-        (os.path.join(SHOTS, "desktop-passport.png"),
+        ("desktop-passport.png",
          "The player record: level and XP, Arena Rank, day streak, mastery — all device-local."),
-        (os.path.join(SHOTS, "phone-passport.png"), "The record on a phone."),
+        ("phone-passport.png", "The record on a phone."),
     ],
 }
 
@@ -693,8 +721,10 @@ def images_for(spec):
     base = os.path.basename(spec)
     pair = IMAGE_PAIRS.get(base)
     if pair:
-        return [(p, c) for p, c in pair if os.path.exists(p)]
-    return [(spec, "")] if os.path.exists(spec) else []
+        found = [(shot(name, spec), caption) for name, caption in pair]
+        return [(p, c) for p, c in found if p]
+    direct = shot(base, spec)
+    return [(direct, "")] if direct else []
 
 
 def render_title(slide, plan, s, page_no):
@@ -778,23 +808,34 @@ def render_chart(slide, s, top, accent):
 def render_chart_and_table(slide, s, top, accent):
     chart_path = os.path.join(CHART_DIR, s["chart"] + ".png")
     band_h = CONTENT_BOT - top
-    bsize, bh = fit_block(s["body"], CONTENT_W - 0.22, band_h * 0.34, 13.5, 10)
-    body_block(slide, MARGIN, top, CONTENT_W, bh + 0.04, s["body"], start=bsize, floor=10,
-               bullet_color=accent)
-    y = top + bh + 0.30
-    rest = CONTENT_BOT - y
     chart_w = 4.95
     gap = 0.32
     table_w = CONTENT_W - chart_w - gap
+    grid = table_grid(s["table"]["headers"], s["table"]["rows"])
+    cap = body_cap_for_table(grid, table_w, band_h, share=0.36)
+    bsize, bh = fit_block(s["body"], CONTENT_W - 0.22, cap, 13.5, 9.0)
+    body_block(slide, MARGIN, top, CONTENT_W, bh + 0.04, s["body"], start=bsize, floor=9.0,
+               bullet_color=accent)
+    y = top + bh + 0.30
+    rest = CONTENT_BOT - y
     add_table(slide, s["table"]["headers"], s["table"]["rows"], MARGIN, y, table_w, rest,
               start=10.5)
     add_picture_fit(slide, chart_path, MARGIN + table_w + gap, y, chart_w, rest)
 
 
+def body_cap_for_table(grid, total_w, band_h, share=0.42, gap=0.30):
+    """How much of the band the body copy may take before the table stops fitting."""
+    floor_w = table_widths(grid, total_w, SZ_TABLE_MIN)
+    floor_h = sum(table_row_heights(grid, floor_w, SZ_TABLE_MIN)) if floor_w else band_h * 0.5
+    return max(band_h * 0.14, min(band_h * share, band_h - floor_h - gap))
+
+
 def render_table(slide, s, top, accent, emphasis_rows=()):
     band_h = CONTENT_BOT - top
-    bsize, bh = fit_block(s["body"], CONTENT_W - 0.22, band_h * 0.42, 14.0, 10)
-    body_block(slide, MARGIN, top, CONTENT_W, bh + 0.04, s["body"], start=bsize, floor=10,
+    grid = table_grid(s["table"]["headers"], s["table"]["rows"], emphasis_rows)
+    cap = body_cap_for_table(grid, CONTENT_W, band_h)
+    bsize, bh = fit_block(s["body"], CONTENT_W - 0.22, cap, 14.0, 9.0)
+    body_block(slide, MARGIN, top, CONTENT_W, bh + 0.04, s["body"], start=bsize, floor=9.0,
                bullet_color=accent)
     y = top + bh + 0.30
     add_table(slide, s["table"]["headers"], s["table"]["rows"], MARGIN, y, CONTENT_W,
@@ -1000,7 +1041,8 @@ def build_source_register_slides(plan, kinds):
             kind = KIND_SHORT.get(kinds.get(src, ""), kinds.get(src, "third-party estimate"))
         rows.append([source_label(src), kind, ", ".join(str(p) for p in pages), src])
 
-    per = 17
+    # four appendix pages, however many sources the plan cites
+    per = max(13, -(-len(rows) // 4))
     chunks = [rows[i:i + per] for i in range(0, len(rows), per)]
     slides = []
     for i, chunk in enumerate(chunks):
@@ -1237,18 +1279,23 @@ def validate(expected_slides):
                 heights = [r.height for r in tbl.rows]
                 for ri, row in enumerate(tbl.rows):
                     for ci, cell in enumerate(row.cells):
+                        # a table cell's text inset lives on a:tcPr, not on the body's bodyPr
+                        insets = (cell.margin_left, cell.margin_right,
+                                  cell.margin_top, cell.margin_bottom)
                         _check_frame(cell.text_frame, widths[ci], heights[ri],
-                                     i, "table cell r%d c%d" % (ri, ci), problems, warnings)
+                                     i, "table cell r%d c%d" % (ri, ci), problems, warnings,
+                                     insets=insets)
     return count, problems, warnings
 
 
-def _check_frame(tf, width_emu, height_emu, slide_no, what, problems, warnings):
+def _check_frame(tf, width_emu, height_emu, slide_no, what, problems, warnings, insets=None):
     if width_emu is None or height_emu is None:
         return
-    inset_l = tf.margin_left if tf.margin_left is not None else Pt(7.2)
-    inset_r = tf.margin_right if tf.margin_right is not None else Pt(7.2)
-    inset_t = tf.margin_top if tf.margin_top is not None else Pt(3.6)
-    inset_b = tf.margin_bottom if tf.margin_bottom is not None else Pt(3.6)
+    if insets is None:
+        insets = (tf.margin_left, tf.margin_right, tf.margin_top, tf.margin_bottom)
+    defaults = (Pt(7.2), Pt(7.2), Pt(3.6), Pt(3.6))
+    inset_l, inset_r, inset_t, inset_b = [
+        d if v is None else v for v, d in zip(insets, defaults)]
     usable_w = (width_emu - inset_l - inset_r) / 914400.0
     usable_h = (height_emu - inset_t - inset_b) / 914400.0
     if usable_w <= 0:
@@ -1286,6 +1333,8 @@ def _check_frame(tf, width_emu, height_emu, slide_no, what, problems, warnings):
         total_h += lines * size * ls / 72.0
         if p.space_before is not None:
             total_h += p.space_before.pt / 72.0
+    if total_h <= 0.0:  # decorative shape (rules, panels) — nothing to overflow
+        return
     if total_h > usable_h * 1.06 + 0.02:
         warnings.append("slide %d %s: text needs ~%.2fin, box is %.2fin"
                         % (slide_no, what, total_h, usable_h))
