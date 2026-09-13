@@ -11,7 +11,7 @@
  * Round/match/fact XP is shown inline by the screens themselves (float text), so it is not toasted here.
  */
 import { useEffect, useRef } from 'react';
-import { useJuice } from '@/components/fx';
+import { useJuice, type ToastInput } from '@/components/fx';
 import { LazyRewardMedal } from '@/components/three';
 import { achievementById, levelForXp, progressionDiff, RANK_TIERS } from '@/lib/progression.mjs';
 
@@ -29,7 +29,10 @@ export function useProgressionFeedback(progression: any, quiet: Quiet) {
   const juice = useJuice();
   const prev = useRef<any>(null);
   const toastQueue = useRef<LogEntry[]>([]);
-  const ceremonyQueue = useRef<Array<() => void>>([]);
+  // Each entry is one candidate ceremony. A single reward burst (level + badge + rank at the end of
+  // a match) shows only the most significant one; the rest arrive as toasts, so the player is never
+  // walked through a stack of full-screen modals.
+  const ceremonyQueue = useRef<Array<{ rank: number; open: () => void; toast: ToastInput }>>([]);
   const handled = useRef(new Set<string>());
   const streakCurrent = useRef<number | null>(null);
 
@@ -53,16 +56,19 @@ export function useProgressionFeedback(progression: any, quiet: Quiet) {
     if (diff.leveledUp) {
       const { to } = diff.leveledUp;
       const info = levelForXp(progression.xp);
-      ceremonyQueue.current.push(() =>
-        juice.ceremony({
-          kind: 'level',
-          kicker: 'LEVEL UP',
-          title: `Level ${to}`,
-          subtitle: `${info.title} · keep the floodlights on`,
-          rewards: [{ label: 'Gems', icon: '💎', value: `+${25 * (to - diff.leveledUp!.from)}` }],
-          slot: <LazyRewardMedal variant="level" replayKey={to} size={1.1} />,
-        }),
-      );
+      ceremonyQueue.current.push({
+        rank: 3,
+        toast: { kind: 'xp', title: `Level ${to}`, body: info.title },
+        open: () =>
+          juice.ceremony({
+            kind: 'level',
+            kicker: 'LEVEL UP',
+            title: `Level ${to}`,
+            subtitle: `${info.title} · keep the floodlights on`,
+            rewards: [{ label: 'Gems', icon: '💎', value: `+${25 * (to - diff.leveledUp!.from)}` }],
+            slot: <LazyRewardMedal variant="level" replayKey={to} size={1.1} />,
+          }),
+      });
     }
     for (const id of diff.newAchievements) {
       const a = achievementById(id) as
@@ -76,52 +82,61 @@ export function useProgressionFeedback(progression: any, quiet: Quiet) {
           }
         | undefined;
       if (!a) continue;
-      ceremonyQueue.current.push(() =>
-        juice.ceremony({
-          kind: 'achievement',
-          kicker: `${a.tier.toUpperCase()} BADGE`,
-          title: a.name,
-          subtitle: a.description,
-          rewards: [
-            { label: 'XP', icon: '⚡', value: `+${a.xp}` },
-            { label: 'Gems', icon: '💎', value: `+${a.gems}` },
-          ],
-          slot: <LazyRewardMedal variant="achievement" tier={a.tier} replayKey={a.id} />,
-        }),
-      );
+      ceremonyQueue.current.push({
+        rank: 2,
+        toast: { kind: 'achievement', title: a.name, body: a.description },
+        open: () =>
+          juice.ceremony({
+            kind: 'achievement',
+            kicker: `${a.tier.toUpperCase()} BADGE`,
+            title: a.name,
+            subtitle: a.description,
+            rewards: [
+              { label: 'XP', icon: '⚡', value: `+${a.xp}` },
+              { label: 'Gems', icon: '💎', value: `+${a.gems}` },
+            ],
+            slot: <LazyRewardMedal variant="achievement" tier={a.tier} replayKey={a.id} />,
+          }),
+      });
     }
     if (diff.rankUp) {
       const { to } = diff.rankUp;
-      ceremonyQueue.current.push(() =>
-        juice.ceremony({
-          kind: 'level',
-          kicker: 'RANK UP',
-          title: `${rankLabel(to)} tier`,
-          subtitle: 'Arena Rank on this device. Your floor is protected from here.',
-          slot: (
-            <LazyRewardMedal
-              variant="achievement"
-              tier={to === 'diamond' || to === 'platinum' ? 'gold' : to === 'gold' ? 'gold' : 'silver'}
-              replayKey={to}
-            />
-          ),
-        }),
-      );
+      ceremonyQueue.current.push({
+        rank: 1,
+        toast: { kind: 'achievement', title: `${rankLabel(to)} tier`, body: 'Arena Rank, on this device' },
+        open: () =>
+          juice.ceremony({
+            kind: 'level',
+            kicker: 'RANK UP',
+            title: `${rankLabel(to)} tier`,
+            subtitle: 'Arena Rank on this device. Your floor is protected from here.',
+            slot: (
+              <LazyRewardMedal
+                variant="achievement"
+                tier={to === 'bronze' || to === 'silver' ? 'silver' : 'gold'}
+                replayKey={to}
+              />
+            ),
+          }),
+      });
     }
     const current = progression.streak?.current ?? 0;
     if (diff.streakChanged && current > (streakCurrent.current ?? 0) && STREAK_MILESTONES.has(current)) {
-      ceremonyQueue.current.push(() =>
-        juice.ceremony({
-          kind: 'streak',
-          kicker: 'STREAK MILESTONE',
-          title: `${current} days`,
-          subtitle:
-            current >= 7
-              ? 'A shield is yours for the next missed day.'
-              : 'Come back tomorrow to keep it alight.',
-          slot: <LazyRewardMedal variant="streak" replayKey={current} />,
-        }),
-      );
+      ceremonyQueue.current.push({
+        rank: 0,
+        toast: { kind: 'streak', title: `${current}-day streak`, body: 'Keep it alight tomorrow' },
+        open: () =>
+          juice.ceremony({
+            kind: 'streak',
+            kicker: 'STREAK MILESTONE',
+            title: `${current} days`,
+            subtitle:
+              current >= 7
+                ? 'A shield is yours for the next missed day.'
+                : 'Come back tomorrow to keep it alight.',
+            slot: <LazyRewardMedal variant="streak" replayKey={current} />,
+          }),
+      });
     }
     streakCurrent.current = current;
   }, [progression, juice]);
@@ -153,8 +168,21 @@ export function useProgressionFeedback(progression: any, quiet: Quiet) {
       }
     }
     if (!quiet.ceremonies && ceremonyQueue.current.length) {
-      const open = ceremonyQueue.current.splice(0);
-      for (const fn of open) fn();
+      const pending = ceremonyQueue.current.splice(0);
+      pending.sort((a, b) => b.rank - a.rank);
+      const [headline, ...rest] = pending;
+      headline.open();
+      for (const item of rest) juice.toast({ ...item.toast, silent: true });
     }
   }, [quiet.toasts, quiet.ceremonies, progression, juice]);
+}
+
+/**
+ * Renders nothing; exists so the hook runs *inside* `<FxProvider>`. Called from outside it,
+ * `useJuice()` falls back to the event bus, which cannot carry a React `slot`, and every ceremony
+ * loses its 3D medal.
+ */
+export function ProgressionFeedback({ progression, quiet }: { progression: any; quiet: Quiet }) {
+  useProgressionFeedback(progression, quiet);
+  return null;
 }

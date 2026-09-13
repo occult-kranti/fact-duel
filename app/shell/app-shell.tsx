@@ -18,13 +18,26 @@ export type AppShellProps = {
   topbar: Omit<TopbarProps, 'inRoom' | 'active'>;
   /** Rendered under the main column when no room is open. */
   footer?: ReactNode;
+  /** Rendered inside the effects provider, before the shell chrome. Use for effect-driving
+   *  components that must see the real FX context (toasts, ceremonies with 3D slots). */
+  effects?: ReactNode;
   children: ReactNode;
 };
 
 /* Layout grid: topbar / (nav | main / footer). The legacy generation classes (site-shell,
  * arcade-shell, rivalry-shell, journey-shell, skin-*) stay on the root so the per-screen CSS
  * keeps matching until each screen is restyled. */
-export function AppShell({ tab, inRoom, active, skin, onNavigate, topbar, footer, children }: AppShellProps) {
+export function AppShell({
+  tab,
+  inRoom,
+  active,
+  skin,
+  onNavigate,
+  topbar,
+  footer,
+  effects,
+  children,
+}: AppShellProps) {
   const className = [
     'fd-shell',
     'site-shell',
@@ -42,6 +55,7 @@ export function AppShell({ tab, inRoom, active, skin, onNavigate, topbar, footer
       {/* FX_PROVIDER_SLOT — the global effects provider (particle canvas, toasts, ceremonies)
           wraps the whole shell; it renders nothing of its own on the server. */}
       <FxProvider>
+        {effects}
         <a className="skip-link" href="#main-content">
           Skip to content
         </a>

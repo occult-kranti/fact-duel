@@ -15,7 +15,7 @@ import { X } from 'lucide-react';
 import { usePlayer } from './use-player';
 import { request } from '@/lib/duel-client';
 import { AppShell } from './shell/app-shell';
-import { useProgressionFeedback } from './screens/use-progression-feedback';
+import { ProgressionFeedback } from './screens/use-progression-feedback';
 import { GemsChip, LevelRing, StreakChip } from './screens/player/topbar-chips';
 import { SettingsSheet, SETTINGS_KEYS, type MotionPref } from './shell/settings-sheet';
 import { HomeScreen } from './screens/home-screen';
@@ -94,12 +94,6 @@ export default function Arena() {
     [haptics, setHaptics] = useState(true),
     [motion, setMotion] = useState<MotionPref>('full');
   const player = usePlayer(room, credentials?.profileEpoch);
-  useProgressionFeedback(player.progression, {
-    toasts: !!room && ['scheduled', 'playing'].includes(room.phase) && !room.round?.result,
-    // Hold full-screen ceremonies through the whole live round, including the reveal window:
-    // celebrating a badge on top of the correct answer hides it and misreads a wrong answer.
-    ceremonies: !!room && !room.settled && room.phase !== 'between',
-  });
   const { clear: clearJournal } = player;
   const playedCues = useRef(new Set<string>()),
     lastFocusKey = useRef<string | null>(null);
@@ -784,6 +778,17 @@ export default function Arena() {
   return (
     <>
       <AppShell
+        effects={
+          <ProgressionFeedback
+            progression={player.progression}
+            quiet={{
+              // Toasts stay out of the way while a question is on screen; full-screen ceremonies
+              // wait for the room to close entirely, so nothing ever covers a round or its reveal.
+              toasts: !!room && ['scheduled', 'playing'].includes(room.phase) && !room.round?.result,
+              ceremonies: !!room,
+            }}
+          />
+        }
         tab={tab}
         inRoom={!!room}
         active={active}

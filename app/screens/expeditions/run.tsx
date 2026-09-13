@@ -65,6 +65,7 @@ export function ExpeditionRun({
     burstTarget = useRef<Element | null>(null),
     card = useRef<HTMLDivElement | null>(null),
     feedback = useRef<HTMLDivElement | null>(null),
+    nextButton = useRef<HTMLButtonElement | null>(null),
     timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   // Answers already on screen when this run mounted have had their feedback: never replay them.
   const celebrated = useRef(new Set<number>(run.answers.map((_: any, i: number) => i)));
@@ -108,9 +109,11 @@ export function ExpeditionRun({
   useEffect(() => {
     if (!answered) return;
     const t = setTimeout(() => {
-      feedback.current?.scrollIntoView({
+      // Scroll the Next button itself clear of the bottom tab bar: scrolling the feedback block
+      // left the CTA under the nav, where a tap hit a nav tab instead.
+      (nextButton.current ?? feedback.current)?.scrollIntoView({
         behavior: reducedMotion() ? 'auto' : 'smooth',
-        block: 'nearest',
+        block: 'end',
       });
     }, 280);
     return () => clearTimeout(t);
@@ -312,6 +315,7 @@ export function ExpeditionRun({
             )}
             <button
               type="button"
+              ref={nextButton}
               className="fd-exp-primary fd-exp-next"
               disabled={writing || !player.loaded}
               onPointerDown={tap}
@@ -335,7 +339,13 @@ export function ExpeditionRun({
       </div>
 
       <div className="fd-exp-pause">
-        <button type="button" className="fd-exp-ghost" disabled={writing} onPointerDown={tap} onClick={onDone}>
+        <button
+          type="button"
+          className="fd-exp-ghost"
+          disabled={writing}
+          onPointerDown={tap}
+          onClick={onDone}
+        >
           <Pause size={16} aria-hidden="true" />
           Pause expedition
         </button>

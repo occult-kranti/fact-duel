@@ -905,7 +905,9 @@
 }
 .fd-exp-run.is-goal .fd-exp-question {
   border-color: color-mix(in oklab, var(--cyan) 45%, transparent);
-  box-shadow: var(--shadow-card), 0 0 34px color-mix(in oklab, var(--cyan) 16%, transparent);
+  box-shadow:
+    var(--shadow-card),
+    0 0 34px color-mix(in oklab, var(--cyan) 16%, transparent);
 }
 .fd-exp-run.is-goal .fd-exp-rail--rail::before {
   border-top-color: color-mix(in oklab, var(--cyan) 45%, var(--line));
@@ -1277,8 +1279,7 @@
   padding: 22px 18px;
   border: 1px solid var(--fd-line);
   border-radius: var(--r-hero);
-  background:
-    radial-gradient(ellipse 70% 60% at 50% 0%, var(--gold-soft), transparent 70%), var(--bg-1);
+  background: radial-gradient(ellipse 70% 60% at 50% 0%, var(--gold-soft), transparent 70%), var(--bg-1);
   background-image:
     radial-gradient(ellipse 70% 60% at 50% 0%, var(--gold-soft), transparent 70%), var(--fd-paper);
   text-align: center;
@@ -1893,4 +1894,10 @@
 :root[data-motion='off'] .fd-club * {
   animation-duration: 0.01ms !important;
   transition-duration: 0.01ms !important;
+}
+
+/* The Next / Finish button must clear the bottom tab bar when scrolled into view; without this
+   the CTA lands under the nav and a tap hits a nav tab instead. */
+.fd-exp-next {
+  scroll-margin-bottom: calc(var(--nav-h, 56px) + var(--gutter, 16px) + env(safe-area-inset-bottom, 0px));
 }
