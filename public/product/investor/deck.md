@@ -355,7 +355,7 @@ Milestones 4-6 are untouched — grow the bank from 54 questions, ship an oppone
 ### Body
 
 - Route A (P) — paid entry to a time-limited expedition event: one entry per player, rotating question set.
-- Nothing of Route A exists. No payment surface, no accounts, and expeditions today are free and replayable.
+- Nothing of Route A exists: no payment surface, no accounts, expeditions free and replayable. Duels stake simulated coins only.
 - Route B (P) — habit subscription. Duolingo: $1,037.6M FY2025 on a streak loop; 12.7M of 140.6M MAU paid, 9.03%.
 - Cross-check at base-case Year-3 scale: 105,900 MAU x 9.03% x $43.99/yr = $420,666 (P), versus $1,630,517 (P) from install economics.
 - Diverging 3.88x, Year-3 revenue is a band — $0.4M-$1.6M (P), not $1.6M. Today: zero users, zero revenue.
@@ -382,7 +382,7 @@ Milestones 4-6 are untouched — grow the bank from 54 questions, ship an oppone
 
 Lead with what is NOT built, not with the model. Route A is the founder’s own route, recorded in numbers.md §4.4b on 14 September 2026: paid entry to a time-limited expedition event, one entry per player, a rotating question set so answers cannot be passed around. It is a coherent design — single entry is what makes a leaderboard mean anything, and rotation is the anti-collusion mechanism a fixed bank cannot provide.
 
-Volunteer the gap before you are asked, because a reader can check every word of it in the public repository in about two minutes. Today: there is no payment surface anywhere in the tree; the duel coins say on screen "Free simulated coins. No monetary value."; expedition stake tiers stake RUN-SCORE POINTS and never a currency (+2/0, +3/-1, +4/-3, lib/expeditions.mjs), under a design rule that nothing stakes a currency and nothing is minted by losing; expeditions are replayable by design and there are no accounts, so "one entry per player" is not yet expressible; and a route’s six cards are frozen — a replay reshuffles the OPTIONS, not the questions, out of a 54-question bank.
+Volunteer the gap before you are asked, because a reader can check every word of it in the public repository in about two minutes. Today: there is no payment surface anywhere in the tree; the duel coins say on screen "Free simulated coins. No monetary value."; expedition stake tiers stake RUN-SCORE POINTS and never a currency (+2/0, +3/-1, +4/-3, lib/expeditions.mjs), under the expedition betting rule that the bet itself stakes no currency — and note the scope of that rule carefully, because a duel DOES stake coins: 0/10/25/50/100 simulated coins per room, reserved into a stake x 2 escrow (lib/server/room-engine.mjs:37, 181-185), which is the nearest shipped mechanism to the coin half of the ask. It is per-room, never persisted to a wallet, and labelled on screen as having no monetary value; expeditions are replayable by design and there are no accounts, so "one entry per player" is not yet expressible; and a route’s six cards are frozen — a replay reshuffles the OPTIONS, not the questions, out of a 54-question bank.
 
 What is already built and would be reused: lib/events.mjs derives up to four limited-time modes a month, deterministically from the month and a hand-checked calendar, so the time-limited and rotating halves have a working mechanism behind them. It rotates duel modes today, pays XP, and takes no money.
 
@@ -476,7 +476,7 @@ STRUCTURE: kind "table", the six-row landscape table and all sixteen sources car
 - Measurement selection. The cohort rate counts only devices that opt into the anonymous ping — consenting devices, not all. We will publish it as exactly that.
 - Content depth. 54 sample questions is a demo bank; the ask funds four engineers and no content line (§4.4).
 - Model honesty. Our base case (P) out-monetises a 9.03%-conversion subscription at $43.99/yr by 3.88x. We flag it, not hide it.
-- Wagering law. Route A stakes real money on a knowledge outcome — regulated as skill gaming or gambling in many jurisdictions. Unanswered.
+- Wagering law. Route A (P) would stake real money on a knowledge outcome: skill gaming or gambling in many jurisdictions. Nothing takes money today.
 
 ### Sources
 
@@ -491,6 +491,8 @@ STRUCTURE: kind "table", the six-row landscape table and all sixteen sources car
 - FACT//DUEL internal: public/product/investor/numbers.md §4.4b (company disclosure)
 
 ### Speaker notes
+
+The plan marker and the conditional mood on this line are load-bearing. Every other bullet on this slide is a fact that is true today, so an unmarked present-tense "Route A stakes real money" reads, to anyone landing here out of order, as a description of a shipped real-money wagering product. There is no payment surface anywhere in the tree and no accounts of any kind.
 
 Eight risks now, not seven. Route A on the business-model slide takes real money on the outcome of a knowledge question, and in many jurisdictions that is regulated as skill gaming or gambling rather than as a game sale. We have no answer and we say so rather than discovering it in diligence.
 

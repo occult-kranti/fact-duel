@@ -377,8 +377,8 @@ Per a16z and CRV, replace the three-year model with milestones. These are chosen
 ### 4.4b The founder's named monetisation route, and what it would take
 
 Stated by the founder, 14 Sep 2026, and recorded here so the deck can cite it rather than assert it:
-**paid entry to a time-limited expedition event — one entry per player, with a rotating question set
-so the answers cannot be passed around.** It is a coherent model: single entry is what makes a
+**paid entry to a time-limited expedition event, in which players stake money and coins on their own
+answers — one entry per player, with a rotating question set so the answers cannot be passed around.** It is a coherent model: single entry is what makes a
 leaderboard meaningful, and rotation is the anti-collusion mechanism that a fixed bank cannot provide.
 
 **None of it is built.** Stated plainly, because the deck's whole credibility strategy is that every
@@ -387,9 +387,9 @@ claim survives a reader checking it against the public repository:
 | The route needs | What ships today | Where it is blocked |
 |---|---|---|
 | Real-money entry | No payment surface exists anywhere in the tree. Duel coins are labelled on screen as *"Free simulated coins. No monetary value."* | Not started |
-| A staked wager | Expedition tiers stake **run-score points**, never a currency — `CONFIDENCE` pays +2/0, +3/−1, +4/−3 (`lib/expeditions.mjs`). Design rule R5 is *nothing stakes a currency and nothing is minted by losing* | Deliberate design; reversing it is a decision, not a task |
+| A staked wager | Expedition tiers stake **run-score points**, never a currency — `CONFIDENCE` pays +2/0, +3/−1, +4/−3 (`lib/expeditions.mjs`). **A duel, though, already stakes coins**: 0/10/25/50/100 *simulated* coins per room, reserved into a `stake × 2` escrow (`lib/server/room-engine.mjs:37, 181-185`), per-room, never persisted to a wallet, no monetary value — the nearest shipped mechanism to the coin half of the ask. Betting-spec rule R5 scopes to the expedition bet, not the product (§1.1: *"not gems, not room coins"*) | Partly shipped in simulated form; taking real money is the decision, not the mechanic |
 | One entry per player | Expeditions are replayable by design — `Replay for practice` ships, and the finish screen deliberately does not block it. There are no accounts, so "per player" is not expressible | Milestone 1 (accounts) |
-| A rotating question set | A route's six cards are frozen (`route.ids` = `q001`…`q006`); a replay reshuffles the **options**, not the questions. The bank is 54 | Milestone 4 (bank size) |
+| A rotating question set | A route's six cards are frozen — `route.ids` is six consecutive ids from that route's `start`, so the nine routes pin `q001`…`q054` between them, the whole bank. A replay reshuffles the **options**, not the questions | Milestone 4 (bank size) |
 | A legal answer | — | Unanswered: real money on a knowledge outcome is regulated as skill gaming or gambling in many jurisdictions, and the deck's own landscape slide notes Skillz runs real-money cash tournaments and has never been profitable |
 
 **What is already built that the route would reuse:** the events engine (`lib/events.mjs`) derives up to
