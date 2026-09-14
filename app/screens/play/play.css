@@ -402,11 +402,16 @@
   background: var(--bg-1);
 }
 .fd-play .fd-field {
-  flex-direction: column;
   display: flex;
   flex-direction: column;
   gap: 7px;
   min-width: 0;
+}
+.fd-play .fd-field-note {
+  margin: 0;
+  font-size: var(--fs-12);
+  line-height: 1.45;
+  color: var(--muted);
 }
 .fd-play .fd-field > label {
   font-size: var(--fs-14);

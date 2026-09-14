@@ -47,8 +47,8 @@ export function Mastery({ progression }: { progression: any }) {
             </div>
             {!rounds && (
               <p className="fd-disclaimer">
-                Nothing recorded yet — a duel or an expedition in any {label.toLowerCase()} topic starts these
-                bars.
+                Nothing recorded yet — a duel round in any {label.toLowerCase()} topic starts these bars.
+                Expedition cards are recorded in your Vault and your Conviction, not here.
               </p>
             )}
           </section>

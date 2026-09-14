@@ -9,6 +9,7 @@
  */
 import { useCallback } from 'react';
 import { useJuice } from '@/components/fx';
+import { gatePress } from '@/lib/fx/press-gate';
 
 export {
   AnswerButton,
@@ -20,15 +21,20 @@ export {
 } from '../answer-button';
 
 /**
- * Press feedback for any control: a tap cue plus a light haptic on pointer *down*.
+ * Press feedback for any control: a tap cue plus a light haptic, gated through lib/fx/press-gate
+ * so a scroll fling is silent and only a real press is heard.
  * Never call preventDefault here — the click must not be deferred or swallowed.
  */
 export function usePress(): (event?: unknown) => void {
   const juice = useJuice();
-  return useCallback(() => {
-    juice.sound('tap');
-    juice.haptic('light');
-  }, [juice]);
+  return useCallback(
+    (event?: unknown) =>
+      gatePress(event, () => {
+        juice.sound('tap');
+        juice.haptic('light');
+      }),
+    [juice],
+  );
 }
 
 /** Filled dot when a seat is ready, hollow ring when it is not. */

@@ -755,7 +755,9 @@
 }
 .fd-exp-stakes {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  /* Three tiers in a half-width brief panel: auto-fit wraps to 2+1 and then to one column rather
+     than squeezing "Called" to two characters at 320px. */
+  grid-template-columns: repeat(auto-fit, minmax(136px, 1fr));
   gap: 10px;
 }
 .fd-exp-stake {
@@ -800,6 +802,11 @@
 .fd-exp-stake--bold .fd-exp-stake-top {
   color: var(--gold-text);
 }
+/* Ember reads hotter than gold at a glance, but the tier is never colour alone: every card carries
+   its own icon and its name in text, and the payout is written out beside it. */
+.fd-exp-stake--called .fd-exp-stake-top {
+  color: var(--ember-text);
+}
 .fd-exp-stake--steady.is-active {
   border-color: color-mix(in oklab, var(--cyan) 50%, transparent);
   background: var(--fd-a-soft);
@@ -807,6 +814,10 @@
 .fd-exp-stake--bold.is-active {
   border-color: color-mix(in oklab, var(--gold) 50%, transparent);
   background: var(--gold-soft);
+}
+.fd-exp-stake--called.is-active {
+  border-color: color-mix(in oklab, var(--ember) 50%, transparent);
+  background: var(--ember-soft);
 }
 .fd-exp-contract {
   display: flex;
@@ -884,26 +895,41 @@
 .fd-exp-run-top h1 {
   font-size: var(--fs-28);
 }
+/* Two stacked fractions now, not one signed total: CARDS RIGHT over CALLS LANDED. Both carry their
+   denominator, so neither can be mistaken for a running score the next card has to dig out of. */
 .fd-exp-runscore {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: stretch;
   flex: 0 0 auto;
+  gap: 6px;
   padding: 8px 14px;
   border: 1px solid var(--fd-line);
   border-radius: var(--r-control);
   background: var(--fd-a-soft);
 }
+.fd-exp-runstat {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.fd-exp-runstat + .fd-exp-runstat {
+  padding-top: 6px;
+  border-top: 1px dashed color-mix(in oklab, var(--cyan) 24%, var(--line));
+}
 .fd-exp-runscore span {
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.12em;
+  white-space: nowrap;
   color: var(--muted);
 }
 .fd-exp-runscore strong {
-  font-size: var(--fs-22);
+  /* Two rows where there was one, so the figure steps down a size and the chapter heading beside it
+     keeps the room it had at 320px. */
+  font-size: var(--fs-18);
   font-weight: 700;
-  line-height: 1.1;
+  line-height: 1.15;
   color: var(--fd-a-text);
 }
 .fd-exp-question {
@@ -971,7 +997,7 @@
 .fd-exp-switch {
   position: relative;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   padding: 4px;
   border: 1px solid var(--line);
   border-radius: var(--r-pill);
@@ -984,7 +1010,9 @@
   top: 4px;
   bottom: 4px;
   left: 4px;
-  width: calc(50% - 4px);
+  /* One third of the padded track, so translateX(100%) is exactly one cell and the thumb lands on
+     the tier rather than near it. */
+  width: calc((100% - 8px) / 3);
   border-radius: var(--r-pill);
   background: var(--fd-a-soft);
   box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--cyan) 55%, transparent);
@@ -998,28 +1026,59 @@
   background: var(--gold-soft);
   box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--gold) 55%, transparent);
 }
+.fd-exp-switch[data-on='called'] .fd-exp-switch-thumb {
+  transform: translateX(200%);
+  background: var(--ember-soft);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--ember) 55%, transparent);
+}
 .fd-exp-switch-btn {
   position: relative;
   z-index: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  /* 320px viewport: 288px of main, less the card's 16px padding and the track's border and 4px
+     padding, leaves 82px a cell. The gap tightens and the cell may shrink so "Steady" keeps its icon
+     instead of the label wrapping; 46px of height keeps the target over 44px on the shortest phone. */
+  gap: 6px;
+  min-width: 0;
   min-height: 46px;
+  padding: 0 4px;
   border: 0;
   border-radius: var(--r-pill);
   background: none;
   color: var(--muted);
   font-size: var(--fs-14);
   font-weight: 700;
+  white-space: nowrap;
   cursor: pointer;
   transition: color 180ms var(--ease-out);
+}
+.fd-exp-switch-btn > svg {
+  flex: 0 0 auto;
+}
+/* Below 360px the 82px cell stops being comfortable for "Steady" at 14px. The label steps down and
+   the icon with it — never the height, because this is the most-tapped control on the screen. */
+@media (max-width: 360px) {
+  .fd-exp-switch-btn {
+    gap: 4px;
+    padding: 0 2px;
+    font-size: var(--fs-12);
+  }
+  .fd-exp-switch-btn > svg {
+    width: 15px;
+    height: 15px;
+  }
 }
 .fd-exp-switch-btn:nth-child(2)[aria-pressed='true'] {
   color: var(--fd-a-text);
 }
 .fd-exp-switch-btn:nth-child(3)[aria-pressed='true'] {
   color: var(--gold-text);
+}
+/* The thumb is child 1, so the tiers are children 2, 3 and 4 in CONFIDENCE_ORDER. */
+.fd-exp-switch-btn:nth-child(4)[aria-pressed='true'] {
+  color: var(--ember-text);
 }
 .fd-exp-conf:disabled .fd-exp-switch-btn {
   cursor: default;
@@ -1031,6 +1090,22 @@
   font-size: var(--fs-12);
   line-height: 1.5;
   color: var(--muted);
+}
+/* The disclaimer sits above the control it describes and travels with it — rule 10. It is set on the
+   card, not tucked into a footnote, so the payouts and "nothing is spent" are read before a tier is
+   picked rather than after. */
+.fd-exp-stake-note {
+  padding: 9px 12px;
+  border: 1px dashed var(--fd-line);
+  border-radius: var(--r-control);
+  background: var(--fd-a-soft);
+  color: var(--text);
+}
+/* The player's own record, under the switch. A hairline separates it from the live stake line so the
+   two are never read as one sentence — one describes the tier, the other is history. */
+.fd-exp-stake-calls {
+  padding-top: 9px;
+  border-top: 1px dashed var(--line);
 }
 
 /* shape-coded answers */
@@ -1296,9 +1371,20 @@
   gap: 10px 16px;
   padding-top: 4px;
 }
+/* Pause and Fold sit side by side and neither is weighted above the other: folding is an exit, not a
+   punishment, and the sentence that explains what it costs wraps onto its own line rather than
+   competing with them for the row. */
+.fd-exp-pause > button {
+  flex: 0 1 auto;
+}
 .fd-exp-pause > span {
+  flex: 1 1 200px;
   font-size: var(--fs-12);
+  line-height: 1.5;
   color: var(--muted);
+}
+.fd-exp-pause > span + span {
+  flex-basis: 100%;
 }
 
 /* --------------------------------------------------------------------------- 12. finish ------ */
@@ -1336,6 +1422,22 @@
   outline: 3px solid var(--ring);
   outline-offset: 4px;
 }
+/* Below zero the stamp is still earned, so the panel still renders — but gold is the celebration
+   family, and a gold medal is not what a -18 run just produced. The surface cools to cyan and the
+   "Stamp earned" pill goes with it; the words underneath are identical either way. */
+.fd-exp-award.is-cool {
+  border-color: color-mix(in oklab, var(--cyan) 30%, var(--line));
+  background: radial-gradient(ellipse 70% 60% at 50% 0%, var(--fd-a-soft), transparent 70%), var(--bg-1);
+  background-image:
+    radial-gradient(ellipse 70% 60% at 50% 0%, var(--fd-a-soft), transparent 70%), var(--fd-paper);
+}
+.fd-exp-award.is-cool .fd-exp-eyebrow {
+  color: var(--cyan-text);
+}
+.fd-exp-award.is-cool .fd-exp-earned {
+  background: var(--fd-a-soft);
+  color: var(--cyan-text);
+}
 .fd-exp-earned {
   display: inline-flex;
   align-items: center;
@@ -1346,6 +1448,155 @@
   color: var(--gold-text);
   font-size: var(--fs-12);
   font-weight: 700;
+}
+/* WHAT YOU KEEP, expedition side. Cyan — the learning temperature — never gold and never a medal,
+   because the sections it dresses (the cooled stamp, the calibration read, a badge promotion) can
+   all land on a run that finished below zero. Inline, never an overlay: the room sheet carries the
+   same vocabulary under `.fd-finish`, and this sheet is the only one loaded on this route. */
+.fd-exp-finish .fd-keep {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  border: 1px solid color-mix(in oklab, var(--cyan) 34%, var(--fd-line));
+  border-radius: var(--r-card);
+  background: color-mix(in oklab, var(--cyan) 7%, var(--bg-1));
+}
+.fd-exp-finish .fd-keep-kicker {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-12);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--cyan-text);
+}
+.fd-exp-finish .fd-keep-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-18);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  color: var(--text);
+}
+.fd-exp-finish .fd-keep-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.fd-exp-finish .fd-keep-list li {
+  position: relative;
+  padding-inline-start: 16px;
+  font-size: var(--fs-14);
+  line-height: 1.5;
+  color: var(--text);
+  animation: fd-exp-keep-rise 280ms var(--ease-out) both;
+  animation-delay: calc(var(--fd-keep-i, 0) * 90ms);
+}
+.fd-exp-finish .fd-keep-list li::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 2px;
+  top: 0.62em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--cyan);
+}
+/* YOUR CALL vs THE CARDS: one row per tier, read across as name / fraction / points. The points
+   column is the only mono cell, so the three signed numbers line up under each other. */
+.fd-exp-calib-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.fd-exp-calib-rows > li {
+  display: grid;
+  grid-template-columns: minmax(4.5em, auto) 1fr auto;
+  align-items: baseline;
+  gap: 4px 10px;
+  font-size: var(--fs-14);
+  line-height: 1.45;
+  animation: fd-exp-keep-rise 280ms var(--ease-out) both;
+  animation-delay: calc(var(--fd-keep-i, 0) * 90ms);
+}
+.fd-exp-calib-tier {
+  font-weight: 700;
+  color: var(--text);
+}
+.fd-exp-calib-count {
+  min-width: 0;
+  color: var(--muted);
+}
+.fd-exp-calib-pts {
+  font-weight: 700;
+  color: var(--text);
+}
+.fd-exp-calib-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 2px;
+}
+.fd-exp-calib-actions > button {
+  /* "Take your two misses to the Vault" is longer than a 320px card is wide, and the shared button
+     rule sets `white-space: nowrap`. Let these two wrap rather than push the page sideways. */
+  flex: 1 1 160px;
+  padding-inline: 14px;
+  white-space: normal;
+  text-align: center;
+}
+/* The stamp block a cooled run gets instead of the full-screen ceremony. It is the headline beat on
+   that screen, so its title carries the display size the overlay would have had. There is no
+   `--fs-20` in the scale; `--fs-22` is the next real step up from the shared keep title. */
+.fd-exp-kept .fd-keep-title {
+  font-size: var(--fs-22);
+}
+/* A conviction promotion is an award, and it is the one thing on this screen that a losing run can
+   still have produced — so it is stated, framed, and left inline. Never an overlay: the promoting
+   card is mid-run, and §6.8 keeps the ceremony out of the way of the next stake choice. */
+.fd-exp-finish .fd-exp-conviction {
+  border-color: color-mix(in oklab, var(--cyan) 52%, var(--fd-line));
+  box-shadow: 0 0 26px color-mix(in oklab, var(--cyan) 12%, transparent);
+}
+/* The below-zero line. It hands over the one thing the run produced, so it is set as a statement
+   rather than as small print under the recap. */
+.fd-exp-below {
+  padding: 11px 14px;
+  border: 1px dashed var(--fd-line);
+  border-radius: var(--r-control);
+  background: var(--fd-a-soft);
+  font-size: var(--fs-14);
+  color: var(--text);
+}
+/* Chips rise into the stack; nothing in the loss beat moves downwards. */
+@keyframes fd-exp-keep-rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fd-exp-finish .fd-keep-list li,
+  .fd-exp-calib-rows > li {
+    animation: none;
+  }
+}
+:root[data-motion='reduced'] .fd-exp-finish .fd-keep-list li,
+:root[data-motion='off'] .fd-exp-finish .fd-keep-list li,
+:root[data-motion='reduced'] .fd-exp-calib-rows > li,
+:root[data-motion='off'] .fd-exp-calib-rows > li {
+  animation: none;
 }
 .fd-exp-scorecard {
   display: grid;
@@ -1411,6 +1662,11 @@
 .fd-exp-finish-actions > button {
   width: 100%;
   min-height: 52px;
+  /* The cooling primary ("Re-read the cards you called wrong") is wider than a 320px screen at the
+     shared button's nowrap. Full-width actions wrap instead of pushing the page sideways. */
+  padding-inline: 14px;
+  white-space: normal;
+  text-align: center;
 }
 .fd-exp-recap {
   display: flex;

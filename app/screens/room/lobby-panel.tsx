@@ -5,12 +5,15 @@
  * Waiting: a versus panel with both seats and their ready state, invite / add-bot actions and the
  * "I'm ready" CTA parked in the thumb zone.
  * Between rounds: the verdict headline, then the round review (the explanation the audit found
- * below the fold), and only then the "Start round N" button — sticky at the bottom on phones.
+ * below the fold), and only then the start button — sticky at the bottom on phones. That button is
+ * a courtesy, not a requirement: `auto` carries the auto-advance window from RoomScreen, so the
+ * next round arrives on its own. Touching the fact panel, or Keep reading, hands the clock back.
  */
 import type { ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Bot, Check, Copy, Users } from 'lucide-react';
 import { ReadyDot, usePress } from './room-bits';
+import { AutoAdvance } from './auto-advance';
 
 function Seat({ player, you, waiting }: { player: any; you: boolean; waiting: boolean }) {
   const bot = player?.kind === 'bot';
@@ -41,6 +44,7 @@ export function LobbyPanel({
   onAddBot,
   headline,
   review,
+  auto,
 }: {
   phase: string;
   room: any;
@@ -52,18 +56,22 @@ export function LobbyPanel({
   onAddBot: () => void;
   headline: { eyebrow: string; title: string; body: string; tone: string };
   review: ReactNode;
+  auto?: { totalMs: number; onHold: () => void; onFire: () => void } | null;
 }) {
   const press = usePress();
   const between = phase === 'between';
   const me = room.players[room.seat];
   const rival = room.players[1 - room.seat];
+  const counting = !!auto && !busy && !me.ready;
   const cta = busy
     ? 'Checking connection…'
     : me.ready
       ? 'Waiting for your rival…'
-      : between
-        ? `Start round ${room.roundIndex + 2}`
-        : 'I’m ready';
+      : counting
+        ? 'Start now'
+        : between
+          ? `Start round ${room.roundIndex + 2}`
+          : 'I’m ready';
   return (
     <div className="fd-lobby" data-phase={between ? 'between' : 'waiting'}>
       <section className="fd-panel fd-headline" data-tone={headline.tone}>
@@ -102,17 +110,30 @@ export function LobbyPanel({
           </div>
         )}
       </section>
-      {between && review}
+      {between && (
+        <div className="fd-review-hold" onPointerDownCapture={auto?.onHold}>
+          {review}
+        </div>
+      )}
       <div className="fd-sticky">
         <Button
           className="fd-btn fd-cta"
+          data-counting={counting ? 'true' : 'false'}
           onPointerDown={press}
           onClick={onReady}
           disabled={busy || !rival || me.ready}
         >
-          {cta}
+          {counting && (
+            <span
+              className="fd-cta-fill"
+              style={{ animationDuration: `${auto!.totalMs}ms` }}
+              aria-hidden="true"
+            />
+          )}
+          <span className="fd-cta-label">{cta}</span>
           <ArrowRight size={18} />
         </Button>
+        {counting && <AutoAdvance totalMs={auto!.totalMs} onFire={auto!.onFire} onHold={auto!.onHold} />}
         <p className="fd-note">
           {between
             ? 'Your original match entry stays reserved. No new entry.'

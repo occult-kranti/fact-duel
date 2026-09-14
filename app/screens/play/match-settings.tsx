@@ -3,10 +3,12 @@ import { ChevronDown, SlidersHorizontal } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { DURATIONS, MODE_DURATION } from '@/lib/server/room-engine.mjs';
+import { MODES } from '../types';
 import type { Config } from '../types';
 import { usePlayJuice } from './press';
 
-const TIMERS = [10, 15, 30];
+const TIMERS = DURATIONS;
 const STAKES = [0, 10, 25, 50, 100];
 
 function Picker({
@@ -98,6 +100,11 @@ export function MatchSettings({ config, name, subtopics, onChange, onName }: Mat
               </button>
             ))}
           </div>
+          <p className="fd-field-note">
+            {MODES.find((m) => m.id === config.mode)?.name ?? 'This format'} opens on{' '}
+            {MODE_DURATION[config.mode as keyof typeof MODE_DURATION] ?? MODE_DURATION.quick}s. A round also
+            ends the moment both answers are in.
+          </p>
         </div>
         <div className="fd-field">
           <Label id="stake-label">Entry · once per match</Label>

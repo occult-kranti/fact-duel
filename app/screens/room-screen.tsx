@@ -20,8 +20,15 @@ import './room/room.css';
  * Reveal hold: the server flips the phase to `between` / `complete` the instant a round resolves,
  * so the card would vanish under the result juice. We keep the stage mounted for REVEAL_MS after a
  * round we actually played, purely so the correct answer, the XP float and the burst land on the
- * button that was pressed. Nothing about the live round changes. */
+ * button that was pressed. Nothing about the live round changes.
+ *
+ * Auto-advance: a multi-round match runs itself. Once the between-round panel is up we arm a single
+ * AUTO_ADVANCE_MS window and then send `ready` on the player's behalf, so Triple Threat and the
+ * Gauntlet never ask for a click to keep going. It fires at most once per round — a failed send
+ * leaves the manual button and its error in place rather than retrying forever — and any deliberate
+ * touch inside the fact panel, or the Keep reading control, cancels it for that round. */
 const REVEAL_MS = 1900;
+const AUTO_ADVANCE_MS = 5000;
 
 export function RoomScreen({ duel, player }: RoomScreenProps) {
   const {
@@ -78,6 +85,33 @@ export function RoomScreen({ duel, player }: RoomScreenProps) {
   const finished = !revealing && ['complete', 'cancelled'].includes(phase);
   const mine = rd?.result ? (rd.receipts?.[room.seat] ?? null) : null;
 
+  /* Auto-advance: after the reveal hold, the between-round panel starts the next round by itself.
+   * Both switches are per-round state rather than refs because `armed` is read during render — a
+   * deliberate hold, and the one shot we allow. A failed send leaves the manual button and its
+   * error in place rather than retrying on a loop. */
+  const roundKey = rd?.id ?? null;
+  const [heldFor, setHeldFor] = useState<string | null>(null);
+  const [firedFor, setFiredFor] = useState<string | null>(null);
+  const armed =
+    lobby &&
+    phase === 'between' &&
+    !!roundKey &&
+    !!room.players[1] &&
+    !room.players[room.seat]?.ready &&
+    !room.settled &&
+    heldFor !== roundKey &&
+    firedFor !== roundKey;
+  const auto = armed
+    ? {
+        totalMs: AUTO_ADVANCE_MS,
+        onHold: () => setHeldFor(roundKey),
+        onFire: () => {
+          setFiredFor(roundKey);
+          void ready();
+        },
+      }
+    : null;
+
   const headline =
     phase === 'between'
       ? {
@@ -90,8 +124,8 @@ export function RoomScreen({ duel, player }: RoomScreenProps) {
                 ? 'That round is yours.'
                 : 'A fact for next time.',
           body: mine?.correct
-            ? 'Your answer was correct. The fact is right below — take it in, then start the next round.'
-            : 'The answer and its explanation are right below. Take them in, then start the next round.',
+            ? 'Your answer was correct. The fact is right below — the next round starts on its own.'
+            : 'The answer and its explanation are right below. The next round starts on its own.',
         }
       : {
           eyebrow: 'THE CHALLENGE IS SET',
@@ -130,6 +164,7 @@ export function RoomScreen({ duel, player }: RoomScreenProps) {
           onCopyInvite={copyInvite}
           onAddBot={addBot}
           headline={headline}
+          auto={auto}
           review={
             phase === 'between' && rd?.result ? <RoundReview room={room} player={player} factFirst /> : null
           }

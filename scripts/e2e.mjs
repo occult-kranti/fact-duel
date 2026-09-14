@@ -28,7 +28,16 @@ const check = (name, ok, detail = '') => {
 const clickUntil = async (locator, expected, timeout = 8000, attempts = 6) => {
   await locator.waitFor({ state: 'visible', timeout: 20000 });
   for (let i = 0; i < attempts; i++) {
-    if (await locator.isEnabled().catch(() => true)) await locator.click({ force: true });
+    // Try a real click first: Playwright scrolls, hit-tests and retries, so a control parked under
+    // the fixed launch bar is not silently handed to the bar (which is how a probe aiming for The
+    // Gauntlet launched a Quick Draw). `force` is only the fallback, for the pre-hydration window
+    // where the markup exists but no handler is attached yet and a real click would time out.
+    if (await locator.isEnabled().catch(() => true)) {
+      await locator.click({ timeout: 2500 }).catch(async () => {
+        await locator.scrollIntoViewIfNeeded().catch(() => {});
+        await locator.click({ force: true }).catch(() => {});
+      });
+    }
     try {
       await locator.page().waitForSelector(expected, { timeout });
       return;
@@ -83,8 +92,8 @@ try {
   await section('room', async () => {
     // --- a live room must never mount a renderer, and the question card must not animate in ---
     await page.waitForSelector('[data-nav="arena"]', { timeout: 20000 });
-    await clickUntil(page.locator('[data-nav="arena"]').first(), 'button:has-text("Play Lucky Guess")');
-    const launch = page.locator('button', { hasText: /Play Lucky Guess/i }).first();
+    await clickUntil(page.locator('[data-nav="arena"]').first(), 'button:has-text("Play Quick Draw")');
+    const launch = page.locator('button', { hasText: /Play Quick Draw/i }).first();
     await clickUntil(launch, '.question-card, .fd-qcard', 12000);
     await page.waitForTimeout(400);
 
@@ -153,6 +162,86 @@ try {
     check('room: no ceremony opens over the reveal', after.ceremonies === 0, `${after.ceremonies} open`);
   });
 
+  await section('celebration', async () => {
+    // --- the loss beat exists, is never a dialog, and never appears on a win ---
+    // The bot's answer is random, so the assertions are written to hold for every outcome rather
+    // than to depend on losing: a loss must carry the block, a win must not, and neither may open
+    // a modal. A full-screen overlay after a loss is the shape of a consolation prize.
+    await page.evaluate(() => sessionStorage.clear());
+    await page.goto(BASE, { waitUntil: 'networkidle' });
+    await page.waitForSelector('[data-nav="arena"]', { timeout: 20000 });
+    await clickUntil(page.locator('[data-nav="arena"]').first(), 'button:has-text("Play Quick Draw")');
+    await clickUntil(
+      page.locator('button', { hasText: /Play Quick Draw/i }).first(),
+      '.question-card, .fd-qcard',
+      15000,
+    );
+    await page.locator('.answer-button, .fd-answer').first().click({ force: true });
+    await page.waitForSelector('.fd-finish', { timeout: 30000 });
+    await page.waitForTimeout(1600);
+    const end = await page.evaluate(() => ({
+      verdict: document.querySelector('.fd-finish')?.getAttribute('data-verdict') ?? null,
+      keep: !!document.querySelector('.fd-keep'),
+      title: document.querySelector('.fd-keep-title')?.textContent?.trim() ?? null,
+      bullets: [...document.querySelectorAll('.fd-keep-list li')].map((li) => li.textContent.trim()),
+      dialogs: document.querySelectorAll('[role="dialog"]').length,
+      // Exit must stay at least as reachable as replay, on any outcome.
+      exits: [...document.querySelectorAll('.fd-finish button')].filter((b) =>
+        /vault|facts|done/i.test(b.textContent || ''),
+      ).length,
+    }));
+    check(
+      'celebration: the loss beat renders on a loss and only on a loss',
+      end.keep === (end.verdict === 'loss'),
+      `verdict=${end.verdict} keep=${end.keep}`,
+    );
+    check('celebration: the loss beat is never a dialog', end.dialogs === 0, `${end.dialogs} open`);
+    check(
+      'celebration: every kept line carries a real number',
+      !end.keep || (end.bullets.length > 0 && end.bullets.every((b) => /\d/.test(b))),
+      end.bullets.join(' | '),
+    );
+    check(
+      'celebration: a way out of the loop is offered on any outcome',
+      end.exits >= 1,
+      `${end.exits} exits`,
+    );
+  });
+
+  await section('auto-advance', async () => {
+    // --- a multi-round match must reach round 2 with no click at all ---
+    await page.evaluate(() => sessionStorage.clear());
+    await page.goto(BASE, { waitUntil: 'networkidle' });
+    await page.waitForSelector('[data-nav="arena"]', { timeout: 20000 });
+    await clickUntil(page.locator('[data-nav="arena"]').first(), 'button:has-text("Play Quick Draw")');
+    await clickUntil(
+      page.locator('[role="radio"]', { hasText: /Triple Threat/i }).first(),
+      'button:has-text("Play Triple Threat")',
+    );
+    const timer = await page.evaluate(
+      () => document.querySelector('.fd-launch-terms')?.textContent?.match(/(\d+)s/)?.[1] ?? null,
+    );
+    check('auto-advance: Triple Threat opens on its own 7s clock', timer === '7', `timer=${timer}s`);
+    await clickUntil(
+      page.locator('button', { hasText: /Play Triple Threat/i }).first(),
+      '.question-card, .fd-qcard',
+      15000,
+    );
+    await page.locator('.answer-button, .fd-answer').first().click({ force: true });
+    await page.waitForSelector('.fd-auto', { timeout: 25000 });
+    const cta = (await page.locator('.fd-cta-label').first().textContent())?.trim() ?? '';
+    check('auto-advance: the between-round CTA reads as optional', /start now/i.test(cta), `cta="${cta}"`);
+    // Nothing is clicked from here. Round 2 has to arrive by itself.
+    await page.waitForFunction(
+      () => document.querySelector('.fd-room-chip')?.getAttribute('data-round') === '2',
+      undefined,
+      { timeout: 30000 },
+    );
+    check('auto-advance: round 2 starts without a click', true);
+    await page.waitForSelector('.question-card, .fd-qcard', { timeout: 25000 });
+    check('auto-advance: the round 2 question is served', true);
+  });
+
   await section('expeditions', async () => {
     // --- the expedition CTA must be tappable, not covered by the bottom tab bar ---
     // Drop the seat credential first, or the app restores the room on load and hides the nav.
@@ -168,7 +257,32 @@ try {
       page.locator('button', { hasText: /Begin chapter 1/i }).first(),
       '.fd-exp-answer, .fd-answer',
     );
-    await page.locator('.fd-exp-answer, .fd-answer').first().click({ force: true });
+    // The betting control sits between the question and the options, so on a 390x844 phone the first
+    // option starts below the fold. Scroll to it and click for real — a forced click at its viewport
+    // coordinates is handed to whatever is on top, which is how a probe aiming at answer 1 launched
+    // the Play tab. That the options clear the bar once scrolled to is the next invariant.
+    const option = page.locator('.fd-exp-answer, .fd-answer').first();
+    const opt = await page.evaluate(async () => {
+      const el = document.querySelector('.fd-exp-answer, .fd-answer');
+      if (!el) return null;
+      // Centre rather than `scrollIntoViewIfNeeded`, which parks the element flush against the
+      // viewport floor — i.e. behind the bar — and would measure the scroll call, not the shell padding
+      // that is supposed to let every control clear it.
+      el.scrollIntoView({ block: 'center' });
+      await new Promise((r2) => setTimeout(r2, 300));
+      const r = el.getBoundingClientRect();
+      const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+      return {
+        height: Math.round(r.height),
+        reachable: hit === el || !!hit?.closest?.('.fd-exp-answer, .fd-answer'),
+      };
+    });
+    check(
+      'expeditions: an answer option is tappable at 44px, not under the tab bar',
+      !!opt?.reachable && opt.height >= 44,
+      opt ? `hit=${opt.reachable} h=${opt.height}` : 'option missing',
+    );
+    await option.click();
     await page.waitForTimeout(1400);
     const cta = await page.evaluate(() => {
       const btn = document.querySelector('.fd-exp-next');

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { D1RoomStore, dispatch } from '../lib/server/duel-service.mjs';
-import { planBotAttempt } from '../lib/server/room-engine.mjs';
+import { DURATIONS, planBotAttempt } from '../lib/server/room-engine.mjs';
 import { LocalD1 } from './d1-local.mjs';
 
 const token = () => crypto.randomUUID().replaceAll('-', '') + '1234567890abcdef';
@@ -31,7 +31,7 @@ async function fixture(t, config = {}) {
 const conserved = (r) => assert.equal(r.balances[0] + r.balances[1] + r.escrow, 2000);
 
 test('bot planner samples each choice and both delay endpoints without question inputs', () => {
-  for (const duration of [10, 15, 30])
+  for (const duration of DURATIONS)
     for (const choice of [0, 1, 2, 3])
       for (const timeSample of [0, 1 - Number.EPSILON]) {
         const samples = [(choice + 0.5) / 4, timeSample];
@@ -44,7 +44,7 @@ test('bot planner samples each choice and both delay endpoints without question 
 
 test('bots finish all three modes with every timer; readiness, secrecy and coins survive retries', async (t) => {
   for (const mode of ['quick', 'trilogy', 'gauntlet'])
-    for (const duration of [10, 15, 30]) {
+    for (const duration of DURATIONS) {
       const f = await fixture(t, { mode, duration }),
         plans = (await f.raw()).botPlans;
       let rounds = 0;

@@ -1,12 +1,12 @@
 'use client';
 /**
- * The expedition run: map rail, Steady/Bold switch, shape-coded answers, explanation card.
+ * The expedition run: map rail, three-way stake switch, shape-coded answers, explanation card.
  *
  * Untimed surface, so entrances are allowed here (unlike the live duel question). All feedback goes
  * through `useJuice()`; the legacy `signal` prop is still accepted by the module but no longer used
  * for correct / learn / stamp so nothing double-fires.
  */
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   ArrowRight,
   Bookmark,
@@ -17,20 +17,54 @@ import {
   Flame,
   Pause,
   Shield,
+  Target,
   Trophy,
   X,
+  XCircle,
 } from 'lucide-react';
-import { reducedMotion, useJuice } from '@/components/fx';
-import { CONFIDENCE, runResult } from '@/lib/expeditions.mjs';
-import { XP } from '@/lib/progression.mjs';
+import { reducedMotion, useJuice, useMounted } from '@/components/fx';
+import { gatePress } from '@/lib/fx/press-gate';
+import { CONFIDENCE, CONFIDENCE_ORDER, runResult, runTally } from '@/lib/expeditions.mjs';
+import { XP, convictionRiskCalls, convictionRiskLanded, dayKey } from '@/lib/progression.mjs';
 import { QuestionIssue } from '../../rivalry-widgets';
 import { ExpeditionFinish } from './finish';
 import { AnswerButton } from '../answer-button';
-import { AnswerShape, RouteRail, signed, useTap } from './parts';
+import { AnswerShape, RouteRail, useTap } from './parts';
 
+/* Every number a stake announces is written with an ASCII hyphen-minus. U+2212 is announced as
+ * nothing by NVDA and JAWS, which would turn "Called +4 / -3" into "Called plus 4 slash 3" — a bet
+ * disclosed to sighted players only. It is allowed in aria-hidden display text and nowhere else. */
 const STAKE_COPY: Record<string, string> = {
-  steady: 'Steady: +2 if you are right, nothing lost if you are not.',
-  bold: 'Bold: +3 if you are right, −1 if you are not.',
+  steady:
+    'Steady: +2 if you are right, 0 if you are not. No run points at risk — and the card still counts toward your Conviction average.',
+  bold: 'Bold: +3 if you are right, -1 if you are not. Worth it above a coin flip.',
+  called: 'Called: +4 if you are right, -3 if you are not. Worth it when you are two-thirds sure.',
+};
+
+/* The payout has to be in the accessible name: aria-pressed announces the toggle state and nothing
+ * else, so without this a screen-reader user places a -3 call having never been told it risks
+ * anything. Words, not glyphs, and the same three-part shape at every tier so the ear can compare. */
+const STAKE_LABEL: Record<string, string> = {
+  steady: 'Steady: plus 2 if right, no change if wrong',
+  bold: 'Bold: plus 3 if right, minus 1 if wrong',
+  called: 'Called: plus 4 if right, minus 3 if wrong',
+};
+
+const TIER_ICON: Record<string, typeof Shield> = { steady: Shield, bold: Flame, called: Target };
+
+/* The loss lines price the call truthfully and then point at the thing that just became valuable: a
+ * high-confidence miss is the most correctable error there is, which is what the Vault is for. */
+const VERDICT: Record<string, { correct: string; wrong: string }> = {
+  steady: {
+    correct: 'That’s the one. +2',
+    wrong: 'A fact for the vault. 0 points - you called it Steady.',
+  },
+  bold: { correct: 'Called it. +3', wrong: 'Bold, and wrong. -1. The fact is yours now.' },
+  called: {
+    correct: 'You knew it. +4',
+    wrong:
+      'Called, and wrong. -3. That is the price of the call - and this is the card most worth re-reading.',
+  },
 };
 
 export function ExpeditionRun({
@@ -41,6 +75,7 @@ export function ExpeditionRun({
   busy,
   onDone,
   onDuel,
+  onVault,
 }: {
   route: any;
   record: any;
@@ -49,6 +84,8 @@ export function ExpeditionRun({
   busy: boolean;
   onDone: () => void;
   onDuel: () => void;
+  /** Navigate to the Vault. Absent = the finish screen re-reads the misses where they already are. */
+  onVault?: () => void;
 }) {
   const juice = useJuice();
   const tap = useTap();
@@ -72,6 +109,22 @@ export function ExpeditionRun({
   // Answers already on screen when this run mounted have had their feedback: never replay them.
   const celebrated = useRef(new Set<number>(run.answers.map((_: any, i: number) => i)));
   const finished = useRef(index === 6);
+  /* The R1 ledger as it stood when this run mounted. By the time the result effect runs, the answer
+   * has already pushed its fact into `counted`, so the live array can never say "first encounter". */
+  const seen = useRef(new Set<string>(player.progression?.conviction?.counted ?? []));
+  // Dates are local: only day-key in the browser so SSR and hydration agree. Empty hides the fold.
+  const today = useMounted() ? (dayKey(Date.now()) as string) : '';
+
+  /* The stake switch gets the neutral `detent`, never `select`: the three tiers must sound
+   * identical, because a tier that sounds like a small win is the app paying you to bet. */
+  const detent = useCallback(
+    (event?: unknown) =>
+      gatePress(event, () => {
+        juice.sound('detent');
+        juice.haptic('light');
+      }),
+    [juice],
+  );
 
   useEffect(
     () => () => {
@@ -92,7 +145,9 @@ export function ExpeditionRun({
       if (!target) return;
       if (hit) {
         juice.burst(target, 'correct');
-        const xp = a.confidence === 'bold' ? XP.expeditionBoldCorrect : XP.expeditionCorrect;
+        /* R2: per-card XP is identical at every tier, so the float never reads `a.confidence`.
+         * R1 is the only thing that moves it — a fact already in the ledger pays the repeat rate. */
+        const xp = seen.current.has(run.cards[i].factId) ? XP.expeditionRepeat : XP.expeditionCorrect;
         timers.current.push(setTimeout(() => juice.floatText(target, `+${xp} XP`), 150));
       } else {
         juice.burst(target, 'wrong');
@@ -171,6 +226,21 @@ export function ExpeditionRun({
     }
   }
 
+  /* Fold is the honest exit from a run you are not enjoying: it costs nothing, keeps every card
+   * already resolved, and frees the route for a fresh start. The run id travels with it so a button
+   * left on screen across a restart cannot end the run that replaced it. */
+  async function foldRun() {
+    if (locked.current || !player.loaded) return;
+    locked.current = true;
+    setWriting(true);
+    try {
+      if (await player.fold(route.id, run.id)) onDone();
+    } finally {
+      locked.current = false;
+      setWriting(false);
+    }
+  }
+
   if (index === 6)
     return (
       <ExpeditionFinish
@@ -180,20 +250,47 @@ export function ExpeditionRun({
         run={run}
         busy={busy}
         loaded={player.loaded}
+        progression={player.progression}
         firstRun={!finished.current && record.completions === 1}
         onDone={onDone}
         onDuel={onDuel}
         onReplay={onReplay}
+        onVault={
+          onVault &&
+          (async (deck) => {
+            /* Every profile write on this surface is dispatched from the run, so the seed is too. It
+               is awaited before the route changes: the Vault reads its queue out of the profile, and
+               a navigation that raced the write would land on a queue that does not hold these yet. */
+            try {
+              await player.seedReview(deck);
+            } catch {
+              /* The dispatcher already surfaces a failed write as `player.storageError`; the player
+                 asked to go to the Vault, so the route still opens rather than the button dying. */
+            }
+            onVault();
+          })
+        }
       />
     );
 
   const correct = answer?.choice === fact.correctIndex,
-    points = answer ? (CONFIDENCE as any)[answer.confidence][correct ? 'correct' : 'wrong'] : 0,
     roundId = `journey:${run.id}:${index}`,
     chapter = Math.floor(index / 2),
     active = answer?.confidence || confidence,
     goal = index >= 4,
     saved = player.journal.saved.includes(fact.question);
+  /* Calls landed comes from the tally, not from `result.bold`: that key is the bold-TIER count and
+   * has been since before Called existed. */
+  const tally = runTally(run),
+    callsMade = tally.bold.n + tally.called.n,
+    callsLanded = tally.bold.correct + tally.called.correct;
+  const conviction = player.progression?.conviction ?? null,
+    riskCalls = conviction ? convictionRiskCalls(conviction) : 0,
+    riskLanded = conviction ? convictionRiskLanded(conviction) : 0;
+  /* From card 2 onward, once today's fold on this route is unused — the day cap is what keeps fold
+   * from being a four-second one-card loop. */
+  const foldable =
+    index >= 1 && run.answers.length >= 1 && !record.folded && today !== '' && record.foldedDay !== today;
 
   return (
     <div className={`fd-exp-run${goal ? ' is-goal' : ''}`} ref={card}>
@@ -202,9 +299,22 @@ export function ExpeditionRun({
           <p className="fd-exp-eyebrow">{route.title}</p>
           <h1>{route.chapters[chapter]}</h1>
         </div>
+        {/* No running signed total: at -9 with three cards left it reads as a hole only Called can
+         * dig you out of, which is chasing pressure manufactured by a number rather than a rule.
+         * The signed score appears once, on the scorecard, where the calibration block frames it. */}
         <div className="fd-exp-runscore">
-          <span>RUN SCORE</span>
-          <strong className="fd-mono">{signed(result.score)}</strong>
+          <div className="fd-exp-runstat">
+            <span>CARDS RIGHT</span>
+            <strong className="fd-mono">
+              {result.correct} / {run.answers.length}
+            </strong>
+          </div>
+          <div className="fd-exp-runstat">
+            <span>CALLS LANDED</span>
+            <strong className="fd-mono">
+              {callsLanded} / {callsMade}
+            </strong>
+          </div>
         </div>
       </div>
 
@@ -220,28 +330,43 @@ export function ExpeditionRun({
         </h2>
 
         <fieldset className="fd-exp-conf" disabled={!!answer || writing || !player.loaded}>
-          <legend>How sure are you?</legend>
+          <legend>How well do you know this one?</legend>
+          <p className="fd-exp-stake-line fd-exp-stake-note">
+            Call it. Steady +2 / 0 · Bold +3 / -1 · Called +4 / -3.
+            <br />
+            Points in this run only. Nothing is spent and nothing can be bought.
+          </p>
+          {/* The tier order is CONFIDENCE_ORDER's, never the key order of the frozen object. */}
           <div className="fd-exp-switch" data-on={active}>
             <span className="fd-exp-switch-thumb" aria-hidden="true" />
-            {(['steady', 'bold'] as const).map((id) => (
-              <button
-                type="button"
-                key={id}
-                className="fd-exp-switch-btn"
-                aria-pressed={active === id}
-                onPointerDown={tap}
-                onClick={() => setConfidence(id)}
-              >
-                {id === 'bold' ? (
-                  <Flame size={16} aria-hidden="true" />
-                ) : (
-                  <Shield size={16} aria-hidden="true" />
-                )}
-                {(CONFIDENCE as any)[id].name}
-              </button>
-            ))}
+            {(CONFIDENCE_ORDER as string[]).map((id) => {
+              const Icon = TIER_ICON[id];
+              return (
+                <button
+                  type="button"
+                  key={id}
+                  className="fd-exp-switch-btn"
+                  aria-pressed={active === id}
+                  aria-label={STAKE_LABEL[id]}
+                  onPointerDown={detent}
+                  onClick={() => setConfidence(id)}
+                >
+                  <Icon size={16} aria-hidden="true" />
+                  {(CONFIDENCE as any)[id].name}
+                </button>
+              );
+            })}
           </div>
-          <p className="fd-exp-stake-line">{STAKE_COPY[active]}</p>
+          <p className="fd-exp-stake-line" aria-live="polite">
+            {STAKE_COPY[active]}
+          </p>
+          {/* Never a nudge, and never a suggested tier: before there is a record to show, the line
+           * says what the menu is for; after, it shows the player their own number. */}
+          <p className="fd-exp-stake-line fd-exp-stake-calls">
+            {riskCalls < 5
+              ? 'Called pays most when you are sure. There is nothing here for bluffing.'
+              : `Your Bold and Called cards so far: ${riskLanded} of ${riskCalls} right.`}
+          </p>
         </fieldset>
 
         <div className="fd-exp-answers">
@@ -295,10 +420,8 @@ export function ExpeditionRun({
         {answer && (
           <div ref={feedback} className={`fd-exp-feedback${correct ? ' is-correct' : ' is-wrong'}`}>
             <div className="fd-exp-feedback-top" role="status">
-              <strong>{correct ? 'That’s the one.' : 'A fact for the vault.'}</strong>
-              <span className="fd-mono">
-                {signed(points)} pts · {answer.confidence === 'bold' ? 'Bold' : 'Steady'}
-              </span>
+              <strong>{VERDICT[answer.confidence][correct ? 'correct' : 'wrong']}</strong>
+              <span className="fd-mono">{(CONFIDENCE as any)[answer.confidence].name}</span>
             </div>
             <p className="fd-exp-key">
               <b>Correct answer:</b> {fact.options[fact.correctIndex]}
@@ -385,11 +508,29 @@ export function ExpeditionRun({
           <Pause size={16} aria-hidden="true" />
           Pause expedition
         </button>
+        {foldable && (
+          <button
+            type="button"
+            className="fd-exp-ghost"
+            disabled={writing || !player.loaded}
+            onPointerDown={tap}
+            onClick={() => void foldRun()}
+          >
+            <XCircle size={16} aria-hidden="true" />
+            Fold this run
+          </button>
+        )}
         <span>
           {player.persistent
             ? 'Each answer saves in this browser.'
             : 'Visit-only progress. Export before leaving.'}
         </span>
+        {foldable && (
+          <span>
+            Folding ends this run and frees the route. The cards you have answered keep their XP and their
+            place in your Vault; there is no stamp. Once per route per day.
+          </span>
+        )}
       </div>
 
       <QuestionIssue

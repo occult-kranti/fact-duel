@@ -40,6 +40,11 @@ export interface Juice {
   floatText: (target: JuiceTarget, text: string, color?: string) => void;
   /** Full-screen confetti (ring pulse under reduced motion) + success haptic. */
   confetti: (preset?: ConfettiPreset) => void;
+  /**
+   * The loss counterpart to `confetti`: a card being placed on a table, not a consolation prize.
+   * One cyan ring pulse and the `kept` cue, no confetti path at any intensity, no downward motion.
+   */
+  settle: (target?: JuiceTarget) => void;
   /** Shake an element (default: the page) + medium haptic. */
   shake: (target?: Element | null, intensity?: number) => void;
   /** Show a toast; returns its id. Sound + haptic play when it becomes visible. */
@@ -210,6 +215,26 @@ export function createJuice(ctx: FxContextValue | null): Juice {
     vibrate('success');
   };
 
+  /**
+   * A win interrupts you; a loss hands you something and gets out of the way. So this is
+   * deliberately the quietest thing in the FX vocabulary that is still a beat: one expanding cyan
+   * ring — the learning temperature, never gold, never a medal — and the `kept` cue, which is
+   * trimmed below `win` and measured to stay there (lib/fx/sound-levels.ts). A celebratory sound on
+   * a loss is the mechanism behind losses-disguised-as-wins, so the ceiling is enforced by test,
+   * not by taste.
+   */
+  const settle: Juice['settle'] = (target) => {
+    const { x, y } = target
+      ? pointOf(target)
+      : {
+          x: typeof window === 'undefined' ? 0 : window.innerWidth / 2,
+          y: typeof window === 'undefined' ? 0 : window.innerHeight * 0.42,
+        };
+    particles.ringPulse({ x, y, radius: 70, color: fxColors()[2] });
+    engine.play('kept');
+    vibrate('light');
+  };
+
   const shake: Juice['shake'] = (target, intensity = 1) => {
     if (typeof document === 'undefined') return;
     shakeEl(target ?? document.body, intensity);
@@ -246,6 +271,7 @@ export function createJuice(ctx: FxContextValue | null): Juice {
     burst,
     floatText,
     confetti,
+    settle,
     shake,
     toast,
     ceremony,

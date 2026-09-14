@@ -12,6 +12,7 @@ import {
   dayDiff,
   dailyQuests,
   QUEST_TEMPLATES,
+  LOG_KINDS,
   ACHIEVEMENTS,
   COSMETICS,
   RANK_TIERS,
@@ -24,6 +25,18 @@ import {
   canEquip,
   cosmeticStatus,
   progressionDiff,
+  unlockMet,
+  PROGRESSION_VERSION,
+  CONVICTION_TIERS,
+  CONVICTION_WINDOW,
+  CONVICTION_MIN_CARDS,
+  CONVICTION_MIN_CALLS,
+  convictionPoints,
+  convictionCalls,
+  convictionRiskCalls,
+  convictionRiskLanded,
+  convictionRating,
+  convictionTier,
   XP,
 } from '../lib/progression.mjs';
 import {
@@ -34,7 +47,7 @@ import {
   passportSummary,
 } from '../lib/passport.mjs';
 import { readJournal, recordRoom } from '../lib/journal.mjs';
-import { EXPEDITIONS } from '../lib/expeditions.mjs';
+import { EXPEDITIONS, CONFIDENCE } from '../lib/expeditions.mjs';
 import { dispatch } from '../lib/server/duel-service.mjs';
 // Local-time timestamps keep dayKey() stable in any timezone.
 const T = (y, m, d, h = 12) => new Date(y, m - 1, d, h).getTime();
@@ -274,6 +287,7 @@ test('a quick duel awards round, fact, match and streak XP exactly once across r
     questsCompleted: [],
     streakChanged: false,
     rankUp: null,
+    convictionUp: null,
     logEntries: [],
   });
 });
@@ -505,7 +519,7 @@ test('expeditions: per-card XP, completion bonus, stamp paid once, and no double
   p = answer(p, 0, true, 'bold', 'run-1');
   const kinds = p.progression.log.map((e) => e.kind).sort();
   assert.deepEqual(kinds, ['expedition-answer', 'fact', 'recall', 'streak']);
-  assert.equal(logXp(p.progression, 'expedition-answer'), 18);
+  assert.equal(logXp(p.progression, 'expedition-answer'), XP.expeditionCorrect);
   assert.equal(p.progression.counters.recalls, 1);
   assert.equal(passportSummary(p.passport).points, 15);
   assert.equal(p.journal.rounds[0].difficulty, cards[0].difficulty);
@@ -514,7 +528,7 @@ test('expeditions: per-card XP, completion bonus, stamp paid once, and no double
   p = next(p, 1, 'run-1');
   p = answer(p, 2, false, 'bold', 'run-1');
   p = next(p, 2, 'run-1');
-  assert.equal(logXp(p.progression, 'expedition-answer'), 18 + 12 + 3);
+  assert.equal(logXp(p.progression, 'expedition-answer'), XP.expeditionCorrect * 2 + XP.expeditionWrong);
   for (let i = 3; i < 6; i++) {
     p = answer(p, i, true, 'bold', 'run-1');
     p = next(p, i, 'run-1');
@@ -540,7 +554,7 @@ test('expeditions: per-card XP, completion bonus, stamp paid once, and no double
       13 * XP.expeditionScorePoint +
       XP.expeditionStamp +
       XP.expeditionComplete +
-      18 * XP.expeditionScorePoint,
+      5 * XP.expeditionScorePoint,
   );
   assert.ok(p.progression.achievements['bold-master']);
   assert.equal(p.progression.counters.facts, 6);
@@ -817,8 +831,8 @@ test('level-ups pay 25 gems per level gained, including several levels in one re
   assert.equal(prog.wallet.gems, prog.wallet.lifetimeGems);
 });
 test('cosmetics: buy and equip guards, level, achievement and rank unlocks, sanitized on reload', () => {
-  assert.equal(COSMETICS.length, 23);
-  assert.equal(new Set(COSMETICS.map((c) => c.id)).size, 23);
+  assert.equal(COSMETICS.length, 29);
+  assert.equal(new Set(COSMETICS.map((c) => c.id)).size, 29);
   let prog = emptyProgression();
   assert.strictEqual(reduceCosmetics(prog, { type: 'cosmetic-buy', id: 'coral' }, DAY1), prog);
   assert.strictEqual(reduceCosmetics(prog, { type: 'cosmetic-buy', id: 'default' }, DAY1), prog);
@@ -959,4 +973,403 @@ test('journal keeps a validated optional difficulty on duel and practice rounds'
 test('practice cards from the service expose difficulty for XP weighting', async () => {
   const out = await dispatch(null, { action: 'practice', topic: 'Space' }, { rng: () => 0.51 });
   for (const card of out.cards) assert.ok(['simple', 'expert', 'extreme'].includes(card.difficulty));
+});
+// ---------------------------------------------------------------------------------------------
+// Conviction, the first-encounter ledger and the betting XP contract (spec 1.6, 2.2-2.4)
+const cv = (steady = [0, 0], bold = [0, 0], called = [0, 0]) => ({
+  ...emptyProgression().conviction,
+  steady: { n: steady[0], correct: steady[1] },
+  bold: { n: bold[0], correct: bold[1] },
+  called: { n: called[0], correct: called[1] },
+});
+const card = (factId, correct, confidence) => ({
+  kind: 'expedition-answer',
+  correct,
+  confidence,
+  factId,
+  routeId: 'cricket',
+  topic: 'Cricket',
+  index: 0,
+});
+/** Entries of one kind added by a single reduce. The log is capped at LOG_LIMIT, so totals across
+ * several reduces have to be summed step by step rather than read off the tail. */
+const newLog = (before, after, kind) =>
+  progressionDiff(before, after).logEntries.filter((e) => e.kind === kind);
+/** n fresh expedition cards at one tier, `hits` of them correct. */
+const cards = (prefix, n, hits, confidence) =>
+  Array.from({ length: n }, (_, i) => card(`${prefix}-${i}`, i < hits, confidence));
+test('conviction rating ties exactly where expected run score ties', () => {
+  assert.equal(convictionRating(emptyProgression().conviction), 1000);
+  assert.equal(convictionRating(cv([0, 0], [0, 0], [0, 0])), 1000);
+  // p = 1/2: Steady and Bold are worth the same bet, Called is not.
+  assert.equal(convictionRating(cv([30, 15])), 1200);
+  assert.equal(convictionRating(cv([0, 0], [30, 15])), 1200);
+  assert.equal(convictionRating(cv([0, 0], [0, 0], [30, 15])), 1100);
+  // p = 2/3: Bold and Called are worth the same bet, Steady is not.
+  assert.equal(convictionRating(cv([30, 20])), 1267);
+  assert.equal(convictionRating(cv([0, 0], [30, 20])), 1333);
+  assert.equal(convictionRating(cv([0, 0], [0, 0], [30, 20])), 1333);
+  // p = 1: honest calling is what pays, and only calling above Steady reaches the top tiers.
+  assert.equal(convictionRating(cv([30, 30])), 1400);
+  assert.equal(convictionRating(cv([0, 0], [30, 30])), 1600);
+  assert.equal(convictionRating(cv([0, 0], [0, 0], [30, 30])), 1800);
+  assert.equal(convictionPoints(cv([1, 1], [2, 1], [2, 1])), 2 + (3 - 1) + (4 - 3));
+  assert.equal(convictionCalls(cv([1, 1], [2, 1], [3, 1])), 6);
+  assert.equal(convictionRiskCalls(cv([1, 1], [2, 1], [3, 1])), 5);
+  assert.equal(convictionRiskLanded(cv([1, 1], [2, 1], [3, 1])), 2);
+});
+test('XP never prefers a confidence tier, and the crossovers are exactly 1/2 and 2/3 (R2)', () => {
+  // The central honesty claim: the tier moves run score and nothing else. Per-card XP is identical.
+  for (const correct of [true, false]) {
+    const paid = ['steady', 'bold', 'called'].map((tier) =>
+      logXp(reduceProgression(emptyProgression(), [card('q001', correct, tier)], DAY1), 'expedition-answer'),
+    );
+    assert.equal(new Set(paid).size, 1);
+    assert.equal(paid[0], correct ? XP.expeditionCorrect : XP.expeditionWrong);
+  }
+  assert.equal(XP.expeditionBoldCorrect, undefined);
+  assert.equal(XP.expeditionCalledCorrect, undefined);
+  assert.ok(XP.expeditionWrong > 0, 'a confident miss is never punished twice');
+  // Total XP EV at hit-rate p, from the exported constants alone. Flat per-card XP is what keeps the
+  // crossovers where the run-score crossovers are, which is what STAKE_COPY advertises.
+  const ev = (tier, p) =>
+    XP.expeditionCorrect * p +
+    XP.expeditionWrong * (1 - p) +
+    XP.expeditionScorePoint * (CONFIDENCE[tier].correct * p + CONFIDENCE[tier].wrong * (1 - p));
+  const near = (a, b) => assert.ok(Math.abs(a - b) < 1e-9, `${a} != ${b}`);
+  near(ev('steady', 1 / 2), ev('bold', 1 / 2));
+  near(ev('bold', 2 / 3), ev('called', 2 / 3));
+  assert.ok(ev('steady', 0.49) > ev('bold', 0.49) && ev('bold', 0.51) > ev('steady', 0.51));
+  assert.ok(ev('bold', 0.66) > ev('called', 0.66) && ev('called', 0.67) > ev('bold', 0.67));
+});
+test('only a fact first expedition answer moves the badge or pays in full (R1)', async () => {
+  const route = EXPEDITIONS[0];
+  const { cards: pack } = await dispatch(null, { action: 'expedition', routeId: route.id });
+  const play = (p, runId, at) => {
+    p = act(p, {
+      type: 'journey-start',
+      routeId: route.id,
+      runId,
+      at,
+      cards: pack,
+      previousRunId: p.journeys[route.key]?.run?.id ?? null,
+    });
+    for (let i = 0; i < 6; i++) {
+      p = act(p, {
+        type: 'journey-answer',
+        routeId: route.id,
+        runId,
+        at,
+        index: i,
+        choice: pack[i].correctIndex,
+        confidence: 'called',
+      });
+      p = act(p, { type: 'journey-next', routeId: route.id, runId, at, index: i });
+    }
+    return p;
+  };
+  let p = emptyProfile();
+  const firstRun = play(emptyProfile(), 'run-1', DAY1);
+  assert.deepEqual(
+    newLog(emptyProfile().progression, firstRun.progression, 'expedition-answer').map((e) => e.xp),
+    Array(6).fill(XP.expeditionCorrect),
+  );
+  p = firstRun;
+  for (let run = 2; run <= 6; run++) {
+    const before = p;
+    p = play(p, `run-${run}`, DAY1 + run * 60e3);
+    const paid = newLog(before.progression, p.progression, 'expedition-answer');
+    assert.deepEqual(
+      paid.map((e) => e.xp),
+      Array(6).fill(XP.expeditionRepeat),
+    );
+    assert.ok(paid.every((e) => e.meta.fresh === false));
+  }
+  const c = p.progression.conviction;
+  // Six plays, thirty-six cards, six distinct facts: the replay farm mints nothing.
+  assert.equal(p.journeys[route.key].completions, 6);
+  assert.equal(convictionCalls(c), 6);
+  assert.deepEqual(c.called, { n: 6, correct: 6 });
+  assert.equal(c.counted.length, 6);
+  assert.deepEqual([...c.counted].sort(), [...route.ids].sort());
+  assert.equal(convictionRating(c), 1800);
+  assert.equal(convictionTier(c).id, 'provisional', 'six distinct facts is under the card minimum');
+  assert.equal(c.best, 'provisional');
+  // The recency window still moves on every answer: it is a display, not a claim.
+  assert.equal(c.recent.length, CONVICTION_WINDOW);
+  assert.ok(c.recent.every((code) => code === 'c1'));
+  // The same ledger, in one reduce so the whole total is visible: six fresh cards then six repeats.
+  const ledger = reduceProgression(
+    emptyProgression(),
+    [...cards('r', 6, 6, 'called'), ...cards('r', 6, 6, 'called')],
+    DAY1,
+  );
+  assert.equal(logXp(ledger, 'expedition-answer'), 6 * XP.expeditionCorrect + 6 * XP.expeditionRepeat);
+  assert.equal(convictionCalls(ledger.conviction), 6);
+  assert.deepEqual(readProfile(JSON.parse(JSON.stringify(p))), p);
+});
+test('a replayed route pays completion score XP only for the improvement', () => {
+  const complete = (extra) => ({
+    kind: 'expedition-complete',
+    routeId: 'cricket',
+    topic: 'Cricket',
+    correct: 6,
+    bold: 0,
+    stakes: null,
+    ...extra,
+  });
+  const first = reduceProgression(
+    emptyProgression(),
+    [complete({ score: 13, previousBest: 0, first: true })],
+    DAY1,
+  );
+  assert.equal(
+    logXp(first, 'expedition-complete'),
+    XP.expeditionComplete + 13 * XP.expeditionScorePoint + XP.expeditionStamp,
+  );
+  assert.equal(first.counters.stamps, 1);
+  const flat = reduceProgression(first, [complete({ score: 13, previousBest: 13, first: false })], DAY1);
+  assert.equal(
+    logXp(flat, 'expedition-complete') - logXp(first, 'expedition-complete'),
+    XP.expeditionComplete,
+  );
+  const worse = reduceProgression(flat, [complete({ score: -18, previousBest: 13, first: false })], DAY1);
+  assert.equal(
+    logXp(worse, 'expedition-complete') - logXp(flat, 'expedition-complete'),
+    XP.expeditionComplete,
+  );
+  const better = reduceProgression(worse, [complete({ score: 18, previousBest: 13, first: false })], DAY1);
+  assert.equal(
+    logXp(better, 'expedition-complete') - logXp(worse, 'expedition-complete'),
+    XP.expeditionComplete + 5 * XP.expeditionScorePoint,
+  );
+  assert.equal(better.counters.stamps, 1);
+  assert.equal(better.counters.expeditions, 4);
+});
+test('the badge needs thirty distinct cards and twenty real calls before it says anything', () => {
+  assert.equal(CONVICTION_MIN_CARDS, 30);
+  assert.equal(CONVICTION_MIN_CALLS, 20);
+  // Twenty-nine perfect Called cards rate 1800 and still say nothing.
+  const twentyNine = cv([0, 0], [0, 0], [29, 29]);
+  assert.equal(convictionRating(twentyNine), 1800);
+  assert.equal(convictionTier(twentyNine).id, 'provisional');
+  // Thirty cards but only nineteen at risk: capped at Hunch however good the rating is.
+  const nineteen = cv([11, 11], [0, 0], [19, 19]);
+  assert.equal(convictionCalls(nineteen), 30);
+  assert.ok(convictionRating(nineteen) >= CONVICTION_TIERS.find((t) => t.id === 'sharp').min);
+  assert.equal(convictionTier(nineteen).id, 'hunch');
+  // The twentieth call at risk is what promotes.
+  const twenty = cv([10, 10], [0, 0], [20, 20]);
+  assert.equal(convictionCalls(twenty), 30);
+  assert.equal(convictionTier(twenty).id, 'sharp');
+  // A player who never calls above Steady is capped at Hunch, however accurate.
+  assert.equal(convictionRating(cv([54, 54])), 1400);
+  assert.equal(convictionTier(cv([54, 54])).id, 'hunch');
+  // A tally rated exactly 1150 is Read; one card worse is Hunch. The minimum is inclusive.
+  assert.equal(convictionRating(cv([12, 12], [20, 5])), 1150);
+  assert.equal(convictionTier(cv([12, 12], [20, 5])).id, 'read');
+  assert.equal(convictionRating(cv([12, 11], [20, 5])), 1138);
+  assert.equal(convictionTier(cv([12, 11], [20, 5])).id, 'hunch');
+  // Every reachable rating lands in the tier whose band contains it, across the whole ladder.
+  const band = (rating) =>
+    [...CONVICTION_TIERS].reverse().find((t) => rating >= t.min && t.id !== 'provisional').id;
+  for (let hits = 0; hits <= 40; hits++) {
+    const c = cv([10, 10], [40, hits]);
+    assert.equal(convictionCalls(c), 50);
+    assert.equal(convictionTier(c).id, band(convictionRating(c)));
+  }
+});
+test('tier gems are cumulative, paid once, and never mint a NaN wallet', () => {
+  // Straight to Dead eye on card thirty: every line crossed is paid, or the slow player out-earns
+  // the fast one on the same thirty cards.
+  const jump = reduceProgression(emptyProgression(), cards('deadeye', 30, 30, 'called'), DAY1);
+  assert.equal(jump.conviction.best, 'deadeye');
+  assert.equal(jump.conviction.bestAt, 1800);
+  assert.equal(logGems(jump, 'rank'), 160);
+  const promotions = jump.log.filter((e) => e.kind === 'rank');
+  assert.equal(promotions.length, 1);
+  assert.deepEqual(promotions[0].meta, { from: 'provisional', to: 'deadeye', rating: 1800 });
+  // Replaying the same cards is a repeat under R1: no tally, no promotion, no second payout.
+  const again = reduceProgression(jump, cards('deadeye', 30, 30, 'called'), DAY1);
+  assert.equal(newLog(jump, again, 'rank').length, 0);
+  assert.deepEqual(again.conviction.called, jump.conviction.called);
+  // Crossing the lines one at a time totals exactly the same 160.
+  let slow = reduceProgression(
+    emptyProgression(),
+    [...cards('a', 10, 10, 'steady'), ...cards('b', 20, 12, 'called')],
+    DAY1,
+  );
+  assert.equal(slow.conviction.best, 'read');
+  let paid = newLog(emptyProgression(), slow, 'rank').reduce((n, e) => n + e.gems, 0);
+  assert.equal(paid, XP.convictionTierGems.read);
+  for (const [prefix, n, expected] of [
+    ['c', 5, 'edge'],
+    ['d', 20, 'sharp'],
+    ['e', 97, 'deadeye'],
+  ]) {
+    const before = slow;
+    slow = reduceProgression(slow, cards(prefix, n, n, 'called'), DAY1);
+    assert.equal(slow.conviction.best, expected);
+    paid += newLog(before, slow, 'rank').reduce((n2, e) => n2 + e.gems, 0);
+  }
+  assert.equal(paid, 160);
+  assert.equal(
+    Object.values(XP.convictionTierGems).reduce((a, b) => a + b, 0),
+    160,
+  );
+  // A Hunch promotion reads a tier whose gem line is zero. `gems += undefined` would be NaN, which
+  // nat() silently zeroes on the next load: a total wallet wipe.
+  const hunch = reduceProgression(emptyProgression(), cards('s', 30, 30, 'steady'), DAY1);
+  assert.equal(hunch.conviction.best, 'hunch');
+  assert.equal(hunch.conviction.bestAt, 1400);
+  assert.ok(Number.isSafeInteger(hunch.wallet.gems));
+  assert.ok(Number.isSafeInteger(hunch.wallet.lifetimeGems));
+  assert.equal(readProgression(JSON.parse(JSON.stringify(hunch))).wallet.gems, hunch.wallet.gems);
+  for (const id of CONVICTION_TIERS.map((t) => t.id))
+    assert.ok(Number.isSafeInteger(XP.convictionTierGems[id]), `${id} has no gem line`);
+});
+test('the badge label never demotes, the rating beside it does, and bestAt is kept', () => {
+  const earned = reduceProgression(emptyProgression(), cards('x', 30, 25, 'called'), DAY1);
+  assert.equal(earned.conviction.best, 'sharp');
+  assert.equal(earned.conviction.bestAt, 1567);
+  assert.equal(convictionRating(earned.conviction), 1567);
+  const slumped = reduceProgression(earned, cards('y', 40, 0, 'called'), DAY1);
+  assert.equal(convictionRating(slumped.conviction), 900);
+  assert.equal(convictionTier(slumped.conviction).id, 'hunch');
+  assert.equal(slumped.conviction.best, 'sharp');
+  assert.equal(slumped.conviction.bestAt, 1567);
+  assert.equal(newLog(earned, slumped, 'rank').length, 0);
+  assert.equal(progressionDiff(earned, slumped).convictionUp, null);
+  // A missed call never pays negative XP: the bet lives in run score and nowhere else.
+  const missed = reduceProgression(emptyProgression(), cards('z', 6, 0, 'called'), DAY1);
+  assert.ok(missed.log.every((e) => e.xp >= 0 && (e.gems ?? 0) >= 0));
+  assert.equal(logXp(missed, 'expedition-answer'), 6 * XP.expeditionWrong);
+  // The high-water mark survives a reload even when the live tallies no longer support it.
+  const reloaded = readProgression(JSON.parse(JSON.stringify(slumped)));
+  assert.equal(reloaded.conviction.best, 'sharp');
+  assert.equal(reloaded.conviction.bestAt, 1567);
+  assert.deepEqual(reloaded, slumped);
+});
+test('conviction survives the reduce, the diff reports promotions, and the profile stays version 2', () => {
+  const prog = reduceProgression(emptyProgression(), cards('p', 30, 30, 'called'), DAY1);
+  // The regression test for the draft / return-literal omission: both enumerate their keys.
+  assert.deepEqual(prog.conviction.called, { n: 30, correct: 30 });
+  assert.equal(prog.conviction.counted.length, 30);
+  const diff = progressionDiff(emptyProgression(), prog);
+  assert.deepEqual(diff.convictionUp, { from: 'provisional', to: 'deadeye', rating: 1800 });
+  assert.equal(progressionDiff(prog, prog).convictionUp, null);
+  const flat = reduceProgression(emptyProgression(), cards('q', 6, 6, 'called'), DAY1);
+  assert.equal(progressionDiff(emptyProgression(), flat).convictionUp, null);
+  assert.equal(PROGRESSION_VERSION, 1);
+  assert.equal(prog.version, 1);
+  const p = { ...emptyProfile(), progression: prog };
+  const round = readProfile(JSON.parse(JSON.stringify(p)));
+  assert.equal(round.version, 2);
+  assert.deepEqual(round.progression.conviction, prog.conviction);
+  assert.deepEqual(readProgression(JSON.parse(JSON.stringify(prog))), prog);
+});
+test('a hand-edited conviction block normalises without inventing a badge', () => {
+  const prog = reduceProgression(emptyProgression(), cards('h', 30, 30, 'called'), DAY1);
+  const raw = JSON.parse(JSON.stringify(prog));
+  raw.conviction = {
+    steady: { n: -4, correct: 2 },
+    bold: { n: 3, correct: 99 },
+    called: { n: 'many', correct: Infinity },
+    counted: ['q001', 'q001', '__proto__', 'constructor', 'has spaces', 42, 'q002'],
+    recent: ['c1', 'nope', 's0', { evil: true }],
+    best: 'grandmaster',
+    bestAt: 99999,
+  };
+  const out = readProgression(raw);
+  assert.deepEqual(out.conviction.steady, { n: 0, correct: 0 });
+  assert.deepEqual(out.conviction.bold, { n: 3, correct: 3 });
+  assert.deepEqual(out.conviction.called, { n: 0, correct: 0 });
+  assert.deepEqual(out.conviction.counted, ['q001', 'q002']);
+  assert.deepEqual(out.conviction.recent, ['c1', 's0']);
+  assert.equal(out.conviction.best, 'provisional');
+  assert.equal(out.conviction.bestAt, null);
+  assert.equal(Object.hasOwn(out.conviction.counted, '__proto__'), false);
+  // A `best` below what the sanitised tallies support is raised, never lowered; bestAt is repaired
+  // to the live rating rather than invented.
+  const understated = JSON.parse(JSON.stringify(prog));
+  understated.conviction.best = 'hunch';
+  understated.conviction.bestAt = 'yesterday';
+  const raised = readProgression(understated);
+  assert.equal(raised.conviction.best, 'deadeye');
+  assert.equal(raised.conviction.bestAt, 1800);
+  // A missing block default-fills and an old profile with no conviction and no reviews counter loads.
+  const old = JSON.parse(JSON.stringify(emptyProgression()));
+  delete old.conviction;
+  delete old.counters.reviews;
+  const filled = readProgression(old);
+  assert.deepEqual(filled.conviction, emptyProgression().conviction);
+  assert.equal(filled.counters.reviews, 0);
+  assert.deepEqual(filled, emptyProgression());
+  assert.deepEqual(readProgression(JSON.parse(JSON.stringify(filled))), filled);
+});
+test('conviction-gated cosmetics cannot be bought or equipped before the badge is earned', () => {
+  const rich = (prog) => ({ ...prog, wallet: { gems: 500, lifetimeGems: 500 } });
+  let prog = rich(emptyProgression());
+  for (const id of ['called-halo', 'called-it', 'deadeye']) {
+    assert.equal(unlockMet(prog, id), false);
+    assert.equal(canEquip(prog, id), false);
+    assert.equal(cosmeticStatus(emptyProgression(), id), 'locked');
+    assert.strictEqual(reduceCosmetics(prog, { type: 'cosmetic-buy', id }, DAY1), prog);
+  }
+  for (const id of ['caller', 'sharp']) {
+    assert.equal(canEquip(prog, id), false);
+    assert.strictEqual(reduceCosmetics(prog, { type: 'cosmetic-equip', id }, DAY1), prog);
+  }
+  // Ungated on purpose: the one new gem sink a Steady-only player can reach.
+  assert.equal(cosmeticStatus(prog, 'field-notes'), 'buyable');
+  const bought = reduceCosmetics(prog, { type: 'cosmetic-buy', id: 'field-notes' }, DAY1);
+  assert.notStrictEqual(bought, prog);
+  assert.ok(bought.cosmetics.owned.includes('field-notes'));
+  // After the promotion the same calls succeed.
+  prog = rich(reduceProgression(emptyProgression(), cards('k', 30, 30, 'called'), DAY1));
+  assert.equal(prog.conviction.best, 'deadeye');
+  for (const id of ['called-halo', 'called-it', 'deadeye']) {
+    assert.equal(unlockMet(prog, id), true);
+    assert.equal(cosmeticStatus(prog, id), 'buyable');
+    const out = reduceCosmetics(prog, { type: 'cosmetic-buy', id }, DAY1);
+    assert.ok(out.cosmetics.owned.includes(id));
+  }
+  for (const id of ['caller', 'sharp']) {
+    assert.equal(canEquip(prog, id), true);
+    assert.equal(reduceCosmetics(prog, { type: 'cosmetic-equip', id }, DAY1).cosmetics.equipped.title, id);
+  }
+});
+test('a Vault review pays only when the card was due and the answer moved its box', () => {
+  const review = (extra) => ({
+    kind: 'review',
+    factId: 'q001',
+    correct: true,
+    due: true,
+    advanced: true,
+    ...extra,
+  });
+  assert.ok(LOG_KINDS.includes('review'));
+  const paid = reduceProgression(emptyProgression(), [review()], DAY1);
+  assert.equal(logXp(paid, 'review'), XP.reviewCorrect);
+  assert.equal(paid.counters.reviews, 1);
+  const missed = reduceProgression(emptyProgression(), [review({ correct: false })], DAY1);
+  assert.equal(logXp(missed, 'review'), XP.review);
+  assert.equal(missed.counters.reviews, 1);
+  // An off-queue re-attempt and one the schedule refused to move are both recorded elsewhere and
+  // pay nothing here, so re-answering the same card cannot be farmed.
+  for (const off of [{ due: false }, { advanced: false }, { due: false, advanced: false }]) {
+    const out = reduceProgression(emptyProgression(), [review(off)], DAY1);
+    assert.equal(logXp(out, 'review'), 0);
+    assert.equal(out.counters.reviews, 0);
+  }
+  // Below the expedition rate, so the Recall Lab never becomes the cheapest XP in the game.
+  assert.ok(XP.reviewCorrect < XP.expeditionCorrect && XP.review < XP.expeditionCorrect);
+  const ceiling = reduceProgression(
+    emptyProgression(),
+    Array.from({ length: 12 }, () => review()),
+    DAY1,
+  );
+  assert.equal(logXp(ceiling, 'review'), 12 * XP.reviewCorrect);
+  assert.equal(ceiling.counters.reviews, 12);
+  assert.deepEqual(readProgression(JSON.parse(JSON.stringify(ceiling))), ceiling);
 });

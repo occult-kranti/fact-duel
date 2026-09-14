@@ -14,6 +14,7 @@
     "db:generate": "drizzle-kit generate",
     "docs:product": "node scripts/product-docs.mjs",
     "e2e": "node scripts/e2e.mjs",
+    "fx:levels": "node scripts/measure-cues.mjs",
     "build:static": "vite build --config vite.config.static.ts",
     "preview:static": "vite preview --config vite.config.static.ts"
   },

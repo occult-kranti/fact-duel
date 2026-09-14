@@ -69,7 +69,7 @@ export function HomeScreen({ player, name, ready, busy, onRoute, onDuel, onSetup
       </h1>
 
       <div className="fd-hub-hero">
-        <HeroStage level={level.level} accent={accent.hex} />
+        <HeroStage level={level.level} accent={accent.hex} progression={prog} />
         <PlayerCard
           name={name}
           level={level}

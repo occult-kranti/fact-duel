@@ -31,6 +31,7 @@ import { AnalyticsScreen } from './screens/analytics-screen';
 import { RulesScreen } from './screens/rules-screen';
 import { ShowroomScreen } from './screens/showroom-screen';
 import { eventModeEvent } from '@/lib/progression.mjs';
+import { MODE_DURATION } from '@/lib/server/room-engine.mjs';
 import {
   INITIAL_CONFIG,
   MODES,
@@ -43,6 +44,10 @@ import {
   type StartMark,
 } from './screens/types';
 
+/** The timer a format opens on. Unknown formats fall back to Quick Draw's clock. */
+function modeDuration(mode: string) {
+  return MODE_DURATION[mode as keyof typeof MODE_DURATION] ?? MODE_DURATION.quick;
+}
 function randomToken() {
   return Array.from(crypto.getRandomValues(new Uint8Array(24)), (b) => b.toString(16).padStart(2, '0')).join(
     '',
@@ -634,9 +639,14 @@ export default function Arena({ initialTab = 'home' }: { initialTab?: string }) 
       setNote(link);
     }
   }
+  /* The clock belongs to the format: choosing a format moves the timer to that format's own
+   * opening value, and an explicit timer choice then sticks until the format changes again. A
+   * caller that already knows the timer it wants (an armed event mode) passes it and wins. */
   const change = (patch: Partial<Config>) => {
     createDraft.current = null;
-    setConfig((c) => ({ ...c, ...patch }));
+    const next =
+      patch.mode && patch.duration === undefined ? { ...patch, duration: modeDuration(patch.mode) } : patch;
+    setConfig((c) => ({ ...c, ...next }));
   };
   useEffect(() => {
     const context = (document as any).modelContext;
@@ -726,7 +736,13 @@ export default function Arena({ initialTab = 'home' }: { initialTab?: string }) 
   };
   const quickDuel = (mode: string, topic = 'all') => {
     const chosenTopic = catalogue?.topics.find((t: any) => t.topic === topic);
-    const next = { ...INITIAL_CONFIG, mode, topic, domain: chosenTopic?.domain || 'all' };
+    const next = {
+      ...INITIAL_CONFIG,
+      mode,
+      duration: modeDuration(mode),
+      topic,
+      domain: chosenTopic?.domain || 'all',
+    };
     createDraft.current = null;
     setConfig(next);
     setJoinView(false);

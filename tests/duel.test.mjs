@@ -1,7 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { D1RoomStore, dispatch } from '../lib/server/duel-service.mjs';
-import { RULES, normalizeConfig } from '../lib/server/room-engine.mjs';
+import {
+  DURATIONS,
+  MODE_DURATION,
+  MODE_ROUNDS,
+  RULES,
+  normalizeConfig,
+  planBotAttempt,
+} from '../lib/server/room-engine.mjs';
 import { QUESTIONS } from '../lib/server/questions.mjs';
 import { LocalD1 } from './d1-local.mjs';
 
@@ -384,6 +391,30 @@ test('atomic reveal uses database write time and refuses stale release windows',
   assert.equal(late, null);
 });
 
+test('the timer is 5, 7 or 10 seconds and every format opens on one of them', () => {
+  assert.deepEqual([...DURATIONS], [5, 7, 10]);
+  // Every format's opening clock must itself be selectable, or the launch screen would ship a
+  // config the server rejects.
+  for (const mode of Object.keys(MODE_ROUNDS)) {
+    assert.ok(DURATIONS.includes(MODE_DURATION[mode]), mode);
+    assert.equal(
+      normalizeConfig({ ...config, mode, duration: MODE_DURATION[mode] }, QUESTIONS).duration,
+      MODE_DURATION[mode],
+    );
+  }
+  assert.equal(MODE_DURATION.quick, 10);
+  // The retired timers, and everything else that could arrive over the wire, are refused.
+  for (const duration of [15, 30, 0, -5, 4, 11, 7.5, '7', null, [7], { valueOf: () => 7 }])
+    assert.throws(() => normalizeConfig({ ...config, duration }, QUESTIONS), /valid timer/);
+});
+test('the bot still answers inside the shortest timer', () => {
+  // planBotAttempt samples 1000..duration*1000-500, which is only a range if the timer clears 1.5s.
+  for (const duration of DURATIONS)
+    for (const roll of [0, 0.5, 1 - Number.EPSILON]) {
+      const { elapsedMs } = planBotAttempt(duration, () => roll);
+      assert.ok(elapsedMs >= 1000 && elapsedMs < duration * 1000, `${duration}s -> ${elapsedMs}ms`);
+    }
+});
 test('mode validation rejects coercible arrays and objects', () => {
   for (const mode of [['gauntlet'], { toString: () => 'quick' }, null, 4, 'constructor', 'toString']) {
     assert.throws(() => normalizeConfig({ ...config, mode }, QUESTIONS));

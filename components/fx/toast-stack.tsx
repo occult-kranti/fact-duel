@@ -29,13 +29,14 @@ export interface ToastItem extends ToastInput {
 export const TOAST_DURATION_MS = 3200;
 export const TOAST_MAX_VISIBLE = 3;
 
-const KIND_CUE: Record<ToastKind, Cue> = {
+/* A toast the player did not trigger must not click at them: `info` is the passive kind, so it
+   arrives silently (the haptic still fires) rather than borrowing the press cue. */
+const KIND_CUE: Partial<Record<ToastKind, Cue>> = {
   xp: 'xp',
   quest: 'quest',
   achievement: 'unlock',
   streak: 'streak',
   gem: 'gem',
-  info: 'tap',
 };
 
 function KindIcon({ kind }: { kind: ToastKind }) {
@@ -75,7 +76,8 @@ function ToastCard({ toast, reduced, onDismiss }: ToastCardProps) {
   // Sound + haptic when the toast becomes visible (which is when it mounts).
   useEffect(() => {
     if (toast.silent) return;
-    sound.play(KIND_CUE[toast.kind] ?? 'tap');
+    const cue = KIND_CUE[toast.kind];
+    if (cue) sound.play(cue);
     haptic('light');
   }, [toast.kind, toast.silent]);
 

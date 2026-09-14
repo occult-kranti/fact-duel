@@ -9,6 +9,22 @@ const VISIT_THROTTLE_MS = 60_000;
 // background adds nothing. lib/analytics.mjs clamps a single sample to its 30-minute session gap.
 const HEARTBEAT_MS = 15_000;
 type CountDelta = { rounds?: number; matches?: number; cards?: number; quests?: number };
+/**
+ * One entry of a seeded review deck: a bare factId, or a factId carrying the `order` of the
+ * confidence tier the player called it at, so the deck can put the calls above Steady first without
+ * the caller having to sort — or this module having to know what a tier is.
+ */
+export type SeedEntry = string | { factId: string; order: number };
+// `chose` is the option text, never the index: every surface reshuffles a card's options per
+// presentation, so an index stored today points somewhere else tomorrow.
+type ReviewAttempt = {
+  factId: string;
+  roundId: string | null;
+  choice: number;
+  chose: string;
+  correct: boolean;
+  revealed: boolean;
+};
 export function usePlayer(room: any, roomEpoch?: string) {
   const [profile, setProfile] = useState<any>(() => emptyProfile()),
     [loaded, setLoaded] = useState(false),
@@ -179,8 +195,28 @@ export function usePlayer(room: any, roomEpoch?: string) {
     [dispatch],
   );
   const epoch = useCallback(() => current.current.epoch, []);
+  // The run id travels with the fold so a button left on screen across a restart cannot end the run
+  // that replaced it — reduceExpeditions is identity when the ids disagree.
+  const fold = useCallback(
+    (routeId: string, runId: string) => dispatch({ type: 'journey-fold', routeId, runId }),
+    [dispatch],
+  );
   const open = useCallback((roundId: string) => void dispatch({ type: 'open', roundId }), [dispatch]);
   const recall = useCallback((roundId: string) => void dispatch({ type: 'recall', roundId }), [dispatch]);
+  // What the Recall Lab dispatches instead of `recall`: this one moves the review schedule and pays,
+  // so the promise is handed back and the caller fires its reward juice only once it has resolved.
+  const review = useCallback(
+    (attempt: ReviewAttempt) => dispatch({ type: 'review', ...attempt }),
+    [dispatch],
+  );
+  // §3.5's deck out of a bad run: precisely these facts, due now. It moves `due` and nothing else and
+  // so pays nothing; the promise comes back only so the caller can navigate once the write has landed,
+  // never onto a Vault whose queue does not hold them yet. `at` pins the instant — `dispatch` stamps
+  // its own `at` from the clock, so an explicit one has to travel beside it.
+  const seedReview = useCallback(
+    (entries: SeedEntry[], at?: number) => dispatch({ type: 'review-seed', factIds: entries, seedAt: at }),
+    [dispatch],
+  );
   const save = useCallback((question: string) => void dispatch({ type: 'save', question }), [dispatch]);
   const clear = useCallback(async () => {
     const ok = await dispatch({ type: 'reset', newEpoch: crypto.randomUUID() });
@@ -238,8 +274,11 @@ export function usePlayer(room: any, roomEpoch?: string) {
     loaded,
     persistent,
     storageError,
+    fold,
     open,
     recall,
+    review,
+    seedReview,
     save,
     clear,
     skin,

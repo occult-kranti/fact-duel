@@ -26,7 +26,7 @@ export function RoomChrome({
         <ArrowLeft size={16} />
         {settled ? 'Back to play' : 'Leave'}
       </Button>
-      <span className="fd-room-chip">
+      <span className="fd-room-chip" data-round={Math.min(roundIndex + 1, rounds)}>
         <b>{modeName}</b>
         <i aria-hidden="true">·</i>
         <span>

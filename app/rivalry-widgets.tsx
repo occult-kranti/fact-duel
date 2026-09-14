@@ -27,8 +27,14 @@ import {
 import { NumberCounter, useJuice } from '@/components/fx';
 import { completedRounds, FORMAT_COPY, matchVerdict, roundReason } from '@/lib/duel-presentation.mjs';
 import { comboMultiplier, levelForXp } from '@/lib/progression.mjs';
-import { comboAt, marginLine, matchRank, matchXp } from './screens/room/room-math';
+import { comboAt, marginLine, matchRank, matchXp, whatYouKeep, winTier } from './screens/room/room-math';
 import { usePress } from './screens/room/room-bits';
+
+/* Consecutive routine wins this session. Module scope, so it resets on reload and never reaches
+   storage: this is about habituation inside one sitting, not a durable player stat. */
+let routineWins = 0;
+/** After this many identical routine celebrations, the next ones are medallion + counter only. */
+const ROUTINE_CELEBRATIONS = 3;
 
 const MODE_LABEL: Record<string, string> = {
   quick: 'QUICK DRAW',
@@ -157,11 +163,35 @@ export function MatchFinish({
   ]
     .filter(Boolean)
     .join(' ');
+  const keep = v.key === 'loss' ? whatYouKeep(room, player) : null;
+  const tier = v.key === 'win' ? winTier(room, player) : null;
   useEffect(() => {
-    if (v.key !== 'win' || celebrated.current === room.id) return;
-    celebrated.current = room.id;
-    juice.confetti('win');
-  }, [v.key, room.id, juice]);
+    if (celebrated.current === room.id) return;
+    if (v.key === 'win') {
+      celebrated.current = room.id;
+      // Ceremonial wins already have the overlay; stacking confetti behind one is two celebrations
+      // for one event. Routine bot wins decay across a session so the tenth does not look like the
+      // first — the *content* varies, never the volume, because randomised intensity is a
+      // reinforcement schedule and randomised true content is a reason to read the screen.
+      if (tier === 'ceremonial') return;
+      if (tier === 'notable') {
+        routineWins = 0;
+        juice.confetti('win');
+        return;
+      }
+      routineWins += 1;
+      if (routineWins <= ROUTINE_CELEBRATIONS)
+        juice.sound('win', { gain: Math.max(0.55, 1 - 0.12 * (routineWins - 1)) });
+      return;
+    }
+    if (v.key === 'loss') {
+      celebrated.current = room.id;
+      routineWins = 0;
+      // Second beat, after the verdict has landed and been announced. Never before it.
+      const id = setTimeout(() => juice.settle(), 400);
+      return () => clearTimeout(id);
+    }
+  }, [v.key, tier, room.id, juice]);
   return (
     <div className="fd-finish" data-verdict={v.key}>
       <section className="fd-verdict">
@@ -197,6 +227,22 @@ export function MatchFinish({
         </div>
         <p className="fd-margin">{marginLine(room)}</p>
       </section>
+
+      {keep && (
+        <section className="fd-keep" aria-labelledby="fd-keep-head">
+          <p className="fd-keep-kicker" id="fd-keep-head">
+            WHAT YOU KEEP
+          </p>
+          <h2 className="fd-keep-title">{keep.title}</h2>
+          <ul className="fd-keep-list">
+            {keep.bullets.map((line, i) => (
+              <li key={line} style={{ ['--fd-keep-i' as string]: String(i) }}>
+                {line}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       {/* Highest-intent moment in the loop: the next action sits straight under the verdict, not
           under four stat tiles where only ~19px of it was visible at 390x844. */}

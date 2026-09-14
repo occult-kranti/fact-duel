@@ -40,7 +40,9 @@ export function ExpeditionBrief({
       <div className="fd-exp-brief-grid">
         <section className="fd-exp-panel">
           <h2 className="fd-exp-panel-title">The route</h2>
-          <RouteRail route={route} cursor={record?.run?.cursor || 0} variant="list" />
+          {/* A folded run keeps its cursor so the reducer can refuse late answers, but the button below
+              begins at card 1 — showing 3/6 above it would promise a resume that does not exist. */}
+          <RouteRail route={route} cursor={record?.folded ? 0 : record?.run?.cursor || 0} variant="list" />
         </section>
         <section className="fd-exp-panel">
           <h2 className="fd-exp-panel-title">How points work</h2>

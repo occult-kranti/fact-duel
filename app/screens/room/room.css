@@ -144,6 +144,86 @@
   opacity: 0.75;
 }
 
+/* Auto-advance between rounds. The CTA keeps its own shape and gains a drain that runs for exactly
+   the window RoomScreen armed, so the countdown is legible without reading the number. The fill is
+   a sibling behind the label, never a background-size animation on the button itself: the button is
+   the paint surface for the press state and must not be repainted 60 times a second. */
+.fd-room .fd-cta[data-slot='button'] {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.fd-room .fd-cta-label,
+.fd-room .fd-cta > svg {
+  position: relative;
+  z-index: 1;
+}
+.fd-room .fd-cta-fill {
+  position: absolute;
+  inset: 0;
+  transform-origin: left center;
+  background: color-mix(in oklab, var(--volt-ink) 16%, transparent);
+  animation: fd-cta-drain linear forwards;
+  z-index: 0;
+}
+@keyframes fd-cta-drain {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+.fd-room .fd-auto {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 32px;
+}
+.fd-room .fd-auto-note {
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+.fd-room .fd-auto-hold {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  background: var(--bg-1);
+  font-family: var(--font-ui);
+  font-size: var(--fs-12);
+  font-weight: 600;
+  color: var(--muted);
+  white-space: nowrap;
+  touch-action: manipulation;
+  transition:
+    color 140ms var(--ease-out),
+    border-color 140ms var(--ease-out);
+}
+.fd-room .fd-auto-hold:hover {
+  color: var(--text);
+  border-color: var(--volt);
+}
+.fd-room .fd-auto-hold:active {
+  transform: scale(0.97);
+}
+/* The fact panel between rounds is the one place a stray tap is meaningful: it cancels the clock,
+   so it must not look inert. */
+.fd-room .fd-review-hold {
+  display: contents;
+}
+@media (prefers-reduced-motion: reduce) {
+  .fd-room .fd-cta-fill {
+    animation: none;
+    transform: scaleX(1);
+    opacity: 0.5;
+  }
+}
+
 /* Primary action parked in the thumb zone on phones. */
 .fd-room .fd-sticky {
   position: sticky;
@@ -157,6 +237,79 @@
   margin-top: auto;
   padding: 12px 0 calc(6px + var(--safe-bottom));
   background: linear-gradient(to top, var(--bg-0) 58%, transparent);
+}
+
+/* WHAT YOU KEEP — the loss beat. Cyan (the learning temperature), never gold and never a medal:
+   the vocabulary is collecting, not comforting. Inline and non-blocking by design — a full-screen
+   overlay after a loss is the shape of a consolation prize. Chips rise into the stack; nothing here
+   moves downwards, and there is no confetti path at any intensity. */
+.fd-finish .fd-keep {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  border: 1px solid color-mix(in oklab, var(--cyan, #4ee1ff) 34%, var(--line));
+  border-radius: var(--r-card);
+  background: color-mix(in oklab, var(--cyan, #4ee1ff) 7%, var(--bg-1));
+}
+.fd-finish .fd-keep-kicker {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-12);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--cyan-text, var(--muted));
+}
+.fd-finish .fd-keep-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-20);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  color: var(--text);
+}
+.fd-finish .fd-keep-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.fd-finish .fd-keep-list li {
+  padding-inline-start: 16px;
+  position: relative;
+  font-size: var(--fs-14);
+  line-height: 1.5;
+  color: var(--text);
+  animation: fd-keep-rise 280ms var(--ease-out) both;
+  animation-delay: calc(var(--fd-keep-i, 0) * 90ms);
+}
+.fd-finish .fd-keep-list li::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 2px;
+  top: 0.62em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--cyan, #4ee1ff);
+}
+@keyframes fd-keep-rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fd-finish .fd-keep-list li {
+    animation: none;
+  }
 }
 
 /* ---------------------------------------------------------------- 2. chrome */

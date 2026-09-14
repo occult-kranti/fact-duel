@@ -14,7 +14,7 @@ import assert from 'node:assert/strict';
 import { setImmediate } from 'node:timers/promises';
 import { D1RoomStore, dispatch } from '../lib/server/duel-service.mjs';
 import { MemoryRoomStore } from '../lib/duel-memory-store.mjs';
-import { MODE_ROUNDS, RULES, makeRoom } from '../lib/server/room-engine.mjs';
+import { DURATIONS, MODE_ROUNDS, RULES, makeRoom } from '../lib/server/room-engine.mjs';
 import { QUESTIONS } from '../lib/server/questions.mjs';
 import { LocalD1 } from './d1-local.mjs';
 
@@ -626,7 +626,7 @@ test('a randomized duel fuzz produces identical transcripts on both stores', asy
     await differential(t, async (store, step) => {
       const pick = seeded(seed * 977);
       const mode = ['quick', 'trilogy', 'gauntlet'][Math.floor(pick() * 3)];
-      const duration = [10, 15, 30][Math.floor(pick() * 3)];
+      const duration = DURATIONS[Math.floor(pick() * DURATIONS.length)];
       const withBot = pick() < 0.5;
       const f = table(store, { seed });
       await step('create', () =>
