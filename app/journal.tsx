@@ -33,8 +33,15 @@ import {
 } from 'lucide-react';
 import { useJuice, useMounted } from '@/components/fx';
 import { CONFIDENCE } from '@/lib/expeditions.mjs';
-import { TOPIC_DOMAINS, uniqueFacts } from '@/lib/journal.mjs';
-import { ATTEMPTS_PER_FACT, REVIEW_CAP, dueToday, isDue, nextAudit } from '@/lib/journal-review.mjs';
+import { TOPIC_DOMAINS, dayKey, uniqueFacts } from '@/lib/journal.mjs';
+import {
+  ATTEMPTS_PER_FACT,
+  REVIEW_CAP,
+  dueToday,
+  isDue,
+  nextAudit,
+  sessionOrder,
+} from '@/lib/journal-review.mjs';
 import { XP } from '@/lib/progression.mjs';
 import { Chip, Choices, Dots, EmptyState, FactCard, StatTile, usePress } from './screens/vault';
 import './screens/vault/vault.css';
@@ -269,8 +276,18 @@ export function Journal({
     return rows.sort((a, b) => b.at - a.at).slice(0, 20);
   }, [attempts, journal.matches]);
 
-  const dueIds: string[] = dueToday(journal, now, REVIEW_CAP);
+  /* The session order, not just the membership: `sessionOrder` leads with §3.5's deck when the run that
+     seeded it is still today's, because `dueToday` ranks on the LIFETIME `boldWrong` counter and would
+     otherwise put a card missed confidently last month above the call the player blew ninety seconds
+     ago. With no seeded deck it IS `dueToday`, unchanged. The true count behind the cap is separate. */
+  const dueIds: string[] = sessionOrder(journal, now, REVIEW_CAP);
   const dueTotal: number = dueToday(journal, now, Infinity).length;
+  // How many of today's queue the seeded deck is leading with, so the note below can say so rather than
+  // describe a ranking the queue is not currently in.
+  const seededLed: number =
+    journal.seed && dayKey(journal.seed.at) === dayKey(now)
+      ? journal.seed.factIds.filter((id: string) => isDue((journal.facts ?? {})[id], now)).length
+      : 0;
   const dueSet = new Set(dueIds);
   const dueEntries = dueIds.map((id) => entries.find((e) => e.factId === id)).filter((e): e is Entry => !!e);
   const shaky = entries.filter(
@@ -655,9 +672,12 @@ export function Journal({
             </div>
             {dueEntries.length > 0 ? (
               <>
+                {/* The order the queue is actually in, said out loud — including the case where a run
+                    has just handed its misses over, which overrides the lifetime ranking below it. */}
                 <p className="fd-note">
-                  Calls you made above Steady and missed come first, then anything you got wrong last time,
-                  then whatever has waited longest.
+                  {seededLed > 0
+                    ? `The ${seededLed} card${seededLed === 1 ? '' : 's'} you just missed come first, the calls above Steady among them leading — then anything you got wrong last time, then whatever has waited longest.`
+                    : 'Calls you made above Steady and missed come first, then anything you got wrong last time, then whatever has waited longest.'}
                 </p>
                 <div className="fd-head-actions">
                   <button

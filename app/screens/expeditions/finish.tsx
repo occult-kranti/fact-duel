@@ -23,6 +23,7 @@ import {
   convictionRiskLanded,
   XP,
 } from '@/lib/progression.mjs';
+import type { SeedEntry } from '../../use-player';
 import { ExpeditionStamp, signed, useTap } from './parts';
 
 /* Cyan token value: the 3D scene takes a colour, not a CSS variable. */
@@ -83,8 +84,12 @@ export function ExpeditionFinish({
   onDone: () => void;
   onDuel: () => void;
   onReplay: () => void;
-  /** Route to the Vault. Absent = the misses are re-read in place, in the recap below. */
-  onVault?: () => void;
+  /**
+   * Seed this deck into the review queue and route to the Vault. The deck travels with the call so
+   * the seed is precisely the cards this run missed, in the order they are worth re-reading.
+   * Absent = the misses are re-read in place, in the recap below.
+   */
+  onVault?: (deck: SeedEntry[]) => void | Promise<void>;
 }) {
   const juice = useJuice();
   const fx = useFx();
@@ -196,9 +201,26 @@ export function ExpeditionFinish({
     juice.sound('unlock', { gain: 0.8 });
   }, [promotion, juice]);
 
+  /* The deck §3.5 hands the Vault: the factIds this run missed, each carrying the `order` of the
+   * tier it was called at. The order is what lets the deck put the calls above Steady first — a
+   * confident miss is the highest-value card in the queue — without this screen ranking tiers itself
+   * or the schedule module ever having to learn what a tier is. */
+  const missedDeck: SeedEntry[] = useMemo(() => {
+    const deck: SeedEntry[] = [];
+    run.cards.forEach((f: { factId: string; correctIndex: number }, i: number) => {
+      const answer = run.answers[i];
+      if (answer && answer.choice !== f.correctIndex)
+        deck.push({ factId: f.factId, order: PAY[answer.confidence]?.order ?? 0 });
+    });
+    return deck;
+  }, [run]);
+
   /** No Vault route threaded in? The six cards are already on this screen — open the missed ones. */
   const reRead = () => {
-    if (onVault) return onVault();
+    // Seeds first, navigates second: the deck is the whole point of the button, and a Vault opened
+    // before the write landed would show yesterday's queue. No XP is paid for pressing it — §3.5 —
+    // because reading an answer is not answering it.
+    if (onVault) return void onVault(missedDeck);
     const node = recap.current;
     if (!node) return;
     node.querySelectorAll('details[data-miss="1"]').forEach((d) => d.setAttribute('open', ''));

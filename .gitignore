@@ -52,3 +52,6 @@ e2e-failure-*.png
 # One-off browser probes written during a session; the durable gate is scripts/e2e.mjs.
 /.gauntlet-check.mjs
 /.probe.mjs
+
+# Python bytecode from the deck/chart scripts.
+__pycache__/

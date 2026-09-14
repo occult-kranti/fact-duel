@@ -18,11 +18,20 @@ export type ExpeditionsProps = {
   player: any;
   onDuel: (mode: string, topic?: string) => void;
   onBack: () => void;
+  /** Route to the Vault, for the finish screen's seeded deck. Absent = the misses re-read in place. */
+  onVault?: () => void;
   /** Legacy tone generator. Still accepted; feedback now runs through useJuice(). */
   signal: (s: string) => void;
 };
 
-export default function Expeditions({ selected, onSelect, player, onDuel, onBack }: ExpeditionsProps) {
+export default function Expeditions({
+  selected,
+  onSelect,
+  player,
+  onDuel,
+  onBack,
+  onVault,
+}: ExpeditionsProps) {
   const tap = useTap();
   const [busy, setBusy] = useState(false),
     [error, setError] = useState('');
@@ -97,6 +106,7 @@ export default function Expeditions({ selected, onSelect, player, onDuel, onBack
           busy={busy}
           onDone={() => onSelect(null)}
           onDuel={() => onDuel('trilogy', route.topic)}
+          onVault={onVault}
         />
       ) : (
         <ExpeditionBrief route={route} record={record} busy={busy} loaded={player.loaded} onStart={start} />

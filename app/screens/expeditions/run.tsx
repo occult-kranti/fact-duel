@@ -75,6 +75,7 @@ export function ExpeditionRun({
   busy,
   onDone,
   onDuel,
+  onVault,
 }: {
   route: any;
   record: any;
@@ -83,6 +84,8 @@ export function ExpeditionRun({
   busy: boolean;
   onDone: () => void;
   onDuel: () => void;
+  /** Navigate to the Vault. Absent = the finish screen re-reads the misses where they already are. */
+  onVault?: () => void;
 }) {
   const juice = useJuice();
   const tap = useTap();
@@ -252,6 +255,21 @@ export function ExpeditionRun({
         onDone={onDone}
         onDuel={onDuel}
         onReplay={onReplay}
+        onVault={
+          onVault &&
+          (async (deck) => {
+            /* Every profile write on this surface is dispatched from the run, so the seed is too. It
+               is awaited before the route changes: the Vault reads its queue out of the profile, and
+               a navigation that raced the write would land on a queue that does not hold these yet. */
+            try {
+              await player.seedReview(deck);
+            } catch {
+              /* The dispatcher already surfaces a failed write as `player.storageError`; the player
+                 asked to go to the Vault, so the route still opens rather than the button dying. */
+            }
+            onVault();
+          })
+        }
       />
     );
 
