@@ -170,7 +170,13 @@
   justify-content: space-between;
   gap: 10px 18px;
   margin: 0;
-  padding: 18px max(var(--gutter), var(--safe-right)) calc(18px + var(--nav-h) + var(--safe-bottom))
+  /* The footer is rendered outside <main>, so a screen's own padding-bottom cannot clear it. Screens
+     that pin a bar above the tab bar publish its height as --fd-stick-h on :root (play.css 104px,
+     expeditions.css 88px, 0px from 900px up) exactly so shell chrome can reserve it too — without
+     this term the fixed launch bar lies on top of the last 104px of the footer and both footer
+     controls become dead taps that fire the bar's action instead. */
+  padding: 18px max(var(--gutter), var(--safe-right))
+    calc(18px + var(--nav-h) + var(--safe-bottom) + var(--fd-stick-h, 0px))
     max(var(--gutter), var(--safe-left));
   border-top: 1px solid var(--line);
   background: var(--bg-1);

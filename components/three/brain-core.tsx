@@ -500,11 +500,14 @@ varying float vFlow;
 
 // color_fragment.glsl is `diffuseColor *= vColor;` — vertex colours modulate diffuse only, while
 // totalEmissiveRadiance comes straight off a uniform. Left alone, the emissive floods every sulcus
-// flat and cancels the cavity map, so the glow is modulated by vColor here too. The fresnel rim buys
-// the silhouette back without the second BackSide shell, which was a sphere and could never hug this.
+// flat and cancels the cavity map, so the glow is modulated by vColor here too. Take .rgb explicitly:
+// three declares `varying vec4 vColor` under USE_COLOR (color_pars_fragment), and the accumulator is a
+// vec3, so a bare `vColor` is a GLSL ES type error that fails the whole program to compile.
+// The fresnel rim buys the silhouette back without the second BackSide shell, which was a sphere and
+// could never hug this.
 const EMISSIVE_PATCH = `
 #include <emissivemap_fragment>
-totalEmissiveRadiance *= vColor;
+totalEmissiveRadiance *= vColor.rgb;
 float fres = pow(1.0 - clamp(dot(normalize(normal), normalize(vViewPosition)), 0.0, 1.0), 2.4);
 totalEmissiveRadiance += uRimColor * fres * uRim;
 float wave = 0.5 + 0.5 * sin(vFlow * 6.2831 * 1.8 - uTime * uRate);

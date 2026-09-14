@@ -287,26 +287,13 @@
   color: var(--muted);
   text-wrap: pretty;
 }
-/* Inside the stage it is a band clear of the badge row, scrimmed so it stays legible over the
- * canvas and inert so it never eats the pointer the orb's parallax is tracking. Dropped straight
- * into the hero grid instead it must span the row, or the 900 breakpoint lands it in the player
- * card's column. */
+/* The twin sits below the stage, never over it. Scrimmed inside the stage it read as a caption on a
+ * tall desktop hero, but the phone hero is 196px and a 43px band "clear of the badge row" landed
+ * dead centre on the canvas — a caption covering the only thing it captions. Dropped into the hero
+ * grid it must span the row, or the 900 breakpoint lands it in the player card's column. */
 .fd-home .fd-hub-hero > .fd-hub-hero-note {
   grid-column: 1 / -1;
-}
-.fd-home .fd-hub-hero-stage > .fd-hub-hero-note {
-  position: absolute;
-  z-index: 2;
-  left: 12px;
-  right: 12px;
-  bottom: 46px;
-  padding: 4px 8px;
-  border-radius: var(--r-control);
-  /* Heavier than the badge's scrim and full-strength ink: this sits over a live canvas whose
-   * luminance the sheet cannot know, and muted grey at 72% is where that bet stops paying. */
-  background: color-mix(in oklab, var(--bg-0) 92%, transparent);
-  color: var(--text);
-  pointer-events: none;
+  margin-top: -6px;
 }
 
 /* ---------- player card ---------- */

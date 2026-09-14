@@ -58,6 +58,71 @@ function verdict(id: string, t: Count) {
   return signed(tierPoints(id, t));
 }
 
+/**
+ * The break-even hit rate for calling a card at tier `i` instead of the tier one step below it: the
+ * p at which the two stakes pay the same, read off the stake table itself so a re-tune of §1.2 moves
+ * it rather than leaving a stale literal here. Steady 0, Bold 1/2, Called 2/3 — the crossovers the
+ * stake copy advertises. Returned as a ratio so the comparison stays integer-exact (2/3 of six cards
+ * is four, not 3.9999999999999996); a table with no crossover comes back with `den` 0, which no run
+ * with a miss in it can clear.
+ */
+function breakEven(i: number): { num: number; den: number } {
+  if (i <= 0) return { num: 0, den: 1 };
+  const b = PAY[CONFIDENCE_ORDER[i]];
+  const a = PAY[CONFIDENCE_ORDER[i - 1]];
+  const num = b.wrong - a.wrong;
+  const den = a.correct - a.wrong - b.correct + b.wrong;
+  if (den === 0) return { num: 1, den: 0 };
+  return den < 0 ? { num: -num, den: -den } : { num, den };
+}
+
+/**
+ * The calibration read-back line, §6.5. Exported because it is the one claim on this screen made
+ * about the *player* rather than about a number, and it has to be provable from the tally alone.
+ *
+ * The trap it is written around: `n === correct` is satisfied *vacuously* by a tier with no cards,
+ * so "every tier below the miss was clean" used to be true of a run that never played one. A player
+ * who called Called on all six and missed all six — the single most miscalibrated run the game
+ * allows, and a -18 floor score — was told "You were right about what you knew", the one thing the
+ * evidence rules out, on the surface whose whole job is calibration honesty (§6.6 bans propping
+ * esteem in exactly this state). So the praise branch now needs evidence for the claim: either a
+ * lower tier was actually played and came back clean, or the tier that missed still cleared the hit
+ * rate that made calling it the right bet. Neither holds for an all-Called 0/6 or an all-Bold 0/6,
+ * both of which fall through to the true line; both hold for the §6.5 worked example and for a 5-of-6
+ * Called run, which keep theirs.
+ */
+export function calibrationRead(tally: Tally): string {
+  const above = tally.bold.n + tally.called.n;
+  const misses = CONFIDENCE_ORDER.reduce((n: number, id: string) => n + tally[id].n - tally[id].correct, 0);
+  /* The misses are what the player can act on, so the line has to be true about where they landed:
+   * "your calls ran ahead" is false when every miss was a Steady card, and both spec branches are
+   * false at 6/6. */
+  const missTier = CONFIDENCE_ORDER.reduce(
+    (top: number, id: string, i: number) => (tally[id].n > tally[id].correct ? i : top),
+    -1,
+  );
+  const clean = (id: string) => tally[id].n === tally[id].correct;
+  const lowerPlayed = CONFIDENCE_ORDER.slice(0, missTier).some((id: string) => tally[id].n > 0);
+  const missed = missTier >= 0 ? tally[CONFIDENCE_ORDER[missTier]] : { n: 0, correct: 0 };
+  const rate = breakEven(missTier);
+  const heldItsOwnTier = missed.correct * rate.den >= rate.num * missed.n;
+  const earned = lowerPlayed || heldItsOwnTier;
+  const lowerClean =
+    missTier > 0 &&
+    earned &&
+    CONFIDENCE_ORDER.slice(0, missTier).every(clean) &&
+    CONFIDENCE_ORDER.slice(missTier + 1).every(clean);
+  const missLabel = missTier >= 0 ? PAY[CONFIDENCE_ORDER[missTier]].name : '';
+  const missCount = missed.n - missed.correct;
+  return misses === 0
+    ? 'Every card landed. Your calls and what you knew agreed on all six.'
+    : above === tally.bold.correct + tally.called.correct
+      ? `You did not over-call a single card. ${sentence(word(misses))} of the six ${misses === 1 ? 'is' : 'are'} worth a second look.`
+      : lowerClean
+        ? `You were right about what you knew — and right about what you did not. The ${word(missCount)} ${missLabel} card${missCount === 1 ? '' : 's'} that missed ${missCount === 1 ? 'is the fact' : 'are the facts'} worth re-reading.`
+        : `Your calls ran ahead of what you knew this time. ${sentence(word(misses))} of the six ${misses === 1 ? 'is' : 'are'} worth a second look.`;
+}
+
 export function ExpeditionFinish({
   route,
   record,
@@ -234,28 +299,7 @@ export function ExpeditionFinish({
   const best = record.best ?? first;
   const repeat = record.completions > 1;
 
-  /* Which copy branch the calibration block gets. The misses are what the player can act on, so the
-   * line has to be true about where they landed: "your calls ran ahead" is false when every miss was
-   * a Steady card, and both spec branches are false at 6/6. */
-  const missTier = CONFIDENCE_ORDER.reduce(
-    (top: number, id: string, i: number) => (tally[id].n > tally[id].correct ? i : top),
-    -1,
-  );
-  const lowerClean =
-    missTier > 0 &&
-    CONFIDENCE_ORDER.slice(0, missTier).every((id: string) => tally[id].n === tally[id].correct) &&
-    CONFIDENCE_ORDER.slice(missTier + 1).every((id: string) => tally[id].n === tally[id].correct);
-  const missLabel = missTier >= 0 ? PAY[CONFIDENCE_ORDER[missTier]].name : '';
-  const missCount =
-    missTier >= 0 ? tally[CONFIDENCE_ORDER[missTier]].n - tally[CONFIDENCE_ORDER[missTier]].correct : 0;
-  const read =
-    misses === 0
-      ? 'Every card landed. Your calls and what you knew agreed on all six.'
-      : above === tally.bold.correct + tally.called.correct
-        ? `You did not over-call a single card. ${sentence(word(misses))} of the six ${misses === 1 ? 'is' : 'are'} worth a second look.`
-        : lowerClean
-          ? `You were right about what you knew — and right about what you did not. The ${word(missCount)} ${missLabel} card${missCount === 1 ? '' : 's'} that missed ${missCount === 1 ? 'is the fact' : 'are the facts'} worth re-reading.`
-          : `Your calls ran ahead of what you knew this time. ${sentence(word(misses))} of the six ${misses === 1 ? 'is' : 'are'} worth a second look.`;
+  const read = calibrationRead(tally);
 
   return (
     <div className="fd-exp-finish">
