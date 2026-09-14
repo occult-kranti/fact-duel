@@ -6,10 +6,10 @@
  * is the COOL learning temperature (cyan accent, gold only for an earned stamp).
  */
 import { useCallback, useId } from 'react';
-import { ArrowRight, Check, Compass, Flame, Shield } from 'lucide-react';
+import { ArrowRight, Check, Compass, Flame, Shield, Target } from 'lucide-react';
 import { useJuice } from '@/components/fx';
 import { gatePress } from '@/lib/fx/press-gate';
-import { EXPEDITIONS, expeditionStatus } from '@/lib/expeditions.mjs';
+import { CONFIDENCE, CONFIDENCE_ORDER, EXPEDITIONS, expeditionStatus } from '@/lib/expeditions.mjs';
 import { TOPIC_STYLE } from '../../collections';
 
 export const signed = (n: number) => (n > 0 ? `+${n}` : String(n));
@@ -225,36 +225,42 @@ export function EpisodeCard({ route, record, onOpen }: { route: any; record: any
 }
 
 /* ------------------------------------------------------------ scoring cards */
-/** The two stake rules as two clear cards (bible 10.4). */
+const STAKE_ICON: Record<string, typeof Shield> = { steady: Shield, bold: Flame, called: Target };
+
+/* "Nothing to lose" is not said on the Steady card any more. A Steady miss costs no run points, but
+ * it still lands in the Conviction denominator, so the card claims the true half and stops there. */
+const STAKE_NOTE: Record<string, string> = {
+  steady: 'Never costs you run points. Every card, at every tier, counts toward your Conviction.',
+  bold: 'Back yourself. Worth it above a coin flip; your run total can go below zero.',
+  called: 'Worth it when you are two-thirds sure. A miss takes three points back.',
+};
+
+/** The stake menu, one card per tier (bible 10.4), read off `CONFIDENCE` so payouts cannot drift. */
 export function ScoringCards({ active }: { active?: string }) {
   return (
     <div className="fd-exp-stakes">
-      <div className={`fd-exp-stake fd-exp-stake--steady${active === 'steady' ? ' is-active' : ''}`}>
-        <span className="fd-exp-stake-top">
-          <Shield size={17} aria-hidden="true" />
-          Steady
-        </span>
-        <span className="fd-exp-stake-score">
-          <strong>+2</strong> correct
-        </span>
-        <span className="fd-exp-stake-score">
-          <strong>0</strong> wrong
-        </span>
-        <p>Bank the safe points. Nothing to lose.</p>
-      </div>
-      <div className={`fd-exp-stake fd-exp-stake--bold${active === 'bold' ? ' is-active' : ''}`}>
-        <span className="fd-exp-stake-top">
-          <Flame size={17} aria-hidden="true" />
-          Bold
-        </span>
-        <span className="fd-exp-stake-score">
-          <strong>+3</strong> correct
-        </span>
-        <span className="fd-exp-stake-score">
-          <strong>−1</strong> wrong
-        </span>
-        <p>Back yourself. Your run total can go below zero.</p>
-      </div>
+      {/* Tier order comes from CONFIDENCE_ORDER; the key order of the frozen object is not a contract. */}
+      {(CONFIDENCE_ORDER as string[]).map((id) => {
+        const tier = (CONFIDENCE as any)[id];
+        const Icon = STAKE_ICON[id] || Shield;
+        return (
+          <div key={id} className={`fd-exp-stake fd-exp-stake--${id}${active === id ? ' is-active' : ''}`}>
+            <span className="fd-exp-stake-top">
+              <Icon size={17} aria-hidden="true" />
+              {tier.name}
+            </span>
+            {/* signed() emits an ASCII hyphen-minus. U+2212 is announced as nothing by NVDA and JAWS,
+             * which would read a -3 stake out as "3" — a bet disclosed to sighted players only. */}
+            <span className="fd-exp-stake-score">
+              <strong>{signed(tier.correct)}</strong> correct
+            </span>
+            <span className="fd-exp-stake-score">
+              <strong>{signed(tier.wrong)}</strong> wrong
+            </span>
+            <p>{STAKE_NOTE[id]}</p>
+          </div>
+        );
+      })}
     </div>
   );
 }

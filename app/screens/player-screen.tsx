@@ -2,10 +2,14 @@
 /**
  * Player — ownership and accomplishment on one screen (design bible 10.5).
  *
- * Order: identity (level / Arena Rank / streak) → mastery → achievements → stamp case → the Locker
- * → the legacy side quests and card finishes. Every number on this page comes from
- * `player.progression`; nothing is inferred or invented, and the one "on this device" disclaimer
- * lives on the Arena Rank card.
+ * Order: identity (level / Arena Rank / streak / Conviction) → topic record → achievements → stamp
+ * case → the Locker → the legacy side quests and card finishes. Every number on this page comes from
+ * `player.progression`; nothing is inferred or invented, and the "on this device" disclaimers sit on
+ * the two cards that make a claim about the player — Arena Rank and Conviction.
+ *
+ * Conviction is the fourth hero card rather than a section of its own because it is identity: it is
+ * the badge the expedition betting mode mints, and it belongs beside the other three things this
+ * device knows about you, not down among the records.
  *
  * The equipped accent cosmetic is published to `document.documentElement.dataset.accent`, which the
  * `[data-accent='…']` rules in ./player/player.css turn into the app-wide --fd-accent highlight.
@@ -16,6 +20,7 @@ import { SETTINGS_KEYS } from '../shell/settings-sheet';
 import { Passport } from '../passport';
 import { MeasurementLink } from './analytics/link-card';
 import { Achievements } from './player/achievements';
+import { ConvictionCard } from './player/conviction-card';
 import { LevelCard } from './player/level-card';
 import { Locker } from './player/locker';
 import { Mastery } from './player/mastery';
@@ -59,18 +64,21 @@ export function PlayerScreen({ player, onOpenExpedition, onMissionAction, go }: 
         <LevelCard progression={progression} level={player.level} name={name} />
         <RankCard progression={progression} />
         <StreakCard progression={progression} />
+        <ConvictionCard progression={progression} />
       </div>
 
       {/* The Arena Rank card above says "on this device"; this is where that claim can be checked. */}
       <MeasurementLink onOpen={() => go('analytics')} />
 
-      <section className="fd-sec" aria-labelledby="fd-mastery-h">
+      {/* Only `counters.byTopic` feeds these bars and only duel rounds write it, so the heading and
+          the aside name what is counted instead of claiming strength the numbers cannot support. */}
+      <section className="fd-sec" aria-labelledby="fd-topic-h">
         <div className="fd-sec-head">
           <div>
-            <p className="fd-eyebrow">WHERE YOU ARE STRONG</p>
-            <h2 id="fd-mastery-h">Mastery</h2>
+            <p className="fd-eyebrow">WHAT YOU HAVE ANSWERED</p>
+            <h2 id="fd-topic-h">Topic record</h2>
           </div>
-          <span>Correct answers ÷ rounds played</span>
+          <span>Duel rounds only</span>
         </div>
         <Mastery progression={progression} />
       </section>

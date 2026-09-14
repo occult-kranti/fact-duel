@@ -76,7 +76,7 @@ export default function Expeditions({ selected, onSelect, player, onDuel, onBack
       <div className="fd-exp-topbar">
         <button type="button" className="fd-exp-ghost" onPointerDown={tap} onClick={() => onSelect(null)}>
           <ArrowLeft size={17} aria-hidden="true" />
-          {record?.run && record.run.cursor < 6 ? 'Pause & browse' : 'All expeditions'}
+          {record?.run && !record.folded && record.run.cursor < 6 ? 'Pause & browse' : 'All expeditions'}
         </button>
         <span className="fd-mono">SOLO · NO TIMER</span>
       </div>
@@ -85,7 +85,9 @@ export default function Expeditions({ selected, onSelect, player, onDuel, onBack
           {error}
         </p>
       )}
-      {record?.run ? (
+      {/* A folded run keeps its `run` so the reducer can refuse late answers; the route is released, so
+          the brief — the only route back to `start()` — is what the player must see. */}
+      {record?.run && !record.folded ? (
         <ExpeditionRun
           key={`${route.key}:${record.run.id}:${player.profile.epoch}`}
           route={route}
@@ -97,13 +99,7 @@ export default function Expeditions({ selected, onSelect, player, onDuel, onBack
           onDuel={() => onDuel('trilogy', route.topic)}
         />
       ) : (
-        <ExpeditionBrief
-          route={route}
-          record={record}
-          busy={busy}
-          loaded={player.loaded}
-          onStart={start}
-        />
+        <ExpeditionBrief route={route} record={record} busy={busy} loaded={player.loaded} onStart={start} />
       )}
     </section>
   );

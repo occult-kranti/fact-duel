@@ -1,8 +1,10 @@
 'use client';
 import * as THREE from 'three';
 import { useFrame, useThree } from '@react-three/fiber';
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { SceneFrame, useSceneState } from './scene-frame';
+import { usePrefersReducedMotion } from './reduced-motion';
+import { BrainCore } from './brain-core';
 import {
   GlowSprite,
   PALETTE,
@@ -26,7 +28,11 @@ export interface HeroOrbProps extends LazySceneProps {
   intensity?: number;
   /** Subtle pointer / touch parallax. Default true. */
   parallax?: boolean;
-  /** Accessible label for the scene box. */
+  /** Distinct game modes played, 0..6. The brain wakes at 4. Default 0. */
+  modesPlayed?: number;
+  /** 0..1 landed-conviction heat. Decoration only — never a score, never a pending stake. */
+  heat?: number;
+  /** Accessible label for the scene box. Defaults to the state-appropriate sentence below. */
   label?: string;
 }
 
@@ -57,66 +63,31 @@ const RINGS: RingDef[] = [
 ];
 
 const clampLevel = (level: number | undefined) => clamp(Math.round(level ?? 1), 1, 60);
-/** Emissive scale for the core: keeps the sphere reading as glowing metal, not a flat disc. */
-const CORE_EMISSIVE = 0.42;
 
-function Core({ accent, brightness, reduced }: { accent: string; brightness: number; reduced: boolean }) {
-  const mesh = useRef<THREE.Mesh>(null);
-  const geometry = useDisposable(() => new THREE.SphereGeometry(0.66, 48, 32), []);
-  const haloGeometry = useDisposable(() => new THREE.SphereGeometry(0.76, 32, 24), []);
-  const material = useDisposable(
-    () =>
-      new THREE.MeshStandardMaterial({
-        color: mixHex(accent, PALETTE.midnight, 0.6),
-        metalness: 0.9,
-        roughness: 0.25,
-        emissive: new THREE.Color(accent),
-        emissiveIntensity: brightness * CORE_EMISSIVE,
-        envMapIntensity: 1.3,
-      }),
-    [accent],
-  );
-  const haloMaterial = useDisposable(
-    () =>
-      new THREE.MeshBasicMaterial({
-        color: accent,
-        transparent: true,
-        opacity: 0.22,
-        blending: THREE.AdditiveBlending,
-        depthWrite: false,
-        side: THREE.BackSide,
-        toneMapped: false,
-      }),
-    [accent],
-  );
-  useEffect(() => {
-    material.emissiveIntensity = brightness * CORE_EMISSIVE;
-  }, [material, brightness]);
-  useFrame(({ clock }) => {
-    if (reduced || !mesh.current) return;
-    const t = clock.elapsedTime;
-    material.emissiveIntensity = brightness * CORE_EMISSIVE * (1 + 0.25 * Math.sin(t * 1.7));
-    const s = 1 + 0.018 * Math.sin(t * 1.7 + 0.5);
-    mesh.current.scale.setScalar(s);
-  });
-  return (
-    <group>
-      <mesh ref={mesh} geometry={geometry} material={material} />
-      <mesh geometry={haloGeometry} material={haloMaterial} />
-    </group>
-  );
-}
+/** Four of the six ways to play wakes the brain: breadth, not a grind counter. */
+const WAKE_MODES = 4;
+/**
+ * The wake is a presentation event, not an earned award, so it stays out of the profile's
+ * exactly-once ledger and out of ACHIEVEMENTS entirely. A player who clears site data may see it
+ * once more; that is the documented price of leaving the achievement count alone.
+ */
+const AWOKE_KEY = 'fd.brain.awoke';
+/** The shell tightens onto the brain forming inside it between 1.1 s and 1.8 s of the wake. */
+const SNAP_FROM = 1.1;
+const SNAP_TO = 1.8;
+/** 1.12 -> 1.02 and back, expressed as a scale so the edge buffer is never rebuilt. */
+const SNAP_DEPTH = 1 - 1.02 / 1.12;
 
-function WireShell({ accent, reduced }: { accent: string; reduced: boolean }) {
+function WireShell({ accent, reduced, ceremony }: { accent: string; reduced: boolean; ceremony: boolean }) {
   const group = useRef<THREE.Group>(null);
   const edges = useDisposable(() => {
-    const source = new THREE.IcosahedronGeometry(1.0, 1);
+    const source = new THREE.IcosahedronGeometry(1.12, 1);
     const geometry = new THREE.EdgesGeometry(source);
     source.dispose();
     return geometry;
   }, []);
   const nodes = useMemo(() => {
-    const source = new THREE.IcosahedronGeometry(1.0, 1);
+    const source = new THREE.IcosahedronGeometry(1.12, 1);
     const seen = new Map<string, THREE.Vector3>();
     const array = source.getAttribute('position').array as ArrayLike<number>;
     for (let i = 0; i < array.length; i += 3) {
@@ -143,10 +114,27 @@ function WireShell({ accent, reduced }: { accent: string; reduced: boolean }) {
     nodes.forEach((p, i) => mesh.setMatrixAt(i, m.makeTranslation(p.x, p.y, p.z)));
     mesh.instanceMatrix.needsUpdate = true;
   }, [nodes]);
+  // Negative means "not running", so the shell costs nothing on every frame that is not a wake.
+  const snap = useRef(-1);
+  useEffect(() => {
+    if (ceremony && !reduced) snap.current = 0;
+  }, [ceremony, reduced]);
   useFrame(({ clock }, dt) => {
     if (reduced || !group.current) return;
     group.current.rotation.y += 0.09 * Math.min(dt, 0.05);
     group.current.rotation.x = Math.sin(clock.elapsedTime * 0.21) * 0.28;
+    if (snap.current < 0) return;
+    snap.current += Math.min(dt, 0.05);
+    const k = Math.sin(Math.PI * clamp((snap.current - SNAP_FROM) / (SNAP_TO - SNAP_FROM), 0, 1));
+    group.current.scale.setScalar(1 - SNAP_DEPTH * k);
+    lineMaterial.opacity = 0.5 + 0.4 * k;
+    nodeMaterial.color.set(mixHex(accent, PALETTE.silver, k));
+    if (snap.current >= SNAP_TO) {
+      snap.current = -1;
+      group.current.scale.setScalar(1);
+      lineMaterial.opacity = 0.5;
+      nodeMaterial.color.set(accent);
+    }
   });
   return (
     <group ref={group} rotation={[0.2, 0.6, 0]}>
@@ -392,6 +380,10 @@ export interface HeroOrbSceneProps {
   accent?: string;
   intensity?: number;
   parallax?: boolean;
+  /** Distinct game modes played, 0..6. The brain wakes at 4. Default 0. */
+  modesPlayed?: number;
+  /** 0..1 landed-conviction heat. Decoration only — never a score, never a pending stake. */
+  heat?: number;
 }
 
 /** The orb without a SceneFrame, for composing into a shared canvas. */
@@ -400,6 +392,8 @@ export function HeroOrbScene({
   accent = PALETTE.volt,
   intensity = 1,
   parallax = true,
+  modesPlayed = 0,
+  heat = 0,
 }: HeroOrbSceneProps) {
   const { reduced } = useSceneState();
   const rig = useRef<THREE.Group>(null);
@@ -409,6 +403,32 @@ export function HeroOrbScene({
   const ringCount = lvl >= 45 ? 5 : lvl >= 25 ? 4 : 3;
   const brightness = (0.85 + (lvl / 60) * 0.6) * intensity;
   const particleCount = Math.round(150 + (lvl / 60) * 110);
+  // BrainCore reads the whole locked / forming / awake staging off one 0..1 number, so the three
+  // stages are this division and nothing else: 0-1 modes builds no geometry, 2-3 ghosts it inside
+  // the old core, 4 wakes it.
+  const unlock = Math.min(1, clamp(Math.round(modesPlayed), 0, 6) / WAKE_MODES);
+
+  // Decided once at mount, not in an effect: the wake is a one-shot, and the read has to happen
+  // before the first frame the brain is drawn on. A blocked store reads as "already seen", because
+  // replaying the sequence on every mount is worse than never playing it.
+  const [ceremony] = useState(() => {
+    if (unlock < 1 || typeof window === 'undefined') return false;
+    try {
+      return !window.localStorage.getItem(AWOKE_KEY);
+    } catch {
+      return false;
+    }
+  });
+  // The flag is written even under reduced motion, where BrainCore skips the sequence: the brain is
+  // then simply present, and the moment is not owed back on a later visit.
+  useEffect(() => {
+    if (!ceremony) return;
+    try {
+      window.localStorage.setItem(AWOKE_KEY, '1');
+    } catch {
+      // Nothing to do: the next mount reads it as unseen and plays again.
+    }
+  }, [ceremony]);
 
   useFrame((_, dt) => {
     if (!rig.current) return;
@@ -431,8 +451,15 @@ export function HeroOrbScene({
             opacity={0.65}
             position={[0, 0, -0.7]}
           />
-          <Core accent={accent} brightness={brightness} reduced={reduced} />
-          <WireShell accent={accent} reduced={reduced} />
+          <BrainCore
+            accent={accent}
+            brightness={brightness}
+            reduced={reduced}
+            heat={heat}
+            unlock={unlock}
+            ceremony={ceremony}
+          />
+          <WireShell accent={accent} reduced={reduced} ceremony={ceremony} />
           {RINGS.slice(0, ringCount).map((def) => (
             <OrbitRing key={def.radius} def={def} accent={accent} reduced={reduced} />
           ))}
@@ -443,28 +470,57 @@ export function HeroOrbScene({
   );
 }
 
+/** Before the wake there is no brain in the box, so the locked scene keeps its own description. */
+const LOCKED_LABEL = 'Glowing knowledge core with orbiting sports and science satellites';
+
+/**
+ * What the pulse reports, said out loud. The last sentence is not padding: a glowing brain that
+ * beats faster is one bad label away from claiming the player got smarter, and this is the only
+ * place a screen reader hears what the movement actually counts.
+ */
+function orbLabel(level: number, awake: boolean, reduced: boolean): string {
+  if (!awake) return LOCKED_LABEL;
+  const movement = reduced
+    ? 'It brightens the more of your recent calls land above Steady.'
+    : 'It pulses faster the more of your recent calls land above Steady.';
+  return `Your brain core at level ${level}. ${movement} It shows how your calls have been landing, not how much you know.`;
+}
+
 /** Home hero "knowledge core" (self-contained: wraps its own SceneFrame). */
 export default function HeroOrb({
   level = 1,
   accent = PALETTE.volt,
   intensity = 1,
   parallax = true,
+  modesPlayed = 0,
+  heat = 0,
   fallback,
   height = 420,
   className,
   style,
-  label = 'Glowing knowledge core with orbiting sports and science satellites',
+  label,
 }: HeroOrbProps) {
+  // SceneFrame owns the reduced-motion state inside the canvas, but the label is read from outside
+  // it, so the preference is queried again here rather than plumbed back out.
+  const reduced = usePrefersReducedMotion();
+  const awake = clamp(Math.round(modesPlayed), 0, 6) >= WAKE_MODES;
   return (
     <SceneFrame
       fallback={fallback}
       height={height}
       className={className}
       style={style}
-      label={label}
+      label={label ?? orbLabel(clampLevel(level), awake, reduced)}
       camera={{ fov: 38, position: [0, 0.15, 5.8], near: 0.1, far: 40 }}
     >
-      <HeroOrbScene level={level} accent={accent} intensity={intensity} parallax={parallax} />
+      <HeroOrbScene
+        level={level}
+        accent={accent}
+        intensity={intensity}
+        parallax={parallax}
+        modesPlayed={modesPlayed}
+        heat={heat}
+      />
     </SceneFrame>
   );
 }

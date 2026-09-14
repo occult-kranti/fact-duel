@@ -306,7 +306,7 @@ def chart_vacuum():
 
     titles(
         fig,
-        "The live 1v1 vacuum: hundreds of millions of installs, no maintained incumbent",
+        "The live 1v1 vacuum: hundreds of millions of installs, essentially no maintained incumbent",
         "Lifetime Android installs, log scale. Colour is maintenance status, not size.",
         sub_y=0.888,
     )
@@ -355,7 +355,7 @@ def chart_vacuum():
 
     source(fig,
            "Google Play internal install counts, verified 13 Sep 2026: Trivia Crack 267,939,837 (displayed as 100M+); Kahoot! 100,263,409; Jeopardy! World Tour 5,177,147; TRIVIA GO! (live.trivia, Sorbet Live) 10K+; Quizion (com.quizion.app) 10+.\n"
-           "QuizDuel — the one live duel product at scale — is shrinking: MAG Interactive group DAU −14% and MAU −13% YoY, US iOS 3.51★ from 78 ratings. Wayground’s apps have been stale since 14 Nov 2025.  numbers.md §2.1–§2.2.")
+           "QuizDuel — the one live duel product at scale — is live and maintained (iOS build 10 Sep 2026) and shrinking: MAG Interactive group DAU −14% and MAU −13% YoY, nine-month average to May 2026; Q3 alone −12% and −9%. US iOS 3.51★ from 78 ratings. Wayground’s apps have been stale since 14 Nov 2025.  numbers.md §2.1–§2.2.")
     save(fig, "vacuum.png")
 
 

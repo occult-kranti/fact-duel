@@ -249,6 +249,65 @@
   letter-spacing: 0.06em;
   color: var(--volt-text);
 }
+/* The brain chip is the badge's twin in the opposite corner: same pill, the learning accent instead
+ * of volt, so the two never read as one control. Geometry lives on the class and placement on the
+ * child rule, so the chip survives being wrapped in a row beside the badge later. */
+.fd-home .fd-hub-hero-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border: 1px solid color-mix(in oklab, var(--fd-cool) 45%, transparent);
+  border-radius: var(--r-pill);
+  background: color-mix(in oklab, var(--bg-0) 72%, transparent);
+  font-size: var(--fs-12);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  color: var(--fd-cool-text);
+}
+.fd-home .fd-hub-hero-stage > .fd-hub-hero-chip {
+  position: absolute;
+  z-index: 2;
+  right: 12px;
+  bottom: 12px;
+}
+.fd-home .fd-hub-hero-chip[data-state='awake'] {
+  border-color: color-mix(in oklab, var(--fd-cool) 70%, transparent);
+  background: color-mix(in oklab, var(--fd-cool) 14%, var(--bg-0));
+}
+
+/* The chip's sentence. It carries the whole claim — the number, its denominator and its scope — so it
+ * is real text under the hero, never a title attribute, and it wraps rather than truncating. */
+.fd-home .fd-hub-hero-note {
+  margin: 0;
+  min-width: 0;
+  font-size: var(--fs-12);
+  line-height: 1.45;
+  color: var(--muted);
+  text-wrap: pretty;
+}
+/* Inside the stage it is a band clear of the badge row, scrimmed so it stays legible over the
+ * canvas and inert so it never eats the pointer the orb's parallax is tracking. Dropped straight
+ * into the hero grid instead it must span the row, or the 900 breakpoint lands it in the player
+ * card's column. */
+.fd-home .fd-hub-hero > .fd-hub-hero-note {
+  grid-column: 1 / -1;
+}
+.fd-home .fd-hub-hero-stage > .fd-hub-hero-note {
+  position: absolute;
+  z-index: 2;
+  left: 12px;
+  right: 12px;
+  bottom: 46px;
+  padding: 4px 8px;
+  border-radius: var(--r-control);
+  /* Heavier than the badge's scrim and full-strength ink: this sits over a live canvas whose
+   * luminance the sheet cannot know, and muted grey at 72% is where that bet stops paying. */
+  background: color-mix(in oklab, var(--bg-0) 92%, transparent);
+  color: var(--text);
+  pointer-events: none;
+}
 
 /* ---------- player card ---------- */
 .fd-home .fd-hub-player-card {
