@@ -347,18 +347,19 @@ Milestones 4-6 are untouched — grow the bank from 54 questions, ship an oppone
 
 ---
 
-## 9. We model on Duolingo's habit-subscription economics, not consumer trivia IAP.
+## 9. Two monetisation routes, both unbuilt: paid event entry, and a habit subscription.
 
 **Kicker:** BUSINESS MODEL  
 **Kind:** chart
 
 ### Body
 
-- Trivia IAP, US iOS top three: ~$102.5K/week peak Q2 2025, ~$90K quarter-end — Sensor Tower's modelled estimate, before Apple's 15-30% cut.
-- Duolingo: $1,037.6M FY2025 revenue on a streak-and-quest loop. A later period, 30 Jun 2026: 12.7M of 140.6M MAU paid, 9.03%.
+- Route A (P) — paid entry to a time-limited expedition event: one entry per player, rotating question set.
+- Nothing of Route A exists. No payment surface, no accounts, and expeditions today are free and replayable.
+- Route B (P) — habit subscription. Duolingo: $1,037.6M FY2025 on a streak loop; 12.7M of 140.6M MAU paid, 9.03%.
 - Cross-check at base-case Year-3 scale: 105,900 MAU x 9.03% x $43.99/yr = $420,666 (P), versus $1,630,517 (P) from install economics.
-- Diverging 3.88x, the base case's Year-3 revenue is a band — $0.4M-$1.6M (P), not $1.6M. Today: zero users, zero revenue.
-- $43.99/yr: Sporcle Orange individual. 9.03%: our arithmetic on Duolingo's filed counts, not a filed ratio. Year-3 installs, 20% monthly churn: unsourced.
+- Diverging 3.88x, Year-3 revenue is a band — $0.4M-$1.6M (P), not $1.6M. Today: zero users, zero revenue.
+- Trivia IAP, US iOS top three: ~$102.5K/week peak (Sensor Tower est., before Apple's 15-30% cut). $43.99/yr: Sporcle Orange.
 
 ### Chart
 
@@ -375,8 +376,17 @@ Milestones 4-6 are untouched — grow the bank from 54 questions, ship an oppone
 - [AppsFlyer — State of App Monetization 2026](https://www.appsflyer.com/resources/reports/app-marketing-monetization-report/)
 - [GameAnalytics — 2026 Mobile & PC Gaming Benchmarks](https://www.gameanalytics.com/reports/2026-mobile-pc-gaming-benchmarks)
 - FACT//DUEL internal: public/product/investor/numbers.md §4.1-§4.3
+- FACT//DUEL internal: public/product/investor/numbers.md §4.4b (company disclosure — the founder’s named monetisation route and what it would take)
 
 ### Speaker notes
+
+Lead with what is NOT built, not with the model. Route A is the founder’s own route, recorded in numbers.md §4.4b on 14 September 2026: paid entry to a time-limited expedition event, one entry per player, a rotating question set so answers cannot be passed around. It is a coherent design — single entry is what makes a leaderboard mean anything, and rotation is the anti-collusion mechanism a fixed bank cannot provide.
+
+Volunteer the gap before you are asked, because a reader can check every word of it in the public repository in about two minutes. Today: there is no payment surface anywhere in the tree; the duel coins say on screen "Free simulated coins. No monetary value."; expedition stake tiers stake RUN-SCORE POINTS and never a currency (+2/0, +3/-1, +4/-3, lib/expeditions.mjs), under a design rule that nothing stakes a currency and nothing is minted by losing; expeditions are replayable by design and there are no accounts, so "one entry per player" is not yet expressible; and a route’s six cards are frozen — a replay reshuffles the OPTIONS, not the questions, out of a 54-question bank.
+
+What is already built and would be reused: lib/events.mjs derives up to four limited-time modes a month, deterministically from the month and a hand-checked calendar, so the time-limited and rotating halves have a working mechanism behind them. It rotates duel modes today, pays XP, and takes no money.
+
+Route A is therefore gated on milestone 1 (accounts), milestone 4 (a bank past 54) and a wagering-law answer, which is on the risks slide. If you are asked which you would build: Route B first, because it is testable on the cohort this round buys, while Route A needs three other things to land before it can be tested at all.
 
 Longest-dwell slide in a seed deck at 64 seconds in DocSend's estimates, so it is the densest page here and the one to rehearse hardest. The argument in one breath: the category does monetise, just not as consumer trivia IAP.
 
@@ -466,6 +476,7 @@ STRUCTURE: kind "table", the six-row landscape table and all sixteen sources car
 - Measurement selection. The cohort rate counts only devices that opt into the anonymous ping — consenting devices, not all. We will publish it as exactly that.
 - Content depth. 54 sample questions is a demo bank; the ask funds four engineers and no content line (§4.4).
 - Model honesty. Our base case (P) out-monetises a 9.03%-conversion subscription at $43.99/yr by 3.88x. We flag it, not hide it.
+- Wagering law. Route A stakes real money on a knowledge outcome — regulated as skill gaming or gambling in many jurisdictions. Unanswered.
 
 ### Sources
 
@@ -477,8 +488,15 @@ STRUCTURE: kind "table", the six-row landscape table and all sixteen sources car
 - FACT//DUEL internal: public/product/investor/numbers.md §2.3, §4.3 and §4.4 (company disclosure)
 - FACT//DUEL internal: public/product/investor/numbers.md §3.5, §5.2 and §5.14 (company disclosure)
 - FACT//DUEL internal: public/product/investor/numbers.md §7.1 and §7.2 (company disclosure)
+- FACT//DUEL internal: public/product/investor/numbers.md §4.4b (company disclosure)
 
 ### Speaker notes
+
+Eight risks now, not seven. Route A on the business-model slide takes real money on the outcome of a knowledge question, and in many jurisdictions that is regulated as skill gaming or gambling rather than as a game sale. We have no answer and we say so rather than discovering it in diligence.
+
+The landscape slide already notes that Skillz runs real-money cash tournaments and has never been profitable. That is the nearest comparable to Route A and it is not an encouraging one — which is a reason to name the risk here, not to leave it off.
+
+Do not let this slide shrink to fit a line budget. Cutting a risk to make a page look tidier is the one edit this deck is not allowed to make.
 
 Each risk has a named response rather than a reassurance.
 
@@ -943,7 +961,7 @@ The point of showing the inputs separately from the outputs is that an investor 
 
 ### Body
 
-- 66 distinct sources across 20 slides. Full URLs are in the speaker notes of every slide.
+- 68 distinct sources across 20 slides. Full URLs are in the speaker notes of every slide.
 - Kind key: audited filing, company disclosure, third-party estimate, analyst estimate, press report.
 - Nothing in this deck rests on a source that is not on this list, and nothing on this list is ours.
 
@@ -1097,6 +1115,7 @@ Source register, continued. Full URLs for this page:
 |---|---|---|
 | AppsFlyer — State of App Monetization 2026 | third-party estimate | 9, 15 |
 | FACT//DUEL internal — numbers.md §4.1-§4.3 | internal (company disclosure) | 9, 15 |
+| FACT//DUEL internal — numbers.md §4.4b (company disclosure — the founder’s named monetisation route and what it would take) | internal (company disclosure) | 9 |
 | Google Play — Kahoot! listing | company disclosure | 10 |
 | Oslo Børs — Kahoot! delisting notice | company disclosure | 10 |
 | PR Newswire — Quizizz $31.5M Series B | press report | 10 |
@@ -1104,14 +1123,13 @@ Source register, continued. Full URLs for this page:
 | SEC 8-K — Skillz FY2025 results | company disclosure | 10, 17 |
 | SEC 8-K — Skillz FY2022 results (FY2021 peak) | audited filing | 10, 17 |
 | SEC 10-K — Skillz FY2023 (Skillz v. AviaGames) | press report | 11 |
+| FACT//DUEL internal — numbers.md §4.4b | internal (company disclosure) | 11 |
 | FACT//DUEL internal — numbers.md §4.4 and §4.5 | internal (company disclosure) | 12 |
 | Carta — State of Private Markets, Q3 2025 | third-party estimate | 13 |
 | Crunchbase — US seed funding, 2025 | press report | 13 |
 | FACT//DUEL internal — numbers.md §4.4, §4.5 and §5.8 | internal (company disclosure) | 13 |
 | FACT//DUEL internal — numbers.md §7.1 and §7.3 | internal (company disclosure) | 13, 18, 20 |
 | Fact.MR — second-screen sports apps market | third-party estimate | 14 |
-| The Business Research Company — fan engagement | third-party estimate | 14 |
-| market.us — fan engagement market | third-party estimate | 14 |
 
 ### Speaker notes
 
@@ -1121,6 +1139,8 @@ Source register, continued. Full URLs for this page:
   https://www.appsflyer.com/resources/reports/app-marketing-monetization-report/
 - FACT//DUEL internal — numbers.md §4.1-§4.3
   FACT//DUEL internal: public/product/investor/numbers.md §4.1-§4.3
+- FACT//DUEL internal — numbers.md §4.4b (company disclosure — the founder’s named monetisation route and what it would take)
+  FACT//DUEL internal: public/product/investor/numbers.md §4.4b (company disclosure — the founder’s named monetisation route and what it would take)
 - Google Play — Kahoot! listing
   https://play.google.com/store/apps/details?id=no.mobitroll.kahoot.android&hl=en_US&gl=US
 - Oslo Børs — Kahoot! delisting notice
@@ -1135,6 +1155,8 @@ Source register, continued. Full URLs for this page:
   https://www.sec.gov/Archives/edgar/data/1801661/000180166123000003/ex991_fy22q4-8xkxearningsr.htm
 - SEC 10-K — Skillz FY2023 (Skillz v. AviaGames)
   https://www.sec.gov/Archives/edgar/data/1801661/000180166124000100/sklz-20231231.htm
+- FACT//DUEL internal — numbers.md §4.4b
+  FACT//DUEL internal: public/product/investor/numbers.md §4.4b (company disclosure)
 - FACT//DUEL internal — numbers.md §4.4 and §4.5
   FACT//DUEL internal: public/product/investor/numbers.md §4.4 and §4.5
 - Carta — State of Private Markets, Q3 2025
@@ -1147,10 +1169,6 @@ Source register, continued. Full URLs for this page:
   FACT//DUEL internal: public/product/investor/numbers.md §7.1 and §7.3 (company disclosure)
 - Fact.MR — second-screen sports apps market
   https://www.factmr.com/report/second-screen-sports-apps-market
-- The Business Research Company — fan engagement
-  https://www.thebusinessresearchcompany.com/report/fan-engagement-global-market-report
-- market.us — fan engagement market
-  https://market.us/report/fan-engagement-market/
 
 ---
 
@@ -1167,6 +1185,8 @@ Source register, continued. Full URLs for this page:
 
 | Source | Kind | Cited on |
 |---|---|---|
+| The Business Research Company — fan engagement | third-party estimate | 14 |
+| market.us — fan engagement market | third-party estimate | 14 |
 | MarketsandMarkets — game-based learning | third-party estimate | 14 |
 | IMARC — game-based learning | third-party estimate | 14 |
 | Sensor Tower — State of Mobile 2026 | third-party estimate | 14 |
@@ -1187,6 +1207,10 @@ Source register, continued. Full URLs for this page:
 
 Source register, continued. Full URLs for this page:
 
+- The Business Research Company — fan engagement
+  https://www.thebusinessresearchcompany.com/report/fan-engagement-global-market-report
+- market.us — fan engagement market
+  https://market.us/report/fan-engagement-market/
 - MarketsandMarkets — game-based learning
   https://www.marketsandmarkets.com/Market-Reports/game-based-learning-market-169115901.html
 - IMARC — game-based learning

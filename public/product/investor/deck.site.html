@@ -398,16 +398,25 @@ Milestones 4-6 are untouched — grow the bank from 54 questions, ship an oppone
 <div class="rail"><span class="rail-n">09</span></div>
 <div class="slide-body">
 <p class="kicker">BUSINESS MODEL</p>
-<h2>We model on Duolingo's habit-subscription economics, not consumer trivia IAP.</h2>
+<h2>Two monetisation routes, both unbuilt: paid event entry, and a habit subscription.</h2>
 <ul class="points">
-<li>Trivia IAP, US iOS top three: ~<b class="num">$102.5K</b>/week peak Q2 2025, ~<b class="num">$90K</b> quarter-end — Sensor Tower's modelled estimate, before Apple's 15-<b class="num">30%</b> cut.</li>
-<li>Duolingo: <b class="num">$1,037.6M</b> FY2025 revenue on a streak-and-quest loop. A later period, 30 Jun 2026: 12.7M of 140.6M MAU paid, <b class="num">9.03%</b>.</li>
+<li>Route A <b class="p">(P)</b> — paid entry to a time-limited expedition event: one entry per player, rotating question set.</li>
+<li>Nothing of Route A exists. No payment surface, no accounts, and expeditions today are free and replayable.</li>
+<li>Route B <b class="p">(P)</b> — habit subscription. Duolingo: <b class="num">$1,037.6M</b> FY2025 on a streak loop; 12.7M of 140.6M MAU paid, <b class="num">9.03%</b>.</li>
 <li>Cross-check at base-case Year-3 scale: 105,900 MAU x <b class="num">9.03%</b> x <b class="num">$43.99</b>/yr = <b class="num">$420,666</b> <b class="p">(P)</b>, versus <b class="num">$1,630,517</b> <b class="p">(P)</b> from install economics.</li>
-<li>Diverging <b class="num">3.88x</b>, the base case's Year-3 revenue is a band — <b class="num">$0.4M</b>-<b class="num">$1.6M</b> <b class="p">(P)</b>, not <b class="num">$1.6M</b>. Today: zero users, zero revenue.</li>
-<li><b class="num">$43.99</b>/yr: Sporcle Orange individual. <b class="num">9.03%</b>: our arithmetic on Duolingo's filed counts, not a filed ratio. Year-3 installs, <b class="num">20%</b> monthly churn: unsourced.</li>
+<li>Diverging <b class="num">3.88x</b>, Year-3 revenue is a band — <b class="num">$0.4M</b>-<b class="num">$1.6M</b> <b class="p">(P)</b>, not <b class="num">$1.6M</b>. Today: zero users, zero revenue.</li>
+<li>Trivia IAP, US iOS top three: ~<b class="num">$102.5K</b>/week peak (Sensor Tower est., before Apple's 15-<b class="num">30%</b> cut). <b class="num">$43.99</b>/yr: Sporcle Orange.</li>
 </ul>
-<figure class="chart"><img src="charts/where-money-is.png" alt="We model on Duolingo's habit-subscription economics, not consumer trivia IAP." loading="lazy" width="2000" height="1200"></figure>
-<details class="notes"><summary>Speaker notes</summary><div class="notes-body">Longest-dwell slide in a seed deck at 64 seconds in DocSend's estimates, so it is the densest page here and the one to rehearse hardest. The argument in one breath: the category does monetise, just not as consumer trivia IAP.
+<figure class="chart"><img src="charts/where-money-is.png" alt="Two monetisation routes, both unbuilt: paid event entry, and a habit subscription." loading="lazy" width="2000" height="1200"></figure>
+<details class="notes"><summary>Speaker notes</summary><div class="notes-body">Lead with what is NOT built, not with the model. Route A is the founder’s own route, recorded in numbers.md §4.4b on 14 September 2026: paid entry to a time-limited expedition event, one entry per player, a rotating question set so answers cannot be passed around. It is a coherent design — single entry is what makes a leaderboard mean anything, and rotation is the anti-collusion mechanism a fixed bank cannot provide.
+
+Volunteer the gap before you are asked, because a reader can check every word of it in the public repository in about two minutes. Today: there is no payment surface anywhere in the tree; the duel coins say on screen &quot;Free simulated coins. No monetary value.&quot;; expedition stake tiers stake RUN-SCORE POINTS and never a currency (+2/0, +3/-1, +4/-3, lib/expeditions.mjs), under a design rule that nothing stakes a currency and nothing is minted by losing; expeditions are replayable by design and there are no accounts, so &quot;one entry per player&quot; is not yet expressible; and a route’s six cards are frozen — a replay reshuffles the OPTIONS, not the questions, out of a 54-question bank.
+
+What is already built and would be reused: lib/events.mjs derives up to four limited-time modes a month, deterministically from the month and a hand-checked calendar, so the time-limited and rotating halves have a working mechanism behind them. It rotates duel modes today, pays XP, and takes no money.
+
+Route A is therefore gated on milestone 1 (accounts), milestone 4 (a bank past 54) and a wagering-law answer, which is on the risks slide. If you are asked which you would build: Route B first, because it is testable on the cohort this round buys, while Route A needs three other things to land before it can be tested at all.
+
+Longest-dwell slide in a seed deck at 64 seconds in DocSend's estimates, so it is the densest page here and the one to rehearse hardest. The argument in one breath: the category does monetise, just not as consumer trivia IAP.
 
 Say the chart's caveat out loud before anyone asks, because the chart annualises. The <b class="num">$5.33M</b> bar is the <b class="num">$102.5K</b> weekly peak times 52, and that is the strongest possible form of the number. The weekly figures on the slide are the honest ones: Sensor Tower's Q2 2025 US iOS estimates put Kahoot at a <b class="num">$38.5K</b>/week peak in mid-June falling to <b class="num">$28.2K</b>, Trivia Crack Premium at about <b class="num">$33K</b>, GeoGuessr at <b class="num">$31K</b> falling to <b class="num">$28.7K</b>. Stack the peaks and it is about <b class="num">$102.5K</b> a week; on quarter-end values about <b class="num">$90K</b>. These are modelled estimates of gross consumer spend before Apple's 15-<b class="num">30%</b> commission — not audited and not company-reported revenue — and they are more than a year old. Do not annualise the stacked peak as a run rate. Full figures and both readings of the gap are on appendix slide 14 (§1.6).
 
@@ -430,6 +439,7 @@ We have no verified CAC or genre ARPDAU benchmark and we will not quote one. All
 <li><a href="https://www.appsflyer.com/resources/reports/app-marketing-monetization-report/" target="_blank" rel="noopener noreferrer">appsflyer.com</a></li>
 <li><a href="https://www.gameanalytics.com/reports/2026-mobile-pc-gaming-benchmarks" target="_blank" rel="noopener noreferrer">gameanalytics.com</a></li>
 <li><a href="FACT//DUEL internal: public/product/investor/numbers.md §4.1-§4.3" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: public/product/investor/numbers.md §4.1-§4.3</a></li>
+<li><a href="FACT//DUEL internal: public/product/investor/numbers.md §4.4b (company disclosure — the founder’s named monetisation route and what it would take)" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: public/product/investor/numbers.md §4.4b (company disclosure — the founder’s named monetisation route and what it would take)</a></li>
 </ul>
 </div></section>
 <section class="slide" id="s10">
@@ -536,8 +546,15 @@ STRUCTURE: kind &quot;table&quot;, the six-row landscape table and all sixteen s
 <li>Measurement selection. The cohort rate counts only devices that opt into the anonymous ping — consenting devices, not all. We will publish it as exactly that.</li>
 <li>Content depth. 54 sample questions is a demo bank; the ask funds four engineers and no content line (§4.4).</li>
 <li>Model honesty. Our base case <b class="p">(P)</b> out-monetises a <b class="num">9.03%</b>-conversion subscription at <b class="num">$43.99</b>/yr by <b class="num">3.88x</b>. We flag it, not hide it.</li>
+<li>Wagering law. Route A stakes real money on a knowledge outcome — regulated as skill gaming or gambling in many jurisdictions. Unanswered.</li>
 </ul>
-<details class="notes"><summary>Speaker notes</summary><div class="notes-body">Each risk has a named response rather than a reassurance.
+<details class="notes"><summary>Speaker notes</summary><div class="notes-body">Eight risks now, not seven. Route A on the business-model slide takes real money on the outcome of a knowledge question, and in many jurisdictions that is regulated as skill gaming or gambling rather than as a game sale. We have no answer and we say so rather than discovering it in diligence.
+
+The landscape slide already notes that Skillz runs real-money cash tournaments and has never been profitable. That is the nearest comparable to Route A and it is not an encouraging one — which is a reason to name the risk here, not to leave it off.
+
+Do not let this slide shrink to fit a line budget. Cutting a risk to make a page look tidier is the one edit this deck is not allowed to make.
+
+Each risk has a named response rather than a reassurance.
 
 Long-tail retention: at a median D30 of 0.68-<b class="num">0.79%</b> a game's MAU is almost entirely the current month's new installs — in our own base case the retained resident base is 5,900 of 105,900 MAU <b class="p">(P)</b>, <b class="num">5.6%</b> — so retention is not a metric in this category, it is the business, and that is why the entire raise is pointed at it. The 0.68-<b class="num">0.79%</b> band is GameAnalytics' global all-genre median, not trivia-specific; the model's base case uses the North American <b class="num">1.18%</b>. Trivia Royale's <b class="num">45%</b> D1 is a company statement to TechCrunch, not audited, and its closure was announced on 23 Feb 2021 (§2.3).
 
@@ -559,6 +576,7 @@ If an investor adds a risk we have not listed, that is a good outcome — write 
 <li><a href="FACT//DUEL internal: public/product/investor/numbers.md §2.3, §4.3 and §4.4 (company disclosure)" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: public/product/investor/numbers.md §2.3, §4.3 and §4.4 (company disclosure)</a></li>
 <li><a href="FACT//DUEL internal: public/product/investor/numbers.md §3.5, §5.2 and §5.14 (company disclosure)" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: public/product/investor/numbers.md §3.5, §5.2 and §5.14 (company disclosure)</a></li>
 <li><a href="FACT//DUEL internal: public/product/investor/numbers.md §7.1 and §7.2 (company disclosure)" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: public/product/investor/numbers.md §7.1 and §7.2 (company disclosure)</a></li>
+<li><a href="FACT//DUEL internal: public/product/investor/numbers.md §4.4b (company disclosure)" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: public/product/investor/numbers.md §4.4b (company disclosure)</a></li>
 </ul>
 </div></section>
 <section class="slide" id="s12">

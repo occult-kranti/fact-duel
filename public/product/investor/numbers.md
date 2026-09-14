@@ -372,7 +372,34 @@ Per a16z and CRV, replace the three-year model with milestones. These are chosen
 3. **Target: beat NA median D7 of 4.97%** on a ≥1,000-player cohort. Stated as a target, with the benchmark visible.
 4. **Grow the question bank from 54.** State the current number — 54 — plainly. Set a target and a production rate.
 5. **Ship an opponent-integrity answer** before monetisation (Skillz v. AviaGames, $42.9M, bots against paying humans).
-6. **Validate one monetisation route** — the subscription cross-check ($43.99/yr at a 9% MAU→paid target) is the one with comparables behind it.
+6. **Validate one monetisation route.** Two are named (§4.4b): the founder's paid single-entry timed expedition event, and the habit subscription. The subscription is the one with public comparables behind it; the paid event is the one that needs accounts, a larger bank and a wagering-law answer before it can be tested at all.
+
+### 4.4b The founder's named monetisation route, and what it would take
+
+Stated by the founder, 14 Sep 2026, and recorded here so the deck can cite it rather than assert it:
+**paid entry to a time-limited expedition event — one entry per player, with a rotating question set
+so the answers cannot be passed around.** It is a coherent model: single entry is what makes a
+leaderboard meaningful, and rotation is the anti-collusion mechanism that a fixed bank cannot provide.
+
+**None of it is built.** Stated plainly, because the deck's whole credibility strategy is that every
+claim survives a reader checking it against the public repository:
+
+| The route needs | What ships today | Where it is blocked |
+|---|---|---|
+| Real-money entry | No payment surface exists anywhere in the tree. Duel coins are labelled on screen as *"Free simulated coins. No monetary value."* | Not started |
+| A staked wager | Expedition tiers stake **run-score points**, never a currency — `CONFIDENCE` pays +2/0, +3/−1, +4/−3 (`lib/expeditions.mjs`). Design rule R5 is *nothing stakes a currency and nothing is minted by losing* | Deliberate design; reversing it is a decision, not a task |
+| One entry per player | Expeditions are replayable by design — `Replay for practice` ships, and the finish screen deliberately does not block it. There are no accounts, so "per player" is not expressible | Milestone 1 (accounts) |
+| A rotating question set | A route's six cards are frozen (`route.ids` = `q001`…`q006`); a replay reshuffles the **options**, not the questions. The bank is 54 | Milestone 4 (bank size) |
+| A legal answer | — | Unanswered: real money on a knowledge outcome is regulated as skill gaming or gambling in many jurisdictions, and the deck's own landscape slide notes Skillz runs real-money cash tournaments and has never been profitable |
+
+**What is already built that the route would reuse:** the events engine (`lib/events.mjs`) derives up to
+four limited-time modes per month deterministically from the month and a hand-checked calendar, so the
+*time-limited* and *rotating* halves have a working mechanism behind them — it currently rotates duel
+modes, not expedition entries, and pays XP rather than taking money.
+
+**Deck treatment:** it appears on the business-model slide as Route A, marked (P) like every other plan
+figure, alongside the line that nothing of it exists; and the wagering-law question appears on the risks
+slide. It is never written as a shipped feature.
 
 ### 4.5 The ask — YC's own formula
 
