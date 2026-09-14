@@ -229,7 +229,9 @@ export function whatYouKeep(room: any, player: any): KeepBlock {
   if (xp > 0) bullets.push(`+${xp} XP`);
 
   const rank = matchRank(room, player?.progression);
-  if (rank.held) bullets.push(`Arena Rank protected at the ${rank.label} floor`);
+  // Every kept line has to be a quantity the player can check, floor included: "protected at the
+  // Bronze floor" is a reassurance, and a reassurance is the one thing this block is not for.
+  if (rank.held) bullets.push(`Arena Rank held at ${rank.points} points, the ${rank.label} floor`);
   else if (rank.delta !== 0)
     bullets.push(`${rank.delta > 0 ? '+' : ''}${rank.delta} rank points · still ${rank.label}`);
 

@@ -257,7 +257,32 @@ try {
       page.locator('button', { hasText: /Begin chapter 1/i }).first(),
       '.fd-exp-answer, .fd-answer',
     );
-    await page.locator('.fd-exp-answer, .fd-answer').first().click({ force: true });
+    // The betting control sits between the question and the options, so on a 390x844 phone the first
+    // option starts below the fold. Scroll to it and click for real — a forced click at its viewport
+    // coordinates is handed to whatever is on top, which is how a probe aiming at answer 1 launched
+    // the Play tab. That the options clear the bar once scrolled to is the next invariant.
+    const option = page.locator('.fd-exp-answer, .fd-answer').first();
+    const opt = await page.evaluate(async () => {
+      const el = document.querySelector('.fd-exp-answer, .fd-answer');
+      if (!el) return null;
+      // Centre rather than `scrollIntoViewIfNeeded`, which parks the element flush against the
+      // viewport floor — i.e. behind the bar — and would measure the scroll call, not the shell padding
+      // that is supposed to let every control clear it.
+      el.scrollIntoView({ block: 'center' });
+      await new Promise((r2) => setTimeout(r2, 300));
+      const r = el.getBoundingClientRect();
+      const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+      return {
+        height: Math.round(r.height),
+        reachable: hit === el || !!hit?.closest?.('.fd-exp-answer, .fd-answer'),
+      };
+    });
+    check(
+      'expeditions: an answer option is tappable at 44px, not under the tab bar',
+      !!opt?.reachable && opt.height >= 44,
+      opt ? `hit=${opt.reachable} h=${opt.height}` : 'option missing',
+    );
+    await option.click();
     await page.waitForTimeout(1400);
     const cta = await page.evaluate(() => {
       const btn = document.querySelector('.fd-exp-next');
