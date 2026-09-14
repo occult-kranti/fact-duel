@@ -112,10 +112,23 @@ const regions = [
 ];
 
 /** The matrix the merge produced, or one derived from the regions when the merge is unavailable. */
+/* The merge labels its cells descriptively — "A — closed-loop cosmetic" against "USA (federal + 50
+   states + DC)" — so both axes are normalised back to the keys the page joins on. Without this every
+   cell silently falls through to an em-dash, which reads as "not researched" rather than "not joined". */
+const modelKey = (m) => String(m ?? '').trim().charAt(0).toUpperCase();
+const regionKey = (r) => {
+  const s = String(r ?? '').toLowerCase();
+  return s.includes('ind') ? 'india' : s.includes('eu') || s.includes('europ') ? 'eu' : 'us';
+};
+
 const matrix =
   merge.modelMatrix?.length >= 12
-    ? merge.modelMatrix.map((c) => ({ ...c, region: String(c.region).toLowerCase().includes('ind') ? 'india' : String(c.region).toLowerCase().includes('eu') ? 'eu' : 'us' }))
+    ? merge.modelMatrix.map((c) => ({ ...c, model: modelKey(c.model), region: regionKey(c.region) }))
     : regions.flatMap((r) => r.verdicts.map((v) => ({ model: v.model, region: r.matrixKey, verdict: v.verdict, summary: v.summary })));
+
+if (!['A', 'B', 'C', 'D'].every((m) => ['us', 'eu', 'india'].every((r) => matrix.some((c) => c.model === m && c.region === r)))) {
+  console.warn('WARNING: the 4x3 matrix has a gap; some cells will render as unresearched');
+}
 
 const sources = [...new Set([usFed, usState, euGam, euHor, india, pay].flatMap((l) => l.sources ?? []))].sort();
 
@@ -134,12 +147,23 @@ const data = {
   affectsProductToday: merge.affectsProductToday ?? [],
   closed: merge.closed ?? [],
   sequencing: merge.sequencing ?? [],
-  questions: [
-    ...(merge.openQuestionsForCounsel ?? []).map((t) => ({ text: t })),
-    ...[usFed, usState, euGam, euHor, india, pay].flatMap((l) =>
-      (l.uncertain ?? []).map((t) => ({ text: t, region: l.jurisdiction?.split('—')[0]?.trim() })),
-    ),
-  ],
+  /* Deduplicated: six lanes independently flagged several of the same unknowns, and a counsel list
+     that asks the same question four times invites being billed for it four times. */
+  questions: (() => {
+    const seen = new Set();
+    const out = [];
+    const push = (text, region) => {
+      const key = String(text).toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim().slice(0, 90);
+      if (!key || seen.has(key)) return;
+      seen.add(key);
+      out.push({ text, region });
+    };
+    for (const t of merge.openQuestionsForCounsel ?? []) push(t);
+    for (const l of [usFed, usState, euGam, euHor, india, pay]) {
+      for (const t of l.uncertain ?? []) push(t, l.jurisdiction?.split('—')[0]?.trim());
+    }
+    return out;
+  })(),
   sources,
   provenance: {
     lanes: [usFed, usState, euGam, euHor, india, pay].map((l, n) => ({

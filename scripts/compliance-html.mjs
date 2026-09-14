@@ -77,15 +77,14 @@ const isUnverified = (v) => /UNVERIFIED/i.test(String(v ?? ''));
 const itemUnverified = (i) => ['cost', 'leadTime', 'notes', 'issuer'].some((k) => isUnverified(i[k]));
 const unverifiedCount = allItems.filter(itemUnverified).length;
 
-/** Every unverified fact becomes a numbered billable question rather than a hedge. */
-const questions = [
-  ...(data.questions ?? []).map((q) => (typeof q === 'string' ? { text: q } : q)),
-  ...allItems.filter(itemUnverified).map((i) => ({
-    text: `${i.item} — confirm ${['cost', 'leadTime'].filter((k) => isUnverified(i[k])).join(' and ') || 'the detail'} with ${i.issuer}.`,
-    from: i.ref,
-    region: i.regionName,
-  })),
-].map((q, n) => ({ ...q, id: `Q${n + 1}` }));
+/** The substantive open questions, numbered so counsel can answer by number over email. Items whose
+    cost or lead time is unverified are NOT expanded into one question each — that produced hundreds of
+    near-identical "confirm the fee" lines that bury the questions that actually need a lawyer. They
+    are collected once, by reference, at the end of the list instead. */
+const questions = (data.questions ?? [])
+  .map((q) => (typeof q === 'string' ? { text: q } : q))
+  .map((q, n) => ({ ...q, id: `Q${n + 1}` }));
+const unverifiedRefs = allItems.filter(itemUnverified).map((i) => i.ref);
 
 const STAGES = [
   'Stage 0 — Entity and money rails',
@@ -344,6 +343,8 @@ ul.bullets li::before{content:'';position:absolute;left:0;top:.6em;width:5px;hei
 ol.questions{margin:0;padding:0;list-style:none;display:grid;gap:10px;counter-reset:q}
 ol.questions li{padding:12px 14px;border:1px solid var(--line);border-radius:var(--r-control);background:var(--bg-1)}
 ol.questions .qid{font-family:var(--font-mono);color:var(--gold);font-weight:700;margin-right:.5em}
+.refs{display:flex;flex-wrap:wrap;gap:6px}
+.refs a{text-decoration:none;border:1px solid var(--line);border-radius:var(--r-pill);padding:1px 8px;font-size:var(--fs-12)}
 .sources{list-style:none;margin:0;padding:0;display:grid;gap:6px;font-size:var(--fs-12);font-family:var(--font-mono)}
 .sources a{color:var(--muted)}
 footer{padding-block:40px;color:var(--dim);font-size:var(--fs-12);font-family:var(--font-mono)}
@@ -464,9 +465,12 @@ ${
   <ol class="questions">${questions
     .map(
       (q) => `<li><span class="qid">${esc(q.id)}</span>${marks(q.text)}
-    ${q.from ? `<p class="note">From <a href="#item-${esc(q.from)}" class="ref">${esc(q.from)}</a>${q.region ? ` · ${esc(q.region)}` : ''}</p>` : ''}</li>`,
+    ${q.region ? `<p class="note">${esc(q.region)}</p>` : ''}</li>`,
     )
     .join('')}</ol>
+  <h4>Figures to confirm before they enter a budget or a geofence</h4>
+  <p class="note">${unverifiedRefs.length} items below carry a cost, lead time or issuer the research could not confirm. They are marked with a gold edge throughout and listed here by reference so they can be priced in one pass rather than one at a time.</p>
+  <p class="refs">${unverifiedRefs.map((r) => `<a href="#item-${esc(r)}" class="ref">${esc(r)}</a>`).join(' ')}</p>
 </div></section>
 
 <section class="band" id="evidence"><div class="wrap">
