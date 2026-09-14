@@ -15,6 +15,13 @@
       "when": 1789319776626,
       "tag": "0001_short_terror",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1789405000000,
+      "tag": "0002_ops_runs",
+      "breakpoints": true
     }
   ]
 }
