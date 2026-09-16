@@ -13,6 +13,7 @@ import { CALENDAR_ASOF, activeModes, groupEvents, monthKey, monthlyModes } from 
 import type { CalendarEvent, EventMode, EventsScreenProps } from './types';
 import { useCalendarNow } from './events/clock';
 import { EventCard } from './events/event-card';
+import { FixtureStrip } from './events/fixture-card';
 import { ModeCard } from './events/mode-card';
 import { useEventsPress } from './events/press';
 import { formatDay, modeForEvent, monthLabel } from './events/util';
@@ -31,6 +32,9 @@ export function EventsScreen({ player, ready, busy, onDuel, onMode, activeModeId
   const openCount = activeModes(now).length;
   const month = monthLabel(monthKey(now));
   const badges: Record<string, number> = player.progression?.eventBadges ?? {};
+  // Fixture windows are cut in the viewer's local day; the offset is read from the same `now` the
+  // rest of the screen renders against, so the server and the browser agree on the hydration frame.
+  const tzOffsetMinutes = new Date(now).getTimezoneOffset();
 
   return (
     <section className="fd-events fd-events-screen" aria-labelledby="fd-ev-title">
@@ -74,6 +78,10 @@ export function EventsScreen({ player, ready, busy, onDuel, onMode, activeModeId
           </span>
         </p>
       </header>
+
+      {/* Fixture sets first: they are the calendar's time-boxed offer, and the strip renders nothing
+          when no window is open, so the page never carries an empty box. */}
+      <FixtureStrip now={now} tzOffsetMinutes={tzOffsetMinutes} go={go} />
 
       <Section
         id="live"

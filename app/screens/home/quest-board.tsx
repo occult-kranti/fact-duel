@@ -4,7 +4,7 @@
  * Auto-claimed by the reducer, so a card never asks for a tap to collect: it shows the meter, the
  * reward chips and, while it is open, the shortest route to finishing it.
  */
-import { ArrowUpRight, Check, Gem, Target, Zap } from 'lucide-react';
+import { ArrowUpRight, Check, Target, Zap } from 'lucide-react';
 import { XP } from '@/lib/progression.mjs';
 import { questHint, type QuestItem } from './util';
 import { usePress } from './press';
@@ -34,10 +34,7 @@ export function QuestBoard({ items, resetIn, onOpen }: QuestBoardProps) {
         <p className="fd-hub-section-note">
           {/* `resetIn` is empty until the client clock is known, so SSR and hydration agree. */}
           {resetIn && <>New set in {resetIn} · </>}all three pays{' '}
-          <b className="fd-mono">
-            +{XP.questBonus} XP · +{XP.questBonusGems}
-          </b>{' '}
-          gems
+          <b className="fd-mono">+{XP.questBonus} XP</b>
         </p>
       </header>
       <ul className="fd-hub-quest-grid">
@@ -59,9 +56,6 @@ export function QuestBoard({ items, resetIn, onOpen }: QuestBoardProps) {
                   <span className="fd-hub-quest-rewards">
                     <span className="fd-hub-chip fd-hub-chip--xp">
                       <Zap aria-hidden="true" />+{q.xp} XP
-                    </span>
-                    <span className="fd-hub-chip fd-hub-chip--gem">
-                      <Gem aria-hidden="true" />+{q.gems}
                     </span>
                   </span>
                 </span>

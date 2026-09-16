@@ -111,7 +111,7 @@ export default function ThreeLabPage() {
   const [medalAccent, setMedalAccent] = useState(ACCENTS[2].hex);
   const [replayKey, setReplayKey] = useState(0);
 
-  const [gems, setGems] = useState(12);
+  const [pieces, setPieces] = useState(12);
   const [stamps, setStamps] = useState<StampInfo[]>(
     STAMP_COLORS.map((color, i) => ({ id: `route-${i + 1}`, color, earned: i % 3 !== 2 })),
   );
@@ -494,43 +494,43 @@ export default function ThreeLabPage() {
 
         <section className="lab-card wide" aria-labelledby="vault-title">
           <div className="lab-card-head">
-            <h2 id="vault-title">Gem vault</h2>
+            <h2 id="vault-title">Physics vault</h2>
             <p>Rapier physics · instanced octahedra · tap the tray to nudge · CSS fallback beside it</p>
           </div>
           <div className="lab-split">
             <div className="lab-stage">
               <span className="lab-tag">WebGL + rapier</span>
-              <LazyGemVault count={gems} height={420} />
+              <LazyGemVault count={pieces} height={420} />
             </div>
             <div className="lab-stage">
               <span className="lab-tag">CSS fallback</span>
-              <GemVaultFallback count={gems} height={420} />
+              <GemVaultFallback count={pieces} height={420} />
             </div>
           </div>
           <div className="lab-controls">
             <span className="lab-field">
-              Gems <output>{gems}</output>
+              Pieces <output>{pieces}</output>
             </span>
             <button
               type="button"
               className="lab-btn primary"
-              onClick={() => setGems((g) => Math.min(120, g + 1))}
+              onClick={() => setPieces((g) => Math.min(120, g + 1))}
             >
-              +1 gem
+              +1
             </button>
-            <button type="button" className="lab-btn" onClick={() => setGems((g) => Math.min(120, g + 5))}>
+            <button type="button" className="lab-btn" onClick={() => setPieces((g) => Math.min(120, g + 5))}>
               +5
             </button>
-            <button type="button" className="lab-btn" onClick={() => setGems((g) => Math.min(120, g + 25))}>
+            <button type="button" className="lab-btn" onClick={() => setPieces((g) => Math.min(120, g + 25))}>
               +25
             </button>
-            <button type="button" className="lab-btn" onClick={() => setGems((g) => Math.max(0, g - 5))}>
+            <button type="button" className="lab-btn" onClick={() => setPieces((g) => Math.max(0, g - 5))}>
               −5
             </button>
-            <button type="button" className="lab-btn" onClick={() => setGems(0)}>
+            <button type="button" className="lab-btn" onClick={() => setPieces(0)}>
               Empty
             </button>
-            <span className="lab-note">Max 120 rigid bodies; the oldest gem is recycled beyond that.</span>
+            <span className="lab-note">Max 120 rigid bodies; the oldest piece is recycled beyond that.</span>
           </div>
         </section>
       </div>

@@ -1,5 +1,8 @@
 # FACT//DUEL — Betting, Knowledge Record, Vault, Brain Hero, Sound & Celebrations
 
+> **Retired 17 Sep 2026 (progression v2):** gems no longer exist as a currency. Every mention below of `convictionTierGems`, the 160-gem badge bonus and the gem sink is historical; cosmetics now unlock by level and achievement, and the only currency in the game is the ad-earned coin (`lib/economy/economy.mjs`).
+
+
 **One implementable specification, revision 2.** Six specialist reports were reconciled into revision 1;
 four adversarial reviewers then attacked revision 1 and found 11 distinct blockers, 26 serious defects and 8 minor ones. Every
 one of those is fixed here, in place, with the numbers re-derived and re-measured against the repo.

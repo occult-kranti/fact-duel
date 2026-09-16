@@ -27,6 +27,8 @@ import {
   earnFromAd,
   emptyWallet,
   enterPractice as enterPracticeReducer,
+  enterRecap as enterRecapReducer,
+  recapFreeToday,
 } from '@/lib/economy/economy.mjs';
 import { validReceipt } from '@/lib/ads/provider.mjs';
 import { WebAdProvider } from '@/lib/ads/web-provider.mjs';
@@ -45,6 +47,8 @@ export type Wallet = Readonly<{
   questToday: number;
   lossStreak: number;
   lastDoubleKey: string;
+  /** The local day the free recap was last entered ('' when never). */
+  recapKey: string;
   adIds: readonly string[];
 }>;
 export type Affordability = ReturnType<typeof affordability>;
@@ -53,7 +57,7 @@ export type Placement = 'coins' | 'practice-entry' | 'duel-entry' | 'continue';
 /** What every wallet action resolves with: the reducer's verdict, in the reducer's words. */
 export type Outcome = {
   ok: boolean;
-  /** 'ad' | 'ad_double' | 'daily' | 'floor' | 'practice' on success; the refusal name otherwise. */
+  /** 'ad' | 'ad_double' | 'daily' | 'floor' | 'practice' | 'recap' on success; the refusal name otherwise. */
   reason: string;
   granted: number;
   spent: number;
@@ -87,12 +91,16 @@ export type WalletApi = {
   floorDueAt: number;
   /** A double-coin ad is owed right now (three staked losses, once per local day). */
   doubleOwed: boolean;
+  /** Today's free "Yesterday" recap has not been entered yet (computed against the local day). */
+  recapFree: boolean;
   /** null until the provider has answered; false in a build with no ads. */
   adsAvailable: boolean | null;
   provider: AdProvider;
   claimDaily: () => Promise<Outcome>;
   claimFloor: () => Promise<Outcome>;
   enterPractice: () => Promise<Outcome>;
+  /** The free recap entry: ok once per local day, refused with 'recap_played' after that. Never charges. */
+  enterRecap: () => Promise<Outcome>;
   watchAd: (placement: Placement) => Promise<Outcome>;
   refreshAds: () => Promise<boolean>;
 };
@@ -238,6 +246,13 @@ export function useWallet(config = DEFAULT_CONFIG): WalletApi {
     return apply((w) => outcomeOf(enterPracticeReducer(applyFloor(w, { at }, config).wallet, config)));
   }, [apply, config]);
 
+  // The recap is the free path: no floor, no charge, only the day stamp. A refusal is the screen's
+  // cue to offer the ordinary practice entry, priced and labelled, never a silent charge.
+  const enterRecap = useCallback(() => {
+    const at = Date.now();
+    return apply((w) => outcomeOf(enterRecapReducer(w, { at, tzOffsetMinutes: tzOffset })));
+  }, [apply, tzOffset]);
+
   /**
    * Ask the provider for an ad, and pay the receipt exactly once. A refusal comes back as an
    * outcome whose `reason` is the provider's word ('unavailable' | 'skipped' | 'failed' | …) so the
@@ -287,11 +302,13 @@ export function useWallet(config = DEFAULT_CONFIG): WalletApi {
       canClaimDaily: wallet.lastDailyKey !== dayKeyOf(now, tzOffset) && wallet.coins < config.softCap,
       floorDueAt: floorDueAt(wallet, config),
       doubleOwed: doubleAdAvailable(wallet, { at: now, tzOffsetMinutes: tzOffset }, config),
+      recapFree: recapFreeToday(wallet, { at: now, tzOffsetMinutes: tzOffset }),
       adsAvailable,
       provider,
       claimDaily,
       claimFloor,
       enterPractice,
+      enterRecap,
       watchAd,
       refreshAds,
     };
@@ -308,6 +325,7 @@ export function useWallet(config = DEFAULT_CONFIG): WalletApi {
     claimDaily,
     claimFloor,
     enterPractice,
+    enterRecap,
     watchAd,
     refreshAds,
   ]);

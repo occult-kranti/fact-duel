@@ -1,11 +1,13 @@
 'use client';
 import { SUBJECT_LINE } from '@/lib/content.mjs';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { ArrowRight, ChevronRight, Info } from 'lucide-react';
 import { rankForPoints } from '@/lib/progression.mjs';
+import { defaultStake } from '@/lib/economy/stake-advice.mjs';
+import { useWalletContext } from '../use-wallet';
 import type { PlayScreenProps } from './types';
 import { LaunchPanel } from './play/launch-panel';
-import { MatchSettings } from './play/match-settings';
+import { MatchSettings, offeredConfig } from './play/match-settings';
 import { ModeCards } from './play/mode-cards';
 import { ModesRow } from './events/modes-row';
 import { JoinForm, OpponentPicker } from './play/opponent-picker';
@@ -31,6 +33,23 @@ export function PlayScreen({ duel, player, catalogue, joinView, joinLink }: Play
     chooseEventMode,
   } = actions;
   const { press } = usePlayJuice();
+  const wallet = useWalletContext();
+  /* The entry tier the wallet suggests (lib/economy/stake-advice.mjs): the highest offered tier it
+   * covers five times over, else the lowest it can afford, else free. Applied to the configurator
+   * ONCE, the first time the wallet is loaded while a friend duel is being set up at a free entry,
+   * and never after the player has touched the picker. It never raises a tier already chosen. */
+  const suggested = useMemo(
+    () => (wallet?.loaded ? defaultStake(wallet.wallet, offeredConfig(wallet.config)) : 0),
+    [wallet],
+  );
+  const stakeTouched = useRef(false);
+  const stakeApplied = useRef(false);
+  const friendAtFree = config.opponent === 'friend' && config.stake === 0;
+  useEffect(() => {
+    if (!wallet?.loaded || stakeApplied.current || stakeTouched.current || !friendAtFree) return;
+    stakeApplied.current = true;
+    if (suggested > 0) change({ stake: suggested });
+  }, [wallet?.loaded, friendAtFree, suggested, change]);
   const facets = catalogue?.facets || [];
   const pool = useMemo(
     () =>
@@ -144,8 +163,13 @@ export function PlayScreen({ duel, player, catalogue, joinView, joinLink }: Play
                   config={config}
                   name={name}
                   subtopics={subtopics}
-                  onChange={change}
+                  onChange={(patch) => {
+                    if ('stake' in patch) stakeTouched.current = true;
+                    change(patch);
+                  }}
                   onName={(value) => setName(value, 'create')}
+                  wallet={wallet}
+                  suggested={suggested}
                 />
                 <div className="fd-pool">
                   <span>

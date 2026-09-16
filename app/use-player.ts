@@ -91,7 +91,14 @@ export function usePlayer(room: any, roomEpoch?: string) {
   }, [accept]);
   const dispatch = useCallback(
     (input: any) => {
-      const action = { ...input, epoch: input.epoch ?? current.current.epoch, at: Date.now() };
+      const action = {
+        ...input,
+        epoch: input.epoch ?? current.current.epoch,
+        at: Date.now(),
+        // Minutes EAST of UTC (JS reports the opposite sign). lib/season.mjs keys matchweeks on
+        // the local ISO week and seasons on the local day.
+        tzOffsetMinutes: -new Date().getTimezoneOffset(),
+      };
       queue.current = queue.current.then(async () => {
         if (storage.current || action.type === 'reset') {
           try {
@@ -189,7 +196,6 @@ export function usePlayer(room: any, roomEpoch?: string) {
       if (timer !== null) clearInterval(timer);
     };
   }, [loaded, noteOpen, noteBeat]);
-  const buyCosmetic = useCallback((id: string) => void dispatch({ type: 'cosmetic-buy', id }), [dispatch]);
   const equipCosmetic = useCallback(
     (id: string) => void dispatch({ type: 'cosmetic-equip', id }),
     [dispatch],
@@ -288,7 +294,6 @@ export function usePlayer(room: any, roomEpoch?: string) {
     noteOpen,
     noteBeat,
     noteCount,
-    buyCosmetic,
     equipCosmetic,
   };
 }

@@ -13,7 +13,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { LocalD1 } from './d1-local.mjs';
-import { D1OpsStore, OPS, getFlags, health, setFlag, sweep } from '../lib/server/ops-service.mjs';
+import { D1OpsStore, OPS, getFlags, health, reconcileLedger, setFlag, sweep } from '../lib/server/ops-service.mjs';
+import { D1LedgerStore } from '../lib/server/ledger-store-d1.mjs';
+import { grant } from '../lib/ledger/intents.mjs';
 import { constantTimeEqual, handleOpsRequest } from '../lib/server/http-ops.mjs';
 
 const TOKEN = 'o'.repeat(48);
@@ -147,21 +149,21 @@ test('health reports a never-run kind, a fresh run and a stale one', async (t) =
 
   const cold = await health({ store, now: 0 });
   assert.equal(cold.healthy, false);
-  assert.equal(cold.runs.length, 1);
-  assert.equal(cold.runs[0].everRan, false);
-  assert.equal(cold.runs[0].stale, true, 'no heartbeat yet reads the same as no heartbeat any more');
+  assert.deepEqual(cold.runs.map((r) => r.kind), ['reconcile', 'sweep']);
+  assert.ok(cold.runs.every((r) => r.everRan === false && r.stale === true), 'no heartbeat yet reads the same as no heartbeat any more');
 
   const at = 1_800_000_000_000;
+  await reconcileLedger({ store, now: at, clock: () => at + 5 });
   await sweep({ store, now: at, clock: () => at + 5 });
 
   const fresh = await health({ store, now: at + OPS.staleAfterMs });
-  assert.equal(fresh.runs[0].stale, false, 'exactly at the threshold is not yet stale');
-  assert.equal(fresh.runs[0].ok, true);
-  assert.equal(fresh.runs[0].ageMs, OPS.staleAfterMs);
+  assert.equal(fresh.runs[1].stale, false, 'exactly at the threshold is not yet stale');
+  assert.equal(fresh.runs[1].ok, true);
+  assert.equal(fresh.runs[1].ageMs, OPS.staleAfterMs);
   assert.equal(fresh.healthy, true);
 
   const late = await health({ store, now: at + OPS.staleAfterMs + 1 });
-  assert.equal(late.runs[0].stale, true);
+  assert.equal(late.runs[1].stale, true);
   assert.equal(late.healthy, false, 'one stale kind is enough to say the switch is dead');
 });
 
@@ -271,7 +273,7 @@ test('an authenticated sweep runs, and the response never contains the token', a
   assert.equal((await runs(db)).length, 1);
 
   const state = await (await handleOpsRequest(request({ action: 'health' }), env)).json();
-  assert.equal(state.runs[0].ok, true);
+  assert.equal(state.runs.find((r) => r.kind === 'sweep').ok, true);
 
   const unknown = await handleOpsRequest(request({ action: 'reboot-everything' }), env);
   assert.equal(unknown.status, 400);
@@ -298,4 +300,31 @@ test('the kill switch can be set and read back over the route, with the setter n
     env,
   );
   assert.equal(anonymous.status, 400, 'a kill switch nobody signed for is not a control');
+});
+
+test('a reconcile run records a balanced ledger as ok, and drift as a failed run that throws', async (t) => {
+  const db = opened(t);
+  const store = new D1OpsStore(db);
+  const books = new D1LedgerStore(db);
+  await books.post(grant({ principalId: 'p_a', amount: 50, opKey: 'grant:ad:p_a:n1', at: 1_800_000_000_000 }));
+
+  const at = 1_800_000_000_500;
+  const good = await reconcileLedger({ store, now: at, clock: () => at + 7 });
+  assert.equal(good.ok, true);
+  assert.equal(good.report.transactions, 1);
+  assert.match(good.detail, /transactions: 1; issued: 50/);
+
+  await db.prepare("UPDATE ledger_accounts SET balance = 9999 WHERE account_id = 'play:user:p_a'").run();
+  await assert.rejects(reconcileLedger({ store, now: at + 10, clock: () => at + 20 }), /did not reconcile/);
+  const rows = await runs(db);
+  assert.equal(rows.length, 2);
+  assert.equal(rows[1].ok, 0, 'the drift is recorded, not hidden');
+  assert.match(rows[1].detail, /FAILED: cached_balance play:user:p_a/);
+  assert.equal((await health({ store, now: at + 20 })).runs.find((r) => r.kind === 'reconcile').ok, false);
+
+  // Over the route: the failed reconcile is a non-2xx, so the workflow goes red.
+  const env = { DB: db, OPS_TOKEN: TOKEN };
+  const response = await handleOpsRequest(request({ action: 'reconcile' }), env);
+  assert.equal(response.status, 500);
+  assert.ok(!JSON.stringify(await response.json()).includes(TOKEN));
 });

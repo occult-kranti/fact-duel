@@ -11,9 +11,8 @@ export type TopbarProps = {
   onToggleSound: () => void;
   onOpenSettings: () => void;
   onBrand: () => void;
-  /** Right-hand slots. The player screen agent fills these with streak / gems / level nodes. */
+  /** Right-hand slots. The player screen agent fills these with streak / level nodes. */
   streak?: ReactNode;
-  gems?: ReactNode;
   level?: ReactNode;
   /** The coin count (app/screens/economy/wallet-chip.tsx): the one place the balance is shown. */
   wallet?: ReactNode;
@@ -27,7 +26,6 @@ export function Topbar({
   onOpenSettings,
   onBrand,
   streak,
-  gems,
   level,
   wallet,
 }: TopbarProps) {
@@ -48,11 +46,10 @@ export function Topbar({
         </span>
       </a>
       <div className="fd-topbar-right">
-        {(streak || gems || level || wallet) && (
+        {(streak || level || wallet) && (
           <div className="fd-topbar-slots">
             {streak}
             {wallet}
-            {gems}
             {level}
           </div>
         )}

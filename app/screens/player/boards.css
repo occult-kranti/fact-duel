@@ -1,0 +1,285 @@
+/* FACT//DUEL — Boards card on the Player screen (feature 16: the honest leaderboards).
+ * Rivals (head-to-head from real friend duels), This week (you against you), Leagues (a plain
+ * note until accounts exist). Sits inside .fd-card from ./player.css; every colour is a token.
+ * Rivals is a competition surface: ember for a loss, volt for a win, muted for a draw — never a
+ * danger red, because a lost duel is a "next time" moment, not an error. */
+
+.fd-boards {
+  gap: 14px;
+}
+.fd-boards-tabs {
+  gap: 8px;
+}
+.fd-boards-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+/* ---------- empty states (one shape for all three tabs) ---------- */
+.fd-boards-empty {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px;
+  border: 1px dashed var(--line);
+  border-radius: var(--r-control);
+  background: var(--bg-2);
+}
+.fd-boards-empty p {
+  margin: 0;
+  font-size: var(--fs-14);
+  line-height: 1.45;
+  color: var(--muted);
+  max-width: 48ch;
+}
+.fd-boards-empty-icon {
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: color-mix(in oklab, var(--muted) 14%, transparent);
+  color: var(--muted);
+}
+.fd-boards-empty-icon > svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* ---------- Rivals ---------- */
+.fd-boards-rivals {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.fd-boards-rival {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 56px;
+  padding: 10px 12px 10px 14px;
+  border: 1px solid var(--line);
+  border-left-width: 3px;
+  border-radius: var(--r-control);
+  background: var(--bg-2);
+}
+.fd-boards-rival[data-last='win'] {
+  border-left-color: var(--volt);
+}
+.fd-boards-rival[data-last='loss'] {
+  border-left-color: var(--ember);
+}
+.fd-boards-rival[data-last='draw'] {
+  border-left-color: color-mix(in oklab, var(--muted) 60%, transparent);
+}
+.fd-boards-rival-who {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.fd-boards-rival-who strong {
+  font-family: var(--font-display);
+  font-size: var(--fs-18);
+  line-height: 1.15;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.fd-boards-rival-who span {
+  font-family: var(--font-mono);
+  font-size: var(--fs-12);
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+.fd-boards-record {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--fs-22);
+  font-weight: 700;
+  line-height: 1;
+}
+.fd-boards-record b {
+  font-weight: 700;
+}
+.fd-boards-record i {
+  font-style: normal;
+  color: var(--muted);
+  font-weight: 400;
+}
+.fd-boards-record small {
+  margin-left: 6px;
+  font-size: var(--fs-12);
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+/* ---------- This week ---------- */
+.fd-boards-weekline {
+  margin: 0;
+  font-size: var(--fs-12);
+  color: var(--muted);
+}
+.fd-boards-weekkey {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+.fd-boards-stats {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin: 0;
+}
+@media (min-width: 600px) {
+  .fd-boards-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.fd-boards-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-control);
+  background: var(--bg-2);
+  min-width: 0;
+}
+.fd-boards-stat dt {
+  font-family: var(--font-mono);
+  font-size: var(--fs-12);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.fd-boards-stat dd {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin: 0;
+  min-width: 0;
+}
+.fd-boards-stat dd > b {
+  font-family: var(--font-mono);
+  font-size: var(--fs-36);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  color: var(--text);
+}
+.fd-boards-stat dd > b.fd-boards-sport {
+  font-family: var(--font-display);
+  font-size: var(--fs-22);
+  line-height: 1.1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.fd-boards-stat dd > span {
+  font-family: var(--font-mono);
+  font-size: var(--fs-12);
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+.fd-boards-delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-12);
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+.fd-boards-delta > svg {
+  width: 13px;
+  height: 13px;
+}
+.fd-boards-delta[data-dir='up'] {
+  color: var(--volt-text);
+}
+.fd-boards-delta[data-dir='down'] {
+  color: var(--ember-text);
+}
+.fd-boards-note {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  font-size: var(--fs-14);
+  color: var(--text);
+}
+.fd-boards-note > svg {
+  flex: 0 0 auto;
+  width: 15px;
+  height: 15px;
+  color: var(--ember-text);
+}
+
+/* ---------- Leagues ---------- */
+.fd-boards-leagues {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.fd-boards-leagues h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-22);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+.fd-boards-leagues > p {
+  margin: 0;
+  font-size: var(--fs-14);
+  color: var(--muted);
+}
+.fd-boards-tier {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-control);
+  background: var(--bg-2);
+}
+.fd-boards-tier-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.fd-boards-tier-text strong {
+  font-family: var(--font-display);
+  font-size: var(--fs-22);
+  line-height: 1.1;
+}
+.fd-boards-tier-text span {
+  font-family: var(--font-mono);
+  font-size: var(--fs-12);
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+.fd-boards-rules {
+  margin: 0;
+  padding: 0 0 0 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: var(--fs-14);
+  line-height: 1.45;
+  color: var(--muted);
+}

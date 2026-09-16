@@ -52,6 +52,9 @@ jobs:
           pnpm exec tsc --noEmit
           node --test tests/*.test.mjs
 
+      - name: Generate the crawlable quiz pages from the served bank
+        run: pnpm seo:pages
+
       - name: Build the offline game
         env:
           STATIC_BASE: /fact-duel/

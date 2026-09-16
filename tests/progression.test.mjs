@@ -1,7 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import {
   emptyProgression,
+  DEFAULT_COSMETICS,
   readProgression,
   levelForXp,
   xpToNext,
@@ -109,8 +111,6 @@ function multi(id, mode, rounds, { scores, winner = 0, human = false, topic = 'a
 }
 const act = (p, a) => reduceProfile(p, { epoch: p.epoch, at: DAY1, ...a });
 const logXp = (prog, kind) => prog.log.filter((e) => e.kind === kind).reduce((n, e) => n + e.xp, 0);
-const logGems = (prog, kind) =>
-  prog.log.filter((e) => e.kind === kind).reduce((n, e) => n + (e.gems ?? 0), 0);
 const totalLogXp = (prog) => prog.log.reduce((n, e) => n + e.xp, 0);
 const roundXp = (prog) =>
   prog.log
@@ -156,6 +156,9 @@ test('combo multipliers, day keys and wild rounds are pure and deterministic', (
 test('readProgression sanitizes garbage, clamps, whitelists ids and default-fills', () => {
   assert.deepEqual(readProgression(null), emptyProgression());
   assert.deepEqual(readProgression({ version: 7, xp: 900 }), emptyProgression());
+  assert.deepEqual(readProgression({ version: 0, xp: 900 }), emptyProgression());
+  assert.equal(PROGRESSION_VERSION, 2);
+  // A version 1 record (the last one with a wallet) is read and migrated; see the migration test.
   const p = readProgression({
     version: 1,
     xp: -20,
@@ -209,7 +212,8 @@ test('readProgression sanitizes garbage, clamps, whitelists ids and default-fill
   );
   assert.equal(p.quests.items[1].label, 'Play Triple Threat');
   assert.deepEqual(p.rank, { points: 250, tier: 'gold', best: 'gold', floor: 250 });
-  assert.deepEqual(p.wallet, { gems: 40, lifetimeGems: 40 });
+  assert.equal(p.version, 2);
+  assert.ok(!('wallet' in p));
   assert.deepEqual(p.cosmetics.owned, ['coral']);
   assert.deepEqual(p.cosmetics.equipped, {
     frame: 'default',
@@ -227,9 +231,12 @@ test('readProgression round-trips a populated state through JSON', () => {
   });
   p = act(p, { type: 'open', roundId: 'g1:0' });
   p = act(p, { type: 'save', question: 'Question g1-q0?' });
-  p = act(p, { type: 'cosmetic-buy', id: 'coral' });
+  // Nothing is for sale any more: the old action is a no-op on the profile too.
+  assert.strictEqual(act(p, { type: 'cosmetic-buy', id: 'coral' }), p);
+  assert.ok(p.progression.cosmetics.owned.includes('coral'), 'level 3 owns coral automatically');
   p = act(p, { type: 'cosmetic-equip', id: 'coral' });
   const prog = p.progression;
+  assert.equal(prog.cosmetics.equipped.accent, 'coral');
   assert.ok(prog.log.length > 5);
   assert.ok(Object.keys(prog.achievements).length >= 3);
   assert.deepEqual(readProgression(JSON.parse(JSON.stringify(prog))), prog);
@@ -281,7 +288,6 @@ test('a quick duel awards round, fact, match and streak XP exactly once across r
   assert.equal(diff.leveledUp?.from, 1);
   assert.deepEqual(progressionDiff(prog, prog), {
     xpGained: 0,
-    gemsGained: 0,
     leveledUp: null,
     newAchievements: [],
     questsCompleted: [],
@@ -640,7 +646,6 @@ function questState(templates, day = '2026-01-05') {
           target: t.target,
           progress: 0,
           xp: t.xp,
-          gems: t.gems,
           done: false,
           claimedAt: null,
           ...extra,
@@ -683,7 +688,7 @@ const matchEvent = (extra = {}) => ({
   matchId: 'm',
   ...extra,
 });
-test('quest progress auto-claims with XP and gems, and the all-three bonus is paid once per day', () => {
+test('quest progress auto-claims with XP, and the all-three bonus is paid once per day', () => {
   let prog = questState([['answer-3'], ['topic-play', { topic: 'Cricket' }], ['win-3']]);
   prog = reduceProgression(prog, [roundEvent(), roundEvent({ correct: false })], DAY1);
   assert.deepEqual(
@@ -694,7 +699,7 @@ test('quest progress auto-claims with XP and gems, and the all-three bonus is pa
       [0, false],
     ],
   );
-  assert.equal(prog.wallet.gems, 0);
+  assert.ok(!('wallet' in prog));
   prog = reduceProgression(prog, [roundEvent(), roundEvent(), roundEvent()], DAY1);
   assert.deepEqual(prog.quests.items[0], {
     ...prog.quests.items[0],
@@ -703,8 +708,6 @@ test('quest progress auto-claims with XP and gems, and the all-three bonus is pa
     claimedAt: DAY1,
   });
   assert.equal(logXp(prog, 'quest'), 30);
-  assert.equal(prog.wallet.gems, 5 + logGems(prog, 'level'));
-  assert.equal(prog.wallet.lifetimeGems, prog.wallet.gems);
   assert.equal(prog.counters.questsDone, 1);
   prog = reduceProgression(prog, [matchEvent({ topic: 'Space', topics: ['Space'] })], DAY1);
   assert.equal(prog.quests.items[1].progress, 0);
@@ -717,8 +720,10 @@ test('quest progress auto-claims with XP and gems, and the all-three bonus is pa
   assert.ok(prog.quests.items.every((i) => i.done));
   assert.equal(logXp(prog, 'quest'), 30 + 50 + 80);
   assert.equal(logXp(prog, 'quests-bonus'), 100);
-  assert.equal(logGems(prog, 'quests-bonus'), 20);
-  assert.equal(prog.wallet.gems, 5 + 10 + 15 + 20 + logGems(prog, 'level') + logGems(prog, 'achievement'));
+  assert.ok(
+    prog.log.every((e) => !('gems' in e)),
+    'no log line carries a second currency',
+  );
   assert.deepEqual(progressionDiff(before, prog).questsCompleted, ['2026-01-05:win-3']);
   const again = reduceProgression(prog, [matchEvent()], DAY1);
   assert.equal(logXp(again, 'quests-bonus'), 100);
@@ -767,11 +772,13 @@ test('streak: today, yesterday, gaps, shields and the seven-day shield award', (
   assert.deepEqual(clockBack.streak, two.streak);
   assert.equal(clockBack.xp, two.xp);
 });
-test('achievements unlock once with their rewards, hidden ones stay hidden, level and gem checks fire', () => {
-  assert.equal(ACHIEVEMENTS.length, 30);
-  assert.equal(new Set(ACHIEVEMENTS.map((a) => a.id)).size, 30);
+test('achievements unlock once with their rewards, hidden ones stay hidden, level checks fire', () => {
+  assert.equal(ACHIEVEMENTS.length, 29);
+  assert.equal(new Set(ACHIEVEMENTS.map((a) => a.id)).size, 29);
+  assert.ok(!ACHIEVEMENTS.some((a) => a.id === 'gem-hoarder'));
   for (const a of ACHIEVEMENTS) {
-    assert.ok(a.xp >= 25 && a.xp <= 300 && a.gems >= 10 && a.gems <= 50, a.id);
+    assert.ok(a.xp >= 25 && a.xp <= 300, a.id);
+    assert.ok(!('gems' in a), a.id);
     assert.ok(['bronze', 'silver', 'gold'].includes(a.tier));
   }
   assert.deepEqual(
@@ -782,7 +789,6 @@ test('achievements unlock once with their rewards, hidden ones stay hidden, leve
   const firstWin = ACHIEVEMENTS.find((a) => a.id === 'first-win');
   assert.equal(prog.achievements['first-win'], DAY1);
   assert.equal(logXp(prog, 'achievement'), firstWin.xp + ACHIEVEMENTS.find((a) => a.id === 'first-duel').xp);
-  assert.equal(logGems(prog, 'achievement'), firstWin.gems + 10);
   const before = prog;
   prog = reduceProgression(prog, [matchEvent()], DAY1);
   assert.equal(prog.achievements['first-win'], DAY1);
@@ -792,14 +798,8 @@ test('achievements unlock once with their rewards, hidden ones stay hidden, leve
   assert.ok(!night.achievements['early-bird']);
   const dawn = reduceProgression(emptyProgression(), [roundEvent({ hour: 6 })], T(2026, 1, 5, 6));
   assert.ok(dawn.achievements['early-bird']);
-  const rich = reduceProgression(
-    { ...emptyProgression(), xp: xpForLevel(10) - 1, wallet: { gems: 0, lifetimeGems: 499 } },
-    [{ kind: 'fact' }],
-    DAY1,
-  );
+  const rich = reduceProgression({ ...emptyProgression(), xp: xpForLevel(10) - 1 }, [{ kind: 'fact' }], DAY1);
   assert.ok(rich.achievements['level-10']);
-  assert.ok(rich.achievements['gem-hoarder']);
-  assert.equal(rich.wallet.lifetimeGems, 499 + 25 + 10 + 25);
   assert.equal(levelForXp(rich.xp).level, 10);
   const sporty = { ...emptyProgression() };
   sporty.counters = {
@@ -810,7 +810,7 @@ test('achievements unlock once with their rewards, hidden ones stay hidden, leve
   assert.ok(fan.achievements['sports-fan']);
   assert.ok(!fan.achievements['lab-coat']);
 });
-test('level-ups pay 25 gems per level gained, including several levels in one reduce', () => {
+test('level-ups log one line per level gained, including several levels in one reduce', () => {
   const prog = reduceProgression(
     emptyProgression(),
     [{ kind: 'expedition-complete', routeId: 'space', score: 18, first: true }],
@@ -822,68 +822,87 @@ test('level-ups pay 25 gems per level gained, including several levels in one re
   );
   const level = levelForXp(prog.xp).level;
   assert.ok(level >= 3);
-  assert.equal(logGems(prog, 'level'), 25 * (level - 1));
+  assert.equal(logXp(prog, 'level'), 0);
   // One entry per level crossed, newest first: together they must span the whole climb.
   const levels = prog.log.filter((e) => e.kind === 'level').map((e) => e.meta);
   assert.equal(levels.at(-1).from, 1);
   assert.equal(levels[0].to, level);
   assert.equal(levels.length, level - 1);
-  assert.equal(prog.wallet.gems, prog.wallet.lifetimeGems);
+  assert.ok(!('wallet' in prog));
 });
-test('cosmetics: buy and equip guards, level, achievement and rank unlocks, sanitized on reload', () => {
+test('cosmetics: equip guards, level, achievement and rank unlocks, sanitized on reload', () => {
   assert.equal(COSMETICS.length, 29);
   assert.equal(new Set(COSMETICS.map((c) => c.id)).size, 29);
   let prog = emptyProgression();
-  assert.strictEqual(reduceCosmetics(prog, { type: 'cosmetic-buy', id: 'coral' }, DAY1), prog);
-  assert.strictEqual(reduceCosmetics(prog, { type: 'cosmetic-buy', id: 'default' }, DAY1), prog);
-  assert.strictEqual(reduceCosmetics(prog, { type: 'cosmetic-equip', id: 'coral' }, DAY1), prog);
-  assert.strictEqual(reduceCosmetics(prog, { type: 'cosmetic-equip', id: 'gold-laurel' }, DAY1), prog);
-  assert.strictEqual(reduceCosmetics(prog, { type: 'cosmetic-equip', id: 'volt' }, DAY1), prog);
-  assert.strictEqual(reduceCosmetics(prog, { type: 'cosmetic-equip', id: 'nope' }, DAY1), prog);
+  assert.strictEqual(reduceCosmetics(prog, { type: 'cosmetic-equip', id: 'coral' }), prog);
+  assert.strictEqual(reduceCosmetics(prog, { type: 'cosmetic-equip', id: 'gold-laurel' }), prog);
+  assert.strictEqual(reduceCosmetics(prog, { type: 'cosmetic-equip', id: 'volt' }), prog);
+  assert.strictEqual(reduceCosmetics(prog, { type: 'cosmetic-equip', id: 'nope' }), prog);
   assert.equal(cosmeticStatus(prog, 'coral'), 'locked');
-  prog = { ...prog, wallet: { gems: 60, lifetimeGems: 60 } };
-  assert.equal(cosmeticStatus(prog, 'coral'), 'buyable');
-  prog = reduceCosmetics(prog, { type: 'cosmetic-buy', id: 'coral' }, DAY1);
-  assert.equal(prog.wallet.gems, 10);
-  assert.equal(prog.wallet.lifetimeGems, 60);
-  assert.deepEqual(prog.cosmetics.owned, ['coral']);
-  assert.deepEqual(prog.log[0], { ...prog.log[0], kind: 'cosmetic', xp: 0, gems: -50 });
+  assert.equal(cosmeticStatus(prog, 'volt'), 'equipped');
+  assert.equal(cosmeticStatus(prog, 'default'), 'equipped');
+  assert.equal(cosmeticStatus(prog, 'nope'), 'locked');
+  // A state built by hand with the rule met but nothing materialised reads as 'unlocked'.
+  const level3 = { ...prog, xp: xpForLevel(3) };
+  assert.equal(cosmeticStatus(level3, 'coral'), 'unlocked');
+  assert.ok(canEquip(level3, 'coral'));
+  // The reducer materialises ownership the moment the rule is met, with one log line per item.
+  prog = reduceProgression(
+    prog,
+    [{ kind: 'expedition-complete', routeId: 'space', score: 18, first: true }],
+    DAY1,
+  );
+  assert.ok(levelForXp(prog.xp).level >= 3);
+  assert.ok(prog.cosmetics.owned.includes('coral'));
   assert.equal(cosmeticStatus(prog, 'coral'), 'owned');
-  assert.strictEqual(reduceCosmetics(prog, { type: 'cosmetic-buy', id: 'coral' }, DAY1), prog);
-  assert.strictEqual(reduceCosmetics(prog, { type: 'cosmetic-buy', id: 'cyan' }, DAY1), prog);
-  prog = reduceCosmetics(prog, { type: 'cosmetic-equip', id: 'coral' }, DAY1);
+  const unlocked = prog.log.filter((e) => e.kind === 'cosmetic');
+  assert.ok(
+    unlocked.some((e) => e.label === 'Unlocked Coral' && e.meta.id === 'coral' && e.meta.kind === 'accent'),
+  );
+  assert.ok(unlocked.every((e) => e.xp === 0 && !('gems' in e)));
+  assert.equal(new Set(prog.cosmetics.owned).size, prog.cosmetics.owned.length);
+  // Owned once is owned for good: the same reduce again adds nothing and logs nothing.
+  const again = reduceProgression(prog, [{ kind: 'visit' }], DAY1);
+  assert.strictEqual(again, prog);
+  prog = reduceCosmetics(prog, { type: 'cosmetic-equip', id: 'coral' });
   assert.equal(prog.cosmetics.equipped.accent, 'coral');
   assert.equal(cosmeticStatus(prog, 'coral'), 'equipped');
-  assert.strictEqual(reduceCosmetics(prog, { type: 'cosmetic-equip', id: 'coral' }, DAY1), prog);
+  assert.strictEqual(reduceCosmetics(prog, { type: 'cosmetic-equip', id: 'coral' }), prog);
   const leveled = { ...prog, xp: xpForLevel(10) };
   assert.ok(canEquip(leveled, 'gold-laurel'));
-  assert.equal(cosmeticStatus(leveled, 'gold-laurel'), 'available');
+  assert.equal(cosmeticStatus(leveled, 'gold-laurel'), 'unlocked');
   assert.equal(
-    reduceCosmetics(leveled, { type: 'cosmetic-equip', id: 'gold-laurel' }, DAY1).cosmetics.equipped.frame,
+    reduceCosmetics(leveled, { type: 'cosmetic-equip', id: 'gold-laurel' }).cosmetics.equipped.frame,
     'gold-laurel',
   );
   assert.ok(!canEquip(leveled, 'prism'));
   const speedy = { ...prog, achievements: { 'speed-demon': 1 } };
   assert.equal(
-    reduceCosmetics(speedy, { type: 'cosmetic-equip', id: 'speedster' }, DAY1).cosmetics.equipped.title,
+    reduceCosmetics(speedy, { type: 'cosmetic-equip', id: 'speedster' }).cosmetics.equipped.title,
     'speedster',
   );
   assert.ok(!canEquip(prog, 'speedster'));
   const platinum = { ...prog, rank: { points: 500, tier: 'platinum', best: 'platinum', floor: 500 } };
   assert.ok(canEquip(platinum, 'platinum'));
   assert.ok(!canEquip(prog, 'platinum'));
-  const equipped = reduceCosmetics(leveled, { type: 'cosmetic-equip', id: 'gold-laurel' }, DAY1);
-  const demoted = readProgression(JSON.parse(JSON.stringify({ ...equipped, xp: 0 })));
-  assert.equal(demoted.cosmetics.equipped.frame, 'default');
-  assert.equal(demoted.cosmetics.equipped.accent, 'coral');
+  // A reload keeps what was owned, materialises what the sanitised state has unlocked, and drops an
+  // equipped item whose rule the sanitised state no longer meets and that was never owned.
+  const equipped = reduceCosmetics(leveled, { type: 'cosmetic-equip', id: 'gold-laurel' });
+  const reloaded = readProgression(JSON.parse(JSON.stringify(equipped)));
+  assert.ok(reloaded.cosmetics.owned.includes('gold-laurel'));
+  assert.equal(reloaded.cosmetics.equipped.frame, 'gold-laurel');
+  const demoted = readProgression(JSON.parse(JSON.stringify({ ...reloaded, xp: 0 })));
+  assert.equal(demoted.cosmetics.equipped.frame, 'gold-laurel', 'listed as owned, so it stays');
+  // `equipped` was built by hand, so gold-laurel was never materialised into its owned list.
+  const never = readProgression(JSON.parse(JSON.stringify({ ...equipped, xp: 0 })));
+  assert.equal(never.cosmetics.equipped.frame, 'default');
+  assert.equal(never.cosmetics.equipped.accent, 'coral', 'materialised by the reducer, so owned for good');
   let p = act(emptyProfile(), {
     type: 'room',
     room: multi('g1', 'gauntlet', Array(5).fill({ correct: true })),
   });
-  assert.ok(p.progression.wallet.gems >= 40);
-  const gems = p.progression.wallet.gems;
-  p = act(p, { type: 'cosmetic-buy', id: 'quiz-hound' });
-  assert.equal(p.progression.wallet.gems, gems - 40);
+  assert.ok(p.progression.cosmetics.owned.includes('quiz-hound'), 'the first duel pays the title');
+  assert.strictEqual(act(p, { type: 'cosmetic-buy', id: 'quiz-hound' }), p);
   assert.strictEqual(act(p, { type: 'cosmetic-equip', id: 'obsidian' }), p);
   p = act(p, { type: 'cosmetic-equip', id: 'quiz-hound' });
   assert.equal(p.progression.cosmetics.equipped.title, 'quiz-hound');
@@ -891,6 +910,174 @@ test('cosmetics: buy and equip guards, level, achievement and rank unlocks, sani
     p.progression.cosmetics.equipped.title,
     readProfile(JSON.parse(JSON.stringify(p))).progression.cosmetics.equipped.title,
   );
+});
+test('a version 1 record migrates: the wallet is dropped, bought cosmetics stay owned, equipped is kept', () => {
+  const v1 = {
+    ...JSON.parse(JSON.stringify(emptyProgression())),
+    version: 1,
+    xp: xpForLevel(6),
+    wallet: { gems: 120, lifetimeGems: 640 },
+    achievements: { 'first-duel': DAY1, 'first-win': DAY1, 'gem-hoarder': DAY1 },
+    cosmetics: {
+      // obsidian and nebula were bought with the old currency; neither rule is met at level 6.
+      owned: ['obsidian', 'nebula', 'coral'],
+      equipped: { frame: 'obsidian', title: 'challenger', banner: 'nebula', accent: 'coral' },
+    },
+    log: [
+      {
+        id: 'a',
+        at: 1,
+        kind: 'cosmetic',
+        xp: 0,
+        label: 'Unlocked Obsidian',
+        gems: -300,
+        meta: { id: 'obsidian' },
+      },
+      { id: 'b', at: 2, kind: 'level', xp: 0, label: 'Level 2 · Rookie', gems: 25 },
+    ],
+  };
+  const p = readProgression(v1);
+  assert.equal(p.version, 2);
+  assert.ok(!('wallet' in p));
+  assert.ok(!Object.hasOwn(p.achievements, 'gem-hoarder'), 'a retired badge is not carried over');
+  assert.equal(p.achievements['first-win'], DAY1);
+  // Bought items first, in stored order, then what level 6 and the first duel unlock, in catalogue order.
+  assert.deepEqual(p.cosmetics.owned, ['obsidian', 'nebula', 'coral', 'chartreuse-ring', 'quiz-hound']);
+  assert.deepEqual(p.cosmetics.equipped, {
+    frame: 'obsidian',
+    title: 'challenger',
+    banner: 'nebula',
+    accent: 'coral',
+  });
+  assert.deepEqual(p.log, [
+    { id: 'a', at: 1, kind: 'cosmetic', xp: 0, label: 'Unlocked Obsidian', meta: { id: 'obsidian' } },
+    { id: 'b', at: 2, kind: 'level', xp: 0, label: 'Level 2 · Rookie' },
+  ]);
+  assert.equal(JSON.stringify(p).includes('gems'), false);
+  // The migrated record is a fixed point: it round-trips and a reduce on it adds no unlock lines.
+  assert.deepEqual(readProgression(JSON.parse(JSON.stringify(p))), p);
+  const reduced = reduceProgression(p, [{ kind: 'visit' }], DAY1);
+  assert.equal(reduced.log.filter((e) => e.kind === 'cosmetic').length, 1);
+  assert.strictEqual(reduced.cosmetics, p.cosmetics);
+  // Owned for good: equipping a bought item whose rule is unmet still works after migration.
+  const swapped = reduceCosmetics(
+    { ...p, cosmetics: { ...p.cosmetics, equipped: { ...p.cosmetics.equipped, frame: 'default' } } },
+    { type: 'cosmetic-equip', id: 'obsidian' },
+  );
+  assert.equal(swapped.cosmetics.equipped.frame, 'obsidian');
+});
+test('cosmetic-buy is a no-op that returns the same object, whatever the state', () => {
+  for (const prog of [
+    emptyProgression(),
+    { ...emptyProgression(), xp: xpForLevel(30) },
+    reduceProgression(emptyProgression(), [matchEvent()], DAY1),
+  ])
+    for (const id of ['coral', 'obsidian', 'default', 'nope', undefined]) {
+      assert.strictEqual(reduceCosmetics(prog, { type: 'cosmetic-buy', id }), prog);
+      assert.strictEqual(reduceCosmetics(prog, { type: 'cosmetic-buy', id, at: DAY1 }), prog);
+    }
+});
+test('every cosmetic is unpriced and every non-default one has a reachable unlock rule', () => {
+  const defaults = new Set(Object.values(DEFAULT_COSMETICS));
+  const achievementIds = new Set(ACHIEVEMENTS.map((a) => a.id));
+  const rankIds = new Set(RANK_TIERS.map((t) => t.id));
+  const convictionIds = new Set(CONVICTION_TIERS.map((t) => t.id));
+  for (const c of COSMETICS) {
+    assert.strictEqual(c.price, null, c.id);
+    assert.ok(!('gems' in c), c.id);
+    const keys = Object.keys(c.unlock);
+    if (defaults.has(c.id)) {
+      assert.deepEqual(keys, [], `${c.id} is a default and carries no rule`);
+      assert.equal(cosmeticStatus(emptyProgression(), c.id), 'equipped');
+      continue;
+    }
+    assert.equal(keys.length, 1, `${c.id} has exactly one unlock rule`);
+    const [key] = keys;
+    const value = c.unlock[key];
+    if (key === 'level')
+      assert.ok(Number.isInteger(value) && value >= 2 && value <= 40, `${c.id} level ${value}`);
+    else if (key === 'achievement') assert.ok(achievementIds.has(value), `${c.id} names badge ${value}`);
+    else if (key === 'rank') assert.ok(rankIds.has(value), `${c.id} names rank ${value}`);
+    else if (key === 'conviction') assert.ok(convictionIds.has(value) && value !== 'provisional', c.id);
+    else assert.fail(`${c.id} has an unknown rule ${key}`);
+    assert.equal(cosmeticStatus(emptyProgression(), c.id), 'locked', `${c.id} is locked on a fresh record`);
+  }
+  // The first evening: a duel, a win, a hat-trick and level 3 already dress the card.
+  const evening = {
+    ...emptyProgression(),
+    xp: xpForLevel(3),
+    achievements: { 'first-duel': DAY1, 'first-win': DAY1, 'combo-3': DAY1 },
+  };
+  assert.deepEqual(
+    COSMETICS.filter((c) => !defaults.has(c.id) && unlockMet(evening, c)).map((c) => c.id),
+    ['quiz-hound', 'coral', 'cyan'],
+  );
+  // A week of daily play: level 8 or so, ten wins, three modes, seven days running.
+  const week = {
+    ...emptyProgression(),
+    xp: xpForLevel(8),
+    streak: { current: 7, best: 7, lastDay: '2026-01-11', shields: 1, frozenDays: 0 },
+    achievements: {
+      'first-duel': DAY1,
+      'first-win': DAY1,
+      'combo-3': DAY1,
+      'wins-10': DAY1,
+      'mode-tour': DAY1,
+      'streak-3': DAY1,
+      'streak-7': DAY1,
+    },
+  };
+  const afterWeek = COSMETICS.filter((c) => !defaults.has(c.id) && unlockMet(week, c)).map((c) => c.id);
+  for (const id of [
+    'chartreuse-ring',
+    'obsidian',
+    'quiz-hound',
+    'stadium-lights',
+    'nebula',
+    'field-notes',
+    'coral',
+    'cyan',
+    'magenta',
+  ])
+    assert.ok(afterWeek.includes(id), `${id} is not reachable in a week`);
+  // Every kind has something to earn inside that week.
+  for (const kind of ['frame', 'title', 'banner', 'accent'])
+    assert.ok(
+      afterWeek.some((id) => COSMETICS.find((c) => c.id === id).kind === kind),
+      kind,
+    );
+});
+test('emptyProgression carries no second currency anywhere in its tree', () => {
+  const walk = (v, path, out) => {
+    if (!v || typeof v !== 'object') return out;
+    for (const [k, x] of Object.entries(v)) {
+      if (/gem|wallet/i.test(k)) out.push(`${path}.${k}`);
+      walk(x, `${path}.${k}`, out);
+    }
+    return out;
+  };
+  assert.deepEqual(walk(emptyProgression(), 'progression', []), []);
+  assert.deepEqual(walk(XP, 'XP', []), []);
+  assert.ok(
+    !Object.hasOwn(XP, 'questBonusGems') &&
+      !Object.hasOwn(XP, 'levelGems') &&
+      !Object.hasOwn(XP, 'convictionTierGems'),
+  );
+  assert.deepEqual(walk(dailyQuests('e', '2026-01-05'), 'quests', []), []);
+  assert.deepEqual(walk(reduceProgression(emptyProgression(), [matchEvent()], DAY1), 'reduced', []), []);
+  assert.ok(!('gemsGained' in progressionDiff(emptyProgression(), emptyProgression())));
+});
+test('lib/progression.mjs has no gems identifier outside comments', () => {
+  const src = readFileSync(new URL('../lib/progression.mjs', import.meta.url), 'utf8');
+  const code = src
+    .split('\n')
+    .filter((line) => !/^\s*(\/\/|\*|\/\*)/.test(line))
+    .map((line) => line.replace(/\/\/.*$/, ''))
+    .join('\n');
+  assert.equal(code.match(/gem/gi), null, 'a currency word survives in code');
+  assert.equal(code.match(/wallet/gi), null, 'the wallet survives in code');
+  assert.equal(code.match(/cosmetic-buy/g), null);
+  assert.equal(code.match(/lifetime/gi), null);
 });
 test('reset yields emptyProgression and stale epochs cannot write progression', () => {
   let p = act(emptyProfile(), { type: 'room', room: room() });
@@ -1179,29 +1366,34 @@ test('the badge needs thirty distinct cards and twenty real calls before it says
     assert.equal(convictionTier(c).id, band(convictionRating(c)));
   }
 });
-test('tier gems are cumulative, paid once, and never mint a NaN wallet', () => {
-  // Straight to Dead eye on card thirty: every line crossed is paid, or the slow player out-earns
-  // the fast one on the same thirty cards.
+test('a conviction promotion logs once, pays no XP, and a replay pays nothing', () => {
+  // Straight to Dead eye on card thirty: one promotion line, whatever the tiers crossed.
   const jump = reduceProgression(emptyProgression(), cards('deadeye', 30, 30, 'called'), DAY1);
   assert.equal(jump.conviction.best, 'deadeye');
   assert.equal(jump.conviction.bestAt, 1800);
-  assert.equal(logGems(jump, 'rank'), 160);
   const promotions = jump.log.filter((e) => e.kind === 'rank');
   assert.equal(promotions.length, 1);
+  assert.equal(promotions[0].xp, 0);
+  assert.ok(!('gems' in promotions[0]));
   assert.deepEqual(promotions[0].meta, { from: 'provisional', to: 'deadeye', rating: 1800 });
-  // Replaying the same cards is a repeat under R1: no tally, no promotion, no second payout.
+  // The badge is what unlocks its cosmetics, and they are owned the moment it lands.
+  for (const id of ['caller', 'called-halo', 'called-it', 'sharp', 'deadeye'])
+    assert.ok(jump.cosmetics.owned.includes(id), id);
+  // No bonus, so no idempotence marks are written for it.
+  assert.ok(!Object.keys(jump.eventBadges).some((k) => k.startsWith('conviction-')));
+  // Replaying the same cards is a repeat under R1: no tally, no promotion.
   const again = reduceProgression(jump, cards('deadeye', 30, 30, 'called'), DAY1);
   assert.equal(newLog(jump, again, 'rank').length, 0);
   assert.deepEqual(again.conviction.called, jump.conviction.called);
-  // Crossing the lines one at a time totals exactly the same 160.
+  // Crossing the lines one at a time logs one line per promotion.
   let slow = reduceProgression(
     emptyProgression(),
     [...cards('a', 10, 10, 'steady'), ...cards('b', 20, 12, 'called')],
     DAY1,
   );
   assert.equal(slow.conviction.best, 'read');
-  let paid = newLog(emptyProgression(), slow, 'rank').reduce((n, e) => n + e.gems, 0);
-  assert.equal(paid, XP.convictionTierGems.read);
+  let lines = newLog(emptyProgression(), slow, 'rank').length;
+  assert.equal(lines, 1);
   for (const [prefix, n, expected] of [
     ['c', 5, 'edge'],
     ['d', 20, 'sharp'],
@@ -1210,23 +1402,21 @@ test('tier gems are cumulative, paid once, and never mint a NaN wallet', () => {
     const before = slow;
     slow = reduceProgression(slow, cards(prefix, n, n, 'called'), DAY1);
     assert.equal(slow.conviction.best, expected);
-    paid += newLog(before, slow, 'rank').reduce((n2, e) => n2 + e.gems, 0);
+    lines += newLog(before, slow, 'rank').length;
   }
-  assert.equal(paid, 160);
-  assert.equal(
-    Object.values(XP.convictionTierGems).reduce((a, b) => a + b, 0),
-    160,
-  );
-  // A Hunch promotion reads a tier whose gem line is zero. `gems += undefined` would be NaN, which
-  // nat() silently zeroes on the next load: a total wallet wipe.
+  assert.equal(lines, 4);
+  // A version 1 record may still carry the old bonus marks; they are inert and survive the load.
+  const marked = readProgression({
+    ...JSON.parse(JSON.stringify(slow)),
+    version: 1,
+    eventBadges: { 'conviction-read': 5, 'conviction-edge': 6 },
+  });
+  assert.deepEqual(marked.eventBadges, { 'conviction-read': 5, 'conviction-edge': 6 });
+  assert.equal(marked.conviction.best, 'deadeye');
   const hunch = reduceProgression(emptyProgression(), cards('s', 30, 30, 'steady'), DAY1);
   assert.equal(hunch.conviction.best, 'hunch');
   assert.equal(hunch.conviction.bestAt, 1400);
-  assert.ok(Number.isSafeInteger(hunch.wallet.gems));
-  assert.ok(Number.isSafeInteger(hunch.wallet.lifetimeGems));
-  assert.equal(readProgression(JSON.parse(JSON.stringify(hunch))).wallet.gems, hunch.wallet.gems);
-  for (const id of CONVICTION_TIERS.map((t) => t.id))
-    assert.ok(Number.isSafeInteger(XP.convictionTierGems[id]), `${id} has no gem line`);
+  assert.deepEqual(readProgression(JSON.parse(JSON.stringify(hunch))), hunch);
 });
 test('the badge label never demotes, the rating beside it does, and bestAt is kept', () => {
   const earned = reduceProgression(emptyProgression(), cards('x', 30, 25, 'called'), DAY1);
@@ -1242,7 +1432,7 @@ test('the badge label never demotes, the rating beside it does, and bestAt is ke
   assert.equal(progressionDiff(earned, slumped).convictionUp, null);
   // A missed call never pays negative XP: the bet lives in run score and nowhere else.
   const missed = reduceProgression(emptyProgression(), cards('z', 6, 0, 'called'), DAY1);
-  assert.ok(missed.log.every((e) => e.xp >= 0 && (e.gems ?? 0) >= 0));
+  assert.ok(missed.log.every((e) => e.xp >= 0 && !('gems' in e)));
   assert.equal(logXp(missed, 'expedition-answer'), 6 * XP.expeditionWrong);
   // The high-water mark survives a reload even when the live tallies no longer support it.
   const reloaded = readProgression(JSON.parse(JSON.stringify(slumped)));
@@ -1260,8 +1450,8 @@ test('conviction survives the reduce, the diff reports promotions, and the profi
   assert.equal(progressionDiff(prog, prog).convictionUp, null);
   const flat = reduceProgression(emptyProgression(), cards('q', 6, 6, 'called'), DAY1);
   assert.equal(progressionDiff(emptyProgression(), flat).convictionUp, null);
-  assert.equal(PROGRESSION_VERSION, 1);
-  assert.equal(prog.version, 1);
+  assert.equal(PROGRESSION_VERSION, 2);
+  assert.equal(prog.version, 2);
   const p = { ...emptyProfile(), progression: prog };
   const round = readProfile(JSON.parse(JSON.stringify(p)));
   assert.equal(round.version, 2);
@@ -1307,36 +1497,26 @@ test('a hand-edited conviction block normalises without inventing a badge', () =
   assert.deepEqual(filled, emptyProgression());
   assert.deepEqual(readProgression(JSON.parse(JSON.stringify(filled))), filled);
 });
-test('conviction-gated cosmetics cannot be bought or equipped before the badge is earned', () => {
-  const rich = (prog) => ({ ...prog, wallet: { gems: 500, lifetimeGems: 500 } });
-  let prog = rich(emptyProgression());
-  for (const id of ['called-halo', 'called-it', 'deadeye']) {
+test('conviction-gated cosmetics cannot be equipped before the badge is earned', () => {
+  let prog = emptyProgression();
+  for (const id of ['called-halo', 'called-it', 'deadeye', 'caller', 'sharp']) {
     assert.equal(unlockMet(prog, id), false);
     assert.equal(canEquip(prog, id), false);
-    assert.equal(cosmeticStatus(emptyProgression(), id), 'locked');
-    assert.strictEqual(reduceCosmetics(prog, { type: 'cosmetic-buy', id }, DAY1), prog);
+    assert.equal(cosmeticStatus(prog, id), 'locked');
+    assert.strictEqual(reduceCosmetics(prog, { type: 'cosmetic-equip', id }), prog);
   }
-  for (const id of ['caller', 'sharp']) {
-    assert.equal(canEquip(prog, id), false);
-    assert.strictEqual(reduceCosmetics(prog, { type: 'cosmetic-equip', id }, DAY1), prog);
-  }
-  // Ungated on purpose: the one new gem sink a Steady-only player can reach.
-  assert.equal(cosmeticStatus(prog, 'field-notes'), 'buyable');
-  const bought = reduceCosmetics(prog, { type: 'cosmetic-buy', id: 'field-notes' }, DAY1);
-  assert.notStrictEqual(bought, prog);
-  assert.ok(bought.cosmetics.owned.includes('field-notes'));
-  // After the promotion the same calls succeed.
-  prog = rich(reduceProgression(emptyProgression(), cards('k', 30, 30, 'called'), DAY1));
+  // After the promotion the same calls succeed, and the items are already owned.
+  prog = reduceProgression(emptyProgression(), cards('k', 30, 30, 'called'), DAY1);
   assert.equal(prog.conviction.best, 'deadeye');
   for (const id of ['called-halo', 'called-it', 'deadeye']) {
     assert.equal(unlockMet(prog, id), true);
-    assert.equal(cosmeticStatus(prog, id), 'buyable');
-    const out = reduceCosmetics(prog, { type: 'cosmetic-buy', id }, DAY1);
-    assert.ok(out.cosmetics.owned.includes(id));
+    assert.equal(cosmeticStatus(prog, id), 'owned');
+    const kind = COSMETICS.find((c) => c.id === id).kind;
+    assert.equal(reduceCosmetics(prog, { type: 'cosmetic-equip', id }).cosmetics.equipped[kind], id);
   }
   for (const id of ['caller', 'sharp']) {
     assert.equal(canEquip(prog, id), true);
-    assert.equal(reduceCosmetics(prog, { type: 'cosmetic-equip', id }, DAY1).cosmetics.equipped.title, id);
+    assert.equal(reduceCosmetics(prog, { type: 'cosmetic-equip', id }).cosmetics.equipped.title, id);
   }
 });
 test('a Vault review pays only when the card was due and the answer moved its box', () => {

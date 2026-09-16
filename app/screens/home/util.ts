@@ -60,7 +60,6 @@ export type QuestItem = {
   target: number;
   progress: number;
   xp: number;
-  gems: number;
   done: boolean;
   topic?: string;
   mode?: string;

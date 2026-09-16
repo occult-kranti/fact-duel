@@ -43,3 +43,28 @@ The open questions are collected, numbered and deduplicated in the generated pag
 The generated page is **deliberately not published**. It carries candid adverse assessments of this
 product written to be useful internally, not safe at a public URL. `.github/workflows/pages.yml` has
 no copy step for it, and the comment there explains why.
+
+## Build status, 17 September 2026
+
+Shipped on the feature branch after the ad-funded pivot, in the order of `ads/synthesis.json`
+`features`:
+
+| # | feature | where |
+| --- | --- | --- |
+| 7 | economy config, burn leg, structural honesty rule | `lib/economy/economy.mjs`, `lib/ledger/intents.mjs` |
+| 10 | reward nonce, completion window, caps — pure half and **server half** | `lib/ads/nonce.mjs`, `lib/server/wallet-service.mjs`, `app/api/wallet/route.ts` |
+| 11 | priced ad card, `duel-entry` placement retired from the UI | `app/screens/economy/ad-card.tsx` |
+| 12 | drills, Yesterday recap, friendly duel | `lib/fixtures.mjs`, `app/discovery.tsx` |
+| 13 | kick-off and full-time sets, next-fixture hook | `lib/fixtures.mjs`, `app/screens/events/fixture-card.tsx`, `app/screens/room/next-fixture.tsx` |
+| 14 | stake picker default, tier-down suggestion, EV note | `lib/economy/stake-advice.mjs`, `app/screens/play/match-settings.tsx` |
+| 15 | per-sport rating, seasons on the real calendars, matchweek streaks with free shields | `lib/season.mjs`, `lib/passport.mjs` (`supporter`) |
+| 16 | leagues engine (bracketed, promotion, percentile, neighbourhood); rivals and you-vs-you boards from real duels | `lib/leagues.mjs`, `app/screens/player/boards.tsx` |
+| 17 | Rules of the coin and Trust pages, change log with the one-matchweek rule | `lib/economy/changelog.mjs`, `app/screens/rules/` |
+| 8 (part) | Supporter Card, guest-first, age band with no pre-selection | `app/screens/player/supporter-card.tsx` |
+| — | gems retired: one currency, cosmetics unlock by play | `lib/progression.mjs` v2 |
+| M3 | ledger persisted, every guard a constraint violation, reconcile on the hourly sweep | `lib/server/ledger-store-d1.mjs`, `lib/ledger-memory-store.mjs`, `lib/server/reconcile.mjs`, `drizzle/0003_ledger.sql` |
+
+Not built, and said so in the UI: accounts and sign-in (M4; the guest principal is promoted in place
+when they arrive), public leagues and the global board (open with accounts; no placeholder table),
+the matchmaking queue, server-verified ad completion (store builds only). The static GitHub Pages
+build carries none of the server half; it keeps the device wallet.

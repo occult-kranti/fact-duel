@@ -15,6 +15,7 @@
     "docs:product": "node scripts/product-docs.mjs",
     "e2e": "node scripts/e2e.mjs",
     "fx:levels": "node scripts/measure-cues.mjs",
+    "seo:pages": "node scripts/seo-pages.mjs",
     "build:static": "vite build --config vite.config.static.ts",
     "preview:static": "vite preview --config vite.config.static.ts"
   },

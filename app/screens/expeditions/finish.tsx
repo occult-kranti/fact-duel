@@ -33,7 +33,7 @@ type Count = { n: number; correct: number };
 type Tally = Record<string, Count>;
 type Tier = { id: string; label: string; min: number };
 type Stake = { name: string; correct: number; wrong: number; order: number };
-type LogLine = { at: number; kind: string; gems?: number; meta?: { to?: string; rating?: number } };
+type LogLine = { at: number; kind: string; meta?: { to?: string; rating?: number } };
 
 /* The frozen tables come back from the .mjs modules as readonly unknown[] / unknown; this is the same
  * narrowing `rankTiers` does in use-progression-feedback, done once instead of at every use. */
@@ -253,7 +253,6 @@ export function ExpeditionFinish({
     return {
       label: tier.label,
       rating: Number.isFinite(entry.meta?.rating) ? (entry.meta?.rating as number) : null,
-      gems: entry.gems ?? 0,
       landed: convictionRiskLanded(c),
       riskCalls: convictionRiskCalls(c),
       calls: convictionCalls(c),
@@ -412,16 +411,11 @@ export function ExpeditionFinish({
               distinct facts.
             </p>
           )}
-          {(promotion.rating !== null || promotion.gems > 0) && (
+          {promotion.rating !== null && (
             <ul className="fd-keep-list">
-              {promotion.rating !== null && (
-                <li style={{ ['--fd-keep-i' as string]: '0' }}>
-                  Earned at {promotion.rating} of 2000, on this device.
-                </li>
-              )}
-              {promotion.gems > 0 && (
-                <li style={{ ['--fd-keep-i' as string]: '1' }}>+{promotion.gems} gems</li>
-              )}
+              <li style={{ ['--fd-keep-i' as string]: '0' }}>
+                Earned at {promotion.rating} of 2000, on this device.
+              </li>
             </ul>
           )}
         </section>

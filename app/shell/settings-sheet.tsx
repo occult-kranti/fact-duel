@@ -181,7 +181,7 @@ export function SettingsSheet({
           </span>
           <p className="fd-setting-note">
             Everything you earn lives in this browser: your Vault of facts and saved question issues,
-            expedition progress and stamps, XP, gems and activity points, side quests and card finishes — and
+            expedition progress and stamps, XP and activity points, side quests and card finishes — and
             the measurement record behind the Analytics screen. Export them before resetting. Theme and sound
             preferences are kept.
           </p>

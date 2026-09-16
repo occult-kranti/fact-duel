@@ -32,7 +32,9 @@ export type Tab =
   | 'discovery'
   | 'showroom'
   | 'rules'
-  | 'timing';
+  | 'timing'
+  | 'coin'
+  | 'trust';
 
 /* ---------- the curated calendar (lib/events.mjs, which is plain JS) ---------- */
 /** One sanitised entry from `readEvents`. Nothing is optional except the verified `headline`. */
@@ -241,7 +243,8 @@ export type EventsScreenProps = {
   go: (tab: string) => void;
 };
 export type RulesScreenProps = {
-  view: 'rules' | 'timing';
+  /** 'rules' is the Playbook; the others are its sub-pages, each with a back button to it. */
+  view: 'rules' | 'timing' | 'coin' | 'trust';
   go: (tab: string) => void;
 };
 export type ShowroomScreenProps = {

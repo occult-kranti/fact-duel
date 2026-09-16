@@ -9,6 +9,7 @@ import { RoomChrome } from './room/room-chrome';
 import { LobbyPanel } from './room/lobby-panel';
 import { CountdownStage } from './room/countdown-stage';
 import { QuestionStage } from './room/question-stage';
+import { NextFixture } from './room/next-fixture';
 import './room/room.css';
 
 /* Room: chrome (leave / mode · round / connection), HUD, lobby & between-round panel, countdown,
@@ -213,6 +214,9 @@ export function RoomScreen({ duel, player }: RoomScreenProps) {
             }}
           />
           {completedRounds(room).length > 0 && <RoundReview room={room} player={player} />}
+          {/* The return hook: the next served-sport fixture on the static calendar, after the receipt
+              and before any ad. It links to Events; it never counts down in seconds or claims a score. */}
+          <NextFixture go={go} />
           {/* The priced ad card goes BELOW the receipt and only once the match is finished: never
               inside a round, never before the result is on screen — the research's timing rule,
               and the single largest complaint cluster across every competitor. */}

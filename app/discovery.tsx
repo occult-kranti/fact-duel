@@ -36,6 +36,7 @@ import { XP } from '@/lib/progression.mjs';
 import { Choices, Dots, usePress } from './screens/vault';
 import { useWalletContext } from './use-wallet';
 import { AdCard } from './screens/economy/ad-card';
+import { clearFixtureDeal, peekFixtureDeal, type FixtureDeal } from './fixture-deal';
 import './screens/vault/vault.css';
 
 /** The entry's state for this session: unpaid yet, paid (and the drill loading or open), or refused. */
@@ -62,7 +63,12 @@ export default function Discovery({
     [error, setError] = useState(''),
     [finished, setFinished] = useState(false),
     [retry, setRetry] = useState(0),
-    [entry, setEntry] = useState<Entry>({ state: 'pending' });
+    [entry, setEntry] = useState<Entry>({ state: 'pending' }),
+    // The fixture set this drill was opened for (armed by a card on Events), or null for the plain
+    // topic drill. Read once at mount and cleared right after, so nothing later inherits it.
+    [fixture] = useState<FixtureDeal | null>(() => peekFixtureDeal()),
+    // The free recap was already played today, so this run went through the ordinary practice entry.
+    [recapPlayed, setRecapPlayed] = useState(false);
   const session = useRef(''),
     // The session whose entry has been paid: a wallet change re-runs the gate, and neither a paid
     // session nor one whose payment is in flight may be charged twice.
@@ -73,7 +79,15 @@ export default function Discovery({
     locked = useRef(false),
     heading = useRef<HTMLHeadingElement | null>(null),
     explanation = useRef<HTMLElement | null>(null);
-  const label = !topic || topic === 'all' ? 'Mixed' : topic;
+  const label = fixture ? fixture.label : !topic || topic === 'all' ? 'Mixed' : topic;
+  const recap = fixture?.kind === 'recap';
+  const expected = fixture?.size ?? 3;
+  const count = cards.length || expected;
+  const facts = count === 3 ? 'three' : String(count);
+
+  useEffect(() => {
+    clearFixtureDeal();
+  }, []);
 
   // A new session on every topic, retry or profile epoch: reset, then let the gate below pay and load.
   useEffect(() => {
@@ -105,21 +119,35 @@ export default function Discovery({
       return;
     }
     charging.current = mine;
-    void wallet.enterPractice().then((outcome) => {
+    // The recap is free once per local day and never routes through an ad. Only once today's free
+    // run is spent does it fall back to the ordinary practice entry — priced, labelled, refusable.
+    const charge = async () => {
+      if (!recap) return wallet.enterPractice();
+      const free = await wallet.enterRecap();
+      if (free.ok || free.reason !== 'recap_played') return free;
+      setRecapPlayed(true);
+      return wallet.enterPractice();
+    };
+    void charge().then((outcome) => {
       charging.current = '';
       if (outcome.ok) paid.current = { session: mine, spent: outcome.spent };
       // Navigated on mid-payment: the new session pays for itself, and this one's cards are not asked for.
       if (session.current !== mine) return;
       setEntry(outcome.ok ? { state: 'paid', spent: outcome.spent } : { state: 'insufficient' });
     });
-  }, [topic, retry, player.profile.epoch, wallet, walletLoaded, walletCoins]);
+  }, [topic, retry, player.profile.epoch, wallet, walletLoaded, walletCoins, recap]);
 
-  // The cards, asked for once the entry is paid (or at once when no wallet is provided).
+  // The cards, asked for once the entry is paid (or at once when no wallet is provided). A fixture
+  // set is dealt by the duel service from the calendar entry and the kind; the window is checked
+  // there, in the viewer's local day, so the offset travels with the request.
   const entryPaid = !wallet || entry.state === 'paid';
   useEffect(() => {
     if (!entryPaid) return;
     let alive = true;
-    request({ action: 'practice', topic })
+    const body = fixture
+      ? { action: 'fixture', eventId: fixture.eventId, kind: fixture.kind, tzOffsetMinutes: new Date().getTimezoneOffset() }
+      : { action: 'practice', topic };
+    request(body)
       .then((d) => {
         if (alive) {
           setCards(d.cards);
@@ -134,7 +162,7 @@ export default function Discovery({
     return () => {
       alive = false;
     };
-  }, [entryPaid, topic, retry, player.profile.epoch]);
+  }, [entryPaid, topic, retry, player.profile.epoch, fixture]);
   useEffect(() => {
     heading.current?.focus();
   }, [index, finished, cards.length]);
@@ -167,14 +195,20 @@ export default function Discovery({
         <p className="fd-eyebrow">NO TIMER · NO OPPONENT</p>
         <div className="fd-learn__title">
           <h1 ref={heading} tabIndex={-1}>
-            Discovery · {label}
+            {fixture ? label : `Discovery · ${label}`}
           </h1>
           <span className="fd-tag fd-tag--cool">
-            <Compass />3 facts · take your time
+            <Compass />
+            {count} facts · take your time
           </span>
           {entry.state === 'paid' && entry.spent > 0 && (
             <span className="fd-tag fd-discovery__entry" title="Paid to the house for this drill">
               −{entry.spent} coins · entry
+            </span>
+          )}
+          {recap && entry.state === 'paid' && entry.spent === 0 && wallet && (
+            <span className="fd-tag fd-discovery__entry" title="Today's recap is free">
+              Free today
             </span>
           )}
         </div>
@@ -191,7 +225,7 @@ export default function Discovery({
             <span className="fd-summary__ring">
               {remembered}/{cards.length}
             </span>
-            <h2>Three facts to take with you.</h2>
+            <h2>{count === 3 ? 'Three' : count} facts to take with you.</h2>
             <p>
               Your attempted cards and their sources are in the Vault. Exploration stamps describe curiosity,
               not mastery.
@@ -246,11 +280,20 @@ export default function Discovery({
         </div>
       ) : wallet && entry.state === 'insufficient' ? (
         <div className="fd-qwrap">
+          {recapPlayed && (
+            <p className="fd-note" role="status">
+              Recap played today. Play it again for {wallet.config.practiceEntry} coins or one ad
+            </p>
+          )}
           <AdCard wallet={wallet} placement="practice-entry" onClose={onBack} />
         </div>
       ) : !fact ? (
         <p className="fd-note" role="status">
-          {entry.state === 'pending' && wallet ? 'Paying the entry…' : 'Opening three sourced facts…'}
+          {entry.state === 'pending' && wallet
+            ? recap
+              ? 'Opening today’s recap…'
+              : 'Paying the entry…'
+            : `Opening ${facts} sourced facts…`}
         </p>
       ) : (
         <div className="fd-qwrap">
