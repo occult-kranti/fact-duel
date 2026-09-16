@@ -15,7 +15,12 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 
 const LANES = 'docs/money/lanes';
 const OUT = 'public/product/compliance/compliance.json';
-const AS_OF = process.env.COMPLIANCE_AS_OF ?? new Date().toISOString().slice(0, 10);
+/* The date the RESEARCH was done, not the date someone ran this script. Deriving it from the clock
+   made a rebuild change the page without changing a single fact, which both breaks the repo's
+   "same sources, same output" convention and quietly ages a document nobody re-researched. Bump it
+   with COMPLIANCE_AS_OF when the lanes are actually re-run. */
+const RESEARCHED_ON = '2026-09-14';
+const AS_OF = process.env.COMPLIANCE_AS_OF ?? RESEARCHED_ON;
 
 /** The corrected lane if the correction pass produced one, else the original brief. */
 function lane(n) {

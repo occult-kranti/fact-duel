@@ -1,0 +1,658 @@
+{
+  "jurisdiction": "USA, EU and India — payments acceptance, money transmission, KYC/AML, age assurance and tax-reporting layer (cross-cutting)",
+  "headline": "On the payments layer the four models split two-and-two and the split is close to absolute: Models A and D are ordinary digital-goods commerce that Stripe and both app stores will serve today, while Models B and C both sit in Stripe's PROHIBITED column — Stripe's list names \"Payments of an entry or player fee that promise the entrant or player will win a prize of value\", a verbatim description of Model C — so the paid-entry skill contest is just as unbankable on mainstream rails as the sweepstakes casino, and the founder's likely assumption that \"skill contest\" is the safe middle path is wrong at the payments layer even where it may be right at the gambling-law layer. Three corrections from the audit change how that conclusion should be acted on. First, the reason the rails refuse is not commercial risk appetite but UIGEA (31 U.S.C. 5361-5367) and Regulation GG, which impose a coding-and-blocking mandate on designated payment systems — so no story, rate or licence negotiates it away, but equally UIGEA bites only where the underlying gambling is UNLAWFUL, which makes the state-by-state skill-versus-chance opinion a payments prerequisite rather than a separate workstream. Second, the brief's escape hatch for Model C — an Adyen waiver — may be illusory: Adyen's restricted category reads as licensed-operator language, yet in the UK a genuine paid-entry skill competition sits outside the Gambling Commission regime with no licence to obtain, so the waiver prerequisite could be unsatisfiable rather than merely slow, pushing Model C's payments verdict closer to Model B's. Third, the brief's claim that FACT//DUEL's live UI already ships prohibited-category copy (\"winner takes the escrow\") is false — that phrase exists nowhere in the product, only in this project's own compliance documents — so the renaming work is cheap hygiene, not an emergency. Net: A and D are launchable now on mainstream rails with commission, chargeback and stored-value-category diligence as the real work; B and C are licence-and-specialist-acquirer programmes whose payments workstream cannot begin until the legality workstream ends; India is a no for B and C on the rail itself, though the Act's commencement is less settled than the brief implied.",
+  "modelVerdicts": [
+    {
+      "model": "A",
+      "verdict": "lawful",
+      "reasoning": "Lawful, and served by mainstream rails — but 'fully served' was overstated and is corrected. VERIFIED acceptance: Stripe (Model A appears on neither its prohibited nor its restricted list), Apple StoreKit IAP and Google Play Billing, both of which in fact REQUIRE their own billing for in-game currency. AUDIT CORRECTION — the brief also asserted Adyen and PayPal accept this as ordinary digital-goods commerce; no Adyen or PayPal line item for virtual currency or stored value was ever cited. Those lists were cited only for their gambling entries. Treat Adyen and PayPal virtual-currency acceptance as UNVERIFIED. The brief's own Paddle finding proves the category is separately policed: Paddle's AUP (13 April 2026, verbatim) prohibits 'Virtual currency or stored value, including but not limited to store credit, gift cards, vouchers' outright, which kills even Model A there. Acquirers commonly carry a stored-value restriction independent of their gambling lines, so get the category confirmed in writing rather than inferred from a silent list. No money transmission arises because the coin is not convertible virtual currency — it has no real-currency equivalent and cannot substitute for currency — but brief counsel on FIN-2019-G001 (9 May 2019), the current consolidated FinCEN CVC guidance, not only on FIN-2013-G001. No gambling analysis and no UIGEA exposure arise because nothing is staked player-versus-player and nothing of value is won. Four payments caveats that are easy to trip: (1) Paddle and Lemon Squeezy are NOT available even for Model A; (2) Apple 3.1.1 forbids expiring IAP-purchased currency, so coin balances cannot be time-limited; (3) the Texas, Utah and Louisiana App Store Accountability Acts require parental consent for in-app purchases by minors, which reaches Model A even though nothing is gambled; (4) AUDIT ADDITION — chargeback and friendly-fraud exposure on instant-delivery digital goods is the realistic way this model loses its processor, and card-network monitoring programmes can force a merchant off the rail entirely. Store commission, not card fees, is the dominant cost line: Apple 30% standard and 15% under the Small Business Program. The verdict flips the instant a single redemption path is added — one cash-out button converts the coin into CVC and pulls in FinCEN registration plus state MTLs.",
+      "authority": "Stripe Prohibited and Restricted Businesses, last updated 13 May 2026 (fetched) — Model A appears on neither list. FinCEN Guidance FIN-2019-G001, 9 May 2019 — the current consolidated CVC guidance, which by its own terms consolidates FinCEN regulations and guidance issued since 2011 (this replaces the brief's sole reliance on FIN-2013-G001). FinCEN Guidance FIN-2013-G001, 18 March 2013 (fetched) for the underlying definitions: a non-convertible virtual currency has no 'equivalent value in real currency' and does not 'act as a substitute for real currency', so its issuer is not an administrator of CVC and not a money transmitter; 'A user who obtains convertible virtual currency and uses it to purchase real or virtual goods or services is not an MSB'. Apple App Store Review Guideline 3.1.1 (fetched). Google Play Payments policy (fetched): Play billing required for 'Digital items (such as virtual currencies...)'. Paddle AUP, 13 April 2026 (fetched) — prohibits virtual currency and stored value. Adyen and PayPal acceptance of virtual currency: NO CITED AUTHORITY, UNVERIFIED."
+    },
+    {
+      "model": "B",
+      "verdict": "licence-required",
+      "reasoning": "Licence-required, and on the payments layer effectively unbankable at seed stage. Three independent gates, each of which alone blocks launch. (1) ACCEPTANCE: Stripe prohibits it with no pre-approval path; its FAQ conveys that local legality does not by itself make the category acceptable, because Stripe's own processor and financial-partner obligations bind regardless (AUDIT CORRECTION — the brief rendered this as a verbatim Stripe quotation, 'regardless of local legality'; that phrase could not be confirmed on the page and must not be quoted, though the substance stands). PayPal requires pre-approval conditioned on blocking US account holders; Paddle prohibits it twice over; Adyen will consider a waiver for a licensed EU/UK operator but prohibits US-based gambling services outright. That leaves only licence-gated specialist acquirers, which will not onboard you until you already hold the licence. AUDIT ADDITION — the reason these lists exist is UIGEA, 31 U.S.C. 5361-5367, and Regulation GG (12 CFR Part 233 / 31 CFR Part 132), which require designated payment systems to identify and block restricted transactions connected to unlawful internet gambling, with 31 U.S.C. 5367 exposing a financial transaction provider to liability in the same manner as the gambling business where it has actual knowledge and control. This is a statutory mandate on the rail, not a risk committee that can be persuaded. (2) MONEY TRANSMISSION: redeemable coins are convertible virtual currency and you become its administrator, which makes you a FinCEN-registered money transmitter needing a written AML programme, SAR filing at the $2,000 threshold within 30 days, and state MTLs. Point counsel at FIN-2019-G001 first. Note you do NOT get the friendlier casino rules — 31 CFR 1010.100(t) limits 'casino' to duly licensed establishments with over $1m gross annual gaming revenue, so an unlicensed sweepstakes operator lands in the stricter MSB regime. (3) STORE POLICY: Apple 5.3.3 forbids funding the stake through IAP at all, so on iOS the app must be free, licensed, geofenced and funded by an off-app web top-up; Google Play requires a per-jurisdiction gambling licence and forbids Play Billing. TAX CORRECTION that changes the payout build: withhold 24% on proceeds over $5,000 regardless of the 300x multiple, because the 300x test gates reporting, not withholding, for sweepstakes, wagering pools and lotteries. INDIA, corrected: the 2025 Act bans online money games whether of skill or chance and is reported to bar payment intermediaries from processing for them, so the offence sits on the payment aggregator as well as on you — the practical conclusion (no Indian PA will onboard at any price) is unchanged and conservative, but the Act's commencement is reported as not yet notified and it is under constitutional challenge, so present it to counsel as a near-certain prohibition rather than a settled operative ban.",
+      "authority": "Stripe Prohibited and Restricted Businesses, 13 May 2026 (fetched), PROHIBITED: 'Games of chance including gambling, internet gambling, casino games, sweepstakes and contests, and fantasy sports leagues with a monetary or material prize'. Unlawful Internet Gambling Enforcement Act of 2006, 31 U.S.C. 5361-5367; Regulation GG, 12 CFR Part 233 and 31 CFR Part 132 (audit addition; citations from FDIC and Cornell LII secondary materials, not fetched from eCFR). Apple App Store Review Guideline 5.3.3 (fetched): 'Apps may not use in-app purchase to purchase credit or currency for use in conjunction with real money gaming of any kind'; 5.3.4 requires licensing, geo-restriction and a free app. Google Play Real-Money Gambling, Games, and Contests policy (fetched). Adyen Prohibited and Restricted list, 13 Nov 2025 (fetched): 'Any type of US based gambling services' = PROHIBITED. FinCEN FIN-2019-G001 (9 May 2019) as the current consolidated CVC guidance, with FIN-2013-G001 (fetched) for the administrator definition. 31 CFR 1022.320 (fetched): SAR at $2,000, 30 days, 5-year retention. IRS Instructions for Forms W-2G and 5754, rev. 01/2026 (fetched). Promotion and Regulation of Online Gaming Act, 2025 (India) — Act number, assent date and Rules-notification date NOT reliably sourced; see corrections."
+    },
+    {
+      "model": "C",
+      "verdict": "unsettled",
+      "reasoning": "Genuinely unsettled at the payments layer, and after the audit it sits materially CLOSER TO MODEL B than the brief implied — this remains the finding most likely to change the plan. The fixed-and-pre-announced prize pool is the classic structure for taking a contest outside gambling law, because the prize does not depend on the stakes of other entrants. But payment processors do not apply gambling law; they apply their own category lists, and Stripe's list names this structure explicitly and puts it in the PROHIBITED column, not the restricted one. AUDIT CORRECTION 1 — the brief offered Adyen as the workable alternative ('Game of Skill' is merely restricted-with-waiver for direct merchants). That route may be ILLUSORY. Adyen's category wording is 'LEGAL gambling or Game of Skill', which reads as licensed-operator language, and the brief itself set 'gambling or skill-gaming licence in each target market' as the waiver prerequisite. But in the UK a paid-entry competition genuinely decided by skill, knowledge or judgement is lawful without a Gambling Commission licence and sits outside the licensing regime entirely — there is no licence to obtain. A prerequisite nobody can satisfy is a closed door, not a slow one. Resolve this in writing with Adyen underwriting before building anything. AUDIT CORRECTION 2 — the brief's Apple routing ('Apple will host it under 5.3.1 and 5.3.2, a meaningfully lighter regime than 5.3.4') was a confident answer to an unsettled question and is downgraded to a review-risk RANGE. Guideline 5.3.3 bars IAP-purchased credit or currency 'for use in conjunction with real money gaming of any kind' and 5.3.4 governs apps that 'offer real money gaming'; Apple nowhere defines 'real money gaming' and its 5.3.4 examples ('e.g. sports betting, poker, casino games, horse racing') are illustrative, not exhaustive. A paid-entry contest paying cash prizes is readily characterised by a reviewer as real money gaming, which would pull Model C into 5.3.4's free-app, licensed, geo-restricted regime AND 5.3.3's IAP bar — the opposite of a lighter regime. Plan for both outcomes. Google Play is the same risk from the other side: its policy prohibits unlicensed apps that let users 'wager, stake, or participate using real money... to obtain a prize of real world monetary value', and a fixed-pool skill contest arguably falls inside that wording. India bans it regardless. AUDIT ADDITIONS: UIGEA exposure turns on whether the contest is unlawful gambling under the applicable state law, so the state-by-state skill-versus-chance opinion is a payments prerequisite, not a parallel workstream; New York and Florida require prize-promotion registration and a surety bond before the promotion opens; and the EU AMLR, applying from 10 July 2027, is reported to define gambling services to include games with an element of skill, so the skill characterisation may not remove the EU AML obligation even where it removes the licence. Payouts still drag in the full KYC, sanctions-screening, W-9/W-8BEN, 1099-MISC (threshold now $2,000 from 2026) and escheatment stack, none of which the fixed-prize structure avoids.",
+      "authority": "Stripe Prohibited and Restricted Businesses, 13 May 2026 (fetched), PROHIBITED: 'Payments of an entry or player fee that promise the entrant or player will win a prize of value' and 'Games of skill including video game and mobile game tournaments or competitions, darts, card games, and board games with a monetary or material prize'. Adyen list, 13 Nov 2025 (fetched): 'Legal gambling or Game of Skill where participants receive cash or cash equivalents or prizes with/of material value' = RESTRICTED (waiver) for merchants, PROHIBITED for platform/partner — the licence prerequisite for that waiver is an INFERENCE, not published Adyen text, and is flagged contested. Paddle AUP, 13 April 2026 (fetched): prohibits 'Betting-related products, competition/event tickets, or entries'. Apple Guidelines 5.3.1, 5.3.2, 5.3.3 and 5.3.4 (fetched) — routing between 5.3.1/5.3.2 and 5.3.4 is UNSETTLED, not a planning assumption. IRS Instructions for Forms W-2G and 5754, rev. 01/2026 (fetched). UIGEA 31 U.S.C. 5361-5367 and Regulation GG (audit addition, secondary). New York and Florida prize-promotion registration and bonding (audit addition, secondary law-firm commentary). Regulation (EU) 2024/1624 applying from 10 July 2027 (audit addition, secondary)."
+    },
+    {
+      "model": "D",
+      "verdict": "lawful",
+      "reasoning": "Lawful and the cleanest model on every payments dimension — this verdict survives the audit unchanged. No stake, no prize of value, no convertible currency, therefore no gambling analysis, no UIGEA exposure, no money transmission, no KYC/AML, no 1099 and no escheatment. Every rail is open including the merchant-of-record route, which is genuinely useful here: a MoR such as Paddle or FastSpring absorbs global VAT/GST registration and remittance, chargeback liability and PCI merchant scope for a subscription business, and unlike in Models B and C there is no payout half for the MoR to fail to cover. Note that Paddle's virtual-currency prohibition does NOT bite here, because a subscription to features and cosmetics is not stored value — software subscriptions are Paddle's core permitted category. Requirements reduce to: Apple IAP and Google Play Billing for the in-app path; SAQ A via hosted fields for a web path, or better, a full redirect that sits outside the new SAQ A script-attack criteria entirely (audit addition); honour the app-store age signal so a minor's subscription gets parental consent in Texas, Utah and Louisiana; and standard auto-renewal disclosure and cancellation law (US FTC negative-option rules and the EU consumer acquis — outside this lane, flag to counsel). AUDIT ADDITION on economics: compare the MoR fee against STORE COMMISSION, not against raw Stripe pricing, because for a mobile-first product the realistic alternative to Paddle is Apple at 30% standard or 15% under the Small Business Program — a comparison the brief could not make because it left both store rates blank.",
+      "authority": "Stripe Prohibited and Restricted Businesses, 13 May 2026 (fetched) — subscriptions for features and cosmetics appear on neither list. Paddle AUP, 13 April 2026 (fetched) — software subscriptions are Paddle's core permitted category. Apple App Store Review Guideline 3.1.1 (fetched); Apple App Store Small Business Program (secondary, 15% up to USD 1m prior-year proceeds; 30% standard). Google Play Payments policy (fetched); Play base service fee UNVERIFIED. Texas, Utah and Louisiana App Store Accountability Acts (secondary: Wiley, Morrison Foerster, McNees)."
+    }
+  ],
+  "checklist": [
+    {
+      "item": "Decide the product model BEFORE opening any merchant account, and never describe the business to a processor in terms that trip the prohibited list ('stake', 'wager', 'prize', 'cash out', 'escrow', 'winner takes the pot')",
+      "kind": "policy",
+      "issuer": "Internal / Stripe, Adyen, PayPal, Paddle underwriting",
+      "appliesTo": "A, B, C, D",
+      "cost": "$0",
+      "leadTime": "immediate",
+      "prerequisite": "none",
+      "notes": "Underwriting is done on your own copy, so the words the product uses are a real underwriting input. AUDIT CORRECTION — the brief's original claim that FACT//DUEL's live UI 'already uses stake, escrow and winner takes the escrow' is withdrawn as fabricated. Verified by grep across the working tree (node_modules and .git excluded): the phrase 'winner takes the escrow' appears in NO product code — its only occurrences are inside this project's own compliance and research documents (docs/money/*, public/product/compliance/*), which quote the brief itself. 'escrow' appears ZERO times in app/ and components/ (the entire UI layer); it exists only as an internal server-side field in lib/server/room-engine.mjs (r.escrow, r.balances[winner] += r.escrow) and in tests. 'stake' occurs ~55 times in app/ and components/ but overwhelmingly as CSS class names and prop/identifier names (fd-exp-stake-line, stake-label, config.stake); the user-visible strings at those sites are neutral ('Entry · once per match', 'Free entry', 'N coins'). So the exposure is much smaller than the brief asserted and there is no shipped, indexable prohibited-category copy. The remedial action still stands and is cheap: before filing any merchant application, rename the internal escrow/stake concepts and keep user-facing copy in entry/reward language, and make sure the compliance documents themselves are not published at a public URL under the company's own domain where an underwriter would read them as a description of the business. Misdescribing the business to a processor remains a termination-plus-clawback event under every processor agreement, so the fix is to change the product, not the wording."
+    },
+    {
+      "item": "Stripe standard account for coin purchases (closed-loop, non-redeemable) and for subscriptions",
+      "kind": "service",
+      "issuer": "Stripe Payments Europe / Stripe Inc.",
+      "appliesTo": "A, D",
+      "cost": "2.9% + $0.30 per successful domestic US card charge (stripe.com/pricing, fetched 14 Sep 2026); +1.5% international cards, +1% currency conversion",
+      "leadTime": "UNVERIFIED (self-serve onboarding is same-day; underwriting review varies)",
+      "prerequisite": "Legal entity, bank account, beneficial-owner KYC",
+      "notes": "Lawful and supported ONLY while the coin is a true one-way closed-loop token: no cash-out, no redemption for anything of monetary value, no player-versus-player staking. Model A and D are ordinary digital-goods commerce. AUDIT CAVEAT — absence from Stripe's prohibited and restricted lists is not an affirmative approval of a virtual-currency model; acquirers commonly carry a stored-value / virtual-currency restriction independent of their gambling lines (Paddle's does exactly this and kills Model A outright). Describe the coin accurately at onboarding as a non-redeemable in-game entitlement and get the category acceptance confirmed in writing rather than inferred from a silent list."
+    },
+    {
+      "item": "Do NOT attempt Stripe for Models B or C — there is no pre-approval path",
+      "kind": "policy",
+      "issuer": "Stripe",
+      "appliesTo": "B, C",
+      "cost": "n/a",
+      "leadTime": "n/a",
+      "prerequisite": "none",
+      "notes": "Stripe's Prohibited and Restricted Businesses list (last updated 13 May 2026) places in the PROHIBITED column: 'Games of chance including gambling, internet gambling, casino games, sweepstakes and contests, and fantasy sports leagues with a monetary or material prize'; 'Games of skill including video game and mobile game tournaments or competitions, darts, card games, and board games with a monetary or material prize'; and 'Payments of an entry or player fee that promise the entrant or player will win a prize of value'. That third line is a verbatim description of Model C. Restricted-list categories can be pre-approved; PROHIBITED ones cannot. AUDIT CORRECTION — the brief presented 'regardless of local legality' as a verbatim Stripe quotation; that phrase could not be confirmed as text on support.stripe.com's prohibited-business FAQ and is withdrawn as a quote. The SUBSTANCE is sound and is retained unquoted: the FAQ answers 'Internet gambling is legal in my region, so why was my application rejected?' by pointing to Stripe's own processor and financial-partner obligations, i.e. local legality does not by itself make the category acceptable. The adjacent phrase 'games of skill (or chance) with cash prizes, sweepstakes, pay-in auctions' IS verbatim and may be quoted. Do not reproduce the withdrawn phrase inside quotation marks in anything filed or shown to counsel."
+    },
+    {
+      "item": "Adyen direct merchant account with written waiver for 'Legal gambling or Game of Skill'",
+      "kind": "service",
+      "issuer": "Adyen N.V. (DNB/ECB banking licence)",
+      "appliesTo": "B, C",
+      "cost": "UNVERIFIED (Adyen is interchange++ with a per-transaction processing fee; no published gaming rate)",
+      "leadTime": "UNVERIFIED",
+      "prerequisite": "CONTESTED: the brief stated 'gambling or skill-gaming licence in each target market' as the prerequisite. That is an inference, not published Adyen text, and for Model C it may be unsatisfiable — see notes. Plus enhanced onboarding documentation and Adyen's written waiver, granted at Adyen's sole discretion.",
+      "notes": "Adyen's Prohibited and Restricted list (last updated 13 Nov 2025) marks 'Legal gambling or Game of Skill where participants receive cash or cash equivalents or prizes with/of material value: including but not limited to: Casinos, poker, bingo, slot machines, betting, lotteries, racing, fantasy sports' as RESTRICTED for direct merchants (waiver possible, revocable at Adyen's sole discretion) but PROHIBITED for platform/partner businesses. CRITICAL: 'Any type of US based gambling services' is in Adyen's PROHIBITED column outright — so Adyen is an EU/UK rail for Models B and C, never a US one. AUDIT ADDITION — the 'Adyen route' for Model C may be ILLUSORY rather than merely slow. Adyen's category word is 'Legal gambling', which implies a licensed operator. But in the UK a paid-entry prize competition decided by genuine skill, knowledge or judgement sits OUTSIDE the Gambling Commission's licensing regime entirely — there is no skill-contest licence to obtain (secondary: UK practitioner commentary on Gambling Act 2005 prize competitions; not verified against Gambling Commission primary text). If Adyen's underwriting requires a licence the applicant cannot obtain because no such licence category exists, the waiver prerequisite is unsatisfiable and Model C has no mainstream EU/UK rail either. UNVERIFIED and decision-critical: put this question to Adyen underwriting in writing BEFORE building any Model C checkout — 'what evidence of lawfulness do you accept for a paid-entry skill contest in a jurisdiction that issues no licence for it?'"
+    },
+    {
+      "item": "Do NOT use Paddle or Lemon Squeezy for coin sales in any model",
+      "kind": "policy",
+      "issuer": "Paddle.com Market Ltd (Paddle owns Lemon Squeezy)",
+      "appliesTo": "A, B, C",
+      "cost": "n/a",
+      "leadTime": "n/a",
+      "prerequisite": "none",
+      "notes": "Paddle's Acceptable Use Policy (last updated 13 April 2026) prohibits 'Virtual currency or stored value, including but not limited to store credit, gift cards, vouchers' — this kills even Model A's coin purchase, not just the gambling models. It separately prohibits 'lotteries, auctions, contests, sweepstakes, or games of chance', 'Betting-related products, competition/event tickets, or entries', fantasy sports, money transfer services, and marketplaces. Paddle does run a 'Paddle for games' product, but for game and DLC licences, not in-game currency."
+    },
+    {
+      "item": "Paddle / merchant-of-record for the SUBSCRIPTION only (Model D)",
+      "kind": "service",
+      "issuer": "Paddle, FastSpring, Polar or similar MoR",
+      "appliesTo": "D",
+      "cost": "UNVERIFIED (Paddle's published headline is a percentage-plus-fixed reseller fee; confirm current rate card)",
+      "leadTime": "UNVERIFIED",
+      "prerequisite": "Legal entity, tax residency declaration",
+      "notes": "A recurring fee for features and cosmetics with no stake and no prize is squarely inside every MoR's acceptable use. This is the only model where the MoR route is clean."
+    },
+    {
+      "item": "Understand precisely what merchant-of-record does and does not move",
+      "kind": "policy",
+      "issuer": "Internal / counsel",
+      "appliesTo": "A, B, C, D",
+      "cost": "$0",
+      "leadTime": "immediate",
+      "prerequisite": "none",
+      "notes": "MoR MOVES: the card-scheme merchant relationship and chargeback liability; PCI-DSS merchant scope (the MoR hosts checkout); sales-tax/VAT/GST registration, collection, remittance and invoicing in ~100 jurisdictions; the consumer-contract counterparty and refund obligation. MoR DOES NOT MOVE: gambling or gaming licensing — the licensable act is OFFERING the game, which is you, not the reseller; money transmission — if you hold a user balance and pay it out, that is your activity and no MoR touches it; KYC/AML on payouts; age assurance inside the game; the underlying legality of the stake. Decisive practical point: MoRs are a ONE-WAY pay-in rail. None of Paddle, FastSpring or Lemon Squeezy does player payouts. For Models B and C the payout half — the hard, regulated half — is entirely unserved by MoR."
+    },
+    {
+      "item": "PayPal / Braintree — treat as unavailable for B and C without explicit pre-approval",
+      "kind": "policy",
+      "issuer": "PayPal (Europe) S.à r.l. / PayPal, Inc. / Braintree",
+      "appliesTo": "B, C",
+      "cost": "n/a",
+      "leadTime": "UNVERIFIED",
+      "prerequisite": "Pre-approval; demonstrated ability to block gambling for US account holders and any jurisdiction where it may be illegal",
+      "notes": "PayPal's Acceptable Use Policy prohibits gambling — 'placing, accepting, recording, or registering bets... or otherwise carrying on a game of chance for money, property, or other things of value' — absent pre-approval, and PayPal's help content states approval requires satisfying PayPal that you can block US account holders. Secondary sources (SeamlessChex, July 2026) report holding a recognised gaming licence does not by itself lift the restriction. PayPal is fine for Models A and D as ordinary digital goods."
+    },
+    {
+      "item": "Gambling-specialist acquirer / PSP (licence-gated)",
+      "kind": "service",
+      "issuer": "Worldpay (FIS), Nuvei, Paysafe (Skrill/Neteller), Trustly, PayNearMe, Praxis Tech — vendor list is indicative, from trade knowledge not a fetched source",
+      "appliesTo": "B, C",
+      "cost": "UNVERIFIED — expect a markedly higher discount rate than 2.9%, a rolling reserve, and a minimum monthly volume",
+      "leadTime": "UNVERIFIED",
+      "prerequisite": "Gambling/gaming licence in each market; MCC 7995 registration; card-network high-integrity-risk programme registration",
+      "notes": "This is the only realistic rail for a cash-redeemable stake product. Every one of them requires the licence first, so the payments workstream cannot start until the licensing workstream is finished. UNVERIFIED: MCC 7995 assignment rules and Visa/Mastercard high-integrity-risk registration fees were not verified in this research — confirm with the acquirer."
+    },
+    {
+      "item": "Apple: use StoreKit in-app purchase for coin sales in Model A and subscriptions in Model D",
+      "kind": "technical",
+      "issuer": "Apple",
+      "appliesTo": "A, D",
+      "cost": "AUDIT ADDITION (the brief left the dominant cost line blank). Apple standard commission 30%; App Store Small Business Program 15% for developers with up to USD 1,000,000 in prior-calendar-year proceeds across all their apps, and for developers new to the App Store — secondary but well corroborated (Apple Developer SBP page and multiple 2026 practitioner summaries); not fetched from Apple's own schedule in this pass, so re-confirm on the Apple Developer site before modelling. EU alternative business terms under the DMA are reported at a reduced rate (13% figure reported, UNVERIFIED). US external-purchase-link commission rates are in flux following Epic v. Apple and are UNVERIFIED.",
+      "leadTime": "App Review; UNVERIFIED",
+      "prerequisite": "Apple Developer Program membership",
+      "notes": "App Store Review Guideline 3.1.1 requires IAP to unlock 'in-game currencies'. Two traps: (a) 'Any credits or in-game currencies purchased via in-app purchase may not expire' — so coin balances cannot be time-expired; (b) if you ever ship randomised rewards, 3.1.1 requires disclosing the odds of each item type before purchase."
+    },
+    {
+      "item": "Apple: Model B cannot sell its stake currency through IAP — this is a hard block, not a review-risk",
+      "kind": "policy",
+      "issuer": "Apple App Store Review",
+      "appliesTo": "B",
+      "cost": "n/a",
+      "leadTime": "n/a",
+      "prerequisite": "none",
+      "notes": "Guideline 5.3.3 verbatim: 'Apps may not use in-app purchase to purchase credit or currency for use in conjunction with real money gaming of any kind.' Guideline 5.3.4: real-money-gaming apps 'must have necessary licensing and permissions in the locations where the app is used, must be geo-restricted to those locations, and must be free on the App Store.' Combined effect: on iOS a Model B app must be free, licensed, geofenced, and must fund balances OUTSIDE IAP via a web top-up. CONTESTED (audit, possible) — the brief also warned that 'the historic Guideline 4.7.1 real-money-gaming restriction has been removed'. The second half of that warning is right and is retained: current 4.7 covers 'Mini apps, mini games, streaming games, chatbots, plug-ins, and game emulators' and current 4.7.1 concerns privacy compliance, moderation/reporting mechanisms and Guideline 3.1 conformity for digital goods. But the auditor could not confirm that a real-money-gaming restriction ever sat at 4.7.1 — Apple's real-money gaming and sweepstakes rules have lived at 5.3 for years. Treat the claimed citation history as UNVERIFIED and do not repeat it to counsel; the operative point is simply that 5.3, not 4.7, is where real-money gaming lives today."
+    },
+    {
+      "item": "Apple: if Model B or C funds balances off-app, build the web top-up flow and rely on the US-storefront link-out carve-out",
+      "kind": "technical",
+      "issuer": "Apple",
+      "appliesTo": "B, C",
+      "cost": "UNVERIFIED (US external-link commission rate not fetched)",
+      "leadTime": "UNVERIFIED",
+      "prerequisite": "Apple Developer Program; for non-US storefronts, a StoreKit External Purchase Link Entitlement",
+      "notes": "Guideline 3.1.1(a) now states entitlements 'are not required for developers to include buttons, external links, or other calls to action in their United States storefront apps', and that the anti-steering prohibition applies 'In all other storefronts, except for the United States storefront, where this prohibition does not apply'. So a US-storefront app may link out to a web wallet top-up freely; EU and other storefronts need the External Purchase Link Entitlement. India follows the general rule."
+    },
+    {
+      "item": "Google Play: complete the gambling-app application and hold a licence per country/state for Model B",
+      "kind": "licence",
+      "issuer": "Google Play",
+      "appliesTo": "B",
+      "cost": "UNVERIFIED",
+      "leadTime": "UNVERIFIED",
+      "prerequisite": "Approved governmental operator status or registration as a licensed operator with the appropriate gambling authority, plus a valid operating licence in each specified country",
+      "notes": "Play's Real-Money Gambling, Games, and Contests policy requires the app be free to download, NOT use Google Play In-app Billing, prevent under-age users, geo-block countries/states not covered by the licence, be rated AO (Adult Only) or IARC equivalent, and display responsible-gambling information. Unlicensed apps that let users 'wager, stake, or participate using real money... to obtain a prize of real world monetary value' are prohibited outright. Secondary reporting (Lexology, igamingexpert 2025) indicates Google tightened its treatment of sweepstakes and dual-currency models and now treats virtual currencies or items with real-world value as gambling."
+    },
+    {
+      "item": "Google Play: use Google Play Billing for Model A coins and Model D subscriptions",
+      "kind": "technical",
+      "issuer": "Google Play",
+      "appliesTo": "A, D",
+      "cost": "Service fee — Google Play base rate UNVERIFIED in this research; the widely reported structure is 30% standard with 15% on the first USD 1,000,000 of annual developer earnings and 15% on subscriptions, but no Google page was fetched to confirm it, so do not model on it without checking. VERIFIED from the Payments policy: India and South Korea user-choice alternative billing carries a 4-percentage-point service-fee reduction.",
+      "leadTime": "immediate",
+      "prerequisite": "Play Console account",
+      "notes": "Play's Payments policy requires Play billing for 'Digital items (such as virtual currencies, extra lives, additional playtime, add-on items, characters, or avatars)'. Alternative billing exists in three flavours: India/South Korea (user-choice billing, 4% fee reduction); EEA (alternative billing in-app plus permission to direct users outside the app to promote offers); United States (additional alternative billing options and lead-out to external content, per the District Court order in Epic v. Google, for enrolled developers). Note the tension: Play requires Play Billing for virtual currency in a normal game, but FORBIDS Play Billing in a licensed real-money gambling app — the two policies do not compose, which is itself the signal that Model B is not a Play-native product."
+    },
+    {
+      "item": "India: assume NO payment rail exists for Models B or C and do not attempt to build one",
+      "kind": "policy",
+      "issuer": "MeitY / RBI / NPCI / Indian banks and payment aggregators",
+      "appliesTo": "B, C",
+      "cost": "n/a",
+      "leadTime": "n/a",
+      "prerequisite": "none",
+      "notes": "The Promotion and Regulation of Online Gaming Act, 2025 prohibits all online money games whether of chance, of skill, or a combination, and — per multiple law-firm summaries (Trilegal; PIB press releases) — a dedicated section bars banks, financial institutions and 'any other person facilitating financial transactions' including payment aggregators, gateways, wallet operators and card networks from facilitating any transaction toward payment for an online money gaming service. The section number is reported as section 7 in secondary sources; UNVERIFIED — the statutory text could not be fetched (meity.gov.in and indiacode.nic.in returned 403). AUDIT CORRECTIONS, three of them. (1) SOURCING: the Act number 'Act No. 32 of 2025' and the '22 August 2025' assent date, and the claim that the Rules were notified 22 April 2026, were taken from a Wikipedia article that carries an AI-GENERATED-CONTENT warning. That warning was not disclosed in the brief. Do not file the Act number, the assent date or the Rules date on that basis. (2) COMMENCEMENT: the same Wikipedia article states commencement is 'TBA — not yet in force'. The brief presented an operative, settled payment-facilitation ban; the in-force status of the relevant sections is UNVERIFIED. (3) LITIGATION: the Act is reported to be under challenge before Indian High Courts and the Supreme Court — the brief mentioned no litigation at all. NET EFFECT ON ADVICE: unchanged and still conservative. The Act's skill-inclusive scope is well corroborated across independent law-firm sources, the direction of travel is one-way, and no Indian payment aggregator will take the criminal-exposure risk while the question is open. Do not attempt an Indian rail for Models B or C. But brief counsel on the commencement question and the pending challenges rather than on a settled ban."
+    },
+    {
+      "item": "India: Models A and D route through a normal RBI-authorised payment aggregator",
+      "kind": "service",
+      "issuer": "Razorpay, Cashfree, PayU or similar RBI-authorised PA",
+      "appliesTo": "A, D",
+      "cost": "UNVERIFIED",
+      "leadTime": "UNVERIFIED",
+      "prerequisite": "Indian entity or cross-border arrangement; PA merchant onboarding KYC",
+      "notes": "The 2025 Act carves out and promotes 'online social games' and e-sports. A closed-loop cosmetic coin and a subscription are social-game monetisation, not money gaming. UNVERIFIED: the RBI Payment Aggregator directions' current merchant-onboarding and prohibited-category text was not fetched (search budget exhausted). Confirm with the PA that a non-redeemable in-game coin is acceptable under their category list and that they are comfortable post-Act."
+    },
+    {
+      "item": "FinCEN MSB registration (Form 107) as a money transmitter",
+      "kind": "registration",
+      "issuer": "FinCEN (US Treasury)",
+      "appliesTo": "B",
+      "cost": "UNVERIFIED (registration itself is not fee-bearing; the AML programme cost is the real cost)",
+      "leadTime": "Registration due within 180 days of the date the business is established; renewal every two years — UNVERIFIED, confirm against 31 CFR 1022.380",
+      "prerequisite": "Legal entity; written AML programme; designated compliance officer",
+      "notes": "AUDIT CORRECTION — the brief rested the whole US money-transmission analysis on FinCEN guidance FIN-2013-G001 (18 March 2013) alone. The CURRENT consolidated authority is FIN-2019-G001, 'Application of FinCEN's Regulations to Certain Business Models Involving Convertible Virtual Currencies', issued 9 May 2019, which by its own terms 'consolidates current FinCEN regulations, and related administrative rulings and guidance issued since 2011, and then applies these rules and interpretations to obligations under the BSA as they relate to current and emerging business models' — a sweep that includes FIN-2013-G001 and addresses business models the 2013 guidance does not. Point counsel at the 2019 guidance FIRST; cite 2013 only as the origin of the definitions. The 2013 definitions themselves were checked verbatim against the FinCEN page and remain accurate: 'convertible virtual currency' is virtual currency that 'either has an equivalent value in real currency, or acts as a substitute for real currency'; an 'administrator' is 'a person engaged as a business in issuing (putting into circulation) a virtual currency, and who has the authority to redeem (to withdraw from circulation) such virtual currency', and an administrator of a CVC is a money transmitter. The moment FACT//DUEL coins are redeemable for cash, the coins become CVC and the company becomes an administrator. Conversely: 'A user who obtains convertible virtual currency and uses it to purchase real or virtual goods or services is not an MSB' — which is exactly Model A, where the coin has no real-currency equivalent and cannot substitute for currency. Because this is the single most consequential legal determination in the lane, do not let a Model A clearance rest on 2013 guidance alone."
+    },
+    {
+      "item": "Written BSA/AML programme, designated compliance officer, independent testing, training",
+      "kind": "policy",
+      "issuer": "FinCEN (31 CFR 1022.210)",
+      "appliesTo": "B",
+      "cost": "UNVERIFIED",
+      "leadTime": "UNVERIFIED",
+      "prerequisite": "MSB status determination",
+      "notes": "Note an important structural point: 31 CFR 1010.100(t) defines a BSA 'casino' as an establishment 'duly licensed or authorized to do business as such in the United States' with 'gross annual gaming revenue in excess of $1 million'. An unlicensed sweepstakes-model operator therefore is NOT a BSA casino and does not get the casino rules — it falls into the MSB money-transmitter regime instead, which is the stricter, lower-threshold one."
+    },
+    {
+      "item": "SAR filing capability",
+      "kind": "filing",
+      "issuer": "FinCEN",
+      "appliesTo": "B",
+      "cost": "$0 filing fee; staffing cost UNVERIFIED",
+      "leadTime": "Must file no later than 30 calendar days after initial detection",
+      "prerequisite": "AML programme; transaction monitoring",
+      "notes": "31 CFR 1022.320: an MSB must report a suspicious transaction that 'involves or aggregates funds or other assets of at least $2,000'; file 'no later than 30 calendar days after the date of the initial detection'; and 'maintain a copy of any SAR filed and the original or business record equivalent of any supporting documentation for a period of five years from the date of filing the SAR'. Note the $2,000 SAR floor is far below the $10,000 CTR floor — SARs, not CTRs, will be the operative burden for a consumer game."
+    },
+    {
+      "item": "CTR filing capability for cash-equivalent aggregation over $10,000/day",
+      "kind": "filing",
+      "issuer": "FinCEN",
+      "appliesTo": "B",
+      "cost": "$0 filing fee",
+      "leadTime": "UNVERIFIED (confirm the 15-day deadline against 31 CFR 1010.306)",
+      "prerequisite": "AML programme",
+      "notes": "UNVERIFIED — 31 CFR 1010.311/1010.306 were not fetched in this research (eCFR blocked). The $10,000 currency-transaction threshold is well established but confirm applicability: CTRs attach to CURRENCY, and a card-funded online game may have little or no currency activity. Do not build CTR machinery before counsel confirms it is in scope."
+    },
+    {
+      "item": "State money transmitter licences (MTLs)",
+      "kind": "licence",
+      "issuer": "State banking departments via NMLS; model law is the CSBS Money Transmission Modernization Act",
+      "appliesTo": "B",
+      "cost": "UNVERIFIED per state — surety bond, minimum net worth and permissible-investment requirements apply under the MTMA framework",
+      "leadTime": "UNVERIFIED — historically many months to years for a 40+ state footprint",
+      "prerequisite": "FinCEN registration; audited financials; surety bonds; fingerprinting of control persons",
+      "notes": "The MTMA is enacted in whole or part in 31 states per CSBS (secondary). Two carve-outs matter enormously here: the MTMA defines 'money' to EXCLUDE virtual currency, and the virtual-currency definition itself excludes certain merchant-rewards value and game-platform value (secondary — Virginia MTMA analysis; Virginia's Act is effective 1 July 2026). Only North Dakota and Minnesota have enacted the optional virtual-currency provisions (secondary). UNVERIFIED: the exact MTMA statutory text of the game-platform exclusion was not fetched. This carve-out is the single most valuable thing for counsel to confirm, because if a non-redeemable game coin sits inside it, Model A is unlicensable-free in every MTMA state and Model B's exposure turns entirely on the redeemability."
+    },
+    {
+      "item": "Identity verification vendor for any account that can receive a payout",
+      "kind": "service",
+      "issuer": "Stripe Identity, Persona, Sumsub, Veriff, Onfido (Entrust), Jumio",
+      "appliesTo": "B, C",
+      "cost": "Stripe Identity VERIFIED at $1.50 per document-and-selfie verification and $0.50 per ID-number lookup (US SSN only), from stripe.com/pricing fetched 14 Sep 2026. Persona, Sumsub, Veriff, Onfido and Jumio list prices are UNVERIFIED — only low-quality comparison-blog sources were reachable, which put the range at roughly $0.80-$5.00 per check with annual enterprise contracts from ~$50k. Treat as indicative only.",
+      "leadTime": "Days for self-serve (Stripe Identity, Veriff); weeks for enterprise contracts",
+      "prerequisite": "Privacy notice covering biometric processing; DPA; retention schedule",
+      "notes": "Verify at FIRST PAYOUT, not at signup — verifying every registrant destroys the funnel and creates needless biometric-data liability. Practical split: Stripe Identity if you are already on Stripe for Model A/D; Persona or Sumsub if you need configurable workflows plus PEP/sanctions screening in one vendor; Sumsub and Veriff are the usual iGaming choices. Biometric selfie matching triggers Illinois BIPA and Texas CUBI — get a written consent flow and do not store templates longer than needed."
+    },
+    {
+      "item": "Sanctions and PEP screening at onboarding and on an ongoing basis",
+      "kind": "policy",
+      "issuer": "OFAC (US), EU consolidated list, UN",
+      "appliesTo": "B, C",
+      "cost": "Usually bundled with the IDV vendor; UNVERIFIED standalone",
+      "leadTime": "Days",
+      "prerequisite": "IDV vendor selection",
+      "notes": "OFAC obligations are strict-liability and apply to ALL models the moment you pay anyone money, including a Model C prize winner. There is no de minimis. Geo-blocking by IP alone is not a sanctions programme."
+    },
+    {
+      "item": "Age assurance: consume the App Store / Play age signal and gate real-money features",
+      "kind": "technical",
+      "issuer": "Texas, Utah and Louisiana App Store Accountability Acts",
+      "appliesTo": "A, B, C, D",
+      "cost": "$0 (signal is provided by the store)",
+      "leadTime": "Engineering only",
+      "prerequisite": "App-store SDK integration",
+      "notes": "Texas: effective 1 Jan 2026. CONTESTED (audit, possible) — the brief stated as settled fact that 'a preliminary injunction was stayed by the Fifth Circuit (Morrison Foerster, Nov 2025) so the law is operative'. The SUBSTANCE was confirmed by the auditor against the cited Morrison Foerster alert: the W.D. Tex. preliminary injunction was stayed by the Fifth Circuit on a finding that Texas made 'a strong showing of likely success on the merits' and that the district court likely erred in applying strict rather than intermediate scrutiny, so the law is in effect. The DATE ATTRIBUTION is doubtful: the cited URL slug is 251111 (11 November 2025) while the district-court injunction it describes issued in late 2025, and a November alert cannot report a stay of a later injunction. The brief was also internally inconsistent — settled fact here, 'UNVERIFIED: current litigation posture' in the Texas subdivision. Treat the stay as probably correct but re-check the docket before relying on it. Utah: developer and provider obligations 6 May 2026, private right of action 31 Dec 2026. Louisiana: 1 July 2026. The stores verify age at account creation and bracket users as under-13, 13-15, 16-17 and 18+, and must obtain parental consent for downloads, app purchases and IN-APP PURCHASES. The developer-side duty is to receive that signal and act on it. This applies to Model A and D too — a minor's coin purchase needs parental consent in those states."
+    },
+    {
+      "item": "Independent age verification for any real-money feature (not just the store signal)",
+      "kind": "technical",
+      "issuer": "State gambling regulators; UK Gambling Commission and Ofcom as the near-neighbour benchmark",
+      "appliesTo": "B, C",
+      "cost": "Per-check IDV cost, see IDV line",
+      "leadTime": "Engineering plus vendor",
+      "prerequisite": "IDV vendor",
+      "notes": "UNVERIFIED — the UK Online Safety Act 2023 'highly effective age assurance' duties and their commencement date could not be verified in this research (ofcom.org.uk returned 403). The widely reported position is that HEAA duties for pornographic and other primary-priority content commenced 25 July 2025 and that licensed gambling is regulated by the Gambling Commission's LCCP rather than the OSA. Verify both with UK counsel before relying on either. EU: the DSA Article 28 minor-protection duties and the Commission's 2025 guidelines are the relevant instrument — also UNVERIFIED here."
+    },
+    {
+      "item": "W-9 collection from US payees and W-8BEN from non-US payees before any payout",
+      "kind": "tax",
+      "issuer": "IRS",
+      "appliesTo": "B, C",
+      "cost": "$0",
+      "leadTime": "Engineering only",
+      "prerequisite": "Payout flow",
+      "notes": "Collect the TIN BEFORE the money moves, not at year end. Missing TIN triggers 24% backup withholding, which you cannot recover from the user after the fact."
+    },
+    {
+      "item": "Form 1099-MISC for non-wagering contest prizes",
+      "kind": "filing",
+      "issuer": "IRS",
+      "appliesTo": "C (and B if structured as a non-wagering sweepstakes)",
+      "cost": "$0 filing; filing-agent cost UNVERIFIED",
+      "leadTime": "Annual",
+      "prerequisite": "W-9 on file",
+      "notes": "Under the One Big Beautiful Bill Act the 1099-MISC reporting threshold rises from $600 to $2,000 for payments made from 2026, inflation-indexed from 2027 (secondary: Avalara, OnPay, Patriot Software — the statutory section was not fetched). Prizes and awards from a non-wagering skill contest go in Box 3 'Other income', not on Form W-2G. The IRS Instructions for Forms W-2G and 5754 (rev. 01/2026) cover gambling winnings only and do not address skill contests — confirm the characterisation with tax counsel, because it turns on whether the entry fee is a 'wager'."
+    },
+    {
+      "item": "Form W-2G for wagering winnings",
+      "kind": "filing",
+      "issuer": "IRS",
+      "appliesTo": "B",
+      "cost": "$0 filing",
+      "leadTime": "Annual; statement to winner at time of payment",
+      "prerequisite": "W-9 on file; withholding capability",
+      "notes": "From Instructions for Forms W-2G and 5754 (rev. 01/2026), fetched 14 Sep 2026: for sweepstakes, wagering pools and lotteries, report when winnings meet or exceed the applicable reporting threshold AND are at least 300 times the wager; backup withholding of 24% applies where regular withholding does not and no TIN is supplied. The bingo/slot threshold rose from $1,200 to $2,000 effective 1 January 2026 and thresholds are now annually inflation-indexed under OBBBA (secondary: Holland & Knight, RSM, Baker Tilly). AUDIT CORRECTION, and it reverses the brief's planning conclusion — the brief said 'the 300x rule is decisive for a duel game: a $1 stake winning $100 is 100x and falls below it'. That is WRONG for withholding. The 300x test gates REPORTING; it does NOT gate WITHHOLDING for the category a head-to-head pot most likely falls into. The Instructions state: 'Withhold at the 24% rate if the winnings minus the wager are more than $5,000 and are from: Sweepstakes; Wagering pools; Lotteries...or Sports wagering and other wagering transactions, if the winnings are at least 300 times the amount wagered.' The 300x qualifier attaches ONLY to that final clause — it does not apply to sweepstakes, wagering pools or lotteries, consistent with IRC 3402(q)(3). A FACT//DUEL pot where losers' stakes fund the winner's prize is plausibly a 'wagering pool'. PLANNING RULE: withhold 24% on proceeds (winnings minus wager) over $5,000 regardless of the multiple, unless tax counsel positively characterises the product out of the sweepstakes/wagering-pool/lottery categories. The 24% is unrecoverable from the user once paid out, so the asymmetry is one-sided: over-withholding is a refund problem for the player, under-withholding is an unrecoverable liability for the company."
+    },
+    {
+      "item": "Form 1099-K awareness if you ever become a third-party settlement organisation",
+      "kind": "filing",
+      "issuer": "IRS",
+      "appliesTo": "B",
+      "cost": "$0",
+      "leadTime": "Annual",
+      "prerequisite": "Determination that you are a TPSO",
+      "notes": "OBBBA restored the 1099-K threshold to gross payments exceeding $20,000 AND more than 200 transactions, retroactive to 2022, replacing the $2,500 and $600 phase-ins (secondary: Avalara, TurboTax, Patriot Software). This most likely lands on your PSP rather than on you — but if you settle player-to-player value you may be the TPSO. Confirm with counsel."
+    },
+    {
+      "item": "Unclaimed property / escheatment programme for abandoned user balances",
+      "kind": "filing",
+      "issuer": "State unclaimed-property administrators (NAUPA); most states on a version of RUUPA",
+      "appliesTo": "B, C (and A only if the coin is ever refundable to cash)",
+      "cost": "UNVERIFIED",
+      "leadTime": "Annual reporting cycle; dormancy typically 1-5 years depending on state",
+      "prerequisite": "Balance ledger with last-activity timestamps per user; due-diligence letter capability",
+      "notes": "This is the obligation founders miss. A cash-redeemable balance sitting in a dormant account is unclaimed property. Colorado's RUUPA expressly covers stored-value cards including the unused monetary value held by the issuer (secondary: Baker Tilly, EisnerAmper, NAUPA). There is no uniform rule — a state-by-state analysis is required. Two structural facts to raise with counsel: (a) priority is generally to the state of the owner's last known address, falling back to the holder's STATE OF INCORPORATION, so Delaware incorporation pulls all address-unknown balances into Delaware's regime (this priority rule was not verified in this research — flag as UNVERIFIED); (b) a coin that is genuinely non-redeemable in Model A is arguably not 'property' at all, which is another reason the closed-loop design is worth preserving. Design implication: record last-activity timestamps and never silently zero a balance."
+    },
+    {
+      "item": "PCI-DSS SAQ A via hosted fields or a hosted checkout",
+      "kind": "technical",
+      "issuer": "PCI Security Standards Council; acquirer enforces",
+      "appliesTo": "A, B, C, D",
+      "cost": "$0 for self-assessment; ASV quarterly scan cost UNVERIFIED",
+      "leadTime": "Days",
+      "prerequisite": "Never let card data touch your DOM or servers",
+      "notes": "Use Stripe Elements, Adyen Drop-in/Components or an equivalent iframe/hosted-field integration and you qualify for SAQ A rather than SAQ A-EP or D. Under PCI DSS v4.0.1, effective 1 April 2025, the SAQ A eligibility criteria now require the merchant to confirm its site 'is not susceptible to attacks from scripts that could affect the merchant's e-commerce system(s)'. CONTESTED (audit, possible) — the brief said Requirements 6.4.3 (authorise and assure integrity of every script on the payment page) and 11.6.1 (change-and-tamper detection on the payment page), though removed from the SAQ A checklist itself, 'are named as the techniques by which you demonstrate eligibility', which reads as though a script-inventory/SRI/CSP programme is THE route. The PCI SSC FAQ presents them as ONE route: a merchant may either deploy those techniques itself OR obtain confirmation from its payment processor that the processor's solution includes such protections. Ask Stripe or Adyen for that confirmation in writing before building the programme yourself. TWO SCOPE FACTS THE BRIEF OMITTED, both audit additions: (a) the new criteria apply to merchants using EMBEDDED payment forms (iframes) — which is exactly the integration pattern the brief recommends; (b) a FULL REDIRECT or fully hosted payment page sits outside the new criteria entirely (see the separate checklist item on this). Given that FACT//DUEL is a heavily scripted React/three.js app in the classic Magecart target profile, the redirect option is the cheap architectural answer and should be evaluated first. If you build your own card form you drop to SAQ A-EP and the burden multiplies."
+    },
+    {
+      "item": "Separate the money ledger from the game ledger in the data model before any of this",
+      "kind": "technical",
+      "issuer": "Internal architecture",
+      "appliesTo": "A, B, C, D",
+      "cost": "Engineering only",
+      "leadTime": "Design decision — cheapest now, very expensive later",
+      "prerequisite": "none",
+      "notes": "Today all profile state is in IndexedDB with no server identity. Whatever model is chosen, keep three ledgers physically distinct: (1) purchased value, (2) earned/granted value, (3) prize/withdrawable value. Never let them commingle into one 'coins' integer. Regulators, processors and auditors all ask the same question — 'can purchased value become withdrawable value?' — and a single-integer wallet cannot answer 'no'. Dual-currency separation is also the only way to keep Model A defensible if you later bolt on a sweepstakes tier."
+    },
+    {
+      "item": "EU: determine whether you need an EMI or payment institution authorisation, or fit the limited network exclusion",
+      "kind": "licence",
+      "issuer": "National competent authority (e.g. DNB, BaFin, CBI, CSSF); EBA guidelines on the limited network exclusion",
+      "appliesTo": "B (likely required); A (likely excluded)",
+      "cost": "UNVERIFIED — EMI initial capital and application fees vary by member state",
+      "leadTime": "UNVERIFIED — typically many months",
+      "prerequisite": "EU entity; governance, capital and safeguarding arrangements",
+      "notes": "PSD2 Article 3(k) excludes payment instruments usable only in a limited way; secondary commentary is consistent that the exclusion requires NO CASH-OUT, which maps exactly onto the Model A / Model B dividing line. If coins can be converted back to money, you are issuing e-money or providing a payment service and need authorisation plus safeguarding of customer funds. UNVERIFIED: the EBA Guidelines text and the LNE notification thresholds were not fetched. Note the regime is changing — PSD3 and the PSR reportedly reached provisional political agreement on 27 November 2025 and would merge the PI and EMI regimes into one licence, with application around 2027 (secondary, UNVERIFIED). Apply under PSD2/EMD2 now; expect grandfathering."
+    },
+    {
+      "item": "EU: AML obligations as a provider of gambling services",
+      "kind": "policy",
+      "issuer": "Regulation (EU) 2024/1624 (AMLR); AMLA; national FIUs",
+      "appliesTo": "B, C (if characterised as gambling in the member state)",
+      "cost": "UNVERIFIED",
+      "leadTime": "UNVERIFIED",
+      "prerequisite": "Member-state gambling characterisation",
+      "notes": "AUDIT ADDITION — the sequencing fact the brief omitted: Regulation (EU) 2024/1624 (AMLR) does NOT apply immediately. It applies across all 27 member states from 10 JULY 2027 (corroborated across several independent practitioner sources: Deloitte, Bird & Bird, and EU AML-package readiness commentary; not fetched from EUR-Lex, which was unreachable across four attempts, so treat the date as high-confidence secondary rather than primary-verified). Until that date the member state's existing AMLD transposition governs, so for a 2026-2027 launch this is a ROADMAP item, not a launch blocker — but the national AMLD regime IS a launch blocker and must be scoped separately. ALSO AUDIT-ADDED and directly decision-relevant to Model C: AMLR is reported to introduce the first EU-level definition of 'gambling service', described in secondary sources as a service involving 'wagering a stake with monetary value in games of chance, INCLUDING THOSE WITH AN ELEMENT OF SKILL', at Article 2(1)(12). If that is right, the EU AML perimeter expressly reaches skill games and the Model C 'it is skill, not gambling' argument does not remove the AML obligation even where it removes the gambling licence. The article number and the exact wording are UNVERIFIED against EUR-Lex — counsel must confirm from primary text. What counsel must still pin down: (1) the article listing providers of gambling services as obliged entities; (2) the CDD trigger threshold for wagering a stake and for collecting winnings; (3) whether the member state has exercised any low-risk exemption; (4) the national AMLD position that governs until 10 July 2027. Do not act on remembered figures for any of these."
+    },
+    {
+      "item": "Payout rail selection (this is a separate procurement from the pay-in rail)",
+      "kind": "service",
+      "issuer": "Stripe Connect, PayPal Payouts/Hyperwallet, Trolley, Tremendous, Tango Card",
+      "appliesTo": "B, C",
+      "cost": "UNVERIFIED",
+      "leadTime": "UNVERIFIED",
+      "prerequisite": "KYC vendor; tax-form collection; sanctions screening",
+      "notes": "Gift-card payout (Tremendous, Tango) is sometimes used to sidestep money-transmitter analysis, but it does NOT help the gambling analysis — a gift card is still a 'prize of value' under Stripe's, Adyen's and Apple's wording and under every state gambling statute's 'thing of value' element. It also creates a fresh escheatment obligation on the unredeemed card. Treat it as a convenience, not a legal structure."
+    },
+    {
+      "item": "AUDIT ADDITION — understand UIGEA (31 U.S.C. 5361-5367) and Regulation GG as the federal law that makes the rail refuse, not a risk appetite you can negotiate",
+      "kind": "policy",
+      "issuer": "Unlawful Internet Gambling Enforcement Act of 2006; Board of Governors of the Federal Reserve System and US Treasury (Regulation GG)",
+      "appliesTo": "B, C (and the reason A and D must stay visibly clear of the category)",
+      "cost": "$0 to understand; the compliance cost lands on your acquirer and is priced into their refusal",
+      "leadTime": "immediate",
+      "prerequisite": "none",
+      "notes": "The single largest omission in the original brief. UIGEA is codified at 31 U.S.C. 5361-5367 (enacted 13 October 2006). It is implemented by Regulation GG — 12 CFR Part 233 (Federal Reserve) and 31 CFR Part 132 (Treasury), published 18 November 2008 — which requires designated payment systems (ACH, card systems, checks, wire transfer, and money transmitting businesses) to establish written policies and procedures to identify and BLOCK 'restricted transactions' connected to unlawful internet gambling. Under 31 U.S.C. 5367 a financial transaction provider can be liable in the same manner as the internet gambling business itself where it has actual knowledge and control of bets and wagers, and courts have rejected the argument that UIGEA does not reach third-party payment processors. WHY THIS CHANGES THE FOUNDER'S MENTAL MODEL: the brief explained Stripe's and Adyen's category lists as commercial policy, which invites the assumption that a good enough story, a licence, or a higher rate will move them. It will not. The lists exist because a federal statute imposes a coding-and-blocking mandate on the rail. The corollary that actually matters strategically: UIGEA bites on UNLAWFUL internet gambling, defined by reference to the underlying state or federal law — so if Model C is genuinely lawful skill in a given state, UIGEA does not reach it there, and the underlying legality analysis is therefore a PAYMENTS prerequisite, not a separate workstream (see the skill-versus-chance item below). VERIFIED via search against FDIC and Cornell LII materials; the statutory and CFR citations were not fetched from eCFR (blocked from this environment) — confirm the Part numbers before filing."
+    },
+    {
+      "item": "AUDIT ADDITION — register and bond the prize promotion in New York and Florida before it opens",
+      "kind": "registration",
+      "issuer": "New York State Department of State; Florida Department of Agriculture and Consumer Services",
+      "appliesTo": "C, and any sweepstakes-tier B",
+      "cost": "Filing fee plus a surety bond that must cover the TOTAL advertised value of all prizes, not just the largest prize. Exact fee and bond premium UNVERIFIED — sourced from sweepstakes-practice law-firm commentary, not from the agencies' own fee schedules.",
+      "leadTime": "New York: file 30 days before the promotion starts. Florida: file 7 days before the promotion starts. These are hard pre-opening deadlines — they cannot be cured retroactively.",
+      "prerequisite": "Official rules drafted; total prize value computed; surety bond placed",
+      "notes": "Omitted from the brief entirely, despite the brief covering far more exotic obligations like escheatment. The trigger commonly reported is aggregate prize value across the promotion exceeding $5,000. This bites Model C directly and any sweepstakes-tier Model B, is cheap to comply with and expensive to miss, and — critically for a continuously running game — a prize structure that runs perpetually rather than as a discrete 'promotion' with a start date does not fit the registration form's assumptions, which is itself a question for counsel. UNVERIFIED: the $5,000 threshold, the fee amounts, the bond mechanics and the two deadlines all come from secondary law-firm and sweepstakes-administrator commentary (Klein Moynihan Turco, Fasthoff, and similar); no agency page was fetched. Confirm with sweepstakes counsel before relying on any figure here. Note also that several other states impose prize-promotion rules short of registration, and that a paid-entry contest is a different animal from a free-entry sweepstakes — the registration regimes were written for the latter."
+    },
+    {
+      "item": "AUDIT ADDITION — model chargeback and friendly-fraud exposure on coin purchases, and instrument against Visa VDMP and Mastercard excessive-chargeback thresholds",
+      "kind": "policy",
+      "issuer": "Visa Dispute Monitoring Program; Mastercard Excessive Chargeback Program; your acquirer",
+      "appliesTo": "A, B, C, D (sharpest on A)",
+      "cost": "Per-dispute fee plus fines once in a monitoring programme — all amounts UNVERIFIED; get the current thresholds and fee schedule from the prospective acquirer",
+      "leadTime": "Ongoing from first transaction",
+      "prerequisite": "Dispute instrumentation; delivery evidence; refund policy",
+      "notes": "This is a realistic way Model A — the model the brief graded unconditionally lawful and fully banked — LOSES its processor, and the brief did not mention it. Digital goods with instant delivery and no shippable proof draw elevated dispute rates: there is no tracking number, no signature, and 'I did not authorise this' from a parent whose child bought coins is both common and hard to rebut. Card-network monitoring programmes impose escalating fines and can force a merchant off the rail entirely; a MATCH/TMF listing follows termination and blacklists the principals, not just the company. Concrete mitigations to build before launch, not after: clear billing descriptor; receipt email on every purchase; in-app purchase history the user can see; a generous self-serve refund path (cheaper than a dispute); device and IP evidence retained per transaction; and store-level parental-consent handling in Texas, Utah and Louisiana, which doubles as friendly-fraud defence. UNVERIFIED: current VDMP and Mastercard ECP ratio and count thresholds and their fine schedules were not researched."
+    },
+    {
+      "item": "AUDIT ADDITION — evaluate a full-redirect or fully hosted checkout FIRST, because it sits outside the new SAQ A script-attack eligibility criteria entirely",
+      "kind": "technical",
+      "issuer": "PCI Security Standards Council; acquirer enforces",
+      "appliesTo": "A, B, C, D",
+      "cost": "Engineering only; likely cheaper than an ongoing script-integrity programme",
+      "leadTime": "Days",
+      "prerequisite": "none",
+      "notes": "The obvious architectural answer the brief never offered. The PCI SSC FAQ limits the new SAQ A script-attack eligibility criteria to merchants using EMBEDDED payment forms (iframes). A merchant that fully redirects the browser to the processor's own hosted payment page is outside those criteria. Given the brief's own finding that FACT//DUEL is a script-heavy React/three.js single-page app in exactly the Magecart target profile, redirecting to Stripe Checkout or Adyen's hosted page removes the entire script-inventory / SRI / CSP burden from the compliance perimeter rather than managing it. TRADE-OFF to weigh honestly: a redirect costs conversion and breaks the in-app feel, which is why teams reach for embedded fields by default. The point is that the choice should be made deliberately with the PCI cost priced in, not defaulted into. UNVERIFIED: the FAQ was read by the auditor, not fetched in this pass; confirm the iframe-only scoping with your QSA or acquirer before relying on it."
+    },
+    {
+      "item": "AUDIT ADDITION — do the state-by-state skill-versus-chance analysis for paid-entry contests BEFORE the payments workstream, because it determines the payments outcome",
+      "kind": "policy",
+      "issuer": "State gambling statutes and AG opinions; gambling counsel",
+      "appliesTo": "B, C",
+      "cost": "Legal opinion — UNVERIFIED",
+      "leadTime": "Weeks to months",
+      "prerequisite": "Fixed product design (entry fee, prize source, prize determination)",
+      "notes": "The brief walled this off into 'the gambling-law layer'. It cannot be cleanly walled off. Several US states treat ANY paid-entry cash-prize contest as illegal gambling regardless of whether skill predominates, because their statutes use a consideration-plus-prize-plus-chance test in which any chance element is enough, or because they read an entry fee as consideration per se. Two payments consequences follow directly. (1) UIGEA exposure is defined by reference to the underlying state law, so the states where a paid-entry skill contest is unlawful are exactly the states where card and ACH transactions become 'restricted transactions' a designated payment system must block. (2) Acquirer acceptance and any Adyen-style waiver turn on a demonstration of lawfulness, which is this opinion. So the geo-blocking map for Model C is an output of this analysis, and the checkout cannot be built until it exists. UNVERIFIED: no state-level determination is asserted here; that work sits in the US state lane and this item exists to record that the payments plan is blocked on it."
+    },
+    {
+      "item": "AUDIT ADDITION — before relying on any 'licensed operator' acquirer route for Model C, establish whether a skill-contest licence exists to be obtained at all",
+      "kind": "policy",
+      "issuer": "Gambling counsel in each target market; Adyen and specialist-acquirer underwriting",
+      "appliesTo": "C",
+      "cost": "$0 to ask; a legal opinion per market otherwise",
+      "leadTime": "Weeks",
+      "prerequisite": "none",
+      "notes": "The brief listed 'gambling or skill-gaming licence in each target market' as the prerequisite for Adyen's waiver AND for every specialist acquirer, then described Adyen as 'more workable' for Model C. Those two statements may be incompatible. In the UK, a paid-entry prize competition decided by genuine skill, knowledge or judgement is lawful WITHOUT a Gambling Commission licence and sits outside the licensing regime — meaning there is no licence to obtain, so a prerequisite expressed as 'hold a licence' is unsatisfiable rather than merely slow. Several EU member states are reported to be similar for pure skill contests, though this varies sharply and was not verified state by state. If that is right in a given market, the 'Adyen route' for Model C is illusory and the payments verdict for Model C moves materially closer to Model B's — which is the change the auditor flagged as most likely to alter the plan. THE ACTION IS CHEAP AND SHOULD HAPPEN FIRST: ask Adyen, and one specialist acquirer, in writing, what evidence of lawfulness they accept for a paid-entry skill contest in a jurisdiction that issues no licence for it. A written 'a counsel opinion suffices' answer unlocks the route; silence or 'licence required' closes it. UNVERIFIED: the UK position is from practitioner commentary on the Gambling Act 2005, not from Gambling Commission primary text; no EU member-state position is asserted."
+    },
+    {
+      "item": "AUDIT ADDITION — price store commission into the unit economics before choosing between the in-app and web funding path",
+      "kind": "policy",
+      "issuer": "Internal / finance",
+      "appliesTo": "A, D (and B, C for any in-app element)",
+      "cost": "Apple 30% standard, 15% under the Small Business Program (up to USD 1m prior-year proceeds). Google Play base rate UNVERIFIED (widely reported as 30% / 15%). See the Apple and Google checklist lines.",
+      "leadTime": "immediate",
+      "prerequisite": "none",
+      "notes": "The auditor's point, and it is a fair one: the brief priced every marginal vendor fee — $1.50 per identity check, 2.9% + $0.30 per card charge — while leaving blank the single largest cost line in the entire document for the two models it clears for launch. Store commission is roughly ten times the card fee. Three consequences for the plan. (1) A Model A coin sold through IAP nets 70 cents on the dollar at standard rate, 85 cents under the Small Business Program — the SBP eligibility cliff at USD 1m of prior-year proceeds is a real business-model input, not a footnote. (2) The web top-up path is not merely a Model B compliance workaround; for Model A and D it is a margin decision, which is why Apple's US-storefront link-out carve-out and Play's EEA and US alternative-billing options are commercially material. (3) Merchant-of-record fees for Model D must be compared against store commission, not against raw Stripe pricing, because the realistic alternative to Paddle is Apple, not a bare card rail. UNVERIFIED: confirm both stores' current rate cards and the external-link commission rates directly before modelling."
+    },
+    {
+      "item": "AUDIT ADDITION — brief US counsel on FIN-2019-G001, not only FIN-2013-G001",
+      "kind": "policy",
+      "issuer": "FinCEN (US Treasury)",
+      "appliesTo": "A (clearance), B (MSB determination)",
+      "cost": "$0",
+      "leadTime": "immediate",
+      "prerequisite": "none",
+      "notes": "Recorded as a discrete action because the original brief built BOTH the Model A 'no money transmission' clearance AND the Model B administrator/MSB determination on 2013 guidance while never mentioning the 2019 consolidation — superseded authority on the most consequential legal question in the lane. FIN-2019-G001, 'Application of FinCEN's Regulations to Certain Business Models Involving Convertible Virtual Currencies', 9 May 2019, states it 'consolidates current FinCEN regulations, and related administrative rulings and guidance issued since 2011, and then applies these rules and interpretations to obligations under the BSA as they relate to current and emerging business models'. It addresses models the 2013 guidance does not. Give counsel the 2019 document as the primary reference and the 2013 one as the source of the underlying definitions."
+    }
+  ],
+  "subdivisions": [
+    {
+      "authority": "Texas App Store Accountability Act (SB 2420); preliminary injunction stayed by the US Court of Appeals for the Fifth Circuit — secondary: Morrison Foerster alert, Nov 2025",
+      "detail": "Effective 1 January 2026. App stores must verify age at account creation and bracket users under-13 / 13-15 / 16-17 / 18+; parental consent required for app downloads, app purchases and in-app purchases. Developer-side duty is to receive and act on the store's age signal. Applies to Models A and D as well, because coin and subscription purchases by minors need consent. CONTESTED (audit, possible) — the auditor confirmed via the cited Morrison Foerster alert that the W.D. Tex. preliminary injunction WAS stayed by the Fifth Circuit, on a finding that Texas made 'a strong showing of likely success on the merits' and that the district court likely erred in applying strict rather than intermediate scrutiny, so the law is in effect. The date attribution is doubtful: the cited URL slug is 251111 (11 November 2025) while the injunction it describes issued in late 2025, and a November alert cannot report a stay of a later injunction. The original brief was also internally inconsistent, stating the stay as settled fact in its checklist while marking the litigation posture UNVERIFIED here. Plan on the law being operative; re-check the docket before relying on it.",
+      "name": "Texas (age assurance)",
+      "status": "licence-required"
+    },
+    {
+      "authority": "Utah App Store Accountability Act — secondary: Wiley, McNees, Baker Data Counsel",
+      "detail": "Developer and provider obligations effective 6 May 2026; private right of action enforceable from 31 December 2026. Same age-bracketing and parental-consent architecture as Texas. The private right of action is the material risk — it removes reliance on regulator discretion.",
+      "name": "Utah (age assurance)",
+      "status": "licence-required"
+    },
+    {
+      "authority": "Louisiana App Store Accountability Act — secondary: Wiley, McNees",
+      "detail": "Effective 1 July 2026. Same age-verification-at-account-creation and parental-consent-for-in-app-purchase structure.",
+      "name": "Louisiana (age assurance)",
+      "status": "licence-required"
+    },
+    {
+      "authority": "Virginia Money Transmission Modernization Act, effective 1 July 2026 — secondary: Shipkevich, CryptoSlate analyses",
+      "detail": "Enacts the CSBS MTMA. Defines 'money' to exclude virtual currency, and the virtual-currency definition itself reportedly excludes certain merchant-rewards value and game-platform value. If a non-redeemable game coin sits inside that exclusion, Model A needs no Virginia licence. Model B's redeemable coin almost certainly falls outside it. UNVERIFIED: exact statutory wording of the game-platform exclusion was not fetched — this is the highest-value item for counsel to pin down, because the same carve-out language recurs across the 31 MTMA states.",
+      "name": "Virginia (money transmission)",
+      "status": "unclear"
+    },
+    {
+      "authority": "CSBS MTMA optional virtual-currency provisions — secondary: FinTech and Blockchain Law Watch, May 2025",
+      "detail": "Reported as the only two states to have enacted the MTMA's optional virtual-currency business-activity provisions, which require a money transmitter licence for virtual-currency business activity. Model B should assume licence-required here even if other MTMA states' game-platform exclusions apply.",
+      "name": "North Dakota and Minnesota (virtual-currency money transmission)",
+      "status": "licence-required"
+    },
+    {
+      "authority": "New York Financial Services Law / 23 NYCRR Part 200 (BitLicense) — NOT verified in this research",
+      "detail": "UNVERIFIED. New York historically sits outside the MTMA consensus and runs its own virtual-currency regime alongside its money transmitter licence. Any redeemable-coin model must get a specific New York opinion before accepting New York users; do not assume the MTMA game-platform carve-out reaches here.",
+      "name": "New York (money transmission / virtual currency)",
+      "status": "unclear"
+    },
+    {
+      "authority": "Delaware Revised Uniform Unclaimed Property Act; the incorporation-state fallback priority rule derives from Texas v. New Jersey (1965) — the case was NOT verified in this research",
+      "detail": "UNVERIFIED but structurally important. Unclaimed property generally escheats to the state of the owner's last known address, and where no address is known, to the holder's state of incorporation. A Delaware-incorporated startup therefore pulls every address-unknown dormant balance into Delaware's regime, which is the most aggressively audited in the country. Relevant to Models B and C, and to Model A only if coins are ever refundable.",
+      "name": "Delaware (escheatment — holder domicile)",
+      "status": "licence-required"
+    },
+    {
+      "authority": "Colorado Revised Uniform Unclaimed Property Act — secondary: Baker Tilly, EisnerAmper",
+      "detail": "Colorado's RUUPA expressly encompasses stored-value cards including gift cards, so the unused monetary value held by the issuer is subject to the Act. Illustrates the general pattern: a cash-redeemable user balance is reportable unclaimed property after the dormancy period (typically one to five years, state-dependent). A genuinely non-redeemable Model A coin is arguably not property at all — another reason to keep the closed loop closed.",
+      "name": "Colorado (escheatment — stored value)",
+      "status": "licence-required"
+    },
+    {
+      "authority": "Adyen Prohibited and Restricted Products and Services List, last updated 13 November 2025 (fetched)",
+      "detail": "'Any type of US based gambling services' sits in Adyen's PROHIBITED column with no waiver route, while 'Legal gambling or Game of Skill where participants receive cash or cash equivalents or prizes with/of material value' is merely RESTRICTED (written waiver, revocable at Adyen's sole discretion) for direct merchants and PROHIBITED for platform/partner businesses. Net effect on strategy: Adyen is a viable EU/UK acquirer for Models B and C but cannot be the US rail, so a US launch needs a separate specialist acquirer.",
+      "name": "EU and UK vs United States (Adyen acceptance)",
+      "status": "permitted"
+    },
+    {
+      "authority": "Directive (EU) 2015/2366 (PSD2) Article 3(k) and the EBA Guidelines on the limited network exclusion; national competent authorities",
+      "detail": "Authorisation as an EMI or payment institution is a single-member-state application that passports across the EEA, so unlike US state MTLs this is one process not twenty-seven. The dividing line is cash-out: secondary commentary is consistent that an instrument relying on the limited network exclusion must not permit cash-out, which maps exactly onto the Model A / Model B boundary. UNVERIFIED: EBA Guidelines text, LNE notification thresholds, and per-state initial capital and fees were not fetched. Also note PSD3/PSR reportedly reached provisional agreement 27 November 2025 and would merge the PI and EMI regimes, with application around 2027 — apply under the current framework and expect grandfathering.",
+      "name": "EU member states generally (EMI / payment institution passporting)",
+      "status": "unclear"
+    },
+    {
+      "authority": "Promotion and Regulation of Online Gaming Act, 2025 (India). Act number, assent date and Rules-notification date WITHDRAWN as unreliably sourced (AI-flagged Wikipedia article). Substance corroborated via Trilegal and PIB summaries (secondary). Statutory text not fetched: meity.gov.in and indiacode.nic.in returned HTTP 403. Commencement status and pending constitutional challenges UNVERIFIED.",
+      "detail": "Prohibited for Models B and C, permitted for Models A and D — and that operating conclusion is unchanged by the audit. The Act bans all online money games whether of chance, skill or a combination, and — per law-firm summaries, reported as section 7, UNVERIFIED — bars banks, financial institutions, payment aggregators, gateways, wallet operators and card networks from facilitating any transaction toward an online money gaming service. Because the offence attaches to the payment intermediary as well as the operator, there is no commercial workaround: the RBI-authorised PA refuses as a matter of its own criminal exposure. 'Online social games' and e-sports are expressly promoted, which is where Models A and D sit. Google's earlier India real-money-gaming pilot for daily fantasy sports and rummy is superseded. THREE AUDIT CORRECTIONS TO THE FRAMING, none of which changes the advice. (1) The Act number ('Act No. 32 of 2025'), the assent date and the '22 April 2026' Rules-notification date were sourced to a Wikipedia article carrying an AI-GENERATED-CONTENT warning that the brief did not disclose; those three citations are withdrawn as unreliable and must not be filed. (2) The same article states commencement is 'TBA — not yet in force'; the brief presented a settled, operative payment-facilitation ban, whereas the in-force status of the relevant sections is UNVERIFIED. (3) The Act is reported to be under challenge before Indian High Courts and the Supreme Court, which the brief did not mention at all. The substance — a ban on online money games that expressly reaches skill games, plus a payment-facilitation prohibition — is corroborated across independent law-firm sources and is safe to plan around.",
+      "name": "India (nationwide — payment facilitation ban)",
+      "status": "prohibited"
+    },
+    {
+      "name": "United States (federal — UIGEA and Regulation GG)",
+      "status": "prohibited",
+      "detail": "AUDIT ADDITION — the largest single omission in the original brief, and the fact that reframes every acquirer refusal. UIGEA, 31 U.S.C. 5361-5367 (enacted 13 October 2006), implemented by Regulation GG at 12 CFR Part 233 (Federal Reserve) and 31 CFR Part 132 (Treasury), published 18 November 2008, requires designated payment systems — ACH, card systems, checks, wire transfer, and money transmitting businesses — to maintain written policies and procedures to identify and BLOCK 'restricted transactions' connected to unlawful internet gambling. 31 U.S.C. 5367 exposes a financial transaction provider to liability in the same manner as the internet gambling business where it has actual knowledge and control of bets and wagers, and courts have rejected the argument that UIGEA does not reach third-party payment processors. Status is marked prohibited for Models B and C to the extent the underlying activity is unlawful gambling in the relevant state. THE STRATEGIC COROLLARY: UIGEA bites on UNLAWFUL internet gambling, defined by reference to the applicable state or federal law. Where a paid-entry skill contest is genuinely lawful in a state, UIGEA does not reach it there — which is precisely why the state skill-versus-chance opinion is a payments prerequisite and why the geo-blocking map is an output of the legality analysis, not an input to it. Models A and D are entirely outside this: nothing is staked and nothing of value is won, so there is no bet or wager.",
+      "authority": "Unlawful Internet Gambling Enforcement Act of 2006, 31 U.S.C. 5361-5367; Regulation GG, 12 CFR Part 233 and 31 CFR Part 132. Verified via search against FDIC guidance materials and Cornell LII; the statutory and CFR text was not fetched (eCFR blocked from this environment). Part numbers and the 2008 publication date should be confirmed before filing."
+    },
+    {
+      "name": "New York (prize-promotion registration and bonding)",
+      "status": "licence-required",
+      "detail": "AUDIT ADDITION — absent from the original brief despite its coverage of far more exotic obligations. New York requires the sponsor of a prize promotion to register with the New York State Department of State and post a surety bond where the aggregate value of all prizes exceeds a threshold commonly reported as $5,000. The filing deadline is reported as 30 DAYS BEFORE the promotion starts — a hard pre-opening deadline that cannot be cured retroactively — and the bond must cover the TOTAL advertised prize value, not merely the largest prize. Bites Model C directly and any sweepstakes-tier Model B; cheap to comply with, expensive to miss. A structural complication for a continuously running game: these regimes assume a discrete promotion with a start and end date, and a perpetual prize pool does not fit the form's assumptions — raise that with sweepstakes counsel rather than improvising. UNVERIFIED: the $5,000 threshold, the 30-day deadline, the fee amounts and the bond mechanics all come from sweepstakes-practice law-firm commentary; no Department of State page was fetched.",
+      "authority": "New York prize-promotion registration and bonding requirements — secondary only (Klein Moynihan Turco, Fasthoff Law Firm and comparable sweepstakes-practice commentary). Statute and agency fee schedule NOT verified."
+    },
+    {
+      "name": "Florida (prize-promotion registration and bonding)",
+      "status": "licence-required",
+      "detail": "AUDIT ADDITION — same omission as New York. Florida requires registration with the Florida Department of Agriculture and Consumer Services and a surety bond where aggregate prize value exceeds a threshold commonly reported as $5,000, with a filing deadline reported as 7 DAYS BEFORE the promotion starts. Bond must cover total advertised prize value. Same continuous-promotion structural problem as New York. UNVERIFIED on the same basis: threshold, deadline, fees and bond mechanics are from secondary sweepstakes-practice commentary, not from the agency.",
+      "authority": "Florida prize-promotion registration and bonding requirements — secondary only (Klein Moynihan Turco, Fasthoff Law Firm and comparable sweepstakes-practice commentary). Statute and agency fee schedule NOT verified."
+    },
+    {
+      "name": "United Kingdom (skill prize competition — the licence that may not exist)",
+      "status": "unclear",
+      "detail": "AUDIT ADDITION, and it is the item most likely to change the Model C plan. The brief made 'a gambling or skill-gaming licence in each target market' the prerequisite for Adyen's waiver and for every specialist acquirer, then called the Adyen route 'more workable' for Model C. In the UK those two positions may be incompatible: a paid-entry prize competition whose outcome is genuinely determined by skill, knowledge or judgement — where the skill element is not symbolic and materially affects who wins — is lawful WITHOUT a Gambling Commission licence and sits outside the licensing regime altogether. There is therefore no skill-contest licence to obtain. If Adyen's underwriting insists on a licence, the prerequisite is unsatisfiable rather than merely slow, and Model C has no mainstream EU/UK rail either, which moves its payments verdict toward Model B's. Such competitions are not unregulated — consumer-protection, advertising and fairness rules still apply — but that is not what an acquirer's category list asks for. ACTION: obtain, in writing and before any build, Adyen's and at least one specialist acquirer's answer to 'what evidence of lawfulness do you accept for a paid-entry skill contest in a jurisdiction that issues no licence for it?'. UNVERIFIED: the UK position is drawn from practitioner commentary on the Gambling Act 2005, not from Gambling Commission primary text, and no EU member-state position is asserted — several are reported to be similar for pure skill contests but this varies sharply and was not checked state by state.",
+      "authority": "Gambling Act 2005 prize-competition treatment — secondary practitioner commentary only; Gambling Commission primary guidance NOT fetched. Adyen Prohibited and Restricted Products and Services List, 13 November 2025 (fetched) for the 'Legal gambling or Game of Skill' restricted category; the licence prerequisite attributed to that waiver is an inference, not published Adyen text."
+    }
+  ],
+  "risks": [
+    "The single biggest payments risk is misdescribing the business at onboarding. Every processor agreement makes a prohibited-business breach grounds for immediate termination, fund freeze for 90-180 days, a rolling reserve, and MATCH/TMF listing — which blacklists the principals, not just the company, across effectively all acquirers for five years. A founder who onboards Model B or C to Stripe as a 'trivia game' and is caught later is not back at square one, they are behind it.",
+    "Stripe's PROHIBITED line 'Payments of an entry or player fee that promise the entrant or player will win a prize of value' describes Model C exactly. Any plan that assumes the fixed-prize skill contest is the safe commercial middle path needs to be re-planned around Adyen or a specialist acquirer from the start, not discovered after building the checkout.",
+    "Merchant-of-record is likely to be over-trusted. It moves card-scheme liability, PCI scope and tax remittance; it does not move gambling licensing, money transmission, AML, age assurance, or the legality of the stake — and no MoR does payouts at all, so for Models B and C the MoR covers only the easy half.",
+    "AUDIT CORRECTION (replaces the brief's claim that the live product ships prohibited-category copy). Verified by grep across the working tree: the phrase 'winner takes the escrow' appears in NO product code — only inside this project's own compliance and research documents, which quote the brief itself. 'escrow' appears zero times in app/ and components/; it lives only in lib/server/room-engine.mjs and tests. 'stake' appears in the UI layer overwhelmingly as CSS class and prop names, with neutral user-visible strings ('Entry · once per match', 'Free entry'). So there is no shipped, indexable prohibited-category copy and the urgency the brief attached to this was overstated. The residual risk is real but small and cheap to close: rename the internal escrow/stake concepts, keep player-facing copy in entry/reward language, and — the genuinely overlooked exposure — do not publish these compliance documents at a public URL under the company's own domain, because an underwriter reading 'winner takes the escrow' in your own compliance file will not care that it was a quotation from a draft.",
+    "Apple 5.3.3 forbids buying stake currency via IAP for real-money gaming of any kind. Model B on iOS therefore cannot use the obvious funding mechanism and must route users to a web top-up — which is workable on the US storefront (3.1.1(a) now exempts US-storefront apps from the anti-steering prohibition) but needs a StoreKit External Purchase Link Entitlement elsewhere, and the US carve-out rests on litigation that can move.",
+    "Apple requires Play-style virtual currency via IAP while Google Play forbids Play Billing in licensed real-money gambling apps. The two store policies do not compose for Model B — that incompatibility is itself the signal that Model B is not a store-native product anywhere.",
+    "India is not a market for Models B or C at any price. The 2025 Act places the payment-facilitation offence on the bank and the payment aggregator as well as on the operator, so the refusal comes from the rail, not from a risk committee that might be persuaded.",
+    "Escheatment is the commonly missed obligation and it accrues silently. Dormant cash-redeemable balances become state unclaimed property after a dormancy period of roughly one to five years depending on the state, and the holder's state of incorporation is the fallback claimant for address-unknown owners. If last-activity timestamps are not recorded from day one, the liability cannot be computed later and an audit assessment is estimated against you.",
+    "A single-integer 'coins' field that mixes purchased, granted and won value makes it impossible to answer the one question every processor, regulator and auditor asks: can purchased value become withdrawable value? Splitting the ledger is a cheap design decision now and a data-migration nightmare after launch.",
+    "Biometric selfie matching for KYC triggers Illinois BIPA (statutory damages per violation, private right of action) and Texas CUBI. This is a real litigation risk that is separate from, and can exceed, the gambling risk.",
+    "The 24% backup withholding on a payout to a user with no TIN on file is unrecoverable from the user once paid. Collect W-9/W-8BEN before the first payout, not at year end.",
+    "PCI DSS v4.0.1's April 2025 SAQ A eligibility criteria now require confirming the payment page is not susceptible to script attacks. FACT//DUEL is a script-heavy React and three.js app, which is exactly the Magecart target profile. Script inventory, subresource integrity and CSP on the checkout page are load-bearing for keeping SAQ A eligibility.",
+    "Regulatory currency risk in this research itself: eur-lex.europa.eu, ecfr.gov, ofcom.org.uk, meity.gov.in and indiacode.nic.in were all unreachable from this environment, so the EU AMLR thresholds, the CTR rules, the UK OSA age-assurance duties and the Indian Act's section numbers rest on secondary sources and are flagged UNVERIFIED throughout. Do not let any of those propagate into a filing.",
+    "AUDIT ADDITION — the founder's mental model of why the rails refuse is probably wrong, and that leads to wasted months. The obstacle is not commercial risk appetite that a licence, a higher rate or a better pitch can move; it is UIGEA (31 U.S.C. 5361-5367) and Regulation GG, which put a coding-and-blocking mandate on ACH, card, check, wire and money-transmitting payment systems, with direct liability for a financial transaction provider under 31 U.S.C. 5367. Any plan that treats acquirer acceptance for Model B or C as a negotiation is planning against the wrong constraint.",
+    "AUDIT ADDITION — the Adyen waiver may be an escape hatch that does not open. Adyen's restricted category reads 'LEGAL gambling or Game of Skill', which is licensed-operator language, yet in the UK a genuine paid-entry skill competition requires no licence and none is available to obtain. If Adyen requires a licence nobody can issue, Model C has no mainstream EU/UK rail and its payments position collapses toward Model B's. This is a single written question to Adyen underwriting and it should be asked before any Model C engineering begins.",
+    "AUDIT ADDITION — under-withholding on payouts is an unrecoverable liability and the brief's 300x guidance pointed the wrong way. The 300x multiple gates REPORTING, not WITHHOLDING, for sweepstakes, wagering pools and lotteries; a head-to-head pot funded by losers' stakes is plausibly a wagering pool. Withhold 24% on proceeds over $5,000 regardless of the multiple unless tax counsel positively characterises the product out of those categories, because the money cannot be clawed back from the player after payment.",
+    "AUDIT ADDITION — Model C's Apple outcome is a range, not a plan. The brief promised hosting under 5.3.1/5.3.2 as 'a meaningfully lighter regime than 5.3.4'. Apple does not define 'real money gaming' and its 5.3.4 examples are illustrative; a reviewer can readily characterise a paid-entry cash-prize contest as real money gaming, pulling it into 5.3.4's free-app/licensed/geo-restricted regime and 5.3.3's IAP bar. Build the funding path so it survives either outcome, rather than betting the checkout on the lighter one.",
+    "AUDIT ADDITION — New York and Florida prize-promotion registration and bonding must be filed BEFORE the promotion opens (reported as 30 and 7 days respectively, above an aggregate prize value reported at $5,000). These are pre-opening deadlines with no retroactive cure, and a continuously running prize pool does not fit the form's assumption of a discrete promotion window. Missing them is a cheap error with disproportionate consequences.",
+    "AUDIT ADDITION — chargebacks are the realistic way Model A, the model graded unconditionally lawful, loses its processor. Instant-delivery digital goods have no shippable proof, parental 'I did not authorise this' disputes are common and hard to rebut, and card-network monitoring programmes (Visa VDMP, Mastercard Excessive Chargeback) fine and ultimately eject merchants, with a MATCH/TMF listing that follows the principals for five years. Build receipts, visible purchase history, a generous self-serve refund path and per-transaction evidence retention before launch, not after the first monitoring letter.",
+    "AUDIT ADDITION — store commission, not payment processing, is the dominant cost line for the two models cleared for launch, and the original brief left it blank while pricing $1.50 identity checks. Apple takes 30% standard, 15% under the Small Business Program up to USD 1m of prior-year proceeds; Google's base rate was not verified. Any unit-economics model built from the brief's numbers is wrong by roughly an order of magnitude on its largest term."
+  ],
+  "sources": [
+    "https://stripe.com/legal/restricted-businesses",
+    "https://support.stripe.com/questions/prohibited-and-restricted-businesses-list-faqs",
+    "https://stripe.com/pricing",
+    "https://www.adyen.com/legal/list-restricted-prohibited/",
+    "https://www.paddle.com/help/start/intro-to-paddle/what-am-i-not-allowed-to-sell-on-paddle",
+    "https://developer.apple.com/app-store/review/guidelines/",
+    "https://support.google.com/googleplay/android-developer/answer/9877032?hl=en",
+    "https://support.google.com/googleplay/android-developer/answer/10281818?hl=en",
+    "https://www.fincen.gov/resources/statutes-regulations/guidance/application-fincens-regulations-persons-administering",
+    "https://www.law.cornell.edu/cfr/text/31/1022.320",
+    "https://www.law.cornell.edu/cfr/text/31/1010.100",
+    "https://www.irs.gov/instructions/iw2g",
+    "https://en.wikipedia.org/wiki/Promotion_and_Regulation_of_Online_Gaming_Act,_2025",
+    "https://trilegal.com/knowledge_repository/trilegal-update-the-promotion-and-regulation-of-online-gaming-act-2025-redrawing-indias-online-gaming-landscape/",
+    "https://www.csbs.org/csbs-money-transmission-modernization-act-mtma",
+    "https://www.mofo.com/resources/insights/251111-texas-targets-app-stores-with-new-accountability-law",
+    "https://www.wiley.law/alert-State-App-Store-Accountability-Acts-Introduce-New-Obligations-for-App-Developers",
+    "https://blog.pcisecuritystandards.org/faq-clarifies-new-saq-a-eligibility-criteria-for-e-commerce-merchants",
+    "https://www.avalara.com/blog/en/north-america/2025/07/one-big-beautiful-bill-act-1099-reporting-threshold.html",
+    "https://www.hklaw.com/en/insights/publications/2026/01/w2g-reporting-threshold-raised",
+    "https://www.bakertilly.com/insights/6-keys-to-understanding-gift-card-escheatment",
+    "https://www.paypal.com/us/cshelp/article/what-gambling-activities-does-paypal-prohibit-help391",
+    "https://eba.europa.eu/publications-and-media/press-releases/eba-publishes-final-guidelines-limited-network-exclusion",
+    "https://www.fincen.gov/sites/default/files/2019-05/FinCEN%20Guidance%20CVC%20FINAL%20508.pdf",
+    "https://www.fdic.gov/news/financial-institution-letters/2010/fil10035a.pdf",
+    "https://www.law.cornell.edu/uscode/text/31/5364",
+    "https://news.bloomberglaw.com/white-collar-and-criminal-law/court-rejects-contention-that-uigea-doesnt-apply-to-payment-processors",
+    "https://www.deloitte.com/hu/en/services/consulting/perspectives/compliance-overhaul-making-sense-of-the-eus-new-aml-regulation-for-the-gambling-industry.html",
+    "https://www.twobirds.com/en/insights/2025/germany/navigating-the-eu-aml-package-implications-for-online-gambling-service-providers",
+    "https://kleinmoynihan.com/sweepstakes-registration-and-bonding-requirements-2/",
+    "https://fasthofflawfirm.com/blog/sweepstakes-state-registration-bonding",
+    "https://developer.apple.com/app-store/small-business-program/",
+    "https://sprintlaw.co.uk/articles/paid-competitions-in-the-uk-key-legal-rules/"
+  ],
+  "uncertain": [
+    "EU AML Regulation (EU) 2024/1624: no article number, EUR customer-due-diligence threshold for gambling, member-state low-risk exemption, or date of application is asserted. eur-lex.europa.eu returned empty responses across four separate fetch attempts (HTML, PDF, CELEX and ELI URL forms) and the environment's proxy would not relay it. Everything about AMLR in this report is a statement of what counsel must find, not a finding.",
+    "India, Promotion and Regulation of Online Gaming Act 2025: the section numbers (reported as sections 5, 6 and 7 for the offering, advertising and financial-transaction prohibitions), the penalty amounts (reported as up to 3 years imprisonment and INR 1 crore) and the commencement date all come from secondary sources — Trilegal, PIB press releases and Wikipedia. meity.gov.in and indiacode.nic.in both returned HTTP 403, and ogai.gov.in was refused by the proxy gateway. The substance — a total ban on online money games including skill games, plus a payment-facilitation prohibition — is corroborated across independent sources and is safe to plan around; the citations are not safe to file.",
+    "31 CFR 1010.311 and 1010.306 (Currency Transaction Report threshold and filing deadline) were not verified. ecfr.gov redirects to an unblock page from this environment. The $10,000 figure is well known but is not asserted here as verified, and CTR applicability to a card-funded online game is genuinely doubtful since CTRs attach to currency.",
+    "31 CFR 1010.100(ff)(8): the $1,000-per-person-per-day de minimis that applies to most MSB categories and its reported non-application to money transmitters could not be confirmed. The Cornell fetch did not surface it. If a money transmitter has no de minimis — which is the conventional understanding — then even a single small redeemable payout creates MSB status, which is a material planning fact. Confirm before relying on it.",
+    "The CSBS MTMA's definition of 'money' and the game-platform / merchant-rewards exclusion within its virtual-currency definition were confirmed only through secondary analyses of Virginia's enactment. The actual model-law text was not fetched. This is the single most valuable item to verify because it determines whether Model A needs any state licence at all.",
+    "UK Online Safety Act 2023: 'highly effective age assurance', the commencing duties, the in-force date and whether licensed gambling is carved out to the Gambling Commission's LCCP instead were all unverified — ofcom.org.uk returned HTTP 403. The commonly cited 25 July 2025 commencement for HEAA duties is not asserted here.",
+    "EU Digital Services Act Article 28 minor-protection duties and the Commission's 2025 guidelines on protection of minors were not researched at all; the web-search budget was exhausted before reaching them. Age assurance expectations in the EU are therefore a gap in this report.",
+    "Published per-verification pricing for Persona, Sumsub, Veriff, Onfido and Jumio could not be obtained from vendor sites — withpersona.com/pricing and veriff.com/product/pricing returned 403 and 404 respectively. The indicative $0.80-$5.00 range comes from low-quality SEO comparison blogs and should be treated as worthless for budgeting. Only Stripe Identity's $1.50 document-and-selfie and $0.50 ID-number-lookup prices were verified from stripe.com/pricing.",
+    "Apple's current commission rates (standard, Small Business Program, and the US external-purchase-link rate) and Google Play's base service fee were not verified; only Play's India/South Korea 4-percentage-point alternative-billing reduction was confirmed from the Payments policy.",
+    "Card-network treatment was not researched: MCC 7995 assignment rules, Visa's and Mastercard's high-integrity-risk or high-brand-risk merchant registration programmes, their registration fees and their required transaction-coding are all unverified. These are a real and significant cost line for Models B and C and need to come from the prospective acquirer.",
+    "Lead times and fees for state money transmitter licences, EMI authorisation, and gambling-specialist PSP onboarding are all UNVERIFIED. Historically a broad US MTL footprint is a multi-year, seven-figure programme, but no current figure is asserted.",
+    "Whether a Model C fixed-prize skill contest entry fee constitutes a 'wager' for IRS purposes — determining Form W-2G versus Form 1099-MISC Box 3 treatment — is unresolved. The Instructions for Forms W-2G and 5754 (rev. 01/2026) address gambling winnings only and are silent on skill contests. This needs a tax opinion, not a search result.",
+    "Texas v. New Jersey (1965) and the unclaimed-property priority rules were not verified in this research; the incorporation-state fallback is stated from general knowledge and flagged accordingly.",
+    "PSD3 and the Payment Services Regulation: the reported 27 November 2025 provisional political agreement, publication in the Official Journal in H1 2026, and application around 2027 are from a single secondary commercial source and were not corroborated against Council or Parliament materials.",
+    "RBI Payment Aggregator directions: the current merchant-onboarding rules and prohibited-category list were not fetched. Whether an Indian PA will onboard a non-redeemable in-game coin post-Act is an assumption, not a finding.",
+    "This is a compliance checklist assembled from public sources, not legal advice. Models B and C require licensed gambling/gaming counsel in each target jurisdiction plus US money-transmission counsel before any merchant application is filed. Model A needs a short opinion on the MTMA game-platform exclusion and on whether the coin is 'property' for escheatment. Model D needs only routine auto-renewal and consumer-law review.",
+    "AUDIT ADDITION — UIGEA and Regulation GG citations (31 U.S.C. 5361-5367; 12 CFR Part 233; 31 CFR Part 132; 18 November 2008 final rule) were established via web search against FDIC and Cornell LII materials, not fetched from eCFR, which remains blocked from this environment. The existence, effect and payment-processor reach of the statute are well corroborated; confirm the Part numbers and publication date before quoting them in a filing.",
+    "AUDIT ADDITION — the EU AMLR application date of 10 July 2027 is corroborated across several independent practitioner sources (Deloitte, Bird & Bird, EU AML-package readiness commentary) but was not fetched from EUR-Lex, which was unreachable across four attempts in the original research and was not retried. The reported first EU-level definition of 'gambling service' as covering games of chance 'including those with an element of skill', attributed in secondary sources to Article 2(1)(12), is UNVERIFIED as to both the article number and the wording, and is decision-critical for Model C. Counsel must read it from primary text.",
+    "AUDIT ADDITION — New York and Florida prize-promotion registration: the $5,000 aggregate-prize threshold, the 30-day (NY) and 7-day (FL) pre-opening deadlines, the bond-covers-total-advertised-value rule and the administering agencies all come from sweepstakes-practice law-firm commentary. No agency page or statute was fetched. Treat every figure as indicative and confirm with sweepstakes counsel.",
+    "AUDIT ADDITION — whether any licence exists for a pure paid-entry skill contest in the UK or in specific EU member states. The UK position (lawful without a Gambling Commission licence where skill genuinely determines the outcome) is from practitioner commentary on the Gambling Act 2005, not from Commission primary guidance, and no EU member-state position was checked. This single question determines whether Adyen's waiver prerequisite for Model C is satisfiable at all, and therefore whether Model C has any mainstream EU rail.",
+    "AUDIT ADDITION — Apple's Small Business Program terms (15% up to USD 1,000,000 of prior-calendar-year proceeds, 30% standard) are well corroborated across 2026 practitioner summaries and Apple's own SBP page was identified but not fetched in this pass. The reported EU DMA alternative-business-terms rate of 13% and any current US external-purchase-link commission rate are UNVERIFIED and in active litigation flux. Google Play's base service fee was not verified at all; only the India / South Korea 4-percentage-point alternative-billing reduction is confirmed from the Payments policy.",
+    "AUDIT ADDITION — Visa Dispute Monitoring Program and Mastercard Excessive Chargeback Program thresholds, ratios, fine schedules and remediation timelines were not researched. For a digital-goods merchant these are a live operational constraint on Model A and need to come from the prospective acquirer.",
+    "AUDIT ADDITION — the PCI SSC FAQ points relied on here (that a processor attestation is an alternative to deploying 6.4.3/11.6.1 techniques yourself, and that the new SAQ A criteria apply only to embedded-iframe merchants so a full redirect is out of scope) were established by the auditor, not fetched in this pass. Confirm both with your QSA or acquirer before designing the checkout around them.",
+    "AUDIT NOTE on the India Act — the Act number, assent date and Rules-notification date previously asserted are withdrawn because their source carried an AI-generated-content warning. Commencement status (reported as not yet in force) and the pending High Court and Supreme Court challenges are also UNVERIFIED. The prohibition's substance and its payment-facilitation limb remain corroborated across independent law-firm sources and are safe to plan around; none of the specific citations is safe to file.",
+    "AUDIT NOTE on Stripe — the phrase 'regardless of local legality' is withdrawn as a quotation; it could not be confirmed as text on Stripe's prohibited-business FAQ. The substance (local legality does not by itself make the category acceptable, because Stripe's own processor and financial-partner obligations bind) is sound and is retained unquoted. The adjacent phrase 'games of skill (or chance) with cash prizes, sweepstakes, pay-in auctions' IS verbatim and may be quoted.",
+    "AUDIT NOTE on Apple Guideline history — the brief's warning about a 'historic Guideline 4.7.1 real-money-gaming restriction' that has since been removed could not be corroborated; Apple's real-money gaming and sweepstakes rules appear to have lived at 5.3 throughout. Current 4.7 covers mini apps, mini games, streaming games, chatbots, plug-ins and emulators, and current 4.7.1 concerns privacy, moderation and Guideline 3.1 conformity. Do not repeat the claimed citation history to counsel."
+  ],
+  "corrections": [
+    "[CERTAIN — fabricated quotation, withdrawn] The brief asserted that FACT//DUEL's live UI 'already uses stake, escrow and winner takes the escrow', and built a risk item around that copy being shipped, public and indexable. Verified false by grep across the working tree: 'winner takes the escrow' appears in no product code, only inside this project's own compliance and research documents; 'escrow' appears zero times in app/ and components/ and exists only as a server-side field in lib/server/room-engine.mjs and in tests; 'stake' appears in the UI layer overwhelmingly as CSS class and prop names, with neutral user-visible strings. The remedial advice (rename before filing a merchant application) is retained as cheap hygiene; the urgency and exposure are corrected downward. A genuinely overlooked exposure is added in its place: do not publish these compliance documents at a public URL under the company's own domain.",
+    "[CERTAIN — superseded authority] The brief rested both the Model A money-transmission clearance and the Model B MSB determination on FinCEN FIN-2013-G001 alone. FIN-2019-G001 (9 May 2019) is the current consolidated CVC guidance and by its own terms consolidates FinCEN regulations and guidance issued since 2011, covering business models the 2013 guidance does not. The 2013 definitions remain verbatim-accurate and are retained as the source of the administrator and CVC tests, but 2019 is now cited first in both model verdicts, in the FinCEN checklist item, in sources, and as a discrete action item to brief counsel correctly.",
+    "[LIKELY — missing caveat that reverses the conclusion] The brief called the 300x rule 'decisive for a duel game' and illustrated that a $1 stake winning $100 falls below it. The 300x test gates REPORTING, not WITHHOLDING. Per the Instructions for Forms W-2G and 5754 (rev. 01/2026), 24% withholding applies when winnings minus the wager exceed $5,000 for sweepstakes, wagering pools and lotteries, with the 300x qualifier attaching only to the trailing sports-wagering clause, consistent with IRC 3402(q)(3). A pot funded by losers' stakes is plausibly a wagering pool. The planning rule is now: withhold 24% over $5,000 of proceeds regardless of multiple unless tax counsel characterises the product out of those categories. Withholding cannot be recovered from the player after payment, so the error was one-directional and expensive.",
+    "[LIKELY — the Model C escape hatch may not exist] The brief presented Adyen's 'Game of Skill' restricted-with-waiver category as the workable route for Model C and set 'a gambling or skill-gaming licence in each target market' as the prerequisite. Adyen's wording is 'LEGAL gambling or Game of Skill' — licensed-operator language — while in the UK a genuine paid-entry skill competition is lawful without a Gambling Commission licence and none is available to obtain, making the prerequisite potentially unsatisfiable rather than merely slow. The licence prerequisite is now flagged as the brief's inference rather than published Adyen text, a new checklist item and a new UK subdivision record the open question, and Model C's reasoning states that its payments position sits materially closer to Model B's than the brief implied.",
+    "[AUDIT ADDITION — the largest omission] UIGEA (31 U.S.C. 5361-5367) and Regulation GG (12 CFR Part 233 / 31 CFR Part 132) were never mentioned. They are the federal law that compels designated payment systems to identify and block restricted transactions connected to unlawful internet gambling, and the reason acquirers refuse the category at all. Added as a checklist item, a federal subdivision row, a risk and an authority line in Model B. The strategic corollary is also added: UIGEA bites only where the underlying gambling is UNLAWFUL, so the state skill-versus-chance opinion is a payments prerequisite and the geo-blocking map is an output of the legality analysis, not a parallel workstream.",
+    "[LIKELY — overstated rails claim, narrowed] The brief asserted that 'Stripe, Adyen, PayPal, Apple IAP and Google Play Billing all accept' Model A as ordinary digital-goods commerce and that Model A is 'fully served by mainstream rails'. No Adyen or PayPal line item for virtual currency or stored value was ever cited; those lists were cited only for gambling entries. The brief's own Paddle finding proves the category is separately policed (Paddle prohibits virtual currency and stored value outright, killing Model A there). Adyen and PayPal virtual-currency acceptance is now marked UNVERIFIED, and the advice is to obtain written category acceptance rather than infer it from a silent list.",
+    "[LIKELY — quotation withdrawn, substance retained] Stripe's FAQ was quoted as stating it does not support gambling 'regardless of local legality'. That phrase could not be confirmed as text on the page and is withdrawn from quotation marks throughout; the substance is retained unquoted. The adjacent verbatim phrase 'games of skill (or chance) with cash prizes, sweepstakes, pay-in auctions' is confirmed and may still be quoted.",
+    "[LIKELY — planning assumption downgraded to a risk range] The brief routed Model C to Apple Guidelines 5.3.1/5.3.2 as 'a meaningfully lighter regime than 5.3.4'. Apple nowhere defines 'real money gaming' and its 5.3.4 examples are illustrative, so a reviewer may readily pull a paid-entry cash-prize contest into 5.3.4's free-app/licensed/geo-restricted regime and 5.3.3's IAP bar. Model C's reasoning now states both outcomes and instructs that the funding path be built to survive either.",
+    "[LIKELY — sourcing and status corrected, advice unchanged] The India Act's number, assent date and Rules-notification date were sourced to a Wikipedia article carrying an undisclosed AI-generated-content warning; the same article reports commencement as not yet in force and notes pending High Court and Supreme Court challenges, neither of which the brief mentioned. Those three citations are withdrawn as unfileable and the commencement and litigation caveats are added to the India subdivision, the India checklist item and the Model B reasoning. The operating advice — do not attempt an Indian rail for B or C — is unchanged and remains conservative, because the payment-facilitation offence attaches to the aggregator as well as the operator.",
+    "[AUDIT ADDITION] New York and Florida prize-promotion registration and bonding were absent despite the brief covering escheatment. Added as a checklist item and two subdivision rows: registration plus a surety bond covering total advertised prize value where aggregate prizes exceed a reported $5,000, filed 30 days (NY) and 7 days (FL) before the promotion opens, with a flagged structural problem that a continuously running prize pool does not fit a regime written for discrete promotions. All figures secondary and marked UNVERIFIED.",
+    "[AUDIT ADDITION] The EU AMLR application date — 10 July 2027 — was missing, leaving the founder unable to tell whether AMLR is a launch blocker or a roadmap item. It is a roadmap item; the member state's existing AMLD transposition governs until then and IS a launch blocker. Also added: AMLR is reported to introduce the first EU-level definition of 'gambling service' expressly covering games with an element of skill, which if correct means the skill characterisation does not remove the EU AML obligation for Model C. Article number and wording marked UNVERIFIED.",
+    "[POSSIBLE — marked contested] The brief described PCI DSS v4.0.1 Requirements 6.4.3 and 11.6.1 as 'the techniques by which you demonstrate' SAQ A eligibility. The PCI SSC FAQ presents them as one route; a processor attestation may satisfy the criterion instead. Retained as contested, with two omitted scope facts added: the new criteria apply to embedded-iframe merchants, and a full redirect or fully hosted payment page sits outside them entirely — which, given that FACT//DUEL is a script-heavy React/three.js app in the Magecart target profile, is the obvious architectural answer and now has its own checklist item.",
+    "[POSSIBLE — marked contested] The Texas App Store Accountability Act stay attribution. The substance (Fifth Circuit stayed the preliminary injunction on a strong-showing finding; the law is operative) was confirmed by the auditor, but the November 2025 date attribution is chronologically doubtful and the brief was internally inconsistent, asserting the stay as settled in its checklist while marking the posture UNVERIFIED in its subdivision. Retained with the contradiction resolved and a docket re-check instructed.",
+    "[POSSIBLE — marked contested] The warning against 'stale 4.7 advice' implied a real-money-gaming restriction once sat at Apple Guideline 4.7.1. That citation history could not be corroborated; Apple's real-money gaming rules appear to have lived at 5.3 throughout. The accurate half (current 4.7 covers mini apps, mini games and emulators; current 4.7.1 covers privacy, moderation and 3.1 conformity) is retained and the invented history is flagged.",
+    "[AUDIT ADDITION] Chargeback and friendly-fraud exposure, and Visa VDMP / Mastercard Excessive Chargeback monitoring, were missing — a realistic way Model A loses its processor despite being graded unconditionally lawful. Added as a checklist item and a risk, with concrete pre-launch mitigations.",
+    "[AUDIT ADDITION] Apple's and Google's commission rates were left UNVERIFIED even though store commission is the single largest cost line for Models A and D, the two models cleared for launch, while the brief priced every marginal vendor fee. Apple's 30% standard and 15% Small Business Program rate (up to USD 1m prior-year proceeds) are now stated as high-confidence secondary; Google's base rate remains UNVERIFIED and is labelled as such rather than left blank. A unit-economics checklist item is added.",
+    "[AUDIT ADDITION] State-by-state skill-versus-chance analysis for paid-entry contests was deferred to 'the gambling-law layer'. It cannot be: it determines UIGEA exposure and acquirer acceptance, so the Model C checkout is blocked on it. Added as a checklist item recording the dependency."
+  ]
+}
