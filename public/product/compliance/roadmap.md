@@ -1,4 +1,57 @@
-# Launch roadmap — the money layer
+# Launch roadmap
+
+> **16 September 2026 — the format changed.** The staked-money product this file was written for is
+> closed in all three markets (see below). The product is now **ad-funded competitive sports
+> quizzing**: coins are earned by watching rewarded ads, by a daily grant, by a floor and by winning;
+> they are spent on duel entries and practice drills; they are never bought and never cashed out.
+> That model needs **no licence, no regulator and no waiting** in the USA, the EU or India, and the
+> backend milestones below are what still has to exist under it. The money-layer plan is kept intact
+> underneath because M0–M6 are the same foundation either way.
+
+## The pivot, decided (16 Sep 2026)
+
+Five research lanes, two adversarially audited; the evidence is in `docs/money/ads/`.
+
+| Decision | Choice | Why |
+|---|---|---|
+| Content | Sports only: football, cricket, baseball, Formula 1, basketball. Science hidden behind one flag, not deleted. | Landed (`lib/content.mjs`). |
+| Currency | **One** coin. Earned from ads, daily grant, floor, duel prizes. Never purchasable. Gems retire as a currency; cosmetics become achievement and season unlocks. | Every long-lived trivia app is being savaged for "a sea of gems, credits, gold bars"; the FTC's Cognosphere order targets multi-tier currencies. |
+| Where the wallet lives | Device today, account later, same reducer. | No web ad network verifies completion server-side — Google, verbatim: "server-side verification is an app only feature." A server wallet buys no integrity on the web; the reward nonce (`lib/ads/nonce.mjs`) adds rate-limiting the client cannot edit, and lands with accounts. Verified rewards exist only in a store build (AdMob SSV) — phase two. |
+| Coins never move between players | Entry to the house; prize from the house; equal, so the house nets zero. | Google's rewarded-ad policy requires rewards to be non-transferable. A coin staked into a pot the opponent wins has been transferred. Same ledger flow, different words — and the words matter to a keyword-driven review. |
+| Reward table | US 50 · GB 35 · DE 25 · FR 20 · IN/BR/other 10, re-derived weekly from realised eCPM once that job exists. | Constant revenue per coin (~0.055¢), anchored on the only verifiable per-country eCPMs. India is unverified anywhere reachable, so it floors at "one ad always buys one duel." Recomputed by the audit; matches. |
+| Fee | Disclosed arena fee: 0% on the 10 and 25 tiers, 10% from 50, 15% on a 500 tier that unlocks at the soft cap. Shown on the entry card as "pot 100 · prize 90". | Grants are not zero-sum even though duels are; without a sink that scales with play the supply inflates. A hidden rake is the exact thing reviewers call rigged, so it is printed. |
+| Bots | Practice bots play for free. Always. | A house-banked bot is a faucet when players beat it and a sink when it beats them, and any balance-aware tuning is rigging. Coupled in the engine and on screen. |
+| Loss streaks | One double-coin ad per day after three staked losses. Nothing about the contest changes. | Three straight losses happens to half of all players inside ten fair duels. The config sanitiser has no key a difficulty or bot-skill could travel in — tested by trying. |
+| Vocabulary | "entry", "stake", "prize", "challenge". Never "bet", "wager", "odds", "jackpot", "casino". | No clause hinges on the word; ad review, store review and India's advertising prohibition all do. |
+| Ads on screen | Opt-in only, priced before the tap, free alternatives on the same card, visible daily cap, never inside a round, never before the result receipt. | The single largest complaint cluster across every competitor. |
+| Leaderboards | Weekly leagues of 30 by sport tier; friends board default; club and derby-week boards; percentile-only global view; no bots. | Global boards demotivate the 95% (Hanus & Fox 2015; Landers 2017); Duolingo's bracketed leagues raised learning time 17%. |
+| Identity | A Supporter Card: one allegiance per sport (club, franchise, team, driver + constructor). Guest-first; the account is offered at the first moment stored value exists, and the anonymous principal is promoted in place. | Fans already carry a public identity they want to display (Cialdini 1976, BIRG). Forced sign-up before first play is an 18% abandonment reason. |
+| Seasons | Aligned to the real calendars: Premier League 21 Aug 2026 – 30 May 2027; NBA 20 Oct 2026 – 11 Apr 2027; F1 14 Mar – 12 Dec 2027; MLB 25 Mar – 26 Sep 2027 + World Series 22–30 Oct; IPL window TBC. | External triggers that exist because the sport exists (Hooked ch. 2). |
+
+**Refused, as a release gate** (the NEVER list, from the dark-pattern audit): fabricated near-misses;
+fake countdowns or scarcity; streak repair for coins or ads; unclosable or fake-close ads, ads inside
+a round or before the receipt; confirmshaming; silent devaluation or hidden rule changes; randomised
+ad rewards, hidden bot fills, undisclosed matchmaking; auto-queued next duel and nag overlays; fake
+presence or unconsented nudges; hidden costs at the entry tap or a second currency; child-directed
+exhortation or profiled ads to minors; loss-streak difficulty rigging; pre-selected opt-ins; forced
+account creation before first play. Each is tied to a competitor complaint and an enforcement
+authority in `docs/money/ads/lane-gamification.json`.
+
+**Built so far under the new format:** the content flag; the economy reducer with the researched
+config; the ad seam (null provider, scripted provider, reward nonce); free bots enforced in the engine
+and on screen; four of five sport banks authored at 60 verified questions each. **In flight:** the
+client wallet and the priced ad card; the fifth bank and its QA; the launch playbook and the
+synthesis that orders the remaining features.
+
+**Only the founder can do:** buy a first-party domain (AdSense will not approve a `github.io`
+subdomain, and H5 Games Ads is application-only on top of an approved AdSense account — this is the
+first item on the critical path); ship a Google-certified TCF 2.3 CMP before EEA traffic; keep the
+product un-flagged as child-directed (a misapplied flag costs ~70% of eCPM); get counsel's written
+view on ad-earned coin staking under India's Act s.2(1)(g) and on league/club names in ranks.
+
+---
+
+# The money layer (kept: the foundation is the same)
 
 **As of 14 September 2026.** This file sequences the engineering against the law, so that no
 code capable of taking money ships ahead of the paperwork that makes taking it lawful.
