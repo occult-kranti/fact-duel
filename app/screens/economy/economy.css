@@ -1,0 +1,295 @@
+/* app/screens/economy/economy.css — the priced ad card, the coins sheet and the top-bar coin chip.
+ *
+ * Rewards are gold (Floodlight §Surfaces). The card is self-contained: its buttons are styled here
+ * rather than borrowed from a screen scope, because the same card mounts inside Discovery (a cool
+ * learning surface) and inside the top-bar sheet (no surface at all). Tokens only, no raw hex. */
+
+/* ---------------------------------------------------------------- the card */
+.fd-adcard {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid color-mix(in oklab, var(--gold) 35%, var(--line));
+  border-radius: var(--r-card);
+  background: linear-gradient(180deg, var(--gold-soft), transparent 55%), var(--bg-1);
+  box-shadow: var(--shadow-card);
+  color: var(--text);
+  min-width: 0;
+}
+.fd-adcard[data-motion='full'] {
+  animation: fd-adcard-in 220ms var(--ease-out) both;
+}
+@keyframes fd-adcard-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.fd-adcard :where(h2, p, ul) {
+  margin: 0;
+}
+.fd-adcard__head {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.fd-adcard__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-12);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold-text);
+}
+.fd-adcard__eyebrow > svg {
+  width: 15px;
+  height: 15px;
+}
+.fd-adcard h2 {
+  font-family: var(--font-display);
+  font-size: var(--fs-22);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+}
+.fd-adcard__lede {
+  max-width: 52ch;
+  font-size: var(--fs-14);
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* the priced offer */
+.fd-adcard__offer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.fd-adcard .fd-btn {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 16px;
+  border-radius: var(--r-control);
+  border: 1px solid var(--line);
+  background: var(--bg-2);
+  color: var(--text);
+  font: inherit;
+  font-weight: 600;
+  font-size: var(--fs-14);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+  transition:
+    transform 140ms var(--ease-out),
+    background 140ms var(--ease-out),
+    border-color 140ms var(--ease-out),
+    box-shadow 140ms var(--ease-out);
+}
+.fd-adcard .fd-btn > svg {
+  width: 17px;
+  height: 17px;
+  flex: none;
+}
+.fd-adcard .fd-btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+.fd-adcard .fd-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.fd-adcard .fd-btn:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+.fd-adcard .fd-btn--primary {
+  background: var(--volt);
+  border-color: transparent;
+  color: var(--volt-ink);
+}
+.fd-adcard .fd-btn--primary:hover:not(:disabled) {
+  box-shadow: var(--glow-volt);
+}
+.fd-adcard .fd-btn--ghost {
+  background: transparent;
+  border-color: transparent;
+  color: var(--muted);
+  padding: 0 10px;
+}
+.fd-adcard .fd-btn--ghost:hover:not(:disabled) {
+  color: var(--text);
+  background: var(--bg-2);
+  border-color: var(--line);
+}
+.fd-adcard__watch {
+  width: 100%;
+  flex-wrap: wrap;
+}
+.fd-adcard__watch > b {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+.fd-adcard__none {
+  padding: 12px 14px;
+  border: 1px dashed var(--line);
+  border-radius: var(--r-control);
+  font-size: var(--fs-14);
+  line-height: 1.5;
+  color: var(--muted);
+}
+.fd-adcard__cap {
+  font-family: var(--font-mono);
+  font-size: var(--fs-12);
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+.fd-adcard__cap > b {
+  color: var(--text);
+}
+.fd-adcard__double {
+  margin-left: 6px;
+  color: var(--gold-text);
+}
+
+/* the free alternatives */
+.fd-adcard__alts {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.fd-adcard__alts > li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-control);
+  background: var(--bg-2);
+  font-size: var(--fs-14);
+  line-height: 1.45;
+}
+.fd-adcard__alts > li > svg {
+  width: 16px;
+  height: 16px;
+  flex: none;
+  margin-top: 2px;
+  color: var(--gold-text);
+}
+.fd-adcard__link {
+  appearance: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-weight: 600;
+  color: var(--cyan-text);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.fd-adcard__link:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.fd-adcard__link:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* what just happened */
+.fd-adcard__status {
+  padding: 10px 12px;
+  border-radius: var(--r-control);
+  border: 1px solid var(--line);
+  font-size: var(--fs-14);
+  line-height: 1.45;
+  color: var(--muted);
+}
+.fd-adcard__status[data-tone='good'] {
+  border-color: color-mix(in oklab, var(--gold) 45%, transparent);
+  background: var(--gold-soft);
+  color: var(--gold-text);
+  font-weight: 600;
+}
+
+.fd-adcard__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.fd-adcard__fine {
+  font-size: var(--fs-12);
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- the top-bar chip */
+.fd-chip-top--coins {
+  appearance: none;
+  cursor: pointer;
+  font: inherit;
+  font-family: var(--font-mono);
+  font-size: var(--fs-12);
+  font-weight: 700;
+  color: var(--gold-text);
+  border-color: color-mix(in oklab, var(--gold) 35%, transparent);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.fd-chip-top--coins:hover {
+  background: var(--gold-soft);
+}
+.fd-chip-top--coins:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------- the coins sheet */
+.fd-adsheet {
+  width: min(100vw - 2 * var(--gutter), 600px);
+  max-height: calc(100dvh - 2 * var(--gutter));
+  margin: auto;
+  padding: 0;
+  border: 0;
+  border-radius: var(--r-hero);
+  background: transparent;
+  color: var(--text);
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+.fd-adsheet::backdrop {
+  background: color-mix(in oklab, var(--bg-0) 72%, transparent);
+  backdrop-filter: blur(12px);
+}
+.fd-adsheet .fd-adcard {
+  max-width: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fd-adcard,
+  .fd-adcard[data-motion='full'] {
+    animation: none;
+  }
+  .fd-adcard .fd-btn {
+    transition: none;
+  }
+}
