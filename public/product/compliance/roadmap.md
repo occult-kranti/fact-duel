@@ -37,6 +37,47 @@ exhortation or profiled ads to minors; loss-streak difficulty rigging; pre-selec
 account creation before first play. Each is tied to a competitor complaint and an enforcement
 authority in `docs/money/ads/lane-gamification.json`.
 
+## Build order (the synthesis, 16 Sep 2026)
+
+Twenty-five features, ordered. `founder` = not engineering. `done` / `in flight` = this branch.
+
+| # | Feature | Status |
+|---|---|---|
+| 1 | First-party domain; AdSense, then H5 Games Ads application | founder |
+| 2 | Google-certified TCF 2.3 CMP, neutral age gate, no child-directed flag | founder + eng |
+| 3 | Vocabulary purge; permanent "coins are not money" notice | done (screens clean) |
+| 4 | Analytics stack and event list (PostHog, GameAnalytics, Cloudflare, Sentry) | next |
+| 5 | Sports-only pipeline: ≥300 verified questions per sport, "valid as of" dates, Report button | in flight (60/sport authored; QA running) |
+| 6 | Static SEO pages per intent cluster and per fixture | next |
+| 7 | Economy config re-tune and the ledger burn leg | done |
+| 8 | Accounts: anonymous principal promoted in place; Supporter Card | M4 |
+| 9 | Server-authoritative duel, fairness receipt, opponent badges | M5 |
+| 10 | Reward nonce, completion window, caps, visible ledger | done (nonce); wiring with M4 |
+| 11 | Priced ad card and placement clean-up | in flight |
+| 12 | Drills at 10 coins or one ad; "Yesterday" recap drill; friendly duel | in flight (gate); recap next |
+| 13 | Kick-off Duel and Full-time set (fixture mode) | next — calendar now carries the fixtures |
+| 14 | Loss-streak levers and stake-picker defaults | done (economy); picker next |
+| 15 | Per-sport rating tiers, seasons on real calendars, matchweek streaks | next |
+| 16 | Leaderboards: bracketed leagues, friends default, club/derby, percentile global | after M4 |
+| 17 | Trust page and "Rules of the coin" page with change log | next |
+| 18 | Social hooks: rematch, private links, "Settle it", rivals, share card | after M4 |
+| 19 | Capacitor iOS and TWA Android with AdMob SSV | W8 |
+| 20 | Weekly eCPM-to-coin re-derivation job and economy dashboards | after M3 |
+| 21 | Region rule row as a staking kill-switch; India counsel opinion | policy engine done; row + counsel: founder |
+| 22–24 | Reddit programme, creator gifts, Shorts cadence, Christmas/January beats | founder + marketing |
+| 25 | Later: mediation, AppLixir trial, ghost replays, cosmetic sinks, data pipeline | later |
+
+## The twelve weeks
+
+Soft launch **India + UK/Ireland on Mon 12 Oct 2026** (web, zero paid acquisition — the launch lane's
+headline is that paid UA can never pay back for an ad-only trivia duel: ad LTV per install is roughly
+$0.06–0.25 in the US and about a cent in India, against CPIs of $2.50–5.00). **EU on 2 Nov** with
+localised football pages. **US on 23 Nov** around the NBA Cup knockouts, leading with NBA, MLB and
+"soccer". Store builds submitted W8 (9–15 Nov). **Go/no-go on 14 Dec** against D1 ≥ 30%, D7 ≥ 10%,
+D30 ≥ 4%, rewarded opt-in ≥ 25% of DAU, ≥ 1.5 rewarded ads per DAU, completion ≥ 85%, question-report
+rate ≤ 0.5%; kill or pivot if D1 < 20% after two fix cycles. The full week-by-week plan is in
+`docs/money/ads/synthesis.json`.
+
 **Built so far under the new format:** the content flag; the economy reducer with the researched
 config; the ad seam (null provider, scripted provider, reward nonce); free bots enforced in the engine
 and on screen; four of five sport banks authored at 60 verified questions each. **In flight:** the
