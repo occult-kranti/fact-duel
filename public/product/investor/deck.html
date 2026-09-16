@@ -116,32 +116,28 @@ footer.end{padding-block:44px 72px;color:var(--dim);font-family:var(--mono);font
   <header class="cover">
     <p class="tag">Seed round · September 2026</p>
     <p class="mark">FACT<i>//</i>DUEL</p>
-    <p class="lede">A 1v1 sports-and-science trivia duel: habit loop first, retention proof next, business last.</p>
-    <p class="meta">Confidential. For the named recipient only. Every number carries its source. Figures marked (P) are a plan, not a forecast. FACT//DUEL has no users outside a private playtest and no revenue.</p>
+    <p class="lede">A 1v1 sports trivia duel, ad-funded: coins are earned by watching, never bought, never cashed out. Retention proof first; the business is the ad.</p>
+    <p class="meta">Confidential. For the named recipient only. Every number carries its source. Figures marked (P) are a plan, not a forecast; figures marked (likely) are third-party benchmarks the research could not independently verify. FACT//DUEL has no users outside a private playtest, no revenue, and takes no money from anyone.</p>
   </header>
   <section class="slide" id="s1">
 <div class="rail"><span class="rail-n">01</span></div>
 <div class="slide-body">
 <p class="kicker">SEED ROUND — SEPTEMBER 2026</p>
-<h2>FACT//DUEL — a 1v1 sports-and-science trivia duel, playable against a bot in a browser.</h2>
-<p class="lede">A 1v1 sports-and-science trivia duel: habit loop first, retention proof next, business last.</p>
+<h2>FACT//DUEL — a 1v1 sports trivia duel, ad-funded, playable against a bot in a browser.</h2>
+<p class="lede">A 1v1 sports trivia duel, ad-funded: coins are earned by watching, never bought, never cashed out. Retention proof first; the business is the ad.</p>
 <ul class="points">
 <li>Play a full bot duel on a phone or laptop: https://occult-kranti.github.io/fact-duel/ — no install, no account, no server.</li>
-<li>Zero users outside a private playtest. Zero revenue. 54 sample questions.</li>
-<li>Raising about <b class="num">$1.2M</b> <b class="p">(P)</b> for 18 months to buy the retention data this deck does not have.</li>
-<li>What that buys: a published D1/D7/D30 cohort of 1,000+ players (numbers.md §4.4).</li>
+<li>Zero users outside a private playtest. Zero revenue. 329 questions in the shipped bank across five sports, every fact source-checked and QA'd; 24 science questions hidden, not deleted.</li>
+<li>The model: coins earned by watching rewarded ads, spent on duel entries. Never purchasable, never cashable. No licence needed in the US, EU or India.</li>
+<li>Raising about <b class="num">$1.2M</b> <b class="p">(P)</b> for 18 months to buy the retention data this deck does not have, and to ship the store builds that make ad rewards verifiable.</li>
 </ul>
-<details class="notes"><summary>Speaker notes</summary><div class="notes-body">Say the three zeroes out loud in the first fifteen seconds: no users outside a private playtest, no revenue, no cohort and therefore no retention rate. All three are on the page, so nobody has to go looking for them.
+<details class="notes"><summary>Speaker notes</summary><div class="notes-body">Say the three zeroes out loud in the first fifteen seconds: no users outside a private playtest, no revenue, no cohort and therefore no retention rate. Then say the fourth thing, which is new since 14 September: the product takes no money from anyone and never will in this form — coins come from attention. That single sentence is what removed the wagering-law risk that sat on this deck two days ago, and it is worth a beat.
 
-The product runs the entire game in a browser with no install and no account since 13 September 2026 (numbers.md §7.2) — a static build served from the repository's own Pages workflow, and it is live once the repository owner has pointed Pages at the gh-pages branch. Confirm the link resolves before the deck is sent, and again the morning of a meeting; do not assume it. A complete bot duel takes about fifteen seconds. The static build carries bot duels in all three modes; two-device friend duels genuinely need a server and are disabled in that build, with an on-screen notice saying so — which is why the headline and the first line both say bot rather than promising a head-to-head match. Slide 5 has the full boundary list. Publishing the link changes nothing about the zeroes: no accounts, no users, no revenue.
+The pivot is dated 16 September 2026 and evidenced in docs/money/ads/: five research lanes (competitor reviews, ad-tech and policy, coin-economy maths, gamification and dark-pattern audit, launch), the two numeric lanes adversarially audited, and one synthesis. The previous route — real money staked on a knowledge outcome — was found closed in all three target markets (criminal in India under the 2025 Act, unlawful in a hard core of US states, and unbankable: Stripe lists it as prohibited and Apple 5.3 forbids stake currency via IAP). That research is kept in the repository under docs/money/ and is not on this deck, because it describes a business we are not building.
 
-If they want the ask math before slide 13: 4 engineers x <b class="num">$15,000</b>/month x 18 months = <b class="num">$1,080,000,</b> rounded to a raise of about <b class="num">$1.2M</b>, inside YC's <b class="num">$500k</b>-<b class="num">$1.5M</b> band (numbers.md §4.5). YC's own worked example is five engineers; the four-engineer headcount is ours, and the <b class="num">$15k</b> is YC's undated editorial rule of thumb, very likely understated today — that caveat is on slide 13 and should be volunteered, not defended.
+The 329: the original reviewed sample's 30 sports questions plus five authored banks of 60 (cricket 59 after QA) — football, cricket, baseball, Formula 1, basketball — written on 16 September with every fact checked against a fetched page, then validated by a separate QA pass (schema, uniqueness across files, reachable sources, difficulty balance, spot-checked extremes). The sample's 24 science questions remain in the repository behind a content flag and are not served. tests/bank.test.mjs keeps the count, the balance and the schema true.
 
-A duel is designed as a 3-4 minute unit, set against GameAnalytics' estimated 3.1-3.5 minute median mobile session (CY2025, iOS and Android app-store installs, not web; North America 3.64 minutes — numbers.md §3.2). That is a design target, never a measured FACT//DUEL session length: we have never measured one (§5.15). The claim itself stays in the body of slide 4.
-
-Add founder name and contact details before sending; do not add anything else.
-
-SOURCES: slide 1's existing seven sources carry forward unchanged, plus one new entry — &quot;FACT//DUEL internal: public/product/investor/numbers.md §4.4 and §4.5 (company disclosure)&quot; — because body lines 3-4 now rest on §4.5 (the ask arithmetic) and §4.4 milestones 2-3 (the cohort target).</div></details>
+The product still runs entirely in a browser with no install and no account (numbers.md §7.2). The live build has no ads in it: the ad provider is a null implementation that says so on screen, and the daily grant and floor keep the game playable without one. That is deliberate — nothing on the live site claims an ad played.</div></details>
 <ul class="sources">
 <li><a href="FACT//DUEL internal: public/product/investor/numbers.md — status paragraph and §5.15 (company disclosure)" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: public/product/investor/numbers.md — status paragraph and §5.15 (company disclosure)</a></li>
 <li><a href="https://www.ycombinator.com/library/4A-a-guide-to-seed-fundraising" target="_blank" rel="noopener noreferrer">ycombinator.com</a></li>
@@ -151,6 +147,8 @@ SOURCES: slide 1's existing seven sources carry forward unchanged, plus one new 
 <li><a href="https://web.archive.org/web/20240302210508/https://www.docsend.com/blog/what-vcs-really-want-to-see-inside-your-seed-deck/" target="_blank" rel="noopener noreferrer">web.archive.org</a></li>
 <li><a href="FACT//DUEL internal: public/product/investor/numbers.md §7.1 and §7.2 (company disclosure)" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: public/product/investor/numbers.md §7.1 and §7.2 (company disclosure)</a></li>
 <li><a href="FACT//DUEL internal: public/product/investor/numbers.md §4.4 and §4.5 (company disclosure)" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: public/product/investor/numbers.md §4.4 and §4.5 (company disclosure)</a></li>
+<li><a href="FACT//DUEL internal: docs/money/ads/synthesis.json (16 Sep 2026; five research lanes, two adversarial audits)" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: docs/money/ads/synthesis.json (16 Sep 2026; five research lanes, two adversarial audits)</a></li>
+<li><a href="FACT//DUEL internal: public/product/investor/numbers.md §8 (company disclosure — the ad-funded format, 16 Sep 2026)" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: public/product/investor/numbers.md §8 (company disclosure — the ad-funded format, 16 Sep 2026)</a></li>
 </ul>
 </div></section>
 <section class="slide" id="s2">
@@ -223,28 +221,18 @@ The takeaway to say out loud: any pitch in this category that leads with &quot;w
 <div class="rail"><span class="rail-n">04</span></div>
 <div class="slide-body">
 <p class="kicker">THE SOLUTION</p>
-<h2>The bet is sequencing: build the habit loop, prove retention, then monetise.</h2>
+<h2>The bet is sequencing: prove retention on a free, ad-funded loop — the business is already legal and already the default.</h2>
 <ul class="points">
-<li>Retention is the gate. Monetisation is downstream of a number we do not have.</li>
-<li>Around the duel, product description rather than audited fact: XP, streaks, quests, cosmetics — copying the streak/XP/quest shape Duolingo monetises (§1.1, §1.6).</li>
-<li>We have measured no session length and no retention benefit, for the duel or any mechanic around it (numbers.md §5.15, §7.1).</li>
-<li>Zero revenue today (status paragraph, §5.15). Monetisation is sequenced last by choice; nothing in our evidence base proves that choice works.</li>
+<li>Retention is still the gate. Monetisation is no longer downstream of a licence: rewarded ads on a coin economy need none, in the US, EU or India (§8.1).</li>
+<li>The loop: watch a short ad → coins; enter a duel; the house pays the winner a prize. No coin ever moves between players. No purchase. No cash-out.</li>
+<li>Every competitor that scaled is drowning in one complaint cluster — ads after every question, unskippable, lives walls, hidden bots (§8.6). Ours are opt-in only, priced before the tap, never inside a round.</li>
+<li>We have measured no session length and no retention benefit (numbers.md §5.15, §7.1). The economy is built and tested; the number it depends on is not.</li>
 </ul>
-<details class="notes"><summary>Speaker notes</summary><div class="notes-body">GameAnalytics' 2026 benchmark set — 16,000+ mobile games, nine regions, iOS and Android, calendar year 2025 — estimates the median session at 3.1-3.5 minutes and North America at 3.64 minutes across 4.23 sessions a day (numbers.md §3.2). Slide 1's notes carry the 3.1-3.5 median; the 3.64 North America figure and the app-store-not-web qualifier live only here, so say both out loud if the session benchmark comes up. A duel is designed as a 3-4 minute unit against that estimate — a design target, not a FACT//DUEL measurement. Every one of those benchmarks is measured on app-store installs while we are a browser product with no install step: numbers.md §5.14 calls that the single largest methodological risk in the model, and slide 11 carries it as a named risk. Since 13 September 2026 the app records session count and engaged time per device (lib/analytics.mjs, §7.1), so the absence of our own session length is missing players, not a missing instrument.
+<details class="notes"><summary>Speaker notes</summary><div class="notes-body">The claim on this slide that matters is &quot;needs no licence&quot;, so be able to say where it comes from: the legal research of 14 September (docs/money/legal-merge.json, six lanes, audited) found that a closed-loop coin economy with no purchase and no prize of value is outside every real-money rule read in the US, the EU and India, and the ad-tech lane of 16 September found the same for Google's publisher gambling policy. The residual policy risk is different and smaller — Google's rewarded-ad policy requires rewards to be non-transferable, which is why the copy says &quot;the house pays a prize&quot; and never &quot;take your opponent's coins&quot; — and it is on the risks slide.
 
-The full loop, all of it product description read off our own repository and none of it audited: XP and levels, day streaks, daily quests, achievements, a device-local rank, gems, cosmetics (lib/progression.mjs). None of it carries a measured retention benefit. Do not attach one to any mechanic.
+On the competitor complaint cluster, the review evidence is verbatim and sourced in docs/money/ads/lane-competitors.json: Trivia Crack (&quot;Every missed question, every screen change, pretty much anything you do results in an ad&quot;), Trivia Star, Jeopardy!, Sporcle and every mass-market football quiz app. The two products that died — QuizUp and HQ Trivia — died of no monetisation, in the founders' own words. That is the whole argument for monetising from day one with the one format users say they tolerate: rewarded video, which mobile gamers prefer to interstitials roughly four to one (Mistplay, vendor figure, likely).
 
-The Duolingo comparison is bounded: §1.6 is the section that calls that streak/XP/quest loop mechanically identical in shape to ours, and §1.1 is the <b class="num">$1,037.6M</b> ÷ 133.1M MAU anchor. Cosmetics is ours and is deliberately not claimed as part of that anchor.
-
-Solo expeditions and a static event calendar are intended to cover the days when nobody wants a live opponent; that claim, and everything that can be checked about it, is on slide 5.
-
-§2.3 concludes the comparables died of monetisation and long-tail retention rather than distribution. Sequencing is our response to that, and it is untested: nothing in the evidence base shows that deferring monetisation avoids this category's failure mode. &quot;Zero revenue&quot; is an absence caused by having no users, never a decision to decline revenue — only the sequencing is a choice.
-
-Files an investor can open for the product description: lib/progression.mjs, lib/expeditions.mjs, lib/events-data.mjs, app/screens/play/opponent-picker.tsx.
-
-SOURCES — REQUIRED ADDITION: because Duolingo is now named on the slide face, this slide's sources array must gain https://www.sec.gov/Archives/edgar/data/1562088/000162828026012246/q4fy25duolingo12-31x25shar.htm and &quot;FACT//DUEL internal: public/product/investor/numbers.md §1.1 and §1.6 (company disclosure)&quot;. Without it the on-face Duolingo reference is unsourced.
-
-IMAGE: recommend dropping the uncaptioned phone-arena.png. Hale's nine named distractions include &quot;photos with no titles or captions&quot;; the arena shots are already carried with captions in deck.md, and slides 5 and 19 carry the product shots.</div></details>
+The economy is built: a pure reducer with the researched configuration, tested at fifteen scenarios plus a property test, with a config sanitiser that structurally cannot carry a difficulty or bot-skill field — because a loss-streak &quot;mercy&quot; that softens questions is the conduct the FTC's dark-pattern orders describe. Say that if integrity comes up.</div></details>
 <ul class="sources">
 <li><a href="https://www.gameanalytics.com/reports/2026-mobile-pc-gaming-benchmarks" target="_blank" rel="noopener noreferrer">gameanalytics.com</a></li>
 <li><a href="FACT//DUEL internal: public/product/investor/numbers.md §3.2, status paragraph and §5.15 (company disclosure)" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: public/product/investor/numbers.md §3.2, status paragraph and §5.15 (company disclosure)</a></li>
@@ -252,6 +240,8 @@ IMAGE: recommend dropping the uncaptioned phone-arena.png. Hale's nine named dis
 <li><a href="FACT//DUEL internal: public/product/investor/numbers.md §7.1 and §7.2 (company disclosure)" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: public/product/investor/numbers.md §7.1 and §7.2 (company disclosure)</a></li>
 <li><a href="https://www.sec.gov/Archives/edgar/data/1562088/000162828026012246/q4fy25duolingo12-31x25shar.htm" target="_blank" rel="noopener noreferrer">sec.gov</a></li>
 <li><a href="FACT//DUEL internal: public/product/investor/numbers.md §1.1 and §1.6 (company disclosure)" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: public/product/investor/numbers.md §1.1 and §1.6 (company disclosure)</a></li>
+<li><a href="FACT//DUEL internal: docs/money/ads/synthesis.json (16 Sep 2026; five research lanes, two adversarial audits)" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: docs/money/ads/synthesis.json (16 Sep 2026; five research lanes, two adversarial audits)</a></li>
+<li><a href="FACT//DUEL internal: public/product/investor/numbers.md §8 (company disclosure — the ad-funded format, 16 Sep 2026)" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: public/product/investor/numbers.md §8 (company disclosure — the ad-funded format, 16 Sep 2026)</a></li>
 </ul>
 </div></section>
 <section class="slide" id="s5">
@@ -261,10 +251,10 @@ IMAGE: recommend dropping the uncaptioned phone-arena.png. Hale's nine named dis
 <h2>Play a complete duel in a browser, on a phone — about fifteen seconds.</h2>
 <ul class="points">
 <li>Open https://occult-kranti.github.io/fact-duel/ on a phone: the static build runs the entire game in a browser, keeping the real duel engine.</li>
-<li>Two-device friend duels need a server and are disabled in that build, with an on-screen notice.</li>
-<li>Between duels: solo expedition routes and a hand-checked static event calendar — no live feed, no scores API, no rights deal.</li>
-<li>The practice opponent carries a BOT badge (app/screens/play/opponent-picker.tsx); a full integrity answer is milestone 5 (§4.4), before monetisation.</li>
-<li>Playable is not traction: no users outside a private playtest, no revenue, 54 sample questions, no retention effect measured (§7.1).</li>
+<li>Sports only since 16 Sep 2026: football, cricket, baseball, Formula 1 and basketball, 60-66 questions each. Science is hidden behind one flag, not deleted.</li>
+<li>Practice bots play for free — enforced in the engine and on screen, because a house-banked bot is a faucet or a sink and any balance-aware tuning of it is rigging.</li>
+<li>Two-device friend duels need a server and are disabled in that build, with an on-screen notice. The calendar is hand-checked and static: no live feed, no scores API.</li>
+<li>Playable is not traction: no users outside a private playtest, no revenue, no retention effect measured (§7.1).</li>
 </ul>
 <figure class="shot"><img src="shots/phone-home.png" alt="FACT//DUEL screen" loading="lazy"></figure>
 <details class="notes"><summary>Speaker notes</summary><div class="notes-body">MERGED SLIDE: old slide 6 (PRODUCT — THE NON-DUEL SURFACE) is folded in here. Its screenshot (desktop-journeys.png) is deleted; its four sources must be appended to this slide's three, because this slide today cites neither §2.3 nor lib/events-data.mjs, which is the only source for the calendar disclosure in body line 3. Entries to append: &quot;numbers.md §7.2 (company disclosure)&quot;; &quot;numbers.md — status paragraph, §2.3, §4.4, §4.5, §7.1 and §7.3 (company disclosure)&quot;; &quot;repository — lib/expeditions.mjs, lib/events.mjs, lib/events-data.mjs, app/screens/expeditions/run.tsx, product code, unaudited&quot;.
@@ -287,7 +277,11 @@ The bank is 54 sample questions today. Growing it is milestone 4: a target and a
 
 Do not assert anything about how the bot is implemented, how progression is stored or how the transport is sized that an investor cannot open the repository and check — after Skillz v. AviaGames this is where an unverifiable claim does the most damage.
 
-IMAGE: recommend dropping phone-home.png from this slide. The only sourced argument is Hale's &quot;photos with no titles or captions&quot;; the rest is editorial — a picture of the product is dead weight next to a live link to the product.</div></details>
+IMAGE: recommend dropping phone-home.png from this slide. The only sourced argument is Hale's &quot;photos with no titles or captions&quot;; the rest is editorial — a picture of the product is dead weight next to a live link to the product.
+
+SPORTS-ONLY (16 Sep 2026): lib/content.mjs carries ENABLED_DOMAINS = ['sports']; the served bank, the visible expeditions and the calendar are filtered at one seam each, and every sanitiser still accepts science so a profile that earned a Physics stamp last month round-trips unchanged. A hidden expedition is refused with the same words as a nonexistent one. Tests pin all of it.
+
+FREE BOTS: normalizeConfig refuses a staked bot match and add_bot refuses to seat a bot in a staked friend room; the entry picker shows the paid tiers disabled with the reason when a bot is chosen. The economy research's arithmetic: farming a bot at p = 0.7 pays about 78 coins an hour against 4,000+ from ads, so it is not even a good faucet — only a liability.</div></details>
 <ul class="sources">
 <li><a href="FACT//DUEL internal: public/product/investor/numbers.md — status paragraph, §4.4 and §7.1-§7.2 (company disclosure)" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: public/product/investor/numbers.md — status paragraph, §4.4 and §7.1-§7.2 (company disclosure)</a></li>
 <li><a href="FACT//DUEL internal: repository — product code, unaudited" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: repository — product code, unaudited</a></li>
@@ -295,6 +289,7 @@ IMAGE: recommend dropping phone-home.png from this slide. The only sourced argum
 <li><a href="FACT//DUEL internal: public/product/investor/numbers.md — status paragraph and §5.15 (company disclosure)" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: public/product/investor/numbers.md — status paragraph and §5.15 (company disclosure)</a></li>
 <li><a href="FACT//DUEL internal: public/product/investor/numbers.md §2.3, §4.3 and §4.4 (company disclosure)" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: public/product/investor/numbers.md §2.3, §4.3 and §4.4 (company disclosure)</a></li>
 <li><a href="FACT//DUEL internal: public/product/investor/numbers.md §7.1 and §7.2 (company disclosure)" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: public/product/investor/numbers.md §7.1 and §7.2 (company disclosure)</a></li>
+<li><a href="FACT//DUEL internal: docs/money/ads/synthesis.json (16 Sep 2026; five research lanes, two adversarial audits)" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: docs/money/ads/synthesis.json (16 Sep 2026; five research lanes, two adversarial audits)</a></li>
 </ul>
 </div></section>
 <section class="slide" id="s6">
@@ -366,7 +361,7 @@ SOURCES — keep all four on the face: the Google Play Trivia Crack URL (https:/
 <ul class="points">
 <li>Shipped 13 Sep 2026, tested: per-device D1/D7/D30 returns a boolean, never a rate (numbers.md §7.1; Appendix G).</li>
 <li>Also shipped: opt-in anonymous cohort ping, aggregate-only, buckets under five devices suppressed. A rate becomes computable the day there are players.</li>
-<li>Milestone 1 was accounts; measurement landed without them. Milestones 1-2 are de-risked, not done — accounts remain unbuilt.</li>
+<li>Milestone 1 was accounts; measurement landed without them. Accounts remain unbuilt; the anonymous-principal design that promotes in place is specified (docs/money/architecture-plan.json M4).</li>
 <li>Milestone 2: publish D1/D7/D30 against GameAnalytics NA medians <b class="num">23.28%</b>/<b class="num">4.97%</b>/<b class="num">1.18%</b> (third-party estimates, 16,000+ mobile games, iOS and Android, CY2025).</li>
 <li>Target: beat that <b class="num">4.97%</b> D7 on a 1,000+ player cohort. Benchmark is app-store installs; web transfer unproven (§5.14).</li>
 </ul>
@@ -397,48 +392,38 @@ Milestones 4-6 are untouched — grow the bank from 54 questions, ship an oppone
 <div class="rail"><span class="rail-n">09</span></div>
 <div class="slide-body">
 <p class="kicker">BUSINESS MODEL</p>
-<h2>Two monetisation routes, both unbuilt: paid event entry, and a habit subscription.</h2>
+<h2>The business is the rewarded ad. One ad ≈ one duel entry, everywhere; the coin is a constant-revenue unit.</h2>
 <ul class="points">
-<li>Route A <b class="p">(P)</b> — paid entry to a time-limited expedition event: one entry per player, rotating question set.</li>
-<li>Nothing of Route A exists: no payment surface, no accounts, expeditions free and replayable. Duels stake simulated coins only.</li>
-<li>Route B <b class="p">(P)</b> — habit subscription. Duolingo: <b class="num">$1,037.6M</b> FY2025 on a streak loop; 12.7M of 140.6M MAU paid, <b class="num">9.03%</b>.</li>
-<li>Cross-check at base-case Year-3 scale: 105,900 MAU x <b class="num">9.03%</b> x <b class="num">$43.99</b>/yr = <b class="num">$420,666</b> <b class="p">(P)</b>, versus <b class="num">$1,630,517</b> <b class="p">(P)</b> from install economics.</li>
-<li>Diverging <b class="num">3.88x</b>, Year-3 revenue is a band — <b class="num">$0.4M</b>-<b class="num">$1.6M</b> <b class="p">(P)</b>, not <b class="num">$1.6M</b>. Today: zero users, zero revenue.</li>
-<li>Trivia IAP, US iOS top three: ~<b class="num">$102.5K</b>/week peak (Sensor Tower est., before Apple's 15-<b class="num">30%</b> cut). <b class="num">$43.99</b>/yr: Sporcle Orange.</li>
+<li>Rewarded video eCPM, in-app, 2024-26 (likely): US <b class="num">$15</b>-30; UK <b class="num">$17</b>-22; DE <b class="num">$12</b>-14; FR <b class="num">$10</b>-11; India unverified in any reachable table, <b class="num">$1</b>-3 (§8.2).</li>
+<li>The coin: 50 per US ad ≈ 0.055¢ (likely). Derived rewards US 50 / UK 35 / DE 25 / FR 20 / India 10 — India floors so one ad always buys one duel (§8.3).</li>
+<li>ARPDAU at 2 rewarded ads per DAU (likely): US 5.5¢ · UK 3.8¢ · DE 2.6¢ · FR 2.0¢ · India 0.4-0.8¢. LTV180 at median retention: US <b class="num">$0.125,</b> India ~<b class="num">$0.01</b> (§8.4).</li>
+<li>The one public comparable: QuizDuel (MAG Interactive) ARPDAU 9.0¢, 9 months to May 2026, +<b class="num">31%</b> — IAP plus ads, 0.9M DAU (verified, §8.5).</li>
+<li>Sink: a disclosed arena fee — <b class="num">0%</b> on 10- and 25-coin entries, <b class="num">10%</b> from 50, <b class="num">15%</b> at 500. Printed on the entry card as &quot;pot 100 · prize 90&quot;. Break-even win rate at <b class="num">10%</b>: <b class="num">55.6%</b> (verified).</li>
+<li>Web pays 30-<b class="num">70%</b> less than in-app and has no server-side verification of completion; verified rewards need the store build (§8.6). Subscription remains an unbuilt later option <b class="p">(P)</b>.</li>
 </ul>
-<figure class="chart"><img src="charts/where-money-is.png" alt="Two monetisation routes, both unbuilt: paid event entry, and a habit subscription." loading="lazy" width="2000" height="1200"></figure>
-<details class="notes"><summary>Speaker notes</summary><div class="notes-body">Lead with what is NOT built, not with the model. Route A is the founder’s own route, recorded in numbers.md §4.4b on 14 September 2026: paid entry to a time-limited expedition event, one entry per player, a rotating question set so answers cannot be passed around. It is a coherent design — single entry is what makes a leaderboard mean anything, and rotation is the anti-collusion mechanism a fixed bank cannot provide.
+<details class="notes"><summary>Speaker notes</summary><div class="notes-body">Lead with the unit, not the totals. The whole economy is anchored on one number — 50 coins for a US rewarded ad at a blended US eCPM the research put at <b class="num">$27.32</b> (a simple mean of Tenjin/CAS.AI Q2 2024 iOS and Android; the audit notes cross-dataset ranges span <b class="num">$15</b>-30 and asked that no single US figure be implied) — which makes a coin worth about 0.055 US cents of revenue. Every other geo's reward is that anchor scaled by its eCPM, then floored at the smallest entry tier so that one ad always buys one duel. The audit recomputed the table (US 50 / UK 35.1→35 / DE 24.0→25 / FR 18.7→20 / BR 10.5→10) and the revenue-per-coin spread across non-floored geos is <b class="num">6.4%</b>. Say that a weekly job will re-derive the table from realised eCPM; until it exists these are researched values, not measurements.
 
-Volunteer the gap before you are asked, because a reader can check every word of it in the public repository in about two minutes. Today: there is no payment surface anywhere in the tree; the duel coins say on screen &quot;Free simulated coins. No monetary value.&quot;; expedition stake tiers stake RUN-SCORE POINTS and never a currency (+2/0, +3/-1, +4/-3, lib/expeditions.mjs), under the expedition betting rule that the bet itself stakes no currency — and note the scope of that rule carefully, because a duel DOES stake coins: 0/10/25/50/100 simulated coins per room, reserved into a stake x 2 escrow (lib/server/room-engine.mjs:37, 181-185), which is the nearest shipped mechanism to the coin half of the ask. It is per-room, never persisted to a wallet, and labelled on screen as having no monetary value; expeditions are replayable by design and there are no accounts, so &quot;one entry per player&quot; is not yet expressible; and a route’s six cards are frozen — a replay reshuffles the OPTIONS, not the questions, out of a 54-question bank.
+INDIA is the honest gap: no per-country rewarded eCPM for India exists in any table the research could reach; <b class="num">$1</b>-3 is illustrative. At a 10:1 US:India ratio a revenue-flat table makes India nearly unplayable, which is exactly why India floors at 10 coins per ad — and why the launch lane treats India as a retention read rather than a revenue read.
 
-What is already built and would be reused: lib/events.mjs derives up to four limited-time modes a month, deterministically from the month and a hand-checked calendar, so the time-limited and rotating halves have a working mechanism behind them. It rotates duel modes today, pays XP, and takes no money.
+ARPDAU arithmetic: ads per DAU × eCPM / 1000. The &quot;2 ads per DAU&quot; is 3.85 sessions × 2 ads offered × a <b class="num">26%</b> watch rate, and the <b class="num">26%</b> is an assumption (the synthesis lists it as an open question; the go/no-go gate is opt-in ≥ <b class="num">25%</b> of DAU). LTV180 uses GameAnalytics CY2025 median retention (D1 ~<b class="num">22%</b>, D7 just under <b class="num">4%</b>, D30 0.68-<b class="num">0.79%</b>) fitted to a power law: lifetime days 2.28 at 180 days median, 3.57 at P75. So US LTV180 is <b class="num">$0.125</b> median / <b class="num">$0.195</b> P75; UK <b class="num">$0.087</b> / <b class="num">$0.137</b>; DE <b class="num">$0.060</b> / <b class="num">$0.094</b>; FR <b class="num">$0.047</b> / <b class="num">$0.073</b>; India <b class="num">$0.009</b>-0.018.
 
-Route A is therefore gated on milestone 1 (accounts), milestone 4 (a bank past 54) and a wagering-law answer, which is on the risks slide. If you are asked which you would build: Route B first, because it is testable on the cohort this round buys, while Route A needs three other things to land before it can be tested at all.
+QuizDuel is the comparable to quote because it is filed, not estimated: MAG Interactive reports 9.0 US cents ARPDAU for nine months to May 2026, up <b class="num">31%</b>, on 0.9M DAU (down <b class="num">12%</b>) — and that is IAP plus ads, so it is a ceiling for an ads-only product, not a target.
 
-Longest-dwell slide in a seed deck at 64 seconds in DocSend's estimates, so it is the densest page here and the one to rehearse hardest. The argument in one breath: the category does monetise, just not as consumer trivia IAP.
+The fee exists because grants (ads, daily, floor) are not zero-sum even though duels are; without a sink that scales with play the coin supply inflates. Zero on the micro tiers keeps &quot;one ad, one duel&quot; exactly true. It is printed before commit because a hidden rake is the exact mechanic reviewers call rigged. Break-even win rate under a fee r is 1/(2(1-r)): <b class="num">50.0%</b> at <b class="num">0%</b>, <b class="num">52.6%</b> at <b class="num">5%</b>, <b class="num">55.6%</b> at <b class="num">10%</b>, <b class="num">58.8%</b> at <b class="num">15%</b> — audit-confirmed.
 
-Say the chart's caveat out loud before anyone asks, because the chart annualises. The <b class="num">$5.33M</b> bar is the <b class="num">$102.5K</b> weekly peak times 52, and that is the strongest possible form of the number. The weekly figures on the slide are the honest ones: Sensor Tower's Q2 2025 US iOS estimates put Kahoot at a <b class="num">$38.5K</b>/week peak in mid-June falling to <b class="num">$28.2K</b>, Trivia Crack Premium at about <b class="num">$33K</b>, GeoGuessr at <b class="num">$31K</b> falling to <b class="num">$28.7K</b>. Stack the peaks and it is about <b class="num">$102.5K</b> a week; on quarter-end values about <b class="num">$90K</b>. These are modelled estimates of gross consumer spend before Apple's 15-<b class="num">30%</b> commission — not audited and not company-reported revenue — and they are more than a year old. Do not annualise the stacked peak as a run rate. Full figures and both readings of the gap are on appendix slide 14 (§1.6).
+What the chart used to show — trivia IAP peaks of ~<b class="num">$102.5K</b>/week across the US iOS top three — is still true and still small; it is in appendix slide 14. It came off this slide because it argues about a business we are no longer building.
 
-If challenged on Kahoot as a counter-example: Kahoot collected <b class="num">$146.0M</b> in FY2022 at a <b class="num">95%</b> gross margin, but through per-presenter B2B and education subscriptions at <b class="num">$19</b>-<b class="num">$79</b> a month. That is not a consumer habit subscription and must not be presented as one. FY2022 is its last comparable year — it went private on 23 Jan 2024 and has published no audited consolidated group figures since, and the parent-only Norwegian statutory accounts are not group results.
-
-On Duolingo, keep the two periods apart: <b class="num">$1,037.6M</b> is FY2025 total revenue; the 12.7M of 140.6M MAU (<b class="num">9.03%</b>) is a 30 June 2026 snapshot (§2.1). The FY2025 pair is 12.2M of 133.1M (<b class="num">9.17%</b>). Neither ratio is filed as a ratio — both are our own arithmetic on separately disclosed subscriber and MAU counts.
-
-The cross-check is the point of the slide and it argues against us: at base-case Year-3 MAU of 105,900 <b class="p">(P)</b>, a Duolingo-rate subscription at Sporcle's <b class="num">$43.99</b>/yr Orange individual price yields <b class="num">$420,666</b> <b class="p">(P)</b> while our install-economics model yields <b class="num">$1,630,517</b> <b class="p">(P)</b> — a <b class="num">3.88x</b> divergence, which is why §4.3 and §1.5 require the base-case Year-3 band to be presented as <b class="num">$0.4M</b>-<b class="num">$1.6M</b> <b class="p">(P)</b> and not <b class="num">$1.6M</b>. Note the scope: that band is the base case only. Conservative Y3 is <b class="num">$92,202</b> / <b class="num">$85,570</b> and optimistic Y3 is <b class="num">$7,560,784</b> / <b class="num">$1,436,647,</b> both outside it. In the conservative case the two routes land within <b class="num">8%</b> of each other, which is the reason to trust the conservative case and distrust the base case.
-
-Two ceilings to state before being asked: base-case revenue per MAU of <b class="num">$15.40</b>/yr <b class="p">(P)</b> already exceeds both real anchors (MAG <b class="num">$13.07,</b> Duolingo <b class="num">$7.80</b>), and break-even blended cost per install is <b class="num">$1.36</b> <b class="p">(P)</b> in the base case against Trivia Royale's sourced <b class="num">$0.20</b> or less — necessary, and demonstrably not sufficient.
-
-We have no verified CAC or genre ARPDAU benchmark and we will not quote one. All scenario figures are <b class="p">(P)</b>: plans built on third-party benchmarks with zero company data behind them, and the Year-3 install volume and the <b class="num">20%</b> monthly churn are flagged in §4.2 as chosen assumptions with no source at all.</div></details>
+Subscription (Route B on the previous deck) is not dead: it is lawful everywhere the research looked and it has the Duolingo comparable behind it. It is sequenced after the ad loop has a retention number, and it is marked <b class="p">(P)</b> because nothing of it is built.</div></details>
 <ul class="sources">
-<li><a href="https://sensortower.com/blog/2025-q2-ios-top-5-trivia%20games-revenue-us-604118ed241bc16eb8b8453a" target="_blank" rel="noopener noreferrer">sensortower.com</a></li>
-<li><a href="https://www.sec.gov/Archives/edgar/data/1562088/000162828026012246/q4fy25duolingo12-31x25shar.htm" target="_blank" rel="noopener noreferrer">sec.gov</a></li>
-<li><a href="https://www.sec.gov/Archives/edgar/data/1562088/000162828026053603/duol-20260630.htm" target="_blank" rel="noopener noreferrer">sec.gov</a></li>
-<li><a href="https://www.sec.gov/Archives/edgar/data/1562088/000162828026053299/q2fy26duolingo6-30x26share.htm" target="_blank" rel="noopener noreferrer">sec.gov</a></li>
-<li><a href="https://kahoot.com/files/2023/02/4Q22_Kahoot_quarterly_report.pdf" target="_blank" rel="noopener noreferrer">kahoot.com</a></li>
-<li><a href="https://www.sporcle.com/memberships/" target="_blank" rel="noopener noreferrer">sporcle.com</a></li>
-<li><a href="https://www.appsflyer.com/resources/reports/app-marketing-monetization-report/" target="_blank" rel="noopener noreferrer">appsflyer.com</a></li>
+<li><a href="https://www.businessofapps.com/marketplace/app-marketing/research/cost-per-install/" target="_blank" rel="noopener noreferrer">businessofapps.com</a></li>
+<li><a href="https://storage.mfn.se/ (MAG Interactive Q3 2025/26 interim report PDF — QuizDuel ARPDAU)" target="_blank" rel="noopener noreferrer">storage.mfn.se</a></li>
+<li><a href="https://support.google.com/admanager/answer/9116812 (rewarded ads for web: &quot;Server-side verification is an app only feature&quot;)" target="_blank" rel="noopener noreferrer">support.google.com</a></li>
+<li><a href="https://support.google.com/adsense/answer/9121589 (policies for ad units that offer rewards)" target="_blank" rel="noopener noreferrer">support.google.com</a></li>
 <li><a href="https://www.gameanalytics.com/reports/2026-mobile-pc-gaming-benchmarks" target="_blank" rel="noopener noreferrer">gameanalytics.com</a></li>
-<li><a href="FACT//DUEL internal: public/product/investor/numbers.md §4.1-§4.3" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: public/product/investor/numbers.md §4.1-§4.3</a></li>
-<li><a href="FACT//DUEL internal: public/product/investor/numbers.md §4.4b (company disclosure — the founder’s named monetisation route and what it would take)" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: public/product/investor/numbers.md §4.4b (company disclosure — the founder’s named monetisation route and what it would take)</a></li>
+<li><a href="https://applixir.com/faq (web rewarded eCPM ranges, vendor)" target="_blank" rel="noopener noreferrer">applixir.com</a></li>
+<li><a href="FACT//DUEL internal: docs/money/ads/lane-economy.json + audit-2-economy.json (recomputed table and break-evens)" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: docs/money/ads/lane-economy.json + audit-2-economy.json (recomputed table and break-evens)</a></li>
+<li><a href="FACT//DUEL internal: docs/money/ads/lane-adtech.json + audit-1.json" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: docs/money/ads/lane-adtech.json + audit-1.json</a></li>
+<li><a href="FACT//DUEL internal: public/product/investor/numbers.md §8 (company disclosure — the ad-funded format, 16 Sep 2026)" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: public/product/investor/numbers.md §8 (company disclosure — the ad-funded format, 16 Sep 2026)</a></li>
 </ul>
 </div></section>
 <section class="slide" id="s10">
@@ -536,38 +521,24 @@ STRUCTURE: kind &quot;table&quot;, the six-row landscape table and all sixteen s
 <div class="rail"><span class="rail-n">11</span></div>
 <div class="slide-body">
 <p class="kicker">RISKS</p>
-<h2>The two risks that emptied this category lead the list, and set the milestones.</h2>
+<h2>The risks that emptied this category still lead — and the ad model adds four of its own.</h2>
 <ul class="points">
-<li>Long-tail retention. Trivia Royale reported <b class="num">45%</b> D1 iOS — company-stated to TechCrunch, not audited — and closed eight months after launch.</li>
-<li>Global median D30 across 16,000+ mobile games is 0.68-<b class="num">0.79%</b> (GameAnalytics est., CY2025); the North American median is <b class="num">1.18%</b>.</li>
-<li>Opponent integrity. Skillz won a <b class="num">$42.9M</b> jury verdict against AviaGames for willful patent infringement (9 Feb 2024); trial evidence showed bots run against paying humans.</li>
-<li>Benchmark transfer. Every retention, session and per-install benchmark in our model is measured on app-store installs, not web (§5.14, §7.3).</li>
-<li>Measurement selection. The cohort rate counts only devices that opt into the anonymous ping — consenting devices, not all. We will publish it as exactly that.</li>
-<li>Content depth. 54 sample questions is a demo bank; the ask funds four engineers and no content line (§4.4).</li>
-<li>Model honesty. Our base case <b class="p">(P)</b> out-monetises a <b class="num">9.03%</b>-conversion subscription at <b class="num">$43.99</b>/yr by <b class="num">3.88x</b>. We flag it, not hide it.</li>
-<li>Wagering law. Route A <b class="p">(P)</b> would stake real money on a knowledge outcome: skill gaming or gambling in many jurisdictions. Nothing takes money today.</li>
+<li>Long-tail retention. Global median D30 across 16,000+ mobile games is 0.68-<b class="num">0.79%</b> (GameAnalytics est., CY2025). Trivia Royale reported <b class="num">45%</b> D1 and closed in eight months.</li>
+<li>Opponent integrity. Skillz v. Papaya: a <b class="num">$420M</b> jury verdict (Apr 2026) and <b class="num">$719M</b> disgorgement (Jul 2026) — the court found it &quot;undisputed&quot; Papaya ran bots while denying it 200+ times.</li>
+<li>Ad policy. Google requires rewarded-ad rewards to be non-transferable. Our entry-and-prize flow is designed to satisfy it; a written answer from Google is the open question we must get first.</li>
+<li>No web verification. No web ad network verifies a completion server-side (Google, verbatim). Web rewards are cheap and capped by design; verified rewards need the store build (W8).</li>
+<li>Web eCPM. Every published rewarded eCPM is in-app; web is quoted 30-<b class="num">70%</b> lower, and ad-blocking runs ~<b class="num">30%</b> of users. India eCPM is unverified anywhere reachable.</li>
+<li>Paid acquisition never pays back. Ad LTV per install is <b class="num">$0.06</b>-0.25 in the US and about a cent in India against CPIs of <b class="num">$2.50</b>-5.00. Growth must be organic and calendar-driven.</li>
+<li>Benchmark transfer and content depth. All retention benchmarks are app-store installs, not web (§5.14). 329 shipped (60-66 per sport); 300 per sport is the launch gate.</li>
+<li>Approval risk. AdSense will not approve a github.io subdomain; H5 Games Ads is application-only and &quot;not guaranteed&quot;. A first-party domain is the first item on the critical path.</li>
 </ul>
-<details class="notes"><summary>Speaker notes</summary><div class="notes-body">The plan marker and the conditional mood on this line are load-bearing. Every other bullet on this slide is a fact that is true today, so an unmarked present-tense &quot;Route A stakes real money&quot; reads, to anyone landing here out of order, as a description of a shipped real-money wagering product. There is no payment surface anywhere in the tree and no accounts of any kind.
+<details class="notes"><summary>Speaker notes</summary><div class="notes-body">Eight risks, and the order is deliberate: the two that emptied the category first, then the four the ad model introduces, then the two carried over. Papaya replaces AviaGames as the integrity example because it is larger and more recent: the SDNY jury found for Skillz under the Lanham Act on 23 April 2026 (<b class="num">$420M</b>) and the 28 July 2026 judgment added <b class="num">$719M</b> disgorgement as an alternative remedy the plaintiff may elect — it is a district-court judgment subject to appeal, binding nobody, and still the most decision-relevant fact about bots in this genre. Our answer is structural: every opponent card is badged Human / Practice bot / Ghost, bots never play for coins, and the trust page publishes the bot policy.
 
-Eight risks now, not seven. Route A on the business-model slide takes real money on the outcome of a knowledge question, and in many jurisdictions that is regulated as skill gaming or gambling rather than as a game sale. We have no answer and we say so rather than discovering it in diligence.
+The ad-policy risk is the one to rehearse. Google's Policies for ad units that offer rewards say a reward must be non-transferable — &quot;only redeemable and usable by the same user who received it, and is not ... items that can be transferred to a third party&quot; (confirmed verbatim by the audit). A coin earned from an ad, staked into a pot the opponent wins, has arguably been transferred. Our flow is entry-to-the-house and prize-from-the-house, sized equal, so no coin moves between players and the copy never says &quot;take their coins&quot;. We believe that satisfies the clause; we have not been told so by Google, and the launch plan sends that enquiry before the soft launch. An account-level disable would end the model overnight, which is why it is on this slide and not in a footnote.
 
-The landscape slide already notes that Skillz runs real-money cash tournaments and has never been profitable. That is the nearest comparable to Route A and it is not an encouraging one — which is a reason to name the risk here, not to leave it off.
+&quot;No web verification&quot; is a quote, not a paraphrase: &quot;Server-side verification is an app only feature and it is unavailable for web use.&quot; Consequence: a web reward is treated as spoofable and kept cheap, with a server-issued nonce, a completion window no shorter than the ad, and daily caps — the ceiling on a lying client is one payout per nonce the server chose to issue. Verified rewards arrive with the Capacitor/TWA builds and AdMob's signed callbacks in week 8.
 
-Do not let this slide shrink to fit a line budget. Cutting a risk to make a page look tidier is the one edit this deck is not allowed to make.
-
-Each risk has a named response rather than a reassurance.
-
-Long-tail retention: at a median D30 of 0.68-<b class="num">0.79%</b> a game's MAU is almost entirely the current month's new installs — in our own base case the retained resident base is 5,900 of 105,900 MAU <b class="p">(P)</b>, <b class="num">5.6%</b> — so retention is not a metric in this category, it is the business, and that is why the entire raise is pointed at it. The 0.68-<b class="num">0.79%</b> band is GameAnalytics' global all-genre median, not trivia-specific; the model's base case uses the North American <b class="num">1.18%</b>. Trivia Royale's <b class="num">45%</b> D1 is a company statement to TechCrunch, not audited, and its closure was announced on 23 Feb 2021 (§2.3).
-
-Opponent integrity: the <b class="num">$42.9M</b> award was a jury verdict for willful infringement of a Skillz platform patent, not damages awarded for running bots — the bots named 'Cucumbers' and 'Guides' were trial evidence — and it is a verdict rather than a collected settlement. Our answer is milestone 5 in §4.4: an opponent-integrity answer ships before monetisation. Do not describe bot internals an investor cannot verify in the repository.
-
-Benchmark transfer is the largest methodological risk in the whole model and is stated rather than buried: we have no verified benchmark for web-first game retention, web-first acquisition cost or web-first payer conversion; §7.3 confirms §5.14 stands unchanged; and the cohort the round buys is what replaces the assumption with data — our own instrument is now the route to a web-first number rather than a request for one. Note the scope: it is every benchmark in §3. Duolingo's <b class="num">9.03%</b> MAU-to-paid and Sporcle's <b class="num">$43.99</b>/yr web price are not store-measured.
-
-Measurement selection is a risk we raise against ourselves: the cohort report is built on an opt-in anonymous daily ping (§7.1), so its denominator is devices that consented, and the honest presentation of the first cohort number names the consent rate next to the retention rate. Do not offer a correction factor — we have no evidence base for one. Say the countervailing design choices in the same breath: aggregate-only reporting, no per-device row, and suppression of any bucket describing fewer than five devices; appendix G (slide 20) documents them.
-
-Content depth: there is no separate content budget in §4.5, which funds four engineers and nothing else, and §4.4 milestone 4 still requires us to set a target and a production rate.
-
-If an investor adds a risk we have not listed, that is a good outcome — write it down and answer it in the follow-up, not on the spot.</div></details>
+The paid-acquisition line is the launch lane's headline and it is arithmetic, not opinion: ad LTV per install of roughly <b class="num">$0.06</b> (median retention) to <b class="num">$0.25</b> (90 days, good curve) in the US, about a cent in India, against 2026 CPIs of <b class="num">$2.50</b>-5.00 North America and <b class="num">$1.50</b>-3.00 APAC. So paid spend is capped at brand defence, and the plan is SEO pages per intent, fixture-driven beats, and community — with Reddit's per-subreddit self-promotion rules read from snapshots and respected.</div></details>
 <ul class="sources">
 <li><a href="https://techcrunch.com/2020/07/10/how-thor-fridrikssons-trivia-royale-earned-2-5m-downloads-in-3-weeks/" target="_blank" rel="noopener noreferrer">techcrunch.com</a></li>
 <li><a href="https://www.gameanalytics.com/reports/2026-mobile-pc-gaming-benchmarks" target="_blank" rel="noopener noreferrer">gameanalytics.com</a></li>
@@ -578,6 +549,14 @@ If an investor adds a risk we have not listed, that is a good outcome — write 
 <li><a href="FACT//DUEL internal: public/product/investor/numbers.md §3.5, §5.2 and §5.14 (company disclosure)" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: public/product/investor/numbers.md §3.5, §5.2 and §5.14 (company disclosure)</a></li>
 <li><a href="FACT//DUEL internal: public/product/investor/numbers.md §7.1 and §7.2 (company disclosure)" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: public/product/investor/numbers.md §7.1 and §7.2 (company disclosure)</a></li>
 <li><a href="FACT//DUEL internal: public/product/investor/numbers.md §4.4b (company disclosure)" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: public/product/investor/numbers.md §4.4b (company disclosure)</a></li>
+<li><a href="https://www.yogonet.com/ (Skillz v. Papaya verdict, 28 Apr 2026)" target="_blank" rel="noopener noreferrer">yogonet.com</a></li>
+<li><a href="https://support.google.com/admanager/answer/9116812" target="_blank" rel="noopener noreferrer">support.google.com</a></li>
+<li><a href="https://support.google.com/adsense/answer/9121589" target="_blank" rel="noopener noreferrer">support.google.com</a></li>
+<li><a href="https://support.google.com/adsense/answer/1705831 (H5 Games Ads: approval &quot;not guaranteed&quot;)" target="_blank" rel="noopener noreferrer">support.google.com</a></li>
+<li><a href="https://www.businessofapps.com/marketplace/app-marketing/research/cost-per-install/" target="_blank" rel="noopener noreferrer">businessofapps.com</a></li>
+<li><a href="FACT//DUEL internal: docs/money/ads/lane-adtech.json + audit-1.json" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: docs/money/ads/lane-adtech.json + audit-1.json</a></li>
+<li><a href="FACT//DUEL internal: docs/money/ads/synthesis.json (16 Sep 2026; five research lanes, two adversarial audits)" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: docs/money/ads/synthesis.json (16 Sep 2026; five research lanes, two adversarial audits)</a></li>
+<li><a href="FACT//DUEL internal: public/product/investor/numbers.md §8 (company disclosure — the ad-funded format, 16 Sep 2026)" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: public/product/investor/numbers.md §8 (company disclosure — the ad-funded format, 16 Sep 2026)</a></li>
 </ul>
 </div></section>
 <section class="slide" id="s12">
@@ -617,8 +596,8 @@ DocSend estimates 38 seconds on the team section (third-party estimate, §4.6); 
 <li>4 engineers x <b class="num">$15,000</b>/month x 18 months = <b class="num">$1,080,000</b> <b class="p">(P)</b>. Raising about <b class="num">$1.2M</b> <b class="p">(P)</b>, inside YC's <b class="num">$500k</b>-<b class="num">$1.5M</b> band.</li>
 <li><b class="num">$15,000</b> is YC's own rule of thumb for an all-in engineer month — undated editorial guidance, not a measured 2026 cost base.</li>
 <li>Illustrative, not a price: at Carta's Q3 2025 median seed pre-money of <b class="num">$16.0M</b>, <b class="num">$1.2M</b> into <b class="num">$17.2M</b> post is <b class="num">6.98%</b> dilution <b class="p">(P)</b>.</li>
-<li>It buys: a published D1/D7/D30 cohort of 1,000+ players; growth of the bank from 54 questions, to a target and rate we must still set.</li>
-<li>Plus an opponent-integrity answer and one validated monetisation route. The measurement layer already shipped, tested, on 13 Sep 2026 (§7.1). Then we come back with data.</li>
+<li>It buys the twelve-week plan: soft launch India + UK on 12 Oct 2026, EU 2 Nov, US 23 Nov, store builds with verified rewards in week 8, go/no-go 14 Dec (§8.7).</li>
+<li>And the number this deck lacks: a published D1/D7/D30 cohort of 1,000+ players; 300 verified questions per sport; an opponent-integrity answer in production.</li>
 </ul>
 <details class="notes"><summary>Speaker notes</summary><div class="notes-body">The ask uses YC's structure — N months x team x cost = $X, with dilution against a published median — and the arithmetic is shown so it can be checked in the 32 seconds this slide gets.
 
@@ -632,13 +611,17 @@ On the question bank: state 54 as the baseline and say plainly that the target a
 
 The one change since the last version of this deck is a de-risking rather than a result: the measurement layer no longer has to be built with this money, because it shipped on 13 September 2026 (§7.1), so the round buys the cohort rather than the instrument. Say it in one sentence and do not inflate it — there is still no cohort, no rate and no revenue, and §7.3 is explicit that every figure in §4 remains a plan.
 
-Base-case Year-1 revenue of <b class="num">$101,907</b> <b class="p">(P)</b> is immaterial to runway and should be described that way — the raise buys 18 months to produce the retention data we do not have, which is the entire thesis of the round. No detailed financial model belongs in this conversation: ours is appendix slide 15, where it can be interrogated rather than performed.</div></details>
+Base-case Year-1 revenue of <b class="num">$101,907</b> <b class="p">(P)</b> is immaterial to runway and should be described that way — the raise buys 18 months to produce the retention data we do not have, which is the entire thesis of the round. No detailed financial model belongs in this conversation: ours is appendix slide 15, where it can be interrogated rather than performed.
+
+THE TWELVE WEEKS (synthesis, 16 Sep 2026): pre-W1 the founder buys the domain and briefs counsel; W1 AdSense and H5 Games Ads applications, TCF 2.3 CMP, analytics; W2 closed alpha (~50 friends, UK and India); W3 fix wave, Report button, 300 questions per sport for football/cricket/F1; W4 public soft launch India + UK/Ireland, web only, zero paid UA; W5 fixture mode; W6 loss-streak levers and the priced ad card; W7 EU with localised football pages and bracketed leagues; W8 Capacitor iOS and TWA Android submitted with AdMob SSV, NBA/MLB banks at 300; W9 wrapper live, trust page; W10 the US around the NBA Cup; W11 F1 season-review expedition; W12 go/no-go on 14 Dec against D1 ≥ <b class="num">30%</b>, D7 ≥ <b class="num">10%</b>, D30 ≥ <b class="num">4%</b>, rewarded opt-in ≥ <b class="num">25%</b> of DAU, ≥ 1.5 rewarded ads per DAU — kill or pivot if D1 &lt; <b class="num">20%</b> after two fix cycles. Total paid spend to date ≤ <b class="num">$500.</b></div></details>
 <ul class="sources">
 <li><a href="https://www.ycombinator.com/library/4A-a-guide-to-seed-fundraising" target="_blank" rel="noopener noreferrer">ycombinator.com</a></li>
 <li><a href="https://carta.com/data/state-of-private-markets-q3-2025/" target="_blank" rel="noopener noreferrer">carta.com</a></li>
 <li><a href="https://news.crunchbase.com/venture/average-seed-funding-amounts-deals-grew-2025/" target="_blank" rel="noopener noreferrer">news.crunchbase.com</a></li>
 <li><a href="FACT//DUEL internal: public/product/investor/numbers.md §4.4, §4.5 and §5.8" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: public/product/investor/numbers.md §4.4, §4.5 and §5.8</a></li>
 <li><a href="FACT//DUEL internal: public/product/investor/numbers.md §7.1 and §7.3 (company disclosure)" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: public/product/investor/numbers.md §7.1 and §7.3 (company disclosure)</a></li>
+<li><a href="FACT//DUEL internal: docs/money/ads/synthesis.json (16 Sep 2026; five research lanes, two adversarial audits)" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: docs/money/ads/synthesis.json (16 Sep 2026; five research lanes, two adversarial audits)</a></li>
+<li><a href="FACT//DUEL internal: public/product/investor/numbers.md §8 (company disclosure — the ad-funded format, 16 Sep 2026)" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: public/product/investor/numbers.md §8 (company disclosure — the ad-funded format, 16 Sep 2026)</a></li>
 </ul>
 </div></section>
   <div class="divider"><p>Appendix</p></div>
@@ -679,61 +662,31 @@ STRUCTURE: kind &quot;appendix&quot;, chart &quot;the-gap&quot;, all eight sourc
 <div class="rail"><span class="rail-n">B</span></div>
 <div class="slide-body">
 <p class="kicker">APPENDIX — THE MODEL</p>
-<h2>Three-year scenarios, all figures (P): plans built on third-party benchmarks.</h2>
+<h2>The ad-funded arithmetic, all figures (likely) or (P): benchmarks the research could not independently verify, and no company data.</h2>
 <ul class="points">
-<li>One model, three input sets; only D30 retention, payer rate and install volume change. Install volumes are chosen assumptions with no company data behind them.</li>
-<li>Even the optimistic case assumes only median casual per-install monetisation; all optimism sits in volume.</li>
-<li>Subscription cross-check: conservative agrees within <b class="num">8%</b>; base diverges <b class="num">3.88x</b>; optimistic <b class="num">5.26x</b>. Break-even cost per install <b class="num">$0.37</b> / <b class="num">$1.36</b> / <b class="num">$1.89</b> — Trivia Royale's was under <b class="num">$0.20,</b> and it still died.</li>
+<li>ARPDAU = ads per DAU x eCPM / 1000. LTV(H) = ARPDAU x lifetime days, where lifetime days = 1 + Σ retention(d) fitted to GameAnalytics CY2025 medians (2.28 at 180 days; P75 3.57).</li>
+<li>US at 2 ads/DAU and <b class="num">$27.32</b> eCPM: ARPDAU 5.46¢; LTV180 <b class="num">$0.125</b> median, <b class="num">$0.195</b> P75. UK 3.84¢ / <b class="num">$0.087</b> / <b class="num">$0.137.</b> DE 2.63¢ / <b class="num">$0.060</b> / <b class="num">$0.094.</b> FR 2.04¢ / <b class="num">$0.047</b> / <b class="num">$0.073.</b> India 0.4-0.8¢ / <b class="num">$0.009</b>-0.018.</li>
+<li>Illustrative day: 10,000 DAU x 2 rewarded/DAU x <b class="num">$15</b> eCPM = <b class="num">$300</b>/day (US in-app); at <b class="num">$1.50</b> = <b class="num">$30</b>/day (India); on the web at <b class="num">$4</b>-7 = <b class="num">$80</b>-140/day before ad-block loss.</li>
+<li>Break-even CPI (organic-only unless this changes): <b class="num">$0.06</b>-0.25 US, ~<b class="num">$0.01</b>-0.02 India. 2026 CPIs: North America <b class="num">$2.50</b>-5.00, EMEA <b class="num">$2.00</b>-4.00, APAC <b class="num">$1.50</b>-3.00 (verified).</li>
+<li>Economy steady state (order of magnitude): faucets ~116 coins/session, sinks ~37, balance settling near 5,800 at a <b class="num">10%</b> fee; sinks/faucets 0.32 at launch, a ratio to instrument, not a target met.</li>
+<li>Every input above is third-party or derived; the two that decide everything — the watch rate (assumed <b class="num">26%</b>) and web eCPM by geo — are unknown until day 30 of the soft launch.</li>
 </ul>
-<figure class="chart"><img src="charts/scenarios.png" alt="Three-year scenarios, all figures (P): plans built on third-party benchmarks." loading="lazy" width="2000" height="1200"></figure>
-<div class="table-wrap"><table><thead><tr>
-<th>Scenario (P)</th>
-<th>Y3 installs</th>
-<th>Rev / install</th>
-<th>Y3 revenue</th>
-<th>Y3 steady MAU</th>
-<th>Subscription cross-check</th>
-</tr></thead><tbody>
-<tr>
-<td>Conservative</td>
-<td>250,000</td>
-<td><b class="num">$0.3688</b></td>
-<td><b class="num">$92,202</b></td>
-<td>21,542</td>
-<td><b class="num">$85,570</b> — agrees within <b class="num">8%</b></td>
-</tr>
-<tr>
-<td>Base</td>
-<td>1,200,000</td>
-<td><b class="num">$1.3588</b></td>
-<td><b class="num">$1,630,517</b></td>
-<td>105,900</td>
-<td><b class="num">$420,666</b> — <b class="num">3.88x</b> divergence</td>
-</tr>
-<tr>
-<td>Optimistic</td>
-<td>4,000,000</td>
-<td><b class="num">$1.8902</b></td>
-<td><b class="num">$7,560,784</b></td>
-<td>361,667</td>
-<td><b class="num">$1,436,647</b> — <b class="num">5.26x</b> divergence</td>
-</tr>
-</tbody></table></div>
-<details class="notes"><summary>Speaker notes</summary><div class="notes-body">This page exists only because someone asked for it. a16z lists detailed three-to-five-year projections among the things not to include, wants 12-18 month milestones instead, and its anchoring rule cannot even be satisfied here because we have no historical data to anchor to — which is itself the most honest sentence on the page.
+<details class="notes"><summary>Speaker notes</summary><div class="notes-body">This page replaces the three-year IAP/subscription scenarios of the 14 September deck, which modelled a business we are not building. It keeps their posture: a16z lists multi-year projections among the things not to include, and there is no historical data to anchor to, so nothing here is a forecast.
 
-Inputs, all third-party: D30 retention of <b class="num">0.68%</b> / <b class="num">1.18%</b> / <b class="num">1.70%</b> (global median low, North American median, global P75 from GameAnalytics); install-to-payer of <b class="num">5.08%</b> / <b class="num">11.14%</b> / <b class="num">18.46%</b> (AppsFlyer NA repeat payer, NA one-time payer, and a derived <b class="num">$1.34</b>/<b class="num">$7.26</b> ratio used only as an optimistic ceiling and labelled derived); ARPPU held at AppsFlyer's casual D90 <b class="num">$7.26</b> in all three; ad revenue per install <b class="num">$0.00</b> in the conservative case because we are a web app with no mediation stack today. Monthly churn of the retained base is fixed at <b class="num">20%</b> across all scenarios — an unsourced modelling assumption, held constant so it cannot flatter any scenario.
+The arithmetic is the economy lane's, recomputed by its audit. The audit's corrections are applied: the steady-state balance is presented as an order of magnitude (5,800 at the brief's own faucet figure, not the 5,000 it first claimed as confirming the soft cap); the sinks/faucets ratio at launch is 0.32, below the brief's 0.35 target, so the target is stated as a ratio to instrument; the gambler's-ruin figures elsewhere in the evidence describe &quot;can no longer afford the tier&quot;, not &quot;hits zero&quot;.
 
-Three stress tests all point the same way: the conservative case is genuinely conservative, and the base case is not. Base-case revenue per MAU of <b class="num">$15.40</b> exceeds both real anchors (MAG <b class="num">$13.07,</b> Duolingo <b class="num">$7.80</b>), so any scenario that out-monetises Duolingo per active user is a ceiling and not a target. Per-MAU revenue also looks high partly because high churn makes annual installs about <b class="num">11x</b> steady-state MAU — throughput, not intensity.
+The illustrative-day arithmetic is the ad-tech lane's, also audit-checked: 20,000 impressions × <b class="num">$15</b>/1000 = <b class="num">$300</b>; × <b class="num">$1.50</b>/1000 = <b class="num">$30</b>; and the web line uses AppLixir's latest stated averages (<b class="num">$4</b>+ average, <b class="num">$7</b>+ tier-1) rather than its <b class="num">$8</b>-15 headline, per the audit.
 
-STRUCTURE: kind &quot;appendix&quot;, chart &quot;scenarios&quot;, the three-row scenario table and all seven sources carry forward.</div></details>
+The one comparable with filed numbers is QuizDuel at 9.0¢ ARPDAU with IAP plus ads (business-model slide). We do not quote a genre ARPDAU benchmark because we have none that is verified.</div></details>
 <ul class="sources">
 <li><a href="https://www.gameanalytics.com/reports/2026-mobile-pc-gaming-benchmarks" target="_blank" rel="noopener noreferrer">gameanalytics.com</a></li>
-<li><a href="https://www.appsflyer.com/resources/reports/app-marketing-monetization-report/" target="_blank" rel="noopener noreferrer">appsflyer.com</a></li>
-<li><a href="https://www.sec.gov/Archives/edgar/data/1562088/000162828026053299/q2fy26duolingo6-30x26share.htm" target="_blank" rel="noopener noreferrer">sec.gov</a></li>
-<li><a href="https://www.sporcle.com/memberships/" target="_blank" rel="noopener noreferrer">sporcle.com</a></li>
-<li><a href="https://techcrunch.com/2020/07/10/how-thor-fridrikssons-trivia-royale-earned-2-5m-downloads-in-3-weeks/" target="_blank" rel="noopener noreferrer">techcrunch.com</a></li>
-<li><a href="https://a16z.com/the-insiders-guide-to-data-rooms-what-to-know-before-you-raise/" target="_blank" rel="noopener noreferrer">a16z.com</a></li>
-<li><a href="FACT//DUEL internal: public/product/investor/numbers.md §4.1-§4.3" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: public/product/investor/numbers.md §4.1-§4.3</a></li>
+<li><a href="https://www.businessofapps.com/marketplace/app-marketing/research/cost-per-install/" target="_blank" rel="noopener noreferrer">businessofapps.com</a></li>
+<li><a href="https://applixir.com/faq" target="_blank" rel="noopener noreferrer">applixir.com</a></li>
+<li><a href="https://support.google.com/admanager/answer/9116812" target="_blank" rel="noopener noreferrer">support.google.com</a></li>
+<li><a href="FACT//DUEL internal: docs/money/ads/lane-economy.json + audit-2-economy.json (recomputed table and break-evens)" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: docs/money/ads/lane-economy.json + audit-2-economy.json (recomputed table and break-evens)</a></li>
+<li><a href="FACT//DUEL internal: docs/money/ads/lane-adtech.json + audit-1.json" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: docs/money/ads/lane-adtech.json + audit-1.json</a></li>
+<li><a href="FACT//DUEL internal: docs/money/ads/lane-launch.json" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: docs/money/ads/lane-launch.json</a></li>
+<li><a href="FACT//DUEL internal: public/product/investor/numbers.md §8 (company disclosure — the ad-funded format, 16 Sep 2026)" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: public/product/investor/numbers.md §8 (company disclosure — the ad-funded format, 16 Sep 2026)</a></li>
 </ul>
 </div></section>
 <section class="slide" id="s16">
@@ -873,6 +826,7 @@ STRUCTURE: kind &quot;appendix&quot;, the four-row graveyard table and all eight
 <li>Unverified: whether app-store benchmarks transfer to a web product with no install step and no push notifications. They may not.</li>
 <li>No trivia CAC or CPI benchmark of any kind is in our evidence base; the circulated genre ARPDAU bands failed verification as citation laundering and are excluded.</li>
 <li>Whether consumer trivia monetises at scale at all: our own paid cohort settles it, and the round buys it.</li>
+<li>Ad-funded unknowns (16 Sep 2026): web rewarded eCPM by geo (all published figures are in-app); India eCPM (absent from every reachable table); the rewarded watch rate (<b class="num">26%</b> assumed); whether Google confirms in writing that entry-and-prize satisfies its non-transferable-reward clause; H5 Games Ads approval on a new domain (&quot;not guaranteed&quot;).</li>
 </ul>
 <details class="notes"><summary>Speaker notes</summary><div class="notes-body">This page is a credibility instrument, not an apology.
 
@@ -891,6 +845,9 @@ STRUCTURE: kind &quot;appendix&quot;, all five sources carry forward.</div></det
 <li><a href="https://techcrunch.com/2020/07/10/how-thor-fridrikssons-trivia-royale-earned-2-5m-downloads-in-3-weeks/" target="_blank" rel="noopener noreferrer">techcrunch.com</a></li>
 <li><a href="https://www.apptweak.com/" target="_blank" rel="noopener noreferrer">apptweak.com</a></li>
 <li><a href="FACT//DUEL internal: public/product/investor/numbers.md §7.1 and §7.3 (company disclosure)" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: public/product/investor/numbers.md §7.1 and §7.3 (company disclosure)</a></li>
+<li><a href="FACT//DUEL internal: docs/money/ads/synthesis.json (16 Sep 2026; five research lanes, two adversarial audits)" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: docs/money/ads/synthesis.json (16 Sep 2026; five research lanes, two adversarial audits)</a></li>
+<li><a href="FACT//DUEL internal: docs/money/ads/lane-adtech.json + audit-1.json" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: docs/money/ads/lane-adtech.json + audit-1.json</a></li>
+<li><a href="FACT//DUEL internal: public/product/investor/numbers.md §8 (company disclosure — the ad-funded format, 16 Sep 2026)" target="_blank" rel="noopener noreferrer">FACT//DUEL internal: public/product/investor/numbers.md §8 (company disclosure — the ad-funded format, 16 Sep 2026)</a></li>
 </ul>
 </div></section>
 <section class="slide" id="s19">

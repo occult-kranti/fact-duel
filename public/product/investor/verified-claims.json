@@ -1069,5 +1069,59 @@
     "source": "https://www.crv.com/content/seed-funding-pitch-deck",
     "kind": "company-disclosure",
     "verdict": "confirmed"
+  },
+  {
+    "id": "quizduel-arpdau-9m-may-2026",
+    "statement": "MAG Interactive reported QuizDuel ARPDAU of 9.0 US cents for the nine months to May 2026 (+31% year on year), 8.8 cents in Q3, with DAU 0.9M (-12%) and MAU 2.2M (-9%); revenue is IAP plus ads.",
+    "value": "9.0 US cents ARPDAU (9 months to May 2026)",
+    "year": "2026",
+    "source": "MAG Interactive Q3 2025/26 interim report (PDF via storage.mfn.se)",
+    "kind": "company-disclosure",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "cpi-2026-business-of-apps",
+    "statement": "Cost per install, 2026: North America $2.50-$5.00; EMEA $2.00-$4.00; APAC $1.50-$3.00; iOS games $2-$5; Android games $1.50-$4.00.",
+    "value": "$2.50-$5.00 (North America)",
+    "year": "2026",
+    "source": "https://www.businessofapps.com/marketplace/app-marketing/research/cost-per-install/",
+    "kind": "third-party-benchmark",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "google-web-rewarded-no-ssv",
+    "statement": "Google Ad Manager's help page for rewarded ads on web states verbatim: 'Server-side verification is an app only feature and it is unavailable for web use.'",
+    "value": "no server-side verification for web rewarded ads",
+    "year": "2026",
+    "source": "https://support.google.com/admanager/answer/9116812",
+    "kind": "policy-text",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "google-rewards-non-transferable",
+    "statement": "Google's policies for ad units that offer rewards require that direct monetary items are never offered and that an indirect reward be non-transferable: 'only redeemable and usable by the same user who received it, and is not directly convertible into direct monetary items or items that can be transferred to a third party.'",
+    "value": "rewards must be non-transferable",
+    "year": "2026",
+    "source": "https://support.google.com/adsense/answer/9121589",
+    "kind": "policy-text",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "skillz-v-papaya-2026",
+    "statement": "Skillz v. Papaya Gaming (S.D.N.Y.): jury verdict of $420M on 23 April 2026 under the Lanham Act; judgment entered 28 July 2026 adding $719M disgorgement as an alternative remedy and $10.1M in fees; the court found it undisputed that Papaya ran bots from 2019 to 2023 while stating 'we do not use bots' more than 200 times. Subject to appeal.",
+    "value": "$420M verdict; $719M disgorgement (alternative remedy)",
+    "year": "2026",
+    "source": "yogonet.com 28 Apr 2026; regulatoryoversight.com Jul 2026",
+    "kind": "court-record-via-press",
+    "verdict": "confirmed"
+  },
+  {
+    "id": "break-even-win-rate-under-fee",
+    "statement": "For a two-player pot with a fee r on the pot, the break-even win rate is p* = 1/(2(1-r)): 50.0% at 0%, 52.6% at 5%, 55.6% at 10%, 58.8% at 15%.",
+    "value": "55.6% at a 10% fee",
+    "year": "2026",
+    "source": "Arithmetic, recomputed by the economy audit (docs/money/ads/audit-2-economy.json)",
+    "kind": "derived",
+    "verdict": "confirmed"
   }
 ]

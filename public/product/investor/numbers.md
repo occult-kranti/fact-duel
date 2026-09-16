@@ -662,3 +662,105 @@ which is also the distribution claim the product makes about itself.
   no verified benchmark for web-first game retention. Our own instrument is now the route to one.
 - The question bank is still 54 questions.
 - Everything in §5.1–§5.13 is unchanged.
+
+## 8. Addendum — 16 September 2026: the ad-funded format
+
+The deck's business model changed on 16 September 2026. Everything below is drawn from
+`docs/money/ads/` — five research lanes (competitor reviews, ad-tech and policy, coin-economy
+maths, gamification and dark-pattern audit, launch), the two numeric lanes adversarially audited,
+and one synthesis — and carries that research's confidence marks: **verified** (read at source),
+**likely** (a benchmark the research could not independently verify), **UNVERIFIED**, or **(P)** for
+a plan. Nothing here is company data; FACT//DUEL has no users outside a private playtest.
+
+### 8.1 Why this format needs no licence
+
+The legal research of 14 September (`docs/money/legal-merge.json`, six lanes, audited) found a
+closed-loop coin economy with no purchase and no prize of monetary value outside every real-money
+rule it read in the US, the EU and India; the ad-tech lane found the same for Google's publisher
+gambling policy (restriction applies to "real-money gambling or any internet-based game where money
+or other items of value are paid or wagered" — coins are neither). The residual policy risk is
+Google's rewarded-ad rule that rewards be **non-transferable** ("not … items that can be transferred
+to a third party", verbatim, audit-confirmed) — answered by the entry-and-prize flow, and open until
+Google says so in writing. India's 2025 Act defines "other stakes" to include coins "equivalent or
+convertible to money" (PRS paraphrase; gazette text not obtained) — ours are neither; counsel's
+written view is still a prerequisite for the India soft launch.
+
+### 8.2 Rewarded-video eCPM (in-app; web is lower)
+
+| Geo | eCPM, in-app | Confidence | Source |
+|---|---|---|---|
+| US | $24.39 iOS / $30.25 Android (Q2 2024); cross-dataset range $15-30 | likely | Tenjin/CAS.AI charts via undrads/gamigion; Mistplay $15.15 (2025) |
+| UK | $16.76 iOS / $21.60 Android | likely | same |
+| DE | $12.20 / $14.07 | likely | same |
+| FR | $10.87 / $9.58 | likely | same |
+| India | **UNVERIFIED** — absent from every reachable per-country table; $1-3 illustrative | UNVERIFIED | — |
+| Web | AppLixir: $4+ average, $7+ tier-1, $1-2 tier-3 (headline $8-15); plan web at $4-7 | likely (vendor) | applixir.com/faq, audit-corrected |
+
+Ad-blocking: 29.5% of internet users globally, US 32.5%, Germany 31.5% (GWI via Backlinko; a 49%
+Germany figure circulates and did not verify).
+
+### 8.3 The coin
+
+Anchor: 50 coins per US rewarded ad at a blended US eCPM of $27.32 (simple mean of the Q2 2024
+iOS and Android figures) → **$0.000546 per coin ≈ 0.055 US cents** (likely). Rewards by geo, US
+anchor scaled by eCPM and floored at the smallest entry tier: **US 50 · UK 35 · DE 25 · FR 20 ·
+BR 10 · India 10 · other 10**; recomputed by the audit (UK 35.1, DE 24.0, FR 18.7, BR 10.5; spread in
+revenue-per-coin across non-floored geos 6.4%). India floors for any eCPM up to ~$6.8. Implemented
+as `DEFAULT_CONFIG` in `lib/economy/economy.mjs`; a weekly re-derivation from realised eCPM (EMA,
+α 0.3) is specified and not yet built.
+
+Entry tiers 10 / 25 / 50 / 100 / 250 / 500 coins (0.2 / 0.5 / 1 / 2 / 5 / 10 US ad-equivalents); 250
+unlocks at 1,000 coins, 500 at 5,000. Disclosed arena fee in basis points of the pot: 0 / 0 / 1,000 /
+1,000 / 1,000 / 1,500. Break-even win rate 1/(2(1−r)): 50.0% / 52.6% / 55.6% / 58.8% at 0 / 5 / 10 /
+15% (verified). Floor: top up to 20 coins at most once per 6 hours. Daily grant 30. Quest budget 30
+per day. Practice bots play for free (verified arithmetic: farming a bot at p = 0.7 yields ~78
+coins/hour against 4,000-6,000 from ads).
+
+### 8.4 ARPDAU and LTV (all likely; the watch rate is an assumption)
+
+ARPDAU = ads/DAU × eCPM / 1000; "2 ads per DAU" = 3.85 sessions × 2 offered × **26% watch rate
+(assumed)**. Lifetime days from a power-law fit through GameAnalytics CY2025 medians (D1 ~22%, D7
+just under 4%, D30 0.68-0.79%): 2.12 / 2.28 / 2.44 at 90 / 180 / 365 days; P75 3.13 / 3.57 / 4.08.
+
+| Geo | ARPDAU | LTV180 median | LTV180 P75 |
+|---|---|---|---|
+| US | 5.46¢ | $0.125 | $0.195 |
+| UK | 3.84¢ | $0.087 | $0.137 |
+| DE | 2.63¢ | $0.060 | $0.094 |
+| FR | 2.04¢ | $0.047 | $0.073 |
+| India ($2-4 illustrative) | 0.4-0.8¢ | $0.009-0.018 | $0.014-0.029 |
+
+Illustrative day (audit-checked): 10,000 DAU × 2 × $15/1000 = $300 (US in-app); $30 at $1.50
+(India); $80-140 on the web at $4-7.
+
+### 8.5 The comparable
+
+**QuizDuel (MAG Interactive)** — ARPDAU 9.0 US cents for the nine months to May 2026 (+31%); 8.8¢
+in Q3 (+24%); DAU 0.9M (−12%), MAU 2.2M (−9%); IAP plus ads. Verified from the Q3 2025/26 interim
+report PDF. A ceiling for an ads-only product, not a target.
+
+### 8.6 Why paid acquisition is off the table
+
+Cost per install, 2026 (verified, Business of Apps): North America $2.50-5.00; EMEA $2.00-4.00;
+APAC $1.50-3.00. Against an ad LTV per install of ~$0.06-0.25 (US, 30-90 days) and ~$0.01-0.02
+(India), break-even CPI is one to two orders of magnitude below market. The launch is therefore
+organic: SEO pages per intent cluster (Google Trends shows "football quiz" GB peaking every
+Christmas week; "nba quiz" US in the playoffs — indices, absolute volumes UNVERIFIED), fixture-driven
+beats, and community under each subreddit's own self-promotion rules. Paid spend capped at brand
+defence (≤ $500 to February 2027).
+
+### 8.7 The twelve weeks (P)
+
+Soft launch India + UK/Ireland **12 Oct 2026** (web, no paid UA); EU (DE/FR/ES/IT) **2 Nov**; store
+builds (Capacitor iOS, TWA Android, AdMob SSV) submitted **9-15 Nov**; US **23 Nov** around the NBA
+Cup; **go/no-go 14 Dec** against D1 ≥ 30%, D7 ≥ 10%, D30 ≥ 4%, sessions/DAU ≥ 3, rewarded opt-in ≥
+25% of DAU, ≥ 1.5 rewarded ads/DAU, completion ≥ 85%, question-report rate ≤ 0.5%; kill or pivot if
+D1 < 20% after two fix cycles. Full plan: `docs/money/ads/synthesis.json`.
+
+### 8.8 What is built on the branch as this addendum is written
+
+The sports-only content flag; the economy reducer with the table above and its tests; the ad seam
+(null provider, scripted provider, reward nonce with a completion window); free bots enforced in the
+engine and on screen; the calendar carrying Formula 1 and Baseball fixtures from fetched season
+pages; five sport banks (299 questions after QA) merged into a served bank of 329. Not built: accounts, the server
+wallet, the store builds, any ad integration. The live site shows no ads and says so.
