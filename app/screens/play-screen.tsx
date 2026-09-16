@@ -116,7 +116,7 @@ export function PlayScreen({ duel, player, catalogue, joinView, joinLink }: Play
               opponent={config.opponent}
               joinView={joinView}
               duration={config.duration}
-              onOpponent={(opponent) => change({ opponent })}
+              onOpponent={(opponent) => change(opponent === 'bot' ? { opponent, stake: 0 } : { opponent })}
               onJoinView={setJoinView}
             />
             {joinView && (
