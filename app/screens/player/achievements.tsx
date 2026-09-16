@@ -18,7 +18,6 @@ type Achievement = {
   description: string;
   tier: 'bronze' | 'silver' | 'gold';
   xp: number;
-  gems: number;
   hidden: boolean;
 };
 const ALL = ACHIEVEMENTS as ReadonlyArray<Achievement>;
@@ -41,7 +40,6 @@ const domains = TOPIC_DOMAINS as Record<string, string>;
 /** Only the slice of a progression these goals read. */
 type Progression = {
   xp: number;
-  wallet: { lifetimeGems: number };
   streak: { best: number };
   counters: {
     wins: number;
@@ -85,7 +83,6 @@ const GOALS: Record<string, { target: number; unit: string; value: (p: Progressi
   'level-10': { target: 10, unit: 'levels', value: (p) => levelForXp(p.xp).level },
   'level-25': { target: 25, unit: 'levels', value: (p) => levelForXp(p.xp).level },
   'level-40': { target: 40, unit: 'levels', value: (p) => levelForXp(p.xp).level },
-  'gem-hoarder': { target: 500, unit: 'gems earned', value: (p) => p.wallet.lifetimeGems },
 };
 
 function badgeProgress(id: string, progression: Progression) {
@@ -162,7 +159,7 @@ export function Achievements({ progression }: { progression: any }) {
                   </span>
                 )}
                 <span className="fd-badge-tier">
-                  {a.tier} · +{a.xp} XP · +{a.gems} gems
+                  {a.tier} · +{a.xp} XP
                 </span>
               </li>
             );

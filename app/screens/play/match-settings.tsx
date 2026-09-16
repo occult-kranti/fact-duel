@@ -1,15 +1,30 @@
 'use client';
 import { ChevronDown, SlidersHorizontal } from 'lucide-react';
+import { useMemo } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { DURATIONS, MODE_DURATION } from '@/lib/server/room-engine.mjs';
+import { DEFAULT_CONFIG } from '@/lib/economy/economy.mjs';
+import { advise, closedReason, evCopy } from '@/lib/economy/stake-advice.mjs';
+import type { WalletApi } from '../../use-wallet';
 import { MODES } from '../types';
 import type { Config } from '../types';
 import { usePlayJuice } from './press';
 
 const TIMERS = DURATIONS;
-const STAKES = [0, 10, 25, 50, 100];
+
+/**
+ * The room engine's `normalizeConfig` accepts entries up to this tier (its demo-entry list is
+ * 0, 10, 25, 50, 100), so the picker offers the economy's tiers only up to here. The economy's
+ * larger tiers (250, 500) wait for the engine to take them; nothing here hard-codes the list.
+ */
+export const ROOM_MAX_STAKE = 100;
+
+/** The economy config narrowed to the tiers a room can be created at. */
+export function offeredConfig(config: typeof DEFAULT_CONFIG = DEFAULT_CONFIG): typeof DEFAULT_CONFIG {
+  return { ...config, stakes: config.stakes.filter((tier) => tier <= ROOM_MAX_STAKE) };
+}
 
 function Picker({
   label,
@@ -54,11 +69,33 @@ export type MatchSettingsProps = {
   subtopics: string[];
   onChange: (patch: Partial<Config>) => void;
   onName: (value: string) => void;
+  /** The device wallet, when one is provided; null keeps the picker as it was before the economy. */
+  wallet?: WalletApi | null;
+  /** The tier `defaultStake` chose for this wallet (0 for free); marked "Suggested" on the picker. */
+  suggested?: number;
 };
 
 /* Everything you rarely change, folded away: name, timer, entry coins, region, level, subtopic. */
-export function MatchSettings({ config, name, subtopics, onChange, onName }: MatchSettingsProps) {
+export function MatchSettings({
+  config,
+  name,
+  subtopics,
+  onChange,
+  onName,
+  wallet = null,
+  suggested = 0,
+}: MatchSettingsProps) {
   const { press } = usePlayJuice();
+  const economy = useMemo(() => offeredConfig(wallet?.config ?? DEFAULT_CONFIG), [wallet?.config]);
+  const stakes = useMemo(() => [0, ...economy.stakes], [economy]);
+  const loaded = !!wallet?.loaded;
+  const coins = wallet?.wallet;
+  const bot = config.opponent === 'bot';
+  // The loss-streak lever: after the configured run of staked losses, a short runway at the chosen
+  // tier is pointed one tier down. Nothing about the contest changes; only this line appears.
+  const advice = loaded && coins && !bot ? advise(coins, config.stake, economy) : null;
+  const closed = (tier: number) => (loaded && coins && tier > 0 ? closedReason(coins, tier, economy) : '');
+  const doubleOwed = loaded && !bot && !!wallet?.doubleOwed;
   return (
     <details className="fd-settings">
       <summary className="fd-pressable" {...press}>
@@ -109,26 +146,57 @@ export function MatchSettings({ config, name, subtopics, onChange, onName }: Mat
         <div className="fd-field">
           <Label id="stake-label">Entry · once per match</Label>
           <div className="fd-opts" role="group" aria-labelledby="stake-label">
-            {STAKES.map((stake) => (
-              <button
-                key={stake}
-                type="button"
-                className="fd-opt fd-pressable"
-                aria-pressed={stake === config.stake}
-                /* A practice bot never plays for coins (room-engine couples the two), so the paid
-                   tiers are unavailable rather than refused after the tap. */
-                disabled={config.opponent === 'bot' && stake !== 0}
-                {...press}
-                onClick={() => onChange({ stake })}
-              >
-                {stake || 'Free'}
-              </button>
-            ))}
+            {stakes.map((stake) => {
+              const why = closed(stake);
+              const open = !why;
+              const isSuggested = loaded && !bot && stake === suggested;
+              return (
+                <button
+                  key={stake}
+                  type="button"
+                  className="fd-opt fd-pressable"
+                  aria-pressed={stake === config.stake}
+                  /* A practice bot never plays for coins (room-engine couples the two), so the paid
+                     tiers are unavailable rather than refused after the tap. */
+                  disabled={bot && stake !== 0}
+                  /* A tier the wallet cannot enter stays in the row (so the ladder reads whole) but
+                     does nothing, and says why on hover and to a screen reader. */
+                  aria-disabled={open ? undefined : true}
+                  aria-describedby={why ? `stake-why-${stake}` : undefined}
+                  title={why || undefined}
+                  {...press}
+                  onClick={() => {
+                    if (open) onChange({ stake });
+                  }}
+                >
+                  {stake || 'Free'}
+                  {isSuggested && <small className="fd-opt-tag">Suggested</small>}
+                  {why && (
+                    <span id={`stake-why-${stake}`} className="sr-only">
+                      {why}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
           </div>
+          {advice && advice.kind !== 'ok' && (
+            <p className="fd-stake-advice" role="status">
+              <span>{advice.reason}</span>
+              <button type="button" className="fd-link" {...press} onClick={() => onChange({ stake: advice.suggested })}>
+                {advice.suggested ? `Play for ${advice.suggested}` : 'Play free'}
+              </button>
+            </p>
+          )}
+          {doubleOwed && (
+            <p className="fd-field-note">A double-coin ad is open today. It is on the coins card in the top bar.</p>
+          )}
           <p className="fd-fine">
-            {config.opponent === 'bot'
+            {bot
               ? 'Practice bots play for free. Entries are for duels with a friend.'
-              : 'Free simulated coins with no cash value. Draws refund the entry, and every new room starts with 1,000 per player.'}
+              : config.stake
+                ? `${evCopy(config.stake, economy)} Draws refund the entry.`
+                : 'Free simulated coins with no cash value. Draws refund the entry, and every new room starts with 1,000 per player.'}
           </p>
         </div>
         <div className="fd-fields">

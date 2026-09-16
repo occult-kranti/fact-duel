@@ -11,7 +11,6 @@ import {
   Compass,
   Flag,
   Flame,
-  Gem,
   Gift,
   Map,
   Palette,
@@ -27,7 +26,7 @@ import { TOPIC_STYLE } from '../../collections';
 import { relativeTime } from './util';
 import { usePress } from './press';
 
-export type LogEntry = { id: string; at: number; kind: string; xp: number; gems?: number; label: string };
+export type LogEntry = { id: string; at: number; kind: string; xp: number; label: string };
 
 const LOG_ICON: Record<string, LucideIcon> = {
   round: Zap,
@@ -93,11 +92,6 @@ export function XpLog({ entries, now }: { entries: LogEntry[]; now: number }) {
                 <span className="fd-hub-log-label">{e.label}</span>
                 <span className="fd-hub-log-gain fd-mono">
                   {e.xp > 0 && <b>+{e.xp} XP</b>}
-                  {!!e.gems && (
-                    <em>
-                      <Gem aria-hidden="true" />+{e.gems}
-                    </em>
-                  )}
                 </span>
                 <time className="fd-hub-log-time" dateTime={new Date(e.at).toISOString()}>
                   {now ? relativeTime(e.at, now) : ''}

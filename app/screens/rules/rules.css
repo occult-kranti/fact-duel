@@ -1,0 +1,272 @@
+/* app/screens/rules/rules.css — the "Rules of the coin" and Trust pages.
+ *
+ * Reading surfaces, not competition: quiet cards on bg-1, gold only where a coin is the subject,
+ * cyan for the trust commitments. Tokens only. Tables scroll inside their own box on a phone;
+ * nothing else is wider than the viewport. */
+
+.fd-rules {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 1050px;
+  margin: 0 auto;
+  min-width: 0;
+  color: var(--text);
+}
+.fd-rules :where(h1, h2, h3, p, ul, ol, table, blockquote) {
+  margin: 0;
+}
+.fd-rules__head {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.fd-rules__head h1 {
+  font-family: var(--font-display);
+  font-size: var(--fs-28);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+.fd-rules__lede {
+  max-width: 60ch;
+  font-size: var(--fs-16);
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+/* the permanent line: coins are not money */
+.fd-rules__notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid color-mix(in oklab, var(--gold) 40%, var(--line));
+  border-radius: var(--r-control);
+  background: var(--gold-soft);
+  color: var(--text);
+  font-weight: 600;
+  font-size: var(--fs-14);
+  line-height: 1.45;
+}
+.fd-rules__notice > svg {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  color: var(--gold-text);
+}
+.fd-rules--trust .fd-rules__notice {
+  border-color: color-mix(in oklab, var(--cyan) 40%, var(--line));
+  background: var(--cyan-soft);
+}
+.fd-rules--trust .fd-rules__notice > svg {
+  color: var(--cyan);
+}
+
+/* one section = one card */
+.fd-rules__section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--bg-1);
+  box-shadow: var(--shadow-card);
+  min-width: 0;
+}
+.fd-rules__section h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-size: var(--fs-22);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+}
+.fd-rules__section h2 > svg {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  color: var(--gold-text);
+}
+.fd-rules--trust .fd-rules__section h2 > svg {
+  color: var(--cyan);
+}
+.fd-rules__section p,
+.fd-rules__section li {
+  font-size: var(--fs-14);
+  line-height: 1.55;
+  color: var(--muted);
+  max-width: 68ch;
+}
+.fd-rules__section p strong {
+  color: var(--text);
+}
+.fd-rules__section ul {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-left: 18px;
+}
+.fd-rules__section blockquote {
+  padding: 10px 14px;
+  border-left: 3px solid var(--cyan);
+  border-radius: 0 var(--r-control) var(--r-control) 0;
+  background: var(--bg-2);
+  font-size: var(--fs-14);
+  line-height: 1.55;
+  color: var(--text);
+  max-width: 68ch;
+}
+.fd-rules__section blockquote cite {
+  display: block;
+  margin-top: 6px;
+  font-style: normal;
+  font-family: var(--font-mono);
+  font-size: var(--fs-12);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* the derived tables */
+.fd-rules__table {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--line);
+  border-radius: var(--r-control);
+  background: var(--bg-2);
+}
+.fd-rules__table table {
+  width: 100%;
+  min-width: 320px;
+  border-collapse: collapse;
+  font-size: var(--fs-14);
+}
+.fd-rules__table th,
+.fd-rules__table td {
+  padding: 10px 12px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--line);
+  line-height: 1.4;
+}
+.fd-rules__table tbody tr:last-child > td {
+  border-bottom: 0;
+}
+.fd-rules__table th {
+  font-family: var(--font-mono);
+  font-size: var(--fs-12);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.fd-rules__table td.fd-rules__num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--text);
+}
+.fd-rules__table td:first-child {
+  color: var(--text);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.fd-rules__table tr[data-mine='true'] > td {
+  background: var(--gold-soft);
+}
+.fd-rules__mine {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--gold);
+  color: var(--gold-ink);
+  font-family: var(--font-mono);
+  font-size: var(--fs-12);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
+/* the change log */
+.fd-rules__log {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  list-style: none;
+  padding: 0;
+}
+.fd-rules__entry {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-control);
+  background: var(--bg-2);
+}
+.fd-rules__entry h3 {
+  font-size: var(--fs-16);
+  font-weight: 700;
+  color: var(--text);
+}
+.fd-rules__when {
+  font-family: var(--font-mono);
+  font-size: var(--fs-12);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.fd-rules__keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0;
+  list-style: none;
+}
+.fd-rules__keys li {
+  padding: 2px 8px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: var(--fs-12);
+  color: var(--muted);
+  max-width: none;
+}
+.fd-rules__empty {
+  padding: 12px 14px;
+  border: 1px dashed var(--line);
+  border-radius: var(--r-control);
+  color: var(--muted);
+  font-size: var(--fs-14);
+  line-height: 1.5;
+}
+
+/* the two link buttons on the Playbook and the back row */
+.fd-rules__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.fd-rules__contact a {
+  color: var(--cyan);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+@media (min-width: 900px) {
+  .fd-rules__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+  .fd-rules__grid > .fd-rules__section--wide {
+    grid-column: 1 / -1;
+  }
+}

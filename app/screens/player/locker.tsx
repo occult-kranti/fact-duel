@@ -1,71 +1,71 @@
 'use client';
 /**
- * The Locker — gems and cosmetics (design bible §4: soft currency, nothing auto-spent, no real
- * money anywhere). Four tabs, one card per cosmetic, and the honest status straight from
- * `cosmeticStatus`: equipped / owned / available / buyable / locked. A locked card is disabled and
- * says exactly what would unlock it. The physics gem vault is only mounted while the Locker is
- * open, only when the browser can draw it, and only when there is at least one gem to draw —
- * at zero it is the static fallback pile, not a 2.2 MB physics chunk around an empty bowl.
+ * The Locker — cosmetics (design bible §4: nothing auto-spent, no real money, no second currency).
+ * Four tabs, one card per cosmetic, and the honest status straight from `cosmeticStatus`:
+ * equipped / owned / unlocked / locked. Every card names the play that unlocks it — a level, a
+ * badge, an arena tier or a conviction badge — and a locked card is disabled and says exactly what
+ * would unlock it. Nothing here is for sale: an item is owned the moment its rule is met.
  */
 import { useState } from 'react';
-import { Check, ChevronDown, Gem, Lock, Sparkles, Vault } from 'lucide-react';
-import { NumberCounter, useJuice } from '@/components/fx';
-import { GemVaultFallback, LazyGemVault } from '@/components/three';
-import { achievementById, canEquip, COSMETICS, cosmeticStatus, RANK_TIERS } from '@/lib/progression.mjs';
-import { usePress, useWebGL } from './shared';
+import { Check, ChevronDown, Lock, Sparkles, Vault } from 'lucide-react';
+import { useJuice } from '@/components/fx';
+import {
+  achievementById,
+  COSMETICS,
+  cosmeticStatus,
+  CONVICTION_TIERS,
+  DEFAULT_COSMETICS,
+  RANK_TIERS,
+} from '@/lib/progression.mjs';
+import { usePress } from './shared';
 
 type Cosmetic = {
   id: string;
   kind: 'frame' | 'title' | 'banner' | 'accent';
   name: string;
   description: string;
-  price: number | null;
-  unlock: { level?: number; achievement?: string; rank?: string };
+  price: null;
+  unlock: { level?: number; achievement?: string; rank?: string; conviction?: string };
 };
-type Status = 'equipped' | 'owned' | 'available' | 'buyable' | 'locked';
+type Status = 'equipped' | 'owned' | 'unlocked' | 'locked';
 
 const ALL = COSMETICS as ReadonlyArray<Cosmetic>;
+const DEFAULTS = new Set(Object.values(DEFAULT_COSMETICS as Record<string, string>));
 const TABS: { id: Cosmetic['kind']; label: string }[] = [
   { id: 'frame', label: 'Frames' },
   { id: 'title', label: 'Titles' },
   { id: 'banner', label: 'Banners' },
   { id: 'accent', label: 'Accents' },
 ];
-const rankLabel = (id: string) =>
-  (RANK_TIERS as ReadonlyArray<{ id: string; label: string }>).find((t) => t.id === id)?.label ?? id;
+const tierLabel = (tiers: unknown, id: string) =>
+  (tiers as ReadonlyArray<{ id: string; label: string }>).find((t) => t.id === id)?.label ?? id;
+const badgeName = (id: string) => (achievementById(id) as { name: string } | undefined)?.name ?? id;
 
 /** The one line that explains a locked card. Never speculative — it quotes the unlock rule. */
-function lockReason(c: Cosmetic, gems: number): string {
-  if (c.price !== null) return `${(c.price - gems).toLocaleString()} more gems needed`;
-  if (c.unlock.level) return `Unlocks at level ${c.unlock.level}`;
-  if (c.unlock.achievement)
-    return `Unlocks with the “${achievementById(c.unlock.achievement)?.name ?? c.unlock.achievement}” badge`;
-  if (c.unlock.rank) return `Unlocks at ${rankLabel(c.unlock.rank)} in the arena`;
+function lockReason(c: Cosmetic): string {
+  if (c.unlock.level) return `Reach level ${c.unlock.level}`;
+  if (c.unlock.achievement) return `Earn the ${badgeName(c.unlock.achievement)} badge`;
+  if (c.unlock.rank) return `Reach ${tierLabel(RANK_TIERS, c.unlock.rank)} in the arena`;
+  if (c.unlock.conviction)
+    return `Reach the ${tierLabel(CONVICTION_TIERS, c.unlock.conviction)} conviction badge`;
   return 'Not available yet';
 }
 
-/** Price / unlock rule shown on every card, whatever its status. */
-function priceLine(c: Cosmetic, status: Status) {
-  if (c.price !== null)
-    return status === 'equipped' || status === 'owned' ? (
-      <span className="fd-cos-price" data-tone="accent">
-        <Gem aria-hidden="true" /> Owned
-      </span>
-    ) : (
-      <span className="fd-cos-price" data-tone="gold">
-        <Gem aria-hidden="true" /> {c.price.toLocaleString()} gems
-      </span>
-    );
+/** Unlock rule shown on every card, whatever its status. */
+function ruleLine(c: Cosmetic, status: Status) {
   const rule = c.unlock.level
     ? `Level ${c.unlock.level}`
     : c.unlock.achievement
-      ? `Badge: ${achievementById(c.unlock.achievement)?.name ?? c.unlock.achievement}`
+      ? `Badge: ${badgeName(c.unlock.achievement)}`
       : c.unlock.rank
-        ? `${rankLabel(c.unlock.rank)} tier`
-        : 'Free';
+        ? `${tierLabel(RANK_TIERS, c.unlock.rank)} tier`
+        : c.unlock.conviction
+          ? `${tierLabel(CONVICTION_TIERS, c.unlock.conviction)} badge`
+          : 'Starter';
+  const held = status !== 'locked';
   return (
-    <span className="fd-cos-price" data-tone={status === 'locked' ? undefined : 'accent'}>
-      <Sparkles aria-hidden="true" /> {rule}
+    <span className="fd-cos-price" data-tone={held ? 'accent' : undefined}>
+      <Sparkles aria-hidden="true" /> {held && !DEFAULTS.has(c.id) ? `Unlocked · ${rule}` : rule}
     </span>
   );
 }
@@ -75,18 +75,13 @@ export function Locker({ player }: { player: any }) {
   const [tab, setTab] = useState<Cosmetic['kind']>('frame');
   const juice = useJuice();
   const press = usePress();
-  const webgl = useWebGL();
   const prog = player.progression;
-  const gems: number = prog.wallet.gems;
   const items = ALL.filter((c) => c.kind === tab);
-  const owned = prog.cosmetics.owned.length;
+  const owned: number = prog.cosmetics.owned.length;
+  const earnable = ALL.filter((c) => !DEFAULTS.has(c.id)).length;
 
-  const buy = (c: Cosmetic, el: Element) => {
-    juice.burst(el, 'gem');
-    player.buyCosmetic(c.id);
-  };
   const equip = (c: Cosmetic, el: Element) => {
-    juice.burst(el, 'gem');
+    juice.burst(el, 'stamp');
     player.equipCosmetic(c.id);
   };
 
@@ -108,36 +103,15 @@ export function Locker({ player }: { player: any }) {
           <small>{owned} unlocked · frames, titles, banners, accents</small>
         </div>
         <span className="fd-wallet">
-          <Gem aria-hidden="true" />
-          <NumberCounter value={gems} />
-          <span className="sr-only">gems</span>
+          <Sparkles aria-hidden="true" />
+          {owned}/{earnable}
+          <span className="sr-only">cosmetics unlocked</span>
         </span>
         <ChevronDown className="fd-locker-caret" aria-hidden="true" />
       </button>
 
       {open && (
         <div className="fd-locker-body" id="fd-locker-body">
-          <figure className="fd-locker-vault">
-            {/* An empty vault is a static pile: never pay ~2.2 MB of physics to draw nothing. */}
-            {webgl && gems > 0 ? (
-              <LazyGemVault
-                count={Math.min(gems, 120)}
-                maxGems={120}
-                height={240}
-                accent="#ffc83d"
-                label={`Vault holding ${Math.min(gems, 120)} of your ${gems} gems`}
-                fallback={<GemVaultFallback count={Math.min(gems, 48)} height={240} accent="#ffc83d" />}
-              />
-            ) : (
-              <GemVaultFallback count={Math.min(gems, 48)} height={240} accent="#ffc83d" />
-            )}
-            <figcaption>
-              {gems > 0
-                ? `${gems.toLocaleString()} gems in the vault${gems > 120 ? ' (120 shown)' : ''}.`
-                : 'The vault is empty. Quests, level-ups and badges drop gems in.'}
-            </figcaption>
-          </figure>
-
           <div className="fd-chips" role="tablist" aria-label="Cosmetic kind">
             {TABS.map((t) => (
               <button
@@ -166,8 +140,6 @@ export function Locker({ player }: { player: any }) {
             {items.map((c) => {
               const status = cosmeticStatus(prog, c.id) as Status;
               const equipped = status === 'equipped';
-              const buyable = status === 'buyable';
-              const equippable = status === 'owned' || status === 'available';
               const locked = status === 'locked';
               const blocked = locked || !player.loaded;
               return (
@@ -181,46 +153,34 @@ export function Locker({ player }: { player: any }) {
                       {c.kind === 'title' ? 'Aa' : null}
                     </span>
                   </div>
-                  {priceLine(c, status)}
+                  {ruleLine(c, status)}
                   <button
                     type="button"
                     className="fd-cos-action fd-btn"
-                    data-kind={equipped ? 'equipped' : buyable ? 'buy' : equippable ? 'equip' : 'locked'}
+                    data-kind={equipped ? 'equipped' : locked ? 'locked' : 'equip'}
                     disabled={equipped || blocked}
                     aria-describedby={locked ? `fd-cos-why-${c.id}` : undefined}
                     onPointerDown={blocked || equipped ? undefined : press}
-                    onClick={(e) =>
-                      buyable ? buy(c, e.currentTarget) : equippable ? equip(c, e.currentTarget) : undefined
-                    }
+                    onClick={(e) => (blocked || equipped ? undefined : equip(c, e.currentTarget))}
                   >
                     {equipped ? (
                       <>
                         <Check aria-hidden="true" /> Equipped
                       </>
-                    ) : buyable ? (
+                    ) : locked ? (
                       <>
-                        <Gem aria-hidden="true" /> Buy for {c.price?.toLocaleString()}
-                      </>
-                    ) : equippable ? (
-                      <>
-                        <Sparkles aria-hidden="true" /> Equip
+                        <Lock aria-hidden="true" /> Locked
                       </>
                     ) : (
                       <>
-                        <Lock aria-hidden="true" /> Locked
+                        <Sparkles aria-hidden="true" /> Equip
                       </>
                     )}
                   </button>
                   {locked && (
                     <p className="fd-cos-reason" id={`fd-cos-why-${c.id}`}>
                       <Lock aria-hidden="true" />
-                      {lockReason(c, gems)}
-                    </p>
-                  )}
-                  {!locked && !equipped && !canEquip(prog, c) && (
-                    <p className="fd-cos-reason">
-                      <Gem aria-hidden="true" />
-                      Buying it adds it to your locker — you choose when to wear it.
+                      {lockReason(c)}
                     </p>
                   )}
                 </article>
@@ -228,8 +188,8 @@ export function Locker({ player }: { player: any }) {
             })}
           </div>
           <p className="fd-disclaimer">
-            Gems are earned by playing: quests, level-ups and badges. They buy cosmetics only, never answers,
-            time or an advantage in a duel.
+            Cosmetics are earned by playing: levels, badges, arena tiers and conviction badges. They dress
+            your card and change nothing in a duel.
           </p>
         </div>
       )}

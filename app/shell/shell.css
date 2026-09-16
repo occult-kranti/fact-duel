@@ -88,7 +88,6 @@
 .fd-topbar-slot--streak {
   color: var(--magenta-text);
 }
-.fd-topbar-slot--gems,
 .fd-topbar-slot--level {
   color: var(--gold-text);
 }

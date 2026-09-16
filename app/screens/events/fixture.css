@@ -1,0 +1,83 @@
+/* FACT//DUEL — Fixtures strip (Kick-off set, Full-time set, the free Yesterday recap).
+ * Rides on the Events sheet (events.css) for cards, chips, the play control and the grid; this file
+ * only adds the strip's own atoms. Floodlight tokens only, every class `fd-` prefixed and scoped
+ * under `.fd-events` so it dresses the strip wherever it is mounted. Mobile-first: one column, two
+ * from 700px, three from 1200px, matching the calendar grids. */
+
+.fd-events .fd-fx-grid {
+  align-items: stretch;
+}
+@media (min-width: 700px) {
+  .fd-events .fd-fx-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1200px) {
+  .fd-events .fd-fx-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* The recap is the free path, so it reads as a reward (gold); the two sets keep the sport's ember. */
+.fd-events .fd-fx-card[data-kind='recap'] {
+  --fd-ev-accent: var(--gold);
+  --fd-ev-accent-text: var(--gold-text);
+  --fd-ev-accent-soft: var(--gold-soft);
+  background: linear-gradient(180deg, var(--gold-soft), transparent 46%), var(--bg-1);
+}
+
+.fd-events .fd-fx-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  color: var(--fd-ev-accent-text);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.fd-events .fd-fx-kicker > svg {
+  width: 13px;
+  height: 13px;
+}
+
+.fd-events .fd-fx-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: var(--fs-12);
+  line-height: 1.5;
+  color: var(--muted);
+}
+.fd-events .fd-fx-meta .fd-mono {
+  color: var(--text);
+  font-weight: 700;
+}
+.fd-events .fd-fx-meta [data-free] {
+  color: var(--gold-text);
+  font-weight: 750;
+}
+
+/* ---------- the next-fixture card at the end of a duel ---------- */
+.fd-events.fd-fx-next {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  background: linear-gradient(180deg, var(--fd-ev-accent-soft), transparent 44%), var(--bg-1);
+  box-shadow: var(--shadow-card);
+}
+.fd-events.fd-fx-next .fd-ev-name {
+  font-size: var(--fs-16);
+}
+.fd-events.fd-fx-next .fd-fx-note {
+  margin: 0;
+  font-size: var(--fs-12);
+  line-height: 1.5;
+  color: var(--muted);
+}

@@ -21,7 +21,6 @@ type LogEntry = {
   at: number;
   kind: string;
   xp?: number;
-  gems?: number;
   label?: string;
   meta?: { badge?: string };
 };
@@ -85,7 +84,6 @@ export function useProgressionFeedback(progression: any, quiet: Quiet) {
             kicker: 'LEVEL UP',
             title: `Level ${to}`,
             subtitle: `${info.title} · keep the floodlights on`,
-            rewards: [{ label: 'Gems', icon: '💎', value: `+${25 * (to - diff.leveledUp!.from)}` }],
             slot: <LazyRewardMedal variant="level" replayKey={to} size={1.1} height={MEDAL_HEIGHT} />,
           }),
       });
@@ -98,7 +96,6 @@ export function useProgressionFeedback(progression: any, quiet: Quiet) {
             description: string;
             tier: 'bronze' | 'silver' | 'gold';
             xp: number;
-            gems: number;
           }
         | undefined;
       if (!a) continue;
@@ -111,10 +108,7 @@ export function useProgressionFeedback(progression: any, quiet: Quiet) {
             kicker: `${a.tier.toUpperCase()} BADGE`,
             title: a.name,
             subtitle: a.description,
-            rewards: [
-              { label: 'XP', icon: '⚡', value: `+${a.xp}` },
-              { label: 'Gems', icon: '💎', value: `+${a.gems}` },
-            ],
+            rewards: [{ label: 'XP', icon: '⚡', value: `+${a.xp}` }],
             slot: (
               <LazyRewardMedal variant="achievement" tier={a.tier} replayKey={a.id} height={MEDAL_HEIGHT} />
             ),
@@ -168,19 +162,15 @@ export function useProgressionFeedback(progression: any, quiet: Quiet) {
     if (!quiet.toasts && toastQueue.current.length) {
       const entries = toastQueue.current.splice(0);
       for (const entry of entries) {
-        const xp = entry.xp ? `+${entry.xp} XP` : '';
-        const gems = entry.gems ? `${entry.gems > 0 ? '+' : '−'}${Math.abs(entry.gems)} gems` : '';
-        const body = [xp, gems].filter(Boolean).join(' · ');
+        const body = entry.xp ? `+${entry.xp} XP` : '';
         const kind =
           entry.kind === 'quest' || entry.kind === 'quests-bonus'
             ? 'quest'
             : entry.kind === 'streak'
               ? 'streak'
-              : entry.kind === 'cosmetic'
-                ? 'gem'
-                : entry.kind === 'rank' || entry.kind === 'event'
-                  ? 'achievement'
-                  : 'xp';
+              : entry.kind === 'cosmetic' || entry.kind === 'rank' || entry.kind === 'event'
+                ? 'achievement'
+                : 'xp';
         // A cleared limited mode leads with the badge it minted; the log label becomes the body.
         const badge = entry.kind === 'event' && entry.meta?.badge ? badgeLabel(entry.meta.badge) : '';
         juice.toast({

@@ -1,4 +1,5 @@
-import { sqliteTable, text, integer, index, primaryKey } from 'drizzle-orm/sqlite-core';
+import { sqliteTable, text, integer, index, primaryKey, uniqueIndex, check } from 'drizzle-orm/sqlite-core';
+import { sql } from 'drizzle-orm';
 export const rooms = sqliteTable(
   'rooms',
   {
@@ -76,3 +77,109 @@ export const opsFlags = sqliteTable('ops_flags', {
   updatedBy: text('updated_by').notNull(),
   updatedAt: integer('updated_at').notNull(),
 });
+/**
+ * The ledger, persisted the way `lib/ledger/store-contract.mjs` demands: every guard is a constraint
+ * violation, because a D1 batch rolls back on a statement ERROR and on nothing else
+ * (`tests/d1-batch-semantics.test.mjs`). Amounts are signed integers exactly as the pure planner
+ * emits them; the cached `balance` is Square Books' decision — a wallet read must not GROUP BY a
+ * growing entry log — and `tests/ledger-store.test.mjs` proves the cache and the entries agree.
+ *
+ *  - `ledger_transactions.tx_id` is sha256(op_key): a replay of the same real-world event collides
+ *    on the primary key and the whole batch is refused → `duplicate`.
+ *  - `ledger_entries` UNIQUE(account_id, seq): a post that read a stale head loses the race on the
+ *    account's sequence and is refused whole → `conflict`.
+ *  - `ledger_accounts` CHECK: an account flagged must-not-go-negative (bit 1) that would be
+ *    overdrawn trips the CHECK on its balance update and the batch is refused whole → `overdraft`.
+ */
+export const ledgerAccounts = sqliteTable(
+  'ledger_accounts',
+  {
+    accountId: text('account_id').primaryKey(),
+    ledger: text('ledger').notNull(),
+    kind: text('kind').notNull(),
+    owner: text('owner').notNull(),
+    flags: integer('flags').notNull().default(0),
+    balance: integer('balance').notNull().default(0),
+    entrySeq: integer('entry_seq').notNull().default(0),
+    openedAt: integer('opened_at').notNull(),
+  },
+  (t) => [
+    index('ledger_accounts_owner_idx').on(t.ledger, t.owner),
+    check('ledger_accounts_no_overdraft', sql`(${t.flags} & 1) = 0 OR ${t.balance} >= 0`),
+  ],
+);
+export const ledgerTransactions = sqliteTable(
+  'ledger_transactions',
+  {
+    txId: text('tx_id').primaryKey(),
+    opKey: text('op_key').notNull().unique(),
+    ledger: text('ledger').notNull(),
+    kind: text('kind').notNull(),
+    memo: text('memo'),
+    meta: text('meta').notNull().default('{}'),
+    effectiveAt: integer('effective_at').notNull(),
+    createdAt: integer('created_at').notNull(),
+  },
+  (t) => [index('ledger_transactions_created_idx').on(t.createdAt)],
+);
+export const ledgerEntries = sqliteTable(
+  'ledger_entries',
+  {
+    entryId: text('entry_id').primaryKey(),
+    txId: text('tx_id').notNull(),
+    accountId: text('account_id').notNull(),
+    leg: integer('leg').notNull(),
+    amount: integer('amount').notNull(),
+    seq: integer('seq').notNull(),
+    createdAt: integer('created_at').notNull(),
+  },
+  (t) => [
+    uniqueIndex('ledger_entries_account_seq_uq').on(t.accountId, t.seq),
+    index('ledger_entries_tx_idx').on(t.txId),
+    check('ledger_entries_nonzero', sql`${t.amount} <> 0`),
+  ],
+);
+/**
+ * The guest principal and the rewarded-ad nonce, the server half of `lib/ads/nonce.mjs`.
+ *
+ * A principal today is anonymous: an id the device minted, promoted in place when accounts arrive
+ * (M4) so nothing earned as a guest is lost. `ad_nonces` is issued before an ad plays and read back
+ * when the client says the ad finished; `ad_redemptions` is the guard — its primary key is the
+ * nonce id, so a second redemption of the same nonce collides and the batch is refused, and the
+ * grant itself is a ledger post whose id is derived from the nonce, so it is refused as a duplicate
+ * too. Two independent constraints, either of which alone caps a lying client at one payout per
+ * nonce the server chose to issue.
+ */
+export const principals = sqliteTable('principals', {
+  id: text('id').primaryKey(),
+  kind: text('kind').notNull().default('anon'),
+  createdAt: integer('created_at').notNull(),
+  lastSeenAt: integer('last_seen_at').notNull(),
+  promotedTo: text('promoted_to'),
+});
+export const adNonces = sqliteTable(
+  'ad_nonces',
+  {
+    id: text('id').primaryKey(),
+    principalId: text('principal_id').notNull(),
+    placement: text('placement').notNull(),
+    region: text('region').notNull(),
+    reward: integer('reward').notNull(),
+    issuedAt: integer('issued_at').notNull(),
+    expiresAt: integer('expires_at').notNull(),
+    minMs: integer('min_ms').notNull(),
+    redeemedAt: integer('redeemed_at'),
+  },
+  (t) => [index('ad_nonces_principal_idx').on(t.principalId, t.issuedAt), index('ad_nonces_expiry_idx').on(t.expiresAt)],
+);
+export const adRedemptions = sqliteTable(
+  'ad_redemptions',
+  {
+    nonceId: text('nonce_id').primaryKey(),
+    principalId: text('principal_id').notNull(),
+    dayKey: text('day_key').notNull(),
+    amount: integer('amount').notNull(),
+    at: integer('at').notNull(),
+  },
+  (t) => [index('ad_redemptions_day_idx').on(t.principalId, t.dayKey)],
+);

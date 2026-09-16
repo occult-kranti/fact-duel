@@ -1,18 +1,17 @@
 'use client';
 /**
  * app/screens/player/topbar-chips.tsx — the three compact progression readouts for the shell top
- * bar (design bible §5 "Layout & mobile": brand, streak flame, gems, level ring, settings).
+ * bar (design bible §5 "Layout & mobile": brand, streak flame, level ring, settings).
  *
- *   import { StreakChip, GemsChip, LevelRing } from './screens/player/topbar-chips';
+ *   import { StreakChip, LevelRing } from './screens/player/topbar-chips';
  *   <Topbar streak={<StreakChip progression={player.progression} />}
- *           gems={<GemsChip progression={player.progression} />}
  *           level={<LevelRing progression={player.progression} level={player.level} />} />
  *
  * Each is a 32px-tall inline chip: no layout of its own, no state, safe on the server. They render
- * nothing at all when there is nothing to show (a fresh profile has no streak and no gems), so the
+ * nothing at all when there is nothing to show (a fresh profile has no streak), so the
  * top bar stays quiet until the player has earned something.
  */
-import { Flame, Gem } from 'lucide-react';
+import { Flame } from 'lucide-react';
 import { levelForXp } from '@/lib/progression.mjs';
 import { ProgressRing } from './shared';
 import './player.css';
@@ -37,18 +36,6 @@ export function StreakChip({ progression }: ChipProps) {
   );
 }
 
-/** Gem wallet. Hidden until the player has earned a gem. */
-export function GemsChip({ progression }: ChipProps) {
-  const gems: number = progression?.wallet?.gems ?? 0;
-  if (gems <= 0) return null;
-  return (
-    <span className="fd-chip-top fd-chip-top--gems" title={`${gems} gems`}>
-      <Gem aria-hidden="true" />
-      <span className="fd-chip-label">{gems.toLocaleString()}</span>
-      <span className="sr-only">gems</span>
-    </span>
-  );
-}
 
 /** Level ring: the XP progress into the current level, with the level number beside it. */
 export function LevelRing({ progression, level }: ChipProps & { level?: LevelInfo }) {

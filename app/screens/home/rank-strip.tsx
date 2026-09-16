@@ -51,7 +51,7 @@ export function RankStrip({ points, rank }: RankStripProps) {
           ) : (
             <>Top tier held.</>
           )}{' '}
-          Rank, XP and gems are kept on this device.
+          Rank and XP are kept on this device.
         </p>
       </div>
     </section>

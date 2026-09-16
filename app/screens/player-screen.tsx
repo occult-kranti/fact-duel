@@ -19,6 +19,7 @@ import { emptyProgression } from '@/lib/progression.mjs';
 import { SETTINGS_KEYS } from '../shell/settings-sheet';
 import { Passport } from '../passport';
 import { MeasurementLink } from './analytics/link-card';
+import { Boards } from './player/boards';
 import { Achievements } from './player/achievements';
 import { ConvictionCard } from './player/conviction-card';
 import { LevelCard } from './player/level-card';
@@ -27,6 +28,7 @@ import { Mastery } from './player/mastery';
 import { RankCard } from './player/rank-card';
 import { StampCase } from './player/stamp-case';
 import { StreakCard } from './player/streak-card';
+import { SupporterCard } from './player/supporter-card';
 import type { PlayerScreenProps } from './types';
 import './player/player.css';
 
@@ -34,6 +36,7 @@ export function PlayerScreen({ player, onOpenExpedition, onMissionAction, go }: 
   const progression = player.progression ?? emptyProgression();
   const accent: string = progression.cosmetics.equipped.accent;
   const [name, setName] = useState('');
+  const boardsAt = useBoardsClock(player.profile.revision);
 
   // The player's name lives in the shell's settings (localStorage); read it for the monogram only.
   useEffect(() => {
@@ -60,6 +63,10 @@ export function PlayerScreen({ player, onOpenExpedition, onMissionAction, go }: 
         </div>
       </header>
 
+      {/* The Supporter Card is the identity hook: handle, allegiance per sport, per-sport rating and
+          season, matchweek streak, the age band. All device-local; it says so itself. */}
+      <SupporterCard player={player} />
+
       <div className="fd-player-hero">
         <LevelCard progression={progression} level={player.level} name={name} />
         <RankCard progression={progression} />
@@ -69,6 +76,16 @@ export function PlayerScreen({ player, onOpenExpedition, onMissionAction, go }: 
 
       {/* The Arena Rank card above says "on this device"; this is where that claim can be checked. */}
       <MeasurementLink onOpen={() => go('analytics')} />
+      <section className="fd-sec" aria-labelledby="fd-boards-sec-h">
+        <div className="fd-sec-head">
+          <div>
+            <p className="fd-eyebrow">WHO YOU HAVE BEATEN</p>
+            <h2 id="fd-boards-sec-h">Boards</h2>
+          </div>
+          <span>Real duels on this device</span>
+        </div>
+        <Boards profile={player.profile} at={boardsAt} />
+      </section>
 
       {/* Only `counters.byTopic` feeds these bars and only duel rounds write it, so the heading and
           the aside name what is counted instead of claiming strength the numbers cannot support. */}
@@ -105,7 +122,7 @@ export function PlayerScreen({ player, onOpenExpedition, onMissionAction, go }: 
             <p className="fd-eyebrow">DRESS THE CARD</p>
             <h2 id="fd-locker-sec-h">Locker</h2>
           </div>
-          <span>Cosmetics only · free simulated gems</span>
+          <span>Cosmetics only · earned by playing</span>
         </div>
         <Locker player={player} />
       </section>
@@ -113,4 +130,16 @@ export function PlayerScreen({ player, onOpenExpedition, onMissionAction, go }: 
       <Passport player={player} onAction={onMissionAction} />
     </div>
   );
+}
+
+/** The wall clock for the week boards, read in an effect so server and first client render agree. */
+function useBoardsClock(revision: number): number {
+  const [at, setAt] = useState(0);
+  useEffect(() => {
+    const read = () => setAt(Date.now());
+    read();
+    window.addEventListener('focus', read);
+    return () => window.removeEventListener('focus', read);
+  }, [revision]);
+  return at;
 }

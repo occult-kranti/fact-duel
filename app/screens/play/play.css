@@ -566,6 +566,54 @@
   background: var(--volt-soft);
   color: var(--volt-text);
 }
+/* A tier the wallet cannot enter: still in the ladder, plainly closed, the reason on its title. */
+.fd-play .fd-opt[aria-disabled='true'] {
+  color: var(--muted);
+  border-style: dashed;
+  cursor: not-allowed;
+}
+.fd-play .fd-opt[aria-disabled='true']:active {
+  transform: none;
+}
+/* The "Suggested" tag on the wallet's default tier. */
+.fd-play .fd-opt {
+  position: relative;
+}
+.fd-play .fd-opt-tag {
+  position: absolute;
+  top: -8px;
+  right: -6px;
+  padding: 1px 6px;
+  border-radius: var(--r-pill);
+  background: var(--volt);
+  color: var(--volt-ink);
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.fd-play .fd-opts:has(.fd-opt-tag) {
+  padding-top: 6px;
+}
+/* The loss-streak line: runway at this tier and the next one down, and one neutral action. */
+.fd-play .fd-stake-advice {
+  flex-direction: row;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-control);
+  background: var(--bg-2);
+  font-size: var(--fs-14);
+  line-height: 1.45;
+  color: var(--text);
+}
 
 /* ---------- pool + warning ---------- */
 .fd-play .fd-pool {

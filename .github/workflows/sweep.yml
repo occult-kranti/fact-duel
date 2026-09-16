@@ -88,6 +88,20 @@ jobs:
               ;;
           esac
 
+          # The ledger reconcile: replays every posted transaction through the invariants and
+          # compares it with the cached balances. Drift is recorded and reported, never repaired.
+          status=$(call '{"action":"reconcile"}') || status="000"
+          echo "POST /api/ops {\"action\":\"reconcile\"} -> HTTP ${status}"
+          cat response.json || true
+          echo
+          case "${status}" in
+            2??) ;;
+            *)
+              echo "::error::Ledger reconcile failed with HTTP ${status}. See docs/money-runbook.md."
+              exit 1
+              ;;
+          esac
+
           # Read the heartbeat back. Non-fatal: the sweep above already succeeded, and a health read
           # that cannot be taken is not itself a reason to page anyone at 3am.
           health=$(call '{"action":"health"}') || health="000"

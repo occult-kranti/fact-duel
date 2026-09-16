@@ -249,7 +249,7 @@ export function AnalyticsScreen({ player, onErase, go }: AnalyticsScreenProps) {
         <p className="fd-an-note">
           <b>Erase</b> opens the same confirmation as <b>Reset local activity</b> in Settings, because it is
           the same single action: there is one reset, and it erases this measurement record together with your
-          Vault, expeditions, XP, gems and stamps. Export first if you want to keep a copy.
+          Vault, expeditions, XP and stamps. Export first if you want to keep a copy.
         </p>
 
         <ul className="fd-an-privacy">

@@ -70,7 +70,7 @@ export async function request(body: any) {
       const stamp = await store.clock();
       return { serverNow: stamp.db_now, clockSource: 'primary-database' };
     }
-    if (['catalogue', 'practice', 'expedition'].includes(body?.action))
+    if (['catalogue', 'practice', 'expedition', 'fixture'].includes(body?.action))
       return await dispatch(null, body, { now: Date.now() });
     return await dispatch(store, body, { now: Date.now(), actor: ACTOR, useDatabaseClock: true });
   } catch (error) {

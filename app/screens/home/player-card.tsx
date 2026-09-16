@@ -2,9 +2,9 @@
 /**
  * app/screens/home/player-card.tsx — the ownership half of the hero row.
  * Monogram avatar in the equipped frame, level + title, an XP meter that fills on mount, and the
- * three numbers the daily loop runs on: streak (magenta), gems (gold) and the Arena Rank chip.
+ * three numbers the daily loop runs on: streak (magenta), badges earned (gold) and the Arena Rank chip.
  */
-import { ChevronRight, Flame, Gem, Shield, Trophy } from 'lucide-react';
+import { Award, ChevronRight, Flame, Shield, Trophy } from 'lucide-react';
 import { NumberCounter } from '@/components/fx';
 import { cosmeticById } from '@/lib/progression.mjs';
 import { FRAME_LABELS } from './util';
@@ -14,7 +14,8 @@ export type PlayerCardProps = {
   name: string;
   level: { level: number; into: number; toNext: number; progress: number; title: string };
   streak: { current: number; shields: number };
-  gems: number;
+  /** Achievements earned on this device. */
+  badges: number;
   rank: { label: string; tier: string; into: number; toNext: number; progress: number };
   points: number;
   frame: string;
@@ -27,7 +28,7 @@ export function PlayerCard({
   name,
   level,
   streak,
-  gems,
+  badges,
   rank,
   points,
   frame,
@@ -47,7 +48,7 @@ export function PlayerCard({
       style={{ ['--fd-accent' as string]: accentToken }}
       onPointerDown={press}
       onClick={onOpen}
-      aria-label={`Open your player card. Level ${level.level}, ${level.title}. ${streak.current} day streak, ${gems} gems, ${rank.label} rank.`}
+      aria-label={`Open your player card. Level ${level.level}, ${level.title}. ${streak.current} day streak, ${badges} badges, ${rank.label} rank.`}
     >
       <span className="fd-hub-player-top">
         <span className="fd-hub-avatar" aria-hidden="true">
@@ -100,12 +101,12 @@ export function PlayerCard({
             </span>
           )}
         </span>
-        <span className="fd-hub-stat fd-hub-stat--gems">
-          <Gem aria-hidden="true" />
+        <span className="fd-hub-stat fd-hub-stat--badges">
+          <Award aria-hidden="true" />
           <b className="fd-mono">
-            <NumberCounter value={gems} from={0} duration={900} />
+            <NumberCounter value={badges} from={0} duration={900} />
           </b>
-          <small>gems</small>
+          <small>badges</small>
         </span>
         <span className="fd-hub-stat fd-hub-stat--rank">
           <Trophy aria-hidden="true" />

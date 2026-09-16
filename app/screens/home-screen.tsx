@@ -74,7 +74,7 @@ export function HomeScreen({ player, name, ready, busy, onRoute, onDuel, onSetup
           name={name}
           level={level}
           streak={prog.streak}
-          gems={prog.wallet.gems}
+          badges={Object.keys(prog.achievements ?? {}).length}
           rank={rank}
           points={prog.rank.points}
           frame={prog.cosmetics.equipped.frame}

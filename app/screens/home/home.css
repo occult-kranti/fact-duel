@@ -480,7 +480,7 @@
   border-color: color-mix(in oklab, var(--magenta) 32%, transparent);
   background: var(--magenta-soft);
 }
-.fd-home .fd-hub-stat--gems {
+.fd-home .fd-hub-stat--badges {
   color: var(--gold-text);
   border-color: color-mix(in oklab, var(--gold) 32%, transparent);
   background: var(--gold-soft);
@@ -661,10 +661,6 @@
 .fd-home .fd-hub-chip--xp {
   background: var(--volt-soft);
   color: var(--volt-text);
-}
-.fd-home .fd-hub-chip--gem {
-  background: var(--gold-soft);
-  color: var(--gold-text);
 }
 .fd-home .fd-hub-quest-label {
   font-size: var(--fs-14);

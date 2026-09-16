@@ -18,7 +18,7 @@ import { WalletChip } from './screens/economy/wallet-chip';
 import { request } from '@/lib/duel-client';
 import { AppShell } from './shell/app-shell';
 import { ProgressionFeedback } from './screens/use-progression-feedback';
-import { GemsChip, LevelRing, StreakChip } from './screens/player/topbar-chips';
+import { LevelRing, StreakChip } from './screens/player/topbar-chips';
 import { SettingsSheet, SETTINGS_KEYS, type MotionPref } from './shell/settings-sheet';
 import { HomeScreen } from './screens/home-screen';
 import { PlayScreen } from './screens/play-screen';
@@ -927,7 +927,6 @@ export default function Arena({ initialTab = 'home' }: { initialTab?: string }) 
         topbar={{
           streak: <StreakChip progression={player.progression} />,
           wallet: <WalletChip />,
-          gems: <GemsChip progression={player.progression} />,
           level: <LevelRing progression={player.progression} level={player.level} />,
           sound,
           onToggleSound: () => setSound((v) => !v),
@@ -943,6 +942,14 @@ export default function Arena({ initialTab = 'home' }: { initialTab?: string }) 
             <span>
               <button className="footer-rules" onClick={() => go('rules')}>
                 Play rules
+              </button>{' '}
+              ·{' '}
+              <button className="footer-rules" onClick={() => go('coin')}>
+                Rules of the coin
+              </button>{' '}
+              ·{' '}
+              <button className="footer-rules" onClick={() => go('trust')}>
+                Trust
               </button>{' '}
               · Free simulated coins · Private playtest
             </span>
@@ -1043,7 +1050,9 @@ export default function Arena({ initialTab = 'home' }: { initialTab?: string }) 
         )}
         {!room && tab === 'discovery' && <DiscoveryScreen player={player} topic={config.topic} go={go} />}
         {!room && tab === 'journal' && <VaultScreen player={player} go={go} />}
-        {!room && (tab === 'rules' || tab === 'timing') && <RulesScreen view={tab} go={go} />}
+        {!room && (tab === 'rules' || tab === 'timing' || tab === 'coin' || tab === 'trust') && (
+          <RulesScreen view={tab} go={go} />
+        )}
         {room && <RoomScreen duel={duel} player={player} />}
       </AppShell>
       <SettingsSheet
@@ -1099,7 +1108,7 @@ export default function Arena({ initialTab = 'home' }: { initialTab?: string }) 
             <AlertDialogTitle>Reset your local activity?</AlertDialogTitle>
             <AlertDialogDescription>
               This removes your Vault of facts and saved question issues, expedition progress, scores and
-              stamps, XP, gems and activity points, side quests and earned card finishes in this browser — and
+              stamps, XP and activity points, side quests and earned card finishes in this browser — and
               the measurement record behind the Analytics screen: sessions, active days, the day-by-day
               activity and the retention answer. Export first to keep a copy. Theme, sound preferences and
               room coins are unaffected.

@@ -3,11 +3,23 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
-import { ArrowLeft, ArrowRight, ShieldCheck, Timer } from 'lucide-react';
+import { ArrowLeft, ArrowRight, BadgeCheck, Coins, ShieldCheck, Timer } from 'lucide-react';
 import type { RulesScreenProps } from './types';
+import { CoinRules } from './rules/coin-rules';
+import { Trust } from './rules/trust';
 
-/* Rules tab: the Playbook, plus the Timing Lab sub-view. */
+/* Rules tab: the Playbook, plus the Timing Lab, Rules of the coin and Trust sub-views. */
 export function RulesScreen({ view, go }: RulesScreenProps) {
+  if (view === 'coin' || view === 'trust')
+    return (
+      <>
+        <Button variant="ghost" onClick={() => go('rules')}>
+          <ArrowLeft />
+          Back to playbook
+        </Button>
+        {view === 'coin' ? <CoinRules /> : <Trust />}
+      </>
+    );
   if (view === 'timing')
     return (
       <>
@@ -21,11 +33,23 @@ export function RulesScreen({ view, go }: RulesScreenProps) {
   return (
     <>
       <Playbook />
-      <Button variant="outline" onClick={() => go('timing')}>
-        <Timer />
-        Explore the timing lab
-        <ArrowRight />
-      </Button>
+      <div className="fd-rules__links">
+        <Button variant="outline" onClick={() => go('coin')}>
+          <Coins />
+          Rules of the coin
+          <ArrowRight />
+        </Button>
+        <Button variant="outline" onClick={() => go('trust')}>
+          <BadgeCheck />
+          Trust
+          <ArrowRight />
+        </Button>
+        <Button variant="outline" onClick={() => go('timing')}>
+          <Timer />
+          Explore the timing lab
+          <ArrowRight />
+        </Button>
+      </div>
     </>
   );
 }

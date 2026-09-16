@@ -12,7 +12,6 @@ import { EXPEDITIONS, MIN_SCORE, MAX_SCORE, readExpeditions } from '../lib/exped
 import {
   COSMETICS,
   CONVICTION_TIERS,
-  XP,
   convictionIndex,
   convictionRating,
   cosmeticStatus,
@@ -110,32 +109,16 @@ test('folding ends the run: it cannot be answered on, and it banks nothing', asy
   assert.equal(p.progression.counters.stamps, 0);
 });
 
-test('the badge bonus is minted once per tier, even across a rollback that strips the tally', () => {
-  // A shipped bundle reading a newer profile drops `conviction` wholesale — it assigns only the keys
-  // it knows — while leaving the wallet intact. Without an idempotence mark the next load walked the
-  // whole ladder again and paid the advertised 160 lifetime gems a second time.
-  const paid = CONVICTION_TIERS.filter((t) => XP.convictionTierGems[t.id] > 0);
-  assert.ok(paid.length >= 1);
-  const total = paid.reduce((a, t) => a + XP.convictionTierGems[t.id], 0);
-  assert.equal(total, 160, 'the advertised lifetime badge bonus');
-  // Every paying tier is marked under a key the shipped reader whitelists by shape, not by list.
-  for (const t of paid) assert.match(`conviction-${t.id}`, /^[a-z0-9]+(?:-[a-z0-9]+)*$/);
-});
-
-test('a cosmetic is only offered for sale when its unlock is actually met', () => {
-  // reduceCosmetics refuses a buy whose unlock is unmet, so an unlock-blind status rendered an
-  // enabled button on the most expensive item in the catalogue that silently did nothing.
-  const rich = { ...emptyProgression(), wallet: { gems: 100000, lifetimeGems: 100000 } };
-  // `unlock` is always an object; an ungated item carries an empty one.
-  const isGated = (c) => Object.keys(c.unlock ?? {}).length > 0;
-  const gated = COSMETICS.filter((c) => c.price !== null && isGated(c));
-  assert.ok(gated.length > 0, 'no gated cosmetics to check');
-  for (const c of gated)
-    if (cosmeticStatus(rich, c.id) === 'buyable')
-      assert.fail(`${c.id} is offered to a fresh profile that cannot buy it`);
-  // And the cautious player still has somewhere to spend: something priced must be reachable.
-  const reachable = COSMETICS.filter((c) => c.price !== null && cosmeticStatus(rich, c.id) === 'buyable');
-  assert.ok(reachable.length > 0, 'every priced cosmetic is gated — the gem sink is unreachable');
+test('nothing in the catalogue is for sale and a fresh profile has every earnable item locked', () => {
+  // The second currency is gone (progression v2): every cosmetic carries an unlock rule and no price,
+  // so there is no "buyable" state for an unlock-blind status to render a dead button for.
+  const fresh = emptyProgression();
+  for (const c of COSMETICS) {
+    assert.strictEqual(c.price, null, c.id);
+    const status = cosmeticStatus(fresh, c.id);
+    assert.ok(status === 'locked' || status === 'equipped', `${c.id} is ${status} on a fresh profile`);
+    assert.notEqual(status, 'buyable');
+  }
 });
 
 test('a badge never prints an earned-at rating below its own floor', () => {
@@ -167,11 +150,10 @@ test('the loader bounds a hostile profile before it walks it', () => {
       counted: Array.from({ length: big }, (_, i) => `q${i}`),
       bold: { n: '9', correct: null },
     },
-    wallet: { gems: 40, lifetimeGems: 40 },
   });
   assert.ok(p.conviction.recent.length <= 20);
   assert.ok(p.conviction.counted.length <= 1200);
-  assert.equal(p.wallet.gems, 40, 'a hostile conviction block must not touch the wallet');
+  assert.ok(!('wallet' in p), 'no second currency comes back from the loader');
   assert.ok(Number.isSafeInteger(convictionRating(p.conviction)), 'rating went non-finite');
   assert.ok(Date.now() - started < 4000, 'load walked the whole array');
 });

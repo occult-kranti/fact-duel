@@ -913,21 +913,6 @@
   padding: 4px 16px 18px;
   border-top: 1px solid var(--line);
 }
-.fd-locker-vault {
-  margin: 0;
-  border: 1px solid var(--line);
-  border-radius: var(--r-card);
-  background: radial-gradient(ellipse 60% 70% at 50% 70%, var(--gold-soft), var(--bg-2) 70%);
-  overflow: hidden;
-}
-.fd-locker-vault figcaption {
-  padding: 0 14px 12px;
-  text-align: center;
-  font-family: var(--font-mono);
-  font-size: var(--fs-12);
-  font-variant-numeric: tabular-nums;
-  color: var(--muted);
-}
 .fd-cosmetics {
   display: grid;
   grid-template-columns: 1fr;
@@ -1269,10 +1254,6 @@
 .fd-chip-top--streak[data-lit='false'] {
   color: var(--muted);
   border-color: var(--line);
-}
-.fd-chip-top--gems {
-  color: var(--gold-text);
-  border-color: color-mix(in oklab, var(--gold) 35%, transparent);
 }
 .fd-chip-top--level {
   gap: 7px;
