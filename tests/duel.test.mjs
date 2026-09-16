@@ -466,13 +466,13 @@ test('stable fact identity is disclosed only after settlement and matches the so
   assert.equal(ended.createdAt, 1000000);
 });
 test('open untimed practice returns three distinct sourced cards without touching a room or coins', async () => {
-  const out = await dispatch(null, { action: 'practice', topic: 'Space' }, { rng: () => 0.51 });
+  const out = await dispatch(null, { action: 'practice', topic: 'Cricket' }, { rng: () => 0.51 });
   assert.equal(out.practice, true);
   assert.equal(out.cards.length, 3);
   assert.equal(new Set(out.cards.map((q) => q.factId)).size, 3);
   assert.equal(out.room, undefined);
   for (const q of out.cards) {
-    assert.equal(q.topic, 'Space');
+    assert.equal(q.topic, 'Cricket');
     assert.equal(new Set(q.options).size, 4);
     assert.ok(q.sourceUrl.startsWith('https://'));
     assert.ok(Number.isInteger(q.correctIndex));

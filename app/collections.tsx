@@ -6,6 +6,7 @@
  * and three mastery mini-bars (encountered / opened / recalled) read from the passport. Choosing a
  * card still calls `onChoose(domain, topic)`, which is what the Play screen listens for.
  */
+import { DOMAIN_CHIPS, domainEnabled } from '@/lib/content.mjs';
 import { useState } from 'react';
 import {
   Activity,
@@ -31,6 +32,8 @@ export const TOPIC_STYLE: any = {
   Basketball: { icon: CircleDot, detail: 'The players behind the numbers', color: 'sport' },
   'American football': { icon: Target, detail: 'Super Bowl stories & NFL history', color: 'sport' },
   Tennis: { icon: Activity, detail: 'Majors, rivalries & defining moments', color: 'sport' },
+  Baseball: { icon: CircleDot, detail: 'October, the record books & the scandals', color: 'sport' },
+  'Formula 1': { icon: Flag, detail: 'Title deciders, team orders & the rows that followed', color: 'sport' },
   Space: { icon: Orbit, detail: 'Small questions. An enormous universe.', color: 'science' },
   Physics: { icon: Atom, detail: 'The rules behind the everyday', color: 'science' },
   Biology: { icon: Brain, detail: 'Life, cells & remarkable discoveries', color: 'science' },
@@ -66,11 +69,8 @@ export function CollectionCover({
   );
 }
 
-const DOMAINS: { id: string; label: string }[] = [
-  { id: 'all', label: 'All' },
-  { id: 'sports', label: 'Sports' },
-  { id: 'science', label: 'Science' },
-];
+/* Only the domains the product shows; with one domain there is no 'all' and no switcher. */
+const DOMAINS: { id: string; label: string }[] = [...DOMAIN_CHIPS];
 
 export default function Collections({
   catalogue,
@@ -82,12 +82,13 @@ export default function Collections({
   onChoose: (domain: string, topic: string) => void;
 }) {
   const press = usePress();
-  const [domain, setDomain] = useState('all'),
+  const [domain, setDomain] = useState(DOMAINS[0].id),
     [search, setSearch] = useState('');
   const query = search.toLowerCase().trim();
   const topics =
     catalogue?.topics?.filter(
       (t: any) =>
+        domainEnabled(t.domain) &&
         (domain === 'all' || t.domain === domain) &&
         `${t.topic} ${TOPIC_STYLE[t.topic]?.detail || ''}`.toLowerCase().includes(query),
     ) || [];

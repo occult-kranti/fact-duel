@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import {
-  EVENTS,
+  ACTIVE_EVENTS, EVENTS,
   CALENDAR_ASOF,
   MODE_TEMPLATES,
   EVENT_DOMAINS,
@@ -512,10 +512,12 @@ test('the shipped calendar matches the contract without the engine knowing anyth
     assert.ok(e.startDay <= e.endDay);
     assert.match(e.sourceUrl, /^https:\/\//);
   }
-  // The engine works the same whether the dataset is empty or full.
+  // The engine works the same whether the dataset is empty or full; its DEFAULT is the active
+  // (sports-only) calendar, and the full shipped list still runs through it unchanged.
   const at = T(2026, 9, 13);
-  assert.deepEqual(groupEvents(at), groupEvents(at, EVENTS));
-  assert.deepEqual(monthlyModes(at), monthlyModes(at, EVENTS));
+  assert.deepEqual(groupEvents(at), groupEvents(at, ACTIVE_EVENTS));
+  assert.deepEqual(monthlyModes(at), monthlyModes(at, ACTIVE_EVENTS));
+  assert.ok(groupEvents(at, EVENTS).recent.length >= groupEvents(at).recent.length);
   assert.ok(monthlyModes(at).length <= MONTHLY_MODE_LIMIT);
   assert.ok(activeModes(at).every((m) => isModeOpen(m, at)));
 });

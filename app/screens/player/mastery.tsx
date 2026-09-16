@@ -6,13 +6,15 @@
  */
 import { Atom, Trophy } from 'lucide-react';
 import { TOPIC_DOMAINS } from '@/lib/journal.mjs';
+import { domainEnabled } from '@/lib/content.mjs';
 import { Meter } from './shared';
 
 /* The bars are data, so they take the accent's text twin (identical in dark, legible on light). */
+/* Only the domains the product shows; a hidden domain's rounds stay in the counters, unpainted. */
 const DOMAINS = [
   { id: 'sports', label: 'Sports', icon: Trophy, tone: 'var(--ember-text)' },
   { id: 'science', label: 'Science', icon: Atom, tone: 'var(--cyan-text)' },
-] as const;
+].filter((d) => domainEnabled(d.id));
 
 const domains = TOPIC_DOMAINS as Record<string, string>;
 

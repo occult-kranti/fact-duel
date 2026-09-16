@@ -14,6 +14,7 @@
  * percentage: a four-option card has a 25% floor, so counts and dates are the only honest units. The
  * schedule is a schedule — when a card comes back — never a prediction about the person answering it.
  */
+import { ENABLED_DOMAINS, domainEnabled } from '@/lib/content.mjs';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   ArrowLeft,
@@ -70,8 +71,7 @@ const SURFACE_LABEL: Record<string, string> = {
 const FILTERS: { id: string; label: string }[] = [
   { id: 'all', label: 'All' },
   { id: 'saved', label: 'Saved' },
-  { id: 'sports', label: 'Sports' },
-  { id: 'science', label: 'Science' },
+  ...ENABLED_DOMAINS.map((id) => ({ id, label: id === 'sports' ? 'Sports' : 'Science' })),
   { id: 'due', label: 'Due' },
   { id: 'wrong', label: 'Wrong last time' },
   { id: 'bold', label: 'Bold misses' },
@@ -205,7 +205,11 @@ export function Journal({
   const entries: Entry[] = useMemo(() => {
     const out: Entry[] = [];
     const seen = new Set<string>();
+    // A hidden domain is hidden here too: its facts stay in the profile untouched, they are simply
+    // not listed, so a science card met last month neither shows nor is lost.
+    const visible = (topic: unknown) => domainEnabled((TOPIC_DOMAINS as Record<string, string>)[String(topic)]);
     for (const r of uniqueFacts(journal.rounds)) {
+      if (!visible(r.topic)) continue;
       const id = typeof r.factId === 'string' ? r.factId : null;
       if (id) seen.add(id);
       out.push({ key: r.id, factId: id, fact: r, record: id ? ((journal.facts ?? {})[id] ?? null) : null });
@@ -213,7 +217,7 @@ export function Journal({
     for (const [id, card] of Object.entries(journal.cards ?? {})) {
       if (seen.has(id)) continue;
       const fact = factFromCard(id, card);
-      if (fact) out.push({ key: fact.id, factId: id, fact, record: (journal.facts ?? {})[id] ?? null });
+      if (fact && visible(fact.topic)) out.push({ key: fact.id, factId: id, fact, record: (journal.facts ?? {})[id] ?? null });
     }
     // Last answered first, with anything the queue wants pinned above it — `uniqueFacts` orders by the
     // round window alone, which cannot see a fact whose only recent answer was a review.
@@ -324,8 +328,8 @@ export function Journal({
   for (const e of entries) {
     counts.all += 1;
     if (journal.saved.includes(e.fact.question)) counts.saved += 1;
-    if ((TOPIC_DOMAINS as any)[e.fact.topic] === 'sports') counts.sports += 1;
-    if ((TOPIC_DOMAINS as any)[e.fact.topic] === 'science') counts.science += 1;
+    const domain = (TOPIC_DOMAINS as Record<string, string>)[e.fact.topic];
+    if (domain in counts) counts[domain] += 1;
     if (dueSet.has(e.factId ?? '')) counts.due += 1;
     if (e.record?.lastCorrect === false) counts.wrong += 1;
     if ((e.record?.boldWrong ?? 0) > 0) counts.bold += 1;

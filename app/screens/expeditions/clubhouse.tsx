@@ -15,7 +15,8 @@ import {
   Swords,
   Users,
 } from 'lucide-react';
-import { EXPEDITIONS, expeditionStatus } from '@/lib/expeditions.mjs';
+import { ACTIVE_EXPEDITIONS as EXPEDITIONS, expeditionStatus } from '@/lib/expeditions.mjs';
+import { DOMAIN_CHIPS, ENABLED_DOMAINS, SINGLE_DOMAIN } from '@/lib/content.mjs';
 import { EpisodeCard, ExpeditionStamp, RouteArt, RouteRail, useTap } from './parts';
 
 const DUELS = [
@@ -52,13 +53,13 @@ export function Clubhouse({
   onShowroom: () => void;
 }) {
   const tap = useTap();
-  const [world, setWorld] = useState('sports');
+  const [world, setWorld] = useState<string>(ENABLED_DOMAINS[0]);
   const journeys = player.profile.journeys || {};
   const continuing = EXPEDITIONS.filter((r: any) => expeditionStatus(journeys[r.key]) === 'continue').sort(
     (a: any, b: any) => journeys[b.key].run.startedAt - journeys[a.key].run.startedAt,
   )[0];
   const featured =
-    continuing || EXPEDITIONS.find((r: any) => r.id === (world === 'sports' ? 'football' : 'space'))!;
+    continuing || EXPEDITIONS.find((r: any) => r.domain === world) || EXPEDITIONS[0];
   const record = journeys[featured.key],
     isContinue = expeditionStatus(record) === 'continue';
   const earned = EXPEDITIONS.filter((r: any) => journeys[r.key]?.first);
@@ -175,16 +176,17 @@ export function Clubhouse({
             <p className="fd-exp-eyebrow">PICK AN OBSESSION</p>
             <h2>A little deeper. A lot more interesting.</h2>
           </div>
+          {/* One visible domain means there is nothing to switch between, so no switcher. */}
+          {!SINGLE_DOMAIN && (
           <div className="fd-exp-seg" role="group" aria-label="Expedition world">
             <span
               className="fd-exp-seg-thumb"
               aria-hidden="true"
-              style={{ '--n': 2, '--i': world === 'science' ? 1 : 0 } as CSSProperties}
+              style={{ '--n': ENABLED_DOMAINS.length, '--i': ENABLED_DOMAINS.indexOf(world) } as CSSProperties}
             />
-            {[
-              ['sports', 'Sports', Flag],
-              ['science', 'Science', Atom],
-            ].map(([id, label, Icon]: any) => (
+            {DOMAIN_CHIPS.filter((c) => c.id !== 'all').map(({ id, label }) => {
+              const Icon = id === 'science' ? Atom : Flag;
+              return (
               <button
                 type="button"
                 key={id}
@@ -196,8 +198,10 @@ export function Clubhouse({
                 <Icon size={15} aria-hidden="true" />
                 {label}
               </button>
-            ))}
+              );
+            })}
           </div>
+          )}
         </div>
         <div className="fd-exp-grid">
           {nextRoutes.map((route: any) => (
@@ -211,7 +215,7 @@ export function Clubhouse({
         </div>
         <div className="fd-club-shelf-foot">
           <button type="button" className="fd-exp-secondary" onPointerDown={tap} onClick={() => onRoute(null)}>
-            All 9 expeditions
+            All {EXPEDITIONS.length} expeditions
             <ArrowRight size={16} aria-hidden="true" />
           </button>
           <button type="button" className="fd-exp-ghost" onPointerDown={tap} onClick={onExplore}>

@@ -15,7 +15,7 @@ import { setImmediate } from 'node:timers/promises';
 import { D1RoomStore, dispatch } from '../lib/server/duel-service.mjs';
 import { MemoryRoomStore } from '../lib/duel-memory-store.mjs';
 import { DURATIONS, MODE_ROUNDS, RULES, makeRoom } from '../lib/server/room-engine.mjs';
-import { QUESTIONS } from '../lib/server/questions.mjs';
+import { QUESTIONS } from '../lib/server/bank.mjs';
 import { LocalD1 } from './d1-local.mjs';
 
 /* ------------------------------------------------------------------------------ harness ----- */
@@ -681,7 +681,7 @@ test('the static client maps service results and errors the way the worker does'
   assert.equal(OFFLINE_BUILD, true);
   const catalogue = await request({ action: 'catalogue' });
   assert.equal(catalogue.catalogue.count, QUESTIONS.length);
-  assert.equal((await request({ action: 'practice', topic: 'Space' })).cards.length, 3);
+  assert.equal((await request({ action: 'practice', topic: 'Cricket' })).cards.length, 3);
   const clock = await request({ action: 'clock' });
   assert.ok(Math.abs(clock.serverNow - Date.now()) < 5000);
   assert.equal(clock.clockSource, 'primary-database');

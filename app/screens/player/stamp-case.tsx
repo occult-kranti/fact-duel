@@ -5,7 +5,7 @@
  * phones and software-only renderers never pay for it; the 2D case below is always the real record.
  */
 import { LazyStampCase3D } from '@/components/three';
-import { EXPEDITIONS } from '@/lib/expeditions.mjs';
+import { ACTIVE_EXPEDITIONS as EXPEDITIONS } from '@/lib/expeditions.mjs';
 import { ExpeditionCase } from '../../expeditions';
 import { useMediaQuery, useWebGL } from './shared';
 
