@@ -23,6 +23,13 @@ import {
   enterPractice,
   affordability,
   ltvCents,
+  readConfig,
+  feeFor,
+  prizeFor,
+  openTiers,
+  doubleAdAvailable,
+  recordLoss,
+  grantQuest,
 } from '../lib/economy/economy.mjs';
 import { NullAdProvider, RecordingAdProvider, assertProvider, validReceipt, adOpKey, PLACEMENTS } from '../lib/ads/provider.mjs';
 
@@ -75,6 +82,7 @@ test('an ad pays the regional rate, exactly once, with a cooldown and a daily ca
 
   const r2 = earnFromAd(w, { adId: 'ad-2', region: 'IN', at: T0 + MIN }, cfg);
   assert.equal(r2.granted, adRewardFor('IN'), 'a different region pays a different coin amount');
+  assert.equal(r2.granted, cfg.stakes[0], 'India is floored at the smallest entry: one ad, one duel');
   assert.equal(r2.wallet.adsToday, 2);
 
   // Walk to the cap.
@@ -170,13 +178,18 @@ test('practice is a pure sink, refused rather than floored when unaffordable', (
 test('affordability says exactly how many ads a player is away from each thing', () => {
   const w = Object.freeze({ ...emptyWallet(), coins: 5, adsToday: 3 });
   const a = affordability(w, { region: 'IN' }, cfg);
-  assert.equal(a.perAd, 20);
-  assert.equal(a.practice.adsNeeded, 1, '5 + 20 >= 10');
-  assert.equal(a.stakes.find((s) => s.amount === 100).adsNeeded, 5, '5 + 5*20 >= 100');
+  assert.equal(a.perAd, 10);
+  assert.equal(a.practice.adsNeeded, 1, '5 + 10 >= 10');
+  assert.equal(a.stakes.find((s) => s.amount === 100).adsNeeded, 10, '5 + 10*10 >= 100');
   assert.equal(a.stakes.find((s) => s.amount === 10).adsNeeded, 1);
+  assert.equal(a.stakes.find((s) => s.amount === 100).prize, 180, 'the card shows the prize net of the disclosed fee');
+  assert.equal(a.stakes.find((s) => s.amount === 500).locked, true);
+  assert.equal(a.stakes.find((s) => s.amount === 500).unlockAt, 5000);
   assert.equal(a.adsLeftToday, cfg.adDailyCap - 3);
   const rich = affordability(Object.freeze({ ...w, coins: 1000 }), { region: 'IN' }, cfg);
   assert.ok(rich.stakes.every((s) => s.adsNeeded === 0));
+  assert.equal(rich.stakes.find((s) => s.amount === 250).locked, false, 'the 5-AE tier opens at 1,000');
+  assert.equal(rich.stakes.find((s) => s.amount === 500).locked, true, 'the 10-AE tier waits for the soft cap');
 });
 
 /* ------------------------------------------------------------------ the engine cannot rig */
@@ -251,4 +264,91 @@ test('a provider must implement the contract, and placements are a closed list',
   assert.deepEqual([...PLACEMENTS], ['coins', 'practice-entry', 'duel-entry', 'continue']);
   assert.equal(validReceipt({ adId: 'a', placement: 'coins', at: 1, region: 'US' }), true);
   assert.equal(validReceipt({ adId: 'a', placement: 'coins', at: 0, region: 'US' }), false);
+});
+
+/* ------------------------------------------------------------------ the researched additions */
+
+test('the reward is never below the smallest entry, and the config cannot smuggle a rigging knob', () => {
+  assert.equal(adRewardFor('ZZ'), cfg.stakes[0]);
+  const starved = readConfig({ adReward: { US: 3, '*': 1 } });
+  assert.equal(adRewardFor('US', starved), cfg.stakes[0], 'a table below the floor is lifted to it');
+
+  // The honesty rule, structurally: there is no key such a thing could travel in.
+  const hostile = readConfig({ ...cfg, difficulty: 'easy', botSkill: 0.3, mercy: true, adReward: { US: 60 } });
+  assert.equal('difficulty' in hostile, false);
+  assert.equal('botSkill' in hostile, false);
+  assert.equal('mercy' in hostile, false);
+  assert.equal(hostile.adReward.US, 60, 'known keys still override');
+  assert.deepEqual(Object.keys(hostile).sort(), Object.keys(cfg).sort());
+  assert.ok(Object.isFrozen(hostile));
+  assert.deepEqual(readConfig(null), cfg);
+});
+
+test('the fee ladder is disclosed, zero on the micro tiers, and the prize is the pot less the fee', () => {
+  assert.equal(feeFor(10), 0);
+  assert.equal(feeFor(25), 0);
+  assert.equal(feeFor(50), 10, '10% of a 100 pot');
+  assert.equal(feeFor(100), 20);
+  assert.equal(feeFor(250), 50);
+  assert.equal(feeFor(500), 150, '15% of a 1000 pot');
+  assert.equal(prizeFor(10), 20, 'one ad, one duel, and the winner keeps the whole pot');
+  assert.equal(prizeFor(100), 180);
+  assert.equal(feeFor(7), 0, 'an unlisted tier has no fee entry');
+});
+
+test('the two largest tiers are locked until the balance earns them', () => {
+  const poor = Object.freeze({ ...emptyWallet(), coins: 300 });
+  assert.deepEqual(canStake(poor, 250, cfg), { ok: false, reason: 'tier_locked' });
+  assert.deepEqual([...openTiers(poor, cfg)], [10, 25, 50, 100]);
+  const mid = Object.freeze({ ...emptyWallet(), coins: 1_000 });
+  assert.deepEqual(canStake(mid, 250, cfg), { ok: true, reason: 'ok' });
+  assert.deepEqual(canStake(mid, 500, cfg), { ok: false, reason: 'tier_locked' });
+  const whale = Object.freeze({ ...emptyWallet(), coins: 5_000 });
+  assert.deepEqual([...openTiers(whale, cfg)], [10, 25, 50, 100, 250, 500]);
+});
+
+test('three staked losses earn one double-coin ad per local day, and nothing else changes', () => {
+  let w = Object.freeze({ ...emptyWallet(), coins: 100 });
+  for (let i = 0; i < 3; i++) {
+    w = stake(w, 10, cfg).wallet;
+    w = recordLoss(w).wallet;
+  }
+  assert.equal(w.lossStreak, 3);
+  assert.equal(doubleAdAvailable(w, { at: T0 }, cfg), true);
+
+  // Asking without being owed it is just an ordinary ad.
+  const fresh = Object.freeze({ ...emptyWallet(), coins: 100 });
+  assert.equal(earnFromAd(fresh, { adId: 'x', region: 'US', at: T0, double: true }, cfg).granted, 50);
+
+  const doubled = earnFromAd(w, { adId: 'd1', region: 'US', at: T0, double: true }, cfg);
+  assert.equal(doubled.granted, 100);
+  assert.equal(doubled.reason, 'ad_double');
+  assert.equal(doubled.wallet.lossStreak, 0, 'the consolation resets the streak');
+  assert.equal(doubleAdAvailable(doubled.wallet, { at: T0 + MIN }, cfg), false);
+
+  // Lose three more the same day: still no second double.
+  let again = doubled.wallet;
+  for (let i = 0; i < 3; i++) again = recordLoss(stake(again, 10, cfg).wallet).wallet;
+  assert.equal(doubleAdAvailable(again, { at: T0 + 2 * MIN }, cfg), false, 'once per local day');
+  assert.equal(earnFromAd(again, { adId: 'd2', region: 'US', at: T0 + 2 * MIN, double: true }, cfg).granted, 50);
+  assert.equal(doubleAdAvailable(again, { at: T0 + 24 * 3_600_000 }, cfg), true, 'tomorrow it is owed again');
+
+  // A prize resets the streak too.
+  assert.equal(receivePayout(again, 20).wallet.lossStreak, 0);
+});
+
+test('quest grants are held to a daily budget and the day rolls it', () => {
+  let w = emptyWallet();
+  const a = grantQuest(w, { amount: 20, at: T0 }, cfg);
+  assert.equal(a.granted, 20);
+  const b = grantQuest(a.wallet, { amount: 20, at: T0 + MIN }, cfg);
+  assert.equal(b.granted, 10, 'only the remainder of the 30 budget');
+  const c = grantQuest(b.wallet, { amount: 5, at: T0 + 2 * MIN }, cfg);
+  assert.equal(c.ok, false);
+  assert.equal(c.reason, 'quest_budget');
+  assert.equal(c.wallet, b.wallet);
+  const tomorrow = grantQuest(b.wallet, { amount: 5, at: T0 + 24 * 3_600_000 }, cfg);
+  assert.equal(tomorrow.granted, 5);
+  assert.equal(tomorrow.wallet.questToday, 5);
+  assert.equal(grantQuest(w, { amount: 0, at: T0 }, cfg).reason, 'bad_amount');
 });

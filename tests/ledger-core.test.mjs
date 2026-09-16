@@ -341,6 +341,35 @@ test('one principal on both sides of a settlement is paid once, for the sum', ()
   assert.equal(result.balances.get(escrowAccount(ROOM)), 0);
 });
 
+test('a disclosed fee burns to the treasury and the escrow is still exhausted exactly', () => {
+  const log = [
+    grant({ principalId: ALICE, amount: 100, opKey: 'grant:a', at: AT }),
+    grant({ principalId: BOB, amount: 100, opKey: 'grant:b', at: AT }),
+    stake({ principalId: ALICE, roomId: ROOM, amount: 50, opKey: 'stake:r_0001:0', at: AT + 1 }),
+    stake({ principalId: BOB, roomId: ROOM, amount: 50, opKey: 'stake:r_0001:1', at: AT + 2 }),
+    // Pot 100, 10% fee: the winner receives 90 and 10 returns to the source of all coins.
+    settle({ roomId: ROOM, payouts: [{ principalId: ALICE, amount: 90 }], fee: 10, opKey: 'settle:r_0001', at: AT + 3 }),
+  ];
+  const tx = log[4];
+  assert.equal(tx.meta.fee, 10);
+  assert.equal(tx.entries.find((e) => e.account === PLAY_TREASURY).amount, 10, 'the fee is a positive leg on the treasury: a burn');
+  const result = check(log);
+  assert.deepEqual(result.violations, []);
+  assert.equal(result.balances.get(escrowAccount(ROOM)), 0, 'payouts plus fee exhaust the escrow');
+  assert.equal(result.balances.get(userAccount('play', ALICE)), 140);
+  assert.equal(result.balances.get(PLAY_TREASURY), -190, 'lifetime issuance fell by the burned fee');
+  assert.equal(result.perLedger.play, 0);
+
+  // A fee that does not reconcile with the payouts is an unbalanced transaction and never becomes one.
+  assert.equal(
+    codeOf(() => settle({ roomId: ROOM, payouts: [{ principalId: ALICE, amount: 95 }], fee: 10, opKey: 'settle:r_x', at: AT })),
+    null,
+    'plan() cannot know the escrow balance — the ledger store catches the overdraft; the planner only requires balance',
+  );
+  assert.ok(check([...log.slice(0, 4), settle({ roomId: ROOM, payouts: [{ principalId: ALICE, amount: 95 }], fee: 10, opKey: 'settle:r_0001', at: AT + 3 })]).violations.some((v) => v.rule === 'no_overdraft'));
+  assert.equal(codeOf(() => settle({ roomId: ROOM, payouts: [{ principalId: ALICE, amount: 1 }], fee: -1, opKey: 'settle:r_y', at: AT })), 'bad_amount');
+});
+
 test('settling for more than the escrow holds overdraws it and is caught', () => {
   const log = [
     grant({ principalId: ALICE, amount: 50, opKey: 'grant:signup:p_alice', at: AT }),

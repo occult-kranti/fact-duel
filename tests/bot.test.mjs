@@ -15,7 +15,7 @@ async function fixture(t, config = {}) {
     dispatch(store, { ...host, action, ...extra }, { now, actor: host.token, rng: () => 0.51 });
   await call('create', {
     name: 'Human',
-    config: { mode: 'quick', stake: 25, duration: 10, opponent: 'bot', ...config },
+    config: { mode: 'quick', stake: 0, duration: 10, opponent: 'bot', ...config },
   });
   const raw = async () => JSON.parse((await store.read(host.roomId)).state);
   const prepare = async () => {

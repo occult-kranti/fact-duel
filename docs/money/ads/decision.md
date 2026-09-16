@@ -1,6 +1,6 @@
 # Ad-funded economy — architecture decisions
 
-**16 September 2026.** Decisions taken on the ad-tech lane (`lane-adtech.json`) and the competitor
+**16 September 2026.** Decisions taken on the ad-tech lane (as corrected by its adversarial audit, `audit-1.json`: 17 defects, mostly citation and attribution; the two load-bearing quotes — no web SSV, non-transferable rewards — were confirmed verbatim on source) (`lane-adtech.json`) and the competitor
 lane (`lane-competitors.json`), both web-grounded and confidence-marked. Where a number is `likely`
 or `UNVERIFIED` there, it is not repeated here as fact.
 
@@ -8,7 +8,9 @@ or `UNVERIFIED` there, it is not repeated here as fact.
 
 Google's help page for rewarded web ads says, verbatim: *"Server-side verification is an app only
 feature and it is unavailable for web use."* Every other web rewarded provider we found (Playwire,
-Venatus/AdinPlay, AppLixir) is in the same position: the completion signal is a browser event. A
+Venatus/AdinPlay, AppLixir) is in the same position: the completion signal is a browser event.
+(AppLixir markets a "signed server webhook"; the audit could not find it documented, so it is
+treated as UNVERIFIED and not relied on.) A
 server cannot know an ad played; it can only know a client said so.
 
 So on the web, a server-held wallet buys no integrity over a device-held one — both trust the
@@ -29,8 +31,8 @@ not worth anyone's time, and cheap enough that the ad revenue behind it is not m
 ## 2. Coins never move between players
 
 Google's *Policies for ad units that offer rewards* (identical across AdSense, AdMob and Ad
-Manager): direct monetary items may never be a reward, and an indirect reward must be *"redeemable
-only within the publisher's platform"* and *"non-transferable"* — *"only redeemable and usable by
+Manager): direct monetary items may never be a reward, and an indirect reward must be redeemable only within the publisher's own platform (paraphrase — the
+audit found that phrase is not verbatim) and *"non-transferable"* — *"only redeemable and usable by
 the same user who received it, and is not directly convertible into direct monetary items or items
 that can be transferred to a third party."*
 
@@ -65,8 +67,8 @@ It is risk management, and it is free.
 ## 4. Region and the reward table
 
 App rewarded eCPMs (2025-26, `likely`): tier 1 (US, UK, DE) $14-22; tier 2 (FR, IT, ES) $8-10;
-India $2-3, with anecdotes near $1. Web is quoted 30-70% lower, before ad-block loss (~30% of
-users globally, ~49% in Germany). India's Q2 2026 rewarded eCPM fell a further 5% quarter on
+India $2-3, with anecdotes near $1. Web is materially lower: AppLixir's own latest figures are $4+ average, $7+ tier-1, $1-2 tier-3, so plan web at ~$4-7 rather than the $8-15 headline; and that is before ad-block loss (~30% of
+users globally, ~31.5% in Germany per GWI; a 49% figure circulates but did not verify). India's Q2 2026 rewarded eCPM fell a further 5% quarter on
 quarter.
 
 The economy config carries a coins-per-ad table by region so that one ad watched is worth roughly
