@@ -2,9 +2,18 @@
 /**
  * Discovery — three untimed teaching cards for the configured topic.
  *
- * No clock, no opponent, no coins: choose once, see the answer, open the explanation, keep the fact.
- * The practice dispatch, the explanation open and the save are exactly the ones the profile reducer
+ * No clock, no opponent: choose once, see the answer, open the explanation, keep the fact. The
+ * practice dispatch, the explanation open and the save are exactly the ones the profile reducer
  * already understands; this screen only adds the Floodlight finish and the feedback.
+ *
+ * THE ENTRY. A drill costs `practiceEntry` coins (economy.mjs), paid to the house before the cards
+ * are asked for. The gate is a CLIENT POLICY over the device wallet and nothing more: the server's
+ * `practice` action stays open content, because there is no server wallet yet and, on the web, a
+ * server could only ever take the client's word for an ad anyway (docs/money/ads/decision.md §1).
+ * A wallet that cannot cover the entry is not a locked door — the priced ad card takes the drill's
+ * place, with the free paths (the floor, the daily grant) printed beside the ad, and the entry is
+ * re-attempted the moment the wallet changes. When no wallet is provided (a mount outside the
+ * arena) the drill loads as it always has.
  */
 import { useEffect, useRef, useState } from 'react';
 import {
@@ -25,7 +34,12 @@ import { useJuice } from '@/components/fx';
 import { request } from '@/lib/duel-client';
 import { XP } from '@/lib/progression.mjs';
 import { Choices, Dots, usePress } from './screens/vault';
+import { useWalletContext } from './use-wallet';
+import { AdCard } from './screens/economy/ad-card';
 import './screens/vault/vault.css';
+
+/** The entry's state for this session: unpaid yet, paid (and the drill loading or open), or refused. */
+type Entry = { state: 'pending' } | { state: 'paid'; spent: number } | { state: 'insufficient' };
 
 export default function Discovery({
   topic,
@@ -40,21 +54,29 @@ export default function Discovery({
 }) {
   const juice = useJuice();
   const press = usePress();
+  const wallet = useWalletContext();
   const [cards, setCards] = useState<any[]>([]),
     [index, setIndex] = useState(0),
     [choice, setChoice] = useState<number | null>(null),
     [results, setResults] = useState<boolean[]>([]),
     [error, setError] = useState(''),
     [finished, setFinished] = useState(false),
-    [retry, setRetry] = useState(0);
+    [retry, setRetry] = useState(0),
+    [entry, setEntry] = useState<Entry>({ state: 'pending' });
   const session = useRef(''),
+    // The session whose entry has been paid: a wallet change re-runs the gate, and neither a paid
+    // session nor one whose payment is in flight may be charged twice.
+    paid = useRef<{ session: string; spent: number } | null>(null),
+    charging = useRef(''),
+    // An entry paid for cards that never arrived carries over to the retry: one entry, one drill.
+    credit = useRef<number | null>(null),
     locked = useRef(false),
     heading = useRef<HTMLHeadingElement | null>(null),
     explanation = useRef<HTMLElement | null>(null);
   const label = !topic || topic === 'all' ? 'Mixed' : topic;
 
+  // A new session on every topic, retry or profile epoch: reset, then let the gate below pay and load.
   useEffect(() => {
-    let alive = true;
     setError('');
     session.current = crypto.randomUUID();
     locked.current = false;
@@ -63,6 +85,40 @@ export default function Discovery({
     setCards([]);
     setIndex(0);
     setFinished(false);
+    setEntry({ state: 'pending' });
+  }, [topic, retry, player.profile.epoch]);
+
+  // The gate. Runs after the reset above (same deps, declared later) and again whenever the wallet
+  // changes, so an ad watched or a grant landed on the card re-attempts the entry by itself. It
+  // only pays; loading is the next effect's job, keyed on the session, so a wallet change can never
+  // cancel a request already in flight.
+  const walletLoaded = wallet?.loaded ?? true,
+    walletCoins = wallet?.wallet.coins ?? 0;
+  useEffect(() => {
+    if (!wallet) return;
+    const mine = session.current;
+    if (!walletLoaded || paid.current?.session === mine || charging.current === mine) return;
+    if (credit.current !== null) {
+      paid.current = { session: mine, spent: credit.current };
+      credit.current = null;
+      setEntry({ state: 'paid', spent: paid.current.spent });
+      return;
+    }
+    charging.current = mine;
+    void wallet.enterPractice().then((outcome) => {
+      charging.current = '';
+      if (outcome.ok) paid.current = { session: mine, spent: outcome.spent };
+      // Navigated on mid-payment: the new session pays for itself, and this one's cards are not asked for.
+      if (session.current !== mine) return;
+      setEntry(outcome.ok ? { state: 'paid', spent: outcome.spent } : { state: 'insufficient' });
+    });
+  }, [topic, retry, player.profile.epoch, wallet, walletLoaded, walletCoins]);
+
+  // The cards, asked for once the entry is paid (or at once when no wallet is provided).
+  const entryPaid = !wallet || entry.state === 'paid';
+  useEffect(() => {
+    if (!entryPaid) return;
+    let alive = true;
     request({ action: 'practice', topic })
       .then((d) => {
         if (alive) {
@@ -72,12 +128,13 @@ export default function Discovery({
         }
       })
       .catch((e) => {
+        if (paid.current?.session === session.current) credit.current = paid.current.spent;
         if (alive) setError(e.message);
       });
     return () => {
       alive = false;
     };
-  }, [topic, retry, player.profile.epoch]);
+  }, [entryPaid, topic, retry, player.profile.epoch]);
   useEffect(() => {
     heading.current?.focus();
   }, [index, finished, cards.length]);
@@ -115,6 +172,11 @@ export default function Discovery({
           <span className="fd-tag fd-tag--cool">
             <Compass />3 facts · take your time
           </span>
+          {entry.state === 'paid' && entry.spent > 0 && (
+            <span className="fd-tag fd-discovery__entry" title="Paid to the house for this drill">
+              −{entry.spent} coins · entry
+            </span>
+          )}
         </div>
         <p className="fd-lede">
           {finished
@@ -182,9 +244,13 @@ export default function Discovery({
             </div>
           </div>
         </div>
+      ) : wallet && entry.state === 'insufficient' ? (
+        <div className="fd-qwrap">
+          <AdCard wallet={wallet} placement="practice-entry" onClose={onBack} />
+        </div>
       ) : !fact ? (
         <p className="fd-note" role="status">
-          Opening three sourced facts…
+          {entry.state === 'pending' && wallet ? 'Paying the entry…' : 'Opening three sourced facts…'}
         </p>
       ) : (
         <div className="fd-qwrap">

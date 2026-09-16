@@ -115,6 +115,9 @@ export function MatchSettings({ config, name, subtopics, onChange, onName }: Mat
                 type="button"
                 className="fd-opt fd-pressable"
                 aria-pressed={stake === config.stake}
+                /* A practice bot never plays for coins (room-engine couples the two), so the paid
+                   tiers are unavailable rather than refused after the tap. */
+                disabled={config.opponent === 'bot' && stake !== 0}
                 {...press}
                 onClick={() => onChange({ stake })}
               >
@@ -123,8 +126,9 @@ export function MatchSettings({ config, name, subtopics, onChange, onName }: Mat
             ))}
           </div>
           <p className="fd-fine">
-            Free simulated coins with no cash value. Draws refund the entry, and every new room starts with
-            1,000 per player.
+            {config.opponent === 'bot'
+              ? 'Practice bots play for free. Entries are for duels with a friend.'
+              : 'Free simulated coins with no cash value. Draws refund the entry, and every new room starts with 1,000 per player.'}
           </p>
         </div>
         <div className="fd-fields">

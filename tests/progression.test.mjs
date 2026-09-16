@@ -971,7 +971,7 @@ test('journal keeps a validated optional difficulty on duel and practice rounds'
   assert.deepEqual(readJournal(JSON.stringify(withDifficulty)), withDifficulty);
 });
 test('practice cards from the service expose difficulty for XP weighting', async () => {
-  const out = await dispatch(null, { action: 'practice', topic: 'Space' }, { rng: () => 0.51 });
+  const out = await dispatch(null, { action: 'practice', topic: 'Cricket' }, { rng: () => 0.51 });
   for (const card of out.cards) assert.ok(['simple', 'expert', 'extreme'].includes(card.difficulty));
 });
 // ---------------------------------------------------------------------------------------------

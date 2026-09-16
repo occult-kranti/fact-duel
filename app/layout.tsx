@@ -7,7 +7,7 @@ import './expeditions.css';
 export const metadata: Metadata = {
   title: 'FACT//DUEL — Know it. Prove it.',
   description:
-    'Explore nine sports and science expeditions, choose your confidence, collect stamps, or challenge a friend or a random bot. Sports and science trivia with free simulated coins.',
+    'Competitive sports quizzing: football, cricket, baseball, Formula 1 and basketball. Duel a friend or a bot under the clock, run an expedition, collect stamps. Free coins, no purchases.',
   icons: {
     icon: '/favicon.svg',
     shortcut: '/favicon.svg',

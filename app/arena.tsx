@@ -13,6 +13,8 @@ import {
 } from '@/components/ui/alert-dialog';
 import { X } from 'lucide-react';
 import { usePlayer } from './use-player';
+import { useWallet, WalletContext } from './use-wallet';
+import { WalletChip } from './screens/economy/wallet-chip';
 import { request } from '@/lib/duel-client';
 import { AppShell } from './shell/app-shell';
 import { ProgressionFeedback } from './screens/use-progression-feedback';
@@ -111,6 +113,9 @@ export default function Arena({ initialTab = 'home' }: { initialTab?: string }) 
     [haptics, setHaptics] = useState(true),
     [motion, setMotion] = useState<MotionPref>('full');
   const player = usePlayer(room, credentials?.profileEpoch);
+  // The coin wallet: its own store, its own hook (app/use-wallet.ts), handed down by context so the
+  // top bar and Discovery can reach it without every wrapper in between learning a prop.
+  const wallet = useWallet();
   const { clear: clearJournal } = player;
   const playedCues = useRef(new Set<string>()),
     lastFocusKey = useRef<string | null>(null);
@@ -900,7 +905,7 @@ export default function Arena({ initialTab = 'home' }: { initialTab?: string }) 
     },
   };
   return (
-    <>
+    <WalletContext value={wallet}>
       <AppShell
         effects={
           <ProgressionFeedback
@@ -921,6 +926,7 @@ export default function Arena({ initialTab = 'home' }: { initialTab?: string }) 
         onNavigate={go}
         topbar={{
           streak: <StreakChip progression={player.progression} />,
+          wallet: <WalletChip />,
           gems: <GemsChip progression={player.progression} />,
           level: <LevelRing progression={player.progression} level={player.level} />,
           sound,
@@ -1107,6 +1113,6 @@ export default function Arena({ initialTab = 'home' }: { initialTab?: string }) 
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </>
+    </WalletContext>
   );
 }

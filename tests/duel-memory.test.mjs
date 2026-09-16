@@ -15,7 +15,7 @@ import { setImmediate } from 'node:timers/promises';
 import { D1RoomStore, dispatch } from '../lib/server/duel-service.mjs';
 import { MemoryRoomStore } from '../lib/duel-memory-store.mjs';
 import { DURATIONS, MODE_ROUNDS, RULES, makeRoom } from '../lib/server/room-engine.mjs';
-import { QUESTIONS } from '../lib/server/questions.mjs';
+import { QUESTIONS } from '../lib/server/bank.mjs';
 import { LocalD1 } from './d1-local.mjs';
 
 /* ------------------------------------------------------------------------------ harness ----- */
@@ -205,7 +205,7 @@ test('read, insert and compareSwap return the same rows and keep the same revisi
 test('commitReveal applies only inside the release window and shares the bot stamp', async (t) => {
   await differential(t, async (store, step) => {
     const scheduledAt = 1_100_000;
-    const room = roomFixture({ id: roomId(4), opponent: 'bot' });
+    const room = roomFixture({ id: roomId(4), opponent: 'bot', stake: 0 });
     room.phase = 'scheduled';
     room.round = {
       id: `${room.id}:0`,
@@ -358,7 +358,7 @@ test('a full bot duel is identical on both stores in all three modes', async (t)
     await differential(t, async (store, step) => {
       const f = table(store, { seed: mode.length * 13 });
       await step('create', () =>
-        f.call(f.host, 'create', { name: 'Human', config: { ...CONFIG, mode, opponent: 'bot' } }),
+        f.call(f.host, 'create', { name: 'Human', config: { ...CONFIG, mode, opponent: 'bot', stake: 0 } }),
       );
       let rounds = 0;
       for (let guard = 0; guard < 12; guard++) {
@@ -604,17 +604,17 @@ test('room creation is rate limited per actor identically through dispatch', asy
   await differential(t, async (store, step) => {
     const f = table(store, { seed: 9, rooms: 32, actor: 'one-device' });
     for (let i = 0; i < 30; i++)
-      await f.call(f.seats[i].host, 'create', { name: `P${i}`, config: { ...CONFIG, opponent: 'bot' } });
+      await f.call(f.seats[i].host, 'create', { name: `P${i}`, config: { ...CONFIG, opponent: 'bot', stake: 0 } });
     await step('the thirty-first room in a minute is refused', () =>
-      f.call(f.seats[30].host, 'create', { name: 'P30', config: { ...CONFIG, opponent: 'bot' } }),
+      f.call(f.seats[30].host, 'create', { name: 'P30', config: { ...CONFIG, opponent: 'bot', stake: 0 } }),
     );
     await step('reopening an existing room needs no admission', () =>
-      f.call(f.seats[0].host, 'create', { name: 'P0', config: { ...CONFIG, opponent: 'bot' } }),
+      f.call(f.seats[0].host, 'create', { name: 'P0', config: { ...CONFIG, opponent: 'bot', stake: 0 } }),
     );
     await step('a different actor is unaffected', () =>
       dispatch(
         store,
-        { ...f.seats[31].host, action: 'create', name: 'P31', config: { ...CONFIG, opponent: 'bot' } },
+        { ...f.seats[31].host, action: 'create', name: 'P31', config: { ...CONFIG, opponent: 'bot', stake: 0 } },
         { now: f.at(), actor: 'another-device', rng: seeded(2) },
       ),
     );
@@ -632,7 +632,8 @@ test('a randomized duel fuzz produces identical transcripts on both stores', asy
       await step('create', () =>
         f.call(f.host, 'create', {
           name: 'A',
-          config: { ...CONFIG, mode, duration, opponent: withBot ? 'bot' : 'friend' },
+          // A practice bot plays for free, so a bot draw is also a free-entry draw.
+          config: { ...CONFIG, mode, duration, opponent: withBot ? 'bot' : 'friend', stake: withBot ? 0 : CONFIG.stake },
         }),
       );
       if (!withBot) await step('join', () => f.call(f.guest, 'join', { name: 'B' }));
@@ -681,7 +682,7 @@ test('the static client maps service results and errors the way the worker does'
   assert.equal(OFFLINE_BUILD, true);
   const catalogue = await request({ action: 'catalogue' });
   assert.equal(catalogue.catalogue.count, QUESTIONS.length);
-  assert.equal((await request({ action: 'practice', topic: 'Space' })).cards.length, 3);
+  assert.equal((await request({ action: 'practice', topic: 'Cricket' })).cards.length, 3);
   const clock = await request({ action: 'clock' });
   assert.ok(Math.abs(clock.serverNow - Date.now()) < 5000);
   assert.equal(clock.clockSource, 'primary-database');
@@ -721,7 +722,7 @@ test('the static client maps service results and errors the way the worker does'
     action: 'create',
     ...seat,
     name: 'Solo',
-    config: { ...CONFIG, opponent: 'bot' },
+    config: { ...CONFIG, opponent: 'bot', stake: 0 },
   });
   assert.equal(created.room.players[1].kind, 'bot');
   assert.equal(created.room.round, null);

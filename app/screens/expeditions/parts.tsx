@@ -9,7 +9,7 @@ import { useCallback, useId } from 'react';
 import { ArrowRight, Check, Compass, Flame, Shield, Target } from 'lucide-react';
 import { useJuice } from '@/components/fx';
 import { gatePress } from '@/lib/fx/press-gate';
-import { CONFIDENCE, CONFIDENCE_ORDER, EXPEDITIONS, expeditionStatus } from '@/lib/expeditions.mjs';
+import { CONFIDENCE, CONFIDENCE_ORDER, ACTIVE_EXPEDITIONS as EXPEDITIONS, expeditionStatus } from '@/lib/expeditions.mjs';
 import { TOPIC_STYLE } from '../../collections';
 
 export const signed = (n: number) => (n > 0 ? `+${n}` : String(n));
@@ -293,7 +293,7 @@ export function ExpeditionCase({ player, onOpen }: { player: any; onOpen: (id: s
           <h2>Your expedition stamps.</h2>
         </div>
         <span className="fd-exp-count">
-          <strong>{earned}</strong> / 9
+          <strong>{earned}</strong> / {EXPEDITIONS.length}
         </span>
       </div>
       <p className="fd-exp-note">

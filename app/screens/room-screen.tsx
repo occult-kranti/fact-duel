@@ -2,6 +2,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { completedRounds } from '@/lib/duel-presentation.mjs';
 import { DuelHUD, MatchFinish, RoundReview } from '../rivalry-widgets';
+import { useWalletContext } from '../use-wallet';
+import { AdCard } from './economy/ad-card';
 import type { RoomScreenProps } from './types';
 import { RoomChrome } from './room/room-chrome';
 import { LobbyPanel } from './room/lobby-panel';
@@ -82,6 +84,7 @@ export function RoomScreen({ duel, player }: RoomScreenProps) {
   const lobby = !revealing && ['waiting', 'between'].includes(phase);
   const counting = !revealing && ['scheduled', 'playing'].includes(phase) && !question;
   const live = !!question && (!rd?.result || revealing);
+  const wallet = useWalletContext();
   const finished = !revealing && ['complete', 'cancelled'].includes(phase);
   const mine = rd?.result ? (rd.receipts?.[room.seat] ?? null) : null;
 
@@ -210,6 +213,10 @@ export function RoomScreen({ duel, player }: RoomScreenProps) {
             }}
           />
           {completedRounds(room).length > 0 && <RoundReview room={room} player={player} />}
+          {/* The priced ad card goes BELOW the receipt and only once the match is finished: never
+              inside a round, never before the result is on screen — the research's timing rule,
+              and the single largest complaint cluster across every competitor. */}
+          {wallet && <AdCard wallet={wallet} placement="coins" />}
         </div>
       )}
     </section>

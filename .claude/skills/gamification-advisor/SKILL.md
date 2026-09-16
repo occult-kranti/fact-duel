@@ -13,6 +13,18 @@ Inputs: the design bible (`public/product/gamification/design-bible.md`), the ro
 3. **Progress** — is progress visible (XP bar, quests, streak, rank) with goal-gradient copy? (Octalysis drive 2; endowed progress)
 4. **Autonomy & ownership** — choices, cosmetics, nothing auto-spent (SDT).
 5. **Honesty** — bots labelled, "on this device", no fabricated presence/near-misses/rarity, one disclaimer max per screen.
+   **Release gate (added 16 Sep 2026, from the dark-pattern audit in `docs/money/ads/lane-gamification.json`):** any
+   screen exhibiting one of these is a BLOCKING finding, scored 1, regardless of the other criteria —
+   N1 fabricated near-miss · N2 fake countdown or scarcity · N3 streak repair for coins/ads, alarmist streak pushes
+   without a shield · N4 unclosable or fake-close ad, an ad inside a live round, an ad before the result receipt ·
+   N5 confirmshaming decline · N6 silent devaluation of coins/entitlements, hidden rule changes · N7 randomised
+   ad rewards, hidden bot fills, undisclosed matchmaking · N8 auto-queued next duel, overlay chains, nags ·
+   N9 fake presence/activity, unconsented nudges · N10 hidden cost at the entry tap, currency bundles, a second
+   currency · N11 child-directed exhortation, profiled ads to minors · N12 loss-streak difficulty rigging or any
+   undisclosed "mercy" · N13 pre-selected opt-ins · N14 forced account creation before first play.
+   Each maps to a competitor complaint and an enforcement authority (FTC Act §5 / Epic and Cognosphere orders,
+   EU UCPD Annex I and DSA Art 25, India DPDP and the 2026 Online Gaming Rules). Vocabulary is part of the gate:
+   "bet", "wager", "odds", "jackpot", "casino" on any surface is a finding.
 6. **Craft** — tokens used, type scale, spacing rhythm, contrast ≥ 4.5:1, no orphan components, consistent naming.
 7. **Mobile** — no overflow at 390px, ≥44px targets, thumb-zone CTAs, safe areas, bottom nav.
 8. **A11y** — focus visible, dialogs trap focus, live regions for score/timer, shape+icon twins for colour.

@@ -1,4 +1,5 @@
 'use client';
+import { SUBJECT_LINE } from '@/lib/content.mjs';
 import { useMemo } from 'react';
 import { ArrowRight, ChevronRight, Info } from 'lucide-react';
 import { rankForPoints } from '@/lib/progression.mjs';
@@ -115,7 +116,7 @@ export function PlayScreen({ duel, player, catalogue, joinView, joinLink }: Play
               opponent={config.opponent}
               joinView={joinView}
               duration={config.duration}
-              onOpponent={(opponent) => change({ opponent })}
+              onOpponent={(opponent) => change(opponent === 'bot' ? { opponent, stake: 0 } : { opponent })}
               onJoinView={setJoinView}
             />
             {joinView && (
@@ -229,14 +230,14 @@ export function PlayScreen({ duel, player, catalogue, joinView, joinLink }: Play
           <div className="fd-poster">
             <img
               src="/art/rivalry-stage.webp"
-              alt="Polished lightning token and a metallic sports sphere surrounded by luminous science orbits"
+              alt="Polished lightning token and a metallic sports sphere under stadium lights"
               width="1672"
               height="941"
               loading="lazy"
               decoding="async"
             />
             <div className="fd-poster-copy">
-              <span>SPORTS × SCIENCE</span>
+              <span>{SUBJECT_LINE}</span>
               <strong>KNOW IT. PROVE IT.</strong>
             </div>
             <button type="button" className="fd-link fd-pressable" {...press} onClick={() => go('showroom')}>

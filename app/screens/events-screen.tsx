@@ -45,7 +45,7 @@ export function EventsScreen({ player, ready, busy, onDuel, onMode, activeModeId
         </p>
         <h1 id="fd-ev-title">Events</h1>
         <p className="fd-ev-lede">
-          Real sports and science moments — just finished, on right now, and coming up. Each one can turn into
+          Real sports moments — just finished, on right now, and coming up. Each one can turn into
           a limited-time duel.
         </p>
 

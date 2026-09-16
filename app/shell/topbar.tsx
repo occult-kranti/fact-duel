@@ -15,6 +15,8 @@ export type TopbarProps = {
   streak?: ReactNode;
   gems?: ReactNode;
   level?: ReactNode;
+  /** The coin count (app/screens/economy/wallet-chip.tsx): the one place the balance is shown. */
+  wallet?: ReactNode;
 };
 
 export function Topbar({
@@ -27,6 +29,7 @@ export function Topbar({
   streak,
   gems,
   level,
+  wallet,
 }: TopbarProps) {
   return (
     <header className="fd-topbar">
@@ -45,9 +48,10 @@ export function Topbar({
         </span>
       </a>
       <div className="fd-topbar-right">
-        {(streak || gems || level) && (
+        {(streak || gems || level || wallet) && (
           <div className="fd-topbar-slots">
             {streak}
+            {wallet}
             {gems}
             {level}
           </div>

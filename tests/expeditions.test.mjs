@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  EXPEDITIONS,
+  ACTIVE_EXPEDITIONS, EXPEDITIONS,
   CONFIDENCE,
   runResult,
   runTally,
@@ -44,9 +44,9 @@ function finish(p, correct = true, confidence = 'steady', runId = 'run-1') {
   }
   return p;
 }
-test('all nine packs match finite manifests, preserve sources and leave catalogue answer-free', async () => {
+test('every visible pack matches a finite manifest, preserves sources and leaves the catalogue answer-free', async () => {
   const ids = [];
-  for (const r of EXPEDITIONS) {
+  for (const r of ACTIVE_EXPEDITIONS) {
     const pack = await dispatch(null, { action: 'expedition', routeId: r.id });
     assert.equal(pack.practice, true);
     assert.equal(pack.version, 1);
@@ -57,7 +57,7 @@ test('all nine packs match finite manifests, preserve sources and leave catalogu
     );
     ids.push(...r.ids);
   }
-  assert.equal(new Set(ids).size, 54);
+  assert.equal(new Set(ids).size, ACTIVE_EXPEDITIONS.length * 6);
   assert.ok(!JSON.stringify(await dispatch(null, { action: 'catalogue' })).includes('correctIndex'));
   await assert.rejects(
     dispatch(null, { action: 'expedition', routeId: 'constructor' }),
@@ -158,7 +158,7 @@ test('replay retains immutable first result and caps activity awards to distinct
 test('independent routes resume without replacement; reset epoch rejects delayed work', async () => {
   let p = await begin();
   p = answer(p, 0);
-  p = await begin(p, 'space-run', EXPEDITIONS[5]);
+  p = await begin(p, 'second-run', ACTIVE_EXPEDITIONS[1]);
   assert.equal(Object.keys(p.journeys).length, 2);
   assert.equal(p.journeys[route.key].run.answers.length, 1);
   const oldEpoch = p.epoch,

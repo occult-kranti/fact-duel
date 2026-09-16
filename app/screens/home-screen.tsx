@@ -6,7 +6,7 @@
  * read from the device-local progression record; nothing here talks to the server.
  */
 import { ArrowRight, Bot, Sliders, Sparkles, Zap } from 'lucide-react';
-import { EXPEDITIONS, expeditionStatus } from '@/lib/expeditions.mjs';
+import { ACTIVE_EXPEDITIONS as EXPEDITIONS, expeditionStatus } from '@/lib/expeditions.mjs';
 import { emptyProgression, levelForXp, rankForPoints } from '@/lib/progression.mjs';
 import type { HomeScreenProps } from './types';
 import { HeroStage } from './home/hero-stage';
