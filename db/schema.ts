@@ -183,3 +183,75 @@ export const adRedemptions = sqliteTable(
   },
   (t) => [index('ad_redemptions_day_idx').on(t.principalId, t.dayKey)],
 );
+/**
+ * Accounts (M4). Identity lives in the same database as the ledger on purpose: promoting a guest
+ * principal to a named one, or merging two, is one batch here — hosted auth would make it a
+ * distributed operation across exactly the boundary that loses value in the failure case.
+ *
+ *  - `identities`: one row per (provider, subject) — a Google account or a verified email — pointing
+ *    at the principal it signs in as. UNIQUE(principal_id, provider) so a principal has one of each.
+ *  - `sessions`: opaque random id kept in an HttpOnly cookie; stored hashed. Sliding expiry.
+ *  - `magic_links`: single-use, short-lived, stored hashed; `principal_hint` is the guest id the
+ *    device presented when it asked, so the promotion targets the right principal.
+ *  - `profile_blobs`: the device profile mirrored to the server for cross-device play; a revision
+ *    the client compares before it overwrites.
+ *  - `match_queue`: one row per waiting principal; pairing is a delete of both rows plus a room
+ *    create in one batch, so a principal can be paired at most once.
+ */
+export const identities = sqliteTable(
+  'identities',
+  {
+    id: text('id').primaryKey(),
+    principalId: text('principal_id').notNull(),
+    provider: text('provider').notNull(),
+    subject: text('subject').notNull(),
+    email: text('email'),
+    createdAt: integer('created_at').notNull(),
+    lastUsedAt: integer('last_used_at').notNull(),
+  },
+  (t) => [uniqueIndex('identities_principal_provider_uq').on(t.principalId, t.provider), index('identities_principal_idx').on(t.principalId)],
+);
+export const sessions = sqliteTable(
+  'sessions',
+  {
+    idHash: text('id_hash').primaryKey(),
+    principalId: text('principal_id').notNull(),
+    createdAt: integer('created_at').notNull(),
+    expiresAt: integer('expires_at').notNull(),
+    lastSeenAt: integer('last_seen_at').notNull(),
+    revokedAt: integer('revoked_at'),
+  },
+  (t) => [index('sessions_principal_idx').on(t.principalId), index('sessions_expiry_idx').on(t.expiresAt)],
+);
+export const magicLinks = sqliteTable(
+  'magic_links',
+  {
+    tokenHash: text('token_hash').primaryKey(),
+    email: text('email').notNull(),
+    principalHint: text('principal_hint'),
+    createdAt: integer('created_at').notNull(),
+    expiresAt: integer('expires_at').notNull(),
+    consumedAt: integer('consumed_at'),
+  },
+  (t) => [index('magic_links_email_idx').on(t.email, t.createdAt), index('magic_links_expiry_idx').on(t.expiresAt)],
+);
+export const profileBlobs = sqliteTable('profile_blobs', {
+  principalId: text('principal_id').primaryKey(),
+  revision: integer('revision').notNull().default(0),
+  state: text('state').notNull(),
+  updatedAt: integer('updated_at').notNull(),
+});
+export const matchQueue = sqliteTable(
+  'match_queue',
+  {
+    principalId: text('principal_id').primaryKey(),
+    sport: text('sport').notNull(),
+    mode: text('mode').notNull(),
+    stake: integer('stake').notNull(),
+    rating: integer('rating').notNull().default(1000),
+    enqueuedAt: integer('enqueued_at').notNull(),
+    lastSeenAt: integer('last_seen_at').notNull(),
+    ticket: text('ticket').notNull(),
+  },
+  (t) => [index('match_queue_lane_idx').on(t.sport, t.mode, t.stake, t.enqueuedAt)],
+);
