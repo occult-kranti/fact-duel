@@ -23,6 +23,10 @@ This card exists from M0 so the controls are written before the thing they contr
 `updatedBy` is mandatory and is stored. If `OPS_TOKEN` is unset or empty the route answers **503 to
 everything**, including a correct token. It never falls open.
 
+Deployed by `.github/workflows/deploy-worker.yml`; `OPS_TOKEN` is pushed to the Worker with
+`wrangler secret put` from the repository secret of the same name. Setup and verification (503
+without the token, 401 with a wrong one) are in `docs/deploy-cloudflare.md`.
+
 Driven hourly by `.github/workflows/sweep.yml`. That schedule is **best-effort**: late by minutes to
 hours, dropped under load, and disabled after 60 days of repository inactivity. **No money invariant
 may depend on it.** It is a backstop and a heartbeat, nothing more.

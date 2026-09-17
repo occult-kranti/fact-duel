@@ -255,3 +255,13 @@ export const matchQueue = sqliteTable(
   },
   (t) => [index('match_queue_lane_idx').on(t.sport, t.mode, t.stake, t.enqueuedAt)],
 );
+/**
+ * One row per (principal, kind, key) that may happen once: the free daily recap today. A second
+ * attempt collides on the primary key, which is the guard — no zero-row UPDATE, no flag column.
+ */
+export const dailyMarks = sqliteTable('daily_marks', {
+  key: text('key').primaryKey(),
+  principalId: text('principal_id').notNull(),
+  kind: text('kind').notNull(),
+  at: integer('at').notNull(),
+});

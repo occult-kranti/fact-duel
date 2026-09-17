@@ -236,3 +236,63 @@ test('a session cookie names the wallet owner and beats a guest header or a body
   assert.equal(wallet.principalId, YOU, 'the signed-in principal, not the guest header or the body');
   assert.equal(wallet.coins, 50);
 });
+
+test('the daily grant pays once per local day, never above the soft cap', async (t) => {
+  const { store } = opened(t);
+  const { grantDaily } = await import('../lib/server/wallet-service.mjs');
+  const first = await grantDaily({ store, principalId: ME, now: T0 });
+  assert.equal(first.ok, true);
+  assert.equal(first.granted, DEFAULT_CONFIG.daily);
+  assert.equal(first.coins, DEFAULT_CONFIG.daily);
+  const again = await grantDaily({ store, principalId: ME, now: T0 + 3_600_000 });
+  assert.equal(again.reason, 'already_claimed');
+  assert.equal(again.coins, DEFAULT_CONFIG.daily);
+  const tomorrow = await grantDaily({ store, principalId: ME, now: Date.parse('2026-09-17T00:00:01Z') });
+  assert.equal(tomorrow.ok, true);
+  // Above the soft cap nothing is paid.
+  for (let i = 0; i < 200; i++) await store.ledger.post((await import('../lib/ledger/intents.mjs')).grant({ principalId: YOU, amount: 100, opKey: `grant:seed:${YOU}:${i}`, at: T0 + i }));
+  assert.equal((await grantDaily({ store, principalId: YOU, now: T0 + 1_000 })).reason, 'soft_cap');
+});
+
+test('the floor tops up to the floor once per window, and the drill entry burns after lifting it', async (t) => {
+  const { store } = opened(t);
+  const { applyFloor, enterPractice } = await import('../lib/server/wallet-service.mjs');
+  const lifted = await applyFloor({ store, principalId: ME, now: T0 });
+  assert.equal(lifted.ok, true);
+  assert.equal(lifted.coins, DEFAULT_CONFIG.floor.coins);
+  assert.equal(lifted.nextAt, (Math.floor(T0 / DEFAULT_CONFIG.floor.everyMs) + 1) * DEFAULT_CONFIG.floor.everyMs);
+  assert.equal((await applyFloor({ store, principalId: ME, now: T0 + 1 })).reason, 'above_floor');
+  const drill = await enterPractice({ store, principalId: ME, sessionId: 'sess_0001', now: T0 + 2 });
+  assert.equal(drill.ok, true);
+  assert.equal(drill.spent, DEFAULT_CONFIG.practiceEntry);
+  assert.equal(drill.coins, DEFAULT_CONFIG.floor.coins - DEFAULT_CONFIG.practiceEntry);
+  const replay = await enterPractice({ store, principalId: ME, sessionId: 'sess_0001', now: T0 + 3 });
+  assert.equal(replay.spent, 0);
+  assert.equal(replay.replayed, true);
+  await enterPractice({ store, principalId: ME, sessionId: 'sess_0002', now: T0 + 4 });
+  // Now at 0 inside the same floor window: the floor is on cooldown, so the third drill is refused.
+  const broke = await enterPractice({ store, principalId: ME, sessionId: 'sess_0003', now: T0 + 5 });
+  assert.equal(broke.reason, 'insufficient');
+  assert.equal(broke.coins, 0);
+  // Next window: the floor lifts again and the drill goes through.
+  const later = T0 + DEFAULT_CONFIG.floor.everyMs;
+  assert.equal((await enterPractice({ store, principalId: ME, sessionId: 'sess_0004', now: later })).ok, true);
+  assert.equal((await reconcile(store.ledger)).ok, true);
+});
+
+test('the free recap is once per local day and moves no coins; the wallet reply prices the ad', async (t) => {
+  const { store, db } = opened(t);
+  const { enterRecap } = await import('../lib/server/wallet-service.mjs');
+  assert.equal((await enterRecap({ store, principalId: ME, now: T0 })).ok, true);
+  assert.equal((await enterRecap({ store, principalId: ME, now: T0 + 60_000 })).reason, 'recap_played');
+  assert.equal((await enterRecap({ store, principalId: ME, now: Date.parse('2026-09-17T00:00:01Z') })).ok, true);
+  assert.equal((await readWallet({ store, principalId: ME, now: T0 })).coins, 0);
+  const priced = await readWallet({ store, principalId: ME, region: 'IN', now: T0 });
+  assert.equal(priced.region, 'IN');
+  assert.equal(priced.perAd, DEFAULT_CONFIG.adReward.IN);
+  const res = await handleWalletRequest(
+    new Request('https://duel.example/api/wallet', { method: 'POST', headers: { 'content-type': 'application/json', 'cf-ipcountry': 'DE' }, body: JSON.stringify({ action: 'enter-recap', principalId: ME }) }),
+    { DB: db },
+  );
+  assert.equal((await res.json()).reason, 'recap_played');
+});
