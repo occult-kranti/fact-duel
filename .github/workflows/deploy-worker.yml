@@ -6,8 +6,8 @@
 # What happens, in order:
 #   1. `pnpm build` writes dist/server/wrangler.json (name = package name, D1 = placeholder id).
 #   2. `pnpm deploy:prepare` writes dist/server/wrangler.deploy.json next to it with the real
-#      Worker name, database id and Custom Domain from repository variables. The generated file is
-#      never edited in place.
+#      Worker name, database id and Custom Domain — from deploy.config.json at the repo root, which
+#      repository variables of the same name override. The generated file is never edited in place.
 #   3. Migrations run BEFORE the new code goes live, so no request ever meets a table it needs and
 #      cannot find. Every migration in drizzle/ is additive; wrangler tracks what it has applied in
 #      the d1_migrations table and re-running is a no-op.
@@ -19,10 +19,10 @@
 # Like sweep.yml: an unconfigured repository exits 0 with a message that names what is missing.
 # A workflow that is permanently red gets ignored, and this is the one that ships the money layer.
 #
-# Required repository SECRETS:   CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID
-# Required repository VARIABLES: CF_D1_DATABASE_ID
-# Optional VARIABLES:            CF_WORKER_NAME (default jaanta-hai-kya), CF_D1_DATABASE_NAME
-#                                (default jhk-db), CF_CUSTOM_DOMAIN (e.g. play.example.com)
+# Required repository SECRETS:   CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID — and nothing else.
+# Required repository VARIABLES: none. deploy.config.json carries the Worker name and the database.
+# Optional VARIABLES:            CF_D1_DATABASE_ID, CF_WORKER_NAME, CF_D1_DATABASE_NAME — each
+#                                overrides the file — and CF_CUSTOM_DOMAIN (e.g. play.example.com)
 # Optional SECRETS (Worker env): OPS_TOKEN, SESSION_SECRET, GOOGLE_CLIENT_ID, MAIL_API_KEY,
 #                                MAIL_FROM, APP_ORIGIN — see cloudflare-env.d.ts for what each does.
 name: Deploy the Worker to Cloudflare
@@ -46,6 +46,7 @@ on:
       - 'next.config.ts'
       - 'tsconfig.json'
       - '.openai/hosting.json'
+      - 'deploy.config.json'
       - '.github/workflows/deploy-worker.yml'
   workflow_dispatch:
 
@@ -66,6 +67,10 @@ jobs:
     outputs:
       configured: ${{ steps.check.outputs.configured }}
     steps:
+      # deploy.config.json is what makes the database id a repo fact rather than a repo variable,
+      # so preflight needs the tree to see it.
+      - uses: actions/checkout@v4
+
       - name: Check the deployment is configured
         id: check
         env:
@@ -74,20 +79,32 @@ jobs:
           CF_D1_DATABASE_ID: ${{ vars.CF_D1_DATABASE_ID }}
         run: |
           set -uo pipefail
-          if [ "${HAS_TOKEN}" = "true" ] && [ "${HAS_ACCOUNT}" = "true" ] && [ -n "${CF_D1_DATABASE_ID:-}" ]; then
+          # The database id comes from the repository variable when it is set, otherwise from the
+          # committed deploy.config.json. Either one satisfies the requirement.
+          if [ -n "${CF_D1_DATABASE_ID:-}" ]; then
+            database_source="vars.CF_D1_DATABASE_ID"
+          elif [ -f deploy.config.json ]; then
+            database_source="deploy.config.json"
+          else
+            database_source=""
+          fi
+          if [ "${HAS_TOKEN}" = "true" ] && [ "${HAS_ACCOUNT}" = "true" ] && [ -n "${database_source}" ]; then
             echo "configured=true" >> "$GITHUB_OUTPUT"
+            echo "Configured. Database id from ${database_source}."
             exit 0
           fi
           echo "configured=false" >> "$GITHUB_OUTPUT"
           echo "Cloudflare deployment is not configured yet — nothing to do."
+          echo "Two repository secrets are all it takes (Settings > Secrets and variables > Actions):"
           [ "${HAS_TOKEN}" = "true" ]   && token_state=present   || token_state=MISSING
           [ "${HAS_ACCOUNT}" = "true" ] && account_state=present || account_state=MISSING
           echo "  secrets.CLOUDFLARE_API_TOKEN  : ${token_state}"
           echo "  secrets.CLOUDFLARE_ACCOUNT_ID : ${account_state}"
-          echo "  vars.CF_D1_DATABASE_ID        : ${CF_D1_DATABASE_ID:-MISSING}"
+          if [ -z "${database_source}" ]; then
+            echo "The database id is missing too: restore deploy.config.json or set vars.CF_D1_DATABASE_ID."
+          fi
           echo
-          echo "To enable: follow docs/deploy-cloudflare.md — create the D1 database, create an API"
-          echo "token, and set the three values above in Settings > Secrets and variables > Actions."
+          echo "How to get both, in ten minutes: docs/deploy-cloudflare.md, the \"Ten-minute path\"."
 
   deploy:
     needs: preflight
@@ -137,6 +154,7 @@ jobs:
       # Also writes dist/client/.assetsignore so public/product/ (7.6 MB of internal documentation,
       # including the compliance checklist pages.yml deliberately never publishes) stays off the
       # domain. The check afterwards is the release gate for that file, not the ignore rule.
+      # Each variable below is optional and overrides deploy.config.json; unset means the file wins.
       - name: Prepare the deploy manifest
         env:
           CF_D1_DATABASE_ID: ${{ vars.CF_D1_DATABASE_ID }}
@@ -216,7 +234,9 @@ jobs:
           if [ -n "${CF_CUSTOM_DOMAIN:-}" ]; then
             echo "  live at https://${CF_CUSTOM_DOMAIN}/ (once the Custom Domain has provisioned)"
           else
-            echo "  live on the workers.dev subdomain shown in the deploy output above"
+            echo "  live at https://${name}.<your-subdomain>.workers.dev/ — the exact URL is in the"
+            echo "  deploy output above. Set the repository variable APP_URL to it so the GitHub"
+            echo "  Pages build hands players over to this one."
           fi
           echo "Verify the ops door: POST /api/ops answers 503 with no OPS_TOKEN set on the Worker,"
           echo "401 with a wrong bearer token, 200 with the right one. See docs/money-runbook.md."

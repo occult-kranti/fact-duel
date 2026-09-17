@@ -5,11 +5,17 @@
  * `app/arena.tsx`) with three aliases that remove the only server-shaped dependencies:
  *   `@/lib/duel-client`   → `lib/duel-client-static.ts` (dispatch in-process, no `/api/duel`)
  *   `@/lib/wallet-client` → `lib/wallet-client-static.ts` (device wallet only, no `/api/wallet`)
+ *   `@/lib/presence-client` → `lib/presence-client-static.ts` (never polls, so no live counts)
  *   `next/dynamic`        → `static/next-dynamic-shim.tsx` (React.lazy + Suspense)
  * Everything else — screens, hooks, CSS, the three.js scenes — is imported unchanged.
  *
  * `base` defaults to `/fact-duel/` for a GitHub Pages project site and can be overridden with the
  * `STATIC_BASE` env var (e.g. `STATIC_BASE=/ pnpm build:static` for a user/organisation site).
+ *
+ * `APP_URL` is the hand-off: once the server build is live somewhere, set it at build time and the
+ * bundle stops being the game. `static/main.tsx` then renders `app/redirect-notice.tsx` — a card
+ * that names the new host and sends the visitor there — instead of mounting the arena. Unset (the
+ * default) it is the empty string and this build behaves exactly as before.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -21,6 +27,14 @@ const repoRoot = path.dirname(fileURLToPath(import.meta.url));
 const rawBase = process.env.STATIC_BASE ?? '/fact-duel/';
 const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 const publicDir = path.join(repoRoot, 'public');
+
+/**
+ * Where the live game runs, frozen into the bundle as `import.meta.env.VITE_APP_URL`. Empty when
+ * the variable is absent, which is the "there is no live site yet" case the static build was
+ * written for; the workflow passes the repo variable through, so an unset repo variable is empty
+ * here too rather than the string "undefined".
+ */
+const appUrl = (process.env.APP_URL ?? '').trim();
 
 /** Everything in `public/` except the 7.6 MB of product documentation, which no screen loads. */
 const SKIP_PUBLIC = new Set(['product']);
@@ -98,11 +112,13 @@ export default defineConfig(({ mode }) => ({
   define: {
     'process.env.NODE_ENV': JSON.stringify(mode === 'development' ? 'development' : 'production'),
     __STATIC_BASE__: JSON.stringify(base),
+    'import.meta.env.VITE_APP_URL': JSON.stringify(appUrl),
   },
   resolve: {
     alias: [
       { find: /^@\/lib\/duel-client$/, replacement: path.join(repoRoot, 'lib/duel-client-static.ts') },
       { find: /^@\/lib\/wallet-client$/, replacement: path.join(repoRoot, 'lib/wallet-client-static.ts') },
+      { find: /^@\/lib\/presence-client$/, replacement: path.join(repoRoot, 'lib/presence-client-static.ts') },
       { find: /^next\/dynamic$/, replacement: path.join(repoRoot, 'static/next-dynamic-shim.tsx') },
       { find: /^@\//, replacement: `${repoRoot}/` },
     ],

@@ -13,12 +13,17 @@
 import { dispatch } from './server/duel-service.mjs';
 import { MemoryRoomStore } from './duel-memory-store.mjs';
 
-/** True in this build only. The static entry reads it to render the offline notice. */
+/** True in this build only. The static entry reads it to render the preview notice. */
 export const OFFLINE_BUILD = true;
 
+/**
+ * The label every visitor sees first. It says what this build is — a preview with no server — and
+ * names the two things that need one, rather than calling itself a demo and leaving the player to
+ * find out which half works.
+ */
 export const OFFLINE_NOTICE = {
-  title: 'Offline demo',
-  body: 'No server: the whole game runs in this browser, progress is saved on this device only, and friend duels are off.',
+  title: 'Preview build',
+  body: 'This preview has no server: friend duels and finding a rival open on the live site. Everything else runs in this browser, and progress is saved on this device only.',
 };
 
 /** The single room table of this tab. It is gone when the tab is closed — same as a room TTL. */
@@ -30,7 +35,7 @@ const ACTOR = 'this-device';
 /**
  * The same guest id the worker build sends as `x-fd-principal`, read from the same localStorage
  * key. There is no ledger behind the memory store, so it is only recorded on the room's seat;
- * the demo coins and the device wallet carry on exactly as before.
+ * the free coins and the device wallet carry on exactly as before.
  */
 const PRINCIPAL_KEY = 'fd-principal';
 function principalId(): string | null {
@@ -70,10 +75,10 @@ function offlineError(message: string): ClientError {
  * shared table to add a row to and no cohort to divide by, so this build measures nothing at all.
  */
 const MEASUREMENT_DISABLED =
-  'Anonymous retention measurement needs the shared server, so this offline build collects and reports nothing.';
+  'Anonymous retention measurement needs the shared server, so this preview collects and reports nothing.';
 
 const FRIEND_DISABLED =
-  'Friend duels need a server to pass the room between two devices, so they are off in this offline demo build. Play Lucky Guess (bot), an expedition or an event instead.';
+  'This preview has no server: friend duels and finding a rival open on the live site. Play Lucky Guess (bot), an expedition or an event instead.';
 
 type Body = { action?: string; config?: { opponent?: string } } & Record<string, unknown>;
 

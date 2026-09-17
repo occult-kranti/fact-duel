@@ -50,3 +50,65 @@ Option 1 = triangle/ember, 2 = diamond/cyan, 3 = circle/gold, 4 = square/magenta
 1. `pnpm exec tsc --noEmit` and `node --test tests/*.test.mjs`.
 2. Dev server on :5173 (`node scripts/run-framework.mjs dev` in background), then `node scripts/screens.mjs <outDir>` — zero horizontal overflow, zero console errors, then READ the PNGs and fix what looks wrong at 390px and 1440px.
 3. `pnpm build` for the release gate when you touched imports, dynamic imports or anything client-only.
+
+## Mobile gate (run it before you call a screen done)
+
+`scripts/mobile-gate.mjs` drives the real app with playwright-core across four phone widths, two
+locales and both themes, then writes PNGs and a `report.json`. It is the phone half of "Verify
+before you finish": `scripts/screens.mjs` says the page renders, this says it is usable by a thumb.
+
+```sh
+node scripts/run-framework.mjs dev &                     # :5173
+node scripts/mobile-gate.mjs outputs/mobile-gate         # every screen but the finish receipt
+# the finish screen needs a build that can create a room (dev has no D1 → /api/duel 503):
+pnpm build:static && pnpm exec vite preview --config vite.config.static.ts --port 5174 &
+node scripts/mobile-gate.mjs outputs/mobile-gate http://localhost:5174/fact-duel/
+```
+
+Exit code 1 on any failure. Then READ the PNGs — the gate measures, it does not have taste.
+
+**Matrix.** 320x568 (top bar only), 360x740, 390x844, 414x896 x `en`/`hi` x dark/light, over: the
+profile gate, Home, Play with each format selected, Player, Vault, Events, Play rules / Rules of
+the coin / Trust, the settings sheet open, Play > Join with the name field focused, and the finish
+receipt reached by playing a bot duel. 172 screens.
+
+**Thresholds** (`THRESHOLDS` in the script — change them there, not per screen):
+
+| what | number | why |
+| --- | --- | --- |
+| horizontal overflow | `scrollWidth <= innerWidth + 1` | the 1px is sub-pixel rounding, not a budget |
+| tap target | 44 x 44 CSS px | WCAG 2.5.5 Target Size (Enhanced). 2.5.8 (Minimum) is 24 x 24; this product holds 44 because every control is a thumb target |
+| body text | >= 14px | an element carrying >= 25 characters of its OWN text, not ALL-CAPS, not inside a button/link/label. Chips, counters and tab labels stay at `--fs-12`; sentences do not |
+| inputs | >= 16px | iOS Safari zooms the page when a focused control computes under 16px |
+| bottom bars | `env(safe-area-inset-bottom)` | read from the CSS, not the box: headless Chromium reports every inset as 0 and a notch cannot be emulated, so a runtime check would pass vacuously |
+| full-height panels | `dvh`/`svh`, never bare `vh` | `vh` == `lvh`, the LARGE viewport: a `100vh` panel overshoots the screen while the URL bar is showing |
+
+Two structural exemptions are applied in code, both from WCAG 2.5.8: **Inline** (a target that
+lays out inline, inside a parent that is a text container rather than a flex/grid box, which holds
+8+ more characters than the target — our footer links and `.fd-link`) and **User agent control**.
+
+**Named exceptions — the cap is two.** A third means fix the control, not the list.
+1. `[data-slot='switch']` — the Radix switch track is 32x18 by design; its 56x44 hit area is a
+   `::after` pseudo-element (`app/shell/shell.css`) and a pseudo-element has no box
+   `getBoundingClientRect` can report.
+2. `[data-slot='slider'] [role='slider']` — the thumb is one end of a continuous control whose real
+   target is the 44px track; growing it would cover the value it points at.
+
+**When it fails.** Fix in CSS first, appended at the END of the sheet that already styles the
+selector (same selector, later source order — no specificity war, no `!important`). Every fix in
+this repo carries a `/* mobile gate (scripts/mobile-gate.mjs) */` header saying which rule it
+answers. Only reach for markup when CSS cannot: an inline `style={{fontSize}}` or a sentence with
+no class of its own (`fd-launch-fine` in `launch-panel.tsx` is the one of those).
+
+**Sources.** MDN, [CSS length](https://developer.mozilla.org/en-US/docs/Web/CSS/length) (svh/lvh/dvh
+and the scroll-resize warning) and [env()](https://developer.mozilla.org/en-US/docs/Web/CSS/env)
+(safe-area insets are 0 unless `viewport-fit=cover`; the `padding: 1em 1em calc(1em + env(...))`
+pattern for a fixed footer — `app/layout.tsx` already sets `viewportFit: 'cover'`).
+W3C, [Understanding 2.5.8 Target Size (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html)
+for the 24px floor and the five exceptions, with 2.5.5 Enhanced as the 44px we actually hold.
+web.dev, [forms design basics](https://web.dev/learn/forms/design-basics) for "use at least 1rem"
+on controls and a 48px tap-target recommendation. Playwright,
+[emulation](https://playwright.dev/docs/emulation) for `browser.newContext({ viewport, isMobile,
+hasTouch, colorScheme, locale })` — the gate sets these itself rather than taking a device
+descriptor, because `devices['iPhone 13']` carries `defaultBrowserType: 'webkit'` and the only
+browser installed here is Chromium.

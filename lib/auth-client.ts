@@ -1,7 +1,7 @@
 /**
  * lib/auth-client.ts — the browser's side of `/api/auth`.
  *
- * Four calls, one transport. Every request carries the session cookie (`credentials: 'include'`)
+ * Five calls, one transport. Every request carries the session cookie (`credentials: 'include'`)
  * and the guest id this device minted (header `x-fd-principal`, read from localStorage
  * `fd-principal` — the key the wallet client owns), so the server knows which guest to promote in
  * place when a sign-in lands. Nothing else about the device is sent.
@@ -20,6 +20,12 @@ export type Whoami =
   | { available: false };
 
 export type GoogleSignIn = { ok: true; principalId: string; merged: boolean; abandonedGuest: string | null };
+
+/** `available: false` is the static build answering: there is no server to keep the claim. */
+export type QuickProfile =
+  | { ok: true; principalId: string; email: string }
+  | { ok: false; available: false }
+  | { ok: false; available: true; error: string };
 
 type Envelope = { status: number; body: Record<string, unknown> | null };
 
@@ -77,6 +83,26 @@ export async function whoami(): Promise<Whoami> {
     email: typeof body.email === 'string' ? body.email : null,
     providers: Array.isArray(body.providers) ? body.providers.filter((p): p is string => typeof p === 'string') : [],
   };
+}
+
+/**
+ * The profile gate's claim: a display name and an email nobody has verified. The server keeps the
+ * address on this principal and issues a session so the card syncs; it proves nothing, and the
+ * upgrade is Settings → "Verify by link". A static build has no `/api/auth`, which is
+ * `{ ok: false, available: false }` — the gate then keeps the pair on the device and says so.
+ */
+export async function quickProfile(name: string, email: string): Promise<QuickProfile> {
+  const { status, body } = await post({ action: 'quick-profile', name, email });
+  if (status === 200 && body?.ok === true && typeof body.principalId === 'string') {
+    announce();
+    return {
+      ok: true,
+      principalId: body.principalId,
+      email: typeof body.email === 'string' ? body.email : email.trim().toLowerCase(),
+    };
+  }
+  if (!body || typeof body.error !== 'string') return { ok: false, available: false };
+  return { ok: false, available: true, error: body.error };
 }
 
 /**

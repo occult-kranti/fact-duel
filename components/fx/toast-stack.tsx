@@ -2,10 +2,12 @@
  * components/fx/toast-stack.tsx — stacked, queued notification toasts.
  *
  * Rendered by `<FxProvider>`; you normally push toasts via `useJuice().toast(...)` or
- * `fx.emit('toast', ...)`. Max 3 visible (the rest wait in order), auto-dismiss after 3.2 s,
- * timer pauses while hovered or focused. Bottom-centre on ≤ 768 px (with safe-area inset),
- * top-right on desktop. The container is `aria-live="polite"`; every toast has a 44 px close
- * button. Enter/exit animation via `motion/react`; reduced motion → opacity fades only.
+ * `fx.emit('toast', ...)`. The pop-up budget (./overlay-budget.ts) decides what is on screen, so
+ * at most TWO toasts are visible, they never arrive in the same instant, and the rest wait their
+ * turn; auto-dismiss after 3.2 s frees the slot, and the timer pauses while hovered or focused.
+ * Bottom-centre on ≤ 768 px (with safe-area inset), top-right on desktop. The container is
+ * `aria-live="polite"`; every toast has a 44 px close button. Enter/exit animation via
+ * `motion/react`; reduced motion → opacity fades only.
  */
 'use client';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
@@ -14,11 +16,26 @@ import { Flame, Gem, Info, ScrollText, Sparkles, Trophy, X } from 'lucide-react'
 import type { ToastKind, ToastOptions } from '@/lib/fx/bus';
 import { haptic } from '@/lib/fx/haptics';
 import { sound, type Cue } from '@/lib/fx/sound';
+import { OVERLAY_CAPACITY } from './overlay-budget';
 import { useReducedMotion } from './use-prefs';
 
 /** Toast as accepted by React callers: `icon` may be any ReactNode. */
 export interface ToastInput extends Omit<ToastOptions, 'icon'> {
   icon?: ReactNode;
+  /**
+   * Toasts sharing this key inside one burst collapse into a single toast (see
+   * `overlay-budget.ts`). Without a key a toast always gets its own slot.
+   */
+  mergeKey?: string;
+  /**
+   * Opaque bag for whoever writes the merge copy (counts, XP totals). The fx layer never reads it.
+   */
+  meta?: Record<string, unknown>;
+  /**
+   * Turn a merged burst into one toast. The budget only groups the items; the words belong to the
+   * caller, so this is where "+3 quests · 140 XP" is written. Read off the FIRST item of a group.
+   */
+  merge?: (items: ToastInput[]) => ToastInput;
 }
 
 /** Toast as stored in the provider (always has an id). */
@@ -27,7 +44,8 @@ export interface ToastItem extends ToastInput {
 }
 
 export const TOAST_DURATION_MS = 3200;
-export const TOAST_MAX_VISIBLE = 3;
+/** Two, because a toast weighs one unit of the overlay budget and the budget holds two. */
+export const TOAST_MAX_VISIBLE = OVERLAY_CAPACITY;
 
 /* A toast the player did not trigger must not click at them: `info` is the passive kind, so it
    arrives silently (the haptic still fires) rather than borrowing the press cue. */
@@ -126,7 +144,7 @@ function ToastCard({ toast, reduced, onDismiss }: ToastCardProps) {
 export interface ToastStackProps {
   toasts: ToastItem[];
   onDismiss: (id: string) => void;
-  /** Visible at once; the rest queue (default 3). */
+  /** Visible at once; the rest queue (default 2). The budget already caps this — belt and braces. */
   max?: number;
 }
 

@@ -2193,3 +2193,11 @@
 .fd-exp-next {
   scroll-margin-bottom: calc(var(--nav-h, 56px) + var(--gutter, 16px) + env(safe-area-inset-bottom, 0px));
 }
+
+/* ---------- mobile gate (scripts/mobile-gate.mjs) ---------- */
+/* Sentences, not labels: 14px on phones. */
+@media (max-width: 599px) {
+  .fd-exp-note {
+    font-size: var(--fs-14);
+  }
+}

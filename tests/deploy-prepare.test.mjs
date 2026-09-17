@@ -11,9 +11,11 @@
  */
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, mkdtempSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import {
   ASSET_IGNORES,
   ASSETS_IGNORE_FILE,
@@ -21,12 +23,19 @@ import {
   DEFAULT_MIGRATIONS_DIR,
   DEFAULT_WORKER_NAME,
   DEPLOY_CONFIG,
+  DEPLOY_FILE,
   GENERATED_CONFIG,
   PLACEHOLDER_DATABASE_ID,
+  loadFileConfig,
   main,
+  mergeConfig,
   prepare,
+  readFileConfig,
   summarise,
 } from '../scripts/deploy-prepare.mjs';
+
+const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const repoFile = (relative) => readFileSync(path.join(repoRoot, relative), 'utf8');
 
 const generated = () => ({
   topLevelName: 'site-creator-vinext-starter',
@@ -227,4 +236,265 @@ test('main says to build first when the generated file or the assets directory i
   mkdirSync(path.join(noAssets, 'dist/server'), { recursive: true });
   writeFileSync(path.join(noAssets, GENERATED_CONFIG), JSON.stringify(generated()));
   assert.throws(() => main(env(), noAssets), /assets directory .* is missing/);
+});
+
+/* -------------------------------------------------------------------------------------------
+ * deploy.config.json — the committed, non-secret account facts, so a fresh clone deploys with
+ * two secrets and no repository variables. The environment always wins; the file fills gaps.
+ * ---------------------------------------------------------------------------------------- */
+
+/** The live database this repo deploys against. A wrong id here is a Worker bound to nothing. */
+const LIVE_ID = '2c74ea74-4d0f-492a-9b21-6e29393bfb4b';
+const file = (extra = {}) => ({
+  workerName: 'jaanta-hai-kya',
+  d1: { name: 'jhk-db', id: LIVE_ID },
+  notes: 'not a secret',
+  ...extra,
+});
+
+test('the file alone is enough: an empty environment still binds the real database', () => {
+  const out = prepare(generated(), {}, file());
+  assert.equal(out.name, 'jaanta-hai-kya');
+  assert.deepEqual(out.d1_databases, [
+    { binding: 'DB', database_name: 'jhk-db', database_id: LIVE_ID, migrations_dir: DEFAULT_MIGRATIONS_DIR },
+  ]);
+  assert.equal('routes' in out, false, 'the file carries no domain');
+});
+
+test('the environment wins over the file, field by field', () => {
+  const out = prepare(
+    generated(),
+    { CF_D1_DATABASE_ID: ID, CF_D1_DATABASE_NAME: 'jhk_staging', CF_WORKER_NAME: 'jhk-staging' },
+    file(),
+  );
+  assert.equal(out.name, 'jhk-staging');
+  assert.equal(out.d1_databases[0].database_id, ID);
+  assert.equal(out.d1_databases[0].database_name, 'jhk_staging');
+});
+
+test('the file fills only the gaps the environment leaves', () => {
+  const out = prepare(generated(), { CF_WORKER_NAME: 'jhk-staging' }, file());
+  assert.equal(out.name, 'jhk-staging', 'from the environment');
+  assert.equal(out.d1_databases[0].database_id, LIVE_ID, 'from the file');
+  assert.equal(out.d1_databases[0].database_name, 'jhk-db', 'from the file');
+});
+
+test('a blank environment value does not shadow the file', () => {
+  const out = prepare(generated(), { CF_D1_DATABASE_ID: '   ', CF_WORKER_NAME: '' }, file());
+  assert.equal(out.d1_databases[0].database_id, LIVE_ID);
+  assert.equal(out.name, 'jaanta-hai-kya');
+});
+
+test('neither the environment nor a file: the same error as before', () => {
+  const before = 'CF_D1_DATABASE_ID is required: the uuid `wrangler d1 create` printed.';
+  assert.throws(() => prepare(generated(), {}), (e) => e.message === before);
+  assert.throws(() => prepare(generated(), {}, null), (e) => e.message === before);
+  assert.throws(() => prepare(generated(), {}, {}), (e) => e.message === before);
+  assert.throws(() => prepare(generated(), {}, { d1: {} }), (e) => e.message === before);
+});
+
+test('the placeholder id is refused from the file too, and the message says where to fix it', () => {
+  assert.throws(
+    () => prepare(generated(), {}, file({ d1: { name: 'jhk-db', id: PLACEHOLDER_DATABASE_ID } })),
+    (e) => /placeholder/.test(e.message) && e.message.includes(DEPLOY_FILE),
+  );
+  assert.throws(
+    () => prepare(generated(), { CF_D1_DATABASE_ID: PLACEHOLDER_DATABASE_ID }, file()),
+    (e) => /placeholder/.test(e.message) && !e.message.includes(DEPLOY_FILE),
+    'an env placeholder must not blame the file',
+  );
+});
+
+test('a malformed value in the file is refused, and the message names the file', () => {
+  for (const bad of [{ d1: { name: 'jhk-db', id: 'not-a-uuid' } }, { d1: { id: LIVE_ID, name: 'no/slash' } }]) {
+    assert.throws(() => prepare(generated(), {}, { ...file(), ...bad }), (e) => e.message.includes(DEPLOY_FILE));
+  }
+  assert.throws(() => prepare(generated(), {}, file({ workerName: 'Has Spaces' })), /CF_WORKER_NAME is not valid/);
+});
+
+test('readFileConfig: nothing, blanks and odd shapes', () => {
+  assert.deepEqual(readFileConfig(null), {});
+  assert.deepEqual(readFileConfig(undefined), {});
+  assert.deepEqual(readFileConfig({}), {});
+  assert.deepEqual(readFileConfig({ workerName: '  ', d1: { id: '', name: null } }), {});
+  assert.deepEqual(readFileConfig({ d1: { id: `  ${LIVE_ID}  ` } }), { CF_D1_DATABASE_ID: LIVE_ID });
+  assert.deepEqual(readFileConfig(file()), {
+    CF_WORKER_NAME: 'jaanta-hai-kya',
+    CF_D1_DATABASE_NAME: 'jhk-db',
+    CF_D1_DATABASE_ID: LIVE_ID,
+  });
+  assert.deepEqual(readFileConfig({ notes: 'x', unknown: { deep: 1 } }), {}, 'unknown fields are ignored');
+  for (const bad of ['x', 42, []]) assert.throws(() => readFileConfig(bad), /is not an object/);
+  assert.throws(() => readFileConfig({ d1: 'jhk-db' }), /d1 must be an object/);
+  assert.throws(() => readFileConfig({ d1: { id: 12 } }), /d1\.id must be a string/);
+  assert.throws(() => readFileConfig({ workerName: ['x'] }), /workerName must be a string/);
+});
+
+test('mergeConfig says where every value came from', () => {
+  const { values, sources } = mergeConfig({ CF_WORKER_NAME: 'jhk-staging', CF_CUSTOM_DOMAIN: 'play.example.com' }, file());
+  assert.deepEqual(values, {
+    CF_WORKER_NAME: 'jhk-staging',
+    CF_D1_DATABASE_NAME: 'jhk-db',
+    CF_D1_DATABASE_ID: LIVE_ID,
+    CF_CUSTOM_DOMAIN: 'play.example.com',
+  });
+  assert.deepEqual(sources, {
+    CF_WORKER_NAME: 'env',
+    CF_D1_DATABASE_NAME: DEPLOY_FILE,
+    CF_D1_DATABASE_ID: DEPLOY_FILE,
+    CF_CUSTOM_DOMAIN: 'env',
+  });
+  assert.deepEqual(mergeConfig({}, null), { values: {}, sources: {} });
+});
+
+test('prepare mutates neither the manifest nor the file config', () => {
+  const source = generated();
+  const config = file();
+  const before = [JSON.stringify(source), JSON.stringify(config)];
+  prepare(source, { CF_CUSTOM_DOMAIN: 'play.example.com' }, config);
+  assert.deepEqual([JSON.stringify(source), JSON.stringify(config)], before);
+});
+
+test('the summary names the fields the file supplied, and stays quiet when it supplied none', () => {
+  const env2 = { CF_WORKER_NAME: 'jhk-staging' };
+  const { values, sources } = mergeConfig(env2, file());
+  const summary = summarise(prepare(generated(), env2, file()), sources);
+  assert.match(summary, /from file {6}deploy\.config\.json: CF_D1_DATABASE_ID, CF_D1_DATABASE_NAME/);
+  assert.equal(summary.includes(values.CF_D1_DATABASE_ID), false, 'still no whole database id');
+  assert.equal(summarise(prepare(generated(), env()), mergeConfig(env(), null).sources).includes('from file'), false);
+  assert.equal(summarise(prepare(generated(), env())).includes('from file'), false, 'and with no sources at all');
+});
+
+test('main reads deploy.config.json from the working directory, and the env still overrides it', () => {
+  const { cwd } = builtTree();
+  writeFileSync(path.join(cwd, DEPLOY_FILE), `${JSON.stringify(file(), null, 2)}\n`);
+  const { target, summary } = main({}, cwd);
+  const written = JSON.parse(readFileSync(target, 'utf8'));
+  assert.equal(written.name, 'jaanta-hai-kya');
+  assert.equal(written.d1_databases[0].database_id, LIVE_ID);
+  assert.match(summary, /from file {6}deploy\.config\.json/);
+
+  const overridden = main({ CF_D1_DATABASE_ID: ID, CF_WORKER_NAME: 'jhk-staging' }, cwd);
+  const second = JSON.parse(readFileSync(overridden.target, 'utf8'));
+  assert.equal(second.d1_databases[0].database_id, ID);
+  assert.equal(second.name, 'jhk-staging');
+  assert.equal(second.d1_databases[0].database_name, 'jhk-db', 'the file still fills the gap');
+});
+
+test('loadFileConfig: absent is not an error, unparseable is', () => {
+  const { cwd } = builtTree();
+  assert.equal(loadFileConfig(cwd), null);
+  assert.throws(() => main({}, cwd), /CF_D1_DATABASE_ID is required/, 'and then the env must carry it');
+  writeFileSync(path.join(cwd, DEPLOY_FILE), '{ not json');
+  assert.throws(() => loadFileConfig(cwd), /deploy\.config\.json is not valid JSON/);
+  assert.throws(() => main(env(), cwd), /deploy\.config\.json is not valid JSON/);
+});
+
+test("the repo's own deploy.config.json is the live database and deploys as it stands", () => {
+  const parsed = JSON.parse(repoFile(DEPLOY_FILE));
+  assert.deepEqual(Object.keys(parsed).sort(), ['d1', 'notes', 'workerName'], 'no room for a secret');
+  assert.equal(parsed.workerName, DEFAULT_WORKER_NAME);
+  assert.equal(parsed.d1.name, DEFAULT_DATABASE_NAME);
+  assert.equal(parsed.d1.id, LIVE_ID);
+  assert.equal(typeof parsed.notes, 'string');
+  assert.ok(parsed.notes.length > 40, 'the notes say what the file is and why it is not secret');
+  const withoutTheId = JSON.stringify(parsed).replaceAll(LIVE_ID, '');
+  assert.deepEqual(
+    withoutTheId.match(/[A-Za-z0-9_-]{30,}/g) ?? [],
+    [],
+    'nothing token-shaped belongs in a committed file',
+  );
+
+  const out = prepare(generated(), {}, parsed);
+  assert.equal(out.name, 'jaanta-hai-kya');
+  assert.deepEqual(out.d1_databases[0], {
+    binding: 'DB',
+    database_name: 'jhk-db',
+    database_id: LIVE_ID,
+    migrations_dir: DEFAULT_MIGRATIONS_DIR,
+  });
+});
+
+/* -------------------------------------------------------------------------------------------
+ * The workflow: two secrets and a dispatch. Parsed with js-yaml so a broken file fails here
+ * rather than in the Actions tab.
+ * ---------------------------------------------------------------------------------------- */
+
+const loadYaml = async () => {
+  const requireFrom = createRequire(import.meta.url);
+  try {
+    return requireFrom('js-yaml').load;
+  } catch {
+    const store = path.join(repoRoot, 'node_modules/.pnpm');
+    const dir = readdirSync(store).find((name) => name.startsWith('js-yaml@'));
+    assert.ok(dir, 'js-yaml is not installed under node_modules/.pnpm');
+    const entry = path.join(store, dir, 'node_modules/js-yaml/dist/js-yaml.mjs');
+    const mod = await import(pathToFileURL(entry).href);
+    return mod.load ?? mod.default.load;
+  }
+};
+
+test('the deploy workflow is valid YAML and redeploys when deploy.config.json changes', async () => {
+  const load = await loadYaml();
+  const doc = load(repoFile('.github/workflows/deploy-worker.yml'));
+  const on = doc.on ?? doc[true];
+  assert.ok('workflow_dispatch' in on, 'the founder can run it by hand');
+  assert.ok(on.push.paths.includes('deploy.config.json'));
+  assert.equal(doc.jobs.deploy.if, "needs.preflight.outputs.configured == 'true'");
+});
+
+test('preflight checks out the tree and takes the file as the database id', async () => {
+  const load = await loadYaml();
+  const doc = load(repoFile('.github/workflows/deploy-worker.yml'));
+  const steps = doc.jobs.preflight.steps;
+  assert.ok(
+    steps.some((step) => typeof step.uses === 'string' && step.uses.startsWith('actions/checkout@')),
+    'without a checkout it cannot see deploy.config.json',
+  );
+  const check = steps.find((step) => step.id === 'check');
+  assert.match(check.run, /\[ -f deploy\.config\.json \]/);
+  assert.match(check.run, /database_source/);
+});
+
+test('the not-configured exit is green and names exactly the two secrets', async () => {
+  const load = await loadYaml();
+  const doc = load(repoFile('.github/workflows/deploy-worker.yml'));
+  const check = doc.jobs.preflight.steps.find((step) => step.id === 'check');
+  assert.match(check.run, /configured=false/);
+  assert.equal(/exit 1/.test(check.run), false, 'an unconfigured repo never goes red');
+  const named = [...new Set(check.run.match(/secrets\.[A-Z_]+/g) ?? [])].sort();
+  assert.deepEqual(named, ['secrets.CLOUDFLARE_ACCOUNT_ID', 'secrets.CLOUDFLARE_API_TOKEN']);
+  assert.match(check.run, /Ten-minute path/, 'and points at the doc that gets them');
+});
+
+test('the prepare step still passes every override the founder may set', async () => {
+  const load = await loadYaml();
+  const doc = load(repoFile('.github/workflows/deploy-worker.yml'));
+  const prepareStep = doc.jobs.deploy.steps.find((step) => step.name === 'Prepare the deploy manifest');
+  assert.deepEqual(Object.keys(prepareStep.env).sort(), [
+    'CF_CUSTOM_DOMAIN',
+    'CF_D1_DATABASE_ID',
+    'CF_D1_DATABASE_NAME',
+    'CF_WORKER_NAME',
+  ]);
+});
+
+test('the deploy doc opens with the Ten-minute path and its seven steps', () => {
+  const doc = repoFile('docs/deploy-cloudflare.md');
+  const lines = doc.split('\n');
+  const tenMinute = lines.indexOf('## Ten-minute path');
+  assert.ok(tenMinute > 0 && tenMinute < 30, `the section is at the top (line ${tenMinute})`);
+  assert.ok(tenMinute < lines.indexOf('## What runs where'));
+  const section = lines.slice(tenMinute, lines.indexOf('## What runs where')).join('\n');
+  for (const step of [1, 2, 3, 4, 5, 6, 7]) assert.match(section, new RegExp(`\n### ${step}\\. `), `step ${step}`);
+  assert.match(section, /Edit Cloudflare Workers/, 'the token template');
+  assert.match(section, /\| Account \| D1 \| \*\*Edit\*\* \|/, 'the D1 row the template may not carry');
+  assert.match(section, /dash\.cloudflare\.com\/<account-id>/, 'where the account id is');
+  assert.match(section, /CLOUDFLARE_API_TOKEN/);
+  assert.match(section, /CLOUDFLARE_ACCOUNT_ID/);
+  assert.match(section, /https:\/\/jaanta-hai-kya\.<your-subdomain>\.workers\.dev/);
+  assert.match(section, /`APP_URL`/, 'so the Pages site hands players over');
+  assert.match(section, /Cloudflare Registrar/);
+  assert.match(section, /CF_CUSTOM_DOMAIN/);
+  assert.equal(/\b(bet|wager|odds|jackpot|casino|slots|gamble)\b/i.test(section), false);
 });

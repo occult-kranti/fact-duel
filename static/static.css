@@ -54,3 +54,12 @@
     font-size: 0.75rem;
   }
 }
+
+/* ---------- mobile gate (scripts/mobile-gate.mjs) ---------- */
+/* The banner is this build's single honesty claim — that there is no server behind it — and it
+   rides above every screen. 13px is the smallest type in the build; on a phone it goes to 14. */
+@media (max-width: 599px) {
+  .fd-offline-note {
+    font-size: 0.875rem;
+  }
+}

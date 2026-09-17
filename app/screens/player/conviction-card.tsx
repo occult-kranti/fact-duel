@@ -51,7 +51,9 @@ const NAME: CSSProperties = { display: 'flex', flexDirection: 'column', gap: 1, 
 const BADGE: CSSProperties = { fontFamily: 'var(--font-display)', fontSize: 'var(--fs-22)', lineHeight: 1.1 };
 const SUB: CSSProperties = {
   fontFamily: 'var(--font-mono)',
-  fontSize: 'var(--fs-12)',
+  // A sentence ("Your badge appears at N called facts"), not a label: the mobile gate holds body
+  // text at 14px and an inline style is the one place CSS cannot reach (scripts/mobile-gate.mjs).
+  fontSize: 'var(--fs-14)',
   fontVariantNumeric: 'tabular-nums',
   color: 'var(--muted)',
 };

@@ -1037,3 +1037,26 @@
 :root[data-motion='off'] .fd-events .fd-ev-pressable:active:not(:disabled) {
   transform: none;
 }
+
+/* ---------- mobile gate (scripts/mobile-gate.mjs) ---------- */
+@media (max-width: 599px) {
+  /* Dates, reward lines, the "checked by hand on <date>" note and the mode's event name are all
+     read, not glanced at. 11-12px on a phone is too small for any of them. */
+  .fd-events .fd-ev-asof,
+  .fd-events .fd-ev-dates,
+  .fd-events .fd-ev-eyebrow,
+  .fd-events .fd-ev-section-lede,
+  .fd-events .fd-ev-mode-event-name,
+  .fd-events .fd-ev-rewards li > span,
+  .fd-events .fd-ev-rewards li > span > small,
+  .fd-events .fd-ev-strip-note,
+  .fd-events .fd-ev-row-note {
+    font-size: var(--fs-14);
+  }
+}
+/* Both controls already stand 44px tall; they were 40-41px WIDE, so neither cleared the target
+   size in either direction. Growing the box, not the type. */
+.fd-events .fd-ev-source,
+.fd-events .fd-ev-back {
+  min-width: 44px;
+}

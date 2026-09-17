@@ -1747,3 +1747,21 @@
 
 /* The finish screen's small print: the name and the sport, nothing else. */
 .fd-final-brand { margin: 0; font-size: var(--fs-12); color: var(--muted); letter-spacing: 0.02em; }
+
+/* ---------- mobile gate (scripts/mobile-gate.mjs) ---------- */
+/* The disclosure was 40px tall. It is the control that opens the explanation — the whole reason
+   the finish screen exists — so it gets the 44px the rest of the app holds. */
+.fd-room .fd-fact-why > summary {
+  min-height: 44px;
+}
+/* The receipt IS the honesty surface: what the level says, what the coins are worth, where the
+   times came from, which answer was right. None of it is a label; all of it is read. 14px on a
+   phone, the desktop scale unchanged. */
+@media (max-width: 599px) {
+  .fd-room .fd-tile > span,
+  .fd-room .fd-note,
+  .fd-room .fd-receipt p,
+  .fd-room .fd-hud-format {
+    font-size: var(--fs-14);
+  }
+}

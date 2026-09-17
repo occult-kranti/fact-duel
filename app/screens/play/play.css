@@ -981,3 +981,86 @@
 /* While searching the launch button is a cancel: quiet, not the volt call to action. */
 .fd-play .fd-launch[data-rival='searching'] .fd-launch-btn { background: var(--bg-2); color: var(--text); box-shadow: none; border: 1px solid var(--line); }
 .fd-play .fd-launch[data-rival='searching'] .fd-launch-terms .fd-link { font: inherit; }
+
+/* ---------- live presence under each format card (lib/presence-client.ts) ----------
+   Text only, one line, muted, at --fs-12. The 6 px dot is volt only while the last successful
+   poll is under 15 s old (data-live='on'); otherwise it is grey and the numbers stand as the last
+   thing the server actually said. Nothing here animates: the counts are facts, not a show, and a
+   number that counted itself up would read as activity that is not happening. */
+.fd-play .fd-modes-live {
+  min-width: 0;
+}
+.fd-play .fd-mode-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.fd-play .fd-mode-cell > .fd-mode {
+  flex: 1 1 auto;
+}
+.fd-play .fd-mode-presence {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  padding: 0 2px;
+  min-width: 0;
+  font-size: var(--fs-12);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.45;
+  color: var(--muted);
+}
+.fd-play .fd-mode-dot {
+  flex: 0 0 auto;
+  width: 6px;
+  height: 6px;
+  border-radius: var(--r-pill);
+  background: var(--muted);
+}
+.fd-play .fd-mode-presence[data-live='on'] .fd-mode-dot {
+  background: var(--volt);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--volt) 18%, transparent);
+}
+/* Light theme: the dot keeps its 3:1 against the panel without becoming a second CTA. */
+:root[data-theme='light'] .fd-play .fd-mode-presence[data-live='on'] .fd-mode-dot {
+  background: color-mix(in oklab, var(--volt) 62%, var(--text));
+  box-shadow: none;
+}
+
+/* ---------- mobile gate (scripts/mobile-gate.mjs) ---------- */
+/* iOS Safari zooms the whole page when a focused form control computes under 16px (web.dev,
+   "Help users enter the right data in forms": use at least 1rem). The field rule above sets
+   --fs-14, so the player name and the invite link zoomed the lobby on every iPhone. */
+@media (max-width: 767px) {
+  .fd-play .fd-field input,
+  .fd-play .fd-field [data-slot='select-trigger'] {
+    font-size: 16px;
+  }
+}
+/* Fine print at 12px is the bot's honesty line, the entry terms and the live-round warning — the
+   three sentences on this screen a player most needs to read. 14px on phones. */
+@media (max-width: 599px) {
+  .fd-play .fd-field-note,
+  .fd-play .fd-fine,
+  .fd-play .fd-live-note,
+  .fd-play .fd-live-note .fd-link,
+  .fd-play .fd-rival-body > small {
+    font-size: var(--fs-14);
+  }
+}
+
+/* The launch bar's terms line is mono value chips ("Entry 0 coins", "Win: +25 XP") at 11px, which
+   is right for a readout. In the Join view the same line is one sentence — the rule that the
+   friend's room, not yours, sets format, timer and entry — and 11px is not a size to read a rule
+   at. Only the sentence grows, and --fd-stick-h grows with it so the footer and the toast stack
+   still clear a two-line bar. */
+@media (max-width: 599px) {
+  .fd-play .fd-launch-terms .fd-launch-fine {
+    font-size: var(--fs-14);
+    line-height: 1.4;
+  }
+  :root:has(.fd-play .fd-launch .fd-launch-fine) {
+    --fd-stick-h: 132px;
+  }
+}

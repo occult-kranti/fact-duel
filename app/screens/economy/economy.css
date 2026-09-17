@@ -311,3 +311,16 @@
     transition: none;
   }
 }
+
+/* ---------- mobile gate (scripts/mobile-gate.mjs) ---------- */
+/* On phones the top-bar chips drop their pill and become plain icon + number readouts
+   (player.css §9), which left the coins chip at 33x28 — the smallest tap target in the app, and
+   the one that opens the coins sheet. The readout keeps its size; the button grows an invisible
+   44x44 box around it. */
+@media (max-width: 599px) {
+  .fd-topbar .fd-chip-top--coins {
+    min-width: 44px;
+    min-height: 44px;
+    justify-content: center;
+  }
+}

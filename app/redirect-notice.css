@@ -1,0 +1,88 @@
+/* app/redirect-notice.css — the hand-off card (app/redirect-notice.tsx).
+ *
+ * This card is the whole page when it renders, so it owns the viewport: one centred Floodlight
+ * card on `--bg-0`, nothing else. Sizes are tokens, height is `dvh` and the safe-area insets are
+ * honoured because the first thing a phone visitor sees should not sit under the notch. */
+
+.fd-redirect {
+  display: grid;
+  place-items: center;
+  min-height: 100dvh;
+  padding: calc(24px + var(--safe-top, 0px)) max(var(--gutter, 16px), var(--safe-right, 0px))
+    calc(24px + var(--safe-bottom, 0px)) max(var(--gutter, 16px), var(--safe-left, 0px));
+  background: var(--bg-0);
+  color: var(--text);
+  font-family: var(--font-ui);
+}
+
+.fd-redirect__card {
+  width: 100%;
+  max-width: 420px;
+  padding: 24px 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--bg-1);
+  box-shadow: var(--shadow-card);
+  text-align: center;
+}
+
+.fd-redirect__line {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-18);
+  font-weight: 600;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.fd-redirect__count {
+  margin: 8px 0 20px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: var(--fs-14);
+  font-variant-numeric: tabular-nums;
+}
+
+.fd-redirect__go {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  min-width: 140px;
+  padding: 0 20px;
+  border: 1px solid transparent;
+  border-radius: var(--r-control);
+  background: var(--volt);
+  color: var(--volt-ink);
+  font-size: var(--fs-16);
+  font-weight: 600;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+  transition:
+    transform 140ms var(--ease-out),
+    box-shadow 140ms var(--ease-out);
+}
+
+.fd-redirect__go:hover {
+  box-shadow: var(--glow-volt);
+}
+
+.fd-redirect__go:active {
+  transform: scale(0.97);
+}
+
+.fd-redirect__go:focus-visible {
+  outline: 2px solid var(--volt);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fd-redirect__go {
+    transition: none;
+  }
+  .fd-redirect__go:active {
+    transform: none;
+  }
+}
