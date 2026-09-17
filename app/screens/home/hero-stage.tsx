@@ -8,6 +8,7 @@
  * beat at all.
  */
 import { LazyHeroOrb } from '@/components/three';
+import { JhkMark } from '../../shell/brand-mark';
 import { useReducedMotion } from '@/components/fx';
 import { CONVICTION_CODES, CONVICTION_WINDOW, MODES } from '@/lib/progression.mjs';
 import { convictionHeat, landedRecent } from '@/lib/heat.mjs';
@@ -96,6 +97,9 @@ export function HeroStage({
   return (
     <>
       <div className="fd-hub-hero-stage">
+        {/* The brand mark as a watermark: decorative, 7% volt, under the poster and the scene, and
+            kept to the top-right corner so it never sits under the badge row or the note. */}
+        <JhkMark className="fd-hub-hero-mark" />
         <img
           className="fd-hub-hero-poster"
           src={STAGE_ART}

@@ -213,6 +213,7 @@ export function RoomScreen({ duel, player }: RoomScreenProps) {
               go('passport');
             }}
           />
+          <p className="fd-final-brand">Jaanta Hai Kya · {room.config.topic && room.config.topic !== 'all' ? room.config.topic : 'Sports'}</p>
           {completedRounds(room).length > 0 && <RoundReview room={room} player={player} />}
           {/* The return hook: the next served-sport fixture on the static calendar, after the receipt
               and before any ad. It links to Events; it never counts down in seconds or claims a score. */}

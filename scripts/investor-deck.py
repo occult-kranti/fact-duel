@@ -748,7 +748,7 @@ def render_title(slide, plan, s, page_no):
         pass
     p0 = ttf.paragraphs[0]
     p0.line_spacing = 1.0
-    for txt, col in (("FACT", TEXT), ("//", VOLT), ("DUEL", TEXT)):
+    for txt, col in (("JAANTA", TEXT), (" HAI ", VOLT), ("KYA", TEXT)):
         r = p0.add_run()
         r.text = txt
         style_run(r, 62, col, bold=True, spc=0.5)

@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import Arena from '../arena';
 
 export const metadata: Metadata = {
-  title: 'Measurement — FACT//DUEL',
+  title: 'Measurement — Jaanta Hai Kya',
   description:
-    'Everything FACT//DUEL records about how this device is used: sessions, active days, the day-by-day activity record and whether you came back on day 1, 7 or 30. Stored only in this browser.',
+    'Everything Jaanta Hai Kya records about how this device is used: sessions, active days, the day-by-day activity record and whether you came back on day 1, 7 or 30. Stored only in this browser.',
 };
 
 /**

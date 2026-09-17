@@ -251,8 +251,8 @@ export default function Studio() {
         Skip to product plan
       </a>
       <header className="studio-header">
-        <a href="/" className="brand" aria-label="FACT DUEL home">
-          FACT<span>//</span>DUEL
+        <a href="/" className="brand" aria-label="Jaanta Hai Kya home">
+          Jaanta Hai <span>Kya</span>
         </a>
         <span className="studio-label">PRODUCT STUDIO</span>
         <div>
@@ -953,7 +953,7 @@ export default function Studio() {
               <strong>Research recommendations, with deliberate adaptations.</strong>
               <p>
                 This historical v3 brief records the earlier psychologist/designer workstream. The historical
-                v4 Curiosity Arcade brief is in Player voices; current FACT//DUEL decisions are in Decisions.
+                v4 Curiosity Arcade brief is in Player voices; current Jaanta Hai Kya decisions are in Decisions.
                 It is not a shipping checklist. The Decisions tab documents the chosen colors, three modes,
                 journal and sound behavior; the roadmap tracks deferred screen contracts. Book coverage is
                 limited to accessible excerpts, author descriptions and publisher contents.
@@ -1016,7 +1016,7 @@ export default function Studio() {
         </Tabs>
       </main>
       <footer>
-        <span>FACT//DUEL · Product Studio</span>
+        <span>Jaanta Hai Kya · Product Studio</span>
         <span>Private playtest · Free coins · Evidence before expansion</span>
       </footer>
       <AlertDialog open={resetOpen} onOpenChange={setResetOpen}>

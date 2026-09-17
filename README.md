@@ -1,4 +1,7 @@
-# FACT//DUEL — Duels, Expeditions & Progression
+# Jaanta Hai Kya (JHK) — Duels, Expeditions & Progression
+
+Formerly FACT//DUEL. The repository, package and storage names keep the old identifier; only what a
+person sees changed. Brand sheet: `docs/brand.md`.
 
 A private sports and science knowledge club for friends or random practice bots.
 All coins are free, per-room simulations with no monetary value.

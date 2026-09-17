@@ -31,7 +31,7 @@ export function Trust() {
     <section className="fd-rules fd-rules--trust" aria-labelledby="fd-trust-title">
       <div className="fd-rules__head">
         <p className="eyebrow">TRUST</p>
-        <h1 id="fd-trust-title">What you can hold us to.</h1>
+        <h1 id="fd-trust-title">What you can hold Jaanta Hai Kya to.</h1>
         <p className="fd-rules__lede">
           Short rules, stated once, kept. Where something is not built yet, this page says so rather
           than pretending.

@@ -69,7 +69,7 @@ function Lab() {
   const shakeTarget = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    document.title = 'FX Lab — FACT//DUEL';
+    document.title = 'FX Lab — Jaanta Hai Kya';
     // The lab is the only page that exposes the engine on `window`. scripts/measure-cues.mjs
     // drives `render()` from here to regenerate lib/fx/sound-levels.ts; nothing ships to a
     // player's route, and nothing on this page depends on the handle existing.

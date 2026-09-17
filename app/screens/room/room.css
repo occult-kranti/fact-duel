@@ -1744,3 +1744,6 @@
     transition: none;
   }
 }
+
+/* The finish screen's small print: the name and the sport, nothing else. */
+.fd-final-brand { margin: 0; font-size: var(--fs-12); color: var(--muted); letter-spacing: 0.02em; }

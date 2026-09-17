@@ -1,6 +1,7 @@
 'use client';
 import type { ReactNode } from 'react';
-import { Zap, Lock, Volume2, VolumeX, Settings } from 'lucide-react';
+import { Lock, Volume2, VolumeX, Settings } from 'lucide-react';
+import { JhkMark, JhkWordmark } from './brand-mark';
 
 export type TopbarProps = {
   /** A room is open (any phase): brand click leaves/backs instead of going home. */
@@ -34,16 +35,16 @@ export function Topbar({
       <a
         href="/"
         className="fd-brand"
-        aria-label="Fact Duel home"
+        aria-label="Jaanta Hai Kya home"
         onClick={(e) => {
           e.preventDefault();
           onBrand();
         }}
       >
-        <Zap aria-hidden="true" />
-        <span>
-          FACT<em>{'//'}</em>DUEL
-        </span>
+        <JhkMark size={32} tile className="fd-brand-mark" />
+        {/* The wordmark is decorative here: the link's own label already names the product. Under
+            360px the CSS hides it and the tile alone carries the brand. */}
+        <JhkWordmark height={16} title="" className="fd-brand-word" />
       </a>
       <div className="fd-topbar-right">
         {(streak || level || wallet) && (

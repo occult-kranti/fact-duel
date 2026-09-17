@@ -1,5 +1,6 @@
 'use client';
 import { House, Compass, Swords, UserRound, Vault, type LucideIcon } from 'lucide-react';
+import { JhkMark } from './brand-mark';
 
 export type NavTabId = 'home' | 'journeys' | 'arena' | 'passport' | 'journal';
 
@@ -21,6 +22,11 @@ export type NavProps = {
 export function Nav({ tab, onNavigate }: NavProps) {
   return (
     <nav className="fd-nav" aria-label="Main navigation">
+      {/* Decorative: the mark heads the desktop rail (shell.css hides it in the bottom tab bar). The
+          topbar brand link is the one that goes home. */}
+      <span className="fd-nav-mark">
+        <JhkMark size={24} />
+      </span>
       {NAV_TABS.map(({ id, label, icon: Icon }) => (
         <button
           key={id}

@@ -129,8 +129,8 @@ export function SupporterCard({ player }: { player: Player }) {
       </fieldset>
 
       <p className="fd-disclaimer">
-        Ratings count human duels only and live on this device. Shields are earned by playing seven days
-        running in a sport; nothing here can be bought or won back from an ad.
+        Jaanta Hai Kya ratings count human duels only and live on this device. Shields are earned by
+        playing seven days running in a sport; nothing here can be bought or won back from an ad.
       </p>
     </section>
   );

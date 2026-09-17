@@ -115,7 +115,10 @@ function head({ lang, title, description, url, base, locale, siteName }) {
 <meta property="og:title" content="${escapeHtml(title)}">
 <meta property="og:description" content="${escapeHtml(description)}">
 <meta property="og:url" content="${escapeHtml(url)}">
-<meta property="og:image" content="${escapeHtml(base)}/arena-art.webp">
+<meta property="og:image" content="${escapeHtml(base)}/brand/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<link rel="icon" type="image/svg+xml" href="${escapeHtml(base)}/favicon.svg">
 <meta name="twitter:card" content="summary_large_image">
 <style>${CSS}</style>
 </head>`;

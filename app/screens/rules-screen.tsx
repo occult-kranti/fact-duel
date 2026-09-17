@@ -149,7 +149,7 @@ export function Playbook() {
   return (
     <section className="playbook">
       <p className="eyebrow">TWO SCREENS, CLEAR RULES</p>
-      <h1>How an online duel works.</h1>
+      <h1>How a Jaanta Hai Kya duel works.</h1>
       <div className="rule-grid">
         {[
           [

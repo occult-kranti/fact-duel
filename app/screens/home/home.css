@@ -1,4 +1,4 @@
-/* FACT//DUEL — Home (Arena Hub). Floodlight tokens only; mobile-first.
+/* Jaanta Hai Kya — Home (Arena Hub). Floodlight tokens only; mobile-first.
  * Order on a phone: core → player card → CTA (thumb zone) → quests → expedition → rank → bento.
  * Breakpoints: 600 (phone landscape), 900 (nav becomes a rail), 1200 (rail expands). */
 
@@ -218,6 +218,19 @@
   height: 100%;
   object-fit: cover;
   object-position: 50% 46%;
+}
+/* The watermark: 6% opacity sits inside the brand-sheet band (6-8%) and nothing legible is drawn over it.
+   Sized off the stage height so it is ~240px on a desktop hero and shrinks with the phone hero. */
+.fd-home .fd-hub-hero-mark {
+  position: absolute;
+  z-index: 0;
+  top: -6%;
+  right: -2%;
+  width: auto;
+  height: 110%;
+  color: var(--volt);
+  opacity: 0.06;
+  pointer-events: none;
 }
 .fd-home .fd-hub-hero-poster {
   z-index: 0;

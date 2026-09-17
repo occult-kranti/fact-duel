@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { OpsDashboard } from './dashboard';
 
 export const metadata: Metadata = {
-  title: 'Ops — FACT//DUEL',
+  title: 'Ops — Jaanta Hai Kya',
   description: 'Founder-only live stats: traffic, search, ad revenue and the game’s own counters.',
   robots: { index: false, follow: false },
 };
