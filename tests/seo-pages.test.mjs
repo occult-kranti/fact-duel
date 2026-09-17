@@ -129,8 +129,10 @@ test('the IPL page fills from cricket when fewer than ten IPL questions exist, a
   const exact = QUESTIONS.filter((q) => eligible(intent, q) && intent.match.test(questionText(q)));
   assert.equal(sel.matched, exact.length);
   assert.equal(sel.questions.length, PAGE_SIZE);
-  for (const q of exact) assert.ok(sel.questions.includes(q), `${q.id} is an exact hit and leads the page`);
-  assert.deepEqual(sel.questions.slice(0, exact.length), sel.questions.slice(0, exact.length).filter((q) => intent.match.test(questionText(q))));
+  const lead = Math.min(exact.length, PAGE_SIZE);
+  // Exact hits lead the page; once the bank holds ten or more, the whole page is exact hits.
+  assert.ok(sel.questions.slice(0, lead).every((q) => intent.match.test(questionText(q))), 'exact hits lead the page');
+  if (exact.length < PAGE_SIZE) for (const q of exact) assert.ok(sel.questions.includes(q), `${q.id} is an exact hit and leads the page`);
   if (exact.length < PAGE_SIZE) {
     assert.equal(sel.filled, true);
     const line = fallbackLine(intent, sel);
