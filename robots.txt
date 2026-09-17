@@ -1,0 +1,9 @@
+# Jaanta Hai Kya (JHK). Everything on this site is public and crawlable. The quiz pages under /quiz/ are generated at
+# build time from the served question bank (scripts/seo-pages.mjs) and listed in the sitemap.
+# Note: a GitHub Pages project site serves this file at /fact-duel/robots.txt, which crawlers do
+# not read (they read the origin root). It becomes live on the first-party domain; until then,
+# submit the sitemap URL in Search Console directly.
+User-agent: *
+Allow: /
+
+Sitemap: https://occult-kranti.github.io/fact-duel/quiz/sitemap.xml
