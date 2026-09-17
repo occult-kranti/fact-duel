@@ -36,6 +36,22 @@ export type ServerWallet = Readonly<{
   adsToday: number;
   adDailyCap: number;
   dayKey: string;
+  /** The edge's word for where the player is, and what one ad pays there. Absent on older servers. */
+  region?: string;
+  perAd?: number;
+  /** When the current floor window ends. Absent on older servers. */
+  floorNextAt?: number;
+}>;
+
+/** The reply to a grant or an entry: the balance after, and why nothing moved when it did not. */
+export type ServerOutcome = Readonly<{
+  ok: boolean;
+  reason?: string;
+  granted?: number;
+  spent?: number;
+  replayed?: boolean;
+  coins: number;
+  nextAt?: number;
 }>;
 
 export type IssueReply =
@@ -79,6 +95,14 @@ export type WalletClient = Readonly<{
   pending(): PendingNonce | null;
   /** Retry the pending nonce. Null when there is none. Clears it on any definitive answer. */
   settlePending(): Promise<RedeemReply | null>;
+  /** The daily grant. Refusals: 'already_claimed' | 'soft_cap' | 'unavailable'. */
+  grantDaily(): Promise<ServerOutcome>;
+  /** The floor top-up. Refusals: 'above_floor' | 'floor_cooldown' | 'unavailable'. */
+  applyFloor(): Promise<ServerOutcome>;
+  /** A drill entry keyed by its session id (idempotent). Refusals: 'insufficient' | 'unavailable'. */
+  enterPractice(sessionId: string): Promise<ServerOutcome>;
+  /** The free daily recap. Refusals: 'recap_played' | 'unavailable'. */
+  enterRecap(): Promise<ServerOutcome>;
 }>;
 
 export const WALLET_ENDPOINT = '/api/wallet';
@@ -190,6 +214,25 @@ function readServerWallet(data: unknown): ServerWallet | null {
     adsToday: d.adsToday,
     adDailyCap: int(d.adDailyCap) ? d.adDailyCap : 0,
     dayKey: typeof d.dayKey === 'string' ? d.dayKey.slice(0, 10) : '',
+    ...(typeof d.region === 'string' ? { region: d.region } : {}),
+    ...(int(d.perAd) ? { perAd: d.perAd } : {}),
+    ...(int(d.floorNextAt) ? { floorNextAt: d.floorNextAt } : {}),
+  });
+}
+
+/** A grant or entry reply as the hook consumes it; a bad shape reads as a failure with coins unknown. */
+function readOutcome(status: number, data: unknown): ServerOutcome {
+  const d = data && typeof data === 'object' ? (data as Record<string, unknown>) : null;
+  if (status >= 500 || !d) return Object.freeze({ ok: false, reason: 'unavailable', coins: -1 });
+  if (status !== 200) return Object.freeze({ ok: false, reason: codeOf(data) ?? 'failed', coins: -1 });
+  return Object.freeze({
+    ok: d.ok === true,
+    ...(typeof d.reason === 'string' ? { reason: d.reason } : {}),
+    ...(int(d.granted) ? { granted: d.granted } : {}),
+    ...(int(d.spent) ? { spent: d.spent } : {}),
+    ...(d.replayed === true ? { replayed: true } : {}),
+    coins: int(d.coins) ? d.coins : -1,
+    ...(int(d.nextAt) ? { nextAt: d.nextAt } : {}),
   });
 }
 
@@ -284,10 +327,24 @@ export function createWalletClient({
     return refusal('pending');
   };
 
+  /** One grant-or-entry call; the network failing reads as 'unavailable', never as a throw. */
+  const outcome = async (body: Record<string, unknown>): Promise<ServerOutcome> => {
+    try {
+      const { status, data } = await call(fetchImpl, id, { ...body, tzOffsetMinutes: tz }, CALL_TIMEOUT_MS);
+      return readOutcome(status, data);
+    } catch {
+      return Object.freeze({ ok: false, reason: 'unavailable', coins: -1 });
+    }
+  };
+
   return Object.freeze({
     principalId: id,
     serverCapable: true,
     probe: () => read(PROBE_TIMEOUT_MS),
+    grantDaily: () => outcome({ action: 'grant-daily' }),
+    applyFloor: () => outcome({ action: 'apply-floor' }),
+    enterPractice: (sessionId: string) => outcome({ action: 'enter-practice', sessionId }),
+    enterRecap: () => outcome({ action: 'enter-recap' }),
     readWallet: () => read(CALL_TIMEOUT_MS),
     async issueNonce(placement) {
       let status: number, data: unknown;

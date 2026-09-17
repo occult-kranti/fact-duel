@@ -73,8 +73,6 @@ function refusalText(reason: string, cap: number): string {
       return 'That ad took too long to report back, so it paid nothing. Nothing was charged.';
     case 'pending':
       return 'Reward pending — it is paid when the connection returns.';
-    case 'not_on_server':
-      return 'That arrives with the next server release. The server keeps your balance, and ads pay into it now.';
     default:
       return 'That ad did not play. Nothing was charged.';
   }
@@ -159,16 +157,8 @@ export function AdCard({ wallet, placement, onClose, children }: AdCardProps) {
     [busy, juice],
   );
 
-  // In server mode a drill entry cannot be taken yet (no endpoint), so the card says that instead
-  // of pricing an entry it could not accept; the ad offer is withheld there too, since a top-up
-  // would not open the drill.
-  const drillOffline = onServer && placement === 'practice-entry';
-  const heading = drillOffline
-    ? {
-        title: 'Drill entries arrive with the next server release.',
-        lede: `The server keeps your balance — ${coins} coins — but it cannot take a drill entry yet. Duels and ad top-ups work now.`,
-      }
-    : placement === 'practice-entry'
+  const drillOffline = false;
+  const heading = placement === 'practice-entry'
       ? {
           title: `This drill is ${a.practice.cost} coins. You have ${coins}.`,
           lede: 'Top up the way you like, or let the free paths do it — nothing here is a condition of playing.',
@@ -181,7 +171,6 @@ export function AdCard({ wallet, placement, onClose, children }: AdCardProps) {
         };
 
   const status = last ? outcomeText(last, config.adDailyCap) : wallet.notice ? outcomeText(wallet.notice, config.adDailyCap) : null;
-  const laterText = 'arrives with the next server release';
 
   return (
     <article className="fd-adcard" data-placement={placement} data-motion={reduced ? 'reduced' : 'full'}>
@@ -234,9 +223,7 @@ export function AdCard({ wallet, placement, onClose, children }: AdCardProps) {
           <Gift aria-hidden="true" />
           <span>
             Daily {config.daily} coins ·{' '}
-            {onServer ? (
-              laterText
-            ) : canClaimDaily ? (
+            {canClaimDaily ? (
               <button
                 type="button"
                 className="fd-adcard__link"
@@ -255,9 +242,7 @@ export function AdCard({ wallet, placement, onClose, children }: AdCardProps) {
           <LifeBuoy aria-hidden="true" />
           <span>
             Floor top-up to {config.floor.coins} coins ·{' '}
-            {onServer ? (
-              laterText
-            ) : floorDueAt === 0 ? (
+            {floorDueAt === 0 ? (
               'there whenever you run low'
             ) : floorReady ? (
               <button

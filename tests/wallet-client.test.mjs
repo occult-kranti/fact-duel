@@ -270,3 +270,28 @@ test('a server reply reads as the reducer’s wallet shape, clean by identity, w
   assert.deepEqual(serverWalletView(null), emptyWallet());
   assert.deepEqual(serverWalletView({ coins: 'x', adsToday: -1 }), emptyWallet());
 });
+
+test('the four grant-and-entry calls carry the guest header and read the reply shape; the network failing is "unavailable"', async () => {
+  const seen = [];
+  const fetchImpl = async (url, init) => {
+    const body = JSON.parse(init.body);
+    seen.push({ action: body.action, header: init.headers['x-fd-principal'], sessionId: body.sessionId });
+    const reply = {
+      'grant-daily': { ok: true, granted: 30, coins: 30 },
+      'apply-floor': { ok: false, reason: 'above_floor', coins: 30, nextAt: 1_800_000_000_000 },
+      'enter-practice': { ok: true, spent: 10, replayed: false, coins: 20 },
+      'enter-recap': { ok: false, reason: 'recap_played', coins: 20 },
+    }[body.action];
+    return new Response(JSON.stringify(reply), { status: 200, headers: { 'content-type': 'application/json' } });
+  };
+  const client = createWalletClient({ fetch: fetchImpl, storage: memory(), sleep: async () => {} });
+  assert.deepEqual(await client.grantDaily(), { ok: true, granted: 30, coins: 30 });
+  assert.deepEqual(await client.applyFloor(), { ok: false, reason: 'above_floor', coins: 30, nextAt: 1_800_000_000_000 });
+  assert.deepEqual(await client.enterPractice('sess0001'), { ok: true, spent: 10, coins: 20 });
+  assert.deepEqual(await client.enterRecap(), { ok: false, reason: 'recap_played', coins: 20 });
+  assert.deepEqual(seen.map((s) => s.action), ['grant-daily', 'apply-floor', 'enter-practice', 'enter-recap']);
+  assert.ok(seen.every((s) => s.header === client.principalId));
+  assert.equal(seen[2].sessionId, 'sess0001');
+  const down = createWalletClient({ fetch: async () => { throw new Error('offline'); }, storage: memory(), sleep: async () => {} });
+  assert.deepEqual(await down.grantDaily(), { ok: false, reason: 'unavailable', coins: -1 });
+});

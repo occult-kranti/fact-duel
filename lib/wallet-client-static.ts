@@ -18,6 +18,7 @@ import type {
   ServerWallet,
   WalletClient,
   WalletClientOptions,
+  ServerOutcome,
 } from './wallet-client';
 
 export type {
@@ -83,6 +84,7 @@ export function readPendingNonce(): PendingNonce | null {
 }
 
 const OFFLINE: Readonly<{ ok: false; reason: string }> = Object.freeze({ ok: false, reason: 'offline_build' });
+const OFFLINE_OUTCOME: ServerOutcome = Object.freeze({ ok: false, reason: 'offline_build', coins: 0 });
 
 export function createWalletClient({ storage = browserStorage() }: WalletClientOptions = {}): WalletClient {
   return Object.freeze({
@@ -94,5 +96,9 @@ export function createWalletClient({ storage = browserStorage() }: WalletClientO
     redeemNonce: async (): Promise<RedeemReply> => OFFLINE,
     pending: (): PendingNonce | null => null,
     settlePending: async (): Promise<RedeemReply | null> => null,
+    grantDaily: async (): Promise<ServerOutcome> => OFFLINE_OUTCOME,
+    applyFloor: async (): Promise<ServerOutcome> => OFFLINE_OUTCOME,
+    enterPractice: async (): Promise<ServerOutcome> => OFFLINE_OUTCOME,
+    enterRecap: async (): Promise<ServerOutcome> => OFFLINE_OUTCOME,
   });
 }

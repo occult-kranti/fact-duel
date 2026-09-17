@@ -46,7 +46,7 @@ import {
 import { validReceipt } from '@/lib/ads/provider.mjs';
 import { WebAdProvider } from '@/lib/ads/web-provider.mjs';
 import { floorDueAt, regionOf, serverWalletView, transactWallet, visitStep } from '@/lib/wallet-store.mjs';
-import { createWalletClient, type ServerWallet, type WalletClient, type WalletMode } from '@/lib/wallet-client';
+import { createWalletClient, type ServerOutcome, type ServerWallet, type WalletClient, type WalletMode } from '@/lib/wallet-client';
 
 /** The reducer's wallet shape (economy.mjs `emptyWallet`), widened from its literal defaults. */
 export type Wallet = Readonly<{
@@ -144,7 +144,6 @@ function deviceRegion() {
   return typeof navigator !== 'undefined' ? regionOf(navigator.language) : '*';
 }
 
-const NOT_ON_SERVER = (wallet: Wallet): Outcome => ({ ok: false, reason: 'not_on_server', granted: 0, spent: 0, wallet });
 
 export function useWallet(config = DEFAULT_CONFIG): WalletApi {
   const [wallet, setWallet] = useState<Wallet>(() => emptyWallet()),
@@ -158,6 +157,10 @@ export function useWallet(config = DEFAULT_CONFIG): WalletApi {
     [server, setServer] = useState<ServerWallet | null>(null),
     // The region the server priced the last nonce for: its word beats the locale placeholder.
     [serverRegion, setServerRegion] = useState<string | null>(null),
+    // Server-mode day flags, learned from replies: null until the server has said.
+    [serverDailyKey, setServerDailyKey] = useState<string | null>(null),
+    [serverFloorNextAt, setServerFloorNextAt] = useState<number | null>(null),
+    [serverRecapKey, setServerRecapKey] = useState<string | null>(null),
     [pendingReward, setPendingReward] = useState(false),
     [notice, setNotice] = useState<Outcome | null>(null);
   // Read once, on the client. The server render sees '*' and offset 0; nothing money-shaped is
@@ -327,33 +330,65 @@ export function useWallet(config = DEFAULT_CONFIG): WalletApi {
     void refreshAds();
   }, [refreshAds]);
 
-  const claimDaily = useCallback(() => {
-    if (modeRef.current === 'server') return Promise.resolve(NOT_ON_SERVER(serverView()));
-    const at = Date.now();
-    return apply((w) => outcomeOf(claimDailyReducer(w, { at, tzOffsetMinutes: tzOffset }, config)));
-  }, [apply, tzOffset, config, serverView]);
+  /**
+   * A server grant or entry as an outcome: the reply's balance becomes the server view, the
+   * server's reason is the outcome's reason, and a success carries the same word the device
+   * reducer would ('daily' | 'floor' | 'practice' | 'recap') so the card reads the same.
+   */
+  const settleServer = useCallback(
+    (reply: ServerOutcome, okReason: string): Outcome => {
+      const before = serverRef.current;
+      if (reply.coins >= 0 && before) acceptServer({ ...before, coins: reply.coins });
+      const wallet = serverView();
+      if (reply.ok) return { ok: true, reason: okReason, granted: reply.granted ?? 0, spent: reply.spent ?? 0, wallet };
+      return { ok: false, reason: reply.reason ?? 'failed', granted: 0, spent: 0, wallet };
+    },
+    [acceptServer, serverView],
+  );
 
-  const claimFloor = useCallback(() => {
-    if (modeRef.current === 'server') return Promise.resolve(NOT_ON_SERVER(serverView()));
-    const at = Date.now();
-    return apply((w) => outcomeOf(applyFloor(w, { at }, config)));
-  }, [apply, config, serverView]);
+  const claimDaily = useCallback(async () => {
+    if (modeRef.current !== 'server') {
+      const at = Date.now();
+      return apply((w) => outcomeOf(claimDailyReducer(w, { at, tzOffsetMinutes: tzOffset }, config)));
+    }
+    const reply = await client.grantDaily();
+    if (reply.ok || reply.reason === 'already_claimed') setServerDailyKey(serverRef.current?.dayKey ?? '');
+    return settleServer(reply, 'daily');
+  }, [apply, tzOffset, config, client, settleServer]);
+
+  const claimFloor = useCallback(async () => {
+    if (modeRef.current !== 'server') {
+      const at = Date.now();
+      return apply((w) => outcomeOf(applyFloor(w, { at }, config)));
+    }
+    const reply = await client.applyFloor();
+    if (reply.nextAt) setServerFloorNextAt(reply.ok ? null : reply.nextAt);
+    return settleServer(reply, 'floor');
+  }, [apply, config, client, settleServer]);
 
   // A money-shaped request is when the floor fires (economy.mjs): lift first, then charge, so a
-  // refused entry still leaves the floor's grant in the wallet.
-  const enterPractice = useCallback(() => {
-    if (modeRef.current === 'server') return Promise.resolve(NOT_ON_SERVER(serverView()));
-    const at = Date.now();
-    return apply((w) => outcomeOf(enterPracticeReducer(applyFloor(w, { at }, config).wallet, config)));
-  }, [apply, config, serverView]);
+  // refused entry still leaves the floor's grant in the wallet. The server does the same in one
+  // call; the drill session id is the idempotency key, so a retried tap never charges twice.
+  const enterPractice = useCallback(async () => {
+    if (modeRef.current !== 'server') {
+      const at = Date.now();
+      return apply((w) => outcomeOf(enterPracticeReducer(applyFloor(w, { at }, config).wallet, config)));
+    }
+    const sessionId = crypto.randomUUID().replaceAll('-', '');
+    return settleServer(await client.enterPractice(sessionId), 'practice');
+  }, [apply, config, client, settleServer]);
 
   // The recap is the free path: no floor, no charge, only the day stamp. A refusal is the screen's
   // cue to offer the ordinary practice entry, priced and labelled, never a silent charge.
-  const enterRecap = useCallback(() => {
-    if (modeRef.current === 'server') return Promise.resolve(NOT_ON_SERVER(serverView()));
-    const at = Date.now();
-    return apply((w) => outcomeOf(enterRecapReducer(w, { at, tzOffsetMinutes: tzOffset })));
-  }, [apply, tzOffset, serverView]);
+  const enterRecap = useCallback(async () => {
+    if (modeRef.current !== 'server') {
+      const at = Date.now();
+      return apply((w) => outcomeOf(enterRecapReducer(w, { at, tzOffsetMinutes: tzOffset })));
+    }
+    const reply = await client.enterRecap();
+    if (reply.ok || reply.reason === 'recap_played') setServerRecapKey(serverRef.current?.dayKey ?? '');
+    return settleServer(reply, 'recap');
+  }, [apply, tzOffset, client, settleServer]);
 
   /**
    * Server mode: the server agrees to the ad first (a refusal here costs nobody any inventory and
@@ -419,7 +454,17 @@ export function useWallet(config = DEFAULT_CONFIG): WalletApi {
     const now = stamp;
     const onServer = mode === 'server';
     const shown = onServer ? (serverWalletView(server) as Wallet) : wallet;
-    const priced = onServer && serverRegion ? serverRegion : region;
+    const priced = onServer ? (serverRegion ?? server?.region ?? region) : region;
+    const serverDay = server?.dayKey ?? '';
+    // Floor on the server: nothing to do above the floor; below it, ready now unless the last reply
+    // named the next window; the server's own window end is the fallback when it said one.
+    const serverFloorDue = !onServer
+      ? 0
+      : shown.coins >= config.floor.coins
+        ? 0
+        : serverFloorNextAt && serverFloorNextAt > now
+          ? serverFloorNextAt
+          : now;
     return {
       wallet: shown,
       loaded,
@@ -430,10 +475,12 @@ export function useWallet(config = DEFAULT_CONFIG): WalletApi {
       tzOffset,
       config,
       affordability: affordability(shown, { region: priced }, config),
-      canClaimDaily: !onServer && shown.lastDailyKey !== dayKeyOf(now, tzOffset) && shown.coins < config.softCap,
-      floorDueAt: onServer ? 0 : floorDueAt(shown, config),
+      canClaimDaily: onServer
+        ? serverDailyKey !== serverDay && shown.coins < config.softCap
+        : shown.lastDailyKey !== dayKeyOf(now, tzOffset) && shown.coins < config.softCap,
+      floorDueAt: onServer ? serverFloorDue : floorDueAt(shown, config),
       doubleOwed: !onServer && doubleAdAvailable(shown, { at: now, tzOffsetMinutes: tzOffset }, config),
-      recapFree: !onServer && recapFreeToday(shown, { at: now, tzOffsetMinutes: tzOffset }),
+      recapFree: onServer ? serverRecapKey !== serverDay : recapFreeToday(shown, { at: now, tzOffsetMinutes: tzOffset }),
       pendingReward,
       notice,
       adsAvailable,
@@ -449,6 +496,9 @@ export function useWallet(config = DEFAULT_CONFIG): WalletApi {
     wallet,
     server,
     serverRegion,
+    serverDailyKey,
+    serverFloorNextAt,
+    serverRecapKey,
     mode,
     client,
     stamp,

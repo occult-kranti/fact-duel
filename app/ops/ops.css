@@ -1,0 +1,705 @@
+/* FACT//DUEL — Ops (the founder dashboard at /ops).
+ * Floodlight tokens only, every class `fd-ops-` prefixed and scoped under `.fd-ops`.
+ * Temperature: cool — a reading surface. Each panel carries ONE series hue so a chart is never
+ * asked to separate two colours: traffic cyan, search volt, ad revenue gold, game magenta. In the
+ * light theme the marks take the `-text` twins, the step that clears 3:1 on a cream card.
+ * Mobile-first: one column with a 16px gutter; two columns from 900px. Nothing sets a min-width
+ * wider than the viewport; only tables scroll sideways, inside their own box. */
+
+.fd-ops {
+  --fd-ops-traffic: var(--cyan);
+  --fd-ops-search: var(--volt);
+  --fd-ops-adsense: var(--gold);
+  --fd-ops-game: var(--magenta);
+  --fd-ops-traffic-text: var(--cyan-text);
+  --fd-ops-search-text: var(--volt-text);
+  --fd-ops-adsense-text: var(--gold-text);
+  --fd-ops-game-text: var(--magenta-text);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1120px;
+  min-width: 0;
+  margin: 0 auto;
+  padding: 16px var(--gutter, 16px) calc(32px + env(safe-area-inset-bottom));
+  color: var(--text);
+  background: var(--bg-0);
+  font-family: var(--font-ui);
+}
+:root[data-theme='light'] .fd-ops {
+  --fd-ops-traffic: var(--cyan-text);
+  --fd-ops-search: var(--volt-text);
+  --fd-ops-adsense: var(--gold-text);
+  --fd-ops-game: var(--magenta-text);
+}
+
+/* ---------- header ---------- */
+.fd-ops-head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-hero);
+  background: linear-gradient(180deg, var(--cyan-soft), transparent 62%), var(--bg-1);
+}
+.fd-ops-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.fd-ops-eyebrow > svg {
+  width: 13px;
+  height: 13px;
+}
+.fd-ops-head h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-28);
+  line-height: 1.1;
+}
+.fd-ops-lede {
+  margin: 0;
+  max-width: 62ch;
+  color: var(--muted);
+  font-size: var(--fs-14);
+  line-height: 1.55;
+}
+
+/* ---------- token gate ---------- */
+.fd-ops-gate {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--bg-1);
+}
+.fd-ops-gate > label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--fs-12);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.fd-ops-gate > label > svg {
+  width: 14px;
+  height: 14px;
+  color: var(--cyan-text);
+}
+.fd-ops-gate-row {
+  display: flex;
+  gap: 8px;
+  min-width: 0;
+}
+.fd-ops-gate-row > input {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-control);
+  background: var(--bg-2);
+  color: var(--text);
+  font: inherit;
+  font-family: var(--font-mono);
+  font-size: var(--fs-14);
+}
+.fd-ops-gate-row > input:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 1px;
+}
+.fd-ops-gate-note {
+  margin: 0;
+  color: var(--muted);
+  font-size: var(--fs-12);
+  line-height: 1.5;
+}
+
+/* ---------- buttons ---------- */
+.fd-ops-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid transparent;
+  border-radius: var(--r-control);
+  background: var(--volt);
+  color: var(--volt-ink);
+  font: inherit;
+  font-size: var(--fs-14);
+  font-weight: 700;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    transform 120ms var(--ease-out, ease-out),
+    opacity 160ms;
+}
+.fd-ops-btn:active {
+  transform: scale(0.97);
+}
+.fd-ops-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.fd-ops-btn > svg {
+  width: 15px;
+  height: 15px;
+}
+.fd-ops-btn--ghost {
+  border-color: var(--line);
+  background: transparent;
+  color: var(--text);
+  font-weight: 650;
+}
+
+/* ---------- filter row ---------- */
+.fd-ops-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.fd-ops-seg {
+  display: inline-flex;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--bg-1);
+}
+.fd-ops-seg-btn {
+  min-height: 36px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: var(--fs-12);
+  font-weight: 700;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.fd-ops-seg-btn[aria-pressed='true'] {
+  background: var(--bg-2);
+  color: var(--text);
+  box-shadow: var(--shadow-card);
+}
+.fd-ops-bar-right {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.fd-ops-asof {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+/* ---------- banners ---------- */
+.fd-ops-banner {
+  display: flex;
+  gap: 10px;
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid color-mix(in oklab, var(--danger) 42%, transparent);
+  border-radius: var(--r-card);
+  background: var(--danger-soft);
+  font-size: var(--fs-14);
+  line-height: 1.5;
+}
+.fd-ops-banner > svg {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  color: var(--danger-text);
+}
+.fd-ops code {
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: var(--bg-2);
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+}
+
+/* ---------- the panel grid ---------- */
+.fd-ops-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  min-width: 0;
+  transition: opacity 200ms;
+}
+/* Refetch: hold the previous render, dimmed — never a skeleton flash. */
+.fd-ops-grid[data-busy='on'] {
+  opacity: 0.6;
+}
+@media (min-width: 900px) {
+  .fd-ops-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.fd-ops-panel {
+  --fd-ops-series: var(--muted);
+  --fd-ops-series-text: var(--muted);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--bg-1);
+}
+.fd-ops-panel[data-tone='traffic'] {
+  --fd-ops-series: var(--fd-ops-traffic);
+  --fd-ops-series-text: var(--fd-ops-traffic-text);
+}
+.fd-ops-panel[data-tone='search'] {
+  --fd-ops-series: var(--fd-ops-search);
+  --fd-ops-series-text: var(--fd-ops-search-text);
+}
+.fd-ops-panel[data-tone='adsense'] {
+  --fd-ops-series: var(--fd-ops-adsense);
+  --fd-ops-series-text: var(--fd-ops-adsense-text);
+}
+.fd-ops-panel[data-tone='game'] {
+  --fd-ops-series: var(--fd-ops-game);
+  --fd-ops-series-text: var(--fd-ops-game-text);
+}
+.fd-ops-panel-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 12px;
+}
+.fd-ops-panel-head .fd-ops-eyebrow {
+  color: var(--fd-ops-series-text);
+}
+.fd-ops-panel-head h2 {
+  margin: 2px 0 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-22);
+  line-height: 1.15;
+}
+.fd-ops-aside {
+  color: var(--muted);
+  font-size: var(--fs-12);
+}
+.fd-ops-sub {
+  margin: 4px 0 -6px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.fd-ops-empty {
+  margin: 0;
+  padding: 18px 12px;
+  border: 1px dashed var(--line);
+  border-radius: var(--r-control);
+  color: var(--muted);
+  font-size: var(--fs-12);
+  text-align: center;
+}
+
+/* ---------- honest states: off and error ---------- */
+.fd-ops-state {
+  display: flex;
+  gap: 12px;
+  padding: 14px;
+  border: 1px dashed var(--line);
+  border-radius: var(--r-control);
+  background: var(--bg-2);
+}
+.fd-ops-state[data-state='error'] {
+  border-style: solid;
+  border-color: color-mix(in oklab, var(--danger) 42%, transparent);
+  background: var(--danger-soft);
+}
+.fd-ops-state > svg {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  color: var(--muted);
+}
+.fd-ops-state[data-state='error'] > svg {
+  color: var(--danger-text);
+}
+.fd-ops-state-title {
+  margin: 0;
+  font-size: var(--fs-14);
+  font-weight: 700;
+  line-height: 1.4;
+}
+.fd-ops-state-note {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: var(--fs-12);
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+.fd-ops-state-note a,
+.fd-ops-foot a,
+.fd-ops-table-wrap > summary {
+  color: var(--cyan-text);
+  font-weight: 650;
+}
+.fd-ops-caveat {
+  display: flex;
+  gap: 8px;
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid color-mix(in oklab, var(--gold) 42%, transparent);
+  border-radius: var(--r-control);
+  background: var(--gold-soft);
+  font-size: var(--fs-12);
+  line-height: 1.5;
+}
+.fd-ops-caveat > svg {
+  flex: 0 0 auto;
+  width: 15px;
+  height: 15px;
+  margin-top: 1px;
+  color: var(--gold-text);
+}
+
+/* ---------- stat tiles ---------- */
+.fd-ops-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(136px, 1fr));
+  gap: 10px;
+  margin: 0;
+}
+.fd-ops-tiles > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--fd-ops-series);
+  border-radius: var(--r-control);
+  background: var(--bg-2);
+}
+.fd-ops-tiles dt {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+/* Proportional figures on purpose: tabular digits make a big 121 look loose (dataviz card). */
+.fd-ops-tiles dd {
+  margin: 0;
+  font-size: var(--fs-22);
+  font-weight: 700;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+.fd-ops-tiles p {
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+/* ---------- line chart ---------- */
+.fd-ops-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  min-width: 0;
+}
+.fd-ops-chart-cap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 12px;
+}
+.fd-ops-chart-title {
+  color: var(--text);
+  font-size: var(--fs-12);
+  font-weight: 650;
+}
+.fd-ops-readout {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+.fd-ops-readout b {
+  color: var(--text);
+  font-weight: 700;
+}
+.fd-ops-plot {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  border-radius: 6px;
+  touch-action: pan-y;
+  cursor: crosshair;
+}
+.fd-ops-plot:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+}
+.fd-ops-plot > svg {
+  display: block;
+  overflow: visible;
+}
+.fd-ops-gridline {
+  stroke: var(--line);
+  stroke-width: 1;
+}
+.fd-ops-tick {
+  fill: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+}
+.fd-ops-area {
+  fill: var(--fd-ops-series);
+  fill-opacity: 0.1;
+}
+.fd-ops-line {
+  fill: none;
+  stroke: var(--fd-ops-series);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.fd-ops-crosshair {
+  stroke: var(--muted);
+  stroke-width: 1;
+}
+.fd-ops-marker {
+  fill: var(--fd-ops-series);
+  stroke: var(--bg-1);
+  stroke-width: 2;
+}
+.fd-ops-tip {
+  position: absolute;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 6px 9px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg-2);
+  box-shadow: var(--shadow-card);
+  font-size: 11px;
+  line-height: 1.3;
+  white-space: nowrap;
+  pointer-events: none;
+  transform: translateX(10px);
+}
+.fd-ops-tip[data-flip='on'] {
+  transform: translateX(calc(-100% - 10px));
+}
+.fd-ops-tip > span {
+  color: var(--muted);
+}
+.fd-ops-tip > b {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.fd-ops-axis {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding-right: 56px;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+/* ---------- tables ---------- */
+.fd-ops-table-wrap > summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  font-size: var(--fs-12);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.fd-ops-table-scroll {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--r-control);
+}
+.fd-ops-table-wrap .fd-ops-table-scroll {
+  margin-top: 8px;
+}
+.fd-ops-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--fs-12);
+}
+.fd-ops-table th,
+.fd-ops-table td {
+  padding: 6px 10px;
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.fd-ops-table thead th {
+  position: sticky;
+  top: 0;
+  background: var(--bg-2);
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.fd-ops-table th:first-child,
+.fd-ops-table tbody th,
+.fd-ops-table [data-key='on'] {
+  text-align: left;
+  font-weight: 650;
+}
+.fd-ops-table--ranked tbody th[data-key='on'] {
+  max-width: 46vw;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.fd-ops-table tbody tr + tr {
+  border-top: 1px solid var(--line);
+}
+.fd-ops-table tbody tr[data-quiet='on'] {
+  color: var(--muted);
+}
+.fd-ops-table-total {
+  background: var(--bg-2);
+}
+.fd-ops-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- heartbeat rows ---------- */
+.fd-ops-runs {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.fd-ops-run {
+  --fd-ops-run: var(--muted);
+  display: flex;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--fd-ops-run);
+  border-radius: var(--r-control);
+  background: var(--bg-2);
+}
+.fd-ops-run[data-status='ok'] {
+  --fd-ops-run: var(--volt);
+}
+.fd-ops-run[data-status='stale'] {
+  --fd-ops-run: var(--gold);
+}
+.fd-ops-run[data-status='failed'],
+.fd-ops-run[data-status='stuck'] {
+  --fd-ops-run: var(--danger);
+}
+.fd-ops-run[data-status='never'] {
+  border-left-style: dashed;
+}
+:root[data-theme='light'] .fd-ops-run[data-status='ok'] {
+  --fd-ops-run: var(--volt-text);
+}
+:root[data-theme='light'] .fd-ops-run[data-status='stale'] {
+  --fd-ops-run: var(--gold-text);
+}
+.fd-ops-run > svg {
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  color: var(--fd-ops-run);
+}
+.fd-ops-run-title {
+  margin: 0;
+  font-size: var(--fs-14);
+  line-height: 1.4;
+}
+.fd-ops-run-note {
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.fd-ops-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin: 0;
+  color: var(--muted);
+  font-size: var(--fs-12);
+  line-height: 1.5;
+}
+.fd-ops-note > svg {
+  flex: 0 0 auto;
+  width: 14px;
+  height: 14px;
+  margin-top: 2px;
+}
+.fd-ops-note b {
+  color: var(--text);
+}
+
+/* ---------- footer ---------- */
+/* globals.css styles bare `footer` as the game shell's flex bar with a rail margin; this is a paragraph. */
+.fd-ops-foot {
+  display: block;
+  margin: 0;
+  padding: 4px 0 0;
+  border: 0;
+  color: var(--muted);
+  font-size: var(--fs-12);
+  line-height: 1.6;
+}
+.fd-ops code {
+  display: inline;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fd-ops-btn,
+  .fd-ops-grid {
+    transition: none;
+  }
+}
