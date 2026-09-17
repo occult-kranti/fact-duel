@@ -12,6 +12,12 @@
  * decline is a neutral "Not now" (N5, no confirmshaming). When the build has no ad provider the
  * card says so plainly and never pretends one played (provider.mjs's NullAdProvider contract).
  *
+ * Server mode (wallet.mode === 'server', app/use-wallet.ts): the balance is the server's and the
+ * ad is paid by it against a nonce. What the server cannot do yet — the daily grant, the floor, a
+ * drill entry — is printed as exactly that, "arrives with the next server release", never as a
+ * grant that quietly did not land. A reward the server has not confirmed yet is "pending", with
+ * the same words the wallet uses when it retries.
+ *
  * Vocabulary (decision.md §3): coins, entry, prize paid by the house — and none of the words the
  * decision rules out, in copy or in source.
  */
@@ -61,6 +67,14 @@ function refusalText(reason: string, cap: number): string {
     case 'above_floor':
     case 'floor_cooldown':
       return 'The floor has nothing to add right now.';
+    case 'too_soon':
+      return 'That ad ended too quickly to count, so it paid nothing. Nothing was charged.';
+    case 'expired':
+      return 'That ad took too long to report back, so it paid nothing. Nothing was charged.';
+    case 'pending':
+      return 'Reward pending — it is paid when the connection returns.';
+    case 'not_on_server':
+      return 'That arrives with the next server release. The server keeps your balance, and ads pay into it now.';
     default:
       return 'That ad did not play. Nothing was charged.';
   }
@@ -115,7 +129,8 @@ export function AdCard({ wallet, placement, onClose, children }: AdCardProps) {
     void refreshAds();
   }, [refreshAds]);
 
-  const { affordability: a, config, adsAvailable, canClaimDaily, floorDueAt, doubleOwed } = wallet;
+  const { affordability: a, config, adsAvailable, canClaimDaily, floorDueAt, doubleOwed, pendingReward } = wallet;
+  const onServer = wallet.mode === 'server';
   const coins = wallet.wallet.coins;
   const perAd = doubleOwed ? a.perAd * 2 : a.perAd;
   const capReached = a.adsLeftToday === 0;
@@ -144,18 +159,29 @@ export function AdCard({ wallet, placement, onClose, children }: AdCardProps) {
     [busy, juice],
   );
 
-  const heading =
-    placement === 'practice-entry'
+  // In server mode a drill entry cannot be taken yet (no endpoint), so the card says that instead
+  // of pricing an entry it could not accept; the ad offer is withheld there too, since a top-up
+  // would not open the drill.
+  const drillOffline = onServer && placement === 'practice-entry';
+  const heading = drillOffline
+    ? {
+        title: 'Drill entries arrive with the next server release.',
+        lede: `The server keeps your balance — ${coins} coins — but it cannot take a drill entry yet. Duels and ad top-ups work now.`,
+      }
+    : placement === 'practice-entry'
       ? {
           title: `This drill is ${a.practice.cost} coins. You have ${coins}.`,
           lede: 'Top up the way you like, or let the free paths do it — nothing here is a condition of playing.',
         }
       : {
           title: 'Your coins',
-          lede: 'A top-up if you want one. Every path below is optional, and the free ones are real.',
+          lede: onServer
+            ? 'A top-up if you want one. Your balance is kept by the server, and every path below is optional.'
+            : 'A top-up if you want one. Every path below is optional, and the free ones are real.',
         };
 
-  const status = last ? outcomeText(last, config.adDailyCap) : null;
+  const status = last ? outcomeText(last, config.adDailyCap) : wallet.notice ? outcomeText(wallet.notice, config.adDailyCap) : null;
+  const laterText = 'arrives with the next server release';
 
   return (
     <article className="fd-adcard" data-placement={placement} data-motion={reduced ? 'reduced' : 'full'}>
@@ -169,7 +195,7 @@ export function AdCard({ wallet, placement, onClose, children }: AdCardProps) {
       </header>
 
       <div className="fd-adcard__offer">
-        {adsAvailable === true ? (
+        {drillOffline ? null : adsAvailable === true ? (
           <button
             ref={offer}
             type="button"
@@ -187,13 +213,20 @@ export function AdCard({ wallet, placement, onClose, children }: AdCardProps) {
           <p className="fd-adcard__none" role="status">
             {adsAvailable === null
               ? 'Checking for ads…'
-              : 'No ads in this build — the daily grant and the floor still work.'}
+              : onServer
+                ? 'No ads in this build — your balance is kept by the server, and a duel win still pays.'
+                : 'No ads in this build — the daily grant and the floor still work.'}
           </p>
         )}
         <p className="fd-adcard__cap">
           Ad boosts today: <b>{wallet.wallet.adsToday}</b> of {config.adDailyCap}
           {doubleOwed && adsAvailable === true && <span className="fd-adcard__double">· double today</span>}
         </p>
+        {pendingReward && (
+          <p className="fd-adcard__pending" role="status">
+            Reward pending — it is paid when the connection returns.
+          </p>
+        )}
       </div>
 
       <ul className="fd-adcard__alts" aria-label="Free ways to get coins">
@@ -201,7 +234,9 @@ export function AdCard({ wallet, placement, onClose, children }: AdCardProps) {
           <Gift aria-hidden="true" />
           <span>
             Daily {config.daily} coins ·{' '}
-            {canClaimDaily ? (
+            {onServer ? (
+              laterText
+            ) : canClaimDaily ? (
               <button
                 type="button"
                 className="fd-adcard__link"
@@ -220,7 +255,9 @@ export function AdCard({ wallet, placement, onClose, children }: AdCardProps) {
           <LifeBuoy aria-hidden="true" />
           <span>
             Floor top-up to {config.floor.coins} coins ·{' '}
-            {floorDueAt === 0 ? (
+            {onServer ? (
+              laterText
+            ) : floorDueAt === 0 ? (
               'there whenever you run low'
             ) : floorReady ? (
               <button
@@ -259,7 +296,11 @@ export function AdCard({ wallet, placement, onClose, children }: AdCardProps) {
           )}
         </footer>
       )}
-      <p className="fd-adcard__fine">Free simulated coins on this device · never money · never transferable</p>
+      <p className="fd-adcard__fine">
+        {onServer
+          ? 'Free simulated coins kept by the server · never money · never transferable'
+          : 'Free simulated coins on this device · never money · never transferable'}
+      </p>
     </article>
   );
 }

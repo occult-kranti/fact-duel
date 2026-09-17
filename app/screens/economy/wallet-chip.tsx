@@ -9,6 +9,9 @@
  * the juice counter, no other motion — and stays hidden until the wallet has loaded, so the
  * server render and the first client paint agree.
  *
+ * In server mode (app/use-wallet.ts) a small dot sits by the count: the balance is kept by the
+ * server, not this device, and the title says so. Nothing else about the chip changes.
+ *
  * The sheet is a native <dialog>: focus stays inside, Escape closes it, and it costs no library.
  */
 import { useEffect, useRef, useState } from 'react';
@@ -34,12 +37,14 @@ export function WalletChip() {
 
   if (!wallet || !wallet.loaded) return null;
   const coins = wallet.wallet.coins;
+  const onServer = wallet.mode === 'server';
   return (
     <>
       <button
         type="button"
         className="fd-chip-top fd-chip-top--coins"
-        title={`${coins.toLocaleString()} coins on this device`}
+        data-mode={wallet.mode}
+        title={onServer ? 'Balance kept by the server' : `${coins.toLocaleString()} coins on this device`}
         aria-haspopup="dialog"
         aria-expanded={open}
         onPointerDown={press}
@@ -47,7 +52,8 @@ export function WalletChip() {
       >
         <Coins aria-hidden="true" />
         <NumberCounter value={coins} duration={600} className="fd-chip-label" />
-        <span className="sr-only">coins</span>
+        <span className="sr-only">{onServer ? 'coins, balance kept by the server' : 'coins'}</span>
+        {onServer && <span className="fd-chip-top__server" aria-hidden="true" />}
       </button>
       <dialog
         ref={dialog}
