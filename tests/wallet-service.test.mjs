@@ -216,3 +216,23 @@ test('fifteen concurrent redeems of five nonces pay exactly five times', async (
   assert.equal((await readWallet({ store, principalId: ME, now: at })).coins, 250);
   assert.equal((await reconcile(store.ledger)).ok, true);
 });
+
+test('a session cookie names the wallet owner and beats a guest header or a body id', async (t) => {
+  const { db, store } = opened(t);
+  const { issueSession, sessionCookie } = await import('../lib/server/auth-service.mjs');
+  const issued = await watch(store, { who: YOU });
+  await redeemAdNonce({ store, principalId: YOU, nonceId: issued.nonce.id, placement: 'coins', now: T0 + 20_000 });
+  const session = await issueSession(db, { principalId: YOU, now: T0 });
+  const cookie = sessionCookie(session.sessionId, { secure: false }).split(';')[0];
+  const res = await handleWalletRequest(
+    new Request('https://duel.example/api/wallet', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', cookie, 'x-fd-principal': ME },
+      body: JSON.stringify({ action: 'wallet', principalId: ME }),
+    }),
+    { DB: db },
+  );
+  const wallet = await res.json();
+  assert.equal(wallet.principalId, YOU, 'the signed-in principal, not the guest header or the body');
+  assert.equal(wallet.coins, 50);
+});
