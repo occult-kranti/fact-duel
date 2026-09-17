@@ -1,8 +1,49 @@
 'use client';
-import { Bot, Link2, Users } from 'lucide-react';
+import { createContext, useContext } from 'react';
+import { Bot, Link2, Swords, Users } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import type { QueueLane } from '@/lib/queue-client';
 import { usePlayJuice } from './press';
+
+/* ---------- Find a rival: the queue state the arena provides ----------
+ * The picker and the launch panel read it from context rather than props, so the play screen and
+ * the shared DuelController types stay untouched (see scratchpad/requests/matchmaking.md for the
+ * threaded version). `available` is false wherever there is no server — the static build, or a
+ * worker without a database — and then the option is simply not rendered. */
+export type RivalSearch =
+  | { phase: 'idle' }
+  | {
+      phase: 'searching';
+      /** The lane as the server confirmed it; null until the first answer. */
+      lane: QueueLane | null;
+      /** Live players in the lane right now, this one included. The server's count; null until it answers. */
+      waiting: number | null;
+      /** This device's stopwatch since the search began. */
+      elapsedMs: number;
+      /** The rating gap the server currently accepts; null until it answers. */
+      window: number | null;
+    }
+  | { phase: 'paired' };
+export type RivalQueue = {
+  available: boolean;
+  /** The "Find a rival" seat is the chosen one. */
+  selected: boolean;
+  /** The lane's sport, from the chosen topic; null when the topic is not one sport. */
+  sport: string | null;
+  search: RivalSearch;
+  select: (on: boolean) => void;
+  start: () => void;
+  cancel: () => void;
+  /** Give up on the queue and play a free practice duel against the bot instead. */
+  practice: () => void;
+};
+export const RivalQueueContext = createContext<RivalQueue | null>(null);
+/** The queue, when the arena offers one. */
+export function useRivalQueue(): RivalQueue | null {
+  const rival = useContext(RivalQueueContext);
+  return rival?.available ? rival : null;
+}
 
 export type OpponentPickerProps = {
   opponent: string;
@@ -13,7 +54,8 @@ export type OpponentPickerProps = {
 };
 
 /* Segmented Bot / Friend / Join plus the seat card for the chosen opponent. The three labels are
- * exactly "Bot", "Friend" and "Join" — the lobby end-to-end scripts click them by accessible name. */
+ * exactly "Bot", "Friend" and "Join" — the lobby end-to-end scripts click them by accessible name.
+ * With a server behind the page a fourth segment, "Rival", opens the matchmaking lane. */
 export function OpponentPicker({
   opponent,
   joinView,
@@ -22,8 +64,17 @@ export function OpponentPicker({
   onJoinView,
 }: OpponentPickerProps) {
   const { press } = usePlayJuice();
-  const botSeat = !joinView && opponent === 'bot';
-  const friendSeat = !joinView && opponent === 'friend';
+  const rival = useRivalQueue();
+  const rivalSeat = !joinView && !!rival?.selected;
+  const botSeat = !joinView && !rivalSeat && opponent === 'bot';
+  const friendSeat = !joinView && !rivalSeat && opponent === 'friend';
+  const searching = rival?.search.phase === 'searching' || rival?.search.phase === 'paired';
+  const pickSeat = (seat: 'bot' | 'friend') => {
+    if (searching) rival?.cancel();
+    rival?.select(false);
+    onJoinView(false);
+    onOpponent(seat);
+  };
   return (
     <>
       <div className="fd-seg" role="group" aria-label="Opponent">
@@ -32,10 +83,7 @@ export function OpponentPicker({
           className="fd-seg-btn fd-pressable"
           aria-pressed={botSeat}
           {...press}
-          onClick={() => {
-            onJoinView(false);
-            onOpponent('bot');
-          }}
+          onClick={() => pickSeat('bot')}
         >
           <Bot size={17} aria-hidden="true" />
           Bot
@@ -45,26 +93,64 @@ export function OpponentPicker({
           className="fd-seg-btn fd-pressable"
           aria-pressed={friendSeat}
           {...press}
-          onClick={() => {
-            onJoinView(false);
-            onOpponent('friend');
-          }}
+          onClick={() => pickSeat('friend')}
         >
           <Users size={17} aria-hidden="true" />
           Friend
         </button>
+        {rival && (
+          <button
+            type="button"
+            className="fd-seg-btn fd-pressable"
+            aria-pressed={rivalSeat}
+            aria-label="Rival — human, matched by rating"
+            {...press}
+            onClick={() => {
+              onJoinView(false);
+              // A matched room is a friend room with a real person in the other seat; the entry
+              // picker keeps working, so the lane's stake is whatever is chosen below.
+              onOpponent('friend');
+              rival.select(true);
+            }}
+          >
+            <Swords size={17} aria-hidden="true" />
+            Rival
+          </button>
+        )}
         <button
           type="button"
           className="fd-seg-btn fd-pressable"
           aria-pressed={joinView}
           {...press}
-          onClick={() => onJoinView(true)}
+          onClick={() => {
+            if (searching) rival?.cancel();
+            rival?.select(false);
+            onJoinView(true);
+          }}
         >
           <Link2 size={17} aria-hidden="true" />
           Join
         </button>
       </div>
-      {!joinView && (
+      {!joinView && rivalSeat && rival && (
+        <div className="fd-rival" data-seat="rival">
+          <span className="fd-rival-avatar" aria-hidden="true">
+            <Swords />
+          </span>
+          <span className="fd-rival-body">
+            <span className="fd-rival-top">
+              <strong>Find a rival</strong>
+              <em className="fd-rival-badge">HUMAN · MATCHED BY RATING</em>
+            </span>
+            <small>
+              {rival.sport
+                ? `A real player in the ${rival.sport} lane at your format and entry, nearest rating first. Nobody is invented to fill the seat.`
+                : 'Pick one sport below to open a lane. Real players only; nobody is invented to fill the seat.'}
+            </small>
+          </span>
+        </div>
+      )}
+      {!joinView && !rivalSeat && (
         <div className="fd-rival" data-seat={opponent}>
           <span className="fd-rival-avatar" aria-hidden="true">
             {botSeat ? <Bot /> : <Users />}
