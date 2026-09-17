@@ -27,6 +27,7 @@ import {
 import { NumberCounter, useJuice } from '@/components/fx';
 import { completedRounds, FORMAT_COPY, matchVerdict, roundReason } from '@/lib/duel-presentation.mjs';
 import { comboMultiplier, levelForXp } from '@/lib/progression.mjs';
+import { prizeFor } from '@/lib/economy/economy.mjs';
 import { comboAt, marginLine, matchRank, matchXp, whatYouKeep, winTier } from './screens/room/room-math';
 import { usePress } from './screens/room/room-bits';
 
@@ -302,10 +303,12 @@ export function MatchFinish({
             {room.phase === 'cancelled' || room.winner === null
               ? 'Refunded'
               : room.config.stake
-                ? `${room.winner === room.seat ? '+' : '−'}${room.config.stake}`
+                ? room.winner === room.seat
+                  ? `+${prizeFor(room.config.stake) - room.config.stake}`
+                  : `−${room.config.stake}`
                 : 'Free play'}
           </strong>
-          <span>Free simulated coins. No monetary value.</span>
+          <span>{room.ledger ? 'Coins from ads. No monetary value.' : 'Free simulated coins. No monetary value.'}</span>
         </div>
       </div>
 
@@ -505,7 +508,7 @@ export function RoundReview({
           </table>
         </div>
         <p className="fd-note">
-          {room.config.stake} simulated coins each, reserved once. Current room balances:{' '}
+          {room.config.stake} {room.ledger ? 'coins' : 'simulated coins'} each, reserved once. Current balances:{' '}
           {room.players.map((p: any, i: number) => `${p.name}: ${room.balances[i]}`).join(' · ')}. Coins have
           no monetary value.
         </p>
