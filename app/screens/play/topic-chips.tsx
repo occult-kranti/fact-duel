@@ -14,6 +14,7 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { usePlayJuice } from './press';
+import { useLocale } from '../../use-locale';
 
 const TOPIC_ICONS: Record<string, LucideIcon> = {
   Cricket: Flag,
@@ -45,6 +46,7 @@ export type TopicChipsProps = {
  * screenshot script (scripts/screens.mjs) reaches the Collections screen through this button. */
 export function TopicChips({ catalogue, domain, topic, onChoose, onAll, limit = 6 }: TopicChipsProps) {
   const { press } = usePlayJuice();
+  const { t, topic: topicName } = useLocale();
   const chips = useMemo(() => {
     const all: { topic: string; domain: string }[] = catalogue?.topics ?? [];
     const sports = all.filter((t) => t.domain === 'sports');
@@ -59,7 +61,7 @@ export function TopicChips({ catalogue, domain, topic, onChoose, onAll, limit = 
   return (
     <section className="fd-block" aria-labelledby="play-topics">
       <div className="fd-block-head">
-        <h2 id="play-topics">Pick your subject</h2>
+        <h2 id="play-topics">{t('topics.pick')}</h2>
         <button
           type="button"
           className="fd-link fd-pressable"
@@ -67,7 +69,7 @@ export function TopicChips({ catalogue, domain, topic, onChoose, onAll, limit = 
           {...press}
           onClick={onAll}
         >
-          All subjects
+          {t('topics.all')}
           <ArrowRight size={15} aria-hidden="true" />
         </button>
       </div>
@@ -81,22 +83,22 @@ export function TopicChips({ catalogue, domain, topic, onChoose, onAll, limit = 
           onClick={() => onChoose('all', 'all')}
         >
           <Shuffle size={16} aria-hidden="true" />
-          Mixed bag
+          {t('topics.mixed')}
         </button>
-        {chips.map((t) => {
-          const Icon = iconFor(t.topic, t.domain);
+        {chips.map((chip) => {
+          const Icon = iconFor(chip.topic, chip.domain);
           return (
             <button
-              key={t.topic}
+              key={chip.topic}
               type="button"
               className="fd-subject fd-pressable"
-              data-domain={t.domain}
-              aria-pressed={topic === t.topic}
+              data-domain={chip.domain}
+              aria-pressed={topic === chip.topic}
               {...press}
-              onClick={() => onChoose(t.domain, t.topic)}
+              onClick={() => onChoose(chip.domain, chip.topic)}
             >
               <Icon size={16} aria-hidden="true" />
-              {t.topic}
+              {topicName(chip.topic)}
             </button>
           );
         })}

@@ -8,6 +8,7 @@ import { ArrowUpRight, Check, Target, Zap } from 'lucide-react';
 import { XP } from '@/lib/progression.mjs';
 import { questHint, type QuestItem } from './util';
 import { usePress } from './press';
+import { useLocale } from '../../use-locale';
 
 export type QuestBoardProps = {
   items: QuestItem[];
@@ -16,6 +17,7 @@ export type QuestBoardProps = {
 };
 
 export function QuestBoard({ items, resetIn, onOpen }: QuestBoardProps) {
+  const { t } = useLocale();
   const press = usePress();
   const doneCount = items.filter((q) => q.done).length;
   const allDone = items.length > 0 && doneCount === items.length;
@@ -25,16 +27,16 @@ export function QuestBoard({ items, resetIn, onOpen }: QuestBoardProps) {
         <div>
           <p className="fd-hub-eyebrow">
             <Target aria-hidden="true" />
-            DAILY QUESTS
+            {t('quests.eyebrow')}
           </p>
           <h2 id="fd-hub-quests-title">
-            {allDone ? 'All three cleared.' : `${doneCount} of ${items.length || 3} done today.`}
+            {allDone ? t('quests.allDone') : t('quests.done', { done: doneCount, total: items.length || 3 })}
           </h2>
         </div>
         <p className="fd-hub-section-note">
           {/* `resetIn` is empty until the client clock is known, so SSR and hydration agree. */}
-          {resetIn && <>New set in {resetIn} · </>}all three pays{' '}
-          <b className="fd-mono">+{XP.questBonus} XP</b>
+          {resetIn && <>{t('quests.newSet', { time: resetIn })}</>}
+          {t('quests.allPays')} <b className="fd-mono">+{XP.questBonus} XP</b>
         </p>
       </header>
       <ul className="fd-hub-quest-grid">
@@ -66,7 +68,7 @@ export function QuestBoard({ items, resetIn, onOpen }: QuestBoardProps) {
                   aria-valuemin={0}
                   aria-valuemax={q.target}
                   aria-valuenow={q.progress}
-                  aria-label={`${q.label}: ${q.progress} of ${q.target}`}
+                  aria-label={t('quests.meterAria', { label: q.label, progress: q.progress, target: q.target })}
                 >
                   <i className="fd-hub-meter-fill" style={{ width: `${pct}%` }} />
                 </span>
@@ -85,8 +87,8 @@ export function QuestBoard({ items, resetIn, onOpen }: QuestBoardProps) {
           [0, 1, 2].map((i) => (
             <li key={i}>
               <span className="fd-hub-quest fd-hub-quest--empty">
-                <strong className="fd-hub-quest-label">Today’s quests arrive with your first visit.</strong>
-                <small>Three every day: one easy, one medium, one hard.</small>
+                <strong className="fd-hub-quest-label">{t('quests.emptyTitle')}</strong>
+                <small>{t('quests.emptyHint')}</small>
               </span>
             </li>
           ))}

@@ -88,16 +88,51 @@ function Glyphs({ glyphs }: { glyphs: Glyph[] }) {
   );
 }
 
+/** The Devanagari wordmark: text, not paths, pending a drawn version (docs/brand.md §5). */
+const HI_TEXT = 'जानता है क्या';
+const HI_W = 640;
+const HI_FONT = "'Noto Sans Devanagari', 'Mukta', 'Nirmala UI', system-ui, sans-serif";
+
 export type JhkWordmarkProps = Omit<SVGProps<SVGSVGElement>, 'children'> & {
   /** Rendered height in px; the width follows the drawing's ratio. */
   height?: number;
-  /** `short` draws the JHK lockup letters instead of the full name. */
-  variant?: 'full' | 'short';
+  /** `short` draws the JHK lockup letters instead of the full name; `hi` the Devanagari name. */
+  variant?: 'full' | 'short' | 'hi';
   title?: string;
 };
 
 /** The wordmark in currentColor. Padding of half a stroke keeps round caps inside the box. */
 export function JhkWordmark({ height = 18, variant = 'full', title = 'Jaanta Hai Kya', ...rest }: JhkWordmarkProps) {
+  if (variant === 'hi') {
+    const w = HI_W;
+    const h = 128 + STROKE;
+    return (
+      <svg
+        viewBox={`0 0 ${w} ${h}`}
+        height={height}
+        width={(height * w) / h}
+        lang="hi"
+        role={title ? 'img' : undefined}
+        aria-label={title || undefined}
+        aria-hidden={title ? undefined : true}
+        focusable="false"
+        {...rest}
+      >
+        <text
+          x="0"
+          y="104"
+          fill="currentColor"
+          fontFamily={HI_FONT}
+          fontSize="112"
+          fontWeight="700"
+          textLength={w}
+          lengthAdjust="spacingAndGlyphs"
+        >
+          {HI_TEXT}
+        </text>
+      </svg>
+    );
+  }
   const glyphs = variant === 'short' ? JHK : WORD;
   const w = (variant === 'short' ? JHK_W : WORD_W) + STROKE;
   const h = 128 + STROKE;

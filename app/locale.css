@@ -1,0 +1,33 @@
+/*
+ * app/locale.css — the Hindi chrome's type. Loaded once by app/use-locale.tsx.
+ *
+ * The three product faces cover Latin only, so under `lang="hi"` the Devanagari face is added to
+ * each stack after the Latin one: Latin glyphs (the wordmark, digits, "XP") keep their face and
+ * every Devanagari glyph falls through to Noto Sans Devanagari, which the provider links from
+ * Google Fonts with font-display: swap only while the locale is Hindi. Mukta and the system
+ * fonts are the offline fallback. Devanagari sits taller than Latin, so the UI line-height is
+ * loosened a touch to keep matras off the line above.
+ */
+:root[lang='hi'] {
+  --font-devanagari: 'Noto Sans Devanagari', 'Mukta', 'Nirmala UI', 'Noto Sans', system-ui, sans-serif;
+  --font-display: 'Bricolage Grotesque', var(--font-devanagari);
+  --font-ui: 'Instrument Sans', var(--font-devanagari);
+  --display: var(--font-display);
+}
+
+:root[lang='hi'] body {
+  line-height: 1.55;
+}
+
+/* Uppercase eyebrows read as shouting in Devanagari, and the transform would break conjuncts. */
+:root[lang='hi'] .fd-play-eyebrow,
+:root[lang='hi'] .fd-hub-eyebrow,
+:root[lang='hi'] .fd-eyebrow,
+:root[lang='hi'] .eyebrow,
+:root[lang='hi'] .fd-ev-eyebrow,
+:root[lang='hi'] .fd-keep-kicker,
+:root[lang='hi'] .fd-tile small,
+:root[lang='hi'] .fd-form-label {
+  text-transform: none;
+  letter-spacing: 0.02em;
+}

@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { Topbar, type TopbarProps } from './topbar';
 import { Nav, type NavTabId } from './nav';
 import { FxProvider } from '@/components/fx/fx-provider';
+import { useLocale } from '../use-locale';
 import './shell.css';
 
 export type AppShellProps = {
@@ -38,6 +39,7 @@ export function AppShell({
   effects,
   children,
 }: AppShellProps) {
+  const { t } = useLocale();
   const className = [
     'fd-shell',
     'site-shell',
@@ -57,7 +59,7 @@ export function AppShell({
       <FxProvider>
         {effects}
         <a className="skip-link" href="#main-content">
-          Skip to content
+          {t('nav.skip')}
         </a>
         <Topbar {...topbar} inRoom={inRoom} active={active} />
         <div className="fd-frame">

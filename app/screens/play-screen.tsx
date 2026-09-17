@@ -5,6 +5,7 @@ import { ArrowRight, ChevronRight, Info } from 'lucide-react';
 import { rankForPoints } from '@/lib/progression.mjs';
 import { defaultStake } from '@/lib/economy/stake-advice.mjs';
 import { useWalletContext } from '../use-wallet';
+import { useLocale } from '../use-locale';
 import type { PlayScreenProps } from './types';
 import { LaunchPanel } from './play/launch-panel';
 import { MatchSettings, offeredConfig } from './play/match-settings';
@@ -33,7 +34,9 @@ export function PlayScreen({ duel, player, catalogue, joinView, joinLink }: Play
     chooseEventMode,
   } = actions;
   const { press } = usePlayJuice();
+  const { t, n, pick } = useLocale();
   const wallet = useWalletContext();
+  const modeName = pick(`modes.${modeInfo.id}.name`, modeInfo.name);
   /* The entry tier the wallet suggests (lib/economy/stake-advice.mjs): the highest offered tier it
    * covers five times over, else the lowest it can afford, else free. Applied to the configurator
    * ONCE, the first time the wallet is loaded while a friend duel is being set up at a free entry,
@@ -83,13 +86,13 @@ export function PlayScreen({ duel, player, catalogue, joinView, joinLink }: Play
     <div className="fd-play">
       <header className="fd-play-head">
         <div>
-          <p className="fd-play-eyebrow">THE KNOWLEDGE ARENA</p>
-          <h1>Play</h1>
+          <p className="fd-play-eyebrow">{t('play.eyebrow')}</p>
+          <h1>{t('play.title')}</h1>
         </div>
         <button
           type="button"
           className="fd-player-chip fd-pressable"
-          aria-label={`${name} — level ${level.level} ${level.title}, ${rank.label} rank on this device. Open your player.`}
+          aria-label={t('play.chipAria', { name, level: level.level, title: level.title, rank: rank.label })}
           {...press}
           onClick={() => go('passport')}
         >
@@ -98,9 +101,7 @@ export function PlayScreen({ duel, player, catalogue, joinView, joinLink }: Play
           </span>
           <span className="fd-player-body" aria-hidden="true">
             <strong>{name}</strong>
-            <small>
-              Lv {level.level} {level.title} · {rank.label}
-            </small>
+            <small>{t('play.lv', { level: level.level, title: level.title, rank: rank.label })}</small>
           </span>
           <ChevronRight size={16} aria-hidden="true" />
         </button>
@@ -113,8 +114,8 @@ export function PlayScreen({ duel, player, catalogue, joinView, joinLink }: Play
           {!joinView && (
             <section id="formats" tabIndex={-1} className="fd-block" aria-labelledby="match-setup">
               <div className="fd-block-head">
-                <h2 id="match-setup">Choose your format</h2>
-                <span className="fd-block-note">One attempt per question</span>
+                <h2 id="match-setup">{t('play.formatH')}</h2>
+                <span className="fd-block-note">{t('play.oneAttempt')}</span>
               </div>
               <ModeCards
                 modes={MODES}
@@ -129,7 +130,7 @@ export function PlayScreen({ duel, player, catalogue, joinView, joinLink }: Play
 
           <section className="fd-block" aria-labelledby="play-opponent">
             <div className="fd-block-head">
-              <h2 id="play-opponent">Choose your opponent</h2>
+              <h2 id="play-opponent">{t('play.opponentH')}</h2>
             </div>
             <OpponentPicker
               opponent={config.opponent}
@@ -158,7 +159,7 @@ export function PlayScreen({ duel, player, catalogue, joinView, joinLink }: Play
                 onAll={() => go('collections')}
               />
 
-              <section className="fd-block" aria-label="Match settings">
+              <section className="fd-block" aria-label={t('play.matchSettings')}>
                 <MatchSettings
                   config={config}
                   name={name}
@@ -173,16 +174,14 @@ export function PlayScreen({ duel, player, catalogue, joinView, joinLink }: Play
                 />
                 <div className="fd-pool">
                   <span>
-                    {catalogue
-                      ? `${modeInfo.rounds} ${modeInfo.rounds === 1 ? 'question' : 'questions'} this match`
-                      : 'Loading questions…'}
+                    {catalogue ? n('play.questions', modeInfo.rounds) : t('play.loading')}
                   </span>
                 </div>
                 {catalogue && pool.length < modeInfo.rounds && (
                   <div className="fd-warn" role="status">
-                    <span>Not enough questions for {modeInfo.name}.</span>
+                    <span>{t('play.notEnough', { mode: modeName })}</span>
                     <button type="button" className="fd-link" {...press} onClick={clearFilters}>
-                      Use all topics
+                      {t('play.useAll')}
                     </button>
                     {pool.length > 0 && config.mode !== 'quick' && (
                       <button
@@ -191,7 +190,7 @@ export function PlayScreen({ duel, player, catalogue, joinView, joinLink }: Play
                         {...press}
                         onClick={() => change({ mode: 'quick' })}
                       >
-                        Play one question
+                        {t('play.playOne')}
                       </button>
                     )}
                   </div>
@@ -200,39 +199,42 @@ export function PlayScreen({ duel, player, catalogue, joinView, joinLink }: Play
 
               <section className="fd-block" aria-labelledby="play-record">
                 <div className="fd-block-head">
-                  <h2 id="play-record">Your record</h2>
+                  <h2 id="play-record">{t('play.record')}</h2>
                   <button type="button" className="fd-link" {...press} onClick={() => go('journal')}>
-                    Match history
+                    {t('play.history')}
                     <ArrowRight size={15} aria-hidden="true" />
                   </button>
                 </div>
                 <div className="fd-form">
-                  <span className="fd-form-label">LAST FIVE</span>
+                  <span className="fd-form-label">{t('play.lastFive')}</span>
                   {recent.length ? (
                     recent.map((m: any) => (
                       <span
                         key={m.id}
                         className="fd-form-dot"
                         data-outcome={m.outcome}
-                        title={`${m.bot ? 'Bot' : 'Friend'} match: ${m.outcome}`}
+                        title={t('play.matchTitle', {
+                          who: m.bot ? t('play.bot') : t('play.friend'),
+                          outcome: pick(`outcome.${m.outcome}`, m.outcome),
+                        })}
                       >
                         {m.outcome === 'win' ? 'W' : m.outcome === 'loss' ? 'L' : 'D'}
                       </span>
                     ))
                   ) : (
-                    <span className="fd-form-empty">Your first result goes here.</span>
+                    <span className="fd-form-empty">{t('play.firstResult')}</span>
                   )}
                 </div>
-                <p className="fd-fine">Level, rank and XP are kept on this device.</p>
+                <p className="fd-fine">{t('play.kept')}</p>
               </section>
             </>
           )}
 
           <p className="fd-live-note">
             <Info size={15} aria-hidden="true" />
-            Live rounds: stay on this screen. Switching away cancels and refunds.
+            {t('play.liveNote')}
             <button type="button" className="fd-link" {...press} onClick={() => go('rules')}>
-              Full rules &amp; timing
+              {t('play.fullRules')}
               <ArrowRight size={15} aria-hidden="true" />
             </button>
           </p>
@@ -255,7 +257,7 @@ export function PlayScreen({ duel, player, catalogue, joinView, joinLink }: Play
           <div className="fd-poster">
             <img
               src="/art/rivalry-stage.webp"
-              alt="Polished lightning token and a metallic sports sphere under stadium lights"
+              alt={t('play.posterAlt')}
               width="1672"
               height="941"
               loading="lazy"
@@ -263,10 +265,10 @@ export function PlayScreen({ duel, player, catalogue, joinView, joinLink }: Play
             />
             <div className="fd-poster-copy">
               <span>{SUBJECT_LINE}</span>
-              <strong>KNOW IT. PROVE IT.</strong>
+              <strong>{t('footer.tagline')}</strong>
             </div>
             <button type="button" className="fd-link fd-pressable" {...press} onClick={() => go('showroom')}>
-              Enter the 3D arena
+              {t('play.enter3d')}
               <ArrowRight size={15} aria-hidden="true" />
             </button>
           </div>

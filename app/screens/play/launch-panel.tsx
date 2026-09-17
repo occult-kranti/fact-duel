@@ -5,6 +5,7 @@ import type { Mode } from '../types';
 import { modeReward } from './mode-cards';
 import { useRivalQueue } from './opponent-picker';
 import { usePlayJuice } from './press';
+import { useLocale } from '../../use-locale';
 
 export type LaunchPanelProps = {
   joinView: boolean;
@@ -43,7 +44,9 @@ export function LaunchPanel({
   onJoin,
 }: LaunchPanelProps) {
   const { press } = usePlayJuice();
-  const reward = modeReward(mode.id);
+  const { t, n, pick, topic } = useLocale();
+  const modeName = pick(`modes.${mode.id}.name`, mode.name);
+  const reward = modeReward(mode.id, t);
   const rival = useRivalQueue();
   const rivalMode = !joinView && !!rival?.selected;
   const search = rival?.search ?? { phase: 'idle' as const };
@@ -51,39 +54,39 @@ export function LaunchPanel({
   const pairing = rivalMode && search.phase === 'paired';
   const label = joinView
     ? busy
-      ? 'Joining…'
-      : 'Join the duel'
+      ? t('launch.joining')
+      : t('launch.join')
     : rivalMode
       ? pairing
-        ? 'Rival found. Entering the room…'
+        ? t('launch.found')
         : searching
-          ? 'Cancel search'
+          ? t('launch.cancel')
           : !playerLoaded
-            ? 'Loading your player…'
-            : 'Find a rival'
+            ? t('launch.loadingPlayer')
+            : t('launch.find')
       : busy
-        ? 'Setting the arena…'
+        ? t('launch.setting')
         : !playerLoaded
-          ? 'Loading your player…'
+          ? t('launch.loadingPlayer')
           : opponent === 'bot'
-            ? `Play ${mode.name}`
-            : 'Create friend duel';
+            ? t('launch.playMode', { mode: modeName })
+            : t('launch.createFriend');
   const disabled = joinView
     ? !canJoin
     : rivalMode
       ? pairing || (!searching && (busy || !canPlay || !rival?.sport))
       : busy || !canPlay;
   const onClick = joinView ? onJoin : rivalMode ? (searching ? rival?.cancel : rival?.start) : onCreate;
-  const entry = stake ? `${stake} coins entry` : 'No entry cost';
+  const entry = stake ? t('launch.entry', { n: stake }) : t('launch.noEntry');
   const offerPractice = searching && search.phase === 'searching' && search.elapsedMs >= QUEUE_OFFER_PRACTICE_MS;
   return (
     <div className="fd-launch" data-rival={rivalMode ? search.phase : undefined}>
       {!joinView && (
         <p className="fd-launch-context">
-          <strong>{mode.name}</strong>
+          <strong>{modeName}</strong>
           <span>
-            {mode.rounds === 1 ? '1 round' : `${mode.rounds} rounds`} ·{' '}
-            {rivalMode ? 'vs a matched rival' : opponent === 'bot' ? 'vs Lucky Guess (BOT)' : 'vs your friend'}
+            {n('launch.rounds', mode.rounds)} ·{' '}
+            {rivalMode ? t('launch.vsRival') : opponent === 'bot' ? t('launch.vsBot') : t('launch.vsFriend')}
           </span>
           <span className="fd-launch-reward">
             <Trophy size={13} aria-hidden="true" />
@@ -105,26 +108,26 @@ export function LaunchPanel({
       </button>
       <p className="fd-launch-terms" role={rivalMode ? 'status' : undefined} aria-live={rivalMode ? 'polite' : undefined}>
         {joinView ? (
-          <span>Your friend’s room decides the format, timer and entry.</span>
+          <span>{t('launch.friendDecides')}</span>
         ) : rivalMode && search.phase === 'searching' ? (
           offerPractice ? (
             <>
-              <span>No rival yet ({clock(search.elapsedMs)}). Keep waiting, or</span>
+              <span>{t('launch.noRivalYet', { clock: clock(search.elapsedMs) })}</span>
               <button type="button" className="fd-link" {...press} onClick={rival?.practice}>
-                play a free practice duel
+                {t('launch.practice')}
               </button>
             </>
           ) : (
             <>
               <span>
-                {search.lane ? `${search.lane.sport} · ${mode.name} · ${entry}` : 'Opening the lane…'}
+                {search.lane ? `${topic(search.lane.sport)} · ${modeName} · ${entry}` : t('launch.opening')}
               </span>
               <span>
                 {search.waiting === null
-                  ? 'Counting the lane…'
+                  ? t('launch.counting')
                   : search.waiting <= 1
-                    ? 'Only you in this lane right now'
-                    : `${search.waiting} in this lane, you included`}
+                    ? t('launch.onlyYou')
+                    : t('launch.inLane', { n: search.waiting })}
               </span>
               <span>
                 <Timer size={13} aria-hidden="true" />
@@ -133,20 +136,20 @@ export function LaunchPanel({
             </>
           )
         ) : rivalMode && search.phase === 'paired' ? (
-          <span>A real player took the other seat. Setting the arena…</span>
+          <span>{t('launch.paired')}</span>
         ) : rivalMode && !rival?.sport ? (
-          <span>Pick one sport to open a lane.</span>
+          <span>{t('launch.pickSport')}</span>
         ) : (
           <>
             <span>
               <Timer size={13} aria-hidden="true" />
-              {duration}s per question
+              {t('launch.perQ', { s: duration })}
             </span>
             <span>
               <Coins size={13} aria-hidden="true" />
-              {rivalMode ? entry : stake ? `${stake} simulated coins` : 'No entry cost'}
+              {rivalMode ? entry : stake ? t('launch.simCoins', { n: stake }) : t('launch.noEntry')}
             </span>
-            {rivalMode && <span>Nearest rating first, window widens while you wait</span>}
+            {rivalMode && <span>{t('launch.nearest')}</span>}
           </>
         )}
       </p>

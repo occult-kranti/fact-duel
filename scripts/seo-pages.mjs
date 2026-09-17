@@ -23,6 +23,7 @@ import {
   PAGE_SIZE,
   UI,
   VERIFIED_ASOF,
+  alternatesOf,
   fallbackLine,
   pageUrl,
   selectQuestions,
@@ -54,6 +55,7 @@ export function longDate(iso, lang) {
     en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
     de: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
     fr: ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'],
+    hi: ['जनवरी', 'फ़रवरी', 'मार्च', 'अप्रैल', 'मई', 'जून', 'जुलाई', 'अगस्त', 'सितंबर', 'अक्टूबर', 'नवंबर', 'दिसंबर'],
   }[lang];
   return lang === 'de' ? `${d}. ${months[m - 1]} ${y}` : `${d} ${months[m - 1]} ${y}`;
 }
@@ -62,7 +64,13 @@ const TIER_LABEL = {
   en: { simple: 'simple', expert: 'expert', extreme: 'extreme' },
   de: { simple: 'einfach', expert: 'Experte', extreme: 'extrem' },
   fr: { simple: 'simple', expert: 'expert', extreme: 'extrême' },
+  hi: { simple: 'आसान', expert: 'एक्सपर्ट', extreme: 'एक्सट्रीम' },
 };
+
+/* The Hindi pages rely on the reader's Devanagari system face (the app links Noto Sans Devanagari
+   at runtime; these pages make no external request at all), so the font stack names the common
+   ones first and lets the system fall through. */
+const HI_FONT = "'Noto Sans Devanagari','Mukta','Nirmala UI',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
 
 /* ------------------------------------------------------------------------------------------ CSS */
 
@@ -98,7 +106,11 @@ footer{margin-top:32px;border-top:1px solid var(--line);padding-top:16px;font-si
 
 /* ---------------------------------------------------------------------------------- one page */
 
-function head({ lang, title, description, url, base, locale, siteName }) {
+function head({ lang, title, description, url, base, locale, siteName, alternates = [] }) {
+  const hreflang = alternates
+    .map((a) => `<link rel="alternate" hreflang="${a.hreflang}" href="${escapeHtml(a.href)}">`)
+    .join('\n');
+  const font = lang === 'hi' ? `<style>body{font-family:${HI_FONT};line-height:1.6}</style>` : '';
   return `<!doctype html>
 <html lang="${lang}">
 <head>
@@ -108,6 +120,7 @@ function head({ lang, title, description, url, base, locale, siteName }) {
 <meta name="description" content="${escapeHtml(description)}">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="${escapeHtml(url)}">
+${hreflang}
 <link rel="icon" type="image/svg+xml" href="${escapeHtml(base)}/favicon.svg">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="${escapeHtml(siteName)}">
@@ -120,7 +133,7 @@ function head({ lang, title, description, url, base, locale, siteName }) {
 <meta property="og:image:height" content="630">
 <link rel="icon" type="image/svg+xml" href="${escapeHtml(base)}/favicon.svg">
 <meta name="twitter:card" content="summary_large_image">
-<style>${CSS}</style>
+<style>${CSS}</style>${font}
 </head>`;
 }
 
@@ -190,11 +203,21 @@ export function renderPage(intent, selection, { base = DEFAULT_BASE } = {}) {
     .filter(Boolean)
     .join('\n');
   const cta = `<a class="cta" href="${escapeHtml(base)}/">${escapeHtml(ui.play)}<small>${escapeHtml(ui.playHint)}</small></a>`;
-  return `${head({ lang: intent.lang, title: intent.title, description: intent.description, url, base, locale: ui.locale, siteName: ui.siteName })}
+  const topicName = ui.topics?.[intent.topic] ?? intent.topic;
+  return `${head({
+    lang: intent.lang,
+    title: intent.title,
+    description: intent.description,
+    url,
+    base,
+    locale: ui.locale,
+    siteName: ui.siteName,
+    alternates: alternatesOf(intent, base),
+  })}
 <body>
 <main>
 <header>
-<p class="kicker">${escapeHtml(ui.siteName)} · ${escapeHtml(intent.topic)}</p>
+<p class="kicker">${escapeHtml(ui.siteName)} · ${escapeHtml(topicName)}</p>
 <h1>${escapeHtml(intent.h1)}</h1>
 ${intro}
 </header>
@@ -258,9 +281,14 @@ ${items}
 
 export function renderSitemap({ base = DEFAULT_BASE } = {}) {
   const rows = sitemapEntries(INTENTS, normaliseBase(base))
-    .map((e) => `  <url><loc>${escapeHtml(e.loc)}</loc><lastmod>${e.lastmod}</lastmod></url>`)
+    .map((e) => {
+      const links = (e.alternates ?? [])
+        .map((a) => `<xhtml:link rel="alternate" hreflang="${a.hreflang}" href="${escapeHtml(a.href)}"/>`)
+        .join('');
+      return `  <url><loc>${escapeHtml(e.loc)}</loc><lastmod>${e.lastmod}</lastmod>${links}</url>`;
+    })
     .join('\n');
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${rows}\n</urlset>\n`;
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${rows}\n</urlset>\n`;
 }
 
 /* ------------------------------------------------------------------------------------- the build */

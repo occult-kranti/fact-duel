@@ -18,13 +18,16 @@ import { useCalendarNow } from './clock';
 import { topicIcon } from './parts';
 import { useEventsPress } from './press';
 import { formatDay, formatRange, whenLabel } from './util';
+import { useLocale } from '../../use-locale';
 import './events.css';
 
 export function LiveStrip({ go }: { go: (tab: string) => void }) {
   const now = useCalendarNow();
   const { press } = useEventsPress();
+  const { t, n, when: localWhen, locale, fmt } = useLocale();
   const groups = groupEvents(now);
   const open = activeModes(now).length;
+  const asOf = locale === 'en' ? formatDay(CALENDAR_ASOF as string) : fmt.isoDay(CALENDAR_ASOF as string);
 
   /* Live first, then the next thing coming — and a second live entry only when nothing is due. */
   const entries: { event: CalendarEvent; status: 'live' | 'upcoming' }[] = [];
@@ -37,12 +40,12 @@ export function LiveStrip({ go }: { go: (tab: string) => void }) {
       <div className="fd-ev-strip-head">
         <h2 id="fd-ev-strip-title">
           <CalendarClock aria-hidden="true" />
-          On the calendar
+          {t('strip.onCalendar')}
         </h2>
         {open > 0 && (
           <span className="fd-ev-count">
             <Zap aria-hidden="true" />
-            {open} {open === 1 ? 'mode' : 'modes'} open
+            {n('strip.modesOpen', open)}
           </span>
         )}
         <button
@@ -51,7 +54,7 @@ export function LiveStrip({ go }: { go: (tab: string) => void }) {
           {...press}
           onClick={() => go('events')}
         >
-          All events
+          {t('strip.allEvents')}
           <ArrowRight aria-hidden="true" />
         </button>
       </div>
@@ -60,16 +63,14 @@ export function LiveStrip({ go }: { go: (tab: string) => void }) {
         // The strip is the Events screen's home on the tab bar, so it stays even with nothing on:
         // hiding it would leave the calendar with no way in.
         <p className="fd-ev-strip-empty">
-          {groups.recent.length
-            ? 'Nothing on the calendar right now. What just finished is still worth a duel.'
-            : 'Nothing on the calendar right now.'}
+          {groups.recent.length ? t('strip.emptyRecent') : t('strip.empty')}
         </p>
       )}
 
       <ul className="fd-ev-strip-list">
         {entries.map(({ event, status }) => {
           const Icon = topicIcon(event.topic, event.domain);
-          const when = whenLabel(event, status, now);
+          const when = localWhen(whenLabel(event, status, now));
           return (
             <li key={event.id}>
               <button
@@ -87,10 +88,10 @@ export function LiveStrip({ go }: { go: (tab: string) => void }) {
                     {status === 'live' ? (
                       <>
                         <i className="fd-ev-live-dot" aria-hidden="true" />
-                        Live now
+                        {t('strip.liveNow')}
                       </>
                     ) : (
-                      'Next up'
+                      t('strip.nextUp')
                     )}
                     {when && <em>{when}</em>}
                   </span>
@@ -104,10 +105,7 @@ export function LiveStrip({ go }: { go: (tab: string) => void }) {
         })}
       </ul>
 
-      <p className="fd-ev-strip-note">
-        Curated calendar, checked by hand on {formatDay(CALENDAR_ASOF as string)}. No live scores or results
-        feeds.
-      </p>
+      <p className="fd-ev-strip-note">{t('strip.note', { day: asOf })}</p>
     </section>
   );
 }

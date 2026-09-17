@@ -20,10 +20,12 @@ import { NumberCounter } from '@/components/fx';
 import { usePress } from '../vault/press';
 import { useWalletContext } from '../../use-wallet';
 import { AdCard } from './ad-card';
+import { useLocale } from '../../use-locale';
 import './economy.css';
 
 export function WalletChip() {
   const wallet = useWalletContext();
+  const { t, fmt } = useLocale();
   const press = usePress();
   const [open, setOpen] = useState(false);
   const dialog = useRef<HTMLDialogElement | null>(null);
@@ -44,7 +46,7 @@ export function WalletChip() {
         type="button"
         className="fd-chip-top fd-chip-top--coins"
         data-mode={wallet.mode}
-        title={onServer ? 'Balance kept by the server' : `${coins.toLocaleString()} coins on this device`}
+        title={onServer ? t('wallet.titleServer') : t('wallet.titleDevice', { n: fmt.number(coins) })}
         aria-haspopup="dialog"
         aria-expanded={open}
         onPointerDown={press}
@@ -52,13 +54,13 @@ export function WalletChip() {
       >
         <Coins aria-hidden="true" />
         <NumberCounter value={coins} duration={600} className="fd-chip-label" />
-        <span className="sr-only">{onServer ? 'coins, balance kept by the server' : 'coins'}</span>
+        <span className="sr-only">{onServer ? t('wallet.srServer') : t('wallet.sr')}</span>
         {onServer && <span className="fd-chip-top__server" aria-hidden="true" />}
       </button>
       <dialog
         ref={dialog}
         className="fd-adsheet"
-        aria-label="Your coins"
+        aria-label={t('wallet.dialog')}
         onClose={() => setOpen(false)}
         onClick={(e) => {
           // A tap on the backdrop is the same neutral "not now" as the button.

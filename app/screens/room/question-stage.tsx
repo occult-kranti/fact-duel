@@ -19,6 +19,7 @@ import { FORMAT_COPY } from '@/lib/duel-presentation.mjs';
 import { Lock } from 'lucide-react';
 import { AnswerButton, usePress } from './room-bits';
 import { comboAt, roundXp, speedBonus } from './room-math';
+import { useLocale } from '../../use-locale';
 
 const HOT_MS = 3000;
 
@@ -53,6 +54,7 @@ export function QuestionStage({
 }) {
   const juice = useJuice();
   const press = usePress();
+  const { t, pick, topic } = useLocale();
   const duration = room.config.duration * 1000;
   const result = rd?.result ?? null;
   const cardRef = useRef<HTMLDivElement>(null);
@@ -142,7 +144,7 @@ export function QuestionStage({
     <section className="fd-qstage" data-live={result ? 'false' : 'true'}>
       <div className="fd-qtop">
         <span className="fd-qtopic">
-          {question.topic} <i aria-hidden="true">/</i> {question.subtopic}
+          {topic(question.topic)} <i aria-hidden="true">/</i> {question.subtopic}
         </span>
         <span className="fd-clock" data-hot={hot ? 'true' : 'false'} aria-hidden="true">
           {seconds}
@@ -156,7 +158,7 @@ export function QuestionStage({
         <div className="fd-speed" data-spent={bonus.xp ? 'false' : 'true'}>
           <span style={{ width: `${100 * bonus.fraction}%` }} />
         </div>
-        <span className="fd-speed-label">{bonus.xp ? `SPEED +${bonus.xp} XP` : 'SPEED BONUS GONE'}</span>
+        <span className="fd-speed-label">{bonus.xp ? t('q.speed', { xp: bonus.xp }) : t('q.speedGone')}</span>
       </div>
 
       <div
@@ -168,7 +170,7 @@ export function QuestionStage({
         <span className="fd-qtag">
           {format.tag}
           <i aria-hidden="true">·</i>
-          <b>{question.difficulty}</b>
+          <b>{pick(`difficulty.${question.difficulty}`, question.difficulty)}</b>
         </span>
         <h1>{question.question}</h1>
         <div className="fd-answers">
@@ -227,51 +229,40 @@ export function QuestionStage({
       >
         {result ? (
           <>
-            <strong>{correct ? 'Correct.' : mine ? 'Not this time.' : 'No answer from you.'}</strong>
+            <strong>{correct ? t('q.correct') : mine ? t('q.notThisTime') : t('q.noAnswer')}</strong>
             {correct && xp ? (
               <span>
-                +{xp.total} XP{xp.speed ? ` · speed +${xp.speed}` : ''}
-                {xp.combo >= 2 ? ` · ×${xp.multiplier} combo` : ''}
-                {xp.wild > 1 ? ` · Wild ×${xp.wild}` : ''}
+                +{xp.total} XP{xp.speed ? t('q.speedPart', { n: xp.speed }) : ''}
+                {xp.combo >= 2 ? t('q.comboPart', { n: xp.multiplier }) : ''}
+                {xp.wild > 1 ? t('q.wildPart', { n: xp.wild }) : ''}
               </span>
             ) : (
-              <span>{question.options[question.correctIndex]} was the answer.</span>
+              <span>{t('q.wasAnswer', { answer: question.options[question.correctIndex] })}</span>
             )}
           </>
         ) : isLocked ? (
           <>
             <Lock size={15} />
-            {rd.answerLocked[room.seat]
-              ? 'Received. Your answer is sealed.'
-              : answerPending
-                ? 'Sending your locked answer…'
-                : 'Your choice is locked on this device.'}
+            {rd.answerLocked[room.seat] ? t('q.sealed') : answerPending ? t('q.sending') : t('q.lockedHere')}
           </>
         ) : remaining <= 0 ? (
-          'Time is up. Waiting for the round to close.'
+          t('q.timeUp')
         ) : (
-          'Tap once or press 1–4. Your first answer locks.'
+          t('q.tapOnce')
         )}
       </div>
 
       {isLocked && !result && (
         <p className="fd-note">
-          {rd.answerLocked[1 - room.seat]
-            ? 'Both answers are in. Comparing…'
-            : 'Waiting for the other attempt or its time limit.'}
+          {rd.answerLocked[1 - room.seat] ? t('q.bothIn') : t('q.waitingOther')}
         </p>
       )}
       {pendingAnswer.current && !rd.answerLocked[room.seat] && !answerPending && !result && (
         <button type="button" className="fd-btn fd-retry" onPointerDown={press} onClick={onRetry}>
-          Retry sending this answer
+          {t('q.retry')}
         </button>
       )}
-      {!result && (
-        <p className="fd-note">
-          Answers lock on tap/click release or a 1–4 keypress. You get one attempt. A close result can be a
-          draw.
-        </p>
-      )}
+      {!result && <p className="fd-note">{t('q.lockNote')}</p>}
     </section>
   );
 }

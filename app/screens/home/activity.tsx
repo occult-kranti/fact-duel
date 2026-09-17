@@ -25,6 +25,7 @@ import {
 import { TOPIC_STYLE } from '../../collections';
 import { relativeTime } from './util';
 import { usePress } from './press';
+import { useLocale } from '../../use-locale';
 
 export type LogEntry = { id: string; at: number; kind: string; xp: number; label: string };
 
@@ -67,19 +68,20 @@ const LOG_TONE: Record<string, string> = {
 };
 
 export function XpLog({ entries, now }: { entries: LogEntry[]; now: number }) {
+  const { t } = useLocale();
   return (
     <section className="fd-hub-log" aria-labelledby="fd-hub-log-title">
       <header className="fd-hub-section-head fd-hub-section-head--tight">
         <div>
           <p className="fd-hub-eyebrow">
             <Zap aria-hidden="true" />
-            RECENT XP
+            {t('log.eyebrow')}
           </p>
-          <h2 id="fd-hub-log-title">Your last five moves.</h2>
+          <h2 id="fd-hub-log-title">{t('log.title')}</h2>
         </div>
       </header>
       {entries.length === 0 ? (
-        <p className="fd-hub-empty">Answer one question and the record starts here.</p>
+        <p className="fd-hub-empty">{t('log.empty')}</p>
       ) : (
         <ul className="fd-hub-log-list">
           {entries.map((e) => {
@@ -127,6 +129,7 @@ export function StampShelf({
   onOpen: (id: string) => void;
   onAll: () => void;
 }) {
+  const { t } = useLocale();
   const press = usePress();
   return (
     <section className="fd-hub-stamps" aria-labelledby="fd-hub-stamps-title">
@@ -134,10 +137,10 @@ export function StampShelf({
         <div>
           <p className="fd-hub-eyebrow fd-hub-eyebrow--cool">
             <Compass aria-hidden="true" />
-            STAMP CASE
+            {t('stamps.eyebrow')}
           </p>
           <h2 id="fd-hub-stamps-title">
-            {earnedCount ? `${earnedCount} of ${total} stories collected.` : 'Every route leaves a mark.'}
+            {earnedCount ? t('stamps.collected', { n: earnedCount, total }) : t('stamps.everyRoute')}
           </h2>
         </div>
       </header>
@@ -156,7 +159,7 @@ export function StampShelf({
               >
                 <Icon aria-hidden="true" />
                 <span className="fd-mono">{route.code}</span>
-                <small>{correct !== null ? `${correct}/6 first run` : 'Not yet earned'}</small>
+                <small>{correct !== null ? t('stamps.firstRun', { n: correct }) : t('stamps.notEarned')}</small>
                 <span className="fd-hub-sr">{route.stamp}</span>
               </button>
             </li>
@@ -164,7 +167,7 @@ export function StampShelf({
         })}
       </ul>
       <button type="button" className="fd-hub-quiet fd-hub-press" onPointerDown={press} onClick={onAll}>
-        All {total} expeditions
+        {t('stamps.all', { total })}
       </button>
     </section>
   );

@@ -5,6 +5,10 @@
  * browser app already: this entry mounts the very same component with `createRoot` and imports the
  * four stylesheets `app/layout.tsx` imports, in the same order. The only additions are the honesty
  * banner (the app screens are untouched) and the base-path patch below.
+ *
+ * Locale: `<Arena/>` mounts its own LocaleProvider (app/use-locale.tsx), so this build follows the
+ * same rule as the Next one — `<html lang>` and the Noto Sans Devanagari stylesheet are set at
+ * runtime only while the stored or detected locale is Hindi; static/index.html links no extra font.
  */
 import { createRoot } from 'react-dom/client';
 import '../app/theme/tokens.css';

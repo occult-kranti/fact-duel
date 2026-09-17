@@ -5,6 +5,8 @@
  * must be on the allowlist below, with a reason, and every allowlist entry must still be in use so
  * the list cannot rot. Counts of the player's OWN record (facts met, cards answered, entries behind a
  * journal filter) and the length of a RUN about to be played ("6 cards", "5 questions") are fine.
+ * Chrome that moved into the locale dictionaries (lib/i18n) is out of this grep's reach by design:
+ * the dictionaries hold only the player's own counts and run lengths, never a pool size.
  */
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -31,7 +33,6 @@ const BANNED = [
 const ALLOW = [
   { file: 'app/screens/vault/bits.tsx', text: '{count}', why: 'Chip count is the player’s own journal tally behind a filter' },
   { file: 'app/collections.tsx', text: '${met} facts met', why: 'facts the player has met, from their own passport' },
-  { file: 'app/discovery.tsx', text: '{cards.length} facts kept', why: 'recap of the cards the player just attempted' },
   { file: 'app/journal.tsx', text: '${deck.length} cards', why: 'the recall deck built from the player’s own due entries' },
   { file: 'app/journal.tsx', text: '${dueIds.length} card', why: 'the player’s own entries due for review today' },
   { file: 'app/journal.tsx', text: 'Review {dueEntries.length} card', why: 'the player’s own entries due for review today' },
@@ -40,7 +41,6 @@ const ALLOW = [
   { file: 'app/screens/expeditions/clubhouse.tsx', text: '5 questions', why: 'rounds in the Gauntlet mode about to be played' },
   { file: 'app/screens/expeditions/clubhouse.tsx', text: '6 questions', why: 'run length of an expedition' },
   { file: 'app/screens/expeditions/parts.tsx', text: '2 cards', why: 'chapter length inside a six-card run' },
-  { file: 'app/screens/home/expedition-card.tsx', text: '6 questions', why: 'run length of the expedition on the card' },
 ];
 
 const files = globSync('app/**/*.tsx', { cwd: ROOT })

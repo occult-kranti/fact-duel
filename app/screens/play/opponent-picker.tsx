@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import type { QueueLane } from '@/lib/queue-client';
 import { usePlayJuice } from './press';
+import { useLocale } from '../../use-locale';
 
 /* ---------- Find a rival: the queue state the arena provides ----------
  * The picker and the launch panel read it from context rather than props, so the play screen and
@@ -64,6 +65,7 @@ export function OpponentPicker({
   onJoinView,
 }: OpponentPickerProps) {
   const { press } = usePlayJuice();
+  const { t, topic } = useLocale();
   const rival = useRivalQueue();
   const rivalSeat = !joinView && !!rival?.selected;
   const botSeat = !joinView && !rivalSeat && opponent === 'bot';
@@ -77,7 +79,7 @@ export function OpponentPicker({
   };
   return (
     <>
-      <div className="fd-seg" role="group" aria-label="Opponent">
+      <div className="fd-seg" role="group" aria-label={t('opp.aria')}>
         <button
           type="button"
           className="fd-seg-btn fd-pressable"
@@ -86,7 +88,7 @@ export function OpponentPicker({
           onClick={() => pickSeat('bot')}
         >
           <Bot size={17} aria-hidden="true" />
-          Bot
+          {t('opp.bot')}
         </button>
         <button
           type="button"
@@ -96,14 +98,14 @@ export function OpponentPicker({
           onClick={() => pickSeat('friend')}
         >
           <Users size={17} aria-hidden="true" />
-          Friend
+          {t('opp.friend')}
         </button>
         {rival && (
           <button
             type="button"
             className="fd-seg-btn fd-pressable"
             aria-pressed={rivalSeat}
-            aria-label="Rival — human, matched by rating"
+            aria-label={t('opp.rivalAria')}
             {...press}
             onClick={() => {
               onJoinView(false);
@@ -114,7 +116,7 @@ export function OpponentPicker({
             }}
           >
             <Swords size={17} aria-hidden="true" />
-            Rival
+            {t('opp.rival')}
           </button>
         )}
         <button
@@ -129,7 +131,7 @@ export function OpponentPicker({
           }}
         >
           <Link2 size={17} aria-hidden="true" />
-          Join
+          {t('opp.join')}
         </button>
       </div>
       {!joinView && rivalSeat && rival && (
@@ -139,14 +141,10 @@ export function OpponentPicker({
           </span>
           <span className="fd-rival-body">
             <span className="fd-rival-top">
-              <strong>Find a rival</strong>
-              <em className="fd-rival-badge">HUMAN · MATCHED BY RATING</em>
+              <strong>{t('opp.findRival')}</strong>
+              <em className="fd-rival-badge">{t('opp.humanBadge')}</em>
             </span>
-            <small>
-              {rival.sport
-                ? `A real player in the ${rival.sport} lane at your format and entry, nearest rating first. Nobody is invented to fill the seat.`
-                : 'Pick one sport below to open a lane. Real players only; nobody is invented to fill the seat.'}
-            </small>
+            <small>{rival.sport ? t('opp.laneOpen', { sport: topic(rival.sport) }) : t('opp.pickSport')}</small>
           </span>
         </div>
       )}
@@ -157,13 +155,11 @@ export function OpponentPicker({
           </span>
           <span className="fd-rival-body">
             <span className="fd-rival-top">
-              <strong>{botSeat ? 'Lucky Guess' : 'Your friend'}</strong>
-              <em className="fd-rival-badge">{botSeat ? 'BOT' : 'INVITE ONLY'}</em>
+              <strong>{botSeat ? t('opp.lucky') : t('opp.yourFriend')}</strong>
+              <em className="fd-rival-badge">{botSeat ? t('opp.botBadge') : t('opp.inviteOnly')}</em>
             </span>
             <small>
-              {botSeat
-                ? `Random 25% guesser · answers after 1–${Math.max(1, duration - 0.5)}s and never reacts to yours.`
-                : 'Create the room, then send the invitation link from the lobby.'}
+              {botSeat ? t('opp.botDesc', { max: Math.max(1, duration - 0.5) }) : t('opp.friendDesc')}
             </small>
           </span>
         </div>
@@ -181,10 +177,11 @@ export type JoinFormProps = {
 
 /* Join view: the same two fields (ids `join-name` and `invite`) the join flow has always used. */
 export function JoinForm({ name, joinLink, onName, onLink }: JoinFormProps) {
+  const { t } = useLocale();
   return (
     <div className="fd-join">
       <div className="fd-field">
-        <Label htmlFor="join-name">Your name</Label>
+        <Label htmlFor="join-name">{t('opp.yourName')}</Label>
         <Input
           id="join-name"
           value={name}
@@ -194,17 +191,15 @@ export function JoinForm({ name, joinLink, onName, onLink }: JoinFormProps) {
         />
       </div>
       <div className="fd-field">
-        <Label htmlFor="invite">Invitation link</Label>
+        <Label htmlFor="invite">{t('opp.inviteLink')}</Label>
         <Input
           id="invite"
           value={joinLink}
           onChange={(e) => onLink(e.target.value)}
-          placeholder="Paste your friend’s invitation"
+          placeholder={t('opp.pasteInvite')}
         />
       </div>
-      <p className="fd-fine">
-        Both screens need access to this private site. Room invitations do not grant site access.
-      </p>
+      <p className="fd-fine">{t('opp.access')}</p>
     </div>
   );
 }

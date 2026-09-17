@@ -14,7 +14,9 @@ import {
   PAGE_SIZE,
   UI,
   VERIFIED_ASOF,
+  alternatesOf,
   eligible,
+  intentBySlug,
   fallbackLine,
   fnv1a32,
   pageUrl,
@@ -51,6 +53,10 @@ test('the intent list covers every cluster the launch lane named, with the right
     'ipl-quiz-2026': ['Cricket', 'en'],
     'fussball-quiz-fragen': ['Football', 'de'],
     'quiz-foot': ['Football', 'fr'],
+    'indian-cricket-quiz': ['Cricket', 'en'],
+    'cricket-quiz-hindi': ['Cricket', 'hi'],
+    'ipl-quiz-hindi': ['Cricket', 'hi'],
+    'bharat-cricket-quiz': ['Cricket', 'hi'],
   };
   for (const [slug, [topic, lang]] of Object.entries(want)) {
     const intent = INTENTS.find((i) => i.slug === slug);
@@ -218,7 +224,7 @@ test('every page is well formed: lang, one h1, canonical, Open Graph, ten detail
   }
 });
 
-test('the German and French pages say the questions are in English, in their own language; English pages do not', () => {
+test('the German, French and Hindi pages say the questions are in English, in their own language; English pages do not', () => {
   for (const intent of INTENTS) {
     const html = renderPage(intent, selectQuestions(intent, QUESTIONS));
     if (intent.lang === 'de') {
@@ -229,20 +235,96 @@ test('the German and French pages say the questions are in English, in their own
       assert.ok(html.includes('<html lang="fr">'));
       assert.ok(html.includes('Les questions sont en anglais.'), intent.slug);
       assert.ok(html.includes('Voir la réponse'));
+    } else if (intent.lang === 'hi') {
+      assert.ok(html.includes('<html lang="hi">'), intent.slug);
+      assert.ok(html.includes('सवाल फ़िलहाल अंग्रेज़ी में हैं।'), `${intent.slug}: the honest line`);
+      assert.ok(html.includes('जवाब देखें'), intent.slug);
+      assert.ok(html.includes('Jaanta Hai Kya · क्रिकेट'), `${intent.slug}: kicker names the sport in Hindi`);
     } else {
       assert.ok(html.includes('<html lang="en">'));
       assert.ok(html.includes('Show the answer'));
-      assert.ok(!html.includes('Englisch') && !html.includes('anglais'));
+      assert.ok(!html.includes('Englisch') && !html.includes('anglais') && !html.includes('अंग्रेज़ी'));
     }
   }
 });
 
-test('the fallback line is printed on the IPL page and on no other', () => {
+test('the Hindi intents: three pages, Devanagari titles, Latin digits, no exclamation mark, and the questions untouched', () => {
+  const hindi = INTENTS.filter((i) => i.lang === 'hi');
+  assert.deepEqual(
+    hindi.map((i) => i.slug),
+    ['cricket-quiz-hindi', 'ipl-quiz-hindi', 'bharat-cricket-quiz'],
+  );
+  assert.equal(intentBySlug('cricket-quiz-hindi').title, 'क्रिकेट क्विज़ — जवाब के साथ');
+  for (const intent of hindi) {
+    for (const k of ['title', 'h1', 'description', 'query']) {
+      assert.match(intent[k], /[\u0900-\u097F]/, `${intent.slug}.${k} is Devanagari`);
+      assert.doesNotMatch(intent[k], /[\u0966-\u096F]/, `${intent.slug}.${k} keeps Latin digits`);
+      assert.doesNotMatch(intent[k], /!/, `${intent.slug}.${k}`);
+    }
+    assert.match(intent.description, /अंग्रेज़ी/, `${intent.slug}: the description says the questions are English`);
+    const sel = selectQuestions(intent, QUESTIONS);
+    const html = renderPage(intent, sel);
+    for (const q of sel.questions) assert.ok(html.includes(escapeHtml(q.question)), `${intent.slug}: ${q.id} verbatim`);
+    assert.doesNotMatch(visible(html), /[\u0966-\u096F]/, `${intent.slug}: no Devanagari digits anywhere`);
+    assert.ok(html.includes('16 सितंबर 2026'), `${intent.slug}: the verification date in Hindi`);
+    assert.ok(html.includes('font-family:\'Noto Sans Devanagari\''), `${intent.slug}: Devanagari font stack`);
+    assert.ok(!/<link[^>]+fonts\.googleapis/.test(html), `${intent.slug}: still no external request`);
+  }
+  for (const v of Object.values(UI.hi)) if (typeof v === 'string') assert.doesNotMatch(v, /सट्टा|जुआ|दांव|दाँव/, v);
+});
+
+test('an English page and its Hindi twin carry matching hreflang alternates, with x-default on the English side', () => {
+  const pairs = [
+    ['cricket-quiz-questions', 'cricket-quiz-hindi'],
+    ['ipl-quiz-2026', 'ipl-quiz-hindi'],
+    ['indian-cricket-quiz', 'bharat-cricket-quiz'],
+  ];
+  for (const [enSlug, hiSlug] of pairs) {
+    const en = intentBySlug(enSlug);
+    const hi = intentBySlug(hiSlug);
+    assert.equal(en.alternate, hiSlug);
+    assert.equal(hi.alternate, enSlug);
+    const want = [
+      { hreflang: 'en', href: pageUrl(DEFAULT_BASE, enSlug) },
+      { hreflang: 'hi', href: pageUrl(DEFAULT_BASE, hiSlug) },
+      { hreflang: 'x-default', href: pageUrl(DEFAULT_BASE, enSlug) },
+    ];
+    assert.deepEqual(alternatesOf(en, DEFAULT_BASE), want, `${enSlug} alternates`);
+    assert.deepEqual(alternatesOf(hi, DEFAULT_BASE), want, `${hiSlug} alternates`);
+    for (const intent of [en, hi]) {
+      const html = renderPage(intent, selectQuestions(intent, QUESTIONS));
+      for (const a of want) assert.ok(html.includes(`<link rel="alternate" hreflang="${a.hreflang}" href="${a.href}">`), `${intent.slug}: ${a.hreflang}`);
+    }
+  }
+  const lone = intentBySlug('football-quiz-with-answers');
+  assert.deepEqual(alternatesOf(lone, DEFAULT_BASE), [{ hreflang: 'en', href: pageUrl(DEFAULT_BASE, lone.slug) }]);
+  const html = renderPage(lone, selectQuestions(lone, QUESTIONS));
+  assert.equal(count(html, 'hreflang="x-default"'), 0);
+  assert.equal(intentBySlug('nope'), null);
+});
+
+test('the Indian cricket pages take the India-region bank first, in both languages, and stay deterministic', () => {
+  for (const slug of ['indian-cricket-quiz', 'bharat-cricket-quiz']) {
+    const intent = intentBySlug(slug);
+    assert.equal(intent.preferRegion, 'India');
+    const sel = selectQuestions(intent, QUESTIONS);
+    const india = QUESTIONS.filter((q) => eligible(intent, q) && q.region === 'India').length;
+    assert.ok(india >= PAGE_SIZE, 'the bank holds an Indian cricket tranche');
+    assert.equal(sel.questions.filter((q) => q.region === 'India').length, PAGE_SIZE, `${slug}: all ten from India`);
+    assert.deepEqual(pickQuestions(intent, QUESTIONS), pickQuestions(intent, [...QUESTIONS].reverse()), `${slug}: order-independent`);
+  }
+  // The field is what does it: pointing it at the Global tranche fills the page from there instead.
+  const global = { ...intentBySlug('indian-cricket-quiz'), preferRegion: 'Global' };
+  assert.equal(selectQuestions(global, QUESTIONS).questions.filter((q) => q.region === 'Global').length, PAGE_SIZE);
+});
+
+test('the fallback line is printed on the two IPL pages and on no other', () => {
   for (const intent of INTENTS) {
     const sel = selectQuestions(intent, QUESTIONS);
     const html = renderPage(intent, sel);
     const line = fallbackLine(intent, sel);
     if (intent.slug === 'ipl-quiz-2026' && sel.filled) assert.ok(html.includes('and more cricket'), intent.slug);
+    else if (intent.slug === 'ipl-quiz-hindi' && sel.filled) assert.ok(html.includes('और बाकी क्रिकेट'), intent.slug);
     else assert.equal(line, null, intent.slug);
   }
 });
@@ -307,6 +389,17 @@ test('the sitemap lists the hub and every page, with the bank date as lastmod', 
   for (const e of entries) assert.ok(xml.includes(`<loc>${e.loc}</loc>`), e.loc);
   assert.equal(count(xml, '<urlset'), 1);
   assert.equal(count(xml, '</urlset>'), 1);
+  // The paired pages repeat their hreflang alternates in the sitemap; the others carry none.
+  assert.ok(xml.includes('xmlns:xhtml="http://www.w3.org/1999/xhtml"'));
+  const paired = INTENTS.filter((i) => i.alternate);
+  assert.equal(paired.length, 6);
+  assert.equal(count(xml, 'hreflang="x-default"'), paired.length);
+  assert.equal(count(xml, 'hreflang="hi"'), paired.length);
+  for (const e of entries) {
+    const intent = INTENTS.find((i) => pageUrl(DEFAULT_BASE, i.slug) === e.loc);
+    if (intent?.alternate) assert.equal(e.alternates.length, 3, e.loc);
+    else assert.equal(e.alternates, undefined, e.loc);
+  }
 });
 
 test('the build produces one file per page plus the hub and the sitemap, byte-identical on repeat', () => {

@@ -14,6 +14,7 @@ import type { CalendarEvent, EventMode } from '../types';
 import { LiveDot, SourceLink, TopicChip } from './parts';
 import { useEventsPress } from './press';
 import { formatRange, modeDuel, modeState, modeXp, whenLabel } from './util';
+import { useLocale } from '../../use-locale';
 
 export type EventCardProps = {
   event: CalendarEvent;
@@ -42,7 +43,8 @@ export function EventCard({
   onDuel,
 }: EventCardProps) {
   const { press, cue } = useEventsPress();
-  const when = whenLabel(event, status, now);
+  const { t, when: localWhen, topic, pick } = useLocale();
+  const when = localWhen(whenLabel(event, status, now));
   const dates = formatRange(event.start, event.end);
   const state = mode ? modeState(mode, now) : null;
   const playable = !!(mode && state?.open && onMode);
@@ -104,14 +106,15 @@ export function EventCard({
           >
             <Play aria-hidden="true" />
             <span className="fd-ev-play-body">
-              <strong>{playable ? (armed ? 'Mode armed' : 'Play this mode') : 'Play this topic'}</strong>
+              <strong>{playable ? (armed ? t('evcard.modeArmed') : t('evcard.playMode')) : t('evcard.playTopic')}</strong>
               <small>
                 {playable && mode && duel ? (
                   <>
-                    {mode.template.name} · {duel.name} · {duel.timer} · +{modeXp(mode.xpBonus).total} XP
+                    {mode.template.name} · {pick(`modes.${mode.duel.mode}.name`, duel.name)} · {duel.timer} · +
+                    {modeXp(mode.xpBonus).total} XP
                   </>
                 ) : (
-                  <>Quick Draw · {event.topic} · vs Lucky Guess (BOT)</>
+                  t('evcard.quickVs', { topic: topic(event.topic) })
                 )}
               </small>
             </span>

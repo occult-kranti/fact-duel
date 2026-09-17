@@ -19,9 +19,11 @@ import { LiveStrip } from './events/live-strip';
 import { accentOf, questRoute, untilReset, type QuestItem } from './home/util';
 import { usePress } from './home/press';
 import { useNow } from './home/use-now';
+import { useLocale } from '../use-locale';
 import './home/home.css';
 
 export function HomeScreen({ player, name, ready, busy, onRoute, onDuel, onSetup, go }: HomeScreenProps) {
+  const { t } = useLocale();
   const press = usePress();
   const now = useNow();
 
@@ -65,7 +67,7 @@ export function HomeScreen({ player, name, ready, busy, onRoute, onDuel, onSetup
   return (
     <section className="fd-home" aria-labelledby="fd-hub-title">
       <h1 id="fd-hub-title" className="fd-hub-sr">
-        Arena hub
+        {t('home.title')}
       </h1>
 
       <div className="fd-hub-hero">
@@ -94,9 +96,9 @@ export function HomeScreen({ player, name, ready, busy, onRoute, onDuel, onSetup
         >
           <Zap aria-hidden="true" />
           <span className="fd-hub-cta-main">
-            <strong>Play now</strong>
+            <strong>{t('home.playNow')}</strong>
             <small>
-              Quick Draw · one question vs Lucky Guess <i className="fd-hub-bot">BOT</i>
+              {t('home.playNowSub')} <i className="fd-hub-bot">{t('home.bot')}</i>
             </small>
           </span>
           <ArrowRight className="fd-hub-cta-arrow" aria-hidden="true" />
@@ -108,13 +110,13 @@ export function HomeScreen({ player, name, ready, busy, onRoute, onDuel, onSetup
           onClick={() => onSetup('settings')}
         >
           <Sliders aria-hidden="true" />
-          Choose a match
+          {t('home.choose')}
         </button>
         <p className="fd-hub-cta-note">
           <Sparkles aria-hidden="true" />
-          Some rounds come up wild and pay double or triple XP.
+          {t('home.wild')}
           <Bot aria-hidden="true" />
-          Bots are always labelled.
+          {t('home.botsLabelled')}
         </p>
       </div>
 

@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { X } from 'lucide-react';
 import { usePlayer } from './use-player';
+import { LocaleProvider, useLocale } from './use-locale';
 import { useWallet, WalletContext } from './use-wallet';
 import { WalletChip } from './screens/economy/wallet-chip';
 import { request } from '@/lib/duel-client';
@@ -82,7 +83,17 @@ function parseInvite(text: string) {
  * `initialTab` is how the `/analytics` route enters: app/analytics/page.tsx renders this same
  * orchestrator with the measurement screen already selected. Everything else routes as a tab.
  */
+/** The locale provider sits above the orchestrator so every screen, and the shell, can read it. */
 export default function Arena({ initialTab = 'home' }: { initialTab?: string }) {
+  return (
+    <LocaleProvider>
+      <ArenaShell initialTab={initialTab} />
+    </LocaleProvider>
+  );
+}
+
+function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
+  const { t } = useLocale();
   const [tab, setTab] = useState(initialTab),
     [catalogue, setCatalogue] = useState<any>(null),
     [config, setConfig] = useState<Config>(INITIAL_CONFIG),
@@ -1039,22 +1050,22 @@ export default function Arena({ initialTab = 'home' }: { initialTab?: string }) 
         }}
         footer={
           <footer className="fd-footer">
-            <span>KNOW IT. PROVE IT.</span>
+            <span>{t('footer.tagline')}</span>
             <span>
               <button className="footer-rules" onClick={() => go('rules')}>
-                Play rules
+                {t('footer.rules')}
               </button>{' '}
               ·{' '}
               <button className="footer-rules" onClick={() => go('coin')}>
-                Rules of the coin
+                {t('footer.coin')}
               </button>{' '}
               ·{' '}
               <button className="footer-rules" onClick={() => go('trust')}>
-                Trust
+                {t('footer.trust')}
               </button>{' '}
-              · Free simulated coins · Private playtest
+              · {t('footer.free')} · {t('footer.private')}
             </span>
-            <a href="/studio">Research & roadmap</a>
+            <a href="/studio">{t('footer.research')}</a>
           </footer>
         }
       >
@@ -1077,7 +1088,7 @@ export default function Arena({ initialTab = 'home' }: { initialTab?: string }) 
                       .catch((e) => setError(e.message));
                   }}
                 >
-                  Retry loading
+                  {t('dialog.retry')}
                 </Button>
               )}
             </div>
@@ -1085,7 +1096,7 @@ export default function Arena({ initialTab = 'home' }: { initialTab?: string }) 
           {note && (
             <div className="notice-box">
               <span>{note}</span>
-              <Button variant="ghost" size="icon" aria-label="Dismiss notice" onClick={() => setNote('')}>
+              <Button variant="ghost" size="icon" aria-label={t('dialog.dismiss')} onClick={() => setNote('')}>
                 <X />
               </Button>
             </div>
@@ -1194,33 +1205,25 @@ export default function Arena({ initialTab = 'home' }: { initialTab?: string }) 
       <AlertDialog open={leaveOpen} onOpenChange={setLeaveOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Leave this match?</AlertDialogTitle>
-            <AlertDialogDescription>
-              The room ends for both players. Unsettled entries are refunded; completed payouts remain final.
-            </AlertDialogDescription>
+            <AlertDialogTitle>{t('dialog.leaveTitle')}</AlertDialogTitle>
+            <AlertDialogDescription>{t('dialog.leaveBody')}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Keep playing</AlertDialogCancel>
-            <AlertDialogAction onClick={leave}>Leave & refund</AlertDialogAction>
+            <AlertDialogCancel>{t('dialog.keepPlaying')}</AlertDialogCancel>
+            <AlertDialogAction onClick={leave}>{t('dialog.leaveRefund')}</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
       <AlertDialog open={clearOpen} onOpenChange={setClearOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Reset your local activity?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This removes your Vault of facts and saved question issues, expedition progress, scores and
-              stamps, XP and activity points, side quests and earned card finishes in this browser — and
-              the measurement record behind the Analytics screen: sessions, active days, the day-by-day
-              activity and the retention answer. Export first to keep a copy. Theme, sound preferences and
-              room coins are unaffected.
-            </AlertDialogDescription>
+            <AlertDialogTitle>{t('dialog.resetTitle')}</AlertDialogTitle>
+            <AlertDialogDescription>{t('dialog.resetBody')}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Keep activity</AlertDialogCancel>
+            <AlertDialogCancel>{t('dialog.keepActivity')}</AlertDialogCancel>
             <AlertDialogAction disabled={!player.loaded} onClick={clearJournal}>
-              Reset local activity
+              {t('dialog.resetAction')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

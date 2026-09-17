@@ -9,6 +9,8 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Database, Volume2 } from 'lucide-react';
 import { AccountPanel } from './account-panel';
+import { useLocale, type Locale } from '../use-locale';
+import { LOCALES } from '@/lib/i18n/index.mjs';
 
 /** Persisted as localStorage['fact-duel-motion']. */
 export type MotionPref = 'full' | 'reduced' | 'off';
@@ -74,46 +76,76 @@ export function SettingsSheet({
   onOpenMeasurement,
 }: SettingsSheetProps) {
   const mobile = useIsMobile();
+  const { t, locale, setLocale } = useLocale();
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side={mobile ? 'bottom' : 'right'} className="fd-sheet">
         <div className="fd-sheet-grab" aria-hidden="true" />
         <SheetHeader>
-          <SheetTitle>Make yourself at home.</SheetTitle>
-          <SheetDescription>Preferences stay on this device. Sounds are optional.</SheetDescription>
+          <SheetTitle>{t('settings.title')}</SheetTitle>
+          <SheetDescription>{t('settings.desc')}</SheetDescription>
         </SheetHeader>
+
+        {/* The language control: two equal segments, the current one marked, no default nudge.
+            Persisted as localStorage['fd-locale'] by the provider. Questions stay English for now
+            and the hint says so. */}
+        <section className="fd-setting-group" aria-labelledby="settings-language">
+          <span className="fd-setting-eyebrow" id="settings-language">
+            {t('settings.language')}
+          </span>
+          <div className="fd-setting-row">
+            <span className="fd-setting-label" id="locale-setting-label">
+              {t('settings.language')}
+              <small>{t('settings.languageHint')}</small>
+            </span>
+            <div className="fd-seg fd-locale-seg" role="group" aria-labelledby="locale-setting-label">
+              {(LOCALES as readonly Locale[]).map((id) => (
+                <button
+                  key={id}
+                  type="button"
+                  className="fd-seg-btn"
+                  lang={id}
+                  aria-pressed={locale === id}
+                  onClick={() => setLocale(id)}
+                >
+                  {id === 'hi' ? t('settings.langHi') : t('settings.langEn')}
+                </button>
+              ))}
+            </div>
+          </div>
+        </section>
 
         <AccountPanel />
 
         <section className="fd-setting-group" aria-labelledby="settings-player">
           <span className="fd-setting-eyebrow" id="settings-player">
-            Player
+            {t('settings.player')}
           </span>
           <div className="fd-setting-stack">
-            <Label htmlFor="name-setting">Your player name</Label>
+            <Label htmlFor="name-setting">{t('settings.name')}</Label>
             <Input
               id="name-setting"
               value={name}
               onChange={(e) => onNameChange(e.target.value)}
               maxLength={24}
               autoComplete="nickname"
-              placeholder="Choose a name"
+              placeholder={t('settings.namePlaceholder')}
             />
           </div>
         </section>
 
         <section className="fd-setting-group" aria-labelledby="settings-feedback">
           <span className="fd-setting-eyebrow" id="settings-feedback">
-            Feedback
+            {t('settings.feedback')}
           </span>
           <div className="fd-setting-row">
-            <Label htmlFor="sound-setting">Game sounds</Label>
+            <Label htmlFor="sound-setting">{t('settings.sounds')}</Label>
             <Switch id="sound-setting" checked={sound} onCheckedChange={onSoundChange} />
           </div>
           <div className="fd-setting-stack">
-            <Label>Sound volume</Label>
+            <Label>{t('settings.volume')}</Label>
             <Slider
-              aria-label="Sound volume"
+              aria-label={t('settings.volume')}
               value={[volume * 100]}
               min={0}
               max={100}
@@ -123,27 +155,27 @@ export function SettingsSheet({
             <div className="fd-setting-actions">
               <Button variant="outline" disabled={!sound} onClick={onPreviewSound}>
                 <Volume2 />
-                Preview sound
+                {t('settings.preview')}
               </Button>
             </div>
           </div>
           <div className="fd-setting-row">
-            <Label htmlFor="haptics-setting">Haptics</Label>
+            <Label htmlFor="haptics-setting">{t('settings.haptics')}</Label>
             <Switch id="haptics-setting" checked={haptics} onCheckedChange={onHapticsChange} />
           </div>
           <div className="fd-setting-row">
             <span className="fd-setting-label" id="motion-setting-label">
-              Effects
-              <small>Confetti, shakes and celebrations</small>
+              {t('settings.effects')}
+              <small>{t('settings.effectsHint')}</small>
             </span>
             <Select value={motion} onValueChange={(v) => onMotionChange(v as MotionPref)}>
               <SelectTrigger id="motion-setting" aria-labelledby="motion-setting-label">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="full">Full</SelectItem>
-                <SelectItem value="reduced">Reduced</SelectItem>
-                <SelectItem value="off">Off</SelectItem>
+                <SelectItem value="full">{t('settings.full')}</SelectItem>
+                <SelectItem value="reduced">{t('settings.reduced')}</SelectItem>
+                <SelectItem value="off">{t('settings.off')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -151,49 +183,41 @@ export function SettingsSheet({
 
         <section className="fd-setting-group" aria-labelledby="settings-appearance">
           <span className="fd-setting-eyebrow" id="settings-appearance">
-            Appearance
+            {t('settings.appearance')}
           </span>
           <div className="fd-setting-row">
-            <Label htmlFor="theme-setting">Light theme</Label>
+            <Label htmlFor="theme-setting">{t('settings.light')}</Label>
             <Switch id="theme-setting" checked={light} onCheckedChange={onLightChange} />
           </div>
           <div className="fd-setting-row">
-            <Label htmlFor="art-setting">Arena object in 3D</Label>
+            <Label htmlFor="art-setting">{t('settings.art')}</Label>
             <Switch id="art-setting" checked={showArt} onCheckedChange={onShowArtChange} />
           </div>
         </section>
 
         <section className="fd-setting-group" aria-labelledby="settings-measurement">
           <span className="fd-setting-eyebrow" id="settings-measurement">
-            Measurement
+            {t('settings.measurement')}
           </span>
-          <p className="fd-setting-note">
-            Sessions, active days and whether you came back on day 1, 7 or 30 are recorded on this device and
-            nowhere else. The Analytics screen shows all of it, in full, and exports it as JSON or CSV.
-          </p>
+          <p className="fd-setting-note">{t('settings.measurementNote')}</p>
           <div className="fd-setting-actions">
             <Button variant="outline" onClick={onOpenMeasurement}>
               <Database />
-              Measurement and your data
+              {t('settings.measurementBtn')}
             </Button>
           </div>
         </section>
         <section className="fd-setting-group" aria-labelledby="settings-storage">
           <span className="fd-setting-eyebrow" id="settings-storage">
-            Your local activity
+            {t('settings.storage')}
           </span>
-          <p className="fd-setting-note">
-            Everything you earn lives in this browser: your Vault of facts and saved question issues,
-            expedition progress and stamps, XP and activity points, side quests and card finishes — and
-            the measurement record behind the Analytics screen. Export them before resetting. Theme and sound
-            preferences are kept.
-          </p>
+          <p className="fd-setting-note">{t('settings.storageNote')}</p>
           <div className="fd-setting-actions">
             <Button variant="outline" disabled={!canExport} onClick={onExport}>
-              Export all activity
+              {t('settings.export')}
             </Button>
             <Button variant="outline" disabled={!canExport} onClick={onReset}>
-              Reset local activity
+              {t('settings.reset')}
             </Button>
           </div>
         </section>

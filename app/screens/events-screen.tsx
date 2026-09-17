@@ -17,11 +17,13 @@ import { FixtureStrip } from './events/fixture-card';
 import { ModeCard } from './events/mode-card';
 import { useEventsPress } from './events/press';
 import { formatDay, modeForEvent, monthLabel } from './events/util';
+import { useLocale } from '../use-locale';
 import './events/events.css';
 
 export function EventsScreen({ player, ready, busy, onDuel, onMode, activeModeId, go }: EventsScreenProps) {
   const now = useCalendarNow();
   const { press } = useEventsPress();
+  const { t, locale, fmt } = useLocale();
 
   const groups = groupEvents(now) as {
     live: readonly CalendarEvent[];
@@ -30,7 +32,8 @@ export function EventsScreen({ player, ready, busy, onDuel, onMode, activeModeId
   };
   const modes = monthlyModes(now) as readonly EventMode[];
   const openCount = activeModes(now).length;
-  const month = monthLabel(monthKey(now));
+  const month = locale === 'en' ? monthLabel(monthKey(now)) : fmt.month(monthKey(now) ?? '');
+  const asOf = locale === 'en' ? formatDay(CALENDAR_ASOF as string) : fmt.isoDay(CALENDAR_ASOF as string);
   const badges: Record<string, number> = player.progression?.eventBadges ?? {};
   // Fixture windows are cut in the viewer's local day; the offset is read from the same `now` the
   // rest of the screen renders against, so the server and the browser agree on the hydration frame.
@@ -41,29 +44,26 @@ export function EventsScreen({ player, ready, busy, onDuel, onMode, activeModeId
       <header className="fd-ev-head">
         <button type="button" className="fd-ev-back fd-ev-pressable" {...press} onClick={() => go('home')}>
           <ArrowLeft aria-hidden="true" />
-          Home
+          {t('events.home')}
         </button>
         <p className="fd-ev-eyebrow">
           <CalendarDays aria-hidden="true" />
-          CURATED CALENDAR · {month.toUpperCase()}
+          {t('events.eyebrow', { month: locale === 'en' ? month.toUpperCase() : month })}
         </p>
-        <h1 id="fd-ev-title">Events</h1>
-        <p className="fd-ev-lede">
-          Real sports moments — just finished, on right now, and coming up. Each one can turn into
-          a limited-time duel.
-        </p>
+        <h1 id="fd-ev-title">{t('events.title')}</h1>
+        <p className="fd-ev-lede">{t('events.lede')}</p>
 
         <dl className="fd-ev-stats">
           <div>
-            <dt>On now</dt>
+            <dt>{t('events.onNow')}</dt>
             <dd className="fd-mono">{groups.live.length}</dd>
           </div>
           <div>
-            <dt>Modes open</dt>
+            <dt>{t('events.modesOpen')}</dt>
             <dd className="fd-mono">{openCount}</dd>
           </div>
           <div>
-            <dt>Coming up</dt>
+            <dt>{t('events.comingUp')}</dt>
             <dd className="fd-mono">{groups.upcoming.length}</dd>
           </div>
         </dl>
@@ -72,9 +72,9 @@ export function EventsScreen({ player, ready, busy, onDuel, onMode, activeModeId
         <p className="fd-ev-asof" role="note">
           <CalendarCheck2 aria-hidden="true" />
           <span>
-            This calendar is curated and static. A human last checked every date and source on{' '}
-            <b>{formatDay(CALENDAR_ASOF as string)}</b>. There are no live score or results feeds here:
-            nothing on this screen updates on its own, and anything after that date may have moved.
+            {t('events.asofA')}
+            <b>{asOf}</b>
+            {t('events.asofB')}
           </span>
         </p>
       </header>
@@ -86,9 +86,9 @@ export function EventsScreen({ player, ready, busy, onDuel, onMode, activeModeId
       <Section
         id="live"
         icon={<Flame aria-hidden="true" />}
-        title="Live now"
-        note={groups.live.length ? `${groups.live.length} on the go` : ''}
-        empty="Nothing on the calendar is running right now."
+        title={t('events.live')}
+        note={groups.live.length ? t('events.onTheGo', { n: groups.live.length }) : ''}
+        empty={t('events.liveEmpty')}
         count={groups.live.length}
       >
         <div className="fd-ev-grid fd-ev-grid--live">
@@ -116,15 +116,12 @@ export function EventsScreen({ player, ready, busy, onDuel, onMode, activeModeId
       <Section
         id="modes"
         icon={<Zap aria-hidden="true" />}
-        title="Limited modes"
-        note={openCount ? `${openCount} playable today` : 'None open today'}
-        empty="No event on the calendar fits this month. The set is rebuilt when the month turns over."
+        title={t('events.limited')}
+        note={openCount ? t('events.playableToday', { n: openCount }) : t('events.noneOpen')}
+        empty={t('events.modesEmpty')}
         count={modes.length}
       >
-        <p className="fd-ev-section-lede">
-          {month}: four modes built from the calendar. Each one sets up an exact duel, pays a one-off XP bonus
-          and mints a badge the first time you clear it.
-        </p>
+        <p className="fd-ev-section-lede">{t('events.modesLede', { month })}</p>
         <div className="fd-ev-grid fd-ev-grid--modes">
           {modes.map((mode) => (
             <ModeCard
@@ -142,9 +139,9 @@ export function EventsScreen({ player, ready, busy, onDuel, onMode, activeModeId
       <Section
         id="upcoming"
         icon={<Sparkles aria-hidden="true" />}
-        title="Coming up"
-        note={groups.upcoming.length ? 'Soonest first' : ''}
-        empty="Nothing else is scheduled on this calendar for the next eight months."
+        title={t('events.comingUp')}
+        note={groups.upcoming.length ? t('events.soonest') : ''}
+        empty={t('events.upcomingEmpty')}
         count={groups.upcoming.length}
       >
         <div className="fd-ev-grid fd-ev-grid--tight">
@@ -157,9 +154,9 @@ export function EventsScreen({ player, ready, busy, onDuel, onMode, activeModeId
       <Section
         id="recent"
         icon={<History aria-hidden="true" />}
-        title="Recently finished"
-        note={groups.recent.length ? 'Newest first' : ''}
-        empty="Nothing on this calendar has wrapped up in the last four months."
+        title={t('events.recent')}
+        note={groups.recent.length ? t('events.newest') : ''}
+        empty={t('events.recentEmpty')}
         count={groups.recent.length}
       >
         <div className="fd-ev-grid fd-ev-grid--tight">

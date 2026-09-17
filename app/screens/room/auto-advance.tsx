@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { BookOpen } from 'lucide-react';
 import { usePress } from './room-bits';
+import { useLocale } from '../../use-locale';
 
 /**
  * The between-rounds clock: a multi-round match advances itself, so nobody has to click through
@@ -29,6 +30,7 @@ export function AutoAdvance({
   onHold: () => void;
 }) {
   const press = usePress();
+  const { t } = useLocale();
   const [left, setLeft] = useState(() => Math.ceil(totalMs / 1000));
   /* `onFire` closes over the orchestrator's current state and is a new function every poll; the ref
    * keeps the timeout on the latest one without restarting the window. */
@@ -78,15 +80,14 @@ export function AutoAdvance({
   return (
     <div className="fd-auto">
       <p className="fd-note fd-auto-note" aria-hidden="true">
-        Next round starts on its own in {left}s.
+        {t('auto.nextIn', { s: left })}
       </p>
       <span className="fd-sr" role="status">
-        The next round starts on its own in a few seconds. Choose Start now to begin immediately, or Keep
-        reading to stay on this fact.
+        {t('auto.sr')}
       </span>
       <button type="button" className="fd-auto-hold" onPointerDown={press} onClick={onHold}>
         <BookOpen size={14} aria-hidden="true" />
-        Keep reading
+        {t('auto.keepReading')}
       </button>
     </div>
   );

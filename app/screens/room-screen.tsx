@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { completedRounds } from '@/lib/duel-presentation.mjs';
 import { DuelHUD, MatchFinish, RoundReview } from '../rivalry-widgets';
 import { useWalletContext } from '../use-wallet';
+import { useLocale } from '../use-locale';
 import { AdCard } from './economy/ad-card';
 import type { RoomScreenProps } from './types';
 import { RoomChrome } from './room/room-chrome';
@@ -68,6 +69,7 @@ export function RoomScreen({ duel, player }: RoomScreenProps) {
     setConfig,
   } = actions;
 
+  const { t, pick, topic } = useLocale();
   /* Only hold on a round this device actually watched go live. */
   const playedLive = useRef<Set<string>>(new Set());
   const [holdId, setHoldId] = useState<string | null>(null);
@@ -119,28 +121,26 @@ export function RoomScreen({ duel, player }: RoomScreenProps) {
   const headline =
     phase === 'between'
       ? {
-          eyebrow: 'A MOMENT TO LEARN',
+          eyebrow: t('room.learnEyebrow'),
           tone: rd.result.winner === null ? 'draw' : rd.result.winner === room.seat ? 'win' : 'loss',
           title:
             rd.result.winner === null
-              ? 'Honours even.'
+              ? t('room.even')
               : rd.result.winner === room.seat
-                ? 'That round is yours.'
-                : 'A fact for next time.',
-          body: mine?.correct
-            ? 'Your answer was correct. The fact is right below — the next round starts on its own.'
-            : 'The answer and its explanation are right below. The next round starts on its own.',
+                ? t('room.yours')
+                : t('room.nextTime'),
+          body: mine?.correct ? t('room.bodyCorrect') : t('room.bodyOther'),
         }
       : {
-          eyebrow: 'THE CHALLENGE IS SET',
+          eyebrow: t('room.setEyebrow'),
           tone: 'neutral',
-          title: room.players[1] ? 'Ready for the first question?' : 'Invite your rival.',
+          title: room.players[1] ? t('room.readyQ') : t('room.invite'),
           body:
             room.players[1]?.kind === 'bot'
-              ? 'Lucky Guess is ready. Its choices and response times are random.'
+              ? t('room.botReady')
               : room.players[1]
-                ? 'You both decide when to begin. One attempt each after the countdown. Stay here during play; switching away cancels the match.'
-                : 'Share the link with someone who can access this private site, or add a practice bot.',
+                ? t('room.bothDecide')
+                : t('room.shareLink'),
         };
 
   return (
@@ -150,7 +150,7 @@ export function RoomScreen({ duel, player }: RoomScreenProps) {
     >
       <RoomChrome
         settled={room.settled}
-        modeName={matchMode.name}
+        modeName={pick(`modes.${matchMode.id}.name`, matchMode.name)}
         roundIndex={room.roundIndex}
         rounds={matchMode.rounds}
         connected={connected}
@@ -213,7 +213,11 @@ export function RoomScreen({ duel, player }: RoomScreenProps) {
               go('passport');
             }}
           />
-          <p className="fd-final-brand">Jaanta Hai Kya · {room.config.topic && room.config.topic !== 'all' ? room.config.topic : 'Sports'}</p>
+          <p className="fd-final-brand">
+            {t('room.brand', {
+              topic: room.config.topic && room.config.topic !== 'all' ? topic(room.config.topic) : t('topic.Sports'),
+            })}
+          </p>
           {completedRounds(room).length > 0 && <RoundReview room={room} player={player} />}
           {/* The return hook: the next served-sport fixture on the static calendar, after the receipt
               and before any ad. It links to Events; it never counts down in seconds or claims a score. */}

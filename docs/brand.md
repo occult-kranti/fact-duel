@@ -60,16 +60,25 @@ Kya duel works."; Trust: "What you can hold Jaanta Hai Kya to."). Titles: `Jaant
 know? Prove it.`; sub-pages `Measurement — Jaanta Hai Kya`. The finish screen's footer line is
 small print: `Jaanta Hai Kya · <sport>`.
 
-## 5. Hindi (reserved, not shipped)
+## 5. Hindi
 
-The Devanagari wordmark **जानता है क्या** is owned by the Hindi locale pass. Reserved names, so the
-files land without a rename:
+The Devanagari wordmark **जानता है क्या** ships with the Hindi locale (`lib/i18n/`, `app/use-locale.tsx`):
 
-- `public/brand/jhk-wordmark-hi.svg` and `public/brand/jhk-wordmark-hi-dark.svg` (root `<svg lang="hi">`),
-- `<JhkWordmark variant="hi" />` in `app/shell/brand-mark.tsx`,
-- `og-hi.svg` / `og-hi.png` with the Hindi tagline.
+- `public/brand/jhk-wordmark-hi.svg` (cream) and `public/brand/jhk-wordmark-hi-dark.svg` (ink), root
+  `<svg lang="hi">`, 656×144 with the same 8-unit padding as the Latin files.
+- `<JhkWordmark variant="hi" />` in `app/shell/brand-mark.tsx`; the top bar switches to it whenever
+  the locale is Hindi, at the same 16 px height.
 
-Until those exist, every surface shows the Latin wordmark, including under a Hindi locale.
+**Text-based, pending a drawn version.** Hand-drawing Devanagari to the monoline grid is out of
+scope for the locale pass, so both files and the component render the name as `<text>` in
+`'Noto Sans Devanagari', 'Mukta', system-ui` at weight 700, fitted to the box with `textLength`.
+It therefore depends on a font: the app links Noto Sans Devanagari from Google Fonts
+(`font-display: swap`) only while the locale is Hindi, and the SVG files fall back to the system
+Devanagari face where that font is absent. When the drawn wordmark lands it replaces the `<text>`
+element in all three places and this note goes.
+
+In running Hindi copy the product is written "जानता है क्या"; the wordmark and the `<title>` keep the
+Latin "Jaanta Hai Kya". `og-hi.svg` / `og-hi.png` with the Hindi tagline are still reserved.
 
 ## 6. Regenerating
 

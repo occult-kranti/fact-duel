@@ -492,6 +492,41 @@
 .fd-setting-row [data-slot='select-trigger'] {
   min-width: 132px;
 }
+/* The language control: two equal pills, the chosen one marked, neither pre-nudged. */
+.fd-locale-seg {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+  min-width: 168px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--bg-1);
+}
+.fd-locale-seg .fd-seg-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--font-ui);
+  font-size: var(--fs-14);
+  font-weight: 650;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.fd-locale-seg .fd-seg-btn:hover {
+  color: var(--text);
+}
+.fd-locale-seg .fd-seg-btn[aria-pressed='true'] {
+  background: var(--bg-2);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--volt) 40%, transparent);
+  color: var(--volt-text);
+}
 .fd-setting-stack {
   display: flex;
   flex-direction: column;

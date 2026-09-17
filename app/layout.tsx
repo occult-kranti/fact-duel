@@ -59,6 +59,9 @@ export default function RootLayout({
           href="/fonts/instrument-sans-latin-normal-400-700.woff2"
         />
         <link rel="stylesheet" href="/fonts/fonts.css" />
+        {/* No Devanagari font here on purpose: app/use-locale.tsx appends the Noto Sans Devanagari
+            stylesheet (font-display: swap) at runtime only while the locale is Hindi, so the
+            English build never carries the request. `lang` is switched by the same provider. */}
       </head>
       <body className="antialiased">{children}</body>
     </html>

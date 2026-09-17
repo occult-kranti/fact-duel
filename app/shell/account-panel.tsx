@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { requestMagicLink, signInWithGoogle, signOut, whoami, type Whoami } from '@/lib/auth-client';
+import { useLocale } from '../use-locale';
 import './account.css';
 
 /**
@@ -61,16 +62,20 @@ function loadGsi(): Promise<void> {
   });
 }
 
-/** What `/?signed-in=1|0` says when the magic-link click lands back on the app. */
+/**
+ * What `/?signed-in=1|0` says when the magic-link click lands back on the app. Notes are kept as
+ * dictionary keys and translated at render, so a language switch re-reads them.
+ */
 function landingNote(): string | null {
   if (typeof window === 'undefined') return null;
   const flag = new URLSearchParams(window.location.search).get('signed-in');
-  if (flag === '1') return 'You are signed in on this device.';
-  if (flag === '0') return 'That link has expired or was already used. Ask for a new one.';
+  if (flag === '1') return 'account.landed1';
+  if (flag === '0') return 'account.landed0';
   return null;
 }
 
 export function AccountPanel() {
+  const { t } = useLocale();
   const [phase, setPhase] = useState<Phase>('loading');
   const [me, setMe] = useState<Whoami | null>(null);
   const [email, setEmail] = useState('');
@@ -115,14 +120,10 @@ export function AccountPanel() {
             setNote(null);
             try {
               const result = await signInWithGoogle(credential);
-              setNote(
-                result.abandonedGuest
-                  ? 'Signed in. Coins earned as a guest on this device stay with that guest id; this account has its own.'
-                  : 'Signed in. Your coins and card are on this account now.',
-              );
+              setNote(result.abandonedGuest ? 'account.abandoned' : 'account.signedIn');
               await refresh();
             } catch (error) {
-              setNote((error as Error).message || 'Google sign-in did not go through.');
+              setNote((error as Error).message || 'account.googleFail');
             } finally {
               setBusy(false);
             }
@@ -132,7 +133,7 @@ export function AccountPanel() {
         window.google.accounts.id.renderButton(slot, { type: 'standard', theme: 'outline', size: 'large', text: 'continue_with', shape: 'pill', width: 280 });
       })
       .catch(() => {
-        if (alive) setNote('Google sign-in could not load. Email still works.');
+        if (alive) setNote('account.googleLoad');
       });
     return () => {
       alive = false;
@@ -143,7 +144,7 @@ export function AccountPanel() {
     event.preventDefault();
     const address = email.trim();
     if (!EMAIL.test(address)) {
-      setNote('Enter an email address to send the link to.');
+      setNote('account.enterEmail');
       return;
     }
     setBusy(true);
@@ -153,7 +154,7 @@ export function AccountPanel() {
     if (ok) {
       setPhase('sent');
     } else {
-      setNote('The link could not be sent right now. Try again in a minute.');
+      setNote('account.sendFail');
     }
   };
 
@@ -169,20 +170,18 @@ export function AccountPanel() {
   return (
     <section className="fd-setting-group fd-account" aria-labelledby="settings-account" aria-busy={busy || phase === 'loading'}>
       <span className="fd-setting-eyebrow" id="settings-account">
-        Account
+        {t('account.title')}
       </span>
 
-      {phase === 'loading' && <p className="fd-setting-note">Checking this device.</p>}
+      {phase === 'loading' && <p className="fd-setting-note">{t('account.checking')}</p>}
 
-      {phase === 'static' && (
-        <p className="fd-setting-note">Sign-in arrives with the server build; on this build your card lives on this device.</p>
-      )}
+      {phase === 'static' && <p className="fd-setting-note">{t('account.static')}</p>}
 
       {phase === 'out' && (
         <>
-          <p className="fd-setting-note">Play as a guest, or sign in to keep your coins and card across devices.</p>
+          <p className="fd-setting-note">{t('account.guest')}</p>
           <form className="fd-account-form" onSubmit={sendLink}>
-            <Label htmlFor="account-email">Email</Label>
+            <Label htmlFor="account-email">{t('account.email')}</Label>
             <div className="fd-account-row">
               <Input
                 id="account-email"
@@ -198,16 +197,16 @@ export function AccountPanel() {
                 disabled={busy}
               />
               <Button type="submit" disabled={busy}>
-                Send me a sign-in link
+                {t('account.send')}
               </Button>
             </div>
           </form>
           {clientId && (
             <div className="fd-account-google">
               <span className="fd-account-or" aria-hidden="true">
-                or
+                {t('account.or')}
               </span>
-              <div ref={googleSlot} className="fd-account-gsi" aria-label="Continue with Google" />
+              <div ref={googleSlot} className="fd-account-gsi" aria-label={t('account.google')} />
             </div>
           )}
         </>
@@ -216,12 +215,11 @@ export function AccountPanel() {
       {phase === 'sent' && (
         <>
           <p className="fd-setting-note">
-            Check <strong className="fd-account-email">{email.trim().toLowerCase()}</strong> for a sign-in link. It works once and
-            stops working in 15 minutes.
+            {t('account.sentA')} <strong className="fd-account-email">{email.trim().toLowerCase()}</strong> {t('account.sentB')}
           </p>
           <div className="fd-setting-actions">
             <Button variant="outline" onClick={() => setPhase('out')} disabled={busy}>
-              Use a different address
+              {t('account.different')}
             </Button>
           </div>
         </>
@@ -230,12 +228,12 @@ export function AccountPanel() {
       {phase === 'in' && me?.available && (
         <>
           <p className="fd-setting-note">
-            Signed in as <strong className="fd-account-email">{me.email ?? 'this account'}</strong>. Your coins and card follow this
-            account on any device.
+            {t('account.signedInA')} <strong className="fd-account-email">{me.email ?? t('account.thisAccount')}</strong>
+            {t('account.signedInB')}
           </p>
           <div className="fd-setting-actions">
             <Button variant="outline" onClick={leave} disabled={busy}>
-              Sign out
+              {t('account.signOut')}
             </Button>
           </div>
         </>
@@ -243,7 +241,7 @@ export function AccountPanel() {
 
       {note && (
         <p className="fd-account-note" role="status">
-          {note}
+          {note.startsWith('account.') ? t(note) : note}
         </p>
       )}
     </section>
