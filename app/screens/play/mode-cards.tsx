@@ -3,8 +3,9 @@ import { useRef } from 'react';
 import { Check, Trophy } from 'lucide-react';
 import { FORMAT_COPY } from '@/lib/duel-presentation.mjs';
 import { XP } from '@/lib/progression.mjs';
-import { usePresence } from '@/lib/presence-client';
+import { PRESENCE_LIVE, presenceLineKey, queuedFormat, usePresence } from '@/lib/presence-client';
 import type { Mode } from '../types';
+import { useRivalQueue } from './opponent-picker';
 import { usePlayJuice } from './press';
 import { useLocale } from '../../use-locale';
 
@@ -28,14 +29,22 @@ export type ModeCardsProps = {
  * only the checked card is in the tab order.
  *
  * Under each card, one muted line of live presence (lib/presence-client.ts): the server's count of
- * people waiting in that format and of matches running in it right now. The rules are honesty
- * rules, not styling ones:
- *  - the line exists only once a real answer has arrived. While loading there is no line and no
- *    skeleton digit, and in the static build `usePresence()` is null forever, so there is never a
- *    number on a build that cannot count one.
- *  - zero is printed as zero ("Nobody in queue · In game 0"). Nothing is padded or held over.
- *  - the 6 px dot is volt only while the last successful poll is under 15 s old; after that it
- *    goes grey and the numbers stand as the last thing the server actually said.
+ * the people waiting in that format and of the people playing it right now. Both numbers are
+ * people. The rules are honesty rules, not styling ones:
+ *  - the line's TEXT exists only once a real answer has arrived. While loading there is no
+ *    sentence and no skeleton digit — only the empty box that holds one, so nothing below it
+ *    jumps when the first poll lands — and in the static build `usePresence()` is null forever,
+ *    so there is never a number on a build that cannot count one.
+ *  - the count is per FORMAT, across every sport and entry, and the copy says so. Pairing needs a
+ *    lane (sport, mode, entry), so the launch panel's number during a search is a subset of this
+ *    one; the two are allowed to differ and neither is "rivals you can meet".
+ *  - when the viewer's own live queue row is one of the rows counted, the line says "you
+ *    included" (`presenceLineKey`). A player alone on the service must never be shown their own
+ *    row as company.
+ *  - zero is printed as zero. Nothing is padded or held over.
+ *  - a last answer older than 15 s is not called live. The 6 px dot goes grey AND the line gains
+ *    `presence.stale` in words, because a colour on an `aria-hidden` dot tells a screen-reader or
+ *    colour-blind player nothing at all.
  *  - the numbers never animate. A counter ticking up would dramatise a figure that is simply a
  *    fact, and would read as activity that is not happening.
  * The lines share ONE `aria-live="polite"` region so a screen reader hears at most one update per
@@ -44,6 +53,11 @@ export function ModeCards({ modes, selected, onSelect }: ModeCardsProps) {
   const { press, cue } = usePlayJuice();
   const { t, n, pick: label } = useLocale();
   const presence = usePresence();
+  // The format the viewer's own queue row is in, if any: the arena's rival search, read through
+  // the context the launch panel already uses, so nothing new is threaded through the screen.
+  const rival = useRivalQueue();
+  const mine = queuedFormat(rival?.search, selected);
+  const stale = !!presence && !presence.fresh;
   const refs = useRef<(HTMLButtonElement | null)[]>([]);
   const pick = (index: number, focus = true) => {
     const mode = modes[index];
@@ -110,12 +124,22 @@ export function ModeCards({ modes, selected, onSelect }: ModeCardsProps) {
                   <Check size={15} />
                 </span>
               </button>
-              {here ? (
-                <p className="fd-mode-presence" data-live={presence?.fresh ? 'on' : 'off'}>
-                  <span className="fd-mode-dot" aria-hidden="true" />
-                  {here.inQueue === 0
-                    ? t('presence.lineZero', { m: here.inGame })
-                    : t('presence.line', { n: here.inQueue, m: here.inGame })}
+              {/* Wherever there IS a server, the line's box is always in the tree, empty until an
+                  answer arrives: reserved (play.css `min-height`) so the topic chips below do not
+                  move under a thumb when the first poll lands, and empty because an empty box
+                  states nothing. On a build with no server there is no box either — no line is
+                  ever coming, so no space is held for one. */}
+              {PRESENCE_LIVE ? (
+                <p className="fd-mode-presence" data-live={here ? (stale ? 'off' : 'on') : 'none'}>
+                  {here ? (
+                    <>
+                      <span className="fd-mode-dot" aria-hidden="true" />
+                      <span className="fd-mode-say">
+                        {t(presenceLineKey(here.inQueue, mine === m.id), { n: here.inQueue, m: here.inGame })}
+                        {stale ? ` ${t('presence.stale')}` : ''}
+                      </span>
+                    </>
+                  ) : null}
                 </p>
               ) : null}
             </div>

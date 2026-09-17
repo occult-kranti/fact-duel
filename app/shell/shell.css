@@ -631,13 +631,12 @@
   }
 }
 
-/* Below 390 the wordmark leaves no room for four 44px targets in one row. The mark stays, and it
-   is the link's whole accessible name either way (aria-label "Jaanta Hai Kya home"). */
-@media (max-width: 389px) {
-  .fd-topbar .fd-brand > .fd-brand-word {
-    display: none;
-  }
-}
+/* The wordmark's hide breakpoint stays at 359px (the rule near the top of this file). It was
+   briefly moved to 389px to buy the top bar room, which would have dropped the wordmark on every
+   375px iPhone (SE, 6/7/8, X, 11 Pro, 12 mini) and every 360px Android — the most common widths
+   in the install base, not an edge case. The brand is what a first-time player reads first, so it
+   stays: 360-389 keeps the wordmark, and only the 320-359 band falls back to the mark alone,
+   where the link's own aria-label ("Jaanta Hai Kya home") still names the product. */
 
 /* The language pair in Settings was 40px tall. */
 .fd-locale-seg .fd-seg-btn {

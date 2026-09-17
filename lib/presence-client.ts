@@ -42,6 +42,12 @@ export type PresenceView = Readonly<{
 }>;
 
 export const PRESENCE_ENDPOINT = '/api/queue';
+/**
+ * Whether this build has a server to count with at all. True here, false in the static twin, so a
+ * screen can reserve the line's box (and only its box) on a build that will one day fill it, and
+ * leave no gap on one that never can.
+ */
+export const PRESENCE_LIVE = true;
 /** The poll interval while the tab is visible. */
 export const PRESENCE_POLL_MS = 10_000;
 /** The interval after the loop has failed this many times in a row. */
@@ -55,6 +61,39 @@ const count = (value: unknown): value is number => Number.isSafeInteger(value) &
 
 /** Is an answer taken at `at` still live, judged by this device's clock? */
 export const isFresh = (at: number, now: number): boolean => now - at < PRESENCE_FRESH_MS;
+
+/** The three shapes of the line under a format card, as dictionary keys. */
+export type PresenceLineKey = 'presence.line' | 'presence.lineYou' | 'presence.lineZero';
+
+/**
+ * Which line a format's card prints. A pure copy rule, here rather than in the component so a test
+ * can pin it without a DOM.
+ *
+ * WHY `queuedHere` EXISTS. `inQueue` counts live unpaired queue rows, and the viewer's own row is
+ * one of them: the arena writes it the moment "Find a rival" is tapped and a 2 s poll keeps it
+ * alive, while the format cards stay on screen for the whole search. Without this, a player alone
+ * on the service would watch their own card turn from "nobody in queue" to "1 in queue" and read
+ * their own row as company. When the viewer is queued in this format the line says so, exactly the
+ * way the launch panel's `launch.inLane` does.
+ */
+export function presenceLineKey(inQueue: number, queuedHere: boolean): PresenceLineKey {
+  if (!(inQueue > 0)) return 'presence.lineZero';
+  return queuedHere ? 'presence.lineYou' : 'presence.line';
+}
+
+/** Just enough of the arena's rival search to say which format the viewer's own row is in. */
+export type QueuedSearch = { phase: string; lane?: { mode: string } | null } | null | undefined;
+
+/**
+ * The format the viewer's own live queue row sits in, or null when there is no such row. A search
+ * writes its row before the server confirms the lane, so until `lane` arrives the format is the
+ * one the search was opened from — the selected card. A `paired` search has already left the queue
+ * for a room, so its row is not in `inQueue` and no card claims it.
+ */
+export function queuedFormat(search: QueuedSearch, selected: string): string | null {
+  if (!search || search.phase !== 'searching') return null;
+  return search.lane?.mode ?? selected;
+}
 
 /**
  * The server's answer, or null. One malformed mode rejects the whole answer: a half-read reply
@@ -84,6 +123,10 @@ export async function requestPresence(timeoutMs = PRESENCE_TIMEOUT_MS): Promise<
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ action: 'presence' }),
+      // The docblock says this call carries no session cookie, and fetch's default for a
+      // same-origin URL ('same-origin') would have sent one on every 10 s poll. `omit` is what
+      // makes the claim true, and it keeps an anonymous count request unattributable in edge logs.
+      credentials: 'omit',
       cache: 'no-store',
       signal: controller.signal,
     });

@@ -11,11 +11,12 @@
  */
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, mkdtempSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { createRequire } from 'node:module';
+import { execFileSync } from 'node:child_process';
+import { existsSync, mkdtempSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { fileURLToPath } from 'node:url';
+import { load as loadYaml } from 'js-yaml';
 import {
   ASSET_IGNORES,
   ASSETS_IGNORE_FILE,
@@ -416,37 +417,123 @@ test("the repo's own deploy.config.json is the live database and deploys as it s
 });
 
 /* -------------------------------------------------------------------------------------------
- * The workflow: two secrets and a dispatch. Parsed with js-yaml so a broken file fails here
- * rather than in the Actions tab.
+ * The workflow: two secrets and a dispatch. Parsed with js-yaml (a declared devDependency, so
+ * these tests do not depend on what some other package happens to hoist) and then audited as
+ * text, because valid YAML is only half of what GitHub demands.
+ *
+ * The other half is the expression contexts. GitHub does NOT expose the `secrets` context to a
+ * step's `if:` — the availability table allows it in `env:` and in a job's own env, and nowhere
+ * else. `if: ${{ secrets.OPS_TOKEN != '' }}` therefore does not evaluate to false when the secret
+ * is unset: it fails workflow validation, and every push produces an instant red run with ZERO
+ * jobs, which looks like nothing happened at all. js-yaml parses that file perfectly happily,
+ * which is exactly why the audit below reads the raw text as well.
  * ---------------------------------------------------------------------------------------- */
 
-const loadYaml = async () => {
-  const requireFrom = createRequire(import.meta.url);
-  try {
-    return requireFrom('js-yaml').load;
-  } catch {
-    const store = path.join(repoRoot, 'node_modules/.pnpm');
-    const dir = readdirSync(store).find((name) => name.startsWith('js-yaml@'));
-    assert.ok(dir, 'js-yaml is not installed under node_modules/.pnpm');
-    const entry = path.join(store, dir, 'node_modules/js-yaml/dist/js-yaml.mjs');
-    const mod = await import(pathToFileURL(entry).href);
-    return mod.load ?? mod.default.load;
-  }
-};
+const WORKFLOW = '.github/workflows/deploy-worker.yml';
+const workflow = () => loadYaml(repoFile(WORKFLOW));
 
-test('the deploy workflow is valid YAML and redeploys when deploy.config.json changes', async () => {
-  const load = await loadYaml();
-  const doc = load(repoFile('.github/workflows/deploy-worker.yml'));
+/**
+ * Every line of a workflow that mentions the `secrets` context, tagged with the block it sits in:
+ * 'env' under an `env:` mapping, 'run' inside a `run:` block scalar, 'comment' for a comment, and
+ * 'other' for anywhere else — which is the only bucket that can fail the file at GitHub.
+ */
+function secretReferences(source) {
+  const rows = [];
+  let block = null; // { column, kind } — the innermost env:/run: we are inside
+  for (const [index, raw] of source.split('\n').entries()) {
+    const trimmed = raw.trim();
+    const dash = /^-\s+/.exec(trimmed);
+    const column = raw.length - raw.trimStart().length + (dash ? dash[0].length : 0);
+    if (block && trimmed !== '' && column <= block.column) block = null;
+    // A `run:` body is shell, so nothing inside it opens a YAML block; anywhere else, it does.
+    const opener = block?.kind === 'run' ? null : /^(env|run):(\s|$)/.exec(trimmed.replace(/^-\s+/, ''));
+    if (opener) block = { column, kind: opener[1] };
+    if (trimmed.includes('secrets.'))
+      rows.push({
+        line: index + 1,
+        text: trimmed,
+        kind: trimmed.startsWith('#') ? 'comment' : (block?.kind ?? 'other'),
+      });
+  }
+  return rows;
+}
+
+test('the audit itself catches a secrets reference in a step condition', () => {
+  const bad = [
+    'jobs:',
+    '  deploy:',
+    '    env:',
+    '      OPS_TOKEN: ${{ secrets.OPS_TOKEN }}',
+    '    steps:',
+    '      - name: Set it',
+    "        if: ${{ secrets.OPS_TOKEN != '' }}",
+    '        run: |',
+    '          echo "secrets.OPS_TOKEN is fine in here"',
+  ].join('\n');
+  assert.deepEqual(
+    secretReferences(bad).map((row) => [row.line, row.kind]),
+    [
+      [4, 'env'],
+      [7, 'other'],
+      [9, 'run'],
+    ],
+  );
+});
+
+test('the deploy workflow is valid YAML and redeploys when deploy.config.json changes', () => {
+  const doc = workflow();
   const on = doc.on ?? doc[true];
   assert.ok('workflow_dispatch' in on, 'the founder can run it by hand');
   assert.ok(on.push.paths.includes('deploy.config.json'));
   assert.equal(doc.jobs.deploy.if, "needs.preflight.outputs.configured == 'true'");
 });
 
-test('preflight checks out the tree and takes the file as the database id', async () => {
-  const load = await loadYaml();
-  const doc = load(repoFile('.github/workflows/deploy-worker.yml'));
-  const steps = doc.jobs.preflight.steps;
+test('every `secrets.` in the workflow sits in an env: mapping, a run: block or a comment', () => {
+  const rows = secretReferences(repoFile(WORKFLOW));
+  assert.ok(rows.length >= 8, `the audit found only ${rows.length} references; it is not looking`);
+  assert.deepEqual(
+    rows.filter((row) => row.kind === 'other'),
+    [],
+    'the secrets context is unavailable outside env: and run:; GitHub rejects the whole file',
+  );
+  assert.ok(
+    rows.some((row) => row.kind === 'env'),
+    'and the optional secrets are still mapped somewhere',
+  );
+});
+
+test('no step or job condition reads the secrets context', () => {
+  const doc = workflow();
+  const conditions = [];
+  for (const [name, job] of Object.entries(doc.jobs)) {
+    if (job.if) conditions.push([`jobs.${name}.if`, job.if]);
+    for (const step of job.steps ?? [])
+      if (step.if) conditions.push([`jobs.${name}: ${step.name ?? step.uses}`, step.if]);
+  }
+  assert.ok(conditions.length >= 7, 'the gate and the six optional-secret steps all have one');
+  for (const [where, expression] of conditions)
+    assert.equal(/secrets\./.test(expression), false, `${where}: ${expression}`);
+});
+
+test('each optional Worker secret is a job-level env var and a step gated on it', () => {
+  const doc = workflow();
+  const OPTIONAL = ['OPS_TOKEN', 'SESSION_SECRET', 'GOOGLE_CLIENT_ID', 'MAIL_API_KEY', 'MAIL_FROM', 'APP_ORIGIN'];
+  for (const secret of OPTIONAL) {
+    assert.equal(
+      doc.jobs.deploy.env[secret],
+      `\${{ secrets.${secret} }}`,
+      `${secret} must reach the step as an env var; a step if: cannot read secrets`,
+    );
+    const step = doc.jobs.deploy.steps.find((s) => s.name === `Set ${secret}`);
+    assert.ok(step, `no step sets ${secret}`);
+    assert.equal(step.if, `env.${secret} != ''`);
+    assert.match(step.run, new RegExp(`wrangler secret put ${secret}\\b`));
+    assert.equal(/\$\{\{/.test(step.run), false, 'the value goes through the environment, not the command line');
+  }
+});
+
+test('preflight checks out the tree and reads the database id out of the file, not its name', () => {
+  const steps = workflow().jobs.preflight.steps;
   assert.ok(
     steps.some((step) => typeof step.uses === 'string' && step.uses.startsWith('actions/checkout@')),
     'without a checkout it cannot see deploy.config.json',
@@ -454,12 +541,42 @@ test('preflight checks out the tree and takes the file as the database id', asyn
   const check = steps.find((step) => step.id === 'check');
   assert.match(check.run, /\[ -f deploy\.config\.json \]/);
   assert.match(check.run, /database_source/);
+  // The gate is the VALUE. A file that exists with no d1.id must fall through to the green
+  // not-configured exit, not send the job into a red `deploy:prepare` ten minutes later.
+  assert.match(check.run, /d1\?\.id|d1"\]\?\.\["id"\]|\.d1\.id/, 'the check reads d1.id');
+  assert.match(check.run, /file_id/);
+  assert.equal(
+    /elif \[ -f deploy\.config\.json \]; then\s*\n\s*database_source=/.test(check.run),
+    false,
+    'the mere existence of the file is not the gate any more',
+  );
 });
 
-test('the not-configured exit is green and names exactly the two secrets', async () => {
-  const load = await loadYaml();
-  const doc = load(repoFile('.github/workflows/deploy-worker.yml'));
-  const check = doc.jobs.preflight.steps.find((step) => step.id === 'check');
+test('the preflight gate, run as shell, answers on the value of d1.id', () => {
+  const check = workflow().jobs.preflight.steps.find((step) => step.id === 'check');
+  // Everything above the `if [ "${HAS_TOKEN}" …` line: the part that decides database_source.
+  const decide = check.run.slice(0, check.run.indexOf('if [ "${HAS_TOKEN}"'));
+  assert.match(decide, /database_source=""/, 'the extracted fragment is the deciding one');
+  const run = (config, vars = {}) => {
+    const cwd = mkdtempSync(path.join(tmpdir(), 'preflight-'));
+    if (config !== null) writeFileSync(path.join(cwd, DEPLOY_FILE), config);
+    const script = `${decide}\nprintf '%s' "\${database_source}"\n`;
+    return execFileSync('bash', ['-c', script], {
+      cwd,
+      encoding: 'utf8',
+      env: { ...process.env, CF_D1_DATABASE_ID: '', ...vars },
+    });
+  };
+  assert.equal(run(`${JSON.stringify(file(), null, 2)}\n`), DEPLOY_FILE, 'a real id is configured');
+  assert.equal(run('{}\n'), '', 'a file with no d1.id is NOT configured');
+  assert.equal(run('{ "d1": {} }\n'), '', 'and neither is an empty d1 block');
+  assert.equal(run('{ not json\n'), '', 'and neither is a file that does not parse');
+  assert.equal(run(null), '', 'and neither is no file at all');
+  assert.equal(run('{}\n', { CF_D1_DATABASE_ID: LIVE_ID }), 'vars.CF_D1_DATABASE_ID', 'the variable still wins');
+});
+
+test('the not-configured exit is green and names exactly the two secrets', () => {
+  const check = workflow().jobs.preflight.steps.find((step) => step.id === 'check');
   assert.match(check.run, /configured=false/);
   assert.equal(/exit 1/.test(check.run), false, 'an unconfigured repo never goes red');
   const named = [...new Set(check.run.match(/secrets\.[A-Z_]+/g) ?? [])].sort();
@@ -467,16 +584,56 @@ test('the not-configured exit is green and names exactly the two secrets', async
   assert.match(check.run, /Ten-minute path/, 'and points at the doc that gets them');
 });
 
-test('the prepare step still passes every override the founder may set', async () => {
-  const load = await loadYaml();
-  const doc = load(repoFile('.github/workflows/deploy-worker.yml'));
-  const prepareStep = doc.jobs.deploy.steps.find((step) => step.name === 'Prepare the deploy manifest');
+test('the prepare step still passes every override the founder may set', () => {
+  const prepareStep = workflow().jobs.deploy.steps.find((step) => step.name === 'Prepare the deploy manifest');
   assert.deepEqual(Object.keys(prepareStep.env).sort(), [
     'CF_CUSTOM_DOMAIN',
     'CF_D1_DATABASE_ID',
     'CF_D1_DATABASE_NAME',
     'CF_WORKER_NAME',
   ]);
+});
+
+test('"Where it went" reads the deployed name from the manifest and hardcodes no default', () => {
+  const doc = workflow();
+  const step = doc.jobs.deploy.steps.find((s) => s.name === 'Where it went');
+  assert.match(step.run, /DEPLOY_CONFIG/, 'the manifest prepare wrote is the source of the name');
+  assert.match(step.run, /\.name/);
+  assert.equal(
+    step.run.includes(DEFAULT_WORKER_NAME),
+    false,
+    'a default here prints a workers.dev host that does not exist when the file names another Worker',
+  );
+  assert.equal('CF_WORKER_NAME' in (step.env ?? {}), false, 'the variable is not what was deployed; the manifest is');
+  assert.match(step.run, /APP_URL/, 'and it still says what to do with the URL');
+});
+
+test('"Where it went", run as shell, prints the name the manifest carries', () => {
+  const cwd = mkdtempSync(path.join(tmpdir(), 'where-it-went-'));
+  mkdirSync(path.join(cwd, 'dist/server'), { recursive: true });
+  const step = workflow().jobs.deploy.steps.find((s) => s.name === 'Where it went');
+  const shell = (env) =>
+    execFileSync('bash', ['-c', step.run], {
+      cwd,
+      encoding: 'utf8',
+      env: { ...process.env, DEPLOY_CONFIG, CF_CUSTOM_DOMAIN: '', ...env },
+    });
+
+  writeFileSync(path.join(cwd, DEPLOY_CONFIG), JSON.stringify(prepare(generated(), { CF_D1_DATABASE_ID: ID }, file({ workerName: 'jhk-live' }))));
+  const out = shell({});
+  assert.match(out, /Deployed Worker 'jhk-live'\./);
+  assert.match(out, /https:\/\/jhk-live\.<your-subdomain>\.workers\.dev\//);
+  assert.equal(out.includes(DEFAULT_WORKER_NAME), false, 'the hardcoded default is gone');
+
+  const domain = shell({ CF_CUSTOM_DOMAIN: 'play.example.com' });
+  assert.match(domain, /https:\/\/play\.example\.com\//);
+  assert.equal(/workers\.dev/.test(domain), false, 'a custom domain replaces the workers.dev line');
+});
+
+test('js-yaml is a declared devDependency, not something a transitive dep happens to hoist', () => {
+  const pkg = JSON.parse(repoFile('package.json'));
+  assert.equal(pkg.devDependencies['js-yaml'], '4.1.1', 'these workflow tests gate the deploy; pin what they import');
+  assert.equal('js-yaml' in (pkg.dependencies ?? {}), false, 'it is a test tool, not a runtime one');
 });
 
 test('the deploy doc opens with the Ten-minute path and its seven steps', () => {
@@ -497,4 +654,39 @@ test('the deploy doc opens with the Ten-minute path and its seven steps', () => 
   assert.match(section, /Cloudflare Registrar/);
   assert.match(section, /CF_CUSTOM_DOMAIN/);
   assert.equal(/\b(bet|wager|odds|jackpot|casino|slots|gamble)\b/i.test(section), false);
+});
+
+test('the rest of the guide agrees with step 6: Pages is a preview until APP_URL, then a hand-off', () => {
+  const doc = repoFile('docs/deploy-cloudflare.md');
+  const lines = doc.split('\n');
+  const section = (heading) => {
+    const start = lines.indexOf(heading);
+    assert.ok(start > 0, `no ${heading} section`);
+    const end = lines.findIndex((line, i) => i > start && line.startsWith('## '));
+    return lines.slice(start, end === -1 ? lines.length : end).join('\n');
+  };
+
+  // Step 6 sets APP_URL, after which static/main.tsx renders the hand-off card and never mounts
+  // the arena. A table that still promises a playable mirror sends the founder to a redirect card.
+  const runsWhere = section('## What runs where');
+  const pagesColumn = (row) => {
+    const line = runsWhere.split('\n').find((l) => l.startsWith(`| ${row} |`));
+    assert.ok(line, `no "${row}" row`);
+    return line.split('|')[2];
+  };
+  for (const row of ['Wallet', 'Duels']) {
+    assert.match(pagesColumn(row), /preview/i, `${row}: the Pages side is the preview build`);
+    assert.match(pagesColumn(row), /APP_URL/, `${row}: and names the switch`);
+    assert.match(pagesColumn(row), /hand-off/i, `${row}: and what it becomes`);
+  }
+  assert.equal(
+    /Both deployments serve the same game/.test(doc),
+    false,
+    'they do not, once APP_URL is set',
+  );
+
+  const tradeoff = section('## Pages: keep it or retire it');
+  assert.match(tradeoff, /leave `APP_URL` unset/, 'keeping the mirror is stated as the actual switch');
+  assert.match(tradeoff, /set `APP_URL`/, 'and so is handing over');
+  assert.equal(/\b(bet|wager|odds|jackpot|casino|slots|gamble)\b/i.test(tradeoff), false);
 });

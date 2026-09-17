@@ -1,7 +1,8 @@
 # Deploys the SERVER build — the Worker with the D1-backed duel, wallet, ledger, accounts and ops
 # routes — to Cloudflare Workers. This is the deployment that carries the founder's own domain, and
-# the one AdSense reviews; the static GitHub Pages build (pages.yml) has no server and stays the
-# offline mirror. See docs/deploy-cloudflare.md for the one-time setup and the tradeoff.
+# the one AdSense reviews; the static GitHub Pages build (pages.yml) has no server — it is the
+# in-browser preview until the repository variable APP_URL points at this Worker, after which it
+# serves a hand-off card and the quiz pages only. See docs/deploy-cloudflare.md, "What runs where".
 #
 # What happens, in order:
 #   1. `pnpm build` writes dist/server/wrangler.json (name = package name, D1 = placeholder id).
@@ -59,8 +60,9 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # Secrets cannot be read in a job-level `if`, so a first job turns "is this configured?" into
-  # an output the deploy job can gate on. Nothing here prints a secret, only whether it is there.
+  # The `secrets` context is not available in a job-level `if` (nor in a step's), so a first job
+  # turns "is this configured?" into an output the deploy job can gate on. It may be read in a
+  # step's `env:`, which is how the two flags below are computed without printing either value.
   preflight:
     runs-on: ubuntu-latest
     timeout-minutes: 2
@@ -80,10 +82,18 @@ jobs:
         run: |
           set -uo pipefail
           # The database id comes from the repository variable when it is set, otherwise from the
-          # committed deploy.config.json. Either one satisfies the requirement.
+          # committed deploy.config.json. Either one satisfies the requirement — but what counts is
+          # the VALUE, not the filename. A file that exists and carries no `d1.id` (stripped to {}
+          # to re-point a staging copy, or hand-edited into invalid JSON) is NOT configured, and
+          # saying so here is the green exit. Calling it configured only moves the failure ten
+          # minutes downstream, into a red deploy after install, typecheck, suite and build.
+          file_id=""
+          if [ -f deploy.config.json ]; then
+            file_id=$(node -e 'try{const v=require("./deploy.config.json")?.d1?.id;process.stdout.write(typeof v==="string"?v.trim():"")}catch{}')
+          fi
           if [ -n "${CF_D1_DATABASE_ID:-}" ]; then
             database_source="vars.CF_D1_DATABASE_ID"
-          elif [ -f deploy.config.json ]; then
+          elif [ -n "${file_id}" ]; then
             database_source="deploy.config.json"
           else
             database_source=""
@@ -100,7 +110,10 @@ jobs:
           [ "${HAS_ACCOUNT}" = "true" ] && account_state=present || account_state=MISSING
           echo "  secrets.CLOUDFLARE_API_TOKEN  : ${token_state}"
           echo "  secrets.CLOUDFLARE_ACCOUNT_ID : ${account_state}"
-          if [ -z "${database_source}" ]; then
+          if [ -z "${database_source}" ] && [ -f deploy.config.json ]; then
+            echo "The database id is missing too: deploy.config.json carries no d1.id (or does not parse)."
+            echo "Put the uuid back under \"d1\": { \"id\": … } or set vars.CF_D1_DATABASE_ID."
+          elif [ -z "${database_source}" ]; then
             echo "The database id is missing too: restore deploy.config.json or set vars.CF_D1_DATABASE_ID."
           fi
           echo
@@ -116,6 +129,18 @@ jobs:
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       WRANGLER_SEND_METRICS: 'false'
       DEPLOY_CONFIG: dist/server/wrangler.deploy.json
+      # The optional Worker secrets, mapped here and nowhere else. GitHub does NOT expose the
+      # `secrets` context to a step's `if:` — only to `env:` and to expressions inside a job's
+      # env, so `if: ${{ secrets.OPS_TOKEN != '' }}` is not a condition that evaluates false, it
+      # is a parse error that fails the whole workflow before any job starts (an instant red run
+      # with zero jobs, on every push). Mapping each one to an env var here makes the same test
+      # legal as `if: env.OPS_TOKEN != ''`. Values stay masked; nothing below echoes one.
+      OPS_TOKEN: ${{ secrets.OPS_TOKEN }}
+      SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+      GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+      MAIL_API_KEY: ${{ secrets.MAIL_API_KEY }}
+      MAIL_FROM: ${{ secrets.MAIL_FROM }}
+      APP_ORIGIN: ${{ secrets.APP_ORIGIN }}
     steps:
       - uses: actions/checkout@v4
 
@@ -185,58 +210,57 @@ jobs:
       - name: Deploy the Worker
         run: pnpm exec wrangler deploy --config "${DEPLOY_CONFIG}"
 
-      # One step per secret, each skipped when the repository does not set it. The value goes to
-      # wrangler over stdin (never an argument, so it is not in `ps` or the log), and the repo's
-      # copy stays the source of truth: change it in Settings and re-run this workflow.
+      # One step per secret, each skipped when the repository does not set it — the test is on the
+      # job-level env var above, because a step's `if:` cannot see the `secrets` context at all.
+      # The value goes to wrangler over stdin (never an argument, so it is not in `ps` or the log),
+      # and the repo's copy stays the source of truth: change it in Settings and re-run this
+      # workflow. An unset secret interpolates to the empty string, so the step simply does not run.
       - name: Set OPS_TOKEN
-        if: ${{ secrets.OPS_TOKEN != '' }}
-        env:
-          VALUE: ${{ secrets.OPS_TOKEN }}
-        run: printf '%s' "${VALUE}" | pnpm exec wrangler secret put OPS_TOKEN --config "${DEPLOY_CONFIG}"
+        if: env.OPS_TOKEN != ''
+        run: printf '%s' "${OPS_TOKEN}" | pnpm exec wrangler secret put OPS_TOKEN --config "${DEPLOY_CONFIG}"
 
       - name: Set SESSION_SECRET
-        if: ${{ secrets.SESSION_SECRET != '' }}
-        env:
-          VALUE: ${{ secrets.SESSION_SECRET }}
-        run: printf '%s' "${VALUE}" | pnpm exec wrangler secret put SESSION_SECRET --config "${DEPLOY_CONFIG}"
+        if: env.SESSION_SECRET != ''
+        run: printf '%s' "${SESSION_SECRET}" | pnpm exec wrangler secret put SESSION_SECRET --config "${DEPLOY_CONFIG}"
 
       - name: Set GOOGLE_CLIENT_ID
-        if: ${{ secrets.GOOGLE_CLIENT_ID != '' }}
-        env:
-          VALUE: ${{ secrets.GOOGLE_CLIENT_ID }}
-        run: printf '%s' "${VALUE}" | pnpm exec wrangler secret put GOOGLE_CLIENT_ID --config "${DEPLOY_CONFIG}"
+        if: env.GOOGLE_CLIENT_ID != ''
+        run: printf '%s' "${GOOGLE_CLIENT_ID}" | pnpm exec wrangler secret put GOOGLE_CLIENT_ID --config "${DEPLOY_CONFIG}"
 
       - name: Set MAIL_API_KEY
-        if: ${{ secrets.MAIL_API_KEY != '' }}
-        env:
-          VALUE: ${{ secrets.MAIL_API_KEY }}
-        run: printf '%s' "${VALUE}" | pnpm exec wrangler secret put MAIL_API_KEY --config "${DEPLOY_CONFIG}"
+        if: env.MAIL_API_KEY != ''
+        run: printf '%s' "${MAIL_API_KEY}" | pnpm exec wrangler secret put MAIL_API_KEY --config "${DEPLOY_CONFIG}"
 
       - name: Set MAIL_FROM
-        if: ${{ secrets.MAIL_FROM != '' }}
-        env:
-          VALUE: ${{ secrets.MAIL_FROM }}
-        run: printf '%s' "${VALUE}" | pnpm exec wrangler secret put MAIL_FROM --config "${DEPLOY_CONFIG}"
+        if: env.MAIL_FROM != ''
+        run: printf '%s' "${MAIL_FROM}" | pnpm exec wrangler secret put MAIL_FROM --config "${DEPLOY_CONFIG}"
 
       - name: Set APP_ORIGIN
-        if: ${{ secrets.APP_ORIGIN != '' }}
-        env:
-          VALUE: ${{ secrets.APP_ORIGIN }}
-        run: printf '%s' "${VALUE}" | pnpm exec wrangler secret put APP_ORIGIN --config "${DEPLOY_CONFIG}"
+        if: env.APP_ORIGIN != ''
+        run: printf '%s' "${APP_ORIGIN}" | pnpm exec wrangler secret put APP_ORIGIN --config "${DEPLOY_CONFIG}"
 
       - name: Where it went
         env:
           CF_CUSTOM_DOMAIN: ${{ vars.CF_CUSTOM_DOMAIN }}
-          CF_WORKER_NAME: ${{ vars.CF_WORKER_NAME }}
         run: |
-          name="${CF_WORKER_NAME:-jaanta-hai-kya}"
-          echo "Deployed Worker '${name}'."
+          set -uo pipefail
+          # Read the name back out of the manifest `pnpm deploy:prepare` wrote earlier in this same
+          # job — the one wrangler just deployed. Re-deriving it from vars.CF_WORKER_NAME would be
+          # blind to deploy.config.json's workerName, and the founder is told to copy this URL into
+          # APP_URL: a guessed name here is a hand-off card pointing every visitor at a dead host.
+          name=$(node -p "require(require('node:path').resolve(process.env.DEPLOY_CONFIG)).name" 2>/dev/null) || name=""
           if [ -n "${CF_CUSTOM_DOMAIN:-}" ]; then
+            echo "Deployed Worker '${name:-see the deploy output above}'."
             echo "  live at https://${CF_CUSTOM_DOMAIN}/ (once the Custom Domain has provisioned)"
-          else
+          elif [ -n "${name}" ]; then
+            echo "Deployed Worker '${name}'."
             echo "  live at https://${name}.<your-subdomain>.workers.dev/ — the exact URL is in the"
             echo "  deploy output above. Set the repository variable APP_URL to it so the GitHub"
             echo "  Pages build hands players over to this one."
+          else
+            echo "Deployed. ${DEPLOY_CONFIG} could not be read back, so the Worker name is not"
+            echo "  repeated here: take the workers.dev URL from the deploy output above. Set the"
+            echo "  repository variable APP_URL to it so the GitHub Pages build hands players over."
           fi
           echo "Verify the ops door: POST /api/ops answers 503 with no OPS_TOKEN set on the Worker,"
           echo "401 with a wrong bearer token, 200 with the right one. See docs/money-runbook.md."

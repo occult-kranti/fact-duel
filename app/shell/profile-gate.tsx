@@ -1,10 +1,10 @@
 'use client';
-import { useEffect, useState, useSyncExternalStore } from 'react';
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { quickProfile, whoami } from '@/lib/auth-client';
-import { GATE, gateDecision, noteClaim, noteSkip, noteVisit, readGate } from '@/lib/profile-gate.mjs';
+import { DEFAULT_NAME, GATE, gateDecision, noteClaim, noteSkip, noteVisit, readGate } from '@/lib/profile-gate.mjs';
 import { useLocale } from '../use-locale';
 import { JhkWordmark } from './brand-mark';
 import './profile-gate.css';
@@ -15,8 +15,10 @@ import './profile-gate.css';
  * One screen, one step, two fields, and a way out that is a plain text link at body size:
  * "Play as guest" is never a smaller, greyer or wordier button than the one beside it, and
  * skipping costs nothing. `lib/profile-gate.mjs` holds the only rule about coming back — three
- * visits after a skip, never again after a claim — so the nagging behaviour is a tested pure
- * function rather than something buried in this component.
+ * counted visits AND half an hour after a skip, never again after a claim — so the nagging
+ * behaviour is a tested pure function rather than something buried in this component. The server's
+ * answer closes it too: somebody who has already signed in, or already claimed an address on this
+ * principal, is never asked for one again.
  *
  * What the claim actually does is said on screen, because it is small: the email is NOT verified
  * (`quickProfile` in lib/server/auth-service.mjs explains what that means for the server), and on
@@ -52,7 +54,8 @@ type CopyKey =
   | 'failed'
   | 'settingsTitle'
   | 'settingsClaimed'
-  | 'settingsVerify';
+  | 'settingsVerify'
+  | 'notVerified';
 
 const COPY: Record<'en' | 'hi', Record<CopyKey, string>> = {
   en: {
@@ -73,6 +76,7 @@ const COPY: Record<'en' | 'hi', Record<CopyKey, string>> = {
     settingsTitle: 'Profile',
     settingsClaimed: 'You entered {email}. It has not been verified.',
     settingsVerify: 'Verify by link',
+    notVerified: 'not verified',
   },
   hi: {
     title: 'अपनी प्रोफ़ाइल बनाएँ',
@@ -92,10 +96,11 @@ const COPY: Record<'en' | 'hi', Record<CopyKey, string>> = {
     settingsTitle: 'प्रोफ़ाइल',
     settingsClaimed: 'आपने {email} दर्ज किया था। यह सत्यापित नहीं हुआ है।',
     settingsVerify: 'लिंक से सत्यापित करें',
+    notVerified: 'सत्यापित नहीं',
   },
 };
 
-/** The gate's own copy table, shared with the claimed-email line in Settings. */
+/** The gate's own copy table, shared with the claimed-email lines in Settings and the panel. */
 export function gateCopy(locale: string): Record<CopyKey, string> {
   return COPY[locale === 'hi' ? 'hi' : 'en'];
 }
@@ -126,8 +131,15 @@ function subscribe(listener: () => void) {
   };
 }
 
-/** Claimed or skipped: write the record and close for the rest of this page load. */
-function settle(record: GateRecord) {
+/**
+ * Claimed or skipped: write the record and close for the rest of this page load.
+ *
+ * The reducer runs against what storage holds NOW, not against the snapshot this tab took when it
+ * loaded. Two tabs open on a first landing are the case: claiming in one and then pressing "Play
+ * as guest" in the other must not write the older tab's `claimed: false` back over the claim.
+ */
+function settle(update: (record: GateRecord) => GateRecord) {
+  const record = update(load());
   save(record);
   decided = { record, show: false };
   for (const listener of listeners) listener();
@@ -161,7 +173,7 @@ export function readClaimedEmail(): string | null {
 }
 
 export type ProfileGateProps = {
-  /** arena's display name at mount. Anything but the placeholder default pre-fills the field. */
+  /** arena's display name. Anything but `DEFAULT_NAME` pre-fills the field, whenever it arrives. */
   name: string;
   /** arena's setter. arena persists it under SETTINGS_KEYS.name. */
   onName: (name: string) => void;
@@ -170,30 +182,61 @@ export type ProfileGateProps = {
 export function ProfileGate({ name, onName }: ProfileGateProps) {
   const { locale } = useLocale();
   const copy = gateCopy(locale);
-  const { record, show } = useSyncExternalStore(subscribe, snapshot, serverSnapshot);
+  const { show } = useSyncExternalStore(subscribe, snapshot, serverSnapshot);
   /** null until `whoami` answers; false is the static build, which has no server to keep a claim. */
   const [available, setAvailable] = useState<boolean | null>(null);
-  const [draftName, setDraftName] = useState(name === 'Challenger' ? '' : name);
+  const [draftName, setDraftName] = useState(name === DEFAULT_NAME ? '' : name);
+  /** Set the moment the person types: from then on the field is theirs, not the prop's. */
+  const touched = useRef(false);
   const [draftEmail, setDraftEmail] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // `whoami` only decides which honest footnote is printed, so it is allowed to land later — and
-  // a device that is past the gate never asks at all.
+  /* `whoami` says two things. Which honest footnote to print (a build with no server keeps the
+   * pair on the device), and whether this device is already past the gate: a player who signed in
+   * by link or Google, or who claimed an address on a device whose `fd-gate` record has since been
+   * cleared, must not be asked for an address they have already given. That answer closes the
+   * gate for good rather than only for this page load. A device with a record never asks at all. */
   useEffect(() => {
     if (!show) return;
     let alive = true;
     whoami().then((who) => {
-      if (alive) setAvailable(who.available);
+      if (!alive) return;
+      setAvailable(who.available);
+      if (!who.available) return;
+      // A proved sign-in settles the gate without recording an address as "claimed": there is
+      // nothing unverified to show in Settings, so only a real claim carries an address here.
+      if (who.signedIn || who.claimed) settle((gate) => noteClaim(gate, who.claimed?.email ?? gate.email));
     });
     return () => {
       alive = false;
     };
   }, [show]);
 
+  /* Another tab of the same app: once it has a claim, this one stops asking for the same pair.
+   * Only a claim closes it — a skip over there is that tab's answer, not this one's. */
+  useEffect(() => {
+    if (!show) return;
+    const onStorage = (event: StorageEvent) => {
+      if (event.key !== null && event.key !== GATE.storageKey) return;
+      const fresh = load();
+      if (fresh.claimed) settle(() => fresh);
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, [show]);
+
+  /* arena reads the saved name in its own mount effect, and a child's effects run before its
+   * parent's, so on the first render `name` is still the default whatever the device has stored.
+   * The draft follows it in while the person has not typed — after that it is theirs. */
+  useEffect(() => {
+    if (touched.current) return;
+    setDraftName(name === DEFAULT_NAME ? '' : name);
+  }, [name]);
+
   if (!show) return null;
 
-  const skip = () => settle(noteSkip(record, Date.now()));
+  const skip = () => settle((gate) => noteSkip(gate, Date.now()));
 
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -220,13 +263,13 @@ export function ProfileGate({ name, onName }: ProfileGateProps) {
       setAvailable(false);
     }
     onName(display);
-    settle(noteClaim(record, address));
+    settle((gate) => noteClaim(gate, address));
   };
 
   return (
     <div className="fd-gate" role="dialog" aria-modal="true" aria-labelledby="fd-gate-title">
       <div className="fd-gate-inner">
-        <JhkWordmark height={20} variant="full" className="fd-gate-mark" />
+        <JhkWordmark height={20} variant={locale === 'hi' ? 'hi' : 'full'} className="fd-gate-mark" />
         <h1 className="fd-gate-title" id="fd-gate-title">
           {copy.title}
         </h1>
@@ -241,7 +284,10 @@ export function ProfileGate({ name, onName }: ProfileGateProps) {
               id="fd-gate-name"
               className="fd-gate-input"
               value={draftName}
-              onChange={(e) => setDraftName(e.target.value)}
+              onChange={(e) => {
+                touched.current = true;
+                setDraftName(e.target.value);
+              }}
               maxLength={NAME_MAX}
               autoComplete="nickname"
               autoCapitalize="words"

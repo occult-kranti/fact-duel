@@ -8,6 +8,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { webcrypto } from 'node:crypto';
+import { readFile } from 'node:fs/promises';
 import { LocalD1 } from './d1-local.mjs';
 import {
   AUTH,
@@ -18,6 +19,7 @@ import {
   issueSession,
   newPrincipalId,
   normaliseEmail,
+  PROVED_PROVIDERS,
   quickProfile,
   readDisplayName,
   requestMagicLink,
@@ -201,11 +203,20 @@ test('(a) a guest with coins signs in and keeps every coin: the id does not chan
   assert.deepEqual({ ...identity }, { id: 'email:pat@example.com', principal_id: GUEST, provider: 'email', subject: 'pat@example.com', email: 'pat@example.com' });
   assert.deepEqual(await whoami(db, { principalId: GUEST, kind: 'session' }), {
     signedIn: true,
+    session: true,
     principalId: GUEST,
     email: 'pat@example.com',
+    claimed: null,
     providers: ['email'],
   });
-  assert.deepEqual(await whoami(db, { principalId: GUEST, kind: 'guest' }), { signedIn: false, principalId: GUEST, email: null, providers: [] });
+  assert.deepEqual(await whoami(db, { principalId: GUEST, kind: 'guest' }), {
+    signedIn: false,
+    session: false,
+    principalId: GUEST,
+    email: null,
+    claimed: null,
+    providers: [],
+  });
 });
 
 test('(a) also holds when the guest never touched the server before', async (t) => {
@@ -418,12 +429,72 @@ test('quick-profile claims an address without verifying it: one identity per pri
   assert.deepEqual(await lookup(again.session.sessionId), { principalId: GUEST });
   assert.deepEqual(await lookup(other.session.sessionId), { principalId: OTHER }, 'each session stays on its own principal');
 
+  // The claim is NOT a sign-in: it has a session, so the card syncs on this device, but nobody
+  // proved the address, so nothing on screen may call it an account.
   assert.deepEqual(await whoami(db, { principalId: GUEST, kind: 'session' }), {
-    signedIn: true,
+    signedIn: false,
+    session: true,
     principalId: GUEST,
     email: 'sam@example.com',
+    claimed: { email: 'sam@example.com' },
     providers: ['claimed-email'],
   });
+});
+
+test('a claimed address never reads as signed in, and a proved address later outranks it', async (t) => {
+  const db = opened(t);
+  // Anyone can type anyone's address into the gate. This is the whole reason `signedIn` may not
+  // be "a session exists": the panel would otherwise say "Signed in as <a stranger's address>".
+  await quickProfile(db, { principalId: GUEST, email: 'someone.else@example.com', name: 'Pat', now: T0 });
+  const claimedOnly = await whoami(db, { principalId: GUEST, kind: 'session' });
+  assert.deepEqual(claimedOnly, {
+    signedIn: false,
+    session: true,
+    principalId: GUEST,
+    email: 'someone.else@example.com',
+    claimed: { email: 'someone.else@example.com' },
+    providers: ['claimed-email'],
+  });
+
+  // The upgrade: a link actually clicked. The proved address is the one reported from then on,
+  // however much older the claimed row is; the claim stays visible, under its own name.
+  await signIn(db, { provider: 'email', subject: 'real@example.com', email: 'real@example.com', guestPrincipalId: GUEST, now: T0 + HOUR });
+  assert.deepEqual(await whoami(db, { principalId: GUEST, kind: 'session' }), {
+    signedIn: true,
+    session: true,
+    principalId: GUEST,
+    email: 'real@example.com',
+    claimed: { email: 'someone.else@example.com' },
+    providers: ['claimed-email', 'email'],
+  });
+  assert.deepEqual(PROVED_PROVIDERS, ['email', 'google'], 'the two a person can prove; claimed-email is not one');
+
+  // Without a session nothing is said at all, claimed or proved.
+  assert.deepEqual(await whoami(db, { principalId: GUEST, kind: 'guest' }), {
+    signedIn: false,
+    session: false,
+    principalId: GUEST,
+    email: null,
+    claimed: null,
+    providers: [],
+  });
+});
+
+test('a Google sign-in on a principal that never claimed anything reports no claim', async (t) => {
+  const db = opened(t);
+  await signIn(db, { provider: 'google', subject: '1234567890', email: 'pat@gmail.com', guestPrincipalId: GUEST, now: T0 });
+  const me = await whoami(db, { principalId: GUEST, kind: 'session' });
+  assert.equal(me.signedIn, true);
+  assert.equal(me.email, 'pat@gmail.com');
+  assert.equal(me.claimed, null);
+});
+
+test('the auth module is text, so the release greps can still read it', async () => {
+  const source = await readFile(new URL('../lib/server/auth-service.mjs', import.meta.url));
+  const control = [...source].flatMap((byte, at) => (byte < 9 || (byte > 13 && byte < 32) || byte === 127 ? [{ at, byte }] : []));
+  assert.deepEqual(control, [], 'a literal control byte makes git diff show a different program and makes grep call the file binary');
+  const junk = `a${String.fromCharCode(0)}b${String.fromCharCode(31)}c${String.fromCharCode(127)}d`;
+  assert.equal(readDisplayName(junk), 'a b c d', 'the escaped class folds exactly what the raw bytes did');
 });
 
 test('quick-profile refuses what it cannot use, and writes nothing when it refuses', async (t) => {
@@ -479,7 +550,14 @@ test('route: whoami for a guest, a sign-in link, the click, whoami for the sessi
 
   const guest = await post({ action: 'whoami' }, opts);
   assert.equal(guest.status, 200);
-  assert.deepEqual(await guest.json(), { signedIn: false, principalId: GUEST, email: null, providers: [] });
+  assert.deepEqual(await guest.json(), {
+    signedIn: false,
+    session: false,
+    principalId: GUEST,
+    email: null,
+    claimed: null,
+    providers: [],
+  });
   assert.equal(guest.headers.get('cache-control'), 'no-store');
 
   const asked = await handleAuthRequest(
@@ -510,13 +588,27 @@ test('route: whoami for a guest, a sign-in link, the click, whoami for the sessi
   assert.equal(cookieOf(twice), null, 'a spent link sets nothing');
 
   const me = await post({ action: 'whoami' }, { env, headers: { cookie: `fd_session=${sessionId}`, 'x-fd-principal': OTHER } });
-  assert.deepEqual(await me.json(), { signedIn: true, principalId: GUEST, email: 'pat@example.com', providers: ['email'] });
+  assert.deepEqual(await me.json(), {
+    signedIn: true,
+    session: true,
+    principalId: GUEST,
+    email: 'pat@example.com',
+    claimed: null,
+    providers: ['email'],
+  });
 
   const out = await post({ action: 'signout' }, { env, headers: { cookie: `fd_session=${sessionId}` } });
   assert.deepEqual(await out.json(), { ok: true });
   assert.equal(cookieOf(out), 'fd_session=; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=0');
   const after = await post({ action: 'whoami' }, { env, headers: { cookie: `fd_session=${sessionId}` } });
-  assert.deepEqual(await after.json(), { signedIn: false, principalId: null, email: null, providers: [] });
+  assert.deepEqual(await after.json(), {
+    signedIn: false,
+    session: false,
+    principalId: null,
+    email: null,
+    claimed: null,
+    providers: [],
+  });
   const outAgain = await post({ action: 'signout' }, { env });
   assert.equal(outAgain.status, 200, 'signing out with no session is fine');
 });
@@ -615,7 +707,7 @@ test('route: APP_ORIGIN wins for the link and the redirect', async (t) => {
   assert.equal(clicked.headers.get('location'), 'https://play.example/?signed-in=1');
 });
 
-test('route: quick-profile sets the cookie, answers the normalised address, and whoami then says claimed-email', async (t) => {
+test('route: quick-profile sets the cookie, answers the normalised address, and whoami then says claimed, not signed in', async (t) => {
   const db = opened(t);
   const env = { DB: db };
   const claim = await post({ action: 'quick-profile', name: ' Pat ', email: 'PAT@example.com' }, { env, headers: { 'x-fd-principal': GUEST } });
@@ -625,7 +717,14 @@ test('route: quick-profile sets the cookie, answers the normalised address, and 
   const sessionId = sessionIdOf(claim);
 
   const me = await post({ action: 'whoami' }, { env, headers: { cookie: `fd_session=${sessionId}` } });
-  assert.deepEqual(await me.json(), { signedIn: true, principalId: GUEST, email: 'pat@example.com', providers: ['claimed-email'] });
+  assert.deepEqual(await me.json(), {
+    signedIn: false,
+    session: true,
+    principalId: GUEST,
+    email: 'pat@example.com',
+    claimed: { email: 'pat@example.com' },
+    providers: ['claimed-email'],
+  });
 
   const junk = await post({ action: 'quick-profile', name: '', email: 'pat@example.com' }, { env, headers: { 'x-fd-principal': GUEST } });
   assert.equal(junk.status, 400);

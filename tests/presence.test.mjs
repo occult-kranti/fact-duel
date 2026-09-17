@@ -6,9 +6,16 @@
  *  - `inQueue` counts LIVE, UNPAIRED queue rows only. A row nobody has touched for 30 s is gone,
  *    and a row carrying a `paired:` assignment has left the queue for a room, so neither is
  *    company anybody can still meet.
- *  - `inGame` counts rooms that are actually mid-match (phase scheduled/playing/between) and have
- *    not expired. A lobby waiting for a guest, a finished room and a cancelled room are not games
- *    in progress, and an expired row is not anything.
+ *  - `inGame` counts the PEOPLE seated in rooms that are actually mid-match (phase
+ *    scheduled/playing/between), not expired, created inside `PRESENCE_ROOM_WINDOW_MS` and not a
+ *    practice duel against the house bot. A lobby waiting for a guest, a finished room and a
+ *    cancelled room are not games in progress; an expired row is not anything; and a room whose
+ *    players closed the tab forty-five minutes ago is not company, because nothing else ever settles
+ *    it (RULES.ttlMs keeps the row for two hours).
+ *  - the two numbers answer DIFFERENT questions and may legitimately disagree with the launch
+ *    panel: presence groups by mode alone, pairing needs a whole lane (sport, mode, entry).
+ *  - the card's own line discloses the viewer's row when the viewer is queued in that format, so
+ *    a player alone on the service is never shown their own queue row as company.
  *  - every format is reported, at zero when nobody is there. Zero is a number the product prints.
  *  - the client never turns a failure into a number: a 404 page, a 503 or a half-read body is a
  *    failure, the last good answer stands, and it stops being called live after 15 s.
@@ -17,7 +24,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { setImmediate as tick } from 'node:timers/promises';
-import { IN_GAME_PHASES, PRESENCE_MODES, presence } from '../lib/server/matchmaking.mjs';
+import { IN_GAME_PHASES, PRESENCE_MODES, PRESENCE_ROOM_WINDOW_MS, presence } from '../lib/server/matchmaking.mjs';
 import { PRESENCE_CACHE_MS, cachedPresence, handleQueueRequest } from '../lib/server/http-queue.mjs';
 import { LocalD1 } from './d1-local.mjs';
 import {
@@ -26,6 +33,8 @@ import {
   PRESENCE_FRESH_MS,
   PRESENCE_POLL_MS,
   isFresh,
+  presenceLineKey,
+  queuedFormat,
   readPresence,
   startPresence,
 } from '../lib/presence-client.ts';
@@ -45,11 +54,18 @@ function queueRow(db, { who, mode, lastSeen = T0, ticket = hex('1'), sport = 'Fo
     .bind(who, sport, mode, stake, lastSeen, lastSeen, ticket)
     .run();
 }
-function roomRow(db, { id, phase, mode, expiresAt = T0 + 60_000 }) {
-  const state = JSON.stringify({ id, phase, config: { mode, opponent: 'friend', stake: 0 } });
+/** A human seat, shaped the way `makeRoom` writes one (a human carries no `kind` at all). */
+const HUMAN = Object.freeze({ hash: hex('d'), name: 'Ana', ready: true, rttMs: 0, jitterMs: 0 });
+/** The seat `attachBot` writes, alongside the `config.opponent` it flips at the same moment. */
+const BOT = Object.freeze({ hash: null, name: 'Lucky Guess · BOT', kind: 'bot', ready: true, rttMs: 0, jitterMs: 0 });
+function roomRow(
+  db,
+  { id, phase, mode, expiresAt = T0 + 60_000, createdAt = T0, opponent = 'friend', players = [HUMAN, HUMAN] },
+) {
+  const state = JSON.stringify({ id, phase, players, config: { mode, opponent, stake: 0 } });
   return db
     .prepare('INSERT INTO rooms (id,revision,state,expires_at,created_at) VALUES (?,0,?,?,?)')
-    .bind(id, state, expiresAt, T0)
+    .bind(id, state, expiresAt, createdAt)
     .run();
 }
 /** The `paired:` ticket shape matchmaking writes; only the prefix matters to the count. */
@@ -90,7 +106,7 @@ test('inQueue counts live unpaired rows per mode: stale rows and paired rows are
   for (const mode of PRESENCE_MODES) assert.equal(view.modes[mode].inGame, 0, 'no rooms were seeded');
 });
 
-test('inGame counts rooms mid-match per mode: lobbies, finished, cancelled and expired rooms are not', async (t) => {
+test('inGame counts the PEOPLE mid-match per mode: lobbies, finished, cancelled and expired rooms are not', async (t) => {
   const db = new LocalD1();
   t.after(() => db.close());
   await roomRow(db, { id: hex('1'), phase: 'scheduled', mode: 'quick' });
@@ -103,10 +119,56 @@ test('inGame counts rooms mid-match per mode: lobbies, finished, cancelled and e
   // expires_at exactly at `now` has not expired yet.
   await roomRow(db, { id: hex('8'), phase: 'playing', mode: 'gauntlet', expiresAt: T0 });
   const view = await presence(db, { now: T0 });
-  assert.equal(view.modes.quick.inGame, 2);
-  assert.equal(view.modes.trilogy.inGame, 1);
-  assert.equal(view.modes.gauntlet.inGame, 1, 'the expired room is not a game, the one at the edge is');
+  // Two rooms, four people: the line and the region's accessible name both say players, so the
+  // number has to be players. A room is never reported as one person.
+  assert.equal(view.modes.quick.inGame, 4);
+  assert.equal(view.modes.trilogy.inGame, 2);
+  assert.equal(view.modes.gauntlet.inGame, 2, 'the expired room is not a game, the one at the edge is');
   for (const mode of PRESENCE_MODES) assert.equal(view.modes[mode].inQueue, 0, 'no queue rows were seeded');
+});
+
+test('a practice duel against the house bot is not a match anybody is in', async (t) => {
+  const db = new LocalD1();
+  t.after(() => db.close());
+  // What `attachBot` writes: the seat AND `config.opponent`, in the same call.
+  await roomRow(db, { id: hex('1'), phase: 'playing', mode: 'quick', opponent: 'bot', players: [HUMAN, BOT] });
+  await roomRow(db, { id: hex('2'), phase: 'scheduled', mode: 'trilogy', opponent: 'bot', players: [HUMAN, BOT] });
+  await roomRow(db, { id: hex('3'), phase: 'playing', mode: 'quick' });
+  const view = await presence(db, { now: T0 });
+  assert.equal(view.modes.quick.inGame, 2, 'the two humans, and neither the bot nor the person it is playing');
+  assert.equal(view.modes.trilogy.inGame, 0, 'one person practising alone is not a format anybody is in');
+});
+
+test('a room nobody has touched for forty-five minutes stops counting, long before its two-hour TTL', async (t) => {
+  const db = new LocalD1();
+  t.after(() => db.close());
+  assert.equal(PRESENCE_ROOM_WINDOW_MS, 45 * 60 * 1000);
+  // `RULES.ttlMs` is two hours and nothing settles a room whose players closed the tab: no
+  // beforeunload, no sendBeacon, and cleanup only deletes rows past `expires_at`. Without the
+  // window an abandoned Quick Draw room — one 10 s round — would be reported as a live match for
+  // roughly five hundred times its real length.
+  const ttl = 7_200_000;
+  await roomRow(db, { id: hex('1'), phase: 'playing', mode: 'quick', createdAt: T0 - 90 * 60_000, expiresAt: T0 + ttl });
+  await roomRow(db, {
+    id: hex('2'),
+    phase: 'playing',
+    mode: 'quick',
+    createdAt: T0 - PRESENCE_ROOM_WINDOW_MS - 1,
+    expiresAt: T0 + ttl,
+  });
+  // The edge is inclusive, and a real Gauntlet is minutes, so nothing live is ever dropped.
+  await roomRow(db, {
+    id: hex('3'),
+    phase: 'playing',
+    mode: 'trilogy',
+    createdAt: T0 - PRESENCE_ROOM_WINDOW_MS,
+    expiresAt: T0 + ttl,
+  });
+  await roomRow(db, { id: hex('4'), phase: 'between', mode: 'gauntlet', createdAt: T0 - 8 * 60_000 });
+  const view = await presence(db, { now: T0 });
+  assert.equal(view.modes.quick.inGame, 0, 'an abandoned room is not a live match');
+  assert.equal(view.modes.trilogy.inGame, 2, 'the room at the edge of the window still counts');
+  assert.equal(view.modes.gauntlet.inGame, 2, 'and a long format in progress counts throughout');
 });
 
 test('a room whose mode is not a served format is counted under no format at all', async (t) => {
@@ -117,30 +179,81 @@ test('a room whose mode is not a served format is counted under no format at all
   await queueRow(db, { who: pid('a'), mode: 'marathon', ticket: hex('1') });
   const view = await presence(db, { now: T0 });
   assert.equal(Object.keys(view.modes).length, 3);
-  assert.equal(view.modes.quick.inGame, 1);
+  assert.equal(view.modes.quick.inGame, 2);
   assert.equal(
     Object.values(view.modes).reduce((n, m) => n + m.inQueue + m.inGame, 0),
-    1,
+    2,
     'the unknown mode added nothing anywhere',
   );
 });
 
-test('the queue and the room counts are read from the same clock and agree with a real pairing', async (t) => {
+test('the whole way through a real pairing: waiting, then a lobby, then two people in game', async (t) => {
   const db = new LocalD1();
   t.after(() => db.close());
   const { enqueue, poll } = await import('../lib/server/matchmaking.mjs');
-  const { D1RoomStore } = await import('../lib/server/duel-service.mjs');
-  const deps = { store: new D1RoomStore(db), actor: 'test' };
+  const { D1RoomStore, dispatch } = await import('../lib/server/duel-service.mjs');
+  const store = new D1RoomStore(db);
+  const deps = { store, actor: 'test' };
   const a = await enqueue(db, { principalId: pid('a'), sport: 'Football', mode: 'quick', stake: 0, rating: 1000, now: T0 });
   const b = await enqueue(db, { principalId: pid('b'), sport: 'Football', mode: 'quick', stake: 0, rating: 1000, now: T0 });
   const waiting = await presence(db, { now: T0 });
   assert.equal(waiting.modes.quick.inQueue, 2, 'both are waiting');
   assert.equal(waiting.modes.quick.inGame, 0, 'and nothing is being played');
-  await poll(db, { principalId: pid('a'), ticket: a.ticket, name: 'Ana', now: T0 + 1000 }, deps);
-  await poll(db, { principalId: pid('b'), ticket: b.ticket, name: 'Bo', now: T0 + 1000 }, deps);
+  const host = await poll(db, { principalId: pid('a'), ticket: a.ticket, name: 'Ana', now: T0 + 1000 }, deps);
+  const guest = await poll(db, { principalId: pid('b'), ticket: b.ticket, name: 'Bo', now: T0 + 1000 }, deps);
+  assert.equal(host.state, 'paired');
+  assert.equal(guest.state, 'paired');
   const paired = await presence(db, { now: T0 + 1000 });
   assert.equal(paired.modes.quick.inQueue, 0, 'a paired row has left the queue');
   assert.equal(paired.modes.quick.inGame, 0, 'and the room is a lobby until the round is scheduled');
+
+  // Now drive that room — built by nothing but the engine, never by this file — to a live round.
+  // This is the test that pins the two `json_extract` paths and the seat count against the shape
+  // `makeRoom` actually writes: hand-built fixtures define the contract they then verify, so
+  // without this a nested or versioned `state` column would zero every count and stay green.
+  const ctx = { now: T0 + 2000, actor: 'test' };
+  const roomId = host.join.roomId;
+  await dispatch(store, { action: 'join', roomId, token: guest.join.token, invite: guest.join.invite, name: 'Bo' }, ctx);
+  await dispatch(store, { action: 'ready', roomId, token: host.join.token, rttMs: 0, jitterMs: 0 }, ctx);
+  await dispatch(store, { action: 'ready', roomId, token: guest.join.token, rttMs: 0, jitterMs: 0 }, ctx);
+  const row = await store.read(roomId);
+  const live = JSON.parse(row.state);
+  assert.equal(live.phase, 'scheduled', 'both seats ready schedules the first round');
+  assert.equal(live.config.opponent, 'friend', 'and it is not a practice room');
+  const playing = await presence(db, { now: T0 + 2000 });
+  assert.equal(playing.modes.quick.inGame, 2, 'two people, in one real room, counted by the real query');
+  assert.equal(playing.modes.quick.inQueue, 0);
+  assert.equal(playing.modes.trilogy.inGame, 0, 'and under no other format');
+
+  // Twenty minutes later nobody has settled it, and it stops being company.
+  const later = await presence(db, { now: T0 + 2000 + PRESENCE_ROOM_WINDOW_MS + 1 });
+  assert.equal(later.modes.quick.inGame, 0);
+});
+
+test('the card count is per FORMAT and the search count is per LANE, and they deliberately differ', async (t) => {
+  const db = new LocalD1();
+  t.after(() => db.close());
+  const { enqueue } = await import('../lib/server/matchmaking.mjs');
+  // Three people queued for Quick Draw in Cricket at an entry of 50 coins.
+  for (const who of ['a', 'b', 'c'])
+    await enqueue(db, { principalId: pid(who), sport: 'Cricket', mode: 'quick', stake: 50, rating: 1000, now: T0 });
+  // A fourth opens a different lane: same format, another sport, another entry. Pairing needs all
+  // three to match, so this player can meet none of the other three.
+  const mine = await enqueue(db, {
+    principalId: pid('d'),
+    sport: 'Football',
+    mode: 'quick',
+    stake: 0,
+    rating: 1000,
+    now: T0,
+  });
+  assert.equal(mine.waiting, 1, 'the launch panel counts the lane: only this player is in it');
+  const view = await presence(db, { now: T0 });
+  assert.equal(view.modes.quick.inQueue, 4, 'the card counts the format: every entry, every sport');
+  // Two true numbers about different things, on one screen, seconds apart. That is why the card's
+  // line says "this format" and never claims to be rivals you can meet, and why no comment in
+  // lib/server/matchmaking.mjs may claim predicate parity with `liveCount`.
+  assert.notEqual(view.modes.quick.inQueue, mine.waiting);
 });
 
 /* ------------------------------------------------------------------ the 5 s cache */
@@ -208,7 +321,7 @@ test('POST /api/queue {action:"presence"} needs no principal and answers counts 
   const view = await anonymous.json();
   assert.deepEqual(Object.keys(view).sort(), ['asOf', 'modes']);
   assert.equal(view.modes.trilogy.inQueue, 1);
-  assert.equal(view.modes.quick.inGame, 1);
+  assert.equal(view.modes.quick.inGame, 2);
   assert.equal(JSON.stringify(view).includes(pid('a')), false, 'no principal is echoed');
   // The other actions still need one.
   const poll = await call({ action: 'poll', ticket: hex('1'), name: 'Ana' });
@@ -474,9 +587,56 @@ test('freshness is re-judged when the page comes back, before the new answer arr
   h.handle.stop();
 });
 
+/* ------------------------------------------------------------------ the line under a card */
+
+test("a card says \"you included\" exactly when the viewer's own queue row is one of the rows counted", () => {
+  // The viewer taps Find a rival; their row is live and unpaired, so `inQueue` counts it. Without
+  // the disclosure a player alone on the service watches the card turn from "nobody in queue" to
+  // "1 in queue" and reads their own row as company — the fabricated-activity gate.
+  assert.equal(presenceLineKey(1, true), 'presence.lineYou');
+  assert.equal(presenceLineKey(4, true), 'presence.lineYou');
+  assert.equal(presenceLineKey(1, false), 'presence.line');
+  assert.equal(presenceLineKey(4, false), 'presence.line');
+  // Zero is still zero, and there is no "you" to include in it.
+  assert.equal(presenceLineKey(0, false), 'presence.lineZero');
+  assert.equal(presenceLineKey(0, true), 'presence.lineZero');
+});
+
+test('the queued format is the lane the server confirmed, the selected card until it does, and nothing otherwise', () => {
+  const searching = { phase: 'searching', lane: { mode: 'trilogy' }, waiting: 3, elapsedMs: 4000, window: 100 };
+  assert.equal(queuedFormat(searching, 'quick'), 'trilogy', "the server's lane wins over the card");
+  // The row is written before the first answer comes back, so until then the format is the one the
+  // search was opened from. Erring this way discloses a row rather than hiding one.
+  assert.equal(queuedFormat({ phase: 'searching', lane: null, waiting: null }, 'quick'), 'quick');
+  assert.equal(queuedFormat({ phase: 'searching' }, 'gauntlet'), 'gauntlet');
+  // A paired search has left the queue for a room: its row is not in `inQueue`, so no card claims it.
+  assert.equal(queuedFormat({ phase: 'paired' }, 'quick'), null);
+  assert.equal(queuedFormat({ phase: 'idle' }, 'quick'), null);
+  assert.equal(queuedFormat(null, 'quick'), null, 'no server, no rival queue, no row');
+  assert.equal(queuedFormat(undefined, 'quick'), null);
+});
+
+test('every line the rule can choose exists in both dictionaries, and only the disclosing one says so', async () => {
+  const { DICTIONARIES } = await import('../lib/i18n/index.mjs');
+  const keys = ['presence.line', 'presence.lineYou', 'presence.lineZero', 'presence.stale', 'presence.aria'];
+  for (const dict of [DICTIONARIES.en, DICTIONARIES.hi]) for (const key of keys) assert.ok(dict[key], key);
+  for (const n of [0, 1, 7]) for (const mine of [true, false]) assert.ok(DICTIONARIES.en[presenceLineKey(n, mine)]);
+  assert.match(DICTIONARIES.en['presence.lineYou'], /you included/);
+  assert.doesNotMatch(DICTIONARIES.en['presence.line'], /you included/);
+  // The count is per format, across every sport and entry, and all three lines have to say so:
+  // the launch panel's lane number is a subset and the two are allowed to differ.
+  for (const key of ['presence.line', 'presence.lineYou', 'presence.lineZero'])
+    assert.match(DICTIONARIES.en[key], /This format/, key);
+  // Staleness is a sentence, not only a colour on an aria-hidden dot.
+  assert.ok(DICTIONARIES.en['presence.stale'].trim().length > 0);
+});
+
 /* ------------------------------------------------------------------ the static twin */
 
 test('the static twin never polls and always answers null', async () => {
+  const { PRESENCE_LIVE } = await import('../lib/presence-client.ts');
+  assert.equal(PRESENCE_LIVE, true, 'a build with a server keeps the line box');
+  assert.equal(staticTwin.PRESENCE_LIVE, false, 'a build without one holds no space for a line that cannot come');
   assert.equal(staticTwin.usePresence(), null);
   assert.equal(staticTwin.readPresence({ asOf: T0, modes: { quick: { inQueue: 1, inGame: 1 } } }), null);
   assert.equal(await staticTwin.requestPresence(), null);
@@ -511,4 +671,22 @@ test('the static twin never polls and always answers null', async () => {
 test('the twin exports the same names as the real client, so the alias is a drop-in', async () => {
   const real = await import('../lib/presence-client.ts');
   for (const name of Object.keys(real)) assert.ok(name in staticTwin, `the twin exports ${name}`);
+});
+
+test('the twin answers the copy rules exactly as the real client does, so the two cannot drift', () => {
+  // The twin re-implements them rather than importing the polling client into a build with no
+  // server to poll, so the table is what keeps the two honest.
+  for (const n of [0, 1, 2, 9]) {
+    for (const mine of [true, false]) assert.equal(staticTwin.presenceLineKey(n, mine), presenceLineKey(n, mine));
+  }
+  for (const search of [
+    null,
+    undefined,
+    { phase: 'idle' },
+    { phase: 'paired' },
+    { phase: 'searching' },
+    { phase: 'searching', lane: null },
+    { phase: 'searching', lane: { mode: 'gauntlet' } },
+  ])
+    assert.equal(staticTwin.queuedFormat(search, 'quick'), queuedFormat(search, 'quick'), JSON.stringify(search));
 });

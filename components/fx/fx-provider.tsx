@@ -11,7 +11,9 @@
  * - runs every overlay through the pop-up budget (`./overlay-budget.ts`), which is the single
  *   answer to "how many pop-ups may the player see": at most two on screen, never two in the same
  *   instant, a ceremony takes the whole budget, same-kind toasts in one burst merge, and nothing
- *   at all opens while `setQuiet(true)` is on (a live question);
+ *   at all opens while `setQuiet(true)` is on (a live question). A ceremony also outranks a toast:
+ *   it jumps queued toasts and sends on-screen ones back to the queue (they return, unchanged,
+ *   once it closes), because a full-screen moment belongs to the screen that raised it;
  * - exposes `FxContext` (`useFx()`) with the toast / ceremony state and controls.
  */
 'use client';
@@ -50,7 +52,11 @@ export interface FxContextValue {
   clearToasts: () => void;
   /** The ceremony the budget has let on screen, if any. */
   ceremony: CeremonyItem | null;
-  /** Ask for a ceremony; returns its id. It opens once the budget is free (a ceremony needs both slots). */
+  /**
+   * Ask for a ceremony; returns its id. It needs the whole budget, so it opens as soon as the
+   * budget can be cleared for it: ahead of any queued toast, and without waiting out the 1200 ms
+   * gap when nothing is on screen. Only another open ceremony makes it wait.
+   */
   openCeremony: (input: CeremonyInput) => string;
   closeCeremony: () => void;
   /** Overlays waiting for a slot. */
@@ -125,7 +131,8 @@ export function FxProvider({ children, maxToasts = TOAST_MAX_VISIBLE }: FxProvid
   const clearToasts = useCallback(() => budget.clear('toast'), [budget]);
 
   // A single commit can raise several ceremonies (a stamp plus a level-up, two badges at once).
-  // The budget queues them and plays one at a time instead of overwriting each other.
+  // The budget queues them and plays one at a time instead of overwriting each other — in ask
+  // order, since one ceremony never jumps another.
   const openCeremony = useCallback(
     (input: CeremonyInput): string => {
       const id = nextId('ceremony');

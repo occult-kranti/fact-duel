@@ -1,24 +1,70 @@
 /**
- * The pop-up budget (components/fx/overlay-budget.ts) under a fake clock.
+ * The pop-up budget (components/fx/overlay-budget.ts) under a fake clock, plus the merge copy that
+ * `app/screens/use-progression-feedback.tsx` writes on top of it.
  *
  * What is being proved: a reward burst can never bury the player. At most two weight units are on
- * screen, two overlays never arrive in the same instant, the order is the order things were asked
- * for, a ceremony fills the budget on its own, same-kind toasts inside one burst collapse into a
- * single overlay, dismissing frees the slot — and nothing is ever dropped: every payload handed to
- * the scheduler comes back out, once, either as its own overlay or merged into one.
+ * screen, two overlays never arrive in the same instant, a ceremony fills the budget on its own,
+ * same-kind toasts inside one burst collapse into a single overlay, dismissing frees the slot —
+ * and nothing is ever dropped: every payload handed to the scheduler comes back out, once, either
+ * as its own overlay or merged into one.
+ *
+ * Ordering is priority-then-FIFO, and that is here because of a real defect: a ceremony belongs to
+ * the screen that raised it. Behind a queue of toasts the expedition stamp opened four to six
+ * seconds late, full-screen, over whatever screen the player had moved to. So a ceremony jumps
+ * queued toasts, sends on-screen toasts back to the queue (they return, unchanged), and does not
+ * sit out the 1200 ms gap when the budget is empty.
  *
  * Time is injected, so every assertion here is about exact milliseconds rather than about "roughly".
+ * The merge-copy tests transpile and run the SHIPPED .tsx, so no copy of that logic lives here.
  */
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { createRequire } from 'node:module';
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
 
 const {
   createOverlayBudget,
   OVERLAY_CAPACITY,
   OVERLAY_GAP_MS,
   OVERLAY_MERGE_WINDOW_MS,
+  OVERLAY_PRIORITY,
   OVERLAY_WEIGHT,
 } = await import('../components/fx/overlay-budget.ts');
+
+const require = createRequire(import.meta.url);
+const ts = require('typescript');
+const ROOT = path.resolve(import.meta.dirname, '..');
+const FEEDBACK_SOURCE = path.join(ROOT, 'app/screens/use-progression-feedback.tsx');
+const PROGRESSION = await import('../lib/progression.mjs');
+
+/** The shipped progression-feedback module with its React/3D/icon edges stubbed out. */
+function loadFeedback() {
+  const js = ts.transpileModule(readFileSync(FEEDBACK_SOURCE, 'utf8'), {
+    compilerOptions: {
+      module: ts.ModuleKind.CommonJS,
+      target: ts.ScriptTarget.ES2022,
+      jsx: ts.JsxEmit.React,
+      jsxFactory: 'h',
+      jsxFragmentFactory: 'Frag',
+    },
+  }).outputText;
+  const stub = new Proxy({}, { get: () => () => null });
+  const fakeRequire = (id) => {
+    if (id === '@/lib/progression.mjs') return PROGRESSION;
+    if (id === 'react' || id.startsWith('@/') || id.startsWith('.')) return stub;
+    throw new Error(`unexpected import ${id}`);
+  };
+  const mod = { exports: {} };
+  new Function('require', 'module', 'exports', 'h', 'Frag', js)(
+    fakeRequire,
+    mod,
+    mod.exports,
+    () => null,
+    'Frag',
+  );
+  return mod.exports;
+}
 
 /** A clock whose timers only fire when the test says so. */
 function fakeClock(start = 0) {
@@ -90,6 +136,7 @@ test('the constants are the ones the roadmap names', () => {
   assert.equal(OVERLAY_GAP_MS, 1200);
   assert.equal(OVERLAY_MERGE_WINDOW_MS, 800);
   assert.deepEqual(OVERLAY_WEIGHT, { toast: 1, ceremony: 2 });
+  assert.deepEqual(OVERLAY_PRIORITY, { toast: 0, ceremony: 1 });
 });
 
 test('a burst of 7 rewards: never more than two, never at once, in order, nothing lost', () => {
@@ -149,7 +196,7 @@ test('the first overlay is immediate; the second waits out the gap', () => {
   assert.equal(budget.getSnapshot().active.length, 2);
 });
 
-test('a ceremony fills the budget: nothing opens beside it, and it waits its turn', () => {
+test('a ceremony fills the budget: it goes first, alone, and the toasts follow', () => {
   const t = fakeClock();
   const budget = createOverlayBudget({ clock: t.clock });
   const spy = watch(budget);
@@ -158,38 +205,145 @@ test('a ceremony fills the budget: nothing opens beside it, and it waits its tur
   budget.request({ type: 'ceremony', id: 'cer', payload: 'ceremony' });
   budget.request({ type: 'toast', id: 'after', payload: 'toast' });
 
+  // Nothing was on screen yet, so the ceremony outranks both toasts and takes the whole budget
+  // straight away — the toast asked for first is not lost, it is waiting.
   t.advance(0);
-  assert.deepEqual(spy.grants.map((g) => g.id), ['before']);
+  assert.deepEqual(spy.grants.map((g) => g.id), ['cer']);
+  let snap = budget.getSnapshot();
+  assert.equal(snap.active.length, 1);
+  assert.equal(snap.used, 2, 'the ceremony is the whole budget');
+  assert.deepEqual(snap.queued.map((g) => g.id), ['before', 'after']);
 
-  // The ceremony needs both units, so it cannot open while the toast is up — and FIFO keeps the
-  // toast behind it from jumping the queue into the free slot.
-  t.advance(5_000);
-  assert.deepEqual(spy.grants.map((g) => g.id), ['before'], 'ceremony blocked, and it blocks the queue');
-  assert.equal(budget.getSnapshot().queued.length, 2);
-
-  budget.release('before');
-  t.advance(1_199);
-  assert.deepEqual(spy.grants.map((g) => g.id), ['before'], 'gap respected after the release');
-  t.advance(1);
-  assert.deepEqual(spy.grants.map((g) => g.id), ['before', 'cer']);
-
-  const live = budget.getSnapshot();
-  assert.equal(live.active.length, 1);
-  assert.equal(live.used, 2, 'the ceremony is the whole budget');
-
-  // While it is open, the waiting toast stays waiting however long we run the clock.
+  // While it is open, the waiting toasts stay waiting however long we run the clock.
   t.advance(30_000);
-  assert.deepEqual(spy.grants.map((g) => g.id), ['before', 'cer']);
+  assert.deepEqual(spy.grants.map((g) => g.id), ['cer'], 'the ceremony is alone on screen');
+  assert.deepEqual(budget.getSnapshot().active.map((g) => g.type), ['ceremony']);
+
+  // A toast, unlike a ceremony, does wait out the gap after the ceremony settles.
+  budget.release('cer');
+  t.advance(OVERLAY_GAP_MS - 1);
+  assert.deepEqual(spy.grants.map((g) => g.id), ['cer'], 'gap respected after the release');
+  t.advance(1);
+  assert.deepEqual(spy.grants.map((g) => g.id), ['cer', 'before']);
+  t.advance(OVERLAY_GAP_MS);
+  assert.deepEqual(spy.grants.map((g) => g.id), ['cer', 'before', 'after'], 'ask order among toasts');
+  assert.ok(spy.peakUnits() <= OVERLAY_CAPACITY);
+});
+
+test('a ceremony asked for behind three queued toasts opens first', () => {
+  const t = fakeClock();
+  // Quiet holds the pump so all four are genuinely queued together, as they are when a player
+  // leaves a room and both gates lift in one commit.
+  const budget = createOverlayBudget({ clock: t.clock, quiet: true });
+  const spy = watch(budget);
+
+  budget.request({ type: 'toast', id: 't1', mergeKey: 'a', payload: 1 });
+  budget.request({ type: 'toast', id: 't2', mergeKey: 'b', payload: 2 });
+  budget.request({ type: 'toast', id: 't3', mergeKey: 'c', payload: 3 });
+  budget.request({ type: 'ceremony', id: 'cer', payload: 'level-up' });
   assert.deepEqual(
-    budget.getSnapshot().active.map((g) => g.type),
-    ['ceremony'],
-    'the ceremony is alone on screen',
+    budget.getSnapshot().queued.map((g) => g.id),
+    ['cer', 't1', 't2', 't3'],
+    'priority first, then the order they were asked for',
   );
 
+  budget.setQuiet(false);
+  t.advance(0);
+  assert.deepEqual(spy.grants.map((g) => g.id), ['cer'], 'the ceremony did not queue behind them');
+
+  // Every toast still opens, in the order it was asked for: jumping the queue drops nothing.
   budget.release('cer');
-  t.advance(OVERLAY_GAP_MS);
-  assert.deepEqual(spy.grants.map((g) => g.id), ['before', 'cer', 'after']);
+  for (let step = 0; step < 400; step += 1) {
+    t.advance(50);
+    spy.sample();
+    for (const g of budget.getSnapshot().active) {
+      if (g.grantedAt >= 0 && t.now() - g.grantedAt >= 3200) budget.release(g.id);
+    }
+    spy.sample();
+  }
+  assert.deepEqual(spy.grants.map((g) => g.id), ['cer', 't1', 't2', 't3']);
   assert.ok(spy.peakUnits() <= OVERLAY_CAPACITY);
+});
+
+test('the expedition stamp: a ceremony 280 ms behind a toast opens inside 300 ms', () => {
+  const t = fakeClock();
+  const budget = createOverlayBudget({ clock: t.clock });
+  const spy = watch(budget);
+
+  // The real sequence at the end of an expedition: the progression flush toasts
+  // 'expedition-complete' as the finish screen mounts, and finish.tsx asks for the stamp 280 ms
+  // later. Behind a strict FIFO queue that stamp opened at 4400 ms — on whatever screen the player
+  // had tapped through to by then.
+  budget.request({ type: 'toast', id: 'expedition-complete', mergeKey: 'prog:expedition', payload: 'toast' });
+  t.advance(0);
+  assert.deepEqual(spy.grants.map((g) => g.id), ['expedition-complete']);
+
+  t.advance(280);
+  const askedAt = t.now();
+  budget.request({ type: 'ceremony', id: 'stamp', payload: 'stamp' });
+  t.advance(0);
+
+  const stamp = spy.grants.find((g) => g.id === 'stamp');
+  assert.ok(stamp, 'the stamp opened');
+  assert.ok(stamp.at - askedAt <= 300, `the stamp opened ${stamp.at - askedAt} ms after it was asked for`);
+  let snap = budget.getSnapshot();
+  assert.deepEqual(snap.active.map((g) => g.id), ['stamp'], 'alone on screen');
+  assert.equal(snap.used, 2);
+  assert.deepEqual(
+    snap.queued.map((g) => g.id),
+    ['expedition-complete'],
+    'the toast it displaced is back at the front of the queue, not dropped',
+  );
+
+  // The player reads the stamp and closes it; the toast returns with its payload intact.
+  t.advance(4_000);
+  budget.release('stamp');
+  t.advance(OVERLAY_GAP_MS);
+  snap = budget.getSnapshot();
+  assert.deepEqual(snap.active.map((g) => g.id), ['expedition-complete']);
+  assert.deepEqual(snap.active[0].items, ['toast']);
+  assert.ok(spy.peakUnits() <= OVERLAY_CAPACITY);
+});
+
+test('an open ceremony is never preempted, and the next one does not wait on a blank screen', () => {
+  const t = fakeClock();
+  const budget = createOverlayBudget({ clock: t.clock });
+  const spy = watch(budget);
+
+  budget.request({ type: 'ceremony', id: 'c1', payload: 1 });
+  t.advance(0);
+  budget.request({ type: 'ceremony', id: 'c2', payload: 2 });
+  t.advance(60_000);
+  assert.deepEqual(spy.grants.map((g) => g.id), ['c1'], 'a ceremony never evicts a ceremony');
+  assert.deepEqual(budget.getSnapshot().queued.map((g) => g.id), ['c2']);
+
+  // The gap exists so two overlays do not land on top of each other; with the screen clear there
+  // is nothing to land on, so the second ceremony opens at the release instant.
+  budget.release('c1');
+  t.advance(0);
+  assert.deepEqual(spy.grants.map((g) => g.id), ['c1', 'c2']);
+  assert.equal(spy.grants[1].at, 60_000);
+  assert.ok(spy.peakUnits() <= OVERLAY_CAPACITY);
+});
+
+test('cancelling a queued item wakes whatever was stuck behind it', () => {
+  const t = fakeClock();
+  // An overlay that cannot fit even on a clear screen: the budget will not evict for it (that
+  // would loop forever), so it blocks the queue — the one state where `pump` arms no timer at all.
+  const budget = createOverlayBudget({ clock: t.clock, weight: { ceremony: 3 } });
+  const spy = watch(budget);
+
+  budget.request({ type: 'ceremony', id: 'huge', payload: 1 });
+  budget.request({ type: 'toast', id: 'b', payload: 2 });
+  t.advance(60_000);
+  assert.equal(spy.grants.length, 0, 'the head blocks the queue');
+
+  // `release` of a still-queued id is a cancel; it has to re-arm the pump like every other
+  // mutation, or the toast behind it waits for a request that may never come.
+  assert.equal(budget.release('huge'), true);
+  t.advance(0);
+  assert.deepEqual(spy.grants.map((g) => g.id), ['b'], 'the toast behind it opened on its own');
+  assert.equal(budget.getSnapshot().queued.length, 0);
 });
 
 test('same-kind toasts inside one burst merge into a single overlay', () => {
@@ -285,10 +439,10 @@ test('quiet holds everything back and lets it through untouched', () => {
 
   budget.setQuiet(false);
   t.advance(0);
-  assert.deepEqual(spy.grants.map((g) => g.id), ['a'], 'order survived the quiet stretch');
-  budget.release('a');
+  assert.deepEqual(spy.grants.map((g) => g.id), ['c'], 'the ceremony leads when the gate lifts');
+  budget.release('c');
   t.advance(OVERLAY_GAP_MS);
-  assert.deepEqual(spy.grants.map((g) => g.id), ['a', 'c']);
+  assert.deepEqual(spy.grants.map((g) => g.id), ['c', 'a'], 'nothing was lost in the quiet stretch');
 });
 
 test('a burst of 7 with repeated kinds: everything shows or merges, nothing twice', () => {
@@ -352,18 +506,19 @@ test('re-requesting a live id updates it in place instead of taking a second slo
 test('clear drops what is waiting and what is up', () => {
   const t = fakeClock();
   const budget = createOverlayBudget({ clock: t.clock });
-  budget.request({ type: 'toast', id: 'a', payload: 1 });
   budget.request({ type: 'ceremony', id: 'c', payload: 2 });
   t.advance(0);
-  assert.equal(budget.getSnapshot().active.length, 1);
+  assert.deepEqual(budget.getSnapshot().active.map((g) => g.id), ['c']);
+  budget.request({ type: 'toast', id: 'a', payload: 1 });
 
   budget.clear('toast');
   let snap = budget.getSnapshot();
-  assert.equal(snap.active.length, 0);
-  assert.equal(snap.queued.length, 1, 'the ceremony survived a toast-only clear');
+  assert.equal(snap.queued.length, 0, 'the waiting toast is gone');
+  assert.equal(snap.active.length, 1, 'the ceremony survived a toast-only clear');
 
   budget.clear();
   snap = budget.getSnapshot();
+  assert.equal(snap.active.length, 0, 'and what was up goes too');
   assert.equal(snap.queued.length, 0);
   assert.equal(snap.used, 0);
 });
@@ -381,4 +536,70 @@ test('destroy stops the timer and the notifications', () => {
   t.advance(10_000);
   assert.equal(calls, before, 'nothing fires after unmount');
   assert.equal(budget.getSnapshot().active.length, 0);
+});
+
+/* ---------------------------------------------------------------------------------------------
+ * The words on top of the budget: app/screens/use-progression-feedback.tsx.
+ *
+ * Defect pinned: 'quest' and 'quests-bonus' shared one merge key. lib/progression.mjs awards the
+ * all-quests bonus in the SAME reducer call that completes the last daily quest, so the two always
+ * arrive in one burst and merged into one toast whose headline counted log rows: finishing one
+ * quest read "+2 quests". A number the player can check against their own quest card, and wrong.
+ * ------------------------------------------------------------------------------------------- */
+
+const questToast = (label, xp) => ({
+  kind: 'quest',
+  title: label,
+  meta: { xp, one: 'quest', many: 'quests', label, kind: 'quest' },
+});
+const bonusToast = () => ({
+  kind: 'quest',
+  title: 'All daily quests complete',
+  meta: {
+    xp: PROGRESSION.XP.questBonus,
+    one: 'bonus',
+    many: 'bonuses',
+    label: 'All daily quests complete',
+    kind: 'quests-bonus',
+  },
+});
+
+test('the all-quests bonus has its own merge key, so it never lands in the quest headline', () => {
+  const { MERGE_GROUPS } = loadFeedback();
+  assert.notEqual(
+    MERGE_GROUPS.quest.key,
+    MERGE_GROUPS['quests-bonus'].key,
+    'the bonus must not merge into the quest group',
+  );
+
+  // Through the real scheduler, with the keys the screen builds: two overlays, not one.
+  const t = fakeClock();
+  const budget = createOverlayBudget({ clock: t.clock, quiet: true });
+  budget.request({ type: 'toast', id: 'q', mergeKey: `prog:${MERGE_GROUPS.quest.key}`, payload: questToast('Answer 3 questions correctly', 50) });
+  budget.request({ type: 'toast', id: 'b', mergeKey: `prog:${MERGE_GROUPS['quests-bonus'].key}`, payload: bonusToast() });
+  const queued = budget.getSnapshot().queued;
+  assert.equal(queued.length, 2, 'the quest and the bonus are separate overlays');
+  assert.deepEqual(queued.map((g) => g.ids), [['q'], ['b']]);
+});
+
+test('the merged quest headline counts quests, not log rows', () => {
+  const { mergeProgressToasts } = loadFeedback();
+
+  // Three real quests in one burst: the count and the XP are both the sum of what landed.
+  const three = [
+    questToast('Answer 3 questions correctly', 60),
+    questToast('Get a 3-answer combo in one match', 50),
+    questToast('Finish a duel', 30),
+  ];
+  const merged = mergeProgressToasts(three);
+  assert.equal(merged.title, '+3 quests · 140 XP');
+  assert.equal(merged.body, 'Answer 3 questions correctly · Get a 3-answer combo in one match · +1 more');
+
+  // One quest on its own reads with the singular noun.
+  assert.equal(mergeProgressToasts([questToast('Finish a duel', 40)]).title, '+1 quest · 40 XP');
+
+  // And the belt-and-braces: even if a bonus row were ever grouped with quests again, the headline
+  // counts the quests. The XP still sums the whole group, because all of it was really awarded.
+  const withBonus = mergeProgressToasts([questToast('Finish a duel', 40), bonusToast()]);
+  assert.equal(withBonus.title, `+1 quest · ${40 + PROGRESSION.XP.questBonus} XP`);
 });

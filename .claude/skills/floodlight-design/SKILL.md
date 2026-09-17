@@ -59,18 +59,31 @@ before you finish": `scripts/screens.mjs` says the page renders, this says it is
 
 ```sh
 node scripts/run-framework.mjs dev &                     # :5173
-node scripts/mobile-gate.mjs outputs/mobile-gate         # every screen but the finish receipt
-# the finish screen needs a build that can create a room (dev has no D1 → /api/duel 503):
+node scripts/mobile-gate.mjs outputs/mobile-gate         # every screen but the live duel
+# the question stage and the finish receipt need a build that can create a room (dev has no D1,
+# so /api/duel answers 503); on the dev server both are recorded as ALLOWED skips, nothing else is:
 pnpm build:static && pnpm exec vite preview --config vite.config.static.ts --port 5174 &
-node scripts/mobile-gate.mjs outputs/mobile-gate http://localhost:5174/fact-duel/
+node scripts/mobile-gate.mjs outputs/mobile-gate-static http://localhost:5174/fact-duel/
 ```
 
-Exit code 1 on any failure. Then READ the PNGs — the gate measures, it does not have taste.
+Exit code 1 on: any screen failure, any static-check failure, any skip that is not on `SKIP_ALLOW`,
+any page/console error or failed request that is not on `CONSOLE_ALLOW`. Then READ the PNGs — the
+gate measures, it does not have taste. Quote counts from `report.json` (`summary`, and
+`static[].checked`), never from memory: `pass` with nothing inspected is the failure mode these
+checks have.
 
-**Matrix.** 320x568 (top bar only), 360x740, 390x844, 414x896 x `en`/`hi` x dark/light, over: the
-profile gate, Home, Play with each format selected, Player, Vault, Events, Play rules / Rules of
-the coin / Trust, the settings sheet open, Play > Join with the name field focused, and the finish
-receipt reached by playing a bot duel. 172 screens.
+**Matrix.** 320x568 (top bar only), 360x740, 390x844, 414x896 x `en`/`hi` x dark/light, over 19
+screens: the profile gate, Home, Expeditions (the atlas and a route's brief), Play with each of the
+three formats selected, Player, Vault, Collections, Events, Play rules / Rules of the coin / Trust,
+the coins card, the settings sheet open, Play > Join with the name field focused, a LIVE question
+stage (the duel is paused at `[data-stage="question"]` with the answers enabled and nothing is
+tapped), and the finish receipt reached by playing that duel out. 232 runs.
+
+**NOT covered**, so nobody reads a green run as the whole app: Discovery, Analytics, Showroom, the
+ops dashboard, the expedition run and finish views, the rewarded state of the ad card (it needs a
+live ad), and Play's rival-search state (it needs a second human in the queue — the queue itself is
+503 on dev and absent on the static build). Landscape is not in the matrix either; the fixes that
+must survive a turned phone are written `@media (pointer: coarse)` instead of a width step.
 
 **Thresholds** (`THRESHOLDS` in the script — change them there, not per screen):
 
@@ -78,14 +91,30 @@ receipt reached by playing a bot duel. 172 screens.
 | --- | --- | --- |
 | horizontal overflow | `scrollWidth <= innerWidth + 1` | the 1px is sub-pixel rounding, not a budget |
 | tap target | 44 x 44 CSS px | WCAG 2.5.5 Target Size (Enhanced). 2.5.8 (Minimum) is 24 x 24; this product holds 44 because every control is a thumb target |
-| body text | >= 14px | an element carrying >= 25 characters of its OWN text, not ALL-CAPS, not inside a button/link/label. Chips, counters and tab labels stay at `--fs-12`; sentences do not |
+| body text | >= 14px | an element carrying >= 25 characters of its OWN text, not ALL-CAPS, not inside a button/link/label. Chips, counters and tab labels stay at `--fs-12`; sentences do not. Hindi counts characters too: a 22-character English readout can be a 30-character Devanagari sentence |
 | inputs | >= 16px | iOS Safari zooms the page when a focused control computes under 16px |
 | bottom bars | `env(safe-area-inset-bottom)` | read from the CSS, not the box: headless Chromium reports every inset as 0 and a notch cannot be emulated, so a runtime check would pass vacuously |
+| top bars | `env(safe-area-inset-top)` | same reading, for "no text under the notch" |
 | full-height panels | `dvh`/`svh`, never bare `vh` | `vh` == `lvh`, the LARGE viewport: a `100vh` panel overshoots the screen while the URL bar is showing |
 
-Two structural exemptions are applied in code, both from WCAG 2.5.8: **Inline** (a target that
-lays out inline, inside a parent that is a text container rather than a flex/grid box, which holds
-8+ more characters than the target — our footer links and `.fd-link`) and **User agent control**.
+**How the three CSS checks read a sheet.** `blocks()` is a brace parser, not a regex: it sees nested
+rules (`& .kid`), composes their selectors, and keeps each block's OWN declarations. `position` is
+resolved PER SELECTOR across every sheet, because this repo writes its viewport steps as
+`@media { .fd-nav { bottom: … } }`; a bottom offset is read from `bottom`, `inset-block-end`,
+`inset-block` or the `inset` shorthand, which is how the settings sheet pins itself
+(`inset: auto 0 0 0`). Three things are recorded rather than required, and the report names each:
+a layer pinned at BOTH edges (`inset: 0`) is full-bleed and pads its own content; a `sticky` box at
+the TOP edge sticks inside its scroller (`env(safe-area-inset-top)` on a sticky table header would
+open a 47px hole inside the table), so only the page-level bars in `PAGE_STICKY` are gated there;
+and an off-screen parking offset (`.skip-link` at `top: -100px`) is checked on the rule that moves
+it. A bar whose `position` lives in a Tailwind class list rather than in CSS goes in
+`PINNED_BY_MARKUP` with the file that pins it — today the Radix sheet.
+
+**What is NOT checked, and why.** The Devanagari line height. The gate reads computed `font-size`,
+never leading, and a correct leading check needs the rendered glyph boxes, not a number: Devanagari
+matras sit above and below the line, and `1.55` in `app/locale.css` is a typographic judgement, not
+a threshold. The rule that stands instead is a review one — **do not declare `line-height` on a
+string that wraps in Hindi**; let `:root[lang='hi'] body { line-height: 1.55 }` reach it.
 
 **Named exceptions — the cap is two.** A third means fix the control, not the list.
 1. `[data-slot='switch']` — the Radix switch track is 32x18 by design; its 56x44 hit area is a
@@ -94,11 +123,30 @@ lays out inline, inside a parent that is a text container rather than a flex/gri
 2. `[data-slot='slider'] [role='slider']` — the thumb is one end of a continuous control whose real
    target is the 44px track; growing it would cover the value it points at.
 
+**Allow-lists, both with a reason per entry.** `SKIP_ALLOW`: a screen the gate could not reach
+fails the run unless it is named here AND the app's own notice matches AND nothing else failed on
+that run — an unreachable screen is what a renamed `data-nav` or a disabled button looks like from
+here. Today it holds one entry: the two duel screens against a build with no room service.
+`CONSOLE_ALLOW`: `/api/*` answering 503 (dev, no D1) or 404 (the static preview has no API at
+all), the Google Fonts fetch that this sandbox's proxy CA breaks, requests the gate itself
+cancelled by navigating, and Chromium's URL-less "Failed to load resource" duplicate. A React
+render crash, a 404 on an app asset, or a 401/403/500 on `/api/*` is not on it and fails.
+
+**When a screen hangs.** Each screen, and the walk out of a live room after it, runs under
+`SCREEN_TIMEOUT_MS` (90s). `page.evaluate` has no timeout of its own, and one unresponsive page
+used to hang the whole run with no report written at all; now that screen fails with
+`driver timed out after …` and the run carries on to the end.
+
 **When it fails.** Fix in CSS first, appended at the END of the sheet that already styles the
 selector (same selector, later source order — no specificity war, no `!important`). Every fix in
 this repo carries a `/* mobile gate (scripts/mobile-gate.mjs) */` header saying which rule it
 answers. Only reach for markup when CSS cannot: an inline `style={{fontSize}}` or a sentence with
 no class of its own (`fd-launch-fine` in `launch-panel.tsx` is the one of those).
+
+**The CSS layer is unit-tested.** `tests/mobile-gate.test.mjs` exercises `blocks`, `checkDvh`,
+`checkSafeArea`, `checkSafeTop` and the two allow-lists on fixture CSS, and asserts the repo's own
+sheets pass with a non-zero inspected count. Importing the script must never launch a browser: the
+run lives behind `if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href)`.
 
 **Sources.** MDN, [CSS length](https://developer.mozilla.org/en-US/docs/Web/CSS/length) (svh/lvh/dvh
 and the scroll-resize warning) and [env()](https://developer.mozilla.org/en-US/docs/Web/CSS/env)

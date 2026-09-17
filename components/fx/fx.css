@@ -390,3 +390,14 @@
 .fx-reduced .fx-toast-bar {
   animation: none;
 }
+
+/* ---------- mobile gate (scripts/mobile-gate.mjs) ---------- */
+/* The toast body used to be six characters ("+60 XP"). Since the overlay budget merges a reward
+   burst into one card it carries a sentence instead — "Answer 3 questions correctly · Get a
+   3-answer combo in one match · +1 more" — which is body text, and body text on a phone is 14px
+   (THRESHOLDS.bodyText). The desktop card is 360px wide and keeps the smaller line. */
+@media (max-width: 768px) {
+  .fx-toast-body {
+    font-size: var(--fs-14, 0.875rem);
+  }
+}

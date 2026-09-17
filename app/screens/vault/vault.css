@@ -1228,3 +1228,16 @@
 :root[data-motion='off'] .fd-learn *::after {
   animation: none !important;
 }
+
+/* ---------- mobile gate (scripts/mobile-gate.mjs) ---------- */
+/* iOS Safari zooms the whole page when a focused form control computes under 16px (web.dev,
+   "Help users enter the right data in forms": use at least 1rem). This is the one raw <input> in
+   the app — every shadcn <Input> is 16px on phones via `text-base md:text-sm` — and Collections is
+   two taps from Play ("see all subjects"), so tapping the search field zoomed the page and left
+   the player pinching back out. 16px at every width on a touch pointer: a phone in LANDSCAPE is
+   wider than any max-width phone step, and iOS zooms there too. */
+@media (pointer: coarse) {
+  .fd-learn .fd-search > input {
+    font-size: 16px;
+  }
+}

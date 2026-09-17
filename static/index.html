@@ -7,13 +7,18 @@
     <title>Jaanta Hai Kya — Do you know? Prove it.</title>
     <meta
       name="description"
-      content="Jaanta Hai Kya (JHK). Explore nine sports and science expeditions, choose your confidence, collect stamps, or challenge a random bot. Sports and science trivia with free simulated coins. Preview build: no server, so everything runs in your browser."
+      content="Jaanta Hai Kya (JHK). Sports quiz duels: run one of five sports expeditions, choose your confidence, collect stamps, or challenge a bot. Free simulated coins, never purchasable. Preview build: no server, so everything runs in your browser."
     />
     <meta property="og:site_name" content="Jaanta Hai Kya" />
     <meta property="og:title" content="Jaanta Hai Kya — Do you know? Prove it." />
     <meta property="og:type" content="website" />
     <!-- The favicon, the two font preloads and the self-hosted fonts stylesheet are injected by the
-         `fd-static-assets` plugin in vite.config.static.ts, which knows the deployment base path. -->
+         `fd-static-assets` plugin in vite.config.static.ts, which knows the deployment base path.
+         That plugin also rewrites the description above, adds a canonical link and a no-script
+         refresh, and puts a plain hand-off link inside #root, when APP_URL says the game has moved:
+         this file describes the preview, and the preview only. The count in the description is the
+         number of served expeditions (lib/expeditions.mjs ACTIVE_EXPEDITIONS) and is pinned by
+         tests/offline-copy.test.mjs, so it cannot drift from what the build actually serves. -->
   </head>
   <body class="antialiased">
     <div id="root"></div>

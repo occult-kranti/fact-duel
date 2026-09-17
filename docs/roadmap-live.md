@@ -7,7 +7,7 @@ below. Every item is a change a player can see or a founder can verify; nothing 
 
 | surface | what it is | can two people play? |
 | --- | --- | --- |
-| https://occult-kranti.github.io/fact-duel/ (GitHub Pages) | the STATIC build: no server, device wallet, bots, expeditions, drills, the SEO quiz pages, the deck | **No.** Friend rooms and matchmaking need a server; this build says "offline demo" for them |
+| https://occult-kranti.github.io/fact-duel/ (GitHub Pages) | the STATIC build: no server, device wallet, bots, expeditions, drills, the SEO quiz pages, the deck | **No.** Friend rooms and matchmaking need a server; this build says the live site opens them |
 | the Worker build (`pnpm build` → Cloudflare Workers + D1) | the full game: accounts, profile sync, server wallet, ledger duels, matchmaking, `/ops` | **Yes**, once deployed. It is NOT deployed yet |
 
 What exists in the Cloudflare account now: the D1 database `jhk-db` (id `2c74ea74-4d0f-492a-9b21-6e29393bfb4b`,
@@ -43,6 +43,14 @@ Until the domain is bought the Worker is reachable at `https://jaanta-hai-kya.<a
 - Tests: presence SQL over LocalD1 with seeded queue rows and rooms in each phase; the 5 s cache; the client
   poll cadence, visibility pause and back-off; the static twin returns null.
 
+**Round-two amendments (after review).** `inGame` counts PEOPLE (filled seats), excludes bot rooms,
+and only counts rooms created inside `PRESENCE_ROOM_WINDOW_MS` (45 minutes) so an abandoned room stops
+being company. Counts are per FORMAT across every sport and entry, and the copy says so ("This format:
+…"); the launch panel's per-lane count is a different, narrower number by design. When the viewer's own
+queue row is in the count the line says "you included"; when the last good answer is over 15 s old the
+line carries "· not checked just now" as a text twin of the dot. On phones the line is 14 px with a
+two-line reserved box so the block never grows after paint.
+
 ### W2 — Overlay budget: never more than two pop-ups, and never at once
 - One scheduler in `components/fx/overlay-budget.ts`: every toast, ceremony and modal-like reward reveal
   asks the budget for a slot. Rules: at most 2 overlays visible; a ceremony counts as 2 (nothing else while
@@ -55,7 +63,7 @@ Until the domain is bought the Worker is reachable at `https://jaanta-hai-kya.<a
   with ≥ 1200 ms spacing (fake timers); a ceremony blocks toasts; identical kinds merge.
 
 ### W3 — The profile gate: name and email on first landing (no verification)
-- On first landing (no `fd-profile-claimed` flag) a full-screen, single-step sheet asks for a display name
+- On first landing (no claim in the `fd-gate` record, `lib/profile-gate.mjs`) a full-screen, single-step sheet asks for a display name
   and an email. Copy: "Jaanta Hai Kya keeps your coins and card under this profile. No password, no link
   to click." Both fields required; email checked for shape only. A "Play as guest" text link stays
   available (never a dark pattern; the gate can be skipped, and it asks again after 3 sessions, not on
@@ -75,7 +83,7 @@ Until the domain is bought the Worker is reachable at `https://jaanta-hai-kya.<a
 - The static build gains an optional `APP_URL` (build env). When set: the app root renders a small
   interstitial "Jaanta Hai Kya now runs at <host>. Taking you there…" with a 3 s auto-redirect and a
   button; the SEO pages' "Play this as a duel" links point at `APP_URL`; the deck and quiz pages stay on
-  Pages. When unset: today's behaviour, but every "offline demo" string is rewritten to say what it is:
+  Pages. When unset: today's behaviour, but every preview string is rewritten to say what it is:
   "This preview has no server: friend duels and finding a rival open on the live site." The Worker build
   never shows any of these strings (test: the Worker bundle contains no "offline").
 - `pages.yml` reads `APP_URL` from a repo variable (`vars.APP_URL`) — the founder sets it once the Worker

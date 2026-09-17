@@ -2,9 +2,11 @@
  * components/fx/toast-stack.tsx — stacked, queued notification toasts.
  *
  * Rendered by `<FxProvider>`; you normally push toasts via `useJuice().toast(...)` or
- * `fx.emit('toast', ...)`. The pop-up budget (./overlay-budget.ts) decides what is on screen, so
- * at most TWO toasts are visible, they never arrive in the same instant, and the rest wait their
- * turn; auto-dismiss after 3.2 s frees the slot, and the timer pauses while hovered or focused.
+ * `fx.emit('toast', ...)`. The pop-up budget (./overlay-budget.ts) decides what is on screen: at
+ * most `TOAST_MAX_VISIBLE` (= `OVERLAY_CAPACITY`, currently 2) are visible, they never arrive in
+ * the same instant, and the rest wait their turn — including a toast the budget sent back to the
+ * queue to let a ceremony through, which returns after it closes. Auto-dismiss after 3.2 s frees
+ * the slot, and the timer pauses while hovered or focused.
  * Bottom-centre on ≤ 768 px (with safe-area inset), top-right on desktop. The container is
  * `aria-live="polite"`; every toast has a 44 px close button. Enter/exit animation via
  * `motion/react`; reduced motion → opacity fades only.
@@ -44,7 +46,10 @@ export interface ToastItem extends ToastInput {
 }
 
 export const TOAST_DURATION_MS = 3200;
-/** Two, because a toast weighs one unit of the overlay budget and the budget holds two. */
+/**
+ * The cap, read off the budget rather than written down twice: a toast weighs one unit and the
+ * budget holds `OVERLAY_CAPACITY` of them, so this moves if that constant ever moves.
+ */
 export const TOAST_MAX_VISIBLE = OVERLAY_CAPACITY;
 
 /* A toast the player did not trigger must not click at them: `info` is the passive kind, so it
@@ -144,7 +149,7 @@ function ToastCard({ toast, reduced, onDismiss }: ToastCardProps) {
 export interface ToastStackProps {
   toasts: ToastItem[];
   onDismiss: (id: string) => void;
-  /** Visible at once; the rest queue (default 2). The budget already caps this — belt and braces. */
+  /** Visible at once; the rest queue (default `TOAST_MAX_VISIBLE`). The budget already caps this. */
   max?: number;
 }
 

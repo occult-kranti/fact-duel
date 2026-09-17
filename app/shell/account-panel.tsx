@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { requestMagicLink, signInWithGoogle, signOut, whoami, type Whoami } from '@/lib/auth-client';
 import { useLocale } from '../use-locale';
+import { gateCopy } from './profile-gate';
 import './account.css';
 
 /**
@@ -13,6 +14,14 @@ import './account.css';
  * (the static build), signed out, signed in — and the Google button exists only when a client id
  * was actually configured for this deployment, so nothing on screen promises what the server
  * cannot do.
+ *
+ * A CLAIMED address is not a sign-in. The profile gate's quick profile leaves a session on the
+ * device, but nobody checked that the person owns what they typed, so `whoami().signedIn` stays
+ * false for it (lib/server/auth-service.mjs) and this panel stays in its signed-out state: it
+ * prints "Profile: <address> · not verified" and keeps the link field — the one thing that can
+ * make it real — on screen, with "Verify by link" putting the address into it. "Signed in as
+ * <address>", and the promise that the card follows it to another device, is printed only for an
+ * address a clicked link or Google proved.
  */
 
 type Phase = 'loading' | 'static' | 'out' | 'sent' | 'in';
@@ -75,7 +84,8 @@ function landingNote(): string | null {
 }
 
 export function AccountPanel() {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
+  const copy = gateCopy(locale);
   const [phase, setPhase] = useState<Phase>('loading');
   const [me, setMe] = useState<Whoami | null>(null);
   const [email, setEmail] = useState('');
@@ -158,6 +168,14 @@ export function AccountPanel() {
     }
   };
 
+  /** "Verify by link": the claimed address goes into the field below, ready to be sent a link. */
+  const verifyByLink = () => {
+    if (me?.available && me.claimed) setEmail(me.claimed.email);
+    const field = document.getElementById('account-email') as HTMLInputElement | null;
+    field?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    field?.focus({ preventScroll: true });
+  };
+
   const leave = async () => {
     setBusy(true);
     setNote(null);
@@ -179,6 +197,19 @@ export function AccountPanel() {
 
       {phase === 'out' && (
         <>
+          {me?.available && me.claimed && (
+            <>
+              <p className="fd-setting-note fd-account-claimed">
+                {copy.settingsTitle}: <strong className="fd-account-email">{me.claimed.email}</strong>
+                <span className="fd-account-unverified"> · {copy.notVerified}</span>
+              </p>
+              <div className="fd-setting-actions">
+                <Button variant="outline" onClick={verifyByLink} disabled={busy}>
+                  {copy.settingsVerify}
+                </Button>
+              </div>
+            </>
+          )}
           <p className="fd-setting-note">{t('account.guest')}</p>
           <form className="fd-account-form" onSubmit={sendLink}>
             <Label htmlFor="account-email">{t('account.email')}</Label>

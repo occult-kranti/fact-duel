@@ -10,10 +10,19 @@
  *    ceremony weighs 2 — so a ceremony fills the budget and nothing else can open beside it.
  *  - NEVER AT ONCE: two overlays never arrive in the same instant. A grant waits `OVERLAY_GAP_MS`
  *    (1200 ms) after the previous grant *or* the previous release, whichever is later. The first
- *    overlay after an idle stretch opens straight away.
- *  - FIFO: the queue is served strictly in the order things were asked for, including when the
- *    head is a ceremony that does not fit yet (it holds its place rather than letting a lighter
- *    item jump it — a stable order beats a clever one).
+ *    overlay after an idle stretch opens straight away, and so does a ceremony that has the whole
+ *    screen to itself (see below).
+ *  - PRIORITY, THEN FIFO: a ceremony outranks a toast, so a ceremony asked for behind three queued
+ *    toasts opens FIRST; inside one rank the order is the order things were asked for. A ceremony
+ *    belongs to the moment that raised it (a stamp, a level-up) and is full-screen, so making it
+ *    queue behind toasts lands it on a screen the player has already walked away from.
+ *  - PREEMPTION: when a ceremony is at the head and only toasts are on screen, those toasts go
+ *    BACK to the front of the queue and open again once the ceremony closes — nothing is dropped,
+ *    and the ceremony does not wait for them to time out. An open ceremony is never preempted.
+ *  - A CEREMONY NEVER WAITS ON AN EMPTY SCREEN: the gap exists so two overlays do not arrive on
+ *    top of each other; with nothing on screen there is nothing to arrive on top of. A ceremony at
+ *    the head opens the instant the budget is empty (this is what keeps the expedition stamp at
+ *    ~280 ms after the finish screen instead of four seconds later, on another screen).
  *  - MERGE: toasts of the same `mergeKey` asked for within `OVERLAY_MERGE_WINDOW_MS` (800 ms) of
  *    the group's first item, and still waiting, collapse into ONE grant carrying every payload.
  *    The scheduler only groups them; the words ("+3 quests · 140 XP") are written by whoever owns
@@ -39,6 +48,13 @@ export const OVERLAY_CAPACITY = 2;
 
 /** Cost of each overlay type against the capacity. */
 export const OVERLAY_WEIGHT: Record<OverlayType, number> = { toast: 1, ceremony: 2 };
+
+/**
+ * Who is served first. Higher wins; ties fall back to the ask order, so this is priority-then-FIFO.
+ * A ceremony is the moment itself and belongs to the screen that raised it; a toast is a footnote
+ * that reads the same ten seconds later.
+ */
+export const OVERLAY_PRIORITY: Record<OverlayType, number> = { toast: 0, ceremony: 1 };
 
 /** Quiet time between one overlay settling and the next one opening. */
 export const OVERLAY_GAP_MS = 1200;
@@ -171,6 +187,22 @@ export function createOverlayBudget<P>(options: OverlayBudgetOptions = {}): Over
 
   const used = (): number => active.reduce((n, e) => n + (weight[e.type] ?? 1), 0);
 
+  const rankOf = (type: OverlayType): number => OVERLAY_PRIORITY[type] ?? 0;
+
+  /** Where a NEW entry of this rank goes: behind everything that outranks or ties it (FIFO). */
+  const tailOf = (rank: number): number => {
+    let i = queued.length;
+    while (i > 0 && rankOf(queued[i - 1].type) < rank) i -= 1;
+    return i;
+  };
+
+  /** Where a PREEMPTED entry goes back: in front of everything of its own rank, behind its betters. */
+  const headOf = (rank: number): number => {
+    let i = 0;
+    while (i < queued.length && rankOf(queued[i].type) > rank) i += 1;
+    return i;
+  };
+
   const build = (): OverlaySnapshot<P> => ({
     version,
     quiet,
@@ -203,15 +235,35 @@ export function createOverlayBudget<P>(options: OverlayBudgetOptions = {}): Over
   function pump(): void {
     timer = null;
     if (destroyed || quiet) return;
-    let granted = false;
+    let moved = false;
     for (;;) {
       const head = queued[0];
       if (!head) break;
-      // Strict FIFO: a ceremony that does not fit yet holds the line rather than being overtaken.
-      if (used() + (weight[head.type] ?? 1) > capacity) break;
+      const need = weight[head.type] ?? 1;
+      if (used() + need > capacity) {
+        // A ceremony is full-screen and belongs to the screen that raised it, so it does not wait
+        // for toasts to time out: the toasts go back to the front of the queue (keeping their
+        // order and their payloads) and open again once it closes. A live ceremony is never
+        // preempted, and neither is anything when the ceremony could not fit even on a clear
+        // screen — that would loop forever.
+        const preemptable =
+          head.type === 'ceremony' &&
+          need <= capacity &&
+          active.length > 0 &&
+          active.every((e) => e.type === 'toast');
+        if (!preemptable) break;
+        const returning = active.splice(0);
+        for (const e of returning) e.grantedAt = -1;
+        queued.splice(headOf(rankOf('toast')), 0, ...returning);
+        moved = true;
+        continue;
+      }
       const now = clock.now();
       const earliest = Math.max(lastGrantAt, lastReleaseAt) + gapMs;
-      if (now < earliest) {
+      // The gap keeps two overlays from arriving on top of each other. A ceremony with the screen
+      // to itself has nothing to arrive on top of, so it opens the moment the budget is empty.
+      const waitsOutTheGap = head.type !== 'ceremony' || active.length > 0;
+      if (waitsOutTheGap && now < earliest) {
         arm(earliest - now);
         break;
       }
@@ -219,9 +271,9 @@ export function createOverlayBudget<P>(options: OverlayBudgetOptions = {}): Over
       head.grantedAt = now;
       active.push(head);
       lastGrantAt = now;
-      granted = true;
+      moved = true;
     }
-    if (granted) changed();
+    if (moved) changed();
   }
 
   const schedule = (): void => {
@@ -256,7 +308,8 @@ export function createOverlayBudget<P>(options: OverlayBudgetOptions = {}): Over
       for (let i = queued.length - 1; i >= 0; i -= 1) {
         const e = queued[i];
         if (e.type !== 'toast' || e.mergeKey !== req.mergeKey) continue;
-        // The queue is append-only, so anything further back is older still: stop looking.
+        // Toasts keep their ask order in the queue (a preempted one goes back at the front of its
+        // own rank), so anything further back is older still: stop looking.
         if (now - e.queuedAt > mergeWindowMs) break;
         e.ids.push(id);
         e.items.push(req.payload);
@@ -267,7 +320,8 @@ export function createOverlayBudget<P>(options: OverlayBudgetOptions = {}): Over
     }
 
     seq += 1;
-    queued.push({
+    // Priority-then-FIFO: a ceremony is spliced in ahead of the toasts, never ahead of a ceremony.
+    queued.splice(tailOf(rankOf(req.type)), 0, {
       id,
       type: req.type,
       mergeKey: req.mergeKey,
@@ -282,7 +336,12 @@ export function createOverlayBudget<P>(options: OverlayBudgetOptions = {}): Over
     return id;
   };
 
-  /** Drop a still-queued item (or one member of a queued group) without touching the gap. */
+  /**
+   * Drop a still-queued item (or one member of a queued group) without touching the gap. Taking
+   * something out of the queue can unblock what was behind it — a cancelled ceremony frees the two
+   * units the toasts behind it were waiting for — and `pump` only re-arms itself when the head
+   * fits, so every removal ends in a `schedule()` exactly like `release` and `clear` do.
+   */
   const cancel = (id: string): boolean => {
     for (let i = 0; i < queued.length; i += 1) {
       const e = queued[i];
@@ -292,11 +351,13 @@ export function createOverlayBudget<P>(options: OverlayBudgetOptions = {}): Over
         e.items.splice(j, 1);
         if (e.ids.length === 0) queued.splice(i, 1);
         changed();
+        schedule();
         return true;
       }
       if (e.id === id) {
         queued.splice(i, 1);
         changed();
+        schedule();
         return true;
       }
     }

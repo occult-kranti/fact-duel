@@ -108,15 +108,21 @@ domain, so this is the step before applying, not after.
 
 ## What runs where
 
+The Pages column has two states, and the repository variable `APP_URL` is the switch. Unset, Pages
+builds the **preview**: the whole game in the browser under a banner saying there is no server here.
+Set (step 6 of the Ten-minute path), Pages builds the **hand-off card** instead — one sentence, one
+link to the Worker, and the arena is not even downloaded. The rows below say which state each fact
+belongs to.
+
 | | GitHub Pages (`pages.yml`, `pnpm build:static`) | Cloudflare Worker (`deploy-worker.yml`, `pnpm build`) |
 | --- | --- | --- |
 | Server | none, fully static | Worker + D1 (`DB` binding) |
-| Wallet | device wallet, in the browser | server wallet: `/api/wallet`, ledger in D1 |
-| Duels | bot duels in-process | bot duels, two-device friend duels, matchmaking (`/api/duel`) |
+| Wallet | preview: a device wallet in the browser. Once `APP_URL` is set: nothing, the hand-off card | server wallet: `/api/wallet`, ledger in D1 |
+| Duels | preview: bot duels in-process. Once `APP_URL` is set: nothing, the hand-off card | bot duels, two-device friend duels, matchmaking (`/api/duel`) |
 | Accounts | none | `/api/auth` — guest promotion, magic link, Google |
 | Ledger, holds, settlement | none | `ledger_*` tables, settlement in the ending request |
 | Ops door and sweep | none | `/api/ops` behind `OPS_TOKEN`, driven by `sweep.yml` |
-| Quiz SEO pages (`/quiz/*`) | yes (`pnpm seo:pages`) | yes, same static assets |
+| Quiz SEO pages (`/quiz/*`) | yes (`pnpm seo:pages`); with `APP_URL` set, "Play this as a duel" points at the Worker | yes, same static assets |
 | Investor deck (`/deck/`) | yes | no |
 | Domain | `<owner>.github.io/fact-duel/` | the founder's own domain, or `<name>.workers.dev` |
 
@@ -286,15 +292,22 @@ Then open the game, play a bot duel, watch an ad card, and check the D1 console 
 
 ## Pages: keep it or retire it
 
-Both deployments serve the same game. Keeping Pages means two copies of the quiz SEO pages on two
-hosts, and AdSense (and search engines) want the first-party domain to be *the* site. Two honest
-options:
+The switch is the repository variable `APP_URL`, not a code change, and it decides whether there
+are two playable copies of the game or one. Keeping a second playable copy means two sets of the
+quiz SEO pages on two hosts, and AdSense (and search engines) want the first-party domain to be
+*the* site. Two honest options:
 
-1. **Retire Pages for the game.** Keep `pages.yml` for the deck only, or stop it. The domain is the
-   single canonical home. Simplest and what AdSense expects.
-2. **Keep Pages as an offline mirror.** Fine for demos, but add a `<link rel="canonical">` pointing
-   at the domain on every static page so the mirror never outranks the real site, and do not put
-   ads on the mirror.
+1. **Hand Pages over to the Worker — set `APP_URL`.** This is step 6 of the Ten-minute path and the
+   default this repo is built for. Pages keeps serving the quiz pages and the deck, but the game
+   itself becomes a card that links to the domain: one canonical home, which is what AdSense
+   expects. `pages.yml` can then be kept for the deck and the quiz pages, or stopped entirely.
+2. **Keep a playable mirror — leave `APP_URL` unset.** The preview build stays a full in-browser
+   game with its device wallet and bot duels, useful for demos on a laptop with no network. If you
+   do this, add a `<link rel="canonical">` pointing at the domain on every static page so the
+   mirror never outranks the real site, and do not put ads on the mirror.
+
+There is no third state: as long as `APP_URL` is set, `<owner>.github.io/fact-duel/` is the
+hand-off card and nothing else — do not send anyone there expecting a demo.
 
 Do not run ads on both. The AdSense review looks at the domain in the application, and the copy
 that carries the ledger is the one that should carry the ads.

@@ -192,7 +192,7 @@ export function usePlayer(room: any, roomEpoch?: string) {
       connecting = true;
       try {
         const me = await whoami();
-        if (cancelled || !me?.signedIn) return;
+        if (cancelled || !me?.session) return;
         const pulled = await pullProfile();
         if (cancelled || (!pulled.ok && pulled.code === 'sign_in_required')) return;
         p.enable(true);

@@ -2195,9 +2195,14 @@
 }
 
 /* ---------- mobile gate (scripts/mobile-gate.mjs) ---------- */
-/* Sentences, not labels: 14px on phones. */
+/* Sentences, not labels: 14px on phones. The brief's three are the ones that explain the rules of
+   a run — how the points work, what each stake tier costs, and what the CTA is about to do — and
+   Expeditions is one of the five tabs in the phone nav, so they are read on a phone first. */
 @media (max-width: 599px) {
-  .fd-exp-note {
+  .fd-exp-note,
+  .fd-exp-panel-note,
+  .fd-exp-stake p,
+  .fd-exp-cta > span {
     font-size: var(--fs-14);
   }
 }

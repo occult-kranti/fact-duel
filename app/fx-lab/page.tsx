@@ -347,7 +347,7 @@ function Lab() {
 
       <Section
         title="Toasts"
-        note="Max 3 visible, the rest queue. Hover or focus pauses the timer. aria-live=polite."
+        note="Max 2 visible, the rest queue with a pause between them. Hover or focus pauses the timer. aria-live=polite."
       >
         <div className="lab-grid">
           {TOASTS.map((kind) => (

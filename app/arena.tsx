@@ -25,6 +25,7 @@ import { ProgressionFeedback } from './screens/use-progression-feedback';
 import { LevelRing, StreakChip } from './screens/player/topbar-chips';
 import { SettingsSheet, SETTINGS_KEYS, type MotionPref } from './shell/settings-sheet';
 import { ProfileGate } from './shell/profile-gate';
+import { DEFAULT_NAME } from '@/lib/profile-gate.mjs';
 import { HomeScreen } from './screens/home-screen';
 import { PlayScreen } from './screens/play-screen';
 import { RoomScreen } from './screens/room-screen';
@@ -98,7 +99,7 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
   const [tab, setTab] = useState(initialTab),
     [catalogue, setCatalogue] = useState<any>(null),
     [config, setConfig] = useState<Config>(INITIAL_CONFIG),
-    [name, setName] = useState('Challenger'),
+    [name, setName] = useState(DEFAULT_NAME),
     [joinLink, setJoinLink] = useState(''),
     [joinView, setJoinView] = useState(false),
     [room, setRoom] = useState<any>(null),

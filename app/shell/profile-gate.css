@@ -53,6 +53,13 @@
   line-height: 1.35;
 }
 
+/* The field labels are shadcn's `leading-none` — a 14px line box around 14px text. Latin
+   descenders clear the autofocused input's focus ring below it; the nukta and ी matra of
+   "आपका खिलाड़ी नाम" do not. The line box gets room instead of the ring being moved. */
+:root[lang='hi'] .fd-gate-field label {
+  line-height: 1.4;
+}
+
 .fd-gate-body {
   margin: 0;
   font-size: var(--fs-16);
@@ -141,8 +148,14 @@
 
 /* A short viewport — a landscape phone, or a portrait one with the keyboard up. The copy gives
    room back to the fields, and where there is width to spare the sheet goes two-column so that
-   "Play as guest" stays on screen next to the form rather than below the fold. */
-@media (max-height: 560px) {
+   "Play as guest" stays on screen next to the form rather than below the fold.
+
+   600, not 560: iOS Safari evaluates a height media query against the LARGE viewport (the page
+   with the toolbars hidden) while `100dvh` above sizes this sheet to the small one. A 320×568
+   iPhone SE therefore reports 568 here and lays the full-size sheet into roughly 452px, which put
+   "Play as guest" about 50px below the fold while "Save and play" stayed in view — the way out
+   off screen and the way in on it. Every viewport between 561 and 600 is a phone that needs this. */
+@media (max-height: 600px) {
   .fd-gate {
     padding-top: max(12px, env(safe-area-inset-top));
     padding-bottom: max(12px, env(safe-area-inset-bottom));
@@ -175,7 +188,7 @@
   }
 }
 
-@media (max-height: 560px) and (min-width: 600px) {
+@media (max-height: 600px) and (min-width: 600px) {
   .fd-gate-inner {
     max-width: 760px;
     display: grid;
@@ -213,10 +226,16 @@
     opacity: 1;
   }
 }
+/* The OS preference and the in-app one (Settings → Motion, written to `data-motion` by
+   app/arena.tsx) — the same pair every other animated surface in this app honours. */
 @media (prefers-reduced-motion: reduce) {
   .fd-gate {
     animation: none;
   }
+}
+:root[data-motion='reduced'] .fd-gate,
+:root[data-motion='off'] .fd-gate {
+  animation: none;
 }
 
 /* ---------- The claimed address, in Settings ---------- */

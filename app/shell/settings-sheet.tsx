@@ -60,23 +60,30 @@ export type SettingsSheetProps = {
  *
  * Nothing about that address has been verified and the line says so. "Verify by link" hands the
  * person to the account panel just above, whose magic link IS the verification; that panel owns
- * the flow and this only puts the cursor in its field. So the button appears only when the panel
- * is actually offering the field: a build with no server has no link to send, and says that
- * instead, and a device that has already signed in has nothing left to verify here.
+ * the flow and this only puts the cursor in its field. So this section exists only for the claims
+ * that panel cannot speak for: `whoami().signedIn` is PROVED-only now (a clicked link or Google,
+ * see lib/server/auth-service.mjs), and when the server itself holds the claim the panel prints
+ * it — saying the same thing twice, one section apart, is noise. What is left is the honest
+ * remainder: a build with no server, and a claim that reached no server and lives on this device.
+ * Nothing is rendered until `whoami` answers, so no state flashes on the way to the right one.
  */
 function ClaimedProfile({ locale }: { locale: Locale }) {
   const [claimed] = useState<string | null>(() => readClaimedEmail());
   const [verify, setVerify] = useState<'checking' | 'can' | 'local' | 'done'>('checking');
+  /** The account panel above is already showing this address with its own "Verify by link". */
+  const [inPanel, setInPanel] = useState(false);
   useEffect(() => {
     let alive = true;
     whoami().then((who) => {
-      if (alive) setVerify(!who.available ? 'local' : who.signedIn ? 'done' : 'can');
+      if (!alive) return;
+      setVerify(!who.available ? 'local' : who.signedIn ? 'done' : 'can');
+      setInPanel(who.available && !who.signedIn && who.claimed !== null);
     });
     return () => {
       alive = false;
     };
   }, []);
-  if (!claimed || verify === 'done') return null;
+  if (!claimed || verify === 'checking' || verify === 'done' || inPanel) return null;
   const copy = gateCopy(locale);
   const [before, after] = copy.settingsClaimed.split('{email}');
   const verifyByLink = () => {

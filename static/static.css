@@ -1,4 +1,4 @@
-/* static/static.css — the offline demo build's own chrome.
+/* static/static.css — the preview build's own chrome.
  * Loaded after the four app stylesheets so it can use the Floodlight tokens. The only rule this
  * build adds to the app is the honesty banner: nothing here restyles an app screen. */
 
@@ -49,17 +49,25 @@
   z-index: 30;
 }
 
-@media (max-width: 420px) {
-  .fd-offline-note {
-    font-size: 0.75rem;
-  }
-}
-
 /* ---------- mobile gate (scripts/mobile-gate.mjs) ---------- */
 /* The banner is this build's single honesty claim — that there is no server behind it — and it
-   rides above every screen. 13px is the smallest type in the build; on a phone it goes to 14. */
+   rides above every screen. 13px is the smallest type in the build; on a phone it goes to 14.
+   (The 420px rule below used to shrink it to 12px instead; the gate's floor wins, so that rule is
+   gone and the narrow phone gets more room a different way.) */
 @media (max-width: 599px) {
   .fd-offline-note {
     font-size: 0.875rem;
+  }
+}
+
+/* On the narrowest phones the pill and the sentence cannot share a row: the pill is nowrap and
+   takes about 113px of a 320px viewport, which leaves the paragraph a 165px column and wraps the
+   body to seven lines — a quarter of the viewport spent on the label, with empty space under the
+   pill. Stacked, the text gets the full column and comes back to about four lines. */
+@media (max-width: 420px) {
+  .fd-offline-note {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
   }
 }
