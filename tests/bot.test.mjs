@@ -28,7 +28,13 @@ async function fixture(t, config = {}) {
   };
   return { host, store, raw, call, prepare, setTime: (t) => (now = t) };
 }
-const conserved = (r) => assert.equal(r.balances[0] + r.balances[1] + r.escrow, 2000);
+// A bot room is free and lives on a ledger store: nothing is staked, the escrow stays empty and
+// the balance snapshot is the anonymous host's real (unopened) account — zero — not demo coins.
+const conserved = (r) => {
+  assert.equal(r.escrow, 0);
+  assert.deepEqual(r.staked, [false, false]);
+  assert.equal(r.ledger, true);
+};
 
 test('bot planner samples each choice and both delay endpoints without question inputs', () => {
   for (const duration of DURATIONS)
@@ -142,6 +148,6 @@ test('bot reveal shares the atomic database timestamp; cancelling prevents its s
   const end = await f.raw();
   assert.equal(end.phase, 'cancelled');
   assert.equal(end.round.answers[1], null);
-  assert.deepEqual(end.balances, [1000, 1000]);
+  assert.deepEqual(end.balances, [0, 0]);
   conserved(end);
 });

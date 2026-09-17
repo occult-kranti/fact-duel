@@ -3,6 +3,7 @@ import { performance } from 'node:perf_hooks';
 import { writeFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
 import { dispatch, D1RoomStore } from '../lib/server/duel-service.mjs';
+import { grant } from '../lib/ledger/intents.mjs';
 import { LocalD1 } from './d1-local.mjs';
 
 const cases = [2, 100, 500]; // rooms; two virtual clients per room
@@ -32,7 +33,8 @@ for (const count of cases) {
       let raw = '';
       for await (const chunk of req) raw += chunk;
       const body = JSON.parse(raw);
-      const out = await dispatch(store, body, { now, actor: body.token || 'clock' });
+      // The harness carries the guest id in the body; the worker reads it from a header.
+      const out = await dispatch(store, body, { now, actor: body.token || 'clock', principalId: body.principalId });
       res.writeHead(200, { 'content-type': 'application/json' });
       res.end(JSON.stringify(out));
     } catch (e) {
@@ -57,8 +59,16 @@ for (const count of cases) {
   const rooms = Array.from({ length: count }, () => {
     const roomId = crypto.randomUUID().replaceAll('-', ''),
       invite = token();
-    return { host: { roomId, invite, token: token() }, guest: { roomId, invite, token: token() } };
+    const principal = () => `anon_${crypto.randomUUID().replaceAll('-', '')}`;
+    return {
+      host: { roomId, invite, token: token(), principalId: principal() },
+      guest: { roomId, invite, token: token(), principalId: principal() },
+    };
   });
+  // Every seat plays for real coins on the ledger behind the store: seed 1,000 each.
+  for (const r of rooms)
+    for (const seat of [r.host, r.guest])
+      await store.ledger.post(grant({ principalId: seat.principalId, amount: 1000, opKey: `grant:seed:${seat.principalId}`, at: 1 }));
   const cpuStart = process.cpuUsage(),
     started = performance.now();
   await bounded(rooms, 50, async (r) => {

@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { DURATIONS, MODE_DURATION } from '@/lib/server/room-engine.mjs';
-import { DEFAULT_CONFIG } from '@/lib/economy/economy.mjs';
+import { DEFAULT_CONFIG, feeFor, prizeFor } from '@/lib/economy/economy.mjs';
 import { advise, closedReason, evCopy } from '@/lib/economy/stake-advice.mjs';
 import type { WalletApi } from '../../use-wallet';
 import { MODES } from '../types';
@@ -15,15 +15,12 @@ import { usePlayJuice } from './press';
 const TIMERS = DURATIONS;
 
 /**
- * The room engine's `normalizeConfig` accepts entries up to this tier (its demo-entry list is
- * 0, 10, 25, 50, 100), so the picker offers the economy's tiers only up to here. The economy's
- * larger tiers (250, 500) wait for the engine to take them; nothing here hard-codes the list.
+ * The tiers a room can be created at: every tier of the economy. The room engine's `STAKES` is
+ * built from the same `DEFAULT_CONFIG.stakes` (lib/server/room-engine.mjs), so nothing here
+ * narrows the list any more; the function stays because the play screen picks its default from it.
  */
-export const ROOM_MAX_STAKE = 100;
-
-/** The economy config narrowed to the tiers a room can be created at. */
 export function offeredConfig(config: typeof DEFAULT_CONFIG = DEFAULT_CONFIG): typeof DEFAULT_CONFIG {
-  return { ...config, stakes: config.stakes.filter((tier) => tier <= ROOM_MAX_STAKE) };
+  return config;
 }
 
 function Picker({
@@ -195,8 +192,10 @@ export function MatchSettings({
             {bot
               ? 'Practice bots play for free. Entries are for duels with a friend.'
               : config.stake
-                ? `${evCopy(config.stake, economy)} Draws refund the entry.`
-                : 'Free simulated coins with no cash value. Draws refund the entry, and every new room starts with 1,000 per player.'}
+                ? `Entry ${config.stake} · prize ${prizeFor(config.stake, economy)}${
+                    feeFor(config.stake, economy) ? ` · arena fee ${feeFor(config.stake, economy)}` : ''
+                  }. ${evCopy(config.stake, economy)} Draws refund the entry.`
+                : 'Free entry. No coins move. Draws and wins count for XP and streaks only.'}
           </p>
         </div>
         <div className="fd-fields">

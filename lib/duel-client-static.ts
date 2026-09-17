@@ -27,21 +27,39 @@ const store = new MemoryRoomStore();
 /** Rooms are per-device here, so the rate limiter has exactly one actor to count. */
 const ACTOR = 'this-device';
 
+/**
+ * The same guest id the worker build sends as `x-fd-principal`, read from the same localStorage
+ * key. There is no ledger behind the memory store, so it is only recorded on the room's seat;
+ * the demo coins and the device wallet carry on exactly as before.
+ */
+const PRINCIPAL_KEY = 'fd-principal';
+function principalId(): string | null {
+  try {
+    const existing = localStorage.getItem(PRINCIPAL_KEY);
+    return existing && /^[a-z]{1,8}_[A-Za-z0-9_-]{16,58}$/.test(existing) ? existing : null;
+  } catch {
+    return null;
+  }
+}
+
+type ClientError = Error & { code?: string; status?: number };
+
 /** `handleDuelRequest`'s catch block, minus the Response wrapper. */
-function toClientError(error: any) {
-  const status = error?.status || 503;
+function toClientError(error: unknown): ClientError {
+  const thrown = (error ?? {}) as Partial<ClientError>;
+  const status = thrown.status || 503;
   const message =
     status === 503
       ? 'The room service is busy or unavailable. Your accepted answer remains locked; retry safely.'
-      : error?.message;
-  const clientError: any = new Error(message || 'Connection interrupted. Try again.');
-  clientError.code = error?.code || 'service_unavailable';
+      : thrown.message;
+  const clientError: ClientError = new Error(message || 'Connection interrupted. Try again.');
+  clientError.code = thrown.code || 'service_unavailable';
   clientError.status = status;
   return clientError;
 }
 
-function offlineError(message: string) {
-  const error: any = new Error(message);
+function offlineError(message: string): ClientError {
+  const error: ClientError = new Error(message);
   error.code = 'offline_build';
   error.status = 501;
   return error;
@@ -57,7 +75,9 @@ const MEASUREMENT_DISABLED =
 const FRIEND_DISABLED =
   'Friend duels need a server to pass the room between two devices, so they are off in this offline demo build. Play Lucky Guess (bot), an expedition or an event instead.';
 
-export async function request(body: any) {
+type Body = { action?: string; config?: { opponent?: string } } & Record<string, unknown>;
+
+export async function request(body: Body) {
   try {
     if (body?.action === 'cohort-ping' || body?.action === 'cohort-report')
       throw offlineError(MEASUREMENT_DISABLED);
@@ -70,9 +90,14 @@ export async function request(body: any) {
       const stamp = await store.clock();
       return { serverNow: stamp.db_now, clockSource: 'primary-database' };
     }
-    if (['catalogue', 'practice', 'expedition', 'fixture'].includes(body?.action))
+    if (['catalogue', 'practice', 'expedition', 'fixture'].includes(body?.action ?? ''))
       return await dispatch(null, body, { now: Date.now() });
-    return await dispatch(store, body, { now: Date.now(), actor: ACTOR, useDatabaseClock: true });
+    return await dispatch(store, body, {
+      now: Date.now(),
+      actor: ACTOR,
+      useDatabaseClock: true,
+      principalId: principalId(),
+    });
   } catch (error) {
     throw toClientError(error);
   }

@@ -10,20 +10,33 @@ import {
   planBotAttempt,
 } from '../lib/server/room-engine.mjs';
 import { QUESTIONS } from '../lib/server/questions.mjs';
+import { grant } from '../lib/ledger/intents.mjs';
+import { escrowAccount } from '../lib/ledger/accounts.mjs';
 import { LocalD1 } from './d1-local.mjs';
 
 const token = () => crypto.randomUUID().replaceAll('-', '') + '1234567890abcdef';
 const id = () => crypto.randomUUID().replaceAll('-', '');
+const principal = () => `anon_${id()}`;
 const config = { mode: 'quick', stake: 25, duration: 10 };
+/** Every D1 room plays on the real ledger, so a seat that pays an entry needs a funded principal. */
+async function fund(store, principalId, amount = 1000) {
+  await store.ledger.post(grant({ principalId, amount, opKey: `grant:seed:${principalId}`, at: 1, reason: 'test seed' }));
+}
 async function fixture(t, overrides = {}) {
   const db = new LocalD1(),
     store = new D1RoomStore(db);
   t.after(() => db.close());
   let now = 1_000_000;
-  const host = { roomId: id(), token: token(), invite: token() };
-  const guest = { roomId: host.roomId, token: token(), invite: host.invite };
+  const host = { roomId: id(), token: token(), invite: token(), principalId: principal() };
+  const guest = { roomId: host.roomId, token: token(), invite: host.invite, principalId: principal() };
+  await fund(store, host.principalId);
+  await fund(store, guest.principalId);
   const call = (seat, action, extra = {}) =>
-    dispatch(store, { ...seat, action, ...extra }, { now, actor: seat.token });
+    dispatch(
+      store,
+      { ...seat, principalId: undefined, action, ...extra },
+      { now, actor: seat.token, principalId: seat.principalId },
+    );
   await call(host, 'create', { name: 'A', config: { ...config, ...overrides } });
   await call(guest, 'join', { name: 'B' });
   const raw = async () => JSON.parse((await store.read(host.roomId)).state);
@@ -56,8 +69,16 @@ async function fixture(t, overrides = {}) {
     setTime: (value) => (now = value),
   };
 }
+/**
+ * Coins are conserved: the two balance snapshots plus the room's escrow are the 2,000 seeded
+ * (the 25 tier carries no fee). Once the room has settled, the escrow ACCOUNT must be empty too.
+ */
 function coins(r) {
   assert.equal(r.balances[0] + r.balances[1] + r.escrow, 2000);
+}
+async function escrowEmpty(f) {
+  const held = await f.store.ledger.balances([escrowAccount(f.host.roomId)]);
+  assert.equal(held.get(escrowAccount(f.host.roomId)), 0);
 }
 
 test('catalogue does not send stems, options or answer keys', async () => {
@@ -99,6 +120,7 @@ test('later packet with faster plausible local duration wins', async (t) => {
   assert.equal(out.room.phase, 'complete');
   assert.deepEqual(out.room.balances, [1025, 975]);
   coins(await f.raw());
+  await escrowEmpty(f);
 });
 test('150ms boundary is a draw; 151ms is a win', async (t) => {
   for (const gap of [150, 151]) {
@@ -140,19 +162,30 @@ test('invalid credentials, wrong invitation and a third player cannot take a sea
   );
   assert.equal((await f.raw()).players.length, 2);
 });
-test('concurrent join race has only one guest', async (t) => {
+test('concurrent join race has only one guest, and every loser gets its entry straight back', async (t) => {
   const db = new LocalD1();
   t.after(() => db.close());
   const store = new D1RoomStore(db);
   const host = { roomId: id(), token: token(), invite: token() };
-  await dispatch(store, { ...host, action: 'create', name: 'Host', config });
+  const hostId = principal();
+  await fund(store, hostId);
+  await dispatch(store, { ...host, action: 'create', name: 'Host', config }, { principalId: hostId });
+  const guests = Array.from({ length: 8 }, () => principal());
+  for (const g of guests) await fund(store, g);
   const results = await Promise.allSettled(
-    Array.from({ length: 8 }, (_, i) =>
-      dispatch(store, { ...host, token: token(), action: 'join', name: `G${i}` }, { actor: `g${i}` }),
+    guests.map((principalId, i) =>
+      dispatch(store, { ...host, token: token(), action: 'join', name: `G${i}` }, { actor: `g${i}`, principalId }),
     ),
   );
   assert.equal(results.filter((r) => r.status === 'fulfilled').length, 1);
-  assert.equal(JSON.parse((await store.read(host.roomId)).state).players.filter(Boolean).length, 2);
+  const room = JSON.parse((await store.read(host.roomId)).state);
+  assert.equal(room.players.filter(Boolean).length, 2);
+  // Exactly two entries sit in the escrow: the host's and the seated guest's. The seven who lost
+  // the seat were released on the spot, whether or not their stake had already landed.
+  const balances = await store.ledger.balances([escrowAccount(host.roomId), ...guests.map((g) => `play:user:${g}`)]);
+  assert.equal(balances.get(escrowAccount(host.roomId)), 50);
+  const seated = room.principals[1];
+  for (const g of guests) assert.equal(balances.get(`play:user:${g}`), g === seated ? 975 : 1000, g);
 });
 test('missing answer closes after persisted deadline; later polling cannot pay again', async (t) => {
   const f = await fixture(t),
@@ -214,6 +247,13 @@ test('leave racing second answer has one final settlement and conserves coins', 
     assert.ok(out.settled);
     assert.equal(out.events.filter((e) => e.type === 'settled').length, 1);
     coins(out);
+    // Whichever verdict won the revision race is the one the ledger paid: the snapshot agrees
+    // with the room and the escrow is empty either way.
+    await f.call(f.host, 'state');
+    const paid = await f.raw();
+    assert.equal(paid.ledgerSettled, true);
+    assert.deepEqual(paid.balances, paid.winner === null ? [1000, 1000] : paid.winner === 0 ? [1025, 975] : [975, 1025]);
+    await escrowEmpty(f);
   }
 });
 test('trilogy keeps the original pot and prevents replaying readiness from an old round', async (t) => {
@@ -241,18 +281,23 @@ test('room expiration refunds unsettled entries', async (t) => {
   const r = (await f.call(f.host, 'state')).room;
   assert.equal(r.reason, 'room-expired');
   assert.deepEqual(r.balances, [1000, 1000]);
+  await escrowEmpty(f);
 });
 test('names must remain nonempty after normalization', async (t) => {
   const f = await fixture(t);
   await assert.rejects(
-    dispatch(f.store, {
-      roomId: id(),
-      token: token(),
-      invite: token(),
-      action: 'create',
-      name: '\u0001',
-      config,
-    }),
+    dispatch(
+      f.store,
+      {
+        roomId: id(),
+        token: token(),
+        invite: token(),
+        action: 'create',
+        name: '\u0001',
+        config,
+      },
+      { principalId: f.host.principalId },
+    ),
     /name/i,
   );
 });

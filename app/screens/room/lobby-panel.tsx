@@ -12,8 +12,23 @@
 import type { ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Bot, Check, Copy, Users } from 'lucide-react';
+import { feeFor, prizeFor } from '@/lib/economy/economy.mjs';
 import { ReadyDot, usePress } from './room-bits';
 import { AutoAdvance } from './auto-advance';
+
+/**
+ * The coin line under the ready button. Entry and prize come from the economy's fee table, the
+ * same numbers the launch screen showed, never from the room's escrow arithmetic. A ledger room
+ * (`room.ledger`) plays for the coins in the player's wallet; a demo room plays for simulated ones.
+ */
+export function entryLine(room: { config: { stake: number }; ledger?: boolean }): string {
+  const stake: number = room.config.stake;
+  if (!stake) return 'Free entry. No coins move.';
+  const fee = feeFor(stake);
+  const prize = prizeFor(stake);
+  const kind = room.ledger ? 'coins' : 'simulated coins';
+  return `Entry ${stake} · prize ${prize}${fee ? ` · arena fee ${fee}` : ''}. ${kind}, once per match. Draws refund both.`;
+}
 
 function Seat({ player, you, waiting }: { player: any; you: boolean; waiting: boolean }) {
   const bot = player?.kind === 'bot';
@@ -135,9 +150,7 @@ export function LobbyPanel({
         </Button>
         {counting && <AutoAdvance totalMs={auto!.totalMs} onFire={auto!.onFire} onHold={auto!.onHold} />}
         <p className="fd-note">
-          {between
-            ? 'Your original match entry stays reserved. No new entry.'
-            : `${room.config.stake} demo coins each, once per match. Draws refund both.`}
+          {between ? 'Your original match entry stays reserved. No new entry.' : entryLine(room)}
         </p>
       </div>
     </div>
