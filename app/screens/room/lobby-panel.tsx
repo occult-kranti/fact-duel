@@ -110,7 +110,9 @@ export function LobbyPanel({
                 {copied ? 'Copied' : 'Copy room invitation'}
               </Button>
             )}
-            {!rival && room.seat === 0 && (
+            {/* A matched host holds no invitation: the seat belongs to the rival on the way, so no
+                bot may take it. Only a friend room the host can share offers the bot. */}
+            {!rival && room.seat === 0 && invite && (
               <Button
                 variant="outline"
                 className="fd-btn"
