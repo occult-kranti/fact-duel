@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Database, Volume2 } from 'lucide-react';
+import { AccountPanel } from './account-panel';
 
 /** Persisted as localStorage['fact-duel-motion']. */
 export type MotionPref = 'full' | 'reduced' | 'off';
@@ -81,6 +82,8 @@ export function SettingsSheet({
           <SheetTitle>Make yourself at home.</SheetTitle>
           <SheetDescription>Preferences stay on this device. Sounds are optional.</SheetDescription>
         </SheetHeader>
+
+        <AccountPanel />
 
         <section className="fd-setting-group" aria-labelledby="settings-player">
           <span className="fd-setting-eyebrow" id="settings-player">
