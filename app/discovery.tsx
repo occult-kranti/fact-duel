@@ -83,7 +83,6 @@ export default function Discovery({
   const recap = fixture?.kind === 'recap';
   const expected = fixture?.size ?? 3;
   const count = cards.length || expected;
-  const facts = count === 3 ? 'three' : String(count);
 
   useEffect(() => {
     clearFixtureDeal();
@@ -199,7 +198,7 @@ export default function Discovery({
           </h1>
           <span className="fd-tag fd-tag--cool">
             <Compass />
-            {count} facts · take your time
+            Take your time
           </span>
           {entry.state === 'paid' && entry.spent > 0 && (
             <span className="fd-tag fd-discovery__entry" title="Paid to the house for this drill">
@@ -293,7 +292,7 @@ export default function Discovery({
             ? recap
               ? 'Opening today’s recap…'
               : 'Paying the entry…'
-            : `Opening ${facts} sourced facts…`}
+            : 'Opening your sourced facts…'}
         </p>
       ) : (
         <div className="fd-qwrap">

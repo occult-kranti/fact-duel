@@ -40,12 +40,13 @@ export type TopicChipsProps = {
 };
 
 /* Topic chips: the mixed bag first, then an alternating sports / science slice of the catalogue so
- * both territories are always one tap away. "All subjects" keeps `data-nav="collections"` — the
+ * both territories are always one tap away. No chip carries a question count: pool sizes are never
+ * shown in the product (tests/no-pool-counts.test.mjs). "All subjects" keeps `data-nav="collections"` — the
  * screenshot script (scripts/screens.mjs) reaches the Collections screen through this button. */
 export function TopicChips({ catalogue, domain, topic, onChoose, onAll, limit = 6 }: TopicChipsProps) {
   const { press } = usePlayJuice();
   const chips = useMemo(() => {
-    const all: { topic: string; domain: string; count: number }[] = catalogue?.topics ?? [];
+    const all: { topic: string; domain: string }[] = catalogue?.topics ?? [];
     const sports = all.filter((t) => t.domain === 'sports');
     const science = all.filter((t) => t.domain === 'science');
     const mixed: typeof all = [];
@@ -81,7 +82,6 @@ export function TopicChips({ catalogue, domain, topic, onChoose, onAll, limit = 
         >
           <Shuffle size={16} aria-hidden="true" />
           Mixed bag
-          <span className="fd-subject-n">{catalogue?.count ?? '…'}</span>
         </button>
         {chips.map((t) => {
           const Icon = iconFor(t.topic, t.domain);
@@ -97,7 +97,6 @@ export function TopicChips({ catalogue, domain, topic, onChoose, onAll, limit = 
             >
               <Icon size={16} aria-hidden="true" />
               {t.topic}
-              <span className="fd-subject-n">{t.count}</span>
             </button>
           );
         })}

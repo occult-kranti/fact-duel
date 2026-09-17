@@ -173,9 +173,10 @@ export function PlayScreen({ duel, player, catalogue, joinView, joinLink }: Play
                 />
                 <div className="fd-pool">
                   <span>
-                    {catalogue ? `${pool.length} questions in this selection` : 'Loading questions…'}
+                    {catalogue
+                      ? `${modeInfo.rounds} ${modeInfo.rounds === 1 ? 'question' : 'questions'} this match`
+                      : 'Loading questions…'}
                   </span>
-                  <span>{modeInfo.rounds} needed</span>
                 </div>
                 {catalogue && pool.length < modeInfo.rounds && (
                   <div className="fd-warn" role="status">

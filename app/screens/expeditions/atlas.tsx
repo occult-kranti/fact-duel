@@ -97,7 +97,7 @@ export function ExpeditionAtlas({
       </div>
 
       <p className="fd-exp-note">
-        These routes use our existing 54-question sample. Levels are editorial, and repeat runs use the
+        These routes draw on the same bank as the duel. Levels are editorial, and repeat runs use the
         same questions. Your progress is local to this browser.
       </p>
     </section>

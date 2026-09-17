@@ -2,9 +2,11 @@
 /**
  * Collections — pick the subject that feeds the duel configurator.
  *
- * A "Mixed bag" ticket comes first, then one card per topic: domain colour, sample-question count
- * and three mastery mini-bars (encountered / opened / recalled) read from the passport. Choosing a
- * card still calls `onChoose(domain, topic)`, which is what the Play screen listens for.
+ * A "Mixed bag" ticket comes first, then one card per topic: domain colour, the player's own tally
+ * (encountered / opened / recalled) and three mastery mini-bars scaled to what THEY have met, read
+ * from the passport. Nothing here says how many questions a topic or the bank holds: pool sizes are
+ * never shown in the product (tests/no-pool-counts.test.mjs). Choosing a card still calls
+ * `onChoose(domain, topic)`, which is what the Play screen listens for.
  */
 import { DOMAIN_CHIPS, domainEnabled } from '@/lib/content.mjs';
 import { useState } from 'react';
@@ -101,6 +103,7 @@ export default function Collections({
       recalled: mine.filter((f: any) => f.recalled).length,
     };
   };
+  const met = facts.length;
 
   return (
     <section className="fd-learn fd-collections">
@@ -110,7 +113,7 @@ export default function Collections({
           <h1>Pick your home ground.</h1>
           <span className="fd-tag fd-tag--cool">
             <Layers />
-            {catalogue?.count ?? '…'} sample questions
+            {met === 1 ? '1 fact met' : `${met} facts met`}
           </span>
         </div>
         <p className="fd-lede">
@@ -151,12 +154,12 @@ export default function Collections({
             </span>
             <span className="fd-coll__title">
               <strong>Mixed bag</strong>
-              <span>{catalogue?.count ?? '…'} questions · sports + science</span>
+              <span>Every subject in one draw</span>
             </span>
             <ArrowUpRight className="fd-coll__go" aria-hidden="true" />
           </span>
           <span className="fd-coll__detail">
-            Everything in the sample bank, shuffled. The quickest way into a duel when you cannot pick.
+            Every subject, shuffled together. The quickest way into a duel when you cannot pick.
           </span>
         </button>
 
@@ -179,15 +182,19 @@ export default function Collections({
                 </span>
                 <span className="fd-coll__title">
                   <strong>{t.topic}</strong>
-                  <span>{t.count} sample questions</span>
+                  <span>
+                    {m.encountered
+                      ? `Encountered ${m.encountered} · Opened ${m.opened} · Recalled ${m.recalled}`
+                      : 'Nothing met yet'}
+                  </span>
                 </span>
                 <ArrowUpRight className="fd-coll__go" aria-hidden="true" />
               </span>
               <span className="fd-coll__detail">{style.detail}</span>
               <span className="fd-mastery">
-                <MasteryBar label="Encountered" value={m.encountered} total={t.count} tone="cyan" />
-                <MasteryBar label="Opened" value={m.opened} total={t.count} tone="gold" />
-                <MasteryBar label="Recalled" value={m.recalled} total={t.count} tone="volt" />
+                <MasteryBar label="Encountered" value={m.encountered} total={m.encountered} tone="cyan" />
+                <MasteryBar label="Opened" value={m.opened} total={m.encountered} tone="gold" />
+                <MasteryBar label="Recalled" value={m.recalled} total={m.encountered} tone="volt" />
               </span>
             </button>
           );
@@ -200,7 +207,7 @@ export default function Collections({
             <Search aria-hidden="true" />
           </span>
           <h2>No collection found.</h2>
-          <p>Nothing matches “{search}”. Clear the search to see every subject in the sample bank.</p>
+          <p>Nothing matches “{search}”. Clear the search to see every subject.</p>
           <button
             type="button"
             className="fd-btn fd-btn--primary"

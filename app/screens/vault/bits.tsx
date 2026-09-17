@@ -54,7 +54,8 @@ export function StatTile({
   );
 }
 
-/** Pill filter chip with an optional count. */
+/** Pill filter chip with an optional count. The count is only ever the player's own tally (their
+ * journal entries behind a filter), never how many items a bank or topic holds. */
 export function Chip({
   active,
   onClick,
@@ -86,7 +87,8 @@ export function Dots({ total, index, label }: { total: number; index: number; la
   );
 }
 
-/** One mastery mini-bar (encountered / opened / recalled). */
+/** One mastery mini-bar (encountered / opened / recalled). `total` is the player's own encountered
+ * count for the topic, so the bars describe their record and never the size of the pool. */
 export function MasteryBar({
   label,
   value,
