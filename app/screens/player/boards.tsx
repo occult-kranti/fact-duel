@@ -26,6 +26,7 @@ import {
 } from '@/lib/leagues.mjs';
 import { RANK_TIERS, rankForPoints } from '@/lib/progression.mjs';
 import { TierShield, usePress } from './shared';
+import { useLocale, type LocaleApi } from '../../use-locale';
 import './boards.css';
 
 type TabId = 'rivals' | 'week' | 'leagues';
@@ -65,6 +66,7 @@ type Profile = {
   progression?: { rank?: { points: number; best: string } };
 };
 
+/** `label` is the English name; the rendered label is `boards.<id>` from the locale. */
 const TABS: { id: TabId; label: string }[] = [
   { id: 'rivals', label: 'Rivals' },
   { id: 'week', label: 'This week' },
@@ -75,37 +77,38 @@ const TIERS = RANK_TIERS as ReadonlyArray<Tier>;
 const validAt = (at: number) => Number.isFinite(at) && at > 0;
 
 /** "today", "yesterday", "N days ago" — whole local days between two timestamps. */
-function daysAgo(at: number, then: number): string {
+function daysAgo(at: number, then: number, t: LocaleApi['t']): string {
   if (!validAt(at) || !validAt(then)) return '';
   const days = Math.max(0, Math.floor((at - then) / 864e5));
-  return days === 0 ? 'today' : days === 1 ? 'yesterday' : `${days} days ago`;
+  return days === 0 ? t('boards.today') : days === 1 ? t('boards.yesterday') : t('boards.daysAgo', { n: days });
 }
 
 export function Boards({ profile, at }: { profile: Profile; at: number }) {
+  const { t } = useLocale();
   const [tab, setTab] = useState<TabId>('rivals');
   const press = usePress();
   const head = rivals(profile) as { rows: RivalRow[]; unnamed: number; friendDuels: number; reason: string | null };
   return (
     <section className="fd-card fd-boards" aria-labelledby="fd-boards-h">
       <span className="fd-card-label" id="fd-boards-h">
-        <Trophy aria-hidden="true" /> Boards
+        <Trophy aria-hidden="true" /> {t('boards.label')}
       </span>
 
-      <div className="fd-chips fd-boards-tabs" role="tablist" aria-label="Board">
-        {TABS.map((t) => (
+      <div className="fd-chips fd-boards-tabs" role="tablist" aria-label={t('boards.tabAria')}>
+        {TABS.map((tab_) => (
           <button
-            key={t.id}
+            key={tab_.id}
             type="button"
             role="tab"
-            id={`fd-boards-tab-${t.id}`}
-            aria-selected={tab === t.id}
+            id={`fd-boards-tab-${tab_.id}`}
+            aria-selected={tab === tab_.id}
             aria-controls="fd-boards-panel"
             className="fd-chip fd-btn"
             onPointerDown={press}
-            onClick={() => setTab(t.id)}
+            onClick={() => setTab(tab_.id)}
           >
-            {t.label}
-            {t.id === 'rivals' && head.rows.length > 0 && <b>{head.rows.length}</b>}
+            {t(`boards.${tab_.id}`)}
+            {tab_.id === 'rivals' && head.rows.length > 0 && <b>{head.rows.length}</b>}
           </button>
         ))}
       </div>
@@ -128,6 +131,7 @@ function RivalsTab({
   head: { rows: RivalRow[]; unnamed: number; friendDuels: number; reason: string | null };
   at: number;
 }) {
+  const { t, n } = useLocale();
   if (head.rows.length === 0) {
     return (
       <div className="fd-boards-empty">
@@ -136,12 +140,11 @@ function RivalsTab({
         </span>
         {head.reason === 'no-opponent-identity' ? (
           <p>
-            {head.unnamed === 1 ? 'One friend duel is' : `${head.unnamed} friend duels are`} on this device without
-            an opponent name attached, so there is no one to list yet. Rivals appear here from your next friend
-            duel.
+            {head.unnamed === 1 ? t('boards.unnamedOne') : t('boards.unnamedMany', { n: head.unnamed })}
+            {t('boards.unnamedRest')}
           </p>
         ) : (
-          <p>Rivals appear here after your first friend duel. Share a room code from Play.</p>
+          <p>{t('boards.empty')}</p>
         )}
       </div>
     );
@@ -154,30 +157,26 @@ function RivalsTab({
             <span className="fd-boards-rival-who">
               <strong>{r.name}</strong>
               <span>
-                {r.played} {r.played === 1 ? 'duel' : 'duels'}
-                {validAt(at) ? ` · last ${daysAgo(at, r.lastAt)}` : ''}
+                {n('boards.duels', r.played)}
+                {validAt(at) ? t('boards.last', { when: daysAgo(at, r.lastAt, t) }) : ''}
               </span>
             </span>
             <span
               className="fd-boards-record"
-              aria-label={`${r.wins} wins, ${r.losses} losses, ${r.draws} draws`}
+              aria-label={t('boards.recordAria', { w: r.wins, l: r.losses, d: r.draws })}
             >
               <b>{r.wins}</b>
               <i>–</i>
               <b>{r.losses}</b>
               <i>–</i>
               <b>{r.draws}</b>
-              <small>W–L–D</small>
+              <small>{t('boards.wld')}</small>
             </span>
           </li>
         ))}
       </ol>
       <p className="fd-disclaimer">
-        {head.unnamed > 0
-          ? `Friend duels only, counted on this device. ${head.unnamed} earlier ${
-              head.unnamed === 1 ? 'duel carries' : 'duels carry'
-            } no opponent name and ${head.unnamed === 1 ? 'is' : 'are'} not listed.`
-          : 'Friend duels only, counted on this device. Practice duels against the bot never appear here.'}
+        {head.unnamed > 0 ? n('boards.unnamedNote', head.unnamed) : t('boards.disclaimer')}
       </p>
     </>
   );
@@ -186,25 +185,29 @@ function RivalsTab({
 /* ---------- This week ---------- */
 
 function Delta({ value, unit = '' }: { value: number | null; unit?: string }) {
-  if (value === null || !Number.isFinite(value)) return <span className="fd-boards-delta" data-dir="none">no comparison</span>;
+  const { t } = useLocale();
+  if (value === null || !Number.isFinite(value)) return <span className="fd-boards-delta" data-dir="none">{t('boards.noComparison')}</span>;
   const dir = value > 0 ? 'up' : value < 0 ? 'down' : 'level';
   const Icon = value > 0 ? ArrowUp : value < 0 ? ArrowDown : Minus;
   return (
     <span className="fd-boards-delta" data-dir={dir}>
       <Icon aria-hidden="true" />
-      {value === 0 ? 'level with last week' : `${value > 0 ? '+' : '−'}${Math.abs(value)}${unit} vs last week`}
+      {value === 0
+        ? t('boards.level')
+        : t('boards.vsLast', { sign: value > 0 ? '+' : '−', n: Math.abs(value), unit })}
     </span>
   );
 }
 
 function WeekTab({ profile, at }: { profile: Profile; at: number }) {
+  const { t, n, topic } = useLocale();
   if (!validAt(at)) {
     return (
       <div className="fd-boards-empty">
         <span className="fd-boards-empty-icon" aria-hidden="true">
           <CalendarRange />
         </span>
-        <p>Working out which week it is.</p>
+        <p>{t('boards.workingOut')}</p>
       </div>
     );
   }
@@ -215,7 +218,7 @@ function WeekTab({ profile, at }: { profile: Profile; at: number }) {
         <span className="fd-boards-empty-icon" aria-hidden="true">
           <CalendarRange />
         </span>
-        <p>No duels this week or last. Play one and this card starts counting.</p>
+        <p>{t('boards.noDuels')}</p>
       </div>
     );
   }
@@ -224,47 +227,48 @@ function WeekTab({ profile, at }: { profile: Profile; at: number }) {
   return (
     <>
       <p className="fd-boards-weekline">
-        <span className="fd-boards-weekkey">{y.weekKey}</span> against <span className="fd-boards-weekkey">{y.lastWeekKey}</span>
+        <span className="fd-boards-weekkey">{y.weekKey}</span> {t('boards.against')}{' '}
+        <span className="fd-boards-weekkey">{y.lastWeekKey}</span>
       </p>
       <dl className="fd-boards-stats">
         <div className="fd-boards-stat">
-          <dt>Duels played</dt>
+          <dt>{t('boards.duelsPlayed')}</dt>
           <dd>
             <b>{w.played}</b>
-            <span>last week {l.played}</span>
+            <span>{t('boards.lastWeek', { n: l.played })}</span>
             <Delta value={y.delta.played} />
           </dd>
         </div>
         <div className="fd-boards-stat">
-          <dt>Wins</dt>
+          <dt>{t('boards.wins')}</dt>
           <dd>
             <b>{w.wins}</b>
-            <span>last week {l.wins}</span>
+            <span>{t('boards.lastWeek', { n: l.wins })}</span>
             <Delta value={y.delta.wins} />
           </dd>
         </div>
         <div className="fd-boards-stat">
-          <dt>Accuracy</dt>
+          <dt>{t('boards.accuracy')}</dt>
           <dd>
             <b>{w.accuracy === null ? '—' : `${w.accuracy}%`}</b>
             <span>
-              {w.answered ? `${w.correct} of ${w.answered} right` : 'nothing answered yet'}
-              {l.accuracy !== null ? ` · last week ${l.accuracy}%` : ''}
+              {w.answered ? t('boards.ofRight', { c: w.correct, a: w.answered }) : t('boards.nothingAnswered')}
+              {l.accuracy !== null ? t('boards.lastWeekPct', { n: l.accuracy }) : ''}
             </span>
-            <Delta value={y.delta.accuracy} unit=" pts" />
+            <Delta value={y.delta.accuracy} unit={t('boards.ptsUnit')} />
           </dd>
         </div>
         <div className="fd-boards-stat">
-          <dt>Best sport</dt>
+          <dt>{t('boards.bestSport')}</dt>
           <dd>
-            <b className="fd-boards-sport">{w.bestSport ? w.bestSport.topic : '—'}</b>
+            <b className="fd-boards-sport">{w.bestSport ? topic(w.bestSport.topic) : '—'}</b>
             <span>
               {w.bestSport
-                ? `${w.bestSport.correct} of ${w.bestSport.answered} right`
-                : 'no correct answer yet this week'}
+                ? t('boards.ofRight', { c: w.bestSport.correct, a: w.bestSport.answered })
+                : t('boards.noCorrect')}
             </span>
             <span className="fd-boards-delta" data-dir="none">
-              {l.bestSport ? `last week ${l.bestSport.topic}` : 'no best sport last week'}
+              {l.bestSport ? t('boards.lastWeekSport', { topic: topic(l.bestSport.topic) }) : t('boards.noBestSport')}
             </span>
           </dd>
         </div>
@@ -272,12 +276,10 @@ function WeekTab({ profile, at }: { profile: Profile; at: number }) {
       {w.friendDuels > 0 && (
         <p className="fd-boards-note">
           <Swords aria-hidden="true" />
-          {w.friendDuels} of this week&apos;s {w.played === 1 ? 'duel was' : 'duels were'} against a friend.
+          {n('boards.friendOf', w.played, { n: w.friendDuels })}
         </p>
       )}
-      <p className="fd-disclaimer">
-        Counted from the duels on this device, practice included. Weeks run Monday to Sunday.
-      </p>
+      <p className="fd-disclaimer">{t('boards.counted')}</p>
     </>
   );
 }
@@ -285,20 +287,17 @@ function WeekTab({ profile, at }: { profile: Profile; at: number }) {
 /* ---------- Leagues ---------- */
 
 function LeaguesTab({ profile }: { profile: Profile }) {
+  const { t } = useLocale();
   const rank = profile?.progression?.rank ?? { points: 0, best: 'bronze' };
   const info = rankForPoints(rank.points) as { tier: string; label: string };
   const index = Math.max(
     0,
-    TIERS.findIndex((t) => t.id === info.tier),
+    TIERS.findIndex((tier) => tier.id === info.tier),
   );
   return (
     <div className="fd-boards-leagues">
-      <h3>
-        {ACCOUNTS_LIVE
-          ? `Your league of ${LEAGUE_SIZE}`
-          : `Leagues of ${LEAGUE_SIZE} open when accounts arrive.`}
-      </h3>
-      <p>Until then your rating and tier live on this card.</p>
+      <h3>{ACCOUNTS_LIVE ? t('boards.leagueOf', { n: LEAGUE_SIZE }) : t('boards.leaguesOpen', { n: LEAGUE_SIZE })}</h3>
+      <p>{t('boards.untilThen')}</p>
       <div className="fd-boards-tier">
         <span className="fd-rank-badge" data-tier={info.tier} aria-hidden="true">
           <TierShield pips={index + 1} />
@@ -306,18 +305,16 @@ function LeaguesTab({ profile }: { profile: Profile }) {
         <span className="fd-boards-tier-text">
           <strong>{info.label}</strong>
           <span>
-            {rank.points} pts · best reached {TIERS.find((t) => t.id === rank.best)?.label ?? info.label}
+            {t('boards.tierLine', { pts: rank.points, label: TIERS.find((tier) => tier.id === rank.best)?.label ?? info.label })}
           </span>
         </span>
       </div>
       <ul className="fd-boards-rules">
-        <li>Leagues of {LEAGUE_SIZE}, matched by tier and by who actually played. Weekly, Monday reset.</li>
-        <li>Top {PROMOTE_TOP} go up. Bottom {RELEGATE_BOTTOM} go down, only in a league of {RELEGATION_MIN} or more.</li>
-        <li>Real people only. No bots, no filler, no invented counts.</li>
+        <li>{t('boards.ruleOne', { n: LEAGUE_SIZE })}</li>
+        <li>{t('boards.ruleTwo', { top: PROMOTE_TOP, bottom: RELEGATE_BOTTOM, min: RELEGATION_MIN })}</li>
+        <li>{t('boards.ruleThree')}</li>
       </ul>
-      <p className="fd-disclaimer">
-        Nothing here leaves this device. Rank points are counted locally and never verify skill.
-      </p>
+      <p className="fd-disclaimer">{t('boards.nothingLeaves')}</p>
     </div>
   );
 }

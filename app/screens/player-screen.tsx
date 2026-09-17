@@ -30,9 +30,11 @@ import { StampCase } from './player/stamp-case';
 import { StreakCard } from './player/streak-card';
 import { SupporterCard } from './player/supporter-card';
 import type { PlayerScreenProps } from './types';
+import { useLocale } from '../use-locale';
 import './player/player.css';
 
 export function PlayerScreen({ player, onOpenExpedition, onMissionAction, go }: PlayerScreenProps) {
+  const { t } = useLocale();
   const progression = player.progression ?? emptyProgression();
   const accent: string = progression.cosmetics.equipped.accent;
   const [name, setName] = useState('');
@@ -58,8 +60,8 @@ export function PlayerScreen({ player, onOpenExpedition, onMissionAction, go }: 
     <div className="fd-player">
       <header className="fd-player-head">
         <div>
-          <p className="fd-eyebrow">KNOW IT. PROVE IT.</p>
-          <h1>Your player record</h1>
+          <p className="fd-eyebrow">{t('player.eyebrow')}</p>
+          <h1>{t('player.title')}</h1>
         </div>
       </header>
 
@@ -79,10 +81,10 @@ export function PlayerScreen({ player, onOpenExpedition, onMissionAction, go }: 
       <section className="fd-sec" aria-labelledby="fd-boards-sec-h">
         <div className="fd-sec-head">
           <div>
-            <p className="fd-eyebrow">WHO YOU HAVE BEATEN</p>
-            <h2 id="fd-boards-sec-h">Boards</h2>
+            <p className="fd-eyebrow">{t('player.boardsEyebrow')}</p>
+            <h2 id="fd-boards-sec-h">{t('player.boards')}</h2>
           </div>
-          <span>Real duels on this device</span>
+          <span>{t('player.boardsNote')}</span>
         </div>
         <Boards profile={player.profile} at={boardsAt} />
       </section>
@@ -92,10 +94,10 @@ export function PlayerScreen({ player, onOpenExpedition, onMissionAction, go }: 
       <section className="fd-sec" aria-labelledby="fd-topic-h">
         <div className="fd-sec-head">
           <div>
-            <p className="fd-eyebrow">WHAT YOU HAVE ANSWERED</p>
-            <h2 id="fd-topic-h">Topic record</h2>
+            <p className="fd-eyebrow">{t('player.topicEyebrow')}</p>
+            <h2 id="fd-topic-h">{t('player.topic')}</h2>
           </div>
-          <span>Duel rounds only</span>
+          <span>{t('player.topicNote')}</span>
         </div>
         <Mastery progression={progression} />
       </section>
@@ -103,10 +105,10 @@ export function PlayerScreen({ player, onOpenExpedition, onMissionAction, go }: 
       <section className="fd-sec" aria-labelledby="fd-ach-h">
         <div className="fd-sec-head">
           <div>
-            <p className="fd-eyebrow">THE BADGE CASE</p>
-            <h2 id="fd-ach-h">Achievements</h2>
+            <p className="fd-eyebrow">{t('player.achEyebrow')}</p>
+            <h2 id="fd-ach-h">{t('player.ach')}</h2>
           </div>
-          <span>Two are hidden until you find them</span>
+          <span>{t('player.achNote')}</span>
         </div>
         <Achievements progression={progression} />
       </section>
@@ -119,10 +121,10 @@ export function PlayerScreen({ player, onOpenExpedition, onMissionAction, go }: 
       <section className="fd-sec" aria-labelledby="fd-locker-sec-h">
         <div className="fd-sec-head">
           <div>
-            <p className="fd-eyebrow">DRESS THE CARD</p>
-            <h2 id="fd-locker-sec-h">Locker</h2>
+            <p className="fd-eyebrow">{t('player.lockerEyebrow')}</p>
+            <h2 id="fd-locker-sec-h">{t('player.locker')}</h2>
           </div>
-          <span>Cosmetics only · earned by playing</span>
+          <span>{t('player.lockerNote')}</span>
         </div>
         <Locker player={player} />
       </section>

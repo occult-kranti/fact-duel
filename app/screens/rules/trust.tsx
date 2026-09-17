@@ -10,6 +10,7 @@ import { BadgeCheck, Bot, Dices, Flag, HardDrive, MessageSquare, Tv, Users } fro
 import { DEFAULT_CONFIG } from '@/lib/economy/economy.mjs';
 import { describeConfig } from '@/lib/economy/changelog.mjs';
 import { useWalletContext } from '../../use-wallet';
+import { useLocale } from '../../use-locale';
 import './rules.css';
 
 /** The Playbook's own description of the practice bot, quoted rather than paraphrased. */
@@ -20,6 +21,7 @@ export const BOT_POLICY_QUOTE =
 export const REVIEW_TARGET_HOURS = 48;
 
 export function Trust() {
+  const { t, fmt } = useLocale();
   const wallet = useWalletContext();
   const config = wallet?.config ?? DEFAULT_CONFIG;
   const region = wallet?.region ?? '';
@@ -30,38 +32,34 @@ export function Trust() {
   return (
     <section className="fd-rules fd-rules--trust" aria-labelledby="fd-trust-title">
       <div className="fd-rules__head">
-        <p className="eyebrow">TRUST</p>
-        <h1 id="fd-trust-title">What you can hold us to.</h1>
-        <p className="fd-rules__lede">
-          Short rules, stated once, kept. Where something is not built yet, this page says so rather
-          than pretending.
-        </p>
+        <p className="eyebrow">{t('trust.eyebrow')}</p>
+        <h1 id="fd-trust-title">{t('trust.title')}</h1>
+        <p className="fd-rules__lede">{t('trust.lede')}</p>
       </div>
 
       <p className="fd-rules__notice" role="note">
         <BadgeCheck aria-hidden="true" />
-        <span>There is no random reward anywhere in the game. No spin, no chest, no mystery box.</span>
+        <span>{t('trust.notice')}</span>
       </p>
 
       <div className="fd-rules__grid">
         <article className="fd-rules__section">
           <h2>
             <Users aria-hidden="true" />
-            Matchmaking
+            {t('trust.matchmaking')}
           </h2>
           <ul>
             <li>
-              <strong>Friend rooms by code.</strong> You create a room, you share the invite, a friend
-              joins. Nobody else can enter.
+              <strong>{t('trust.mmOne')}</strong>
+              {t('trust.mmOneText')}
             </li>
             <li>
-              <strong>No hidden fill.</strong> An empty seat stays empty until a friend joins or you add
-              the practice bot yourself. The game never seats a bot for you and never calls it a person.
+              <strong>{t('trust.mmTwo')}</strong>
+              {t('trust.mmTwoText')}
             </li>
             <li>
-              <strong>No public queue yet.</strong> Matching with strangers needs accounts, which do not
-              exist yet. When the queue arrives it will be announced on the Rules of the coin page
-              before it opens, with its own rules written down.
+              <strong>{t('trust.mmThree')}</strong>
+              {t('trust.mmThreeText')}
             </li>
           </ul>
         </article>
@@ -69,75 +67,66 @@ export function Trust() {
         <article className="fd-rules__section">
           <h2>
             <Bot aria-hidden="true" />
-            Bot policy
+            {t('trust.bot')}
           </h2>
           <ul>
             <li>
-              <strong>Always labelled.</strong> A practice bot is called a practice bot on the room
-              screen, on the receipt and in your Vault. A bot is never shown as a person anywhere.
+              <strong>{t('trust.botOne')}</strong>
+              {t('trust.botOneText')}
             </li>
             <li>
-              <strong>Free matches only.</strong> A practice bot plays for no entry. No coin is staked
-              against a bot and no prize is paid for beating one.
+              <strong>{t('trust.botTwo')}</strong>
+              {t('trust.botTwoText')}
             </li>
             <li>
-              <strong>Uniformly at random.</strong> From the Playbook, word for word:
+              <strong>{t('trust.botThree')}</strong>
+              {t('trust.botThreeText')}
             </li>
           </ul>
           <blockquote>
-            {BOT_POLICY_QUOTE}
-            <cite>Play rules, step one</cite>
+            {t('trust.quote')}
+            <cite>{t('trust.cite')}</cite>
           </blockquote>
         </article>
 
         <article className="fd-rules__section">
           <h2>
             <Dices aria-hidden="true" />
-            Random rewards
+            {t('trust.random')}
           </h2>
           <p>
-            <strong>There is no random reward anywhere in the game.</strong> No spin, no chest, no
-            mystery box. Every coin you receive has a stated reason: an ad you finished, the daily
-            grant, the floor, a quest you completed, or a prize for a duel you won, and the amount is
-            written on this device before you tap.
+            <strong>{t('trust.randomStrong')}</strong>
+            {t('trust.randomText')}
           </p>
-          <p>
-            The only randomness in the product is the order questions are drawn in and the practice
-            bot’s answer, and neither one touches your wallet.
-          </p>
+          <p>{t('trust.randomTwo')}</p>
         </article>
 
         <article className="fd-rules__section">
           <h2>
             <Flag aria-hidden="true" />
-            Question review
+            {t('trust.review')}
           </h2>
           <p>
-            Every answer reveal has a Report button. The commitment: a reported question is reviewed
-            within <strong>{REVIEW_TARGET_HOURS} hours</strong>, corrections are listed in public, and if a
-            question is voided every entry it decided is refunded.
+            {t('trust.reviewA')}
+            <strong>{t('trust.hours', { n: REVIEW_TARGET_HOURS })}</strong>
+            {t('trust.reviewB')}
           </p>
-          <p>
-            What is real today: the Report button writes your report to the issues list in this
-            device’s journal, where you can read and export it from the Vault. Nothing leaves the
-            device yet, because there is no server to send it to. The public corrections page, and the
-            refund path, arrive with accounts.
-          </p>
+          <p>{t('trust.reviewTwo')}</p>
         </article>
 
         <article className="fd-rules__section">
           <h2>
             <Tv aria-hidden="true" />
-            Ad policy
+            {t('trust.ad')}
           </h2>
           <ul>
             <li>
-              <strong>Opt-in only.</strong> An ad plays when you choose it from a card that shows its
-              price in coins first. “Not now” is always there and costs nothing.
+              <strong>{t('trust.adOne')}</strong>
+              {t('trust.adOneText')}
             </li>
             <li>
-              <strong>Never inside a round, never before the receipt.</strong> The result of a duel is
-              shown in full before any ad is offered.
+              <strong>{t('trust.adTwo')}</strong>
+              {t('trust.adTwoText')}
             </li>
             {adLimits.map((l) => (
               <li key={l.key}>
@@ -146,14 +135,16 @@ export function Trust() {
             ))}
             {myRate && (
               <li>
-                <strong>Your rate.</strong> On this device a completed ad pays{' '}
-                {(myRate.value ?? 0).toLocaleString('en-US')} coins
-                {region ? ` (region ${region}, read from the browser language, never your location)` : ''}.
+                <strong>{t('trust.yourRate')}</strong>
+                {t('trust.yourRateText', {
+                  n: fmt.number(myRate.value ?? 0),
+                  region: region ? t('trust.regionPart', { region }) : '',
+                })}
               </li>
             )}
             <li>
-              <strong>An ad that does not play charges nothing.</strong> The free paths, the daily grant
-              and the floor, are on the same card.
+              <strong>{t('trust.adThree')}</strong>
+              {t('trust.adThreeText')}
             </li>
           </ul>
         </article>
@@ -161,27 +152,21 @@ export function Trust() {
         <article className="fd-rules__section">
           <h2>
             <HardDrive aria-hidden="true" />
-            Your data
+            {t('trust.data')}
           </h2>
-          <p>
-            Everything the game knows about you lives in this browser, on this device: your wallet,
-            your Vault of facts, your match journal and your reports. There is no account, so there
-            is nothing to log in to and nothing on a server to leak.
-          </p>
-          <p>
-            Export it as JSON or CSV from the Analytics screen, or reset it from Settings. A reset
-            erases the local record and cannot be undone.
-          </p>
+          <p>{t('trust.dataOne')}</p>
+          <p>{t('trust.dataTwo')}</p>
         </article>
 
         <article className="fd-rules__section fd-rules__contact">
           <h2>
             <MessageSquare aria-hidden="true" />
-            Contact
+            {t('trust.contact')}
           </h2>
           <p>
-            Questions: see the project page. <a href="/studio">Research &amp; roadmap</a> lists what
-            is built, what is planned and what is untested.
+            {t('trust.contactA')}
+            <a href="/studio">{t('trust.contactLink')}</a>
+            {t('trust.contactB')}
           </p>
         </article>
       </div>

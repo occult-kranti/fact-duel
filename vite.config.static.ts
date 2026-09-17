@@ -2,9 +2,10 @@
  * vite.config.static.ts — the server-free build (`pnpm build:static` → `dist-static/`).
  *
  * The game's UI is already a client app, so this config bundles `static/main.tsx` (which mounts
- * `app/arena.tsx`) with two aliases that remove the only two server-shaped dependencies:
- *   `@/lib/duel-client` → `lib/duel-client-static.ts` (dispatch in-process, no `/api/duel`)
- *   `next/dynamic`      → `static/next-dynamic-shim.tsx` (React.lazy + Suspense)
+ * `app/arena.tsx`) with three aliases that remove the only server-shaped dependencies:
+ *   `@/lib/duel-client`   → `lib/duel-client-static.ts` (dispatch in-process, no `/api/duel`)
+ *   `@/lib/wallet-client` → `lib/wallet-client-static.ts` (device wallet only, no `/api/wallet`)
+ *   `next/dynamic`        → `static/next-dynamic-shim.tsx` (React.lazy + Suspense)
  * Everything else — screens, hooks, CSS, the three.js scenes — is imported unchanged.
  *
  * `base` defaults to `/fact-duel/` for a GitHub Pages project site and can be overridden with the
@@ -101,6 +102,7 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: [
       { find: /^@\/lib\/duel-client$/, replacement: path.join(repoRoot, 'lib/duel-client-static.ts') },
+      { find: /^@\/lib\/wallet-client$/, replacement: path.join(repoRoot, 'lib/wallet-client-static.ts') },
       { find: /^next\/dynamic$/, replacement: path.join(repoRoot, 'static/next-dynamic-shim.tsx') },
       { find: /^@\//, replacement: `${repoRoot}/` },
     ],

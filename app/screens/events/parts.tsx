@@ -16,6 +16,7 @@ import {
   Volleyball,
   type LucideIcon,
 } from 'lucide-react';
+import { useLocale } from '../../use-locale';
 
 const TOPIC_ICONS: Record<string, LucideIcon> = {
   Cricket: Flag,
@@ -34,36 +35,39 @@ export const topicIcon = (topic: string, domain: string): LucideIcon =>
 
 /** Domain-coloured topic chip: icon + topic, never colour alone. */
 export function TopicChip({ topic, domain }: { topic: string; domain: string }) {
+  const { topic: topicName } = useLocale();
   const Icon = topicIcon(topic, domain);
   return (
     <span className="fd-ev-chip" data-domain={domain}>
       <Icon aria-hidden="true" />
-      {topic}
+      {topicName(topic)}
     </span>
   );
 }
 
 /** The live marker. The dot pulses; under reduced motion it simply sits there, still visible. */
-export function LiveDot({ label = 'On now' }: { label?: string }) {
+export function LiveDot({ label }: { label?: string }) {
+  const { t } = useLocale();
   return (
     <span className="fd-ev-live">
       <i className="fd-ev-live-dot" aria-hidden="true" />
-      {label}
+      {label ?? t('parts.onNow')}
     </span>
   );
 }
 
 /** Every card cites where its entry came from. External, and never a same-tab navigation. */
 export function SourceLink({ href, name }: { href: string; name: string }) {
+  const { t } = useLocale();
   return (
     <a
       className="fd-ev-source"
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label={`Source for ${name} (opens in a new tab)`}
+      aria-label={t('parts.sourceFor', { name })}
     >
-      Source
+      {t('parts.source')}
       <ExternalLink aria-hidden="true" />
     </a>
   );

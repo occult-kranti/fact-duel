@@ -165,6 +165,14 @@
   margin-left: 6px;
   color: var(--gold-text);
 }
+.fd-adcard__pending {
+  padding: 8px 12px;
+  border: 1px dashed color-mix(in oklab, var(--gold) 45%, var(--line));
+  border-radius: var(--r-control);
+  font-size: var(--fs-12);
+  line-height: 1.45;
+  color: var(--gold-text);
+}
 
 /* the free alternatives */
 .fd-adcard__alts {
@@ -261,6 +269,16 @@
 .fd-chip-top--coins:focus-visible {
   outline: 2px solid var(--gold);
   outline-offset: 2px;
+}
+/* server mode: the balance is the server's, said by a dot and the title, nothing louder */
+.fd-chip-top__server {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-left: 2px;
+  border-radius: 50%;
+  background: var(--cyan-text);
+  flex: none;
 }
 
 /* ---------------------------------------------------------------- the coins sheet */

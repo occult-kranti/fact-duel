@@ -1,4 +1,4 @@
-/* FACT//DUEL app shell — topbar / main / nav. Mobile-first; 900px switches the nav from a
+/* Jaanta Hai Kya (JHK) app shell — topbar / main / nav. Mobile-first; 900px switches the nav from a
  * bottom tab bar to a left icon rail; 1200px expands the rail with labels. */
 
 .fd-shell {
@@ -39,15 +39,24 @@
   white-space: nowrap;
   border-radius: var(--r-control);
 }
-.fd-brand > svg {
-  width: 22px;
-  height: 22px;
-  color: var(--volt-text);
-  fill: var(--volt-text);
+/* The mark is the app icon: a dark tile with a volt glyph in both themes (the tile carries its own
+   ground, so the light theme needs no twin). The wordmark paints in the text colour. */
+.fd-brand > .fd-brand-mark {
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  border-radius: 7px;
 }
-.fd-brand em {
-  font-style: normal;
-  color: var(--volt-text);
+.fd-brand > .fd-brand-word {
+  display: block;
+  height: 16px;
+  width: auto;
+  color: var(--text);
+}
+@media (max-width: 359px) {
+  .fd-brand > .fd-brand-word {
+    display: none;
+  }
 }
 .fd-topbar-right {
   display: flex;
@@ -202,6 +211,9 @@
 }
 
 /* ---------- nav: bottom tab bar (default, ≤ 899px) ---------- */
+.fd-nav-mark {
+  display: none;
+}
 .fd-nav {
   position: fixed;
   left: 0;
@@ -312,6 +324,14 @@
     border-right: 1px solid var(--line);
     overflow-y: auto;
   }
+  .fd-nav-mark {
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    height: 40px;
+    margin: 0 0 6px;
+    color: var(--volt-text);
+  }
   .fd-nav-btn {
     flex: 0 0 auto;
     min-height: 56px;
@@ -340,6 +360,10 @@
   }
   .fd-nav {
     padding: 16px 12px calc(16px + var(--safe-bottom)) max(12px, var(--safe-left));
+  }
+  .fd-nav-mark {
+    justify-items: start;
+    padding-left: 12px;
   }
   .fd-nav-btn {
     flex-direction: row;
@@ -467,6 +491,41 @@
 }
 .fd-setting-row [data-slot='select-trigger'] {
   min-width: 132px;
+}
+/* The language control: two equal pills, the chosen one marked, neither pre-nudged. */
+.fd-locale-seg {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+  min-width: 168px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--bg-1);
+}
+.fd-locale-seg .fd-seg-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--font-ui);
+  font-size: var(--fs-14);
+  font-weight: 650;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.fd-locale-seg .fd-seg-btn:hover {
+  color: var(--text);
+}
+.fd-locale-seg .fd-seg-btn[aria-pressed='true'] {
+  background: var(--bg-2);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--volt) 40%, transparent);
+  color: var(--volt-text);
 }
 .fd-setting-stack {
   display: flex;

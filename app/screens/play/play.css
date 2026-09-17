@@ -974,3 +974,10 @@
 :root[data-motion='off'] .fd-play .fd-pressable:active:not(:disabled) {
   transform: none;
 }
+
+/* The matched-rival seat card: volt, not the bot's ember or the friend's cyan. */
+.fd-play .fd-rival[data-seat='rival'] .fd-rival-avatar { color: var(--volt-text); }
+.fd-play .fd-rival[data-seat='rival'] .fd-rival-badge { background: color-mix(in oklab, var(--volt) 18%, transparent); color: var(--volt-text); }
+/* While searching the launch button is a cancel: quiet, not the volt call to action. */
+.fd-play .fd-launch[data-rival='searching'] .fd-launch-btn { background: var(--bg-2); color: var(--text); box-shadow: none; border: 1px solid var(--line); }
+.fd-play .fd-launch[data-rival='searching'] .fd-launch-terms .fd-link { font: inherit; }

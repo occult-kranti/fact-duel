@@ -9,6 +9,7 @@ import { NumberCounter } from '@/components/fx';
 import { cosmeticById } from '@/lib/progression.mjs';
 import { FRAME_LABELS } from './util';
 import { usePress } from './press';
+import { useLocale } from '../../use-locale';
 
 export type PlayerCardProps = {
   name: string;
@@ -36,6 +37,7 @@ export function PlayerCard({
   titleId,
   onOpen,
 }: PlayerCardProps) {
+  const { t, n, fmt } = useLocale();
   const press = usePress();
   const monogram = (name.trim().charAt(0) || 'P').toUpperCase();
   const badge = cosmeticById(titleId);
@@ -48,17 +50,15 @@ export function PlayerCard({
       style={{ ['--fd-accent' as string]: accentToken }}
       onPointerDown={press}
       onClick={onOpen}
-      aria-label={`Open your player card. Level ${level.level}, ${level.title}. ${streak.current} day streak, ${badges} badges, ${rank.label} rank.`}
+      aria-label={t('card.aria', { level: level.level, title: level.title, streak: streak.current, badges, rank: rank.label })}
     >
       <span className="fd-hub-player-top">
         <span className="fd-hub-avatar" aria-hidden="true">
           <span className="fd-hub-avatar-mono">{monogram}</span>
         </span>
         <span className="fd-hub-player-id">
-          <strong className="fd-hub-player-name">{name || 'Player'}</strong>
-          <span className="fd-hub-player-sub">
-            Level {level.level} · {level.title}
-          </span>
+          <strong className="fd-hub-player-name">{name || t('card.player')}</strong>
+          <span className="fd-hub-player-sub">{t('card.level', { level: level.level, title: level.title })}</span>
           {badge && badge.id !== 'challenger' && <span className="fd-hub-player-badge">{badge.name}</span>}
         </span>
         <ChevronRight className="fd-hub-player-go" aria-hidden="true" />
@@ -66,10 +66,10 @@ export function PlayerCard({
 
       <span className="fd-hub-xp">
         <span className="fd-hub-xp-head">
-          <span className="fd-hub-xp-label">XP to level {level.level + 1}</span>
+          <span className="fd-hub-xp-label">{t('card.xpTo', { level: level.level + 1 })}</span>
           <span className="fd-hub-xp-value fd-mono">
             <NumberCounter value={level.into} from={0} duration={1100} />
-            <i>/{level.toNext.toLocaleString()}</i>
+            <i>/{fmt.number(level.toNext)}</i>
           </span>
         </span>
         <span
@@ -78,7 +78,7 @@ export function PlayerCard({
           aria-valuemin={0}
           aria-valuemax={level.toNext}
           aria-valuenow={level.into}
-          aria-label={`Experience toward level ${level.level + 1}`}
+          aria-label={t('card.xpAria', { level: level.level + 1 })}
         >
           <i className="fd-hub-meter-fill" style={{ width: `${pct}%` }} />
         </span>
@@ -88,12 +88,9 @@ export function PlayerCard({
         <span className="fd-hub-stat fd-hub-stat--streak">
           <Flame aria-hidden="true" />
           <b className="fd-mono">{streak.current}</b>
-          <small>day streak</small>
+          <small>{t('card.dayStreak')}</small>
           {streak.shields > 0 && (
-            <span
-              className="fd-hub-shields"
-              title={`${streak.shields} streak shield${streak.shields > 1 ? 's' : ''}`}
-            >
+            <span className="fd-hub-shields" title={n('card.shields', streak.shields)}>
               {Array.from({ length: streak.shields }, (_, i) => (
                 <Shield key={i} aria-hidden="true" />
               ))}
@@ -106,16 +103,16 @@ export function PlayerCard({
           <b className="fd-mono">
             <NumberCounter value={badges} from={0} duration={900} />
           </b>
-          <small>badges</small>
+          <small>{t('card.badges')}</small>
         </span>
         <span className="fd-hub-stat fd-hub-stat--rank">
           <Trophy aria-hidden="true" />
           <b>{rank.label}</b>
-          <small className="fd-mono">{points} pts</small>
+          <small className="fd-mono">{t('card.pts', { n: points })}</small>
         </span>
       </span>
       {frame !== 'default' && (
-        <span className="fd-hub-frame-name">{FRAME_LABELS[frame] ?? 'Equipped frame'}</span>
+        <span className="fd-hub-frame-name">{FRAME_LABELS[frame] ?? t('card.frame')}</span>
       )}
     </button>
   );

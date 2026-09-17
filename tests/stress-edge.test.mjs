@@ -15,6 +15,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
+import { DICTIONARIES, bind } from '../lib/i18n/index.mjs';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
@@ -40,7 +41,12 @@ function loadComponent() {
     if (id === 'react') return react;
     if (id === 'lucide-react') return new Proxy({}, { get: () => () => ({ kids: [] }) });
     if (id.startsWith('.'))
-      return { usePress: () => () => {}, useJuice: () => ({ sound() {}, haptic() {} }) };
+      return {
+        usePress: () => () => {},
+        useJuice: () => ({ sound() {}, haptic() {} }),
+        // The locale hook over the real English dictionary, so the countdown digits are printed.
+        useLocale: () => ({ ...bind(DICTIONARIES.en, 'en'), locale: 'en' }),
+      };
     throw new Error(`unexpected import ${id}`);
   };
   const mod = { exports: {} };

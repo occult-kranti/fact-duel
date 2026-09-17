@@ -258,10 +258,10 @@ test('purchased value cannot reach a match escrow, by any route', () => {
 });
 
 test('the intent table is the readable answer to "what can touch which ledger"', () => {
-  assert.deepEqual(Object.keys(INTENTS).sort(), ['grant', 'purchase', 'reverse', 'settle', 'spend', 'stake']);
+  assert.deepEqual(Object.keys(INTENTS).sort(), ['burn', 'grant', 'purchase', 'reverse', 'settle', 'spend', 'stake']);
   assert.deepEqual(
     Object.fromEntries(Object.entries(INTENTS).map(([k, v]) => [k, v.ledger])),
-    { grant: 'play', stake: 'play', settle: 'play', purchase: 'value', spend: 'value', reverse: 'value' },
+    { grant: 'play', stake: 'play', settle: 'play', burn: 'play', purchase: 'value', spend: 'value', reverse: 'value' },
   );
   // There is no cash-out intent, at any milestone.
   assert.equal(INTENTS.cashout, undefined);

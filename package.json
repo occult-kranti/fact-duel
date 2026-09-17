@@ -17,7 +17,9 @@
     "fx:levels": "node scripts/measure-cues.mjs",
     "seo:pages": "node scripts/seo-pages.mjs",
     "build:static": "vite build --config vite.config.static.ts",
-    "preview:static": "vite preview --config vite.config.static.ts"
+    "preview:static": "vite preview --config vite.config.static.ts",
+    "deploy:prepare": "node scripts/deploy-prepare.mjs",
+    "db:migrate:remote": "wrangler d1 migrations apply DB --remote --config dist/server/wrangler.deploy.json"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

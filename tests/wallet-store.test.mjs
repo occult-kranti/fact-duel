@@ -86,3 +86,23 @@ test('junk in the row is repaired on read; a failing step writes nothing', async
   );
   assert.deepEqual(await transactWallet(null), before, 'the aborted transaction left the row alone');
 });
+
+test('the server view is the same wallet shape: the server’s three numbers, nothing device-side', async () => {
+  const { serverWalletView } = await import('../lib/wallet-store.mjs');
+  const view = serverWalletView({ principalId: 'anon_x', coins: 75, adsToday: 2, adDailyCap: 20, dayKey: '2026-09-16' });
+  assert.equal(view.coins, 75);
+  assert.equal(view.adsToday, 2);
+  assert.equal(view.dayKey, '2026-09-16');
+  assert.equal(readWallet(view), view, 'clean by identity, like everything the store hands out');
+  assert.equal(view.lastDailyKey, '', 'the daily grant is not on the server yet, so it is not claimed');
+  assert.equal(view.lastFloorAt, 0);
+  assert.deepEqual(serverWalletView(undefined), emptyWallet(), 'garbage in, empty wallet out');
+  assert.deepEqual(serverWalletView({ coins: 1.5, adsToday: 'two', dayKey: 9 }), emptyWallet());
+  assert.deepEqual(serverWalletView(JSON.parse(JSON.stringify(view))), view, 'round-trips');
+
+  // A stored device wallet is untouched by the view: the two balances never merge.
+  await reset();
+  const stored = await transactWallet(visitStep({ at: T0, tzOffsetMinutes: 0 }, cfg));
+  assert.notEqual(stored.coins, view.coins);
+  assert.deepEqual(await transactWallet(null), stored);
+});

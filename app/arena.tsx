@@ -13,9 +13,13 @@ import {
 } from '@/components/ui/alert-dialog';
 import { X } from 'lucide-react';
 import { usePlayer } from './use-player';
+import { LocaleProvider, useLocale } from './use-locale';
 import { useWallet, WalletContext } from './use-wallet';
 import { WalletChip } from './screens/economy/wallet-chip';
 import { request } from '@/lib/duel-client';
+import { startSearch, type QueueJoin, type SearchHandle } from '@/lib/queue-client';
+import { sportOfTopic } from '@/lib/season.mjs';
+import { RivalQueueContext, type RivalQueue, type RivalSearch } from './screens/play/opponent-picker';
 import { AppShell } from './shell/app-shell';
 import { ProgressionFeedback } from './screens/use-progression-feedback';
 import { LevelRing, StreakChip } from './screens/player/topbar-chips';
@@ -79,7 +83,17 @@ function parseInvite(text: string) {
  * `initialTab` is how the `/analytics` route enters: app/analytics/page.tsx renders this same
  * orchestrator with the measurement screen already selected. Everything else routes as a tab.
  */
+/** The locale provider sits above the orchestrator so every screen, and the shell, can read it. */
 export default function Arena({ initialTab = 'home' }: { initialTab?: string }) {
+  return (
+    <LocaleProvider>
+      <ArenaShell initialTab={initialTab} />
+    </LocaleProvider>
+  );
+}
+
+function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
+  const { t } = useLocale();
   const [tab, setTab] = useState(initialTab),
     [catalogue, setCatalogue] = useState<any>(null),
     [config, setConfig] = useState<Config>(INITIAL_CONFIG),
@@ -102,6 +116,11 @@ export default function Arena({ initialTab = 'home' }: { initialTab?: string }) 
     [connected, setConnected] = useState(true),
     [copied, setCopied] = useState(false);
   const [selectedExpedition, setSelectedExpedition] = useState<string | null>(null);
+  /* Find a rival (lib/queue-client.ts): the "Rival" seat is chosen, and the search the launch panel
+   * shows. The handle owns the poll loop; everything on screen comes from the server's answers. */
+  const [rivalSelected, setRivalSelected] = useState(false),
+    [rivalSearch, setRivalSearch] = useState<RivalSearch>({ phase: 'idle' });
+  const rivalHandle = useRef<SearchHandle | null>(null);
   /* The limited-time event mode currently armed, if any. It holds the duel it stands for so the
    * settle handler can check the match that actually ran was that duel before paying the badge. */
   const [eventMode, setEventMode] = useState<ArmedMode | null>(null);
@@ -369,6 +388,7 @@ export default function Arena({ initialTab = 'home' }: { initialTab?: string }) 
     setError('');
     createDraft.current = null;
     joinDraft.current = null;
+    setRivalSearch({ phase: 'idle' });
   }, [remember]);
   const leave = useCallback(async () => {
     await mutate('leave');
@@ -616,6 +636,97 @@ export default function Arena({ initialTab = 'home' }: { initialTab?: string }) 
       setBusy(false);
     }
   }
+  /* ---------- Find a rival ---------- */
+  const cancelRival = useCallback(() => {
+    const handle = rivalHandle.current;
+    rivalHandle.current = null;
+    if (handle) void handle.cancel();
+    setRivalSearch({ phase: 'idle' });
+  }, []);
+  /* The seat the queue handed us. The host (seat 0) already owns a room the server created in its
+   * name, so remembering the credentials is enough: the state poll above brings the room in. The
+   * guest (seat 1) joins with its own token, exactly as a pasted invitation would. */
+  async function enterMatched(join: QueueJoin) {
+    rivalHandle.current = null;
+    setRivalSearch({ phase: 'paired' });
+    setShowArt(false);
+    const profileEpoch = player.epoch();
+    try {
+      if (join.seat === 0) {
+        remember({ roomId: join.roomId, token: join.token, profileEpoch });
+        return;
+      }
+      const draft = { roomId: join.roomId, token: join.token, invite: join.invite, name, profileEpoch };
+      const data = await request({ action: 'join', ...draft });
+      remember({ roomId: join.roomId, token: join.token, profileEpoch });
+      accept(data);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Could not enter the room. Try again.');
+      setRivalSearch({ phase: 'idle' });
+    }
+  }
+  function findRival() {
+    if (busy || !player.loaded || rivalHandle.current) return;
+    if (!name.trim()) {
+      setError('Choose a player name first.');
+      return;
+    }
+    const sport = sportOfTopic(config.topic);
+    if (!sport) {
+      setError('Pick one sport to open a lane.');
+      return;
+    }
+    setError('');
+    const lane = { sport, mode: config.mode, stake: config.stake };
+    const rating = Number(player.profile?.supporter?.ratings?.[sport]?.rating) || 1000;
+    setRivalSearch({ phase: 'searching', lane: null, waiting: null, elapsedMs: 0, window: null });
+    rivalHandle.current = startSearch(
+      { lane, rating, name },
+      {
+        onWaiting: (view) =>
+          setRivalSearch({
+            phase: 'searching',
+            lane: view.lane,
+            waiting: view.waiting,
+            elapsedMs: view.elapsedMs,
+            window: view.window,
+          }),
+        onPaired: (join) => void enterMatched(join),
+        onError: (e) => {
+          rivalHandle.current = null;
+          setRivalSearch({ phase: 'idle' });
+          setError(
+            e.status === 401
+              ? 'Finding a rival needs a wallet or a sign-in on this device.'
+              : e.status === 503
+                ? 'Matchmaking is unavailable right now. Play a friend or the practice bot.'
+                : e.message,
+          );
+        },
+      },
+    );
+  }
+  /* "No rival yet": the player chooses a free practice duel. Never automatic, never a bot in disguise. */
+  function practiceInstead() {
+    cancelRival();
+    setRivalSelected(false);
+    const next: Config = { ...config, opponent: 'bot', stake: 0 };
+    change({ opponent: 'bot', stake: 0 });
+    void create(next);
+  }
+  /* A search only lives on the Play tab: `go()` cancels it on the way out, `resetLocal` clears the
+   * "entering" state when a room is forgotten, and unmounting leaves the lane. */
+  useEffect(() => () => void rivalHandle.current?.cancel(), []);
+  const rival: RivalQueue = {
+    available: wallet.mode === 'server',
+    selected: rivalSelected,
+    sport: sportOfTopic(config.topic),
+    search: rivalSearch,
+    select: setRivalSelected,
+    start: findRival,
+    cancel: cancelRival,
+    practice: practiceInstead,
+  };
   async function ready() {
     setBusy(true);
     setError('');
@@ -716,6 +827,7 @@ export default function Arena({ initialTab = 'home' }: { initialTab?: string }) 
     window.scrollTo({ top: 0, behavior: 'instant' });
   };
   const go = (next: string) => {
+    if (next !== 'arena') cancelRival();
     setTab(next);
     window.scrollTo({ top: 0, behavior: 'instant' });
   };
@@ -938,22 +1050,22 @@ export default function Arena({ initialTab = 'home' }: { initialTab?: string }) 
         }}
         footer={
           <footer className="fd-footer">
-            <span>KNOW IT. PROVE IT.</span>
+            <span>{t('footer.tagline')}</span>
             <span>
               <button className="footer-rules" onClick={() => go('rules')}>
-                Play rules
+                {t('footer.rules')}
               </button>{' '}
               ·{' '}
               <button className="footer-rules" onClick={() => go('coin')}>
-                Rules of the coin
+                {t('footer.coin')}
               </button>{' '}
               ·{' '}
               <button className="footer-rules" onClick={() => go('trust')}>
-                Trust
+                {t('footer.trust')}
               </button>{' '}
-              · Free simulated coins · Private playtest
+              · {t('footer.free')} · {t('footer.private')}
             </span>
-            <a href="/studio">Research & roadmap</a>
+            <a href="/studio">{t('footer.research')}</a>
           </footer>
         }
       >
@@ -976,7 +1088,7 @@ export default function Arena({ initialTab = 'home' }: { initialTab?: string }) 
                       .catch((e) => setError(e.message));
                   }}
                 >
-                  Retry loading
+                  {t('dialog.retry')}
                 </Button>
               )}
             </div>
@@ -984,7 +1096,7 @@ export default function Arena({ initialTab = 'home' }: { initialTab?: string }) 
           {note && (
             <div className="notice-box">
               <span>{note}</span>
-              <Button variant="ghost" size="icon" aria-label="Dismiss notice" onClick={() => setNote('')}>
+              <Button variant="ghost" size="icon" aria-label={t('dialog.dismiss')} onClick={() => setNote('')}>
                 <X />
               </Button>
             </div>
@@ -1013,13 +1125,15 @@ export default function Arena({ initialTab = 'home' }: { initialTab?: string }) 
           />
         )}
         {!room && tab === 'arena' && (
-          <PlayScreen
-            duel={duel}
-            player={player}
-            catalogue={catalogue}
-            joinView={joinView}
-            joinLink={joinLink}
-          />
+          <RivalQueueContext value={rival}>
+            <PlayScreen
+              duel={duel}
+              player={player}
+              catalogue={catalogue}
+              joinView={joinView}
+              joinLink={joinLink}
+            />
+          </RivalQueueContext>
         )}
         {!room && tab === 'events' && (
           <EventsScreen
@@ -1091,33 +1205,25 @@ export default function Arena({ initialTab = 'home' }: { initialTab?: string }) 
       <AlertDialog open={leaveOpen} onOpenChange={setLeaveOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Leave this match?</AlertDialogTitle>
-            <AlertDialogDescription>
-              The room ends for both players. Unsettled entries are refunded; completed payouts remain final.
-            </AlertDialogDescription>
+            <AlertDialogTitle>{t('dialog.leaveTitle')}</AlertDialogTitle>
+            <AlertDialogDescription>{t('dialog.leaveBody')}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Keep playing</AlertDialogCancel>
-            <AlertDialogAction onClick={leave}>Leave & refund</AlertDialogAction>
+            <AlertDialogCancel>{t('dialog.keepPlaying')}</AlertDialogCancel>
+            <AlertDialogAction onClick={leave}>{t('dialog.leaveRefund')}</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
       <AlertDialog open={clearOpen} onOpenChange={setClearOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Reset your local activity?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This removes your Vault of facts and saved question issues, expedition progress, scores and
-              stamps, XP and activity points, side quests and earned card finishes in this browser — and
-              the measurement record behind the Analytics screen: sessions, active days, the day-by-day
-              activity and the retention answer. Export first to keep a copy. Theme, sound preferences and
-              room coins are unaffected.
-            </AlertDialogDescription>
+            <AlertDialogTitle>{t('dialog.resetTitle')}</AlertDialogTitle>
+            <AlertDialogDescription>{t('dialog.resetBody')}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Keep activity</AlertDialogCancel>
+            <AlertDialogCancel>{t('dialog.keepActivity')}</AlertDialogCancel>
             <AlertDialogAction disabled={!player.loaded} onClick={clearJournal}>
-              Reset local activity
+              {t('dialog.resetAction')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

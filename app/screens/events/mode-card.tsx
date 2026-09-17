@@ -12,6 +12,7 @@ import type { EventMode } from '../types';
 import { TopicChip } from './parts';
 import { useEventsPress } from './press';
 import { badgeLabel, formatDay, isoOf, modeDuel, modeState, modeXp } from './util';
+import { useLocale } from '../../use-locale';
 
 export type ModeCardProps = {
   mode: EventMode;
@@ -24,8 +25,11 @@ export type ModeCardProps = {
 
 export function ModeCard({ mode, now, earnedAt, armed, onChoose }: ModeCardProps) {
   const { press, cue } = useEventsPress();
+  const { t, pick, topic, locale, fmt } = useLocale();
   const state = modeState(mode, now);
   const duel = modeDuel(mode);
+  const duelName = pick(`modes.${mode.duel.mode}.name`, duel.name);
+  const duelTopic = topic(duel.topic);
   const xp = modeXp(mode.xpBonus);
   const badge = badgeLabel(mode.badge);
   const earned = earnedAt > 0;
@@ -41,7 +45,7 @@ export function ModeCard({ mode, now, earnedAt, armed, onChoose }: ModeCardProps
       <header className="fd-ev-mode-head">
         <p className="fd-ev-mode-kicker">
           {state.open ? <Zap aria-hidden="true" /> : <Lock aria-hidden="true" />}
-          Limited mode
+          {t('modecard.limited')}
         </p>
         <h3>{mode.template.name}</h3>
         <p className="fd-ev-mode-tagline">{mode.template.tagline}</p>
@@ -54,19 +58,19 @@ export function ModeCard({ mode, now, earnedAt, armed, onChoose }: ModeCardProps
 
       <dl className="fd-ev-specs">
         <div>
-          <dt>Duel</dt>
-          <dd>{duel.name}</dd>
+          <dt>{t('modecard.duel')}</dt>
+          <dd>{duelName}</dd>
         </div>
         <div>
           <dt>
             <Timer aria-hidden="true" />
-            Timer
+            {t('modecard.timer')}
           </dt>
           <dd className="fd-mono">{duel.timer}</dd>
         </div>
         <div>
-          <dt>Topic</dt>
-          <dd>{duel.topic}</dd>
+          <dt>{t('modecard.topic')}</dt>
+          <dd>{duelTopic}</dd>
         </div>
       </dl>
 
@@ -76,20 +80,24 @@ export function ModeCard({ mode, now, earnedAt, armed, onChoose }: ModeCardProps
         <li>
           <Zap aria-hidden="true" />
           <span>
-            <b className="fd-mono">+{xp.total} XP</b> {earned ? 'already paid' : 'once cleared'}
+            <b className="fd-mono">+{xp.total} XP</b> {earned ? t('modecard.alreadyPaid') : t('modecard.onceCleared')}
             <small>
               {earned
-                ? 'The event bonus pays once per badge.'
-                : `${xp.base} × ${xp.bonus.toFixed(2).replace(/\.?0+$/, '')} event bonus`}
+                ? t('modecard.paysOnce')
+                : t('modecard.bonus', { base: xp.base, mult: xp.bonus.toFixed(2).replace(/\.?0+$/, '') })}
             </small>
           </span>
         </li>
         <li>
           {earned ? <BadgeCheck aria-hidden="true" /> : <Medal aria-hidden="true" />}
           <span>
-            <b>{badge}</b> badge
+            <b>{badge}</b> {t('modecard.badge')}
             <small>
-              {earned ? `Earned ${formatDay(isoOf(earnedAt))}` : 'Pays once, the first time you clear it'}
+              {earned
+                ? t('modecard.earnedOn', {
+                    day: locale === 'en' ? formatDay(isoOf(earnedAt)) : fmt.isoDay(isoOf(earnedAt), { day: 'numeric', month: 'short', year: 'numeric' }),
+                  })
+                : t('modecard.paysFirst')}
             </small>
           </span>
         </li>
@@ -113,9 +121,9 @@ export function ModeCard({ mode, now, earnedAt, armed, onChoose }: ModeCardProps
           >
             {armed ? <Check aria-hidden="true" /> : <Play aria-hidden="true" />}
             <span className="fd-ev-play-body">
-              <strong>{armed ? 'Armed — go to Play' : earned ? 'Play it again' : 'Play this mode'}</strong>
+              <strong>{armed ? t('modecard.armedGo') : earned ? t('modecard.playAgain') : t('modecard.playMode')}</strong>
               <small>
-                {duel.name} · {duel.timer} · {duel.topic}
+                {duelName} · {duel.timer} · {duelTopic}
               </small>
             </span>
           </button>
@@ -124,7 +132,7 @@ export function ModeCard({ mode, now, earnedAt, armed, onChoose }: ModeCardProps
             <Lock aria-hidden="true" />
             <span>
               <strong>{state.reason}</strong>
-              <small>Not playable today</small>
+              <small>{t('modecard.notPlayable')}</small>
             </span>
           </p>
         )}

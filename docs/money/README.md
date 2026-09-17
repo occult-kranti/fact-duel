@@ -68,3 +68,24 @@ Not built, and said so in the UI: accounts and sign-in (M4; the guest principal 
 when they arrive), public leagues and the global board (open with accounts; no placeholder table),
 the matchmaking queue, server-verified ad completion (store builds only). The static GitHub Pages
 build carries none of the server half; it keeps the device wallet.
+
+## Build status, 17 September 2026 (evening) — M4 and the Indian bank
+
+| item | where |
+| --- | --- |
+| Accounts: email magic link, Google ID token, sessions kept hashed, guest principal promoted in place | `lib/server/auth-service.mjs`, `http-auth.mjs`, `app/shell/account-panel.tsx`, migration 0005 |
+| Cross-device profile sync for signed-in players (revision-guarded, higher revision wins whole) | `lib/server/profile-service.mjs`, `lib/profile-sync.ts` |
+| Server wallet in the client: nonce-backed ad rewards, daily grant, floor, drill entry, free recap | `lib/wallet-client.ts`, `app/use-wallet.ts`, `lib/server/wallet-service.mjs`, migration 0006 |
+| Duel entries and prizes on the ledger: stake before the row, settle from the durable verdict, refund on every other exit, sweep refunds before delete | `lib/server/duel-service.mjs`, `room-engine.mjs`, `tests/duel-ledger.test.mjs` |
+| Matchmaking: lanes by sport, mode and entry; widening rating window; real counts; no fills | `lib/server/matchmaking.mjs`, `http-queue.mjs`, `lib/queue-client.ts` |
+| Cloudflare Workers deploy workflow with D1 migrations and secrets; the compliance page is excluded from the Worker's assets | `.github/workflows/deploy-worker.yml`, `scripts/deploy-prepare.mjs`, `docs/deploy-cloudflare.md` |
+| Founder dashboard at `/ops`: Cloudflare traffic, Search Console, AdSense, game ops; honest "Not connected" states | `lib/server/stats-service.mjs`, `app/ops/`, `docs/ops-dashboard.md` |
+| Indian cricket bank: 500 questions (cr100–cr599) incl. 50 on women's cricket; 829 served | `lib/server/questions/cricket-india-*.mjs` |
+| Pool sizes hidden from every surface | `tests/no-pool-counts.test.mjs` |
+| AdSense maximisation research lane and five decisions | `ads/lane-adsense.json`, `ads/decision.md` addendum |
+| Rebrand to Jaanta Hai Kya (JHK) | `docs/brand.md`, `public/brand/` |
+
+Known follow-ups: the queue stores a pairing in the `ticket` column behind a `paired:` prefix
+(a `room_id`/`credential` column pair is the clean version, `scratchpad` request recorded in the
+matchmaking module header); the app-side coin pricing before the first nonce comes from the
+wallet reply's `region`/`perAd`; loss-streak double ads are still device-only.

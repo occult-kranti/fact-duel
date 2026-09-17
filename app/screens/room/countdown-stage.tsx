@@ -8,24 +8,26 @@
  */
 import { Radio, Sparkles } from 'lucide-react';
 import { wildRound } from '@/lib/progression.mjs';
+import { useLocale } from '../../use-locale';
 
 export function CountdownStage({ countdown, roundId }: { countdown: number; roundId?: string | null }) {
+  const { t } = useLocale();
   const wild = roundId ? wildRound(roundId) : 1;
   return (
     <section className="fd-panel fd-count">
-      <p className="fd-eyebrow">ONE QUESTION. ONE ATTEMPT.</p>
-      <h1>{countdown > 0 ? 'Here we go.' : 'Opening your question…'}</h1>
+      <p className="fd-eyebrow">{t('count.eyebrow')}</p>
+      <h1>{countdown > 0 ? t('count.go') : t('count.opening')}</h1>
       {wild > 1 && (
         <p className="fd-wild">
           <Sparkles size={16} />
-          WILD ROUND ×{wild} XP
+          {t('count.wild', { n: wild })}
         </p>
       )}
       <strong className="fd-count-num" key={countdown} aria-hidden="true">
         {countdown > 0 ? countdown : <Radio />}
       </strong>
       <p className="fd-count-status" role="status">
-        {countdown > 0 ? 'Get ready for your question.' : 'Waiting for the question to arrive.'}
+        {countdown > 0 ? t('count.getReady') : t('count.waitingQ')}
       </p>
     </section>
   );

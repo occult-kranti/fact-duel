@@ -28,6 +28,7 @@ import {
 } from '@/lib/season.mjs';
 import type { Player } from '../types';
 import { Meter, usePress } from './shared';
+import { useLocale, type LocaleApi } from '../../use-locale';
 import './supporter.css';
 
 type Tier = { id: string; label: string; min: number };
@@ -41,20 +42,26 @@ type Op =
   | { type: 'handle'; handle: string }
   | { type: 'age-band'; band: string };
 
-const AGE_LABELS: Record<string, string> = {
-  'under-18': 'Under 18',
-  '18-plus': '18 or over',
-  'prefer-not': 'Prefer not to say',
+const AGE_KEYS: Record<string, string> = {
+  'under-18': 'sup.under18',
+  '18-plus': 'sup.18plus',
+  'prefer-not': 'sup.preferNot',
 };
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-/** '2027-08-21' → '21 Aug 2027', with no Date object so SSR and the browser agree. */
-function shortDate(iso: string): string {
+/**
+ * '2027-08-21' → '21 Aug 2027', with no Date object so SSR and the browser agree. Under another
+ * locale the Intl formatter takes over (that render happens after mount, so hydration is safe).
+ */
+function shortDate(iso: string, loc: LocaleApi): string {
+  if (loc.locale !== 'en') return loc.fmt.isoDay(iso, { day: 'numeric', month: 'short', year: 'numeric' });
   const [y, m, d] = iso.split('-').map(Number);
   return `${d} ${MONTHS[(m || 1) - 1]} ${y}`;
 }
 const tiers = SEASON_TIERS as ReadonlyArray<Tier>;
 
 export function SupporterCard({ player }: { player: Player }) {
+  const loc = useLocale();
+  const { t } = loc;
   const sup = player.profile.supporter ?? emptySupporter();
   const clock = useClock(player.profile.revision);
   const progress = cardProgress(sup, player.profile) as {
@@ -68,31 +75,29 @@ export function SupporterCard({ player }: { player: Player }) {
   return (
     <section className="fd-card fd-supporter" aria-labelledby="fd-sup-h">
       <span className="fd-card-label" id="fd-sup-h">
-        <UserRound aria-hidden="true" /> Supporter Card
+        <UserRound aria-hidden="true" /> {t('sup.label')}
       </span>
 
       <HandleRow handle={sup.handle} onSave={(handle) => act({ type: 'handle', handle })} press={press} />
 
       <div className="fd-sup-progress">
         <div className="fd-sup-progress-row">
-          <span>Card complete</span>
-          <b>
-            {progress.done} of {progress.total}
-          </b>
+          <span>{t('sup.complete')}</span>
+          <b>{t('sup.ofTotal', { done: progress.done, total: progress.total })}</b>
         </div>
-        <Meter value={progress.done / progress.total} label={`Card ${progress.done} of ${progress.total} complete`} />
+        <Meter value={progress.done / progress.total} label={t('sup.meterAria', { done: progress.done, total: progress.total })} />
         <ul className="fd-sup-steps">
           {progress.steps.map((s) => (
             <li key={s.id} data-done={s.done}>
               {s.done ? <Check aria-hidden="true" /> : <span className="fd-sup-step-dot" aria-hidden="true" />}
               <span>{s.label}</span>
-              <span className="fd-sr">{s.done ? ' — done' : ' — not yet'}</span>
+              <span className="fd-sr">{s.done ? t('sup.done') : t('sup.notYet')}</span>
             </li>
           ))}
         </ul>
       </div>
 
-      <ul className="fd-sup-rows" aria-label="Your sports">
+      <ul className="fd-sup-rows" aria-label={t('sup.sportsAria')}>
         {SPORTS.map((sport: string) => (
           <SportRow
             key={sport}
@@ -108,11 +113,9 @@ export function SupporterCard({ player }: { player: Player }) {
       </ul>
 
       <fieldset className="fd-sup-age">
-        <legend>Age band</legend>
-        <p className="fd-sup-age-why">
-          Used for one thing: keeping any ads non-personalised for under-18s. It stays on this device.
-        </p>
-        <div className="fd-sup-age-opts" role="group" aria-label="Age band">
+        <legend>{t('sup.ageBand')}</legend>
+        <p className="fd-sup-age-why">{t('sup.ageWhy')}</p>
+        <div className="fd-sup-age-opts" role="group" aria-label={t('sup.ageBand')}>
           {(AGE_BANDS as ReadonlyArray<string>).map((band) => (
             <button
               key={band}
@@ -122,16 +125,13 @@ export function SupporterCard({ player }: { player: Player }) {
               onPointerDown={press}
               onClick={() => act({ type: 'age-band', band })}
             >
-              {AGE_LABELS[band]}
+              {t(AGE_KEYS[band] ?? band)}
             </button>
           ))}
         </div>
       </fieldset>
 
-      <p className="fd-disclaimer">
-        Ratings count human duels only and live on this device. Shields are earned by playing seven days
-        running in a sport; nothing here can be bought or won back from an ad.
-      </p>
+      <p className="fd-disclaimer">{t('sup.disclaimer')}</p>
     </section>
   );
 }
@@ -161,6 +161,7 @@ function HandleRow({
   onSave: (handle: string) => void;
   press: () => void;
 }) {
+  const { t } = useLocale();
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState('');
   const valid = draft === '' || HANDLE_RE.test(draft);
@@ -173,17 +174,13 @@ function HandleRow({
   return (
     <div className="fd-sup-head">
       <div className="fd-sup-id">
-        <h2>{handle ?? 'Guest'}</h2>
-        {!handle && (
-          <p className="fd-sup-guest">
-            Your card lives on this device. Sign-in arrives with accounts — nothing you earn is lost then.
-          </p>
-        )}
+        <h2>{handle ?? t('sup.guest')}</h2>
+        {!handle && <p className="fd-sup-guest">{t('sup.guestNote')}</p>}
       </div>
       {editing ? (
         <form className="fd-sup-edit" onSubmit={submit}>
           <label className="fd-sr" htmlFor="fd-sup-handle">
-            Handle
+            {t('sup.handle')}
           </label>
           <input
             id="fd-sup-handle"
@@ -192,17 +189,17 @@ function HandleRow({
             maxLength={24}
             autoComplete="off"
             autoFocus
-            placeholder="Letters, digits, underscore"
+            placeholder={t('sup.handlePlaceholder')}
             aria-invalid={!valid}
             onChange={(e) => setDraft(e.target.value.replace(/[^A-Za-z0-9_]/g, '').slice(0, 24))}
           />
-          <button type="submit" className="fd-sup-icon-btn fd-btn" aria-label="Save handle" onPointerDown={press}>
+          <button type="submit" className="fd-sup-icon-btn fd-btn" aria-label={t('sup.saveHandle')} onPointerDown={press}>
             <Check aria-hidden="true" />
           </button>
           <button
             type="button"
             className="fd-sup-icon-btn fd-btn"
-            aria-label="Cancel"
+            aria-label={t('sup.cancel')}
             onPointerDown={press}
             onClick={() => setEditing(false)}
           >
@@ -220,7 +217,7 @@ function HandleRow({
           }}
         >
           <Pencil aria-hidden="true" />
-          {handle ? 'Change handle' : 'Choose a handle'}
+          {handle ? t('sup.changeHandle') : t('sup.chooseHandle')}
         </button>
       )}
     </div>
@@ -245,6 +242,8 @@ function SportRow({
   onTeam: (team: string) => void;
   press: () => void;
 }) {
+  const loc = useLocale();
+  const { t, n, topic } = loc;
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState('');
   const rated = !!rating && rating.ratedGames > 0;
@@ -260,11 +259,11 @@ function SportRow({
   return (
     <li className="fd-sup-row" data-rated={rated}>
       <div className="fd-sup-row-top">
-        <span className="fd-sup-sport">{sport}</span>
+        <span className="fd-sup-sport">{topic(sport)}</span>
         {editing ? (
           <form className="fd-sup-edit" onSubmit={submit}>
             <label className="fd-sr" htmlFor={`fd-sup-side-${sportId}`}>
-              Who you support in {sport}
+              {t('sup.supportIn', { sport: topic(sport) })}
             </label>
             <input
               id={`fd-sup-side-${sportId}`}
@@ -273,16 +272,16 @@ function SportRow({
               maxLength={ALLEGIANCE_MAX}
               autoComplete="off"
               autoFocus
-              placeholder={sport === 'Formula 1' ? 'Driver or team' : 'Club, side or team'}
+              placeholder={sport === 'Formula 1' ? t('sup.driverOrTeam') : t('sup.clubSide')}
               onChange={(e) => setDraft(e.target.value.slice(0, ALLEGIANCE_MAX))}
             />
-            <button type="submit" className="fd-sup-icon-btn fd-btn" aria-label="Save" onPointerDown={press}>
+            <button type="submit" className="fd-sup-icon-btn fd-btn" aria-label={t('sup.save')} onPointerDown={press}>
               <Check aria-hidden="true" />
             </button>
             <button
               type="button"
               className="fd-sup-icon-btn fd-btn"
-              aria-label="Cancel"
+              aria-label={t('sup.cancel')}
               onPointerDown={press}
               onClick={() => setEditing(false)}
             >
@@ -299,16 +298,18 @@ function SportRow({
               setDraft(team);
               setEditing(true);
             }}
-            aria-label={team ? `${sport}: you support ${team}. Change` : `Pick a side in ${sport}`}
+            aria-label={
+              team ? t('sup.supportChange', { sport: topic(sport), team }) : t('sup.pickSideIn', { sport: topic(sport) })
+            }
           >
-            {team || 'Pick a side'}
+            {team || t('sup.pickSide')}
             <Pencil aria-hidden="true" />
           </button>
         )}
       </div>
       <dl className="fd-sup-stats">
         <div className="fd-sup-stat">
-          <dt>Rating</dt>
+          <dt>{t('sup.rating')}</dt>
           <dd>
             {rated && tier ? (
               <>
@@ -318,45 +319,41 @@ function SportRow({
                   {tier.label}
                 </span>
                 {rating.provisional && (
-                  <span className="fd-pill" title={`Settles after ${PROVISIONAL_DUELS} rated duels`}>
-                    provisional · {rating.ratedGames}/{PROVISIONAL_DUELS}
+                  <span className="fd-pill" title={t('sup.settles', { n: PROVISIONAL_DUELS })}>
+                    {t('sup.provisional', { n: rating.ratedGames, of: PROVISIONAL_DUELS })}
                   </span>
                 )}
               </>
             ) : (
               <span className="fd-sup-muted">
-                Not yet rated
-                {rating && rating.duels > 0
-                  ? ` · ${rating.duels} practice ${rating.duels === 1 ? 'duel' : 'duels'}`
-                  : ''}
+                {t('sup.notRated')}
+                {rating && rating.duels > 0 ? n('sup.practiceDuels', rating.duels) : ''}
               </span>
             )}
           </dd>
           {rated && next && (
-            <dd className="fd-sup-next">
-              {next.min - rating.rating} to {next.label}
-            </dd>
+            <dd className="fd-sup-next">{t('sup.toNext', { n: next.min - rating.rating, label: next.label })}</dd>
           )}
         </div>
         <div className="fd-sup-stat">
           <dt>
-            <CalendarDays aria-hidden="true" /> Season
+            <CalendarDays aria-hidden="true" /> {t('sup.season')}
           </dt>
           <dd>{season ? <SeasonLine season={season} /> : <span className="fd-sup-muted">…</span>}</dd>
         </div>
         <div className="fd-sup-stat">
           <dt>
-            <Flame aria-hidden="true" /> Matchweeks
+            <Flame aria-hidden="true" /> {t('sup.matchweeks')}
           </dt>
           <dd>
             <b>{streak?.current ?? 0}</b>
-            <span className="fd-sup-muted">{streak?.current === 1 ? ' week' : ' weeks'}</span>
+            <span className="fd-sup-muted">{n('sup.weeks', streak?.current ?? 0)}</span>
             {!!streak?.best && streak.best > (streak.current ?? 0) && (
-              <span className="fd-sup-muted"> · best {streak.best}</span>
+              <span className="fd-sup-muted">{t('sup.best', { n: streak.best })}</span>
             )}
             <span className={streak?.shields ? 'fd-pill fd-pill--shield' : 'fd-pill'}>
               <ShieldCheck aria-hidden="true" />
-              {streak?.shields ?? 0} {streak?.shields === 1 ? 'shield' : 'shields'}
+              {n('sup.shields', streak?.shields ?? 0)}
             </span>
           </dd>
         </div>
@@ -366,21 +363,22 @@ function SportRow({
 }
 
 function SeasonLine({ season }: { season: Season }) {
+  const loc = useLocale();
+  const { t, n } = loc;
   if (!season.offSeason)
     return (
       <>
         <b>{season.label}</b>
-        <span className="fd-sup-muted">
-          {' '}
-          · {season.daysLeft} {season.daysLeft === 1 ? 'day' : 'days'} left
-        </span>
+        <span className="fd-sup-muted">{n('sup.daysLeft', season.daysLeft)}</span>
       </>
     );
   return (
     <>
       <b>{season.label}</b>
       <span className="fd-sup-muted">
-        {season.next ? ` · ${season.next.label} from ${shortDate(season.next.start)}` : ' · no season in the calendar yet'}
+        {season.next
+          ? t('sup.from', { label: season.next.label, date: shortDate(season.next.start, loc) })
+          : t('sup.noSeason')}
       </span>
     </>
   );

@@ -8,16 +8,16 @@
  * beat at all.
  */
 import { LazyHeroOrb } from '@/components/three';
+import { JhkMark } from '../../shell/brand-mark';
 import { useReducedMotion } from '@/components/fx';
 import { CONVICTION_CODES, CONVICTION_WINDOW, MODES } from '@/lib/progression.mjs';
 import { convictionHeat, landedRecent } from '@/lib/heat.mjs';
+import { useLocale } from '../../use-locale';
 
 const STAGE_ART = '/art/rivalry-stage.webp';
-const STAGE_ALT = 'Floodlit arena stage: a lightning token and a sports sphere in luminous orbits';
 
 /** Four of the six ways to play. Breadth is reachable in one session and teaches the whole app. */
 const WAKE_MODES = 4;
-const SPELLED = ['none', 'one', 'two', 'three', 'four', 'five', 'six'];
 
 /**
  * Only the corner of the progression record this screen reads, and every field is optional: a
@@ -70,6 +70,7 @@ export function HeroStage({
   accent: string;
   progression?: HeroProgression;
 }) {
+  const { t, n } = useLocale();
   const reduced = useReducedMotion();
   const modesPlayed = countModes(progression);
   const awake = modesPlayed >= WAKE_MODES;
@@ -85,10 +86,10 @@ export function HeroStage({
      shows and no rotor reaches. */
   const note = awake
     ? resolved === 0
-      ? 'No expedition calls resolved yet — the count starts with your first call above Steady that lands.'
-      : `${landed} of your last ${resolved} expedition ${resolved === 1 ? 'call' : 'calls'} landed above Steady`
-    : `Four of the six ways to play wakes it. ${
-        modesPlayed === 0 ? 'You have not played any yet.' : `You have played ${SPELLED[modesPlayed]}.`
+      ? t('hero.noCalls')
+      : n('hero.landed', resolved, { landed })
+    : `${t('hero.wake')} ${
+        modesPlayed === 0 ? t('hero.wakeNone') : t('hero.wakeSome', { spelled: t(`num.${modesPlayed}`) })
       }`;
 
   /* The text twin sits BELOW the stage, never over it. Scrimmed inside a 196px-tall hero on a phone
@@ -96,6 +97,9 @@ export function HeroStage({
   return (
     <>
       <div className="fd-hub-hero-stage">
+        {/* The brand mark as a watermark: decorative, 7% volt, under the poster and the scene, and
+            kept to the top-right corner so it never sits under the badge row or the note. */}
+        <JhkMark className="fd-hub-hero-mark" />
         <img
           className="fd-hub-hero-poster"
           src={STAGE_ART}
@@ -115,12 +119,12 @@ export function HeroStage({
           heat={heat}
           height="var(--fd-orb-h)"
           fallback={
-            <img className="fd-hub-hero-fallback" src={STAGE_ART} alt={STAGE_ALT} width="1672" height="941" />
+            <img className="fd-hub-hero-fallback" src={STAGE_ART} alt={t('hero.alt')} width="1672" height="941" />
           }
         />
-        <span className="fd-hub-hero-badge fd-mono">LV {level}</span>
+        <span className="fd-hub-hero-badge fd-mono">{t('hero.lv', { level })}</span>
         <span className="fd-hub-hero-chip fd-mono" data-state={awake ? 'awake' : 'locked'}>
-          {awake ? 'BRAIN AWAKE' : `BRAIN ${modesPlayed}/${WAKE_MODES}`}
+          {awake ? t('hero.awake') : t('hero.brain', { n: modesPlayed, of: WAKE_MODES })}
         </span>
       </div>
       <p className="fd-hub-hero-note">{note}</p>

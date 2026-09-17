@@ -16,6 +16,7 @@ import { useWalletContext } from '../../use-wallet';
 import type { CalendarEvent } from '../types';
 import { TopicChip } from './parts';
 import { useEventsPress } from './press';
+import { useLocale } from '../../use-locale';
 import './fixture.css';
 
 export type { FixtureKind };
@@ -37,6 +38,7 @@ export function FixtureStrip({ now, tzOffsetMinutes, go }: { now: number; tzOffs
     ...fixtures.kickoff.map((event) => ({ event, kind: 'kickoff' as const })),
     ...fixtures.fulltime.map((event) => ({ event, kind: 'fulltime' as const })),
   ];
+  const { t, n } = useLocale();
   if (!cards.length) return null;
   return (
     <section className="fd-ev-section fd-fx-strip" aria-labelledby="fd-ev-fixtures-title">
@@ -45,14 +47,11 @@ export function FixtureStrip({ now, tzOffsetMinutes, go }: { now: number; tzOffs
           <span className="fd-ev-section-icon" aria-hidden="true">
             <Timer />
           </span>
-          Fixtures
+          {t('fixture.title')}
         </h2>
-        <span className="fd-ev-section-note">{cards.length === 1 ? '1 set open' : `${cards.length} sets open`}</span>
+        <span className="fd-ev-section-note">{n('fixture.setsOpen', cards.length)}</span>
       </div>
-      <p className="fd-ev-section-lede">
-        Sets cut from the calendar: ten cards the day before a fixture starts, ten the day after it ends, and a
-        free five-card recap the morning after. Untimed, no opponent.
-      </p>
+      <p className="fd-ev-section-lede">{t('fixture.lede')}</p>
       <div className="fd-ev-grid fd-fx-grid">
         {cards.map(({ event, kind }) => (
           <FixtureCard key={`${kind}:${event.id}`} event={event} kind={kind} now={now} tzOffsetMinutes={tzOffsetMinutes} go={go} />
@@ -76,9 +75,10 @@ export function FixtureCard({
   go: (tab: string) => void;
 }) {
   const { press, cue } = useEventsPress();
+  const { t, when: localWhen } = useLocale();
   const wallet = useWalletContext();
   const label = fixtureLabel(event, kind) as string;
-  const when = countdownCopy(event, now, { tzOffsetMinutes }) as string;
+  const when = localWhen(countdownCopy(event, now, { tzOffsetMinutes }) as string);
   const size = SIZE[kind];
   const recap = kind === 'recap';
   // The recap's price line is the wallet's truth: free until played today, then the ordinary
@@ -87,9 +87,9 @@ export function FixtureCard({
   const entry = wallet?.config.practiceEntry ?? 10;
   const price = recap
     ? free
-      ? 'Free today'
-      : `Recap played today. Play it again for ${entry} coins or one ad`
-    : `${entry} coins or one ad`;
+      ? t('fixture.freeToday')
+      : t('fixture.recapPlayed', { n: entry })
+    : t('fixture.coinsOrAd', { n: entry });
 
   const play = () => {
     cue('select', 'medium');
@@ -105,11 +105,11 @@ export function FixtureCard({
       </div>
       <p className="fd-fx-kicker">
         {recap ? <Gift aria-hidden="true" /> : kind === 'kickoff' ? <CalendarClock aria-hidden="true" /> : <Trophy aria-hidden="true" />}
-        {recap ? 'Yesterday' : kind === 'kickoff' ? 'Kick-off set' : 'Full-time set'}
+        {recap ? t('fixture.yesterday') : kind === 'kickoff' ? t('fixture.kickoff') : t('fixture.fulltime')}
       </p>
       <h3 className="fd-ev-name">{event.name}</h3>
       <p className="fd-fx-meta">
-        <span className="fd-mono">{size} cards</span>
+        <span className="fd-mono">{t('fixture.cards', { n: size })}</span>
         <span aria-hidden="true">·</span>
         <span data-free={free || undefined}>{price}</span>
       </p>
@@ -117,7 +117,7 @@ export function FixtureCard({
         <button type="button" className="fd-ev-play fd-ev-pressable" data-kind={recap && free ? 'mode' : 'topic'} {...press} onClick={play}>
           <Play aria-hidden="true" />
           <span className="fd-ev-play-body">
-            <strong>Play the set</strong>
+            <strong>{t('fixture.playSet')}</strong>
             <small>{label}</small>
           </span>
         </button>

@@ -5,25 +5,23 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { DURATIONS, MODE_DURATION } from '@/lib/server/room-engine.mjs';
-import { DEFAULT_CONFIG } from '@/lib/economy/economy.mjs';
+import { DEFAULT_CONFIG, feeFor, prizeFor } from '@/lib/economy/economy.mjs';
 import { advise, closedReason, evCopy } from '@/lib/economy/stake-advice.mjs';
 import type { WalletApi } from '../../use-wallet';
 import { MODES } from '../types';
 import type { Config } from '../types';
 import { usePlayJuice } from './press';
+import { useLocale } from '../../use-locale';
 
 const TIMERS = DURATIONS;
 
 /**
- * The room engine's `normalizeConfig` accepts entries up to this tier (its demo-entry list is
- * 0, 10, 25, 50, 100), so the picker offers the economy's tiers only up to here. The economy's
- * larger tiers (250, 500) wait for the engine to take them; nothing here hard-codes the list.
+ * The tiers a room can be created at: every tier of the economy. The room engine's `STAKES` is
+ * built from the same `DEFAULT_CONFIG.stakes` (lib/server/room-engine.mjs), so nothing here
+ * narrows the list any more; the function stays because the play screen picks its default from it.
  */
-export const ROOM_MAX_STAKE = 100;
-
-/** The economy config narrowed to the tiers a room can be created at. */
 export function offeredConfig(config: typeof DEFAULT_CONFIG = DEFAULT_CONFIG): typeof DEFAULT_CONFIG {
-  return { ...config, stakes: config.stakes.filter((tier) => tier <= ROOM_MAX_STAKE) };
+  return config;
 }
 
 function Picker({
@@ -86,6 +84,7 @@ export function MatchSettings({
   suggested = 0,
 }: MatchSettingsProps) {
   const { press } = usePlayJuice();
+  const { t, pick } = useLocale();
   const economy = useMemo(() => offeredConfig(wallet?.config ?? DEFAULT_CONFIG), [wallet?.config]);
   const stakes = useMemo(() => [0, ...economy.stakes], [economy]);
   const loaded = !!wallet?.loaded;
@@ -101,28 +100,28 @@ export function MatchSettings({
       <summary className="fd-pressable" {...press}>
         <span className="fd-settings-title">
           <SlidersHorizontal size={16} aria-hidden="true" />
-          Match settings
+          {t('play.matchSettings')}
         </span>
         <span className="fd-settings-summary">
           <em>{config.duration}s</em>
-          <em>{config.stake ? `${config.stake} coins` : 'Free entry'}</em>
+          <em>{config.stake ? t('match.coins', { n: config.stake }) : t('match.free')}</em>
           <ChevronDown className="fd-settings-chevron" size={16} aria-hidden="true" />
         </span>
       </summary>
       <div className="fd-settings-body">
         <div className="fd-field">
-          <Label htmlFor="player-name">Your player name</Label>
+          <Label htmlFor="player-name">{t('settings.name')}</Label>
           <Input
             id="player-name"
             value={name}
             onChange={(e) => onName(e.target.value)}
             maxLength={24}
             autoComplete="nickname"
-            placeholder="Choose a name"
+            placeholder={t('settings.namePlaceholder')}
           />
         </div>
         <div className="fd-field">
-          <Label id="timer-label">Time per question</Label>
+          <Label id="timer-label">{t('match.timeLabel')}</Label>
           <div className="fd-opts" role="group" aria-labelledby="timer-label">
             {TIMERS.map((duration) => (
               <button
@@ -138,13 +137,14 @@ export function MatchSettings({
             ))}
           </div>
           <p className="fd-field-note">
-            {MODES.find((m) => m.id === config.mode)?.name ?? 'This format'} opens on{' '}
-            {MODE_DURATION[config.mode as keyof typeof MODE_DURATION] ?? MODE_DURATION.quick}s. A round also
-            ends the moment both answers are in.
+            {t('match.opens', {
+              mode: pick(`modes.${config.mode}.name`, MODES.find((m) => m.id === config.mode)?.name ?? t('match.thisFormat')),
+              s: MODE_DURATION[config.mode as keyof typeof MODE_DURATION] ?? MODE_DURATION.quick,
+            })}
           </p>
         </div>
         <div className="fd-field">
-          <Label id="stake-label">Entry · once per match</Label>
+          <Label id="stake-label">{t('match.entryLabel')}</Label>
           <div className="fd-opts" role="group" aria-labelledby="stake-label">
             {stakes.map((stake) => {
               const why = closed(stake);
@@ -169,8 +169,8 @@ export function MatchSettings({
                     if (open) onChange({ stake });
                   }}
                 >
-                  {stake || 'Free'}
-                  {isSuggested && <small className="fd-opt-tag">Suggested</small>}
+                  {stake || t('match.freeOpt')}
+                  {isSuggested && <small className="fd-opt-tag">{t('match.suggested')}</small>}
                   {why && (
                     <span id={`stake-why-${stake}`} className="sr-only">
                       {why}
@@ -184,42 +184,50 @@ export function MatchSettings({
             <p className="fd-stake-advice" role="status">
               <span>{advice.reason}</span>
               <button type="button" className="fd-link" {...press} onClick={() => onChange({ stake: advice.suggested })}>
-                {advice.suggested ? `Play for ${advice.suggested}` : 'Play free'}
+                {advice.suggested ? t('match.playFor', { n: advice.suggested }) : t('match.playFree')}
               </button>
             </p>
           )}
           {doubleOwed && (
-            <p className="fd-field-note">A double-coin ad is open today. It is on the coins card in the top bar.</p>
+            <p className="fd-field-note">{t('match.doubleOwed')}</p>
           )}
           <p className="fd-fine">
             {bot
-              ? 'Practice bots play for free. Entries are for duels with a friend.'
+              ? t('match.botFree')
               : config.stake
-                ? `${evCopy(config.stake, economy)} Draws refund the entry.`
-                : 'Free simulated coins with no cash value. Draws refund the entry, and every new room starts with 1,000 per player.'}
+                ? t('match.entryLine', {
+                    stake: config.stake,
+                    prize: prizeFor(config.stake, economy),
+                    fee: feeFor(config.stake, economy) ? t('match.feePart', { fee: feeFor(config.stake, economy) }) : '',
+                    ev: evCopy(config.stake, economy),
+                  })
+                : t('match.freeLine')}
           </p>
         </div>
         <div className="fd-fields">
           <Picker
-            label="Region"
+            label={t('match.region')}
             value={config.region}
             onChange={(region) => onChange({ region })}
             items={['all', 'US', 'India', 'Europe', 'Global'].map((v) => [
               v,
-              v === 'all' ? 'All regions' : v,
+              v === 'all' ? t('match.allRegions') : v,
             ])}
           />
           <Picker
-            label="Level"
+            label={t('match.level')}
             value={config.difficulty}
             onChange={(difficulty) => onChange({ difficulty })}
-            items={['all', 'simple', 'expert', 'extreme'].map((v) => [v, v === 'all' ? 'All levels' : v])}
+            items={['all', 'simple', 'expert', 'extreme'].map((v) => [
+              v,
+              v === 'all' ? t('match.allLevels') : pick(`difficulty.${v}`, v),
+            ])}
           />
           <Picker
-            label="Subtopic"
+            label={t('match.subtopic')}
             value={config.subtopic}
             onChange={(subtopic) => onChange({ subtopic })}
-            items={[['all', 'Any subtopic'], ...subtopics.map((v) => [v, v] as [string, string])]}
+            items={[['all', t('match.anySubtopic')], ...subtopics.map((v) => [v, v] as [string, string])]}
           />
         </div>
       </div>

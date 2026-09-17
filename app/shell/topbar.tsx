@@ -1,6 +1,8 @@
 'use client';
 import type { ReactNode } from 'react';
-import { Zap, Lock, Volume2, VolumeX, Settings } from 'lucide-react';
+import { Lock, Volume2, VolumeX, Settings } from 'lucide-react';
+import { JhkMark, JhkWordmark } from './brand-mark';
+import { useLocale } from '../use-locale';
 
 export type TopbarProps = {
   /** A room is open (any phase): brand click leaves/backs instead of going home. */
@@ -29,21 +31,23 @@ export function Topbar({
   level,
   wallet,
 }: TopbarProps) {
+  const { t, locale } = useLocale();
   return (
     <header className="fd-topbar">
       <a
         href="/"
         className="fd-brand"
-        aria-label="Fact Duel home"
+        aria-label={t('top.brandHome')}
         onClick={(e) => {
           e.preventDefault();
           onBrand();
         }}
       >
-        <Zap aria-hidden="true" />
-        <span>
-          FACT<em>{'//'}</em>DUEL
-        </span>
+        <JhkMark size={32} tile className="fd-brand-mark" />
+        {/* The wordmark is decorative here: the link's own label already names the product. Under
+            360px the CSS hides it and the tile alone carries the brand. Under the Hindi locale the
+            Devanagari wordmark takes its place (docs/brand.md §5). */}
+        <JhkWordmark height={16} title="" variant={locale === 'hi' ? 'hi' : 'full'} className="fd-brand-word" />
       </a>
       <div className="fd-topbar-right">
         {(streak || level || wallet) && (
@@ -56,14 +60,14 @@ export function Topbar({
         {!active && (
           <span className="fd-private">
             <Lock size={13} aria-hidden="true" />
-            Private playtest
+            {t('top.private')}
           </span>
         )}
         <button
           type="button"
           className="fd-iconbtn"
           onClick={onToggleSound}
-          aria-label={sound ? 'Mute sounds' : 'Enable sounds'}
+          aria-label={sound ? t('top.mute') : t('top.unmute')}
           aria-pressed={sound}
         >
           {sound ? <Volume2 aria-hidden="true" /> : <VolumeX aria-hidden="true" />}
@@ -72,7 +76,7 @@ export function Topbar({
           type="button"
           className="fd-iconbtn"
           onClick={onOpenSettings}
-          aria-label="Open settings"
+          aria-label={t('top.settings')}
           disabled={active}
           data-in-room={inRoom || undefined}
         >

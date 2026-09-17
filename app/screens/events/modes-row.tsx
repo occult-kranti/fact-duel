@@ -13,6 +13,7 @@ import { useCalendarNow } from './clock';
 import { topicIcon } from './parts';
 import { useEventsPress } from './press';
 import { formatDay, modeDuel, modeState, modeXp } from './util';
+import { useLocale } from '../../use-locale';
 import './events.css';
 
 export type ModesRowProps = {
@@ -25,20 +26,22 @@ export type ModesRowProps = {
 export function ModesRow({ activeId, onChoose, go }: ModesRowProps) {
   const now = useCalendarNow();
   const { press, cue } = useEventsPress();
+  const { t, pick, topic, locale, fmt } = useLocale();
   const modes = activeModes(now) as readonly EventMode[];
   if (!modes.length) return null;
+  const asOf = locale === 'en' ? formatDay(CALENDAR_ASOF as string) : fmt.isoDay(CALENDAR_ASOF as string);
 
   return (
     <section className="fd-events fd-ev-row" aria-labelledby="fd-ev-row-title">
       <div className="fd-ev-row-head">
-        <h2 id="fd-ev-row-title">Event modes</h2>
+        <h2 id="fd-ev-row-title">{t('modesrow.title')}</h2>
         <button
           type="button"
           className="fd-ev-row-all fd-ev-pressable"
           {...press}
           onClick={() => go('events')}
         >
-          All events
+          {t('strip.allEvents')}
           <ArrowRight aria-hidden="true" />
         </button>
       </div>
@@ -68,7 +71,8 @@ export function ModesRow({ activeId, onChoose, go }: ModesRowProps) {
                 <span className="fd-ev-row-body">
                   <strong>{mode.template.name}</strong>
                   <small>
-                    {duel.name} · <span className="fd-mono">{duel.timer}</span> · {duel.topic}
+                    {pick(`modes.${mode.duel.mode}.name`, duel.name)} · <span className="fd-mono">{duel.timer}</span> ·{' '}
+                    {topic(duel.topic)}
                   </small>
                   <em className="fd-ev-row-event">{mode.event.name}</em>
                 </span>
@@ -82,10 +86,7 @@ export function ModesRow({ activeId, onChoose, go }: ModesRowProps) {
         })}
       </ul>
 
-      <p className="fd-ev-row-note">
-        Curated calendar, checked by hand on {formatDay(CALENDAR_ASOF as string)}. No live scores or results
-        feeds.
-      </p>
+      <p className="fd-ev-row-note">{t('strip.note', { day: asOf })}</p>
     </section>
   );
 }

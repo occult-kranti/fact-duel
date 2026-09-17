@@ -1,9 +1,19 @@
 'use client';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { emptyProfile, reduceProfile, passportSummary } from '@/lib/passport.mjs';
+import { emptyProfile, readProfile, reduceProfile, passportSummary } from '@/lib/passport.mjs';
 import { transactProfile } from '@/lib/profile-store.mjs';
 import { readJournal } from '@/lib/journal.mjs';
 import { levelForXp } from '@/lib/progression.mjs';
+import {
+  arrivedSignedIn,
+  createProfilePusher,
+  mergeOnSignIn,
+  pullProfile,
+  whoami,
+  type Pusher,
+  type ServerProfile,
+  type SyncState,
+} from '@/lib/profile-sync';
 const VISIT_THROTTLE_MS = 60_000;
 // Engaged time is sampled every 15 s and only while the tab is on screen, so a tab left open in the
 // background adds nothing. lib/analytics.mjs clamps a single sample to its 30-minute session gap.
@@ -29,8 +39,11 @@ export function usePlayer(room: any, roomEpoch?: string) {
   const [profile, setProfile] = useState<any>(() => emptyProfile()),
     [loaded, setLoaded] = useState(false),
     [persistent, setPersistent] = useState(true),
-    [storageError, setStorageError] = useState('');
+    [storageError, setStorageError] = useState(''),
+    // Cross-device sync (lib/profile-sync.ts): 'off' until a signed-in principal is confirmed.
+    [syncState, setSyncState] = useState<SyncState>('off');
   const current = useRef<any>(profile),
+    pusher = useRef<Pusher | null>(null),
     channel = useRef<BroadcastChannel | null>(null),
     queue = useRef<Promise<any>>(Promise.resolve()),
     storage = useRef(true),
@@ -109,6 +122,7 @@ export function usePlayer(room: any, roomEpoch?: string) {
             accept(value, action.type === 'reset');
             channel.current?.postMessage('updated');
             setStorageError('');
+            pusher.current?.schedule();
             return true;
           } catch {
             if (action.type === 'reset' && everStored.current) {
@@ -125,12 +139,90 @@ export function usePlayer(room: any, roomEpoch?: string) {
           }
         }
         accept(reduceProfile(current.current, action));
+        pusher.current?.schedule();
         return true;
       });
       return queue.current;
     },
     [accept],
   );
+  // The server's copy replaces this device's, whole (see the merge rule in lib/profile-sync.ts).
+  // Queued behind every pending write so it cannot land between a read and its put; authoritative
+  // for `accept` because it is the higher revision by construction.
+  const replaceWith = useCallback(
+    (server: ServerProfile) => {
+      queue.current = queue.current.then(async () => {
+        if (server.state?.version !== 2) return false;
+        let value: Record<string, unknown> | null = null;
+        if (storage.current)
+          try {
+            value = await transactProfile({ type: 'replace', state: server.state });
+            channel.current?.postMessage('updated');
+          } catch {
+            value = null;
+          }
+        if (!value) {
+          value = readProfile(server.state);
+          value.revision = server.revision;
+        }
+        accept(value, true);
+        return true;
+      });
+      return queue.current.then(() => undefined);
+    },
+    [accept],
+  );
+  // Sign-in check: once loaded, ask who this is; a signed-in principal pulls the server copy,
+  // keeps the higher revision, and turns the pusher on. The static build and a guest stay 'off'.
+  // The sign-in redirect lands with `?signed-in=1`, so a focus while still off asks again.
+  useEffect(() => {
+    if (!loaded) return;
+    const p = createProfilePusher({
+      current: () => current.current,
+      onState: (state) => {
+        if (live.current) setSyncState(state);
+      },
+      onStale: replaceWith,
+    });
+    pusher.current = p;
+    let cancelled = false,
+      connecting = false;
+    const connect = async () => {
+      if (connecting || p.enabled) return;
+      connecting = true;
+      try {
+        const me = await whoami();
+        if (cancelled || !me?.signedIn) return;
+        const pulled = await pullProfile();
+        if (cancelled || (!pulled.ok && pulled.code === 'sign_in_required')) return;
+        p.enable(true);
+        if (!pulled.ok) {
+          // No copy to compare against: the next push reconciles, because the server refuses a
+          // lower revision and hands its copy back.
+          setSyncState('error');
+          return;
+        }
+        const merged = mergeOnSignIn(current.current, pulled.profile);
+        if (merged.source === 'server' && pulled.profile) {
+          p.markPushed(pulled.profile.revision);
+          await replaceWith({ revision: pulled.profile.revision, state: merged.profile });
+        } else void p.flush();
+      } finally {
+        connecting = false;
+      }
+    };
+    void connect();
+    const onFocus = () => {
+      if (!p.enabled && arrivedSignedIn()) void connect();
+    };
+    window.addEventListener('focus', onFocus);
+    return () => {
+      cancelled = true;
+      window.removeEventListener('focus', onFocus);
+      p.dispose();
+      if (pusher.current === p) pusher.current = null;
+    };
+  }, [loaded, replaceWith]);
   // Bind activity to the seat generation, never compare browser and server clocks.
   useEffect(() => {
     if (loaded && roomEpoch && (room?.round?.result || room?.completedRounds?.length))
@@ -280,6 +372,7 @@ export function usePlayer(room: any, roomEpoch?: string) {
     loaded,
     persistent,
     storageError,
+    syncState,
     fold,
     open,
     recall,

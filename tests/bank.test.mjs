@@ -40,14 +40,15 @@ test('the served bank is sports only, and every one of the five sports is deep a
   assert.ok(QUESTIONS.every((q) => ENABLED_DOMAINS.includes(q.domain)));
   // 30 sports questions in the original sample plus five authored banks; the sample's 24 science
   // questions are hidden, not served, so this is 329 today and only ever grows.
-  assert.ok(QUESTIONS.length >= 329, `served ${QUESTIONS.length}`);
+  assert.ok(QUESTIONS.length >= 829, `served ${QUESTIONS.length}`);
   for (const sport of SPORTS) {
     const mine = QUESTIONS.filter((q) => q.topic === sport);
     assert.ok(mine.length >= 59, `${sport}: ${mine.length} questions`);
     for (const level of LEVELS) {
       const n = mine.filter((q) => q.difficulty === level).length;
       // Each authored bank is 20/20/20; the sample adds a few to football, cricket and basketball.
-      assert.ok(n >= 19 && n <= 27, `${sport} ${level}: ${n} — a lopsided tier makes a mode unplayable at that level`);
+      // Each tier holds at least a quarter of the sport's pool: a lopsided tier makes a mode unplayable at that level.
+      assert.ok(n >= Math.floor(mine.length / 4), `${sport} ${level}: ${n} of ${mine.length}`);
     }
   }
 });

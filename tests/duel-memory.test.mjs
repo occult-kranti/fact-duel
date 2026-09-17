@@ -14,6 +14,8 @@ import assert from 'node:assert/strict';
 import { setImmediate } from 'node:timers/promises';
 import { D1RoomStore, dispatch } from '../lib/server/duel-service.mjs';
 import { MemoryRoomStore } from '../lib/duel-memory-store.mjs';
+import { MemoryLedgerStore } from '../lib/ledger-memory-store.mjs';
+import { grant } from '../lib/ledger/intents.mjs';
 import { DURATIONS, MODE_ROUNDS, RULES, makeRoom } from '../lib/server/room-engine.mjs';
 import { QUESTIONS } from '../lib/server/bank.mjs';
 import { LocalD1 } from './d1-local.mjs';
@@ -32,6 +34,20 @@ function seeded(seed) {
 }
 const roomId = (seed) => (seed >>> 0).toString(16).padStart(8, '0').repeat(4);
 const tokenOf = (label) => `${label}_abcdefghijklmnopqrstuvwxyz0123456789`.slice(0, 40);
+/** A guest principal per seat label, the shape the wallet client mints. */
+const principalOf = (label) => `anon_${label}0123456789abcdef0123456789abcdef`.slice(0, 37);
+/**
+ * Both stores play on a real ledger here (D1RoomStore always does; the memory store is handed a
+ * MemoryLedgerStore), so a seat that pays an entry needs coins first. Seeding is idempotent —
+ * the grant's key names the principal — so it can run before every create and join.
+ */
+async function fund(store, principalId, amount = 1000) {
+  try {
+    await store.ledger.post(grant({ principalId, amount, opKey: `grant:seed:${principalId}`, at: 1, reason: 'test seed' }));
+  } catch (error) {
+    if (error?.code !== 'duplicate') throw error;
+  }
+}
 const CONFIG = { mode: 'quick', stake: 25, duration: 10, opponent: 'friend' };
 
 /** Both implementations, plus a way to read what each one actually stored. */
@@ -49,7 +65,10 @@ function pair(t, { yieldIO = false } = {}) {
       name: 'MemoryRoomStore',
       // The SQLite adapter yields with setImmediate; matching it keeps concurrent interleavings
       // comparable instead of merely similar.
-      store: new MemoryRoomStore({ yieldIO: yieldIO ? () => setImmediate() : false }),
+      store: new MemoryRoomStore({
+        yieldIO: yieldIO ? () => setImmediate() : false,
+        ledger: new MemoryLedgerStore({ yieldIO }),
+      }),
       rooms() {
         return [...this.store.rooms.values()]
           .map(({ id, revision, state, expires_at }) => ({ id, revision, state, expires_at }))
@@ -129,10 +148,16 @@ function canonicalEvents(value) {
 function table(store, { seed = 7, start = 1_000_000, rooms = 1, actor = null } = {}) {
   const rng = seeded(seed);
   const seats = Array.from({ length: rooms }, (_, i) => ({
-    host: { roomId: roomId(i + 1), token: tokenOf(`host${i}`), invite: tokenOf(`invite${i}`) },
-    guest: { roomId: roomId(i + 1), token: tokenOf(`guest${i}`), invite: tokenOf(`invite${i}`) },
+    host: { roomId: roomId(i + 1), token: tokenOf(`host${i}`), invite: tokenOf(`invite${i}`), principalId: principalOf(`h${i}`) },
+    guest: { roomId: roomId(i + 1), token: tokenOf(`guest${i}`), invite: tokenOf(`invite${i}`), principalId: principalOf(`g${i}`) },
   }));
   let now = start;
+  // The principal travels in the dispatch context (as the worker reads it from a header), never in the body.
+  const body = (seat, action, extra) => {
+    const rest = { ...seat };
+    delete rest.principalId;
+    return { ...rest, action, ...extra };
+  };
   return {
     seats,
     host: seats[0].host,
@@ -144,8 +169,10 @@ function table(store, { seed = 7, start = 1_000_000, rooms = 1, actor = null } =
     setTime(value) {
       return (now = value);
     },
-    call: (seat, action, extra = {}) =>
-      dispatch(store, { ...seat, action, ...extra }, { now, actor: actor ?? seat.token, rng }),
+    call: async (seat, action, extra = {}) => {
+      if (action === 'create' || action === 'join') await fund(store, seat.principalId);
+      return dispatch(store, body(seat, action, extra), { now, actor: actor ?? seat.token, rng, principalId: seat.principalId });
+    },
     raw: async (seat = seats[0].host) => JSON.parse((await store.read(seat.roomId)).state),
   };
 }
@@ -390,7 +417,7 @@ test('a full bot duel is identical on both stores in all three modes', async (t)
       await step('final room', async () => end);
       assert.equal(end.settled, true);
       assert.equal(end.phase, 'complete');
-      assert.equal(end.balances[0] + end.balances[1] + end.escrow, 2000, 'coins are conserved');
+      assert.equal(end.balances[0] + end.balances[1] + end.escrow, 1000, 'the host alone holds coins in a bot room');
       assert.equal(end.events.filter((e) => e.type === 'settled').length, 1, 'the entry settles once');
       assert.ok(rounds >= 1 && rounds <= MODE_ROUNDS[mode]);
     });
@@ -522,13 +549,15 @@ test('the reveal window, the receipt deadline and room expiry cancel the same wa
 test('eight racing joins seat exactly one guest on both stores', async (t) => {
   for (const side of pair(t, { yieldIO: true })) {
     const host = { roomId: roomId(77), token: tokenOf('racehost'), invite: tokenOf('raceinvite') };
-    await dispatch(side.store, { ...host, action: 'create', name: 'Host', config: CONFIG }, { now: 1 });
+    await fund(side.store, principalOf('racehost'));
+    for (let i = 0; i < 8; i++) await fund(side.store, principalOf(`racer${i}`));
+    await dispatch(side.store, { ...host, action: 'create', name: 'Host', config: CONFIG }, { now: 1, principalId: principalOf('racehost') });
     const results = await Promise.allSettled(
       Array.from({ length: 8 }, (_, i) =>
         dispatch(
           side.store,
           { ...host, token: tokenOf(`racer${i}`), action: 'join', name: `G${i}` },
-          { now: 1, actor: `racer${i}` },
+          { now: 1, actor: `racer${i}`, principalId: principalOf(`racer${i}`) },
         ),
       ),
     );
@@ -586,9 +615,12 @@ test('concurrent readiness, reveals, answers and polling resolve identically', a
           elapsedMs: 1151,
         }),
       ]);
+      // The balance snapshot is refreshed by whichever poll records the payout, and the two ledger
+      // stores yield a different number of times on the way there, so which poll sees the refreshed
+      // numbers is scheduling; the final room below checks the numbers themselves.
       await step('ten concurrent polls', async () => {
         const out = await Promise.all(Array.from({ length: 10 }, () => f.call(f.host, 'state')));
-        return out.map((x) => [x.room.phase, x.room.settled, x.room.balances, x.room.winner]);
+        return out.map((x) => [x.room.phase, x.room.settled, x.room.winner]);
       });
       const end = await f.raw();
       await step('final room', async () => end);
@@ -669,7 +701,8 @@ test('a randomized duel fuzz produces identical transcripts on both stores', asy
       }
       const end = await f.raw();
       await step('final room', async () => end);
-      assert.equal(end.balances[0] + end.balances[1] + end.escrow, 2000, 'coins are conserved');
+      // The bot has no wallet: only the host's 1,000 seeded coins are in play in a bot room.
+      assert.equal(end.balances[0] + end.balances[1] + end.escrow, withBot ? 1000 : 2000, 'coins are conserved');
       assert.ok(end.events.filter((e) => e.type === 'settled').length <= 1);
     });
   }

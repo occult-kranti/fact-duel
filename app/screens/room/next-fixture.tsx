@@ -14,12 +14,14 @@ import type { CalendarEvent } from '../types';
 import { useCalendarNow } from '../events/clock';
 import { TopicChip } from '../events/parts';
 import { useEventsPress } from '../events/press';
+import { useLocale } from '../../use-locale';
 import '../events/events.css';
 import '../events/fixture.css';
 
 export function NextFixture({ go }: { go: (tab: string) => void }) {
   const now = useCalendarNow();
   const { press } = useEventsPress();
+  const { t, when: localWhen, topic } = useLocale();
   const tzOffsetMinutes = new Date(now).getTimezoneOffset();
   const { next } = fixturesAt(now, { tzOffsetMinutes }) as { next: CalendarEvent | null };
   if (!next) return null;
@@ -28,23 +30,21 @@ export function NextFixture({ go }: { go: (tab: string) => void }) {
     <aside className="fd-events fd-fx-next" data-domain={next.domain} aria-labelledby="fd-fx-next-title">
       <p className="fd-fx-kicker">
         <CalendarClock aria-hidden="true" />
-        Next fixture
+        {t('fixture.next')}
       </p>
       <div className="fd-ev-card-top">
         <TopicChip topic={next.topic} domain={next.domain} />
-        {when ? <span className="fd-ev-when">{when}</span> : null}
+        {when ? <span className="fd-ev-when">{localWhen(when)}</span> : null}
       </div>
       <h3 id="fd-fx-next-title" className="fd-ev-name">
         {next.name}
       </h3>
-      <p className="fd-fx-note">
-        A ten-card Kick-off set opens the day before it starts. From the curated calendar: no live scores here.
-      </p>
+      <p className="fd-fx-note">{t('fixture.nextNote')}</p>
       <button type="button" className="fd-ev-play fd-ev-pressable" data-kind="topic" {...press} onClick={() => go('events')}>
         <ArrowRight aria-hidden="true" />
         <span className="fd-ev-play-body">
-          <strong>See the fixture</strong>
-          <small>Events · {next.topic}</small>
+          <strong>{t('fixture.seeFixture')}</strong>
+          <small>{t('fixture.eventsTopic', { topic: topic(next.topic) })}</small>
         </span>
       </button>
     </aside>

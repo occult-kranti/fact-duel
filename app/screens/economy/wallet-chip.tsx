@@ -9,6 +9,9 @@
  * the juice counter, no other motion — and stays hidden until the wallet has loaded, so the
  * server render and the first client paint agree.
  *
+ * In server mode (app/use-wallet.ts) a small dot sits by the count: the balance is kept by the
+ * server, not this device, and the title says so. Nothing else about the chip changes.
+ *
  * The sheet is a native <dialog>: focus stays inside, Escape closes it, and it costs no library.
  */
 import { useEffect, useRef, useState } from 'react';
@@ -17,10 +20,12 @@ import { NumberCounter } from '@/components/fx';
 import { usePress } from '../vault/press';
 import { useWalletContext } from '../../use-wallet';
 import { AdCard } from './ad-card';
+import { useLocale } from '../../use-locale';
 import './economy.css';
 
 export function WalletChip() {
   const wallet = useWalletContext();
+  const { t, fmt } = useLocale();
   const press = usePress();
   const [open, setOpen] = useState(false);
   const dialog = useRef<HTMLDialogElement | null>(null);
@@ -34,12 +39,14 @@ export function WalletChip() {
 
   if (!wallet || !wallet.loaded) return null;
   const coins = wallet.wallet.coins;
+  const onServer = wallet.mode === 'server';
   return (
     <>
       <button
         type="button"
         className="fd-chip-top fd-chip-top--coins"
-        title={`${coins.toLocaleString()} coins on this device`}
+        data-mode={wallet.mode}
+        title={onServer ? t('wallet.titleServer') : t('wallet.titleDevice', { n: fmt.number(coins) })}
         aria-haspopup="dialog"
         aria-expanded={open}
         onPointerDown={press}
@@ -47,12 +54,13 @@ export function WalletChip() {
       >
         <Coins aria-hidden="true" />
         <NumberCounter value={coins} duration={600} className="fd-chip-label" />
-        <span className="sr-only">coins</span>
+        <span className="sr-only">{onServer ? t('wallet.srServer') : t('wallet.sr')}</span>
+        {onServer && <span className="fd-chip-top__server" aria-hidden="true" />}
       </button>
       <dialog
         ref={dialog}
         className="fd-adsheet"
-        aria-label="Your coins"
+        aria-label={t('wallet.dialog')}
         onClose={() => setOpen(false)}
         onClick={(e) => {
           // A tap on the backdrop is the same neutral "not now" as the button.

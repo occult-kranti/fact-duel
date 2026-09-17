@@ -35,6 +35,7 @@ import { request } from '@/lib/duel-client';
 import { XP } from '@/lib/progression.mjs';
 import { Choices, Dots, usePress } from './screens/vault';
 import { useWalletContext } from './use-wallet';
+import { useLocale } from './use-locale';
 import { AdCard } from './screens/economy/ad-card';
 import { clearFixtureDeal, peekFixtureDeal, type FixtureDeal } from './fixture-deal';
 import './screens/vault/vault.css';
@@ -55,6 +56,7 @@ export default function Discovery({
 }) {
   const juice = useJuice();
   const press = usePress();
+  const { t, topic: topicName } = useLocale();
   const wallet = useWalletContext();
   const [cards, setCards] = useState<any[]>([]),
     [index, setIndex] = useState(0),
@@ -79,11 +81,10 @@ export default function Discovery({
     locked = useRef(false),
     heading = useRef<HTMLHeadingElement | null>(null),
     explanation = useRef<HTMLElement | null>(null);
-  const label = fixture ? fixture.label : !topic || topic === 'all' ? 'Mixed' : topic;
+  const label = fixture ? fixture.label : !topic || topic === 'all' ? t('disc.mixed') : topicName(topic);
   const recap = fixture?.kind === 'recap';
   const expected = fixture?.size ?? 3;
   const count = cards.length || expected;
-  const facts = count === 3 ? 'three' : String(count);
 
   useEffect(() => {
     clearFixtureDeal();
@@ -188,35 +189,31 @@ export default function Discovery({
       <div>
         <button type="button" className="fd-btn fd-btn--ghost" onPointerDown={press} onClick={onBack}>
           <ArrowLeft />
-          Back to Play
+          {t('disc.back')}
         </button>
       </div>
       <header className="fd-learn__head">
-        <p className="fd-eyebrow">NO TIMER · NO OPPONENT</p>
+        <p className="fd-eyebrow">{t('disc.eyebrow')}</p>
         <div className="fd-learn__title">
           <h1 ref={heading} tabIndex={-1}>
-            {fixture ? label : `Discovery · ${label}`}
+            {fixture ? label : t('disc.title', { label })}
           </h1>
           <span className="fd-tag fd-tag--cool">
             <Compass />
-            {count} facts · take your time
+            {t('disc.takeTime')}
           </span>
           {entry.state === 'paid' && entry.spent > 0 && (
-            <span className="fd-tag fd-discovery__entry" title="Paid to the house for this drill">
-              −{entry.spent} coins · entry
+            <span className="fd-tag fd-discovery__entry" title={t('disc.paidTitle')}>
+              {t('disc.entryTag', { n: entry.spent })}
             </span>
           )}
           {recap && entry.state === 'paid' && entry.spent === 0 && wallet && (
-            <span className="fd-tag fd-discovery__entry" title="Today's recap is free">
-              Free today
+            <span className="fd-tag fd-discovery__entry" title={t('disc.recapFreeTitle')}>
+              {t('disc.freeToday')}
             </span>
           )}
         </div>
-        <p className="fd-lede">
-          {finished
-            ? 'Session complete. Every card you attempted is in your Vault with its explanation and source.'
-            : 'Follow your curiosity. Choose once to reveal the answer, open the explanation, and keep whatever is worth keeping.'}
-        </p>
+        <p className="fd-lede">{finished ? t('disc.ledeDone') : t('disc.lede')}</p>
       </header>
 
       {finished ? (
@@ -225,30 +222,27 @@ export default function Discovery({
             <span className="fd-summary__ring">
               {remembered}/{cards.length}
             </span>
-            <h2>{count === 3 ? 'Three' : count} facts to take with you.</h2>
-            <p>
-              Your attempted cards and their sources are in the Vault. Exploration stamps describe curiosity,
-              not mastery.
-            </p>
+            <h2>{t('disc.factsTitle', { n: count === 3 ? t('disc.three') : count })}</h2>
+            <p>{t('disc.summary')}</p>
             <div className="fd-summary__scores">
               <span className="fd-tag fd-tag--cool">
                 <Check />
-                {remembered} first-try
+                {t('disc.firstTry', { n: remembered })}
               </span>
               <span className="fd-tag">
                 <BookOpen />
-                {cards.length} facts kept
+                {t('disc.kept', { n: cards.length })}
               </span>
             </div>
             <div className="fd-summary__actions">
               {onVault && (
                 <button type="button" className="fd-btn" onPointerDown={press} onClick={onVault}>
                   <Vault />
-                  Open your Vault
+                  {t('disc.openVault')}
                 </button>
               )}
               <button type="button" className="fd-btn fd-btn--primary" onPointerDown={press} onClick={onBack}>
-                Back to Play
+                {t('disc.back')}
                 <ArrowRight />
               </button>
             </div>
@@ -260,7 +254,7 @@ export default function Discovery({
             <span className="fd-summary__ring">
               <TriangleAlert />
             </span>
-            <h2>Couldn’t open these cards.</h2>
+            <h2>{t('disc.couldnt')}</h2>
             <p>{error}</p>
             <div className="fd-summary__actions">
               <button
@@ -273,7 +267,7 @@ export default function Discovery({
                   setRetry((n) => n + 1);
                 }}
               >
-                Try again
+                {t('disc.tryAgain')}
               </button>
             </div>
           </div>
@@ -282,7 +276,7 @@ export default function Discovery({
         <div className="fd-qwrap">
           {recapPlayed && (
             <p className="fd-note" role="status">
-              Recap played today. Play it again for {wallet.config.practiceEntry} coins or one ad
+              {t('disc.recapPlayed', { n: wallet.config.practiceEntry })}
             </p>
           )}
           <AdCard wallet={wallet} placement="practice-entry" onClose={onBack} />
@@ -291,20 +285,20 @@ export default function Discovery({
         <p className="fd-note" role="status">
           {entry.state === 'pending' && wallet
             ? recap
-              ? 'Opening today’s recap…'
-              : 'Paying the entry…'
-            : `Opening ${facts} sourced facts…`}
+              ? t('disc.openingRecap')
+              : t('disc.paying')
+            : t('disc.openingFacts')}
         </p>
       ) : (
         <div className="fd-qwrap">
-          <Dots total={cards.length} index={index} label={`Fact ${index + 1} of ${cards.length}`} />
+          <Dots total={cards.length} index={index} label={t('disc.factOf', { n: index + 1, of: cards.length })} />
           <div className="fd-qcard">
             <div className="fd-qcard__meta">
-              <span className="fd-tag">{fact.topic}</span>
+              <span className="fd-tag">{topicName(fact.topic)}</span>
               <span className="fd-tag">{fact.subtopic}</span>
             </div>
             <h2 className="fd-qcard__q">{fact.question}</h2>
-            <p className="fd-note">Choose once to see the explanation. There is no time limit.</p>
+            <p className="fd-note">{t('disc.chooseOnce')}</p>
             <Choices
               key={roundId}
               options={fact.options}
@@ -318,10 +312,10 @@ export default function Discovery({
               <div className="fd-result" data-tone={choice === fact.correctIndex ? 'correct' : 'wrong'}>
                 <strong className="fd-result__verdict" role="status">
                   {choice === fact.correctIndex ? <Check /> : <X />}
-                  {choice === fact.correctIndex ? 'You found it.' : 'A new fact for the collection.'}
+                  {choice === fact.correctIndex ? t('disc.found') : t('disc.newFact')}
                 </strong>
                 <p className="fd-result__answer">
-                  <b>Correct answer:</b> {fact.options[fact.correctIndex]}
+                  <b>{t('disc.correctAnswer')}</b> {fact.options[fact.correctIndex]}
                 </p>
                 <details
                   className="fd-disclose"
@@ -335,12 +329,12 @@ export default function Discovery({
                 >
                   <summary ref={explanation} onPointerDown={press}>
                     <ChevronRight className="fd-caret" aria-hidden="true" />
-                    Open the explanation
+                    {t('disc.openExplanation')}
                   </summary>
                   <div className="fd-disclose__body">
                     <p>{fact.explanation}</p>
                     <a className="fd-source" href={fact.sourceUrl} target="_blank" rel="noopener noreferrer">
-                      Source: {fact.sourceLabel}
+                      {t('disc.source', { label: fact.sourceLabel })}
                       <ExternalLink aria-hidden="true" />
                     </a>
                   </div>
@@ -362,7 +356,7 @@ export default function Discovery({
                     }}
                   >
                     {saved ? <BookmarkCheck /> : <Bookmark />}
-                    {saved ? 'Saved' : 'Save fact'}
+                    {saved ? t('disc.saved') : t('disc.saveFact')}
                   </button>
                   <button
                     type="button"
@@ -379,17 +373,14 @@ export default function Discovery({
                       }
                     }}
                   >
-                    {index + 1 < cards.length ? 'Next fact' : 'Complete session'}
+                    {index + 1 < cards.length ? t('disc.nextFact') : t('disc.complete')}
                     <ArrowRight />
                   </button>
                 </div>
               </div>
             )}
           </div>
-          <p className="fd-note">
-            Open teaching cards share facts with the duel sample. Their answers are available to this practice
-            screen; this is untimed exploration, not a ranked test.
-          </p>
+          <p className="fd-note">{t('disc.footnote')}</p>
         </div>
       )}
     </section>

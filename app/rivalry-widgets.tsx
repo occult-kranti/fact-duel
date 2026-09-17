@@ -27,8 +27,10 @@ import {
 import { NumberCounter, useJuice } from '@/components/fx';
 import { completedRounds, FORMAT_COPY, matchVerdict, roundReason } from '@/lib/duel-presentation.mjs';
 import { comboMultiplier, levelForXp } from '@/lib/progression.mjs';
+import { prizeFor } from '@/lib/economy/economy.mjs';
 import { comboAt, marginLine, matchRank, matchXp, whatYouKeep, winTier } from './screens/room/room-math';
 import { usePress } from './screens/room/room-bits';
+import { useLocale } from './use-locale';
 
 /* Consecutive routine wins this session. Module scope, so it resets on reload and never reaches
    storage: this is about habituation inside one sitting, not a durable player stat. */
@@ -36,26 +38,21 @@ let routineWins = 0;
 /** After this many identical routine celebrations, the next ones are medallion + counter only. */
 const ROUTINE_CELEBRATIONS = 3;
 
-const MODE_LABEL: Record<string, string> = {
-  quick: 'QUICK DRAW',
-  trilogy: 'TRIPLE THREAT',
-  gauntlet: 'THE GAUNTLET',
-};
-
 export function DuelHUD({ room }: { room: any }) {
+  const { t } = useLocale();
   const me = room.seat,
     other = 1 - me,
     format = (FORMAT_COPY as any)[room.config.mode],
     rounds = completedRounds(room),
     max = room.config.mode === 'quick' ? 1 : room.config.mode === 'trilogy' ? 3 : 5;
   const combo = comboAt(room);
-  const rivalName = room.players[other]?.name?.replace(' · BOT', '') || 'Open seat';
+  const rivalName = room.players[other]?.name?.replace(' · BOT', '') || t('hud.openSeat');
   return (
     <div className="fd-hud" data-mode={room.config.mode}>
       <div className="fd-hud-seat">
         <span className="fd-hud-avatar">{room.players[me].name.charAt(0).toUpperCase()}</span>
         <span className="fd-hud-id">
-          <small>YOU</small>
+          <small>{t('hud.you')}</small>
           <strong>{room.players[me].name}</strong>
         </span>
       </div>
@@ -67,15 +64,15 @@ export function DuelHUD({ room }: { room: any }) {
         </span>
         <small>
           {room.config.mode === 'trilogy'
-            ? 'FIRST TO TWO'
+            ? t('hud.firstToTwo')
             : room.config.mode === 'gauntlet'
-              ? 'FIVE-ROUND MATCH'
-              : 'ONE-SHOT DUEL'}
+              ? t('hud.fiveRound')
+              : t('hud.oneShot')}
         </small>
       </div>
       <div className="fd-hud-seat fd-hud-rival">
         <span className="fd-hud-id">
-          <small>{room.players[other]?.kind === 'bot' ? 'BOT' : 'RIVAL'}</small>
+          <small>{room.players[other]?.kind === 'bot' ? t('hud.bot') : t('hud.rival')}</small>
           <strong>{rivalName}</strong>
         </span>
         <span className="fd-hud-avatar">
@@ -83,7 +80,7 @@ export function DuelHUD({ room }: { room: any }) {
         </span>
       </div>
       <div className="fd-hud-rail">
-        <div className="fd-rail" aria-label="Match rounds">
+        <div className="fd-rail" aria-label={t('hud.rounds')}>
           {Array.from({ length: max }, (_, i) => {
             const done = rounds.find((r: any) => r.index === i),
               status = done
@@ -98,7 +95,7 @@ export function DuelHUD({ room }: { room: any }) {
                   ? 'current'
                   : 'pending';
             return (
-              <span key={i} data-status={status} aria-label={`Round ${i + 1}: ${status}`}>
+              <span key={i} data-status={status} aria-label={t('hud.roundStatus', { n: i + 1, status })}>
                 {status === 'win'
                   ? 'W'
                   : status === 'loss'
@@ -115,13 +112,11 @@ export function DuelHUD({ room }: { room: any }) {
         {combo >= 1 ? (
           <span className="fd-combo" data-hot={combo >= 3 ? 'true' : 'false'}>
             <Flame size={13} />
-            COMBO {combo}
+            {t('hud.combo', { n: combo })}
             {combo >= 2 && <b>×{comboMultiplier(combo)}</b>}
           </span>
         ) : (
-          <small className="fd-hud-format">
-            {format.short} · {room.config.duration}s each
-          </small>
+          <small className="fd-hud-format">{t('hud.each', { short: format.short, s: room.config.duration })}</small>
         )}
       </div>
     </div>
@@ -143,6 +138,7 @@ export function MatchFinish({
 }) {
   const juice = useJuice();
   const press = usePress();
+  const { t, n, pick } = useLocale();
   const celebrated = useRef<string | null>(null);
   const v = matchVerdict(room),
     rounds = completedRounds(room),
@@ -154,12 +150,8 @@ export function MatchFinish({
   const level = levelForXp(player.progression?.xp ?? 0);
   const settledOk = room.phase === 'complete';
   const notes = [
-    scored.length > mine.length
-      ? `${scored.length - mine.length} completed rounds had no answer from you.`
-      : '',
-    rounds.length < room.roundIndex + (room.round?.result ? 1 : 0)
-      ? 'Earlier round details may be unavailable for an older room.'
-      : '',
+    scored.length > mine.length ? t('finish.noAnswerRounds', { n: scored.length - mine.length }) : '',
+    rounds.length < room.roundIndex + (room.round?.result ? 1 : 0) ? t('finish.older') : '',
   ]
     .filter(Boolean)
     .join(' ');
@@ -196,8 +188,8 @@ export function MatchFinish({
     <div className="fd-finish" data-verdict={v.key}>
       <section className="fd-verdict">
         <div className="fd-verdict-kicker">
-          <span>{MODE_LABEL[room.config.mode] ?? room.config.mode.toUpperCase()}</span>
-          <span>{room.players.some((p: any) => p?.kind === 'bot') ? 'VS BOT' : 'FRIEND DUEL'}</span>
+          <span>{pick(`modes.${room.config.mode}.upper`, room.config.mode.toUpperCase())}</span>
+          <span>{room.players.some((p: any) => p?.kind === 'bot') ? t('finish.vsBot') : t('finish.friendDuel')}</span>
         </div>
         <span className="fd-medallion" aria-hidden="true">
           {v.key === 'cancelled' ? (
@@ -214,7 +206,7 @@ export function MatchFinish({
         <p className="fd-verdict-sub">{v.subtitle}</p>
         <div
           className="fd-scoreline"
-          aria-label={`Score ${room.scores[room.seat]} to ${room.scores[1 - room.seat]}`}
+          aria-label={t('finish.scoreAria', { a: room.scores[room.seat], b: room.scores[1 - room.seat] })}
         >
           <NumberCounter className="fd-scorenum" value={room.scores[room.seat]} from={0} duration={700} />
           <i aria-hidden="true">–</i>
@@ -231,7 +223,7 @@ export function MatchFinish({
       {keep && (
         <section className="fd-keep" aria-labelledby="fd-keep-head">
           <p className="fd-keep-kicker" id="fd-keep-head">
-            WHAT YOU KEEP
+            {t('finish.keep')}
           </p>
           <h2 className="fd-keep-title">{keep.title}</h2>
           <ul className="fd-keep-list">
@@ -248,40 +240,38 @@ export function MatchFinish({
           under four stat tiles where only ~19px of it was visible at 390x844. */}
       <div className="fd-finish-actions">
         <Button className="fd-btn fd-cta" onPointerDown={press} onClick={onReplay}>
-          {room.config.opponent === 'bot' ? 'Play again' : 'Set up rematch'}
+          {room.config.opponent === 'bot' ? t('finish.playAgain') : t('finish.rematch')}
           <ArrowRight size={18} />
         </Button>
         <div className="fd-finish-secondary">
           <Button variant="outline" className="fd-btn" onPointerDown={press} onClick={onVault}>
             <BookOpen size={16} />
-            Review my facts
+            {t('finish.review')}
           </Button>
           <Button variant="ghost" className="fd-btn" onPointerDown={press} onClick={onFinish}>
-            Done for now
+            {t('finish.done')}
           </Button>
         </div>
       </div>
 
       <div className="fd-tiles">
         <div className="fd-tile" data-accent="gold">
-          <small>XP THIS MATCH</small>
+          <small>{t('finish.xpThis')}</small>
           <strong>
             +<NumberCounter value={xpGained} from={0} duration={900} />
           </strong>
-          <span>
-            Level {level.level} · {level.title} · on this device
-          </span>
+          <span>{t('finish.levelLine', { level: level.level, title: level.title })}</span>
         </div>
         <div className="fd-tile" data-accent="volt">
-          <small>CORRECT ANSWERS</small>
+          <small>{t('finish.correctAnswers')}</small>
           <strong>
             <NumberCounter value={correct} from={0} duration={600} />
             <i> / {scored.length}</i>
           </strong>
-          <span>{scored.length === 1 ? '1 round resolved' : `${scored.length} rounds resolved`}</span>
+          <span>{n('finish.resolved', scored.length)}</span>
         </div>
         <div className="fd-tile" data-accent="cyan">
-          <small>ARENA RANK</small>
+          <small>{t('finish.arenaRank')}</small>
           <strong>
             {rank.label}
             {settledOk && rank.delta !== 0 && (
@@ -292,20 +282,22 @@ export function MatchFinish({
             )}
           </strong>
           <span>
-            {rank.points} pts
-            {settledOk && rank.held ? ' · held at the tier floor' : ''}
+            {t('finish.pts', { n: rank.points })}
+            {settledOk && rank.held ? t('finish.held') : ''}
           </span>
         </div>
         <div className="fd-tile" data-accent="ember">
-          <small>COINS</small>
+          <small>{t('finish.coins')}</small>
           <strong>
             {room.phase === 'cancelled' || room.winner === null
-              ? 'Refunded'
+              ? t('finish.refunded')
               : room.config.stake
-                ? `${room.winner === room.seat ? '+' : '−'}${room.config.stake}`
-                : 'Free play'}
+                ? room.winner === room.seat
+                  ? `+${prizeFor(room.config.stake) - room.config.stake}`
+                  : `−${room.config.stake}`
+                : t('finish.freePlay')}
           </strong>
-          <span>Free simulated coins. No monetary value.</span>
+          <span>{room.ledger ? t('finish.coinsFromAds') : t('finish.simNoValue')}</span>
         </div>
       </div>
 
@@ -328,6 +320,7 @@ export function RoundReview({
   factFirst?: boolean;
 }) {
   const press = usePress();
+  const { t, n, topic } = useLocale();
   const rounds = completedRounds(room),
     [selected, setSelected] = useState<string | null>(null),
     [reportOpen, setReportOpen] = useState(false);
@@ -341,13 +334,11 @@ export function RoundReview({
   const breakdown = (
     <>
       <div className="fd-review-top">
-        <h2>{rounds.length > 1 ? 'The match, question by question.' : 'Here’s how it was decided.'}</h2>
-        <span className="fd-review-count">
-          {rounds.length} {rounds.length === 1 ? 'fact' : 'facts'}
-        </span>
+        <h2>{rounds.length > 1 ? t('review.matchQbyQ') : t('review.decided')}</h2>
+        <span className="fd-review-count">{n('review.facts', rounds.length)}</span>
       </div>
       {rounds.length > 1 && (
-        <div className="fd-review-tabs" aria-label="Choose a completed round">
+        <div className="fd-review-tabs" aria-label={t('review.chooseRound')}>
           {rounds.map((row: any) => (
             <button
               key={row.id}
@@ -357,7 +348,7 @@ export function RoundReview({
               onPointerDown={press}
               onClick={() => setSelected(row.id)}
             >
-              Round {row.index + 1}
+              {t('review.round', { n: row.index + 1 })}
               <span
                 data-status={
                   row.result.reason === 'timing-inconsistent'
@@ -387,17 +378,15 @@ export function RoundReview({
       </div>
       <div className="fd-receipts">
         {[
-          [my, 'You'],
-          [rival, room.players[1 - room.seat]?.kind === 'bot' ? 'Lucky Guess · BOT' : 'Your rival'],
+          [my, t('review.you')],
+          [rival, room.players[1 - room.seat]?.kind === 'bot' ? t('review.luckyBot') : t('review.yourRival')],
         ].map(([a, label]: any, i) => (
           <div key={i} className="fd-receipt" data-ok={a ? (a.correct ? 'true' : 'false') : 'none'}>
             <span className="fd-receipt-who">{label}</span>
-            <strong>{a ? (a.correct ? 'Correct' : 'Incorrect') : 'No answer'}</strong>
+            <strong>{a ? (a.correct ? t('review.correct') : t('review.incorrect')) : t('review.noAnswer')}</strong>
             <span className="fd-receipt-time">{a ? `${(a.elapsedMs / 1000).toFixed(3)} s` : '—'}</span>
-            <p>{a ? q.options[a.choice] : 'No answer submitted'}</p>
-            <small>
-              {a?.simulated ? 'Scheduled bot time' : a ? 'Browser-reported time' : 'No response time'}
-            </small>
+            <p>{a ? q.options[a.choice] : t('review.noSubmitted')}</p>
+            <small>{a?.simulated ? t('review.botTime') : a ? t('review.browserTime') : t('review.noTime')}</small>
           </div>
         ))}
       </div>
@@ -407,13 +396,13 @@ export function RoundReview({
     <article className="fd-fact">
       <div className="fd-fact-top">
         <span>
-          {q.topic} <i aria-hidden="true">/</i> {q.subtopic}
+          {topic(q.topic)} <i aria-hidden="true">/</i> {q.subtopic}
         </span>
         <Button
           variant="ghost"
           size="icon"
           className="fd-btn"
-          aria-label={saved ? 'Remove saved fact' : 'Save this fact'}
+          aria-label={saved ? t('review.removeSaved') : t('review.saveFact')}
           aria-pressed={saved}
           onPointerDown={press}
           onClick={() => player.save(q.question)}
@@ -434,7 +423,7 @@ export function RoundReview({
         }}
       >
         <summary>
-          Why this is the answer
+          {t('review.why')}
           <ChevronDown size={16} />
         </summary>
         <p>{q.explanation}</p>
@@ -446,7 +435,7 @@ export function RoundReview({
         </a>
         <Button variant="ghost" className="fd-btn" onPointerDown={press} onClick={() => setReportOpen(true)}>
           <Flag size={15} />
-          {received ? 'Issue saved locally' : 'Question an answer'}
+          {received ? t('review.issueSaved') : t('review.question')}
         </Button>
       </div>
     </article>
@@ -466,21 +455,18 @@ export function RoundReview({
       )}
       <details className="fd-timing">
         <summary>
-          Timing &amp; coin details
+          {t('review.timing')}
           <ChevronDown size={16} />
         </summary>
-        <p className="fd-note">
-          Human times are reported by each browser. Bot times are scheduled randomly. A {room.tieMs} ms draw
-          band applies when both answers are correct; these checks do not prove client honesty.
-        </p>
+        <p className="fd-note">{t('review.timingNote', { ms: room.tieMs })}</p>
         <div className="fd-table">
           <table>
             <thead>
               <tr>
-                <th>Player</th>
-                <th>Reported time</th>
-                <th>Server / simulation</th>
-                <th>Result</th>
+                <th>{t('review.player')}</th>
+                <th>{t('review.reported')}</th>
+                <th>{t('review.server')}</th>
+                <th>{t('review.result')}</th>
               </tr>
             </thead>
             <tbody>
@@ -489,15 +475,15 @@ export function RoundReview({
                 return (
                   <tr key={i}>
                     <td>{p.name}</td>
-                    <td>{a ? `${(a.elapsedMs / 1000).toFixed(3)} s` : 'No answer'}</td>
+                    <td>{a ? `${(a.elapsedMs / 1000).toFixed(3)} s` : t('review.noAnswer')}</td>
                     <td>
                       {a
                         ? a.simulated
-                          ? 'Scheduled bot'
+                          ? t('review.scheduledBot')
                           : `${(a.serverElapsedMs / 1000).toFixed(3)} s`
                         : '—'}
                     </td>
-                    <td>{a ? (a.correct ? 'Correct' : 'Incorrect') : 'No answer'}</td>
+                    <td>{a ? (a.correct ? t('review.correct') : t('review.incorrect')) : t('review.noAnswer')}</td>
                   </tr>
                 );
               })}
@@ -505,9 +491,11 @@ export function RoundReview({
           </table>
         </div>
         <p className="fd-note">
-          {room.config.stake} simulated coins each, reserved once. Current room balances:{' '}
-          {room.players.map((p: any, i: number) => `${p.name}: ${room.balances[i]}`).join(' · ')}. Coins have
-          no monetary value.
+          {t('review.balances', {
+            stake: room.config.stake,
+            kind: room.ledger ? t('lobby.coins') : t('lobby.simCoins'),
+            list: room.players.map((p: any, i: number) => `${p.name}: ${room.balances[i]}`).join(' · '),
+          })}
         </p>
       </details>
       <QuestionIssue
@@ -534,6 +522,7 @@ export function QuestionIssue({
   roundId: string;
   player: any;
 }) {
+  const { t } = useLocale();
   const [reason, setReason] = useState('incorrect'),
     [note, setNote] = useState(''),
     [busy, setBusy] = useState(false),
@@ -551,48 +540,42 @@ export function QuestionIssue({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="question-issue">
         <DialogHeader>
-          <DialogTitle>Question the answer.</DialogTitle>
-          <DialogDescription>
-            Keep the fact and your concern together. This saves an issue on this device; it is not sent to a
-            support team and does not change the score.
-          </DialogDescription>
+          <DialogTitle>{t('issue.title')}</DialogTitle>
+          <DialogDescription>{t('issue.desc')}</DialogDescription>
         </DialogHeader>
         {saved ? (
           <div className="issue-confirmed">
             <Check />
-            <h3>Saved on this device.</h3>
+            <h3>{t('issue.savedTitle')}</h3>
             <p>
-              {player.persistent
-                ? 'The issue is included in your activity export.'
-                : 'Storage is unavailable; export this visit’s activity before leaving.'}{' '}
-              Find it in your Vault.
+              {player.persistent ? t('issue.included') : t('issue.unavailable')} {t('issue.findVault')}
             </p>
             <Button variant="outline" onClick={player.exportAll}>
               <Download />
-              Export activity
+              {t('issue.export')}
             </Button>
-            <Button onClick={() => onOpenChange(false)}>Back to the result</Button>
+            <Button onClick={() => onOpenChange(false)}>{t('issue.back')}</Button>
           </div>
         ) : (
           <>
             <p className="issue-fact">{fact.question}</p>
             <label className="issue-label">
-              What needs a closer look?
+              {t('issue.what')}
               <select value={reason} onChange={(e) => setReason(e.target.value)}>
-                <option value="incorrect">The accepted answer seems incorrect</option>
-                <option value="ambiguous">More than one answer could fit</option>
-                <option value="source">The source is missing or unclear</option>
-                <option value="other">Something else</option>
+                <option value="incorrect">{t('issue.incorrect')}</option>
+                <option value="ambiguous">{t('issue.ambiguous')}</option>
+                <option value="source">{t('issue.source')}</option>
+                <option value="other">{t('issue.other')}</option>
               </select>
             </label>
             <label className="issue-label">
-              Your note (optional)
+              {t('issue.note')}
               <textarea
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
                 maxLength={800}
                 rows={3}
-                placeholder="What would you change, and why?"
+                placeholder={t('issue.placeholder')}
               />
             </label>
             {error && (
@@ -608,15 +591,15 @@ export function QuestionIssue({
                 try {
                   const ok = await player.report(roundId, reason, note);
                   if (ok) setSaved(true);
-                  else setError('The fact has not finished saving. Try again in a moment.');
+                  else setError(t('issue.notSaved'));
                 } catch {
-                  setError('Could not save this issue. Keep your note and try again.');
+                  setError(t('issue.couldNot'));
                 } finally {
                   setBusy(false);
                 }
               }}
             >
-              {busy ? 'Saving…' : existing ? 'Update saved issue' : 'Save issue on this device'}
+              {busy ? t('issue.saving') : existing ? t('issue.update') : t('issue.save')}
               <Flag />
             </Button>
           </>

@@ -71,7 +71,7 @@ export function AnalyticsScreen({ player, onErase, go }: AnalyticsScreenProps) {
       </p>
       <h1 id="fd-an-title">What this app records</h1>
       <p className="fd-an-lede">
-        Everything FACT//DUEL records about how this device is used is on this page, in full, and it is kept
+        Everything Jaanta Hai Kya records about how this device is used is on this page, in full, and it is kept
         only in this browser. There is no analytics service behind it and nothing on this screen is uploaded.
       </p>
       <p className="fd-an-caveat" role="note">

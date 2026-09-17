@@ -1,0 +1,222 @@
+# Deploys the SERVER build — the Worker with the D1-backed duel, wallet, ledger, accounts and ops
+# routes — to Cloudflare Workers. This is the deployment that carries the founder's own domain, and
+# the one AdSense reviews; the static GitHub Pages build (pages.yml) has no server and stays the
+# offline mirror. See docs/deploy-cloudflare.md for the one-time setup and the tradeoff.
+#
+# What happens, in order:
+#   1. `pnpm build` writes dist/server/wrangler.json (name = package name, D1 = placeholder id).
+#   2. `pnpm deploy:prepare` writes dist/server/wrangler.deploy.json next to it with the real
+#      Worker name, database id and Custom Domain from repository variables. The generated file is
+#      never edited in place.
+#   3. Migrations run BEFORE the new code goes live, so no request ever meets a table it needs and
+#      cannot find. Every migration in drizzle/ is additive; wrangler tracks what it has applied in
+#      the d1_migrations table and re-running is a no-op.
+#   4. `wrangler deploy` uploads the Worker and the static assets.
+#   5. Each secret that is set in the repository is pushed with `wrangler secret put`. An unset
+#      secret is skipped and the Worker's existing value (if any) is kept. Secrets are never
+#      written into a config file or echoed into the log.
+#
+# Like sweep.yml: an unconfigured repository exits 0 with a message that names what is missing.
+# A workflow that is permanently red gets ignored, and this is the one that ships the money layer.
+#
+# Required repository SECRETS:   CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID
+# Required repository VARIABLES: CF_D1_DATABASE_ID
+# Optional VARIABLES:            CF_WORKER_NAME (default jaanta-hai-kya), CF_D1_DATABASE_NAME
+#                                (default jhk-db), CF_CUSTOM_DOMAIN (e.g. play.example.com)
+# Optional SECRETS (Worker env): OPS_TOKEN, SESSION_SECRET, GOOGLE_CLIENT_ID, MAIL_API_KEY,
+#                                MAIL_FROM, APP_ORIGIN — see cloudflare-env.d.ts for what each does.
+name: Deploy the Worker to Cloudflare
+
+on:
+  push:
+    branches: [main]
+    # Only what can change the served Worker. Docs, the deck and the marketing pages do not redeploy.
+    paths:
+      - 'app/**'
+      - 'lib/**'
+      - 'db/**'
+      - 'drizzle/**'
+      - 'scripts/**'
+      - 'components/**'
+      - 'hooks/**'
+      - 'public/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'vite.config.ts'
+      - 'next.config.ts'
+      - 'tsconfig.json'
+      - '.openai/hosting.json'
+      - '.github/workflows/deploy-worker.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Never cancel a half-finished deploy (migrations may be mid-flight); queue instead.
+concurrency:
+  group: deploy-worker
+  cancel-in-progress: false
+
+jobs:
+  # Secrets cannot be read in a job-level `if`, so a first job turns "is this configured?" into
+  # an output the deploy job can gate on. Nothing here prints a secret, only whether it is there.
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    outputs:
+      configured: ${{ steps.check.outputs.configured }}
+    steps:
+      - name: Check the deployment is configured
+        id: check
+        env:
+          HAS_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
+          HAS_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID != '' }}
+          CF_D1_DATABASE_ID: ${{ vars.CF_D1_DATABASE_ID }}
+        run: |
+          set -uo pipefail
+          if [ "${HAS_TOKEN}" = "true" ] && [ "${HAS_ACCOUNT}" = "true" ] && [ -n "${CF_D1_DATABASE_ID:-}" ]; then
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "configured=false" >> "$GITHUB_OUTPUT"
+          echo "Cloudflare deployment is not configured yet — nothing to do."
+          [ "${HAS_TOKEN}" = "true" ]   && token_state=present   || token_state=MISSING
+          [ "${HAS_ACCOUNT}" = "true" ] && account_state=present || account_state=MISSING
+          echo "  secrets.CLOUDFLARE_API_TOKEN  : ${token_state}"
+          echo "  secrets.CLOUDFLARE_ACCOUNT_ID : ${account_state}"
+          echo "  vars.CF_D1_DATABASE_ID        : ${CF_D1_DATABASE_ID:-MISSING}"
+          echo
+          echo "To enable: follow docs/deploy-cloudflare.md — create the D1 database, create an API"
+          echo "token, and set the three values above in Settings > Secrets and variables > Actions."
+
+  deploy:
+    needs: preflight
+    if: needs.preflight.outputs.configured == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      WRANGLER_SEND_METRICS: 'false'
+      DEPLOY_CONFIG: dist/server/wrangler.deploy.json
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.25.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check types and run the suite
+        run: |
+          pnpm exec tsc --noEmit
+          node --test tests/*.test.mjs
+
+      # The crawlable /quiz/* pages, with their canonical URLs on the founder's domain when there
+      # is one (unset SITE_BASE means the generator's default, the GitHub Pages mirror).
+      - name: Generate the crawlable quiz pages from the served bank
+        env:
+          CF_CUSTOM_DOMAIN: ${{ vars.CF_CUSTOM_DOMAIN }}
+        run: |
+          if [ -n "${CF_CUSTOM_DOMAIN:-}" ]; then
+            SITE_BASE="https://${CF_CUSTOM_DOMAIN}" pnpm seo:pages
+          else
+            pnpm seo:pages
+          fi
+
+      - name: Build the Worker
+        run: pnpm build
+
+      # Also writes dist/client/.assetsignore so public/product/ (7.6 MB of internal documentation,
+      # including the compliance checklist pages.yml deliberately never publishes) stays off the
+      # domain. The check afterwards is the release gate for that file, not the ignore rule.
+      - name: Prepare the deploy manifest
+        env:
+          CF_D1_DATABASE_ID: ${{ vars.CF_D1_DATABASE_ID }}
+          CF_D1_DATABASE_NAME: ${{ vars.CF_D1_DATABASE_NAME }}
+          CF_WORKER_NAME: ${{ vars.CF_WORKER_NAME }}
+          CF_CUSTOM_DOMAIN: ${{ vars.CF_CUSTOM_DOMAIN }}
+        run: |
+          set -uo pipefail
+          pnpm deploy:prepare
+          echo "Assets excluded from upload (dist/client/.assetsignore):"
+          cat dist/client/.assetsignore
+          # wrangler's summary counts files before ignores; only its debug log names what it skips.
+          WRANGLER_LOG=debug pnpm exec wrangler deploy --dry-run --config "${DEPLOY_CONFIG}" > dry-run.log 2>&1 \
+            || { tail -40 dry-run.log; echo "::error::wrangler dry run failed."; exit 1; }
+          checklist=product/compliance/checklist.site.html
+          if [ -e "dist/client/${checklist}" ] && ! grep -qxF "Ignoring asset: ${checklist}" dry-run.log; then
+            echo "::error::The compliance checklist would be uploaded (no 'Ignoring asset: ${checklist}' in the dry run). Refusing to deploy."
+            exit 1
+          fi
+          echo "Ignored under product/: $(grep -c '^Ignoring asset: product/' dry-run.log) entries."
+          grep -E '^(Total Upload|.*Read [0-9]+ files from the assets directory)' dry-run.log || true
+
+      # Additive migrations first, then code: a request that lands during the deploy finds every
+      # table it was written against. wrangler records applied migrations in d1_migrations.
+      - name: Apply D1 migrations
+        run: pnpm exec wrangler d1 migrations apply DB --remote --config "${DEPLOY_CONFIG}"
+
+      - name: Deploy the Worker
+        run: pnpm exec wrangler deploy --config "${DEPLOY_CONFIG}"
+
+      # One step per secret, each skipped when the repository does not set it. The value goes to
+      # wrangler over stdin (never an argument, so it is not in `ps` or the log), and the repo's
+      # copy stays the source of truth: change it in Settings and re-run this workflow.
+      - name: Set OPS_TOKEN
+        if: ${{ secrets.OPS_TOKEN != '' }}
+        env:
+          VALUE: ${{ secrets.OPS_TOKEN }}
+        run: printf '%s' "${VALUE}" | pnpm exec wrangler secret put OPS_TOKEN --config "${DEPLOY_CONFIG}"
+
+      - name: Set SESSION_SECRET
+        if: ${{ secrets.SESSION_SECRET != '' }}
+        env:
+          VALUE: ${{ secrets.SESSION_SECRET }}
+        run: printf '%s' "${VALUE}" | pnpm exec wrangler secret put SESSION_SECRET --config "${DEPLOY_CONFIG}"
+
+      - name: Set GOOGLE_CLIENT_ID
+        if: ${{ secrets.GOOGLE_CLIENT_ID != '' }}
+        env:
+          VALUE: ${{ secrets.GOOGLE_CLIENT_ID }}
+        run: printf '%s' "${VALUE}" | pnpm exec wrangler secret put GOOGLE_CLIENT_ID --config "${DEPLOY_CONFIG}"
+
+      - name: Set MAIL_API_KEY
+        if: ${{ secrets.MAIL_API_KEY != '' }}
+        env:
+          VALUE: ${{ secrets.MAIL_API_KEY }}
+        run: printf '%s' "${VALUE}" | pnpm exec wrangler secret put MAIL_API_KEY --config "${DEPLOY_CONFIG}"
+
+      - name: Set MAIL_FROM
+        if: ${{ secrets.MAIL_FROM != '' }}
+        env:
+          VALUE: ${{ secrets.MAIL_FROM }}
+        run: printf '%s' "${VALUE}" | pnpm exec wrangler secret put MAIL_FROM --config "${DEPLOY_CONFIG}"
+
+      - name: Set APP_ORIGIN
+        if: ${{ secrets.APP_ORIGIN != '' }}
+        env:
+          VALUE: ${{ secrets.APP_ORIGIN }}
+        run: printf '%s' "${VALUE}" | pnpm exec wrangler secret put APP_ORIGIN --config "${DEPLOY_CONFIG}"
+
+      - name: Where it went
+        env:
+          CF_CUSTOM_DOMAIN: ${{ vars.CF_CUSTOM_DOMAIN }}
+          CF_WORKER_NAME: ${{ vars.CF_WORKER_NAME }}
+        run: |
+          name="${CF_WORKER_NAME:-jaanta-hai-kya}"
+          echo "Deployed Worker '${name}'."
+          if [ -n "${CF_CUSTOM_DOMAIN:-}" ]; then
+            echo "  live at https://${CF_CUSTOM_DOMAIN}/ (once the Custom Domain has provisioned)"
+          else
+            echo "  live on the workers.dev subdomain shown in the deploy output above"
+          fi
+          echo "Verify the ops door: POST /api/ops answers 503 with no OPS_TOKEN set on the Worker,"
+          echo "401 with a wrong bearer token, 200 with the right one. See docs/money-runbook.md."
