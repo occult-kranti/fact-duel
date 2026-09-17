@@ -1,7 +1,7 @@
 /**
  * lib/auth-client.ts — the browser's side of `/api/auth`.
  *
- * Four calls, one transport. Every request carries the session cookie (`credentials: 'include'`)
+ * Five calls, one transport. Every request carries the session cookie (`credentials: 'include'`)
  * and the guest id this device minted (header `x-fd-principal`, read from localStorage
  * `fd-principal` — the key the wallet client owns), so the server knows which guest to promote in
  * place when a sign-in lands. Nothing else about the device is sent.
@@ -15,11 +15,30 @@
 export const PRINCIPAL_KEY = 'fd-principal';
 export const AUTH_CHANGED_EVENT = 'fd-auth-change';
 
+/**
+ * `signedIn` means a PROVED identity (a clicked link or Google) on a live session — never an
+ * address typed into the profile gate, which arrives as `claimed` instead. `session` is the weaker
+ * fact the claim does buy: the cookie resolved, so the card syncs on this device.
+ */
 export type Whoami =
-  | { available: true; signedIn: boolean; principalId: string | null; email: string | null; providers: string[] }
+  | {
+      available: true;
+      signedIn: boolean;
+      session: boolean;
+      principalId: string | null;
+      email: string | null;
+      claimed: { email: string } | null;
+      providers: string[];
+    }
   | { available: false };
 
 export type GoogleSignIn = { ok: true; principalId: string; merged: boolean; abandonedGuest: string | null };
+
+/** `available: false` is the static build answering: there is no server to keep the claim. */
+export type QuickProfile =
+  | { ok: true; principalId: string; email: string }
+  | { ok: false; available: false }
+  | { ok: false; available: true; error: string };
 
 type Envelope = { status: number; body: Record<string, unknown> | null };
 
@@ -66,17 +85,44 @@ const announce = () => {
   }
 };
 
-/** Who this browser is to the server, or `{ available: false }` when there is no server. */
+/**
+ * Who this browser is to the server, or `{ available: false }` when there is no server. An older
+ * server that does not send `claimed` or `session` reads as "no claim" and "a session iff signed
+ * in", which is what that build meant.
+ */
 export async function whoami(): Promise<Whoami> {
   const { status, body } = await post({ action: 'whoami' });
   if (status !== 200 || !body || typeof body.signedIn !== 'boolean') return { available: false };
+  const claimed = body.claimed as { email?: unknown } | null | undefined;
   return {
     available: true,
     signedIn: body.signedIn,
+    session: body.session === true || body.signedIn === true,
     principalId: typeof body.principalId === 'string' ? body.principalId : null,
     email: typeof body.email === 'string' ? body.email : null,
+    claimed: claimed && typeof claimed.email === 'string' ? { email: claimed.email } : null,
     providers: Array.isArray(body.providers) ? body.providers.filter((p): p is string => typeof p === 'string') : [],
   };
+}
+
+/**
+ * The profile gate's claim: a display name and an email nobody has verified. The server keeps the
+ * address on this principal and issues a session so the card syncs; it proves nothing, and the
+ * upgrade is Settings → "Verify by link". A static build has no `/api/auth`, which is
+ * `{ ok: false, available: false }` — the gate then keeps the pair on the device and says so.
+ */
+export async function quickProfile(name: string, email: string): Promise<QuickProfile> {
+  const { status, body } = await post({ action: 'quick-profile', name, email });
+  if (status === 200 && body?.ok === true && typeof body.principalId === 'string') {
+    announce();
+    return {
+      ok: true,
+      principalId: body.principalId,
+      email: typeof body.email === 'string' ? body.email : email.trim().toLowerCase(),
+    };
+  }
+  if (!body || typeof body.error !== 'string') return { ok: false, available: false };
+  return { ok: false, available: true, error: body.error };
 }
 
 /**

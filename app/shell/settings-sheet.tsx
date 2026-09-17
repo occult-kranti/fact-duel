@@ -1,4 +1,5 @@
 'use client';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -7,8 +8,10 @@ import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { whoami } from '@/lib/auth-client';
 import { Database, Volume2 } from 'lucide-react';
 import { AccountPanel } from './account-panel';
+import { gateCopy, readClaimedEmail } from './profile-gate';
 import { useLocale, type Locale } from '../use-locale';
 import { LOCALES } from '@/lib/i18n/index.mjs';
 
@@ -49,6 +52,66 @@ export type SettingsSheetProps = {
   /** Opens the Analytics screen: what this device records, and the JSON/CSV exports of it. */
   onOpenMeasurement: () => void;
 };
+
+/**
+ * The address the profile gate was given on this device, and the way to make it real. The sheet's
+ * content is mounted only while the sheet is open, so reading the record in the state initialiser
+ * re-reads it on every open — a claim made a moment ago is already here.
+ *
+ * Nothing about that address has been verified and the line says so. "Verify by link" hands the
+ * person to the account panel just above, whose magic link IS the verification; that panel owns
+ * the flow and this only puts the cursor in its field. So this section exists only for the claims
+ * that panel cannot speak for: `whoami().signedIn` is PROVED-only now (a clicked link or Google,
+ * see lib/server/auth-service.mjs), and when the server itself holds the claim the panel prints
+ * it — saying the same thing twice, one section apart, is noise. What is left is the honest
+ * remainder: a build with no server, and a claim that reached no server and lives on this device.
+ * Nothing is rendered until `whoami` answers, so no state flashes on the way to the right one.
+ */
+function ClaimedProfile({ locale }: { locale: Locale }) {
+  const [claimed] = useState<string | null>(() => readClaimedEmail());
+  const [verify, setVerify] = useState<'checking' | 'can' | 'local' | 'done'>('checking');
+  /** The account panel above is already showing this address with its own "Verify by link". */
+  const [inPanel, setInPanel] = useState(false);
+  useEffect(() => {
+    let alive = true;
+    whoami().then((who) => {
+      if (!alive) return;
+      setVerify(!who.available ? 'local' : who.signedIn ? 'done' : 'can');
+      setInPanel(who.available && !who.signedIn && who.claimed !== null);
+    });
+    return () => {
+      alive = false;
+    };
+  }, []);
+  if (!claimed || verify === 'checking' || verify === 'done' || inPanel) return null;
+  const copy = gateCopy(locale);
+  const [before, after] = copy.settingsClaimed.split('{email}');
+  const verifyByLink = () => {
+    const field = document.getElementById('account-email');
+    (field ?? document.getElementById('settings-account'))?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    (field as HTMLInputElement | null)?.focus({ preventScroll: true });
+  };
+  return (
+    <section className="fd-setting-group" aria-labelledby="settings-profile">
+      <span className="fd-setting-eyebrow" id="settings-profile">
+        {copy.settingsTitle}
+      </span>
+      <p className="fd-setting-note">
+        {before}
+        <strong className="fd-gate-claim-email">{claimed}</strong>
+        {after}
+        {verify === 'local' ? ` ${copy.local}` : ''}
+      </p>
+      {verify === 'can' && (
+        <div className="fd-setting-actions">
+          <Button variant="outline" onClick={verifyByLink}>
+            {copy.settingsVerify}
+          </Button>
+        </div>
+      )}
+    </section>
+  );
+}
 
 /* Settings live in a sheet: a bottom sheet on phones, a right-hand panel from 600px. The
  * orchestrator (arena.tsx) owns every value and persists it under the keys in SETTINGS_KEYS. */
@@ -116,6 +179,8 @@ export function SettingsSheet({
         </section>
 
         <AccountPanel />
+
+        <ClaimedProfile locale={locale} />
 
         <section className="fd-setting-group" aria-labelledby="settings-player">
           <span className="fd-setting-eyebrow" id="settings-player">

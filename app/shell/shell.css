@@ -596,3 +596,49 @@
   height: 44px;
   transform: translate(-50%, -50%);
 }
+
+/* ---------- mobile gate (scripts/mobile-gate.mjs) ----------
+ * Fixes from the W5 phone pass. Appended last on purpose: same selectors as above, so the later
+ * block wins without raising specificity or reaching for !important. */
+
+@media (max-width: 599px) {
+  /* The top bar is one flex row and every child may shrink. At 360px the mute and settings
+     buttons measured 37px wide — under the 44x44 the design system holds (WCAG 2.5.5 Enhanced;
+     2.5.8 Minimum is 24). Pin the buttons and tighten the gaps rather than let the row eat them. */
+  .fd-topbar .fd-iconbtn {
+    flex: 0 0 44px;
+  }
+  .fd-topbar {
+    gap: 6px;
+  }
+  .fd-topbar-right,
+  .fd-topbar-slots {
+    gap: 4px;
+  }
+  /* The brand link was 36x44 at 320px, where the wordmark is already hidden. */
+  .fd-topbar .fd-brand {
+    min-width: 44px;
+    justify-content: center;
+  }
+  /* Fine print is where this product makes its honesty claims ("free simulated coins", "on this
+     device"). 12px is not a size to read those at on a phone. Chips, counters and tab labels keep
+     --fs-12; sentences do not. */
+  .fd-shell .fd-footer {
+    font-size: var(--fs-14);
+  }
+  .fd-setting-row > .fd-setting-label > small {
+    font-size: var(--fs-14);
+  }
+}
+
+/* The wordmark's hide breakpoint stays at 359px (the rule near the top of this file). It was
+   briefly moved to 389px to buy the top bar room, which would have dropped the wordmark on every
+   375px iPhone (SE, 6/7/8, X, 11 Pro, 12 mini) and every 360px Android — the most common widths
+   in the install base, not an edge case. The brand is what a first-time player reads first, so it
+   stays: 360-389 keeps the wordmark, and only the 320-359 band falls back to the mark alone,
+   where the link's own aria-label ("Jaanta Hai Kya home") still names the product. */
+
+/* The language pair in Settings was 40px tall. */
+.fd-locale-seg .fd-seg-btn {
+  min-height: 44px;
+}

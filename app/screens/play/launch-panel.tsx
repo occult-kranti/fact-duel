@@ -107,8 +107,10 @@ export function LaunchPanel({
         {!searching && <ArrowRight size={18} aria-hidden="true" />}
       </button>
       <p className="fd-launch-terms" role={rivalMode ? 'status' : undefined} aria-live={rivalMode ? 'polite' : undefined}>
+        {/* `fd-launch-fine`: the one whole sentence in this bar, as against the mono value chips
+            beside it, so play.css can hold it at 14px on a phone (scripts/mobile-gate.mjs). */}
         {joinView ? (
-          <span>{t('launch.friendDecides')}</span>
+          <span className="fd-launch-fine">{t('launch.friendDecides')}</span>
         ) : rivalMode && search.phase === 'searching' ? (
           offerPractice ? (
             <>

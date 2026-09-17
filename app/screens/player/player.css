@@ -1466,3 +1466,17 @@
   max-width: 560px;
   margin-inline: auto;
 }
+
+/* ---------- mobile gate (scripts/mobile-gate.mjs) ---------- */
+/* The Player screen carries most of the product's device-honesty copy ("Rank points are counted
+   on this device", "ratings count human duels only"). At 12px it was the smallest type on the
+   most-read screen. Badge rules, section counts and the footnote go with it. */
+@media (max-width: 599px) {
+  .fd-disclaimer,
+  .fd-badge small,
+  .fd-sec-head > span,
+  .fd-rank-foot,
+  .fd-player-footnote {
+    font-size: var(--fs-14);
+  }
+}

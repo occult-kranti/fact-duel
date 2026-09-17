@@ -1,0 +1,246 @@
+/* ---------- The profile gate (first landing) ---------- *
+
+ * A full-screen single step, not an overlay on top of the game: `100dvh` so the mobile URL bar
+ * cannot crop the button, safe-area padding on all four sides, and one scroll container so a
+ * short landscape phone with the keyboard up can still reach "Play as guest". Inputs are a fixed
+ * 16px — the size below which iOS Safari zooms the page on focus — which beats shadcn's
+ * `md:text-sm` by specificity rather than `!important`.
+ */
+.fd-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  height: 100vh;
+  height: 100dvh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--bg-0);
+  padding: max(24px, env(safe-area-inset-top)) max(var(--gutter), env(safe-area-inset-right))
+    max(24px, env(safe-area-inset-bottom)) max(var(--gutter), env(safe-area-inset-left));
+  animation: fd-gate-in 200ms ease-out both;
+}
+
+/* `margin: auto` rather than `align-items: center`: a centred flex item taller than its scroll
+   container has its overflowing top clipped, and this one grows with the error line. */
+.fd-gate-inner {
+  margin: auto;
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.fd-gate-mark {
+  color: var(--text);
+  align-self: flex-start;
+  margin-bottom: 4px;
+}
+
+.fd-gate-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-28);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+
+/* Devanagari sits taller than Latin: the display line-height that suits English clips matras. */
+:root[lang='hi'] .fd-gate-title {
+  line-height: 1.35;
+}
+
+/* The field labels are shadcn's `leading-none` — a 14px line box around 14px text. Latin
+   descenders clear the autofocused input's focus ring below it; the nukta and ी matra of
+   "आपका खिलाड़ी नाम" do not. The line box gets room instead of the ring being moved. */
+:root[lang='hi'] .fd-gate-field label {
+  line-height: 1.4;
+}
+
+.fd-gate-body {
+  margin: 0;
+  font-size: var(--fs-16);
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.fd-gate-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 6px;
+}
+
+.fd-gate-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fd-gate .fd-gate-input {
+  height: 48px;
+  font-size: 16px;
+  border-radius: var(--r-control);
+  background: var(--bg-1);
+}
+
+.fd-gate .fd-gate-save {
+  width: 100%;
+  height: 52px;
+  font-size: var(--fs-16);
+  font-weight: 700;
+  border-radius: var(--r-control);
+}
+
+.fd-gate-error {
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--ember);
+  border-radius: var(--r-control);
+  background: var(--ember-soft);
+  color: var(--text);
+  font-size: var(--fs-14);
+  line-height: 1.5;
+}
+
+.fd-gate-note {
+  margin: 2px 0 0;
+  font-size: var(--fs-14);
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* The way out. Body size, underlined, in the body colour: a link, never a disguised one. */
+.fd-gate-guest {
+  align-self: center;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 0;
+  background: none;
+  color: var(--text);
+  font-family: inherit;
+  font-size: var(--fs-16);
+  line-height: 1.5;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.fd-gate-guest:hover {
+  color: var(--volt);
+}
+.fd-gate-guest:focus-visible {
+  outline: 2px solid var(--volt);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+@media (min-width: 600px) {
+  .fd-gate {
+    padding: 40px max(24px, env(safe-area-inset-right)) 40px max(24px, env(safe-area-inset-left));
+  }
+  .fd-gate-inner {
+    gap: 14px;
+  }
+}
+
+/* A short viewport — a landscape phone, or a portrait one with the keyboard up. The copy gives
+   room back to the fields, and where there is width to spare the sheet goes two-column so that
+   "Play as guest" stays on screen next to the form rather than below the fold.
+
+   600, not 560: iOS Safari evaluates a height media query against the LARGE viewport (the page
+   with the toolbars hidden) while `100dvh` above sizes this sheet to the small one. A 320×568
+   iPhone SE therefore reports 568 here and lays the full-size sheet into roughly 452px, which put
+   "Play as guest" about 50px below the fold while "Save and play" stayed in view — the way out
+   off screen and the way in on it. Every viewport between 561 and 600 is a phone that needs this. */
+@media (max-height: 600px) {
+  .fd-gate {
+    padding-top: max(12px, env(safe-area-inset-top));
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+  }
+  .fd-gate-mark {
+    display: none;
+  }
+  .fd-gate-inner {
+    gap: 8px;
+  }
+  .fd-gate-title {
+    font-size: var(--fs-22);
+  }
+  .fd-gate-body {
+    font-size: var(--fs-14);
+    line-height: 1.45;
+  }
+  .fd-gate-form {
+    gap: 10px;
+    margin-top: 2px;
+  }
+  .fd-gate-field {
+    gap: 6px;
+  }
+  .fd-gate .fd-gate-input {
+    height: 44px;
+  }
+  .fd-gate .fd-gate-save {
+    height: 48px;
+  }
+}
+
+@media (max-height: 600px) and (min-width: 600px) {
+  .fd-gate-inner {
+    max-width: 760px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 28px;
+    align-content: start;
+  }
+  .fd-gate-title {
+    grid-area: 1 / 1;
+  }
+  .fd-gate-body {
+    grid-area: 2 / 1;
+  }
+  .fd-gate-form {
+    grid-area: 1 / 2 / 5 / 3;
+    align-self: start;
+    margin-top: 0;
+  }
+  .fd-gate-note {
+    grid-area: 3 / 1;
+  }
+  .fd-gate-guest {
+    grid-area: 4 / 1;
+    align-self: start;
+    justify-self: start;
+    padding-left: 0;
+  }
+}
+
+@keyframes fd-gate-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+/* The OS preference and the in-app one (Settings → Motion, written to `data-motion` by
+   app/arena.tsx) — the same pair every other animated surface in this app honours. */
+@media (prefers-reduced-motion: reduce) {
+  .fd-gate {
+    animation: none;
+  }
+}
+:root[data-motion='reduced'] .fd-gate,
+:root[data-motion='off'] .fd-gate {
+  animation: none;
+}
+
+/* ---------- The claimed address, in Settings ---------- */
+.fd-gate-claim-email {
+  color: var(--text);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}

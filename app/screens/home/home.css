@@ -1102,3 +1102,17 @@
     transition: none;
   }
 }
+
+/* ---------- mobile gate (scripts/mobile-gate.mjs) ---------- */
+/* Every one of these is a whole sentence the Home screen asks a player to read — what the brain
+   orb means, what a wild round pays, when the quest set turns over, what a rank note says. They
+   were 11-12px. Labels, chips and counters keep --fs-12; prose does not. */
+@media (max-width: 599px) {
+  .fd-home .fd-hub-hero-note,
+  .fd-home .fd-hub-cta-note,
+  .fd-home .fd-hub-section-note,
+  .fd-home .fd-hub-expedition-foot small,
+  .fd-home .fd-hub-rank-note {
+    font-size: var(--fs-14);
+  }
+}

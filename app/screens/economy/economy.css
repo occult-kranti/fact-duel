@@ -311,3 +311,32 @@
     transition: none;
   }
 }
+
+/* ---------- mobile gate (scripts/mobile-gate.mjs) ---------- */
+/* The coins card's last line is the honesty claim this whole screen rests on — "Free simulated
+   coins on this device · never money" — the pending line says a reward is still owed, and the cap
+   line says how many boosts are left today. All three are sentences a player reads, not chips, and
+   the cap line is 30 characters in Hindi ("आज के विज्ञापन बूस्ट: 3 (कुल 20)"), so the gate reads it as
+   body text at both widths it is measured on. 14px on phones; the desktop scale is unchanged. */
+@media (max-width: 599px) {
+  .fd-adcard__fine,
+  .fd-adcard__pending,
+  .fd-adcard__cap {
+    font-size: var(--fs-14);
+  }
+}
+
+/* On phones the top-bar chips drop their pill and become plain icon + number readouts
+   (player.css §9), which left the coins chip at 33x28 — the smallest tap target in the app, and
+   the one that opens the coins sheet. The readout keeps its size; the button grows an invisible
+   44x44 box around it. */
+/* The condition is the POINTER, not the width: the same phone in landscape is 844-932px wide and
+   the thumb has not grown. A `max-width: 599px` cap handed the coins button back its 32px pill
+   the moment the device turned. */
+@media (pointer: coarse) {
+  .fd-topbar .fd-chip-top--coins {
+    min-width: 44px;
+    min-height: 44px;
+    justify-content: center;
+  }
+}

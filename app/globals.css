@@ -203,8 +203,10 @@ button[data-slot='button']:disabled {
   color: var(--primary-foreground);
   z-index: 100;
 }
+/* mobile gate (scripts/mobile-gate.mjs): the focused skip link is a fixed bar at the top edge, so
+   on a notched phone 8px puts it under the status bar / camera. --safe-top is 0 everywhere else. */
 .skip-link:focus {
-  top: 8px;
+  top: calc(8px + var(--safe-top, 0px));
 }
 .topbar {
   height: 80px;

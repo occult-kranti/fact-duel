@@ -26,7 +26,7 @@ import { readProfile } from './passport.mjs';
 
 export type SyncState = 'off' | 'idle' | 'pushing' | 'stale' | 'error';
 export type ServerProfile = { revision: number; state: Record<string, unknown> };
-export type Whoami = { signedIn: boolean; principalId: string | null };
+export type Whoami = { signedIn: boolean; session: boolean; principalId: string | null };
 export type PullResult = { ok: true; profile: ServerProfile | null } | { ok: false; code: string };
 export type PushResult =
   | { ok: true; revision: number }
@@ -99,8 +99,14 @@ function readServerProfile(value: unknown): ServerProfile | null {
 export async function whoami(): Promise<Whoami | null> {
   const reply = await post(AUTH_API, { action: 'whoami' });
   if (!reply || reply.status !== 200) return null;
-  const { signedIn, principalId } = reply.data;
-  return { signedIn: signedIn === true, principalId: typeof principalId === 'string' ? principalId : null };
+  const { signedIn, principalId, session } = reply.data;
+  return {
+    signedIn: signedIn === true,
+    // A claimed (unverified) profile is not a sign-in, but it does hold a session, and the profile
+    // API only needs a session. An older server that sends no `session` falls back to `signedIn`.
+    session: session === true || signedIn === true,
+    principalId: typeof principalId === 'string' ? principalId : null,
+  };
 }
 
 export async function pullProfile(): Promise<PullResult> {

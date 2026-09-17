@@ -54,3 +54,13 @@
   font-size: var(--fs-14);
   line-height: 1.5;
 }
+
+/* The claimed address, above the link field that can make it real. It is a plain line, not an
+   alarm: the address in the text colour, the fact that nobody checked it beside it, unbroken. */
+.fd-account-claimed {
+  margin-bottom: 6px;
+}
+.fd-account-unverified {
+  color: var(--muted);
+  white-space: nowrap;
+}

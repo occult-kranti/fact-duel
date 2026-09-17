@@ -8,6 +8,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { webcrypto } from 'node:crypto';
+import { readFile } from 'node:fs/promises';
 import { LocalD1 } from './d1-local.mjs';
 import {
   AUTH,
@@ -18,6 +19,9 @@ import {
   issueSession,
   newPrincipalId,
   normaliseEmail,
+  PROVED_PROVIDERS,
+  quickProfile,
+  readDisplayName,
   requestMagicLink,
   revokeSession,
   sessionCookie,
@@ -199,11 +203,20 @@ test('(a) a guest with coins signs in and keeps every coin: the id does not chan
   assert.deepEqual({ ...identity }, { id: 'email:pat@example.com', principal_id: GUEST, provider: 'email', subject: 'pat@example.com', email: 'pat@example.com' });
   assert.deepEqual(await whoami(db, { principalId: GUEST, kind: 'session' }), {
     signedIn: true,
+    session: true,
     principalId: GUEST,
     email: 'pat@example.com',
+    claimed: null,
     providers: ['email'],
   });
-  assert.deepEqual(await whoami(db, { principalId: GUEST, kind: 'guest' }), { signedIn: false, principalId: GUEST, email: null, providers: [] });
+  assert.deepEqual(await whoami(db, { principalId: GUEST, kind: 'guest' }), {
+    signedIn: false,
+    session: false,
+    principalId: GUEST,
+    email: null,
+    claimed: null,
+    providers: [],
+  });
 });
 
 test('(a) also holds when the guest never touched the server before', async (t) => {
@@ -376,6 +389,144 @@ test('mailerFor: HTTP sender when configured, NullMailer otherwise; the HTTP sen
   await assert.rejects(failing.send({ to: 'a@b.co', subject: 's', text: 't' }), { status: 503 });
 });
 
+/* ---------- the quick profile (the gate's claim) ---------- */
+
+test('quick-profile claims an address without verifying it: one identity per principal, a session, and never a link between two', async (t) => {
+  const db = opened(t);
+  const first = await quickProfile(db, { principalId: GUEST, email: ' Pat@Example.com ', name: '  Pat  ', now: T0 });
+  assert.equal(first.principalId, GUEST);
+  assert.equal(first.email, 'pat@example.com', 'normalised');
+  assert.equal(first.name, 'Pat', 'trimmed');
+  assert.match(first.session.sessionId, /^[A-Za-z0-9_-]{48}$/);
+
+  const row = await db.prepare('SELECT * FROM identities WHERE principal_id = ?').bind(GUEST).first();
+  assert.equal(row.id, `claimed-email:${GUEST}`, 'keyed by the principal, never by the address');
+  assert.equal(row.provider, 'claimed-email');
+  assert.equal(row.subject, 'pat@example.com');
+  assert.equal(row.email, 'pat@example.com');
+  assert.equal(Number(row.created_at), T0);
+  const principal = await db.prepare('SELECT kind, last_seen_at FROM principals WHERE id = ?').bind(GUEST).first();
+  assert.equal(principal.kind, 'anon', 'touched, not promoted: nothing has been proved');
+  assert.equal(Number(principal.last_seen_at), T0);
+
+  // Idempotent per principal: a re-claim moves the address on the SAME row and adds no second one.
+  const again = await quickProfile(db, { principalId: GUEST, email: 'sam@example.com', name: 'Sam', now: T0 + HOUR });
+  assert.equal(await count(db, 'SELECT COUNT(*) AS n FROM identities WHERE principal_id = ?', GUEST), 1);
+  const updated = await db.prepare('SELECT subject, email, created_at, last_used_at FROM identities WHERE id = ?').bind(`claimed-email:${GUEST}`).first();
+  assert.equal(updated.subject, 'sam@example.com');
+  assert.equal(updated.email, 'sam@example.com');
+  assert.equal(Number(updated.created_at), T0, 'the first claim is when this identity began');
+  assert.equal(Number(updated.last_used_at), T0 + HOUR);
+  assert.notEqual(again.session.sessionId, first.session.sessionId, 'each claim mints its own session');
+
+  // The same address from ANOTHER principal. Nothing is looked up by subject, so nothing merges.
+  const other = await quickProfile(db, { principalId: OTHER, email: 'SAM@example.com', name: 'Sam too', now: T0 + 2 * HOUR });
+  assert.equal(other.principalId, OTHER);
+  assert.equal(await count(db, 'SELECT COUNT(*) AS n FROM identities WHERE subject = ?', 'sam@example.com'), 2);
+  const owners = (await db.prepare('SELECT principal_id FROM identities WHERE subject = ? ORDER BY principal_id').bind('sam@example.com').all()).results;
+  assert.deepEqual(owners.map((r) => r.principal_id), [GUEST, OTHER], 'two principals, two ledgers, one typed address');
+  const lookup = sessionLookupFor(db, { now: () => T0 + 2 * HOUR + 1 });
+  assert.deepEqual(await lookup(again.session.sessionId), { principalId: GUEST });
+  assert.deepEqual(await lookup(other.session.sessionId), { principalId: OTHER }, 'each session stays on its own principal');
+
+  // The claim is NOT a sign-in: it has a session, so the card syncs on this device, but nobody
+  // proved the address, so nothing on screen may call it an account.
+  assert.deepEqual(await whoami(db, { principalId: GUEST, kind: 'session' }), {
+    signedIn: false,
+    session: true,
+    principalId: GUEST,
+    email: 'sam@example.com',
+    claimed: { email: 'sam@example.com' },
+    providers: ['claimed-email'],
+  });
+});
+
+test('a claimed address never reads as signed in, and a proved address later outranks it', async (t) => {
+  const db = opened(t);
+  // Anyone can type anyone's address into the gate. This is the whole reason `signedIn` may not
+  // be "a session exists": the panel would otherwise say "Signed in as <a stranger's address>".
+  await quickProfile(db, { principalId: GUEST, email: 'someone.else@example.com', name: 'Pat', now: T0 });
+  const claimedOnly = await whoami(db, { principalId: GUEST, kind: 'session' });
+  assert.deepEqual(claimedOnly, {
+    signedIn: false,
+    session: true,
+    principalId: GUEST,
+    email: 'someone.else@example.com',
+    claimed: { email: 'someone.else@example.com' },
+    providers: ['claimed-email'],
+  });
+
+  // The upgrade: a link actually clicked. The proved address is the one reported from then on,
+  // however much older the claimed row is; the claim stays visible, under its own name.
+  await signIn(db, { provider: 'email', subject: 'real@example.com', email: 'real@example.com', guestPrincipalId: GUEST, now: T0 + HOUR });
+  assert.deepEqual(await whoami(db, { principalId: GUEST, kind: 'session' }), {
+    signedIn: true,
+    session: true,
+    principalId: GUEST,
+    email: 'real@example.com',
+    claimed: { email: 'someone.else@example.com' },
+    providers: ['claimed-email', 'email'],
+  });
+  assert.deepEqual(PROVED_PROVIDERS, ['email', 'google'], 'the two a person can prove; claimed-email is not one');
+
+  // Without a session nothing is said at all, claimed or proved.
+  assert.deepEqual(await whoami(db, { principalId: GUEST, kind: 'guest' }), {
+    signedIn: false,
+    session: false,
+    principalId: GUEST,
+    email: null,
+    claimed: null,
+    providers: [],
+  });
+});
+
+test('a Google sign-in on a principal that never claimed anything reports no claim', async (t) => {
+  const db = opened(t);
+  await signIn(db, { provider: 'google', subject: '1234567890', email: 'pat@gmail.com', guestPrincipalId: GUEST, now: T0 });
+  const me = await whoami(db, { principalId: GUEST, kind: 'session' });
+  assert.equal(me.signedIn, true);
+  assert.equal(me.email, 'pat@gmail.com');
+  assert.equal(me.claimed, null);
+});
+
+test('the auth module is text, so the release greps can still read it', async () => {
+  const source = await readFile(new URL('../lib/server/auth-service.mjs', import.meta.url));
+  const control = [...source].flatMap((byte, at) => (byte < 9 || (byte > 13 && byte < 32) || byte === 127 ? [{ at, byte }] : []));
+  assert.deepEqual(control, [], 'a literal control byte makes git diff show a different program and makes grep call the file binary');
+  const junk = `a${String.fromCharCode(0)}b${String.fromCharCode(31)}c${String.fromCharCode(127)}d`;
+  assert.equal(readDisplayName(junk), 'a b c d', 'the escaped class folds exactly what the raw bytes did');
+});
+
+test('quick-profile refuses what it cannot use, and writes nothing when it refuses', async (t) => {
+  const db = opened(t);
+  const refused = (patch, why) =>
+    assert.rejects(
+      () => quickProfile(db, { principalId: GUEST, email: 'pat@example.com', name: 'Pat', now: T0, ...patch }),
+      (error) => error?.status === 400 && typeof error.message === 'string' && error.message.length > 0,
+      why,
+    );
+  await refused({ email: 'not an address' }, 'no @');
+  await refused({ email: 'pat@example' }, 'no dot');
+  await refused({ email: '' }, 'empty');
+  await refused({ email: 42 }, 'not a string');
+  await refused({ email: `${'x'.repeat(250)}@example.com` }, 'absurd length');
+  await refused({ name: '   ' }, 'blank once trimmed');
+  await refused({ name: 'x'.repeat(25) }, 'past 24 characters');
+  await refused({ name: 7 }, 'not a string');
+  await refused({ principalId: 'nope' }, 'not a principal id');
+  await refused({ now: 0 }, 'no clock');
+  assert.equal(await count(db, 'SELECT COUNT(*) AS n FROM identities'), 0);
+  assert.equal(await count(db, 'SELECT COUNT(*) AS n FROM sessions'), 0);
+  assert.equal(await count(db, 'SELECT COUNT(*) AS n FROM principals'), 0);
+
+  const edge = await quickProfile(db, { principalId: GUEST, email: 'pat@example.com', name: ` ${'x'.repeat(24)} `, now: T0 });
+  assert.equal(edge.name, 'x'.repeat(24), 'exactly 24 characters is a name');
+  assert.equal(readDisplayName('Pat  the\tGreat'), 'Pat the Great', 'runs of space fold');
+  assert.equal(readDisplayName('x'.repeat(25)), null);
+  assert.equal(readDisplayName(null), null);
+  assert.equal(readDisplayName(''), null);
+});
+
 /* ---------- the route ---------- */
 
 const post = (body, { env, headers = {}, url = ORIGIN + '/api/auth' } = {}) =>
@@ -399,7 +550,14 @@ test('route: whoami for a guest, a sign-in link, the click, whoami for the sessi
 
   const guest = await post({ action: 'whoami' }, opts);
   assert.equal(guest.status, 200);
-  assert.deepEqual(await guest.json(), { signedIn: false, principalId: GUEST, email: null, providers: [] });
+  assert.deepEqual(await guest.json(), {
+    signedIn: false,
+    session: false,
+    principalId: GUEST,
+    email: null,
+    claimed: null,
+    providers: [],
+  });
   assert.equal(guest.headers.get('cache-control'), 'no-store');
 
   const asked = await handleAuthRequest(
@@ -430,13 +588,27 @@ test('route: whoami for a guest, a sign-in link, the click, whoami for the sessi
   assert.equal(cookieOf(twice), null, 'a spent link sets nothing');
 
   const me = await post({ action: 'whoami' }, { env, headers: { cookie: `fd_session=${sessionId}`, 'x-fd-principal': OTHER } });
-  assert.deepEqual(await me.json(), { signedIn: true, principalId: GUEST, email: 'pat@example.com', providers: ['email'] });
+  assert.deepEqual(await me.json(), {
+    signedIn: true,
+    session: true,
+    principalId: GUEST,
+    email: 'pat@example.com',
+    claimed: null,
+    providers: ['email'],
+  });
 
   const out = await post({ action: 'signout' }, { env, headers: { cookie: `fd_session=${sessionId}` } });
   assert.deepEqual(await out.json(), { ok: true });
   assert.equal(cookieOf(out), 'fd_session=; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=0');
   const after = await post({ action: 'whoami' }, { env, headers: { cookie: `fd_session=${sessionId}` } });
-  assert.deepEqual(await after.json(), { signedIn: false, principalId: null, email: null, providers: [] });
+  assert.deepEqual(await after.json(), {
+    signedIn: false,
+    session: false,
+    principalId: null,
+    email: null,
+    claimed: null,
+    providers: [],
+  });
   const outAgain = await post({ action: 'signout' }, { env });
   assert.equal(outAgain.status, 200, 'signing out with no session is fine');
 });
@@ -533,6 +705,41 @@ test('route: APP_ORIGIN wins for the link and the redirect', async (t) => {
   assert.equal(link.origin, 'https://play.example');
   const clicked = await handleAuthRequest(new Request(link.toString()), env, { now: () => T0 + 1 });
   assert.equal(clicked.headers.get('location'), 'https://play.example/?signed-in=1');
+});
+
+test('route: quick-profile sets the cookie, answers the normalised address, and whoami then says claimed, not signed in', async (t) => {
+  const db = opened(t);
+  const env = { DB: db };
+  const claim = await post({ action: 'quick-profile', name: ' Pat ', email: 'PAT@example.com' }, { env, headers: { 'x-fd-principal': GUEST } });
+  assert.equal(claim.status, 200);
+  assert.deepEqual(await claim.json(), { ok: true, principalId: GUEST, email: 'pat@example.com' });
+  assert.match(cookieOf(claim), /^fd_session=[A-Za-z0-9_-]{48}; HttpOnly; Secure; SameSite=Lax; Path=\/; Max-Age=2592000$/);
+  const sessionId = sessionIdOf(claim);
+
+  const me = await post({ action: 'whoami' }, { env, headers: { cookie: `fd_session=${sessionId}` } });
+  assert.deepEqual(await me.json(), {
+    signedIn: false,
+    session: true,
+    principalId: GUEST,
+    email: 'pat@example.com',
+    claimed: { email: 'pat@example.com' },
+    providers: ['claimed-email'],
+  });
+
+  const junk = await post({ action: 'quick-profile', name: '', email: 'pat@example.com' }, { env, headers: { 'x-fd-principal': GUEST } });
+  assert.equal(junk.status, 400);
+  assert.equal((await junk.json()).code, 'invalid_request');
+  assert.equal(cookieOf(junk), null, 'a refusal sets nothing');
+
+  // A first landing can arrive before the wallet minted a guest id; the door mints one instead of
+  // refusing, and the new principal is the one behind the cookie.
+  const fresh = await post({ action: 'quick-profile', name: 'Sam', email: 'sam@example.com' }, { env });
+  assert.equal(fresh.status, 200);
+  const minted = (await fresh.json()).principalId;
+  assert.match(minted, /^p_[0-9a-f]{32}$/);
+  assert.notEqual(minted, GUEST);
+  assert.deepEqual(await sessionLookupFor(db, { now: () => T0 + 6 })(sessionIdOf(fresh)), { principalId: minted });
+  assert.equal(await count(db, 'SELECT COUNT(*) AS n FROM identities WHERE principal_id = ?', minted), 1);
 });
 
 /* ---------- housekeeping ---------- */

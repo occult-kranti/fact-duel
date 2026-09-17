@@ -1,0 +1,8 @@
+{
+  "workerName": "jaanta-hai-kya",
+  "d1": {
+    "name": "jhk-db",
+    "id": "2c74ea74-4d0f-492a-9b21-6e29393bfb4b"
+  },
+  "notes": "The live Cloudflare D1 database (APAC), with migrations 0000-0006 already applied and recorded in its d1_migrations table, so the deploy's `d1 migrations apply` is a no-op. This file exists so the deploy needs nothing but the two repository secrets CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID. A database id is a locator, not a secret: it does nothing without those. Repository variables of the same names (CF_WORKER_NAME, CF_D1_DATABASE_NAME, CF_D1_DATABASE_ID) still win over this file. See docs/deploy-cloudflare.md."
+}

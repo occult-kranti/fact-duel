@@ -81,3 +81,11 @@
   line-height: 1.5;
   color: var(--muted);
 }
+
+/* ---------- mobile gate (scripts/mobile-gate.mjs) ---------- */
+/* The "next fixture" note on the finish screen is a sentence, not a chip. */
+@media (max-width: 599px) {
+  .fd-events.fd-fx-next .fd-fx-note {
+    font-size: var(--fs-14);
+  }
+}

@@ -44,9 +44,10 @@ export function Topbar({
         }}
       >
         <JhkMark size={32} tile className="fd-brand-mark" />
-        {/* The wordmark is decorative here: the link's own label already names the product. Under
-            360px the CSS hides it and the tile alone carries the brand. Under the Hindi locale the
-            Devanagari wordmark takes its place (docs/brand.md §5). */}
+        {/* The wordmark is decorative here: the link's own label already names the product. At
+            359px and below (app/shell/shell.css) the CSS hides it and the tile alone carries the
+            brand; every width from 360px up — the 375px iPhones included — keeps it. Under the
+            Hindi locale the Devanagari wordmark takes its place (docs/brand.md §5). */}
         <JhkWordmark height={16} title="" variant={locale === 'hi' ? 'hi' : 'full'} className="fd-brand-word" />
       </a>
       <div className="fd-topbar-right">

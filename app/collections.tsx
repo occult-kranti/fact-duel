@@ -117,7 +117,7 @@ export default function Collections({
           </span>
         </div>
         <p className="fd-lede">
-          Sport, science, or your specialist subject. Choose a collection and the duel configurator follows
+          Pick a sport or your specialist subject. Choose a collection and the duel configurator follows
           you back to Play. The mini-bars show what you have already met, opened and recalled.
         </p>
         <div className="fd-toolbar">

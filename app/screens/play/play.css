@@ -5,7 +5,11 @@
 .fd-play {
   /* Height of the sticky launch bar on phones: 10px + 54px button + 6px gap + terms line +
      12px + hairline. The column reserves this plus the tab bar so the last section
-     ("Pick your subject") can always be scrolled clear of both. */
+     ("Pick your subject") can always be scrolled clear of both.
+     TWO literals, one measurement: --fd-stick-h (published on :root for the toast stack and the
+     footer, see the launch section) must always carry the same number as this. The Join view's
+     bar is taller because its terms line is a whole sentence, so BOTH are raised to 132px at the
+     end of this file under the same `:has(.fd-launch-fine)` condition. Change one, change both. */
   --fd-launch-h: 104px;
   display: flex;
   flex-direction: column;
@@ -712,7 +716,8 @@
 /* ---------- launch ---------- */
 /* Publish the sticky bar's height so global overlays (the toast stack) can clear it. Without this
    the first-visit streak toast lands on top of the primary CTA and swallows the tap. The literal
-   matches --fd-launch-h below; :root cannot read a variable scoped to .fd-play. */
+   matches --fd-launch-h at the top of this file; :root cannot read a variable scoped to .fd-play.
+   Both are raised together for the Join view at the end of the file. */
 :root:has(.fd-play .fd-launch) {
   --fd-stick-h: 104px;
 }
@@ -981,3 +986,139 @@
 /* While searching the launch button is a cancel: quiet, not the volt call to action. */
 .fd-play .fd-launch[data-rival='searching'] .fd-launch-btn { background: var(--bg-2); color: var(--text); box-shadow: none; border: 1px solid var(--line); }
 .fd-play .fd-launch[data-rival='searching'] .fd-launch-terms .fd-link { font: inherit; }
+
+/* ---------- live presence under each format card (lib/presence-client.ts) ----------
+   Text only, one line, muted. The 6 px dot is volt only while the last successful poll is under
+   15 s old (data-live='on'); otherwise it is grey, and the LINE ITSELF says so in words
+   (`presence.stale`), because a colour on an aria-hidden dot is not a signal a screen-reader or
+   colour-blind player can read. Nothing here animates: the counts are facts, not a show, and a
+   number that counted itself up would read as activity that is not happening.
+
+   RESERVED BOX. The <p> is always in the tree, empty (data-live='none') until the first answer
+   lands, and `min-height: 1.55em` holds exactly one line of it. Without that, the opponent picker
+   and the topic chips below dropped a line per card the moment the first poll answered — up to 8 s
+   after paint on a slow connection, with a thumb already moving towards a chip. The reserve sits
+   here rather than on .fd-mode-cell because the cell would have to hard-code the button's height
+   to do the same job. An empty box states nothing, which is the point: no skeleton digits.
+   One line is the right reserve for every width the app is audited at: measured in Chromium, the
+   longest English line that is not a live search ("This format: nobody in queue · 0 in game")
+   needs a 340px viewport, and scripts/mobile-gate.mjs walks this screen at 360 and 390. Under
+   ~340px it takes two lines and one line of movement is left; two lines of reserve everywhere
+   would cost every mainstream phone a permanent empty row, which is the worse trade.
+
+   On a build with no server the <p> is not rendered at all (PRESENCE_LIVE), so nothing holds space
+   for a line that can never arrive.
+
+   SIZE. --fs-12 is a readout size, but this is a sentence of 25+ characters and it sits OUTSIDE
+   the card button, so it carries no interactive-control exemption from scripts/mobile-gate.mjs:
+   14px on phones, below. line-height is 1.55, not 1.45, so Devanagari keeps the leading
+   app/locale.css gives the rest of the Hindi chrome (its matras need the room). */
+.fd-play .fd-modes-live {
+  min-width: 0;
+}
+.fd-play .fd-mode-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.fd-play .fd-mode-cell > .fd-mode {
+  flex: 1 1 auto;
+}
+.fd-play .fd-mode-presence {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  padding: 0 2px;
+  min-width: 0;
+  min-height: 1.55em;
+  font-size: var(--fs-12);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.55;
+  color: var(--muted);
+}
+/* The sentence is one flex item, so a wrapped line stays inside the cell instead of pushing the
+   dot out of it. */
+.fd-play .fd-mode-say {
+  min-width: 0;
+}
+.fd-play .fd-mode-dot {
+  flex: 0 0 auto;
+  width: 6px;
+  height: 6px;
+  border-radius: var(--r-pill);
+  background: var(--muted);
+}
+.fd-play .fd-mode-presence[data-live='on'] .fd-mode-dot {
+  background: var(--volt);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--volt) 18%, transparent);
+}
+/* Light theme: the dot keeps its 3:1 against the panel without becoming a second CTA. */
+:root[data-theme='light'] .fd-play .fd-mode-presence[data-live='on'] .fd-mode-dot {
+  background: color-mix(in oklab, var(--volt) 62%, var(--text));
+  box-shadow: none;
+}
+/* Phones: a 12px sentence is under the round's own body-text floor (scripts/mobile-gate.mjs
+   THRESHOLDS.bodyText = 14). The reserved box grows with it, because min-height is in em. */
+@media (max-width: 599px) {
+  .fd-play .fd-mode-presence {
+    font-size: var(--fs-14);
+    /* The "you included" and "not checked just now" variants wrap to two lines at 360-390px
+       (measured against the bundled Instrument Sans), so the reserve is two lines here: the block
+       never grows when a search starts or the network stalls. */
+    min-height: 3.1em;
+  }
+}
+
+/* ---------- mobile gate (scripts/mobile-gate.mjs) ---------- */
+/* iOS Safari zooms the whole page when a focused form control computes under 16px (web.dev,
+   "Help users enter the right data in forms": use at least 1rem). The field rule above sets
+   --fs-14, so the player name and the invite link zoomed the lobby on every iPhone. The condition
+   is the POINTER, not the width: an iPhone in landscape is 844-932px wide and still zooms, and a
+   `max-width` cap left the one-column phone layout (it holds to 900px) with a 14px field. */
+@media (pointer: coarse) {
+  .fd-play .fd-field input,
+  .fd-play .fd-field [data-slot='select-trigger'] {
+    font-size: 16px;
+  }
+}
+/* Fine print at 12px is the bot's honesty line, the entry terms and the live-round warning — the
+   three sentences on this screen a player most needs to read. 14px on phones. */
+@media (max-width: 599px) {
+  .fd-play .fd-field-note,
+  .fd-play .fd-fine,
+  .fd-play .fd-live-note,
+  .fd-play .fd-live-note .fd-link,
+  .fd-play .fd-rival-body > small {
+    font-size: var(--fs-14);
+  }
+}
+
+/* The launch bar's terms line is mono value chips ("Entry 0 coins", "Win: +25 XP") at 11px, which
+   is right for a readout. In the Join view the same line is one sentence — the rule that the
+   friend's room, not yours, sets format, timer and entry — and 11px is not a size to read a rule
+   at. Only the sentence grows, and --fd-stick-h grows with it so the footer and the toast stack
+   still clear a two-line bar. */
+@media (max-width: 599px) {
+  /* No line-height here, deliberately. This sentence is `launch.friendDecides`, the one string in
+     the bar that wraps to two lines in Hindi, and it sits in a <p> (launch-panel.tsx), so it
+     inherits `p { line-height: 1.65 }` from app/globals.css: 23.1px of leading at 14px, measured
+     in the browser at 360, 390 and 414 in both locales. That clears the 1.55 app/locale.css sets
+     under `lang='hi'` to keep Devanagari matras off the line above. The 1.4 this replaces gave the
+     same string 19.6px — tighter than either — and it carries marks above AND below the line. */
+  .fd-play .fd-launch-terms .fd-launch-fine {
+    font-size: var(--fs-14);
+  }
+  :root:has(.fd-play .fd-launch .fd-launch-fine) {
+    --fd-stick-h: 132px;
+  }
+  /* --fd-launch-h is the SAME measurement as --fd-stick-h above (the comment at the top of the
+     launch section says so): the column reserves it so its last section can be scrolled clear of
+     the bar. The taller Join bar has to grow both, or the last lines of the Join form — the entry
+     terms and the site-access sentence — sit behind an opaque fixed bar and a tap there fires the
+     launch button. Same condition, same literal, so the two cannot drift again. */
+  .fd-play:has(.fd-launch .fd-launch-fine) {
+    --fd-launch-h: 132px;
+  }
+}

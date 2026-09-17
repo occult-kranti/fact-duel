@@ -12,14 +12,42 @@
  */
 import { dispatch } from './server/duel-service.mjs';
 import { MemoryRoomStore } from './duel-memory-store.mjs';
+import { parseApp } from './redirect-target.mjs';
 
-/** True in this build only. The static entry reads it to render the offline notice. */
+/** True in this build only. The static entry reads it to render the preview notice. */
 export const OFFLINE_BUILD = true;
 
-export const OFFLINE_NOTICE = {
-  title: 'Offline demo',
-  body: 'No server: the whole game runs in this browser, progress is saved on this device only, and friend duels are off.',
-};
+/**
+ * The label every visitor sees first. It says what this build is — a preview with no server — and
+ * names the two things that need one, rather than calling itself a demo and leaving the player to
+ * find out which half works.
+ *
+ * Both halves of the sentence have to stay true in the build that shows it. Say "open on the live
+ * site" with no live site and no link and the player goes looking for something that is not there;
+ * so the wording is future tense until there is an address to give, and names the host when there
+ * is one. `liveUrl` is where the live game runs, validated by `parseApp` — anything that is not an
+ * absolute http(s) URL is treated as no live site at all, because a broken link is worse than none.
+ */
+export function offlineNotice(liveUrl: string | null | undefined = '') {
+  const live = parseApp(liveUrl);
+  return {
+    title: 'Preview build',
+    body: live
+      ? `This preview has no server: friend duels and finding a rival are on the live site, ${live.host}. Everything else runs in this browser, and progress is saved on this device only.`
+      : 'This preview has no server: friend duels and finding a rival will open once the live site is up. Everything else runs in this browser, and progress is saved on this device only.',
+    /** Where to send a player who wants the real thing, or null while there is no real thing. */
+    href: live ? live.href : null,
+  };
+}
+
+/**
+ * What this build actually shows. `static/main.tsx` only mounts the arena (and therefore this
+ * banner) when the hand-off target is null — no `APP_URL`, or one that does not parse, or one
+ * pointing back at this page — so by construction there is no live site to name here. The linked
+ * form above exists for the day the preview is served next to a live game, and is pinned by
+ * `tests/offline-copy.test.mjs` so the two branches cannot drift.
+ */
+export const OFFLINE_NOTICE = offlineNotice();
 
 /** The single room table of this tab. It is gone when the tab is closed — same as a room TTL. */
 const store = new MemoryRoomStore();
@@ -30,7 +58,7 @@ const ACTOR = 'this-device';
 /**
  * The same guest id the worker build sends as `x-fd-principal`, read from the same localStorage
  * key. There is no ledger behind the memory store, so it is only recorded on the room's seat;
- * the demo coins and the device wallet carry on exactly as before.
+ * the free coins and the device wallet carry on exactly as before.
  */
 const PRINCIPAL_KEY = 'fd-principal';
 function principalId(): string | null {
@@ -70,10 +98,10 @@ function offlineError(message: string): ClientError {
  * shared table to add a row to and no cohort to divide by, so this build measures nothing at all.
  */
 const MEASUREMENT_DISABLED =
-  'Anonymous retention measurement needs the shared server, so this offline build collects and reports nothing.';
+  'Anonymous retention measurement needs the shared server, so this preview collects and reports nothing.';
 
 const FRIEND_DISABLED =
-  'Friend duels need a server to pass the room between two devices, so they are off in this offline demo build. Play Lucky Guess (bot), an expedition or an event instead.';
+  'This preview has no server: friend duels and finding a rival will open once the live site is up. Play Lucky Guess (bot), an expedition or an event instead.';
 
 type Body = { action?: string; config?: { opponent?: string } } & Record<string, unknown>;
 

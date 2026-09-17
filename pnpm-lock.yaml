@@ -135,6 +135,9 @@ importers:
       fake-indexeddb:
         specifier: 6.2.4
         version: 6.2.4
+      js-yaml:
+        specifier: 4.1.1
+        version: 4.1.1
       playwright-core:
         specifier: 1.58.2
         version: 1.58.2

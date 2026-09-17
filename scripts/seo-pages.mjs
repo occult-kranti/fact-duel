@@ -3,6 +3,7 @@
  *
  *   pnpm seo:pages                      # writes public/quiz/**, served at <site>/quiz/ by build:static
  *   SITE_BASE=https://example.com pnpm seo:pages
+ *   APP_URL=https://app.example.com pnpm seo:pages   # "Play this as a duel" points at the live game
  *
  * One static, no-login HTML page per intent in lib/seo/intents.mjs, plus a hub and a sitemap. Each
  * page shows ten real questions from lib/server/bank.mjs QUESTIONS (the served bank, so a hidden
@@ -10,6 +11,11 @@
  * <details> element — visible to a crawler and to a reader with scripts off. Inline CSS only, no
  * scripts, no external requests. Run before `pnpm build:static`; the vite static config emits
  * everything under public/ except public/product, so the output lands at /quiz/... unchanged.
+ *
+ * `SITE_BASE` is where these pages live and is what every canonical, hreflang alternate and
+ * sitemap row is built from. `APP_URL` is only the destination of the "Play this as a duel"
+ * button: once the game runs on its own host the pages stay put and the button leaves. Unset, the
+ * button points at the site root, which is what it has always done.
  *
  * The output directory is generated and git-ignored. Regenerate, never hand-edit.
  */
@@ -26,6 +32,7 @@ import {
   alternatesOf,
   fallbackLine,
   pageUrl,
+  playUrl,
   selectQuestions,
   sitemapEntries,
 } from '../lib/seo/intents.mjs';
@@ -188,7 +195,7 @@ function questionItem(q, ui, lang) {
  * Render one intent page. `selection` is the result of selectQuestions; pass it in so the tests
  * and the build see the same choice.
  */
-export function renderPage(intent, selection, { base = DEFAULT_BASE } = {}) {
+export function renderPage(intent, selection, { base = DEFAULT_BASE, appUrl = '' } = {}) {
   base = normaliseBase(base);
   const ui = UI[intent.lang];
   const url = pageUrl(base, intent.slug);
@@ -202,7 +209,7 @@ export function renderPage(intent, selection, { base = DEFAULT_BASE } = {}) {
   ]
     .filter(Boolean)
     .join('\n');
-  const cta = `<a class="cta" href="${escapeHtml(base)}/">${escapeHtml(ui.play)}<small>${escapeHtml(ui.playHint)}</small></a>`;
+  const cta = `<a class="cta" href="${escapeHtml(playUrl(base, appUrl))}">${escapeHtml(ui.play)}<small>${escapeHtml(ui.playHint)}</small></a>`;
   const topicName = ui.topics?.[intent.topic] ?? intent.topic;
   return `${head({
     lang: intent.lang,
@@ -239,7 +246,7 @@ ${otherPages(intent.slug, base, ui)}
 
 /* -------------------------------------------------------------------------------------- the hub */
 
-export function renderHub({ base = DEFAULT_BASE } = {}) {
+export function renderHub({ base = DEFAULT_BASE, appUrl = '' } = {}) {
   base = normaliseBase(base);
   const ui = UI.en;
   const url = pageUrl(base, '');
@@ -266,7 +273,7 @@ export function renderHub({ base = DEFAULT_BASE } = {}) {
 <ul class="more">
 ${items}
 </ul>
-<a class="cta" href="${escapeHtml(base)}/">${escapeHtml(ui.play)}<small>${escapeHtml(ui.playHint)}</small></a>
+<a class="cta" href="${escapeHtml(playUrl(base, appUrl))}">${escapeHtml(ui.play)}<small>${escapeHtml(ui.playHint)}</small></a>
 <footer>
 <p>${escapeHtml(ui.reviewed)}</p>
 </footer>
@@ -294,23 +301,23 @@ export function renderSitemap({ base = DEFAULT_BASE } = {}) {
 /* ------------------------------------------------------------------------------------- the build */
 
 /** Every file the build writes, as `{ relativePath: contents }`, without touching the disk. */
-export function buildFiles({ base = DEFAULT_BASE, questions = QUESTIONS } = {}) {
+export function buildFiles({ base = DEFAULT_BASE, questions = QUESTIONS, appUrl = '' } = {}) {
   const files = {};
   const report = [];
   for (const intent of INTENTS) {
     const selection = selectQuestions(intent, questions);
     if (selection.questions.length !== PAGE_SIZE)
       throw new Error(`${intent.slug}: only ${selection.questions.length} eligible ${intent.topic} questions, need ${PAGE_SIZE}`);
-    files[`${intent.slug}/index.html`] = renderPage(intent, selection, { base });
+    files[`${intent.slug}/index.html`] = renderPage(intent, selection, { base, appUrl });
     report.push({ slug: intent.slug, lang: intent.lang, topic: intent.topic, matched: selection.matched, filled: selection.filled });
   }
-  files['index.html'] = renderHub({ base });
+  files['index.html'] = renderHub({ base, appUrl });
   files['sitemap.xml'] = renderSitemap({ base });
   return { files, report };
 }
 
-export function writePages({ base = DEFAULT_BASE, outDir = OUT_DIR } = {}) {
-  const { files, report } = buildFiles({ base });
+export function writePages({ base = DEFAULT_BASE, outDir = OUT_DIR, appUrl = '' } = {}) {
+  const { files, report } = buildFiles({ base, appUrl });
   fs.rmSync(outDir, { recursive: true, force: true });
   for (const [rel, contents] of Object.entries(files)) {
     const file = path.join(outDir, rel);
@@ -322,8 +329,12 @@ export function writePages({ base = DEFAULT_BASE, outDir = OUT_DIR } = {}) {
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const base = normaliseBase(process.env.SITE_BASE);
-  const { files, report } = writePages({ base });
+  // Absent or empty (an unset GitHub repo variable arrives as the empty string), the CTA keeps
+  // pointing at this site's root.
+  const appUrl = (process.env.APP_URL ?? '').trim();
+  const { files, report } = writePages({ base, appUrl });
   console.log(`Wrote ${files.length} files to ${path.relative(repoRoot, OUT_DIR)}/ for ${base}`);
+  console.log(`  play button → ${playUrl(base, appUrl)}`);
   for (const r of report)
     console.log(`  /quiz/${r.slug}/  ${r.lang}  ${r.topic}${r.filled ? `  (${r.matched} exact hits, topped up from ${r.topic})` : ''}`);
 }

@@ -8,19 +8,121 @@ Why this and not GitHub Pages: AdSense reviews a first-party domain that serves 
 and the money layer needs a server. Pages (`.github/workflows/pages.yml`) has neither. See
 [What runs where](#what-runs-where) at the end for the split, and the tradeoff after it.
 
+In a hurry: the [Ten-minute path](#ten-minute-path) is the whole live launch. The long
+[One-time setup](#one-time-setup) below it explains each piece and covers a fresh account.
+
+---
+
+## Ten-minute path
+
+Everything that can be committed already is. `deploy.config.json` at the repo root carries the
+Worker name and the live database:
+
+```json
+{ "workerName": "jaanta-hai-kya", "d1": { "name": "jhk-db", "id": "2c74ea74-4d0f-492a-9b21-6e29393bfb4b" } }
+```
+
+`jhk-db` exists in the Cloudflare account (APAC) with migrations 0000–0006 applied and recorded in
+its `d1_migrations` table, so the deploy's migration step applies nothing. Repository variables are
+no longer needed: what is left is two secrets, because only the account owner can mint them.
+
+### 1. Create the API token — about four minutes
+
+Dashboard > My Profile > API Tokens > **Create Token** > **Edit Cloudflare Workers** > Use template.
+
+Before saving, check the permission rows. The deploy needs exactly these three:
+
+| scope | permission | level | what it is for |
+| --- | --- | --- | --- |
+| Account | Workers Scripts | **Edit** | upload the Worker and its assets, `wrangler secret put` |
+| Account | D1 | **Edit** | bind the database and apply migrations |
+| Account | Account Settings | **Read** | wrangler resolves the account |
+
+`D1 · Edit` is the row to check for: add it if the template did not. Everything else the template
+adds (Workers KV Storage, Workers R2 Storage, Workers Tail, User Details, Memberships) is harmless;
+leave it. Under **Account Resources** pick the account that owns `jhk-db`.
+
+Leave **Zone Resources** alone for now. The two zone rows — `Zone · Workers Routes · Edit` and
+`Zone · Zone · Read` — are needed only for the custom domain in step 7, and the token can be edited
+later to add them.
+
+Continue to summary > Create Token > copy the value. It is shown once.
+
+### 2. Find the account id — thirty seconds
+
+Two places, same 32 hex characters:
+
+- the dashboard URL while any account page is open: `https://dash.cloudflare.com/<account-id>/…`
+- Workers & Pages > Overview, right-hand column, **Account ID**, with a copy button
+
+### 3. Add the two repository secrets — one minute
+
+GitHub repo > Settings > Secrets and variables > Actions > **New repository secret**, twice:
+
+| name | value |
+| --- | --- |
+| `CLOUDFLARE_API_TOKEN` | the token from step 1 |
+| `CLOUDFLARE_ACCOUNT_ID` | the id from step 2 |
+
+That is the whole configuration. Until both are set the deploy workflow exits green with a message
+marking which of the two is missing; it never fails red for being unconfigured.
+
+### 4. Run the deploy — about six minutes, unattended
+
+Actions > **Deploy the Worker to Cloudflare** > Run workflow > branch `main` > Run workflow.
+
+The log to read, in order: "Check the deployment is configured" says where the database id came
+from; "Prepare the deploy manifest" prints the Worker name, the database and the assets it will
+skip; "Apply D1 migrations" reports nothing to apply; "Deploy the Worker" prints the URL.
+
+### 5. The URL
+
+```
+https://jaanta-hai-kya.<your-subdomain>.workers.dev
+```
+
+`<your-subdomain>` is the account's workers.dev subdomain — Workers & Pages > Overview shows it,
+and the deploy step prints the full URL. Open it and play one duel end to end.
+
+### 6. Point the Pages build at it
+
+GitHub repo > Settings > Secrets and variables > Actions > **Variables** > New repository variable:
+
+| name | value |
+| --- | --- |
+| `APP_URL` | the URL from step 5 |
+
+Then re-run the Pages workflow. The static build stops calling itself a demo and hands players over
+to the live game; the quiz pages' "Play this as a duel" links point at the Worker.
+
+### 7. Later: the domain
+
+Buy `jaantahaikya.com` at Cloudflare Registrar (about $10 a year) — bought there, the zone is active
+immediately and the nameserver step disappears. Then set the repository variable `CF_CUSTOM_DOMAIN`
+to the hostname and re-run the deploy; wrangler creates the DNS record and the certificate. The
+detail, including the nameserver route for a domain bought elsewhere, is in
+[step 4 of the one-time setup](#4-point-the-domain-at-cloudflare). AdSense wants that first-party
+domain, so this is the step before applying, not after.
+
 ---
 
 ## What runs where
 
+The Pages column has two states, and the repository variable `APP_URL` is the switch. Unset, Pages
+builds the **preview**: the whole game in the browser under a banner saying there is no server here.
+Set (step 6 of the Ten-minute path), Pages builds the **hand-off card** instead — one sentence, one
+link to the Worker, and the arena is not even downloaded. The rows below say which state each fact
+belongs to.
+
 | | GitHub Pages (`pages.yml`, `pnpm build:static`) | Cloudflare Worker (`deploy-worker.yml`, `pnpm build`) |
 | --- | --- | --- |
 | Server | none, fully static | Worker + D1 (`DB` binding) |
-| Wallet | device wallet, in the browser | server wallet: `/api/wallet`, ledger in D1 |
-| Duels | bot duels in-process | bot duels, two-device friend duels, matchmaking (`/api/duel`) |
+| Wallet | preview: a device wallet in the browser. Once `APP_URL` is set: nothing, the hand-off card | server wallet: `/api/wallet`, ledger in D1 |
+| Duels | preview: bot duels in-process. Once `APP_URL` is set: nothing, the hand-off card | bot duels, two-device friend duels, matchmaking (`/api/duel`) |
 | Accounts | none | `/api/auth` — guest promotion, magic link, Google |
 | Ledger, holds, settlement | none | `ledger_*` tables, settlement in the ending request |
 | Ops door and sweep | none | `/api/ops` behind `OPS_TOKEN`, driven by `sweep.yml` |
-| Quiz SEO pages (`/quiz/*`) | yes (`pnpm seo:pages`) | yes, same static assets |
+| Quiz SEO pages (`/quiz/*`) | yes (`pnpm seo:pages`); with `APP_URL` set, "Play this as a duel" points at the Worker | yes, same static assets |
 | Investor deck (`/deck/`) | yes | no |
 | Domain | `<owner>.github.io/fact-duel/` | the founder's own domain, or `<name>.workers.dev` |
 
@@ -33,32 +135,43 @@ and the money layer needs a server. Pages (`.github/workflows/pages.yml`) has ne
 `vite.config.ts` from `.openai/hosting.json`. That manifest is right about the code and blank
 about the account: Worker name = package name, D1 = a placeholder id, no route.
 
-`pnpm deploy:prepare` (`scripts/deploy-prepare.mjs`) fills the blanks from the environment and
-writes `dist/server/wrangler.deploy.json` beside it. The generated file is never edited. It also
+`pnpm deploy:prepare` (`scripts/deploy-prepare.mjs`) fills the blanks from `deploy.config.json` and
+the environment — the environment wins, the file fills the gaps — and writes
+`dist/server/wrangler.deploy.json` beside it. The generated file is never edited. It also
 writes `dist/client/.assetsignore` with `product/` in it: the Worker build copies all of
 `public/` into the assets, and `public/product/` is internal documentation — including the
 compliance checklist that `pages.yml` refuses to publish, for the reasons in its header. The
 workflow dry-runs the upload and fails if that file would go out.
 
-| env | required | meaning |
-| --- | --- | --- |
-| `CF_D1_DATABASE_ID` | yes | the uuid from step 1 below |
-| `CF_D1_DATABASE_NAME` | no (default `jhk-db`) | the database's name, as created |
-| `CF_WORKER_NAME` | no (default `jaanta-hai-kya`) | the Worker's name in the dashboard |
-| `CF_CUSTOM_DOMAIN` | no | e.g. `play.example.com`; emits a `custom_domain` route |
+| env | file field | required | meaning |
+| --- | --- | --- | --- |
+| `CF_D1_DATABASE_ID` | `d1.id` | yes, from one of the two | the uuid from step 1 below |
+| `CF_D1_DATABASE_NAME` | `d1.name` | no (default `jhk-db`) | the database's name, as created |
+| `CF_WORKER_NAME` | `workerName` | no (default `jaanta-hai-kya`) | the Worker's name in the dashboard |
+| `CF_CUSTOM_DOMAIN` | — | no | e.g. `play.example.com`; emits a `custom_domain` route |
 
-`pnpm db:migrate:remote` applies `drizzle/*.sql` (0000–0005 today) to the live database through
-that deploy config. wrangler keeps a `d1_migrations` table so re-running applies nothing twice.
+Nothing in `deploy.config.json` is secret: a database id is a locator and does nothing without
+`CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`, which are repository secrets and never written
+to a file. A repository variable of the same name still overrides the file, so a staging deploy
+needs no edit to the tree. Deploying the local placeholder id is refused outright.
+
+`pnpm db:migrate:remote` applies `drizzle/*.sql` (0000–0006 today, all already applied to `jhk-db`)
+to the live database through that deploy config. wrangler keeps a `d1_migrations` table so
+re-running applies nothing twice.
 
 The workflow `.github/workflows/deploy-worker.yml` runs all of the above on every push to `main`
-that touches app, lib, db, drizzle, scripts or the package files, and on demand from the Actions
-tab. Until it is configured it exits green with a "not configured" message, exactly like the sweep.
+that touches app, lib, db, drizzle, scripts, `deploy.config.json` or the package files, and on
+demand from the Actions tab. Until the two secrets are set it exits green with a "not configured"
+message naming them, exactly like the sweep.
 
 ---
 
 ## One-time setup
 
 ### 1. Create the D1 database
+
+Already done for this repo: `jhk-db`, id `2c74ea74-4d0f-492a-9b21-6e29393bfb4b`, APAC, in
+`deploy.config.json`. Skip to step 2 unless you are standing up a second account or a staging copy.
 
 Either in the dashboard (Storage & Databases > D1 > Create) or locally, logged in as the account:
 
@@ -67,7 +180,9 @@ npx wrangler login
 npx wrangler d1 create jhk-db
 ```
 
-Copy the `database_id` it prints. If you pick another name, that name is `CF_D1_DATABASE_NAME`.
+Copy the `database_id` it prints into `deploy.config.json` (`d1.id`), or set it as the repository
+variable `CF_D1_DATABASE_ID`. If you pick another name, that name is `d1.name` /
+`CF_D1_DATABASE_NAME`.
 
 ### 2. Create the API token
 
@@ -93,14 +208,15 @@ Secrets:
 | `CLOUDFLARE_API_TOKEN` | the token from step 2 |
 | `CLOUDFLARE_ACCOUNT_ID` | the account id |
 
-Variables:
+Variables — all optional, each one overriding `deploy.config.json`:
 
 | name | value |
 | --- | --- |
-| `CF_D1_DATABASE_ID` | the uuid from step 1 |
+| `CF_D1_DATABASE_ID` | only to point at a database other than the file's |
 | `CF_D1_DATABASE_NAME` | only if not `jhk-db` |
 | `CF_WORKER_NAME` | only if not `jaanta-hai-kya` |
 | `CF_CUSTOM_DOMAIN` | leave unset for the first deploy; set in step 4 |
+| `APP_URL` | the Worker's URL, read by the Pages build so the static site hands players over |
 
 ### 4. Point the domain at Cloudflare
 
@@ -138,15 +254,17 @@ the repository secret `OPS_TOKEN` that `sweep.yml` reads, and `OPS_URL` becomes
 ### 6. First deploy
 
 Actions > "Deploy the Worker to Cloudflare" > Run workflow. Read the log: the "Prepare the deploy
-manifest" step prints the Worker name, database and domain it resolved; "Apply D1 migrations"
-lists 0000–0005 as applied; "Deploy the Worker" prints the URL.
+manifest" step prints the Worker name, database and domain it resolved, and which of those came
+from `deploy.config.json`; "Apply D1 migrations" reports 0000–0006 already applied, so nothing
+runs; "Deploy the Worker" prints the URL.
 
-Locally, the same thing is:
+Locally, the same thing is (the database id comes from `deploy.config.json`; set
+`CF_D1_DATABASE_ID` only to override it):
 
 ```
 SITE_BASE=https://play.example.com pnpm seo:pages   # canonical URLs on your domain
 pnpm build
-CF_D1_DATABASE_ID=<uuid> CF_CUSTOM_DOMAIN=play.example.com pnpm deploy:prepare
+CF_CUSTOM_DOMAIN=play.example.com pnpm deploy:prepare
 pnpm db:migrate:remote
 WRANGLER_LOG=debug npx wrangler deploy --dry-run --config dist/server/wrangler.deploy.json \
   | grep -x 'Ignoring asset: product/compliance/checklist.site.html'   # must print one line
@@ -174,15 +292,22 @@ Then open the game, play a bot duel, watch an ad card, and check the D1 console 
 
 ## Pages: keep it or retire it
 
-Both deployments serve the same game. Keeping Pages means two copies of the quiz SEO pages on two
-hosts, and AdSense (and search engines) want the first-party domain to be *the* site. Two honest
-options:
+The switch is the repository variable `APP_URL`, not a code change, and it decides whether there
+are two playable copies of the game or one. Keeping a second playable copy means two sets of the
+quiz SEO pages on two hosts, and AdSense (and search engines) want the first-party domain to be
+*the* site. Two honest options:
 
-1. **Retire Pages for the game.** Keep `pages.yml` for the deck only, or stop it. The domain is the
-   single canonical home. Simplest and what AdSense expects.
-2. **Keep Pages as an offline mirror.** Fine for demos, but add a `<link rel="canonical">` pointing
-   at the domain on every static page so the mirror never outranks the real site, and do not put
-   ads on the mirror.
+1. **Hand Pages over to the Worker — set `APP_URL`.** This is step 6 of the Ten-minute path and the
+   default this repo is built for. Pages keeps serving the quiz pages and the deck, but the game
+   itself becomes a card that links to the domain: one canonical home, which is what AdSense
+   expects. `pages.yml` can then be kept for the deck and the quiz pages, or stopped entirely.
+2. **Keep a playable mirror — leave `APP_URL` unset.** The preview build stays a full in-browser
+   game with its device wallet and bot duels, useful for demos on a laptop with no network. If you
+   do this, add a `<link rel="canonical">` pointing at the domain on every static page so the
+   mirror never outranks the real site, and do not put ads on the mirror.
+
+There is no third state: as long as `APP_URL` is set, `<owner>.github.io/fact-duel/` is the
+hand-off card and nothing else — do not send anyone there expecting a demo.
 
 Do not run ads on both. The AdSense review looks at the domain in the application, and the copy
 that carries the ledger is the one that should carry the ads.
@@ -196,7 +321,8 @@ that carries the ledger is the one that should carry the ads.
 - **Migrations run before code.** Every migration is additive, so old code keeps working against
   the new schema while the upload finishes. Keep it that way: never drop a column in the same
   deploy that stops writing it.
-- **Do not change `CF_D1_DATABASE_ID` casually.** Pointing the Worker at a different database is
+- **Do not change the database id casually** — in `deploy.config.json` or as
+  `CF_D1_DATABASE_ID`. Pointing the Worker at a different database is
   a fresh ledger with a zero balance for everyone. See the Time Travel warning in
   `docs/money-runbook.md` before restoring anything.
 - **Secrets survive deploys.** `wrangler deploy` never clears a secret; only `wrangler secret
