@@ -102,3 +102,58 @@ the first tap. One primary action on the home screen and zero nag surfaces.
 The lane flags, correctly, that coin-gated practice **can read as an energy wall**. The economy
 already answers this: the floor, the daily grant, and `affordability()` saying exactly how many
 ads away each thing is, so the ad is a priced choice on the screen and never a toll mid-flow.
+
+## AdSense maximisation addendum — 17 September 2026
+
+Source: `lane-adsense.json` (40 findings, every number carrying a source and a confidence; disagreements
+recorded, not averaged). Five decisions, in the order they bite.
+
+**1. Two surfaces, two stacks.** The static question/answer pages and share-your-score pages are
+ordinary content pages: Auto ads (in-page load capped at 3), one manual unit right after the answer,
+a bottom anchor on mobile, and a vignette on link-click only, with "additional triggers" OFF. The app
+shell (lobby, duel, receipt, practice) never loads the Auto ads script; it carries only the H5 Games
+Ads `reward` placement and at most one display unit under a content-bearing receipt. Reason: since
+9 Feb 2026 vignettes fire on the browser back button and on "30 seconds of inactivity followed by
+user interaction" — a quiz player's exact behaviour — and an anchor on a non-scrolling screen sits
+over the answer controls; both are the H5 placement violations Google names verbatim ("interfere
+with user navigation", "interrupt the user during periods of continuous game play").
+
+**2. The receipt is content or it carries nothing.** Google's Inventory-value policy bans ads on
+screens "used for alerts, navigation or other behavioral purposes" and on screens "without
+publisher-content". The ad card below the duel receipt (commit 1960cd3) stays only while the receipt
+above it shows the score, both answer times, the answer review, the rating change and the fairness
+receipt, with "next duel" above the ad. No ad on loading, error, login, coin-empty or bare win/loss
+transitions. Same rule for share pages: scoreboard plus question list, varied per set, noindex if thin.
+
+**3. Apply with the content site, not the app.** AdSense review takes "a few days … in some cases
+2-4 weeks"; "low value content" is the standard refusal for templated pages. Order: first-party
+domain → About/Contact/Privacy live → question pages substantive (explanation, source, stats) and
+indexed → AdSense application → only then the H5 Games Ads form ("approval is not guaranteed").
+Cloudflare before applying: WAF rule that skips bot protection for `Mediapartners-Google`,
+`Google-Display-Ads-Bot`, `AdsBot-Google`; `/ads.txt` at the root of the static assets; sellers.json
+set to Transparent (confidential "might impact your revenue").
+
+**4. Reward copy is a lint rule.** Rewarded inventory is the one explicit exception to "encouraging
+clicks", and its own policy allows text "other than to describe the reward(s) offered" nowhere:
+"Watch a short ad to earn 50 coins" is the whole permitted vocabulary. Out, in source strings:
+"support us", "keep the game free", "help the developer", "click", arrows or hands at the ad,
+countdowns on the opt-in. Equal-weight "No thanks". Display units labelled "Advertisement" only.
+Rewards are gated in the reward layer, not the ad layer: per-account daily caps, device velocity,
+no reward for datacentre/VPN ASNs — because India's "earn" ecosystems (paid-to-click, link
+shorteners) will share an "earn coins" game, and farmed opt-in views read to Google as
+"third-party services that generate clicks or impressions". Test only with `data-adbreak-test`.
+
+**5. Plan India on published web numbers, not app benchmarks.** Web rewarded is $1-4 gross in
+India on both vendor datasets that publish it (Playgama $1-3, AppLixir $1-4; they disagree 2x on
+the US, $15-28 vs $6-15); entertainment display RPM is Rs 40-165; 48% of Indian consumers say
+they block ads; FatChilli's EU rewarded-web fill is "up to 30%", so the reward card must hide when
+`beforeReward` is not called. Demand peaks are IPL (April-May) and the September-November
+festive window; the rummy/fantasy advertiser pool left Google Ads India on 21 Jan 2026 and is
+not in any forecast. Payments: USD wire from Google Asia Pacific (Singapore), $100 threshold,
+21st-26th, no Indian TDS, GST zero-rated only with an LUT; US withholding is disputed between
+sources (15% vs 0%) and needs a CA's answer before the first payment.
+
+Not decided here, flagged: Sporcle earns ~90% from ads and sells a $4/month ad-free tier as the
+second line; Ezoic closed to sites under 250,000 monthly users on 19 Feb 2026; Raptive needs 25k
+pageviews with 50% tier-1 traffic; Mediavine Journey (1,000 sessions, 70%) is the only managed
+option that an India-heavy site could reach early, and only for the content pages.
