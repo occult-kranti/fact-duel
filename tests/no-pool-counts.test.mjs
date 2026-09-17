@@ -36,11 +36,6 @@ const ALLOW = [
   { file: 'app/journal.tsx', text: '${dueIds.length} card', why: 'the player’s own entries due for review today' },
   { file: 'app/journal.tsx', text: 'Review {dueEntries.length} card', why: 'the player’s own entries due for review today' },
   { file: 'app/screens/expeditions/clubhouse.tsx', text: '1 question', why: 'rounds in the Quick Draw mode about to be played' },
-  {
-    file: 'app/screens/play-screen.tsx',
-    text: '${pool.length} questions in this selection',
-    why: 'PENDING: a pool size. The patch that removes it is in scratchpad/requests/counts.md; delete this entry once applied',
-  },
   { file: 'app/screens/expeditions/brief.tsx', text: '6 cards', why: 'run length of the expedition about to be played' },
   { file: 'app/screens/expeditions/clubhouse.tsx', text: '5 questions', why: 'rounds in the Gauntlet mode about to be played' },
   { file: 'app/screens/expeditions/clubhouse.tsx', text: '6 questions', why: 'run length of an expedition' },
