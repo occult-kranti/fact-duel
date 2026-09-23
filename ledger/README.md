@@ -41,9 +41,9 @@ python3 -m http.server 8000   # then open http://localhost:8000/
 
 Wallet starts at 1,000 coins; daily grant +30 (once per day on load). Stakes
 [10…500] exist **only for pass-and-play**; the Wire Bot always plays free.
-Desk fee = feeBps {10:0, 25:0, 50:1000, 100:1000, 250:1000, 500:1500} of the
-prize; prize = 2×stake − fee; draw or cancel refunds in full. No purchase, no
-ads, nothing to win: *"Simulated coins. No money, no prizes."*
+Winner collects the combined pot flat: pot = 2×stake, no deduction; draw or
+cancel refunds in full. No purchase, no
+ads, nothing to win: *"Simulated coins. No money involved, nothing to buy."*
 
 ## Awareness & titles
 
@@ -65,7 +65,7 @@ rows (glyph + text, never colour alone).
 
 ## Content sourcing rules
 
-90 questions (45 politics + 45 finance), each sourced to an official/public
+95 questions (48 politics + 47 finance), each sourced to an official/public
 record (CAG, Supreme Court, ECI, RBI, SEBI, PIB, PRS, budget documents) with a
 URL and a two-line note. Audit and court items are framed as instruments and
 holdings, never allegations against individuals; mutable facts carry an
