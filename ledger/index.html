@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LEDGER — The Politics &amp; Money Desk · Who follows the news best?</title>
+<meta name="description" content="LEDGER (लेजर) — The Politics & Money Desk. Fact duels on the documented Indian record: politics 2000–2026 and money literacy. Every answer shows its source. Simulated coins only — no money, no prizes, no ads.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Rozha+One&family=Noto+Serif+Devanagari:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23141210'/%3E%3Ctext x='16' y='23' font-family='serif' font-size='20' fill='%23F3ECDD' text-anchor='middle'%3EL%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+  <a class="skip-link" href="#screen">Skip to the edition</a>
+  <div id="grain" aria-hidden="true"></div>
+
+  <header id="topbar">
+    <button id="brand" class="brand" type="button" aria-label="Ledger — today's edition">
+      <span class="brand-latin">LEDGER</span><span class="brand-deva" lang="hi">लेजर</span>
+    </button>
+    <nav id="topnav" aria-label="Desk">
+      <button type="button" data-nav="home"      class="nav-btn" data-i18n="navEdition">Edition</button>
+      <button type="button" data-nav="modes"     class="nav-btn" data-i18n="navDuels">Duels</button>
+      <button type="button" data-nav="league"    class="nav-btn" data-i18n="navLeague">League</button>
+      <button type="button" data-nav="beats"     class="nav-btn" data-i18n="navBeats">Beats</button>
+      <button type="button" data-nav="clippings" class="nav-btn" data-i18n="navClips">Clippings</button>
+      <button type="button" data-nav="card"      class="nav-btn" data-i18n="navCard">Press Card</button>
+      <button type="button" id="wallet-chip" class="wallet-chip" aria-label="Coin balance">
+        <span class="wc-label" data-i18n="coins">Coins</span><span class="wc-num" id="wallet-num">1,000</span>
+      </button>
+      <button type="button" id="lang-toggle" class="nav-btn nav-lang" aria-label="Switch language">EN / हिं</button>
+    </nav>
+  </header>
+
+  <div id="tickerbar" role="status" aria-label="Awareness ticker">
+    <span class="ticker-tag">LEDGER WIRE</span>
+    <div class="ticker-window"><span class="ticker-inner" id="ticker-inner"></span></div>
+  </div>
+
+  <main id="stage">
+    <div id="screen" role="main"></div>
+  </main>
+
+  <footer id="colophon">
+    <span data-i18n="colophonLine">Simulated coins. No money, no prizes. Every answer shows its source.</span>
+    <span class="colophon-mono">LEDGER · THE POLITICS &amp; MONEY DESK</span>
+  </footer>
+
+  <!-- Print-only Press Card -->
+  <div id="certificate" aria-hidden="true">
+    <div class="cert-frame">
+      <div class="cert-band">
+        <span class="cert-wordmark">LEDGER</span>
+        <span class="cert-mono">THE POLITICS &amp; MONEY DESK · PRESS CARD</span>
+      </div>
+      <p class="cert-label">Press Card — Reader of Record</p>
+      <h1 class="cert-title">Who follows the news best?</h1>
+      <p class="cert-line">This card is issued to</p>
+      <p class="cert-name" id="cert-name">Reader</p>
+      <p class="cert-line" id="cert-body"></p>
+      <p class="cert-line" id="cert-detail"></p>
+      <div class="cert-foot">
+        <div class="cert-meta">
+          <span id="cert-date"></span>
+          <span id="cert-acc"></span>
+        </div>
+        <div class="cert-stamp" id="cert-stamp">LATE EDITION</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="live" class="visually-hidden" aria-live="polite"></div>
+  <script src="questions-politics.js"></script>
+  <script src="questions-finance.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
