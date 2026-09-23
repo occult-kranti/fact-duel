@@ -104,9 +104,9 @@ function addXP(n) { S.xp += n; S.weekXp += n; save(); }
 
 /* ---------------- Economy (simulated coins — free, no money) ---------------- */
 var STAKES = [0, 10, 25, 50, 100, 250, 500];
-var FEE_BPS = { 0: 0, 10: 0, 25: 0, 50: 1000, 100: 1000, 250: 1000, 500: 1500 };
+var FEE_BPS = { 0: 0, 10: 0, 25: 0, 50: 0, 100: 0, 250: 0, 500: 0 };
 function feeFor(stake) { return Math.round(2 * stake * (FEE_BPS[stake] || 0) / 10000); }
-function prizeFor(stake) { return 2 * stake - feeFor(stake); }
+function prizeFor(stake) { return 2 * stake - feeFor(stake); } /* 2×stake flat — no deduction */
 function dailyGrant() {
   var today = dayKey();
   if (S.grantDay === today) return false;
@@ -232,11 +232,12 @@ var STR = {
   en: {
     navEdition: 'Edition', navDuels: 'Duels', navLeague: 'League', navBeats: 'Beats', navClips: 'Clippings', navCard: 'Press Card',
     coins: 'Coins',
-    colophonLine: 'Simulated coins. No money, no prizes. Every answer shows its source.',
+    colophonLine: 'Simulated coins. No money involved, nothing to buy. Every answer shows its source.',
     tagline: 'Who follows the news best?',
     volLine: 'THE POLITICS & MONEY DESK · DAILY · ',
     leadStory: 'Today’s Lead', openLead: 'Open the lead',
     leadHint: 'One question, ten seconds, against the Wire Bot. The desk rotates daily.',
+    leadRelaxedHint: 'Prefer no clock? Relaxed Mode lives under Duels.',
     deskIndex: 'Desk Index', deskHint: 'Three desks. Open a beat for six untimed questions with a confidence ladder.',
     leagueSnapshot: 'League Snapshot', viewLeague: 'Full table',
     deskPolity: 'Polity Desk', deskMoney: 'Money Desk', deskSchemes: 'Schemes Desk',
@@ -247,7 +248,7 @@ var STR = {
     relaxed: 'Relaxed Mode', relaxedHint: 'No countdowns. Speed is ignored entirely. Your choice is remembered.',
     opponent: 'Across the desk', oppWire: 'The Wire Bot (the house machine)', oppTable: 'Across the Desk (two readers, one device)',
     stakeLabel: 'Stake (simulated coins)', stakeBotNote: 'The Wire Bot plays free — no stake against the house.',
-    stakeHint: 'Both readers stake equally. Winner takes 2× stake minus a desk fee; a draw refunds in full.',
+    stakeHint: 'Both readers stake equally. The winner collects the combined pot of 2× stake; a draw refunds in full.',
     begin: 'Begin', back: 'Back to the Edition',
     you: 'You', seatA: 'Seat A', seatB: 'Seat B', wireBot: 'The Wire Bot',
     lock: 'File the answer', lockHint: 'You may change your answer until you file it.',
@@ -263,7 +264,7 @@ var STR = {
     seatAPrevailed: 'Seat A prevailed', seatBPrevailed: 'Seat B prevailed',
     roundLedger: 'Round-by-round ledger', colRound: 'Round', colYou: 'You', colOpp: 'Wire Bot', colResult: 'Round to', colSource: 'Source',
     totals: 'Totals', xpEarned: 'Awareness filed (XP)',
-    coinSettleWin: 'Coin settlement: stake {s} each · prize {p} · desk fee {f} · credited.',
+    coinSettleWin: 'Coin settlement: the winner collects the combined pot of {p} coins (stake {s} each) · credited.',
     coinSettleDraw: 'Coin settlement: draw — both stakes refunded in full.',
     coinSettleFree: 'A free duel — no coins moved.',
     again: 'Duel again', toDesk: 'Return to the Edition', toModes: 'Choose another duel',
@@ -296,7 +297,7 @@ var STR = {
     sound: 'Sound', soundHint: 'A teletype tick on reveal, a press ker-chunk on filing. Off by default.',
     lang: 'Language / भाषा',
     toNext: 'awareness to',
-    coinsNote: 'Coins are simulated. No money, no prizes, nothing to buy.',
+    coinsNote: 'Coins are simulated. No money involved, nothing to buy.',
     scoringTitle: 'The scoring table',
     scoringBody: 'Correct answer 20 · trying 5 · duel won 50 · draw 25 · beat filed 40 · review 6. Speed adds at most 10 marks of 100 in timed duels, and nothing in Relaxed Mode.',
     ob1Title: 'Your first question',
@@ -324,7 +325,7 @@ var STR = {
   hi: {
     navEdition: 'संस्करण', navDuels: 'द्वंद्व', navLeague: 'लीग', navBeats: 'बीट', navClips: 'कतरनें', navCard: 'प्रेस कार्ड',
     coins: 'सिक्के',
-    colophonLine: 'काल्पनिक सिक्के। न पैसा, न इनाम। हर उत्तर अपना स्रोत दिखाता है।',
+    colophonLine: 'काल्पनिक सिक्के। पैसे का कोई मामला नहीं, कुछ खरीदने को नहीं। हर उत्तर अपना स्रोत दिखाता है।',
     tagline: 'सबसे बेहतर ख़बर कौन जानता है?',
     volLine: 'राजनीति और धन डेस्क · दैनिक · ',
     leadStory: 'आज की लीड', openLead: 'लीड खोलिए',
@@ -337,9 +338,10 @@ var STR = {
     deskSchemesDesc: 'सरकारी योजनाएँ और नीति-समयरेखा।',
     modesTitle: 'द्वंद्व चुनिए', modesSub: 'तथ्य-द्वंद्व के तीन रूप। समय-सीमा एक बारिक रेखा है, पिंजरा नहीं।',
     relaxed: 'आराम मोड', relaxedHint: 'कोई उल्टी गिनती नहीं। गति की पूरी अनदेखी। आपकी पसंद याद रखी जाती है।',
+    leadRelaxedHint: 'घड़ी नहीं चाहिए? आराम मोड "द्वंद्व" में मिलेगा।',
     opponent: 'डेस्क के उस पार', oppWire: 'वायर बॉट (गृह-यंत्र)', oppTable: 'डेस्क के उस पार (दो पाठक, एक यंत्र)',
     stakeLabel: 'दाँव (काल्पनिक सिक्के)', stakeBotNote: 'वायर बॉट मुफ़्त खेलता है — घर के विरुद्ध कोई दाँव नहीं।',
-    stakeHint: 'दोनों पाठक बराबर लगाते हैं। विजेता लेता है दोगुना दाँव घटा डेस्क शुल्क; बराबरी पर पूरी वापसी।',
+    stakeHint: 'दोनों पाठक बराबर दाँव लगाते हैं। विजेता दोगुने दाँव का संयुक्त पोट लेता है; बराबरी पर पूरी वापसी।',
     begin: 'शुरू करें', back: 'संस्करण पर लौटें',
     you: 'आप', seatA: 'पहली सीट', seatB: 'दूसरी सीट', wireBot: 'वायर बॉट',
     lock: 'उत्तर फ़ाइल करें', lockHint: 'फ़ाइल करने तक आप उत्तर बदल सकते हैं।',
@@ -355,7 +357,7 @@ var STR = {
     seatAPrevailed: 'पहली सीट विजयी रही', seatBPrevailed: 'दूसरी सीट विजयी रही',
     roundLedger: 'चरण-दर-चरण बही', colRound: 'चरण', colYou: 'आप', colOpp: 'वायर बॉट', colResult: 'चरण किसे', colSource: 'स्रोत',
     totals: 'योग', xpEarned: 'दर्ज जागरूकता (XP)',
-    coinSettleWin: 'सिक्का निपटान: दाँव {s} प्रत्येक · पुरस्कार {p} · डेस्क शुल्क {f} · जमा किया गया।',
+    coinSettleWin: 'सिक्का निपटान: विजेता {p} सिक्कों का संयुक्त पोट लेता है (दाँव {s} प्रत्येक) · जमा किया गया।',
     coinSettleDraw: 'सिक्का निपटान: बराबर — दोनों दाँव पूरे लौटाए गए।',
     coinSettleFree: 'मुफ़्त द्वंद्व — कोई सिक्का नहीं चला।',
     again: 'फिर द्वंद्व', toDesk: 'संस्करण पर लौटें', toModes: 'दूसरा द्वंद्व चुनिए',
@@ -388,7 +390,7 @@ var STR = {
     sound: 'ध्वनि', soundHint: 'प्रकटन पर टेलीटाइप टिक और फ़ाइलिंग पर प्रेस की थाप। डिफ़ॉल्ट रूप से बंद।',
     lang: 'Language / भाषा',
     toNext: 'जागरूकता शेष',
-    coinsNote: 'सिक्के काल्पनिक हैं। न पैसा, न इनाम, न कुछ खरीदने को।',
+    coinsNote: 'सिक्के काल्पनिक हैं। पैसे का कोई मामला नहीं, कुछ खरीदने को नहीं।',
     scoringTitle: 'अंक-तालिका',
     scoringBody: 'सही उत्तर 20 · प्रयास 5 · द्वंद्व विजय 50 · बराबर 25 · बीट पूर्ण 40 · समीक्षा 6। समयबद्ध द्वंद्व में गति अधिकतम 100 में से 10 अंक देती है; आराम मोड में कुछ नहीं।',
     ob1Title: 'आपका पहला प्रश्न',
@@ -765,6 +767,7 @@ ROUTES.home = function (root) {
     startDuel({ mode: 'single', opponent: 'wire', pool: [todayQ], stake: 0 });
   });
   card.appendChild(enter);
+  card.appendChild(el('p', 'small muted', t('leadRelaxedHint')));
   grid.appendChild(card);
 
   /* League snapshot: top 5 + the player's row */
@@ -878,7 +881,7 @@ ROUTES.modes = function (root) {
       : (modeChoice.stake > 0
           ? t('stakeHint') + ' ' + t('coins') + ': ' + fmt(S.coins) + ' · ' +
             (t('coinSettleWin').replace('{s}', fmt(modeChoice.stake))
-              .replace('{p}', fmt(prizeFor(modeChoice.stake))).replace('{f}', fmt(feeFor(modeChoice.stake))))
+              .replace('{p}', fmt(prizeFor(modeChoice.stake))))
           : t('stakeHint'));
   }
   drawStakes();
@@ -1344,7 +1347,7 @@ function finishDuel() {
   /* coin settlement (pass-and-play stakes only) */
   if (D.stake > 0) {
     if (outcome === 'draw') S.coins += 2 * D.stake;              /* draw: full refund */
-    else S.coins += prizeFor(D.stake);                           /* winner: 2×stake − fee */
+    else S.coins += prizeFor(D.stake);                           /* winner: 2×stake flat */
   }
 
   /* weekly record (account holder) + league movement */
@@ -1396,7 +1399,7 @@ ROUTES.results = function (root) {
     D.stake > 0
       ? (D.outcome === 'draw'
           ? t('coinSettleDraw')
-          : t('coinSettleWin').replace('{s}', fmt(D.stake)).replace('{p}', fmt(prizeFor(D.stake))).replace('{f}', fmt(feeFor(D.stake))))
+          : t('coinSettleWin').replace('{s}', fmt(D.stake)).replace('{p}', fmt(prizeFor(D.stake))))
       : t('coinSettleFree'));
   sheet.appendChild(coinLine);
 
