@@ -65,7 +65,7 @@ rows (glyph + text, never colour alone).
 
 ## Content sourcing rules
 
-95 questions (48 politics + 47 finance), each sourced to an official/public
+90 questions (45 politics + 45 finance), each sourced to an official/public
 record (CAG, Supreme Court, ECI, RBI, SEBI, PIB, PRS, budget documents) with a
 URL and a two-line note. Audit and court items are framed as instruments and
 holdings, never allegations against individuals; mutable facts carry an
