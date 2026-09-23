@@ -3,7 +3,7 @@
 // Framing rule: "the CAG report estimated...", "the Supreme Court held..." — no allegation of individual guilt.
 window.LEDGER_POLITICS = [
 
-// ============ SECTION 1: The Record: Audits & Courts (12) ============
+// ============ SECTION 1: The Record: Audits & Courts (15) ============
 { id:'pl001', era:'The Record: Audits & Courts', difficulty:3,
   q:"What presumptive-loss figure did the CAG's performance audit of the issue of 2G telecom licences and spectrum (Report No. 19 of 2010-11) place at the upper end of its estimate for revenue forgone?",
   options:["₹22,000 crore","₹58,000 crore","₹1.76 lakh crore","₹10.67 lakh crore"], answerIndex:2,
@@ -201,7 +201,7 @@ window.LEDGER_POLITICS = [
   options:["65.79%","67.40%","69.16%","63.05%"], answerIndex:0,
   source:"Election Commission of India — press note on voter turnout, 6 June 2024",
   sourceUrl:"https://www.eci.gov.in",
-  note:"The ECI put polling-station turnout at 65.79% (male 68.80%, female 65.78%) and said over 642 million electors voted. Detailed statistical reports including postal ballots follow on the ECI website." },
+  note:"The ECI put polling-station turnout at 65.79% (male 68.80%, female 65.78%) and said over 64.2 crore electors voted. Detailed statistical reports including postal ballots follow on the ECI website." },
 { id:'pl033', era:'Elections & Institutions', difficulty:2,
   q:"The 'None of the Above' (NOTA) button on EVMs and ballot papers followed which Supreme Court judgment of 27 September 2013?",
   options:["ADR v. Union of India","Lily Thomas v. Union of India","People's Union for Civil Liberties v. Union of India","Subramanian Swamy v. Election Commission of India"], answerIndex:2,
@@ -241,7 +241,7 @@ window.LEDGER_POLITICS = [
   sourceUrl:"https://nrega.nic.in",
   note:"NREGA was notified in the Gazette on 7 September 2005 and took effect in 200 districts on 2 February 2006, extending in phases until nationwide rural coverage from 1 April 2008. It guarantees up to 100 days of wage employment per rural household per year." },
 { id:'pl039', era:'Schemes & Policy Timeline (politics of)', difficulty:1,
-  q:"The Right to Information Act, 2005 — passed by Parliament on 15 June 2005 — came fully into force on:",
+  q:"The Right to Information Act, 2005 — which received presidential assent on 15 June 2005 — came fully into force on:",
   options:["12 October 2005","26 January 2006","15 August 2005","2 October 2005"], answerIndex:0,
   source:"Right to Information Act, 2005 (Act 22 of 2005) — text and commencement",
   sourceUrl:"https://rti.gov.in",
@@ -253,7 +253,7 @@ window.LEDGER_POLITICS = [
   sourceUrl:"https://uidai.gov.in",
   note:"The bill was introduced on 3 March 2016, certified by the Speaker as a Money Bill, and received assent on 25 March 2016 (gazetted 26 March). The Money Bill certification was later challenged in the Supreme Court; in 2018 the Court upheld the Act with certain provisions read down or struck." },
 { id:'pl041', era:'Schemes & Policy Timeline (politics of)', difficulty:1,
-  q:"The Goods and Services Tax, enabled by the Constitution (101st Amendment) Act that entered into force on 8 September 2016, was rolled out nationwide on:",
+  q:"The Goods and Services Tax, enabled by the Constitution (101st Amendment) Act that received presidential assent on 8 September 2016, was rolled out nationwide on:",
   options:["1 April 2017","1 July 2017","8 September 2016","31 March 2017"], answerIndex:1,
   source:"Constitution (101st Amendment) Act, 2016; GST Council / Central Board of Indirect Taxes and Customs records",
   sourceUrl:"https://gstcouncil.gov.in",
@@ -281,5 +281,23 @@ window.LEDGER_POLITICS = [
   options:["the 2024 general election","a census conducted after its commencement and a subsequent delimitation exercise","ratification by all state legislatures","a notification by the President alone"], answerIndex:1,
   source:"Constitution (106th Amendment) Act, 2023 — Gazette of India, 28 September 2023",
   sourceUrl:"https://legislative.gov.in",
-  note:"Passed 454-2 in the Lok Sabha (20 September 2023) and unanimously in the Rajya Sabha (21 September 2023), it inserted Articles 330A, 332A and 334A; Article 334A links operation to the first census after commencement and the ensuing delimitation. As of early 2026 the reservation is not yet operational." }
+  note:"Passed 454-2 in the Lok Sabha (20 September 2023) and unanimously in the Rajya Sabha (21 September 2023), it inserted Articles 330A, 332A and 334A; Article 334A links operation to the first census after commencement and the ensuing delimitation. As of early 2026 the reservation is not yet operational." },
+{ id:'pl046', era:'The Record: Audits & Courts', difficulty:3,
+  q:"In Vineet Narain v. Union of India, the Supreme Court's judgment of 18 December 1997 — arising from the 'hawala diaries' investigation — directed which institutional arrangement?",
+  options:["That the Central Vigilance Commission be given statutory status and supervise the CBI","That the CBI be merged into the Central Vigilance Commission","That all corruption probes be conducted only by Supreme Court benches","That the CBI be placed directly under the Cabinet Secretariat"], answerIndex:0,
+  source:"Supreme Court of India — Vineet Narain v. Union of India, (1998) 1 SCC 226",
+  sourceUrl:"https://main.sci.gov.in",
+  note:"The Court issued a continuing mandamus over the investigations, invalidated the 'single directive' requiring prior government approval to probe senior officials, and directed statutory status for the CVC with supervision of the CBI. Parliament enacted the CVC Act, 2003, giving effect to these directions." },
+{ id:'pl047', era:'The Record: Audits & Courts', difficulty:2,
+  q:"A Joint Parliamentary Committee (JPC), such as the one constituted in 1992 to examine the securities scam, is best described as:",
+  options:["A permanent committee of the Rajya Sabha for financial oversight","A judicial tribunal appointed by the Chief Justice of India","An ad hoc committee of members of both Houses of Parliament formed to examine a specific matter","A statutory commission under the Ministry of Finance"], answerIndex:2,
+  source:"Parliament of India — Joint Parliamentary Committee records (1992 securities scam inquiry)",
+  sourceUrl:"https://sansad.in",
+  note:"The 1992 JPC, chaired by Ram Niwas Mirdha, examined the securities scam associated with broker Harshad Mehta and tabled its report in December 1993. JPC findings are recommendatory; the inquiry preceded reforms that strengthened SEBI's regulatory powers." },
+{ id:'pl048', era:'The Record: Audits & Courts', difficulty:3,
+  q:"On 26 September 2018, a five-judge Constitution Bench of the Supreme Court ruled on the Aadhaar Act, 2016. What was the outcome?",
+  options:["The Act was struck down in full as unconstitutional","The Act was upheld as constitutional, with certain provisions read down or restricted","The petitions were referred to a nine-judge bench with no finding","The Act was held valid only for direct tax purposes"], answerIndex:1,
+  source:"Supreme Court of India — K.S. Puttaswamy v. Union of India (Aadhaar), (2019) 1 SCC 1",
+  sourceUrl:"https://main.sci.gov.in",
+  note:"By a 4:1 majority the Court upheld the Act, including Section 7 (subsidies) and PAN-Aadhaar linkage, while reading down Section 57 so private entities could not compel Aadhaar authentication; Justice Chandrachud dissented. The Money Bill question was later referred to a larger bench in Rojer Mathew (2019)." }
 ];
