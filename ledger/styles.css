@@ -101,7 +101,7 @@ button { font-family: inherit; }
   padding: 0 16px; min-height: 48px; align-self: center; margin-left: auto;
 }
 .wallet-chip:hover { background: var(--ink); }
-.wc-label { text-transform: uppercase; opacity: 0.7; font-size: 12px; }
+.wc-label { text-transform: uppercase; opacity: 0.7; font-size: 14px; }
 .wc-num { font-weight: 600; }
 
 /* ---------------- Awareness ticker ---------------- */
@@ -113,7 +113,7 @@ button { font-family: inherit; }
   min-height: 40px;
 }
 .ticker-tag {
-  font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
+  font-family: var(--mono); font-size: 14px; letter-spacing: 0.14em; text-transform: uppercase;
   background: var(--red); color: var(--desk-cream);
   display: flex; align-items: center; padding: 0 12px; flex: none;
 }
@@ -178,13 +178,13 @@ button { font-family: inherit; }
 
 /* ---------------- Toggle switch ---------------- */
 .toggle {
-  width: 64px; height: 36px; flex: none; align-self: center;
+  width: 64px; height: 48px; flex: none; align-self: center;
   border: 1px solid var(--ink); background: var(--newsprint);
   cursor: pointer; position: relative; padding: 0;
 }
 .toggle::after {
   content: ''; position: absolute; top: 4px; left: 4px;
-  width: 26px; height: 26px; background: var(--rule);
+  width: 26px; height: 38px; background: var(--rule);
   transition: left 200ms ease, background 200ms ease;
 }
 .toggle[aria-checked="true"]::after { left: 32px; background: var(--red); }
@@ -200,7 +200,7 @@ button { font-family: inherit; }
 html[lang="hi"] .masthead-word { font-size: clamp(52px, 10vw, 104px); }
 .masthead-deva { font-family: var(--hi-display); font-size: 26px; color: var(--red); margin: 2px 0 6px; }
 .masthead-tag { font-size: 21px; font-style: italic; color: var(--ink-soft); margin: 0 0 8px; }
-.masthead-meta { font-family: var(--mono); font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-soft); margin: 0; }
+.masthead-meta { font-family: var(--mono); font-size: 14px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-soft); margin: 0; }
 .masthead .rule-double { margin: 18px 0 0; }
 
 /* ---------------- Clipping cards ---------------- */
@@ -218,11 +218,11 @@ html[lang="hi"] .masthead-word { font-size: clamp(52px, 10vw, 104px); }
   border-bottom: 1px solid var(--rule); padding-bottom: 8px; margin-bottom: 14px;
 }
 .dateline {
-  font-family: var(--mono); font-size: 13px; letter-spacing: 0.12em;
+  font-family: var(--mono); font-size: 14px; letter-spacing: 0.12em;
   text-transform: uppercase; color: var(--ink-soft);
 }
 .desk-tag {
-  font-family: var(--mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+  font-family: var(--mono); font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase;
   border: 1px solid var(--ink); padding: 3px 8px; color: var(--ink);
 }
 .desk-tag.money { border-color: var(--up); color: var(--up); }
@@ -268,7 +268,7 @@ html[lang="hi"] .q-text, html[lang="hi"] .q-tease { font-family: var(--display);
   transform: rotate(-4deg);
   background: rgba(247, 241, 230, 0.85);
 }
-.stamp.small { font-size: 12px; padding: 3px 8px; border-width: 2px; }
+.stamp.small { font-size: 14px; padding: 3px 8px; border-width: 2px; }
 .stamp.big { font-size: 22px; padding: 10px 22px; }
 .stamp.stamped { animation: stampin 420ms ease both; }
 @keyframes stampin {
@@ -310,14 +310,14 @@ table.sheet, .record-table, .stats-ledger {
   border: 1px solid var(--rule); padding: 10px 12px; text-align: left; vertical-align: top;
 }
 .sheet th, .record-table th {
-  font-family: var(--mono); font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em;
+  font-family: var(--mono); font-size: 14px; text-transform: uppercase; letter-spacing: 0.1em;
   background: var(--paper-deep); color: var(--ink);
 }
 .sheet tbody tr:hover, .record-table tbody tr:hover { background: var(--desk-black); color: var(--desk-cream); }
 .sheet tbody tr:hover a, .record-table tbody tr:hover a { color: #F08A82; }
 .num { font-family: var(--mono); text-align: right; font-variant-numeric: tabular-nums; }
 tr.totals td { border-top: 3px double var(--ink); font-weight: 600; }
-.rt-note { font-size: 13px; color: var(--ink-soft); }
+.rt-note { font-size: 14px; color: var(--ink-soft); }
 .record-table tbody tr:hover .rt-note { color: var(--desk-cream); opacity: 0.75; }
 
 /* ---------------- League table ---------------- */
@@ -358,14 +358,14 @@ tr.totals td { border-top: 3px double var(--ink); font-weight: 600; }
 .bench-side { flex: 1; padding: 12px 16px; }
 .bench-spine { width: 1px; background: var(--ink); }
 .nameplate { font-weight: 600; font-size: 17px; display: flex; flex-direction: column; }
-.plate-sub { font-family: var(--mono); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); }
+.plate-sub { font-family: var(--mono); font-size: 14px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); }
 .figure { font-family: var(--mono); font-size: 30px; font-weight: 600; margin: 2px 0; }
 .round-ticks { display: flex; gap: 6px; margin: 4px 0; }
 .round-tick { width: 26px; height: 10px; border: 1px solid var(--ink); background: transparent; }
 .round-tick.won { background: var(--ink); }
 .round-tick.grow { animation: tickgrow 300ms ease; }
 @keyframes tickgrow { from { transform: scaleX(0.2); } to { transform: scaleX(1); } }
-.opp-mark { font-size: 13px; color: var(--ink-soft); min-height: 18px; }
+.opp-mark { font-size: 14px; color: var(--ink-soft); min-height: 18px; }
 
 /* ---------------- Shield (pass-and-play) ---------------- */
 .shield {
@@ -435,9 +435,9 @@ tr.totals td { border-top: 3px double var(--ink); font-weight: 600; }
 /* ---------------- Field rows (press card) ---------------- */
 .pass-cover { text-align: center; border-bottom: 3px double var(--ink); padding: 22px 0 18px; margin-bottom: 22px; }
 .pass-title { font-size: clamp(40px, 7vw, 72px); margin: 0; }
-.pass-no { font-family: var(--mono); font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-soft); margin: 6px 0 0; }
+.pass-no { font-family: var(--mono); font-size: 14px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-soft); margin: 6px 0 0; }
 .field-row { display: flex; gap: 14px; align-items: baseline; border-bottom: 1px solid var(--rule); padding: 12px 2px; flex-wrap: wrap; }
-.f-label { font-family: var(--mono); font-size: 13px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--ink-soft); width: 210px; flex: none; }
+.f-label { font-family: var(--mono); font-size: 14px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--ink-soft); width: 210px; flex: none; }
 .f-value { font-size: 19px; font-weight: 600; }
 .f-edit { font-size: 19px; padding: 10px 12px; border: 1px solid var(--ink); background: #FBF7EE; font-family: var(--ui); min-height: 48px; }
 .standing-bar { display: flex; gap: 3px; margin: 8px 0; }
@@ -447,7 +447,7 @@ tr.totals td { border-top: 3px double var(--ink); font-weight: 600; }
 
 /* ---------------- Onboarding ---------------- */
 .onboard { max-width: 720px; margin: 0 auto; }
-.onboard-step-no { font-family: var(--mono); font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--red); }
+.onboard-step-no { font-family: var(--mono); font-size: 14px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--red); }
 .onboard h1 { font-size: 34px; }
 
 /* ---------------- Colophon ---------------- */
@@ -458,7 +458,7 @@ tr.totals td { border-top: 3px double var(--ink); font-weight: 600; }
   padding: 18px 20px; font-size: 15px; color: var(--ink-soft);
   background: var(--paper-deep);
 }
-.colophon-mono { font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; }
+.colophon-mono { font-family: var(--mono); font-size: 14px; letter-spacing: 0.14em; text-transform: uppercase; }
 
 /* ---------------- Certificate (print only) ---------------- */
 #certificate { display: none; }
@@ -472,13 +472,13 @@ tr.totals td { border-top: 3px double var(--ink); font-weight: 600; }
 .cert-frame { border: 2px solid #17130E; padding: 48px 54px; margin: 24px; background: #fff; }
 .cert-band { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 3px double #17130E; padding-bottom: 12px; margin-bottom: 26px; }
 .cert-wordmark { font-family: var(--display); font-weight: 900; font-size: 44px; }
-.cert-mono { font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; }
+.cert-mono { font-family: var(--mono); font-size: 14px; letter-spacing: 0.14em; text-transform: uppercase; }
 .cert-label { font-family: var(--mono); font-size: 14px; letter-spacing: 0.14em; text-transform: uppercase; color: #A4272B; }
 .cert-title { font-size: 34px; }
 .cert-line { font-size: 18px; }
 .cert-name { font-family: var(--display); font-weight: 900; font-size: 44px; margin: 8px 0 14px; }
 .cert-foot { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 44px; }
-.cert-meta { font-family: var(--mono); font-size: 13px; display: flex; flex-direction: column; gap: 4px; }
+.cert-meta { font-family: var(--mono); font-size: 14px; display: flex; flex-direction: column; gap: 4px; }
 .cert-stamp {
   font-family: var(--mono); font-weight: 600; text-transform: uppercase; letter-spacing: 0.16em;
   color: #A4272B; border: 3px double #A4272B; padding: 8px 16px; font-size: 18px;
@@ -495,7 +495,7 @@ tr.totals td { border-top: 3px double var(--ink); font-weight: 600; }
   body { font-size: 18px; }
   #stage { padding: 18px 12px 70px; }
   .brand-latin { font-size: 24px; }
-  .nav-btn { padding: 12px 10px; font-size: 13px; }
+  .nav-btn { padding: 12px 10px; font-size: 14px; }
   .q-text { font-size: 22px; }
   .card { padding: 16px 14px; }
   .verdict-sheet { padding: 18px 14px 30px; }
