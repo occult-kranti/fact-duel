@@ -1,9 +1,9 @@
 // Ledger — News-awareness question bank: Indian government schemes & finance/investment
-// 45 items. Every fact checked against official records (PIB, RBI, SEBI, NPCI, scheme portals, Union Budget documents, AMFI, IRDAI).
+// 47 items. Every fact checked against official records (PIB, RBI, SEBI, NPCI, scheme portals, Union Budget documents, AMFI, IRDAI).
 // Mutable facts are date-stamped in the note field. Compiled 2024-2026 source window.
 window.LEDGER_FINANCE = [
 
-// ============ SECTION 1: GOVERNMENT SCHEMES (15) ============
+// ============ SECTION 1: GOVERNMENT SCHEMES (17) ============
 { id:'gs001', era:'Government Schemes', difficulty:2,
   q:"In which year was the Pradhan Mantri Jan Dhan Yojana (PMJDY), the national mission for financial inclusion, launched?",
   options:["2013","2014","2015","2017"], answerIndex:1,
@@ -60,7 +60,7 @@ window.LEDGER_FINANCE = [
   sourceUrl:"https://www.mudra.org.in/",
   note:"PMMY's original tiers were Shishu (up to ₹50,000), Kishore (up to ₹5 lakh) and Tarun (up to ₹10 lakh). Budget 2024-25 announced a 'Tarun Plus' tier up to ₹20 lakh, notified in October 2024 for borrowers who repaid an earlier Tarun loan." },
 
-{ id:'gs009', era:'Government Schemes', difficulty:3,
+{ id:'gs009', era:'Government Schemes', difficulty:4,
   q:"Under Stand-Up India (launched 5 April 2016), scheduled commercial banks facilitate loans in what range for greenfield enterprises of SC/ST and women entrepreneurs?",
   options:["₹1 lakh to ₹10 lakh","₹5 lakh to ₹25 lakh","₹50,000 to ₹5 lakh","₹10 lakh to ₹1 crore"], answerIndex:3,
   source:"Stand-Up India portal (standupmitra.in), SIDBI / Department of Financial Services",
@@ -108,6 +108,20 @@ window.LEDGER_FINANCE = [
   source:"Department of Food & Public Distribution, Ministry of Consumer Affairs",
   sourceUrl:"https://dfpd.gov.in/",
   note:"AAY was launched on 25 December 2000, initially covering one crore poorest families at 35 kg of grain a month at ₹3/kg rice and ₹2/kg wheat. The national school meal programme began earlier, on 15 August 1995, as the NP-NSPE (now PM POSHAN)." },
+
+{ id:'gs016', era:'Government Schemes', difficulty:2,
+  q:"The Pradhan Mantri Gram Sadak Yojana (PMGSY), providing all-weather road connectivity to eligible unconnected rural habitations, was launched on 25 December 2000 with which nodal ministry?",
+  options:["Ministry of Road Transport and Highways","Ministry of Rural Development","Ministry of Panchayati Raj","Ministry of Housing and Urban Affairs"], answerIndex:1,
+  source:"PIB — PMGSY completes 25 years (release, 25 December 2025); Ministry of Rural Development",
+  sourceUrl:"https://www.pib.gov.in/PressReleasePage.aspx?PRID=2208381",
+  note:"PMGSY began on 25 December 2000 as a fully centrally sponsored programme (funding later shared 60:40 with states). It is implemented by the Ministry of Rural Development; a fourth phase (2024-29) targets a further 25,000 habitations." },
+
+{ id:'gs017', era:'Government Schemes', difficulty:2,
+  q:"The Sarva Shiksha Abhiyan, the flagship programme for universalisation of elementary education for children aged 6-14, was launched in 2001 under which ministry?",
+  options:["Ministry of Women and Child Development","Ministry of Social Justice and Empowerment","Ministry of Labour and Employment","Ministry of Human Resource Development (now Ministry of Education)"], answerIndex:3,
+  source:"Ministry of Education — Department of School Education & Literacy, SSA programme records",
+  sourceUrl:"https://dsel.education.gov.in/",
+  note:"SSA ran as a centrally sponsored scheme from 2001, aligned with the 86th Constitutional Amendment (2002) inserting Article 21A. In 2018 it was subsumed into Samagra Shiksha, which covers schooling from pre-primary to Class 12." },
 
 // ============ SECTION 2: MONEY & MARKETS (12) ============
 { id:'mm016', era:'Money & Markets', difficulty:1,
@@ -225,7 +239,7 @@ window.LEDGER_FINANCE = [
 
 { id:'ia032', era:'Investment Awareness', difficulty:3,
   q:"In a mutual fund, the Total Expense Ratio (TER) is:",
-  options:["The annual fee the fund house charges, expressed as a percentage of the fund's assets","A tax paid to the government on redemptions","A one-time entry load on every purchase","The brokerage charged on the investor's demat account"], answerIndex:0,
+  options:["The annual charge the fund house levies, expressed as a percentage of the fund's assets","A tax paid to the government on redemptions","A one-time entry load on every purchase","The brokerage charged on the investor's demat account"], answerIndex:0,
   source:"AMFI — Mutual fund expenses; SEBI TER regulations",
   sourceUrl:"https://www.amfiindia.com/",
   note:"SEBI caps TER on a sliding scale linked to assets under management, and direct plans carry lower TERs than regular plans because no distributor commission is embedded." },
