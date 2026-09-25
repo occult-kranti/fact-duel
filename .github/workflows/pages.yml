@@ -85,6 +85,19 @@ jobs:
           echo "Deck entry:"; ls _site/deck/index.html
           du -sh _site
 
+      # HISAAB DO, the politics edition, lives at /fact-duel/hisaab/ and is published into the same
+      # branch by pages-hisaab.yml. The force-push below replaces the whole tree, so carry that
+      # folder over from the live branch first; without this, every JHK deploy would erase it.
+      - name: Keep the HISAAB DO edition
+        run: |
+          set -euo pipefail
+          if git fetch -q --depth 1 origin gh-pages 2>/dev/null && git cat-file -e FETCH_HEAD:hisaab 2>/dev/null; then
+            git archive FETCH_HEAD hisaab | tar -x -C _site
+            echo "Carried over hisaab/ from the live gh-pages branch."
+          else
+            echo "No hisaab/ on gh-pages yet; nothing to carry over."
+          fi
+
       # Publish by committing the built site to the gh-pages branch. The Pages API route
       # (configure-pages / deploy-pages) needs a token that can create a Pages site, which the
       # workflow token is not permitted to do here; pushing a branch needs only contents: write.
