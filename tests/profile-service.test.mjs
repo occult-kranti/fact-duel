@@ -18,7 +18,12 @@ const { mergeOnSignIn, pushProfile, pullProfile, whoami, createProfilePusher, PU
   '../lib/profile-sync.ts'
 );
 
-const T0 = Date.parse('2026-09-16T10:00:00Z');
+/**
+ * The HTTP ingress resolves the session against the real clock, so the fixtures sit at "now"
+ * rather than a pinned date: a pinned date expires every session a day after it is written.
+ * Nothing here depends on the calendar, only on offsets from T0.
+ */
+const T0 = Date.now();
 const ME = 'p_0123456789abcdef0123456789abcdef';
 const YOU = 'p_fedcba9876543210fedcba9876543210';
 /** 48 url-safe characters, the shape `auth-service.mjs` mints and `sessionLookupFor` accepts. */

@@ -224,6 +224,8 @@ test('a session cookie names the wallet owner and beats a guest header or a body
   await redeemAdNonce({ store, principalId: YOU, nonceId: issued.nonce.id, placement: 'coins', now: T0 + 20_000 });
   const session = await issueSession(db, { principalId: YOU, now: T0 });
   const cookie = sessionCookie(session.sessionId, { secure: false }).split(';')[0];
+  // The ingress checks the session against the real clock; hold it inside the session's life.
+  t.mock.method(Date, 'now', () => T0 + 21_000);
   const res = await handleWalletRequest(
     new Request('https://duel.example/api/wallet', {
       method: 'POST',
@@ -290,6 +292,8 @@ test('the free recap is once per local day and moves no coins; the wallet reply 
   const priced = await readWallet({ store, principalId: ME, region: 'IN', now: T0 });
   assert.equal(priced.region, 'IN');
   assert.equal(priced.perAd, DEFAULT_CONFIG.adReward.IN);
+  // The ingress reads the real clock; hold it on the same UTC day as the last recap above.
+  t.mock.method(Date, 'now', () => Date.parse('2026-09-17T00:00:02Z'));
   const res = await handleWalletRequest(
     new Request('https://duel.example/api/wallet', { method: 'POST', headers: { 'content-type': 'application/json', 'cf-ipcountry': 'DE' }, body: JSON.stringify({ action: 'enter-recap', principalId: ME }) }),
     { DB: db },
