@@ -186,6 +186,8 @@ test('HTTP: a guest header or no identity is 401 sign_in_required; no database i
 });
 
 test('HTTP: a session cookie whose sha256 is a live sessions row reads and writes its own profile', async (t) => {
+  // The handler reads the real clock (the session lookup, `putProfile`'s `now`); pin it to the session's T0.
+  t.mock.timers.enable({ apis: ['Date'], now: T0 });
   const db = opened(t);
   await signIn(db);
   const empty = await handleProfileRequest(request({ action: 'get' }, { cookie: SESSION }), { DB: db });
@@ -229,6 +231,8 @@ test('HTTP: an expired or revoked session is a guest again', async (t) => {
 });
 
 test('HTTP: the edge rejects cross-origin, non-JSON, oversized and unknown requests', async (t) => {
+  // The handler reads the real clock (the session lookup, `putProfile`'s `now`); pin it to the session's T0.
+  t.mock.timers.enable({ apis: ['Date'], now: T0 });
   const db = opened(t);
   await signIn(db);
   assert.equal((await handleProfileRequest(request({ action: 'get' }, { cookie: SESSION, origin: 'https://other.example' }), { DB: db })).status, 403);
@@ -300,6 +304,8 @@ test('the client resolves quietly when there is no server or the answer is not o
 });
 
 test('the client speaks the ingress contract end to end, cookie and all', async (t) => {
+  // The handler reads the real clock (the session lookup, `putProfile`'s `now`); pin it to the session's T0.
+  t.mock.timers.enable({ apis: ['Date'], now: T0 });
   const db = opened(t);
   await signIn(db);
   const original = globalThis.fetch;
@@ -333,6 +339,8 @@ test('the client speaks the ingress contract end to end, cookie and all', async 
 /* ------------------------------------------------------------------ the pusher */
 
 test('the pusher debounces, pushes the latest copy once, replaces on stale and stays quiet when off', async (t) => {
+  // The handler reads the real clock (the session lookup, `putProfile`'s `now`); pin it to the session's T0.
+  t.mock.timers.enable({ apis: ['Date'], now: T0 });
   const db = opened(t);
   await signIn(db);
   const original = globalThis.fetch;

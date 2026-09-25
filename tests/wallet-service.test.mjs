@@ -218,6 +218,8 @@ test('fifteen concurrent redeems of five nonces pay exactly five times', async (
 });
 
 test('a session cookie names the wallet owner and beats a guest header or a body id', async (t) => {
+  // The session lookup reads the real clock; pin it to T0 so the session issued at T0 is live.
+  t.mock.timers.enable({ apis: ['Date'], now: T0 });
   const { db, store } = opened(t);
   const { issueSession, sessionCookie } = await import('../lib/server/auth-service.mjs');
   const issued = await watch(store, { who: YOU });
@@ -281,6 +283,8 @@ test('the floor tops up to the floor once per window, and the drill entry burns 
 });
 
 test('the free recap is once per local day and moves no coins; the wallet reply prices the ad', async (t) => {
+  // The HTTP call below reads the real clock; pin it to T0 so it lands on the day already played.
+  t.mock.timers.enable({ apis: ['Date'], now: T0 });
   const { store, db } = opened(t);
   const { enterRecap } = await import('../lib/server/wallet-service.mjs');
   assert.equal((await enterRecap({ store, principalId: ME, now: T0 })).ok, true);
