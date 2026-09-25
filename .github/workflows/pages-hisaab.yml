@@ -1,0 +1,19 @@
+# HISAAB DO — publishes the politics edition into gh-pages/hisaab/ (placeholder; the build steps
+# land with the edition scaffold). Manual only until then.
+name: Deploy HISAAB DO to Pages
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  noop:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "The edition build is not wired yet."
