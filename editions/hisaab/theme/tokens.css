@@ -1,0 +1,347 @@
+/* ==========================================================================
+   HISAAB DO — "LAL FEETA" design tokens (docs/hisaab/design-bible.md §3–§6)
+   A sarkari file, reprinted as a pop poster: manila covers, red tape,
+   stamp-pad violet ink, typed file numbers, receipts — under loud
+   Devanagari + Latin display type.
+
+   Rules for consumers (the full card is .claude/skills/hisaab-design):
+   - Use tokens, never raw hex, in edition components. Classes are `h-*`.
+   - Colour never carries meaning alone: every semantic colour has an
+     icon/shape/word twin (bible §7).
+   - `-text` variants are for words on paper/ground; `-ink` is the text
+     colour ON a solid fill of that accent; `-soft` is a fill tint.
+   - Contrast: 66 text/background pairs x 2 themes pass (>= 4.5:1 text,
+     >= 3:1 UI and stamps) — results in bible §3.4; re-check any change
+     with the snippet in the skill.
+   Theme switch: <html data-theme="light|dark">, or on any subtree. With no
+   attribute the OS preference decides (the media block mirrors the dark one).
+   ========================================================================== */
+
+:root,
+[data-theme='light'] {
+  color-scheme: light;
+
+  /* ---- Grounds & surfaces: "Daftar by day" (office by day) ------------- */
+  --h-ground: #e8ece1; /* page: pale noting-sheet grey-green, never cream */
+  --h-ground-2: #dce2d2; /* sunken wells, secondary bands, option tab */
+  --h-paper: #fbfbf6; /* primary card: photocopy white */
+  --h-sheet: #e2efd8; /* noting sheet (explanations, rules) — has the red margin rule */
+  --h-receipt: #ffffff; /* thermal receipt, certificate, share card */
+  --h-manila: #e6c78c; /* file cover: modes, routes, state files (tappable objects) */
+  --h-manila-2: #d4ac62; /* file tab / spine / pressed file */
+  --h-manila-ink: #1f1608; /* text on manila */
+
+  /* ---- Ink ----------------------------------------------------------------- */
+  --h-ink: #17131f; /* carbon ink: primary text, object outlines */
+  --h-ink-2: #45414f; /* secondary text (>= 4.5:1 on every light surface incl. manila) */
+  --h-ink-3: #75717f; /* tertiary: placeholders, disabled glyphs, meta — UI-only (>= 3:1) */
+  --h-line: #17131f; /* 2px object outline (files, buttons, options) */
+  --h-hair: #b9c0b0; /* decorative dividers, receipt leaders — never the only boundary */
+  --h-shadow-ink: #17131f; /* hard offset shadow colour */
+  --h-scrim: rgb(23 19 31 / 0.55); /* behind sheets and ceremonies */
+
+  /* ---- The one hot accent: SYAHI (stamp-pad / voter-ink violet) ----------- */
+  --h-syahi: #4a22d4; /* primary action fill, selected state, focus, progress */
+  --h-syahi-text: #4a22d4; /* violet words on paper (links, Devanagari poster line) */
+  --h-syahi-soft: #e4ddff; /* tint fill: selected chip, current rung */
+  --h-syahi-ink: #ffffff; /* text on a syahi fill */
+
+  /* ---- Props (decoration + metaphor; never the only carrier of meaning) --- */
+  --h-tape: #cf2a1f; /* LAL FEETA: red-tape ribbon on unopened files */
+  --h-tape-ink: #ffffff;
+  --h-marker: #ffe45c; /* babu's highlighter swipe behind a key word (text stays --h-ink) */
+  --h-brass: #d4a12a; /* coins in the Tijori, XP chips */
+  --h-brass-text: #7a5700; /* amounts/XP in words on paper */
+  --h-brass-ink: #1f1600; /* text on a brass fill */
+  --h-margin-rule: rgb(207 42 31 / 0.45); /* noting-sheet red margin line (inside .h-sheet only) */
+
+  /* ---- Stamps & verdicts (always with a word + icon twin) ----------------- */
+  --h-pass: #0b7a43; /* APPROVED / SAHI — correct, cleared, won */
+  --h-pass-text: #0a6b3a;
+  --h-pass-soft: #d6efdf;
+  --h-pass-ink: #ffffff;
+  --h-fail: #c62a1f; /* OBJECTION / GALAT — wrong, lost */
+  --h-fail-text: #a8231a;
+  --h-fail-soft: #fbe0dc;
+  --h-fail-ink: #ffffff;
+  --h-wait: #9a5800; /* PENDING — time-out, unanswered, draft (ochre: a file gathering dust) */
+  --h-wait-text: #874600;
+  --h-wait-soft: #fcebcf;
+  --h-wait-ink: #ffffff;
+  /* Legal-status chips (ALLEGED, FIR, CHARGESHEETED, ON BAIL, ACQUITTED, CONVICTED…) use ONE
+     neutral pair for every status. Never red for "accused", never green for "acquitted". */
+  --h-legal: #e4e2ea;
+  --h-legal-ink: #2e2a38;
+
+  /* ---- Answer slots: shape + letter carry identity; tint is the third twin - */
+  --h-slot-a: #e4ddff; /* A / क  ▲ triangle */
+  --h-slot-b: #d7ecf7; /* B / ख  ◆ diamond  */
+  --h-slot-c: #f6e3b8; /* C / ग  ● circle   */
+  --h-slot-d: #f9dce6; /* D / घ  ■ square   */
+
+  /* ---- Focus --------------------------------------------------------------- */
+  --h-focus: #4a22d4;
+
+  /* ---- Textures (CSS only, no image requests) ------------------------------ */
+  --h-halftone: radial-gradient(circle at 1px 1px, rgb(23 19 31 / 0.14) 1px, transparent 1.6px) 0 0 / 7px 7px;
+  --h-ruled: repeating-linear-gradient(transparent 0 27px, rgb(23 19 31 / 0.07) 27px 28px);
+  --h-perf: 14px; /* receipt zig-zag tooth width (mask size) */
+
+  /* ---- Radii --------------------------------------------------------------- */
+  --h-r-xs: 4px; /* file-cover corner under the tab */
+  --h-r-s: 8px; /* chips, stamps, inputs */
+  --h-r-m: 12px; /* buttons, answer options */
+  --h-r-l: 16px; /* files, cards */
+  --h-r-xl: 24px; /* sheets, ceremony card, certificate */
+  --h-r-pill: 999px;
+
+  /* ---- Borders & shadows (hard, printed; blur only on overlays) ------------ */
+  --h-bw: 2px;
+  --h-bw-thin: 1px;
+  --h-shadow-accent: #4a22d4; /* colour of --h-shadow-3 */
+  --h-shadow-float: 0 18px 40px rgb(23 19 31 / 0.22); /* sheets, toasts, ceremonies only */
+
+  /* ---- Type families ----------------------------------------------------- */
+  --h-font-display: 'Akshar Variable', 'Akshar', 'Mukta', system-ui, sans-serif;
+  --h-font-ui: 'Mukta', 'Noto Sans Devanagari', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --h-font-mono: 'Sometype Mono', ui-monospace, 'Mukta', monospace; /* Latin + ₹ only; Devanagari falls to Mukta */
+  --h-font-hand: 'Kalam', 'Mukta', cursive; /* optional noting hand: one line per screen max */
+
+  /* ---- Type scale (px; phone first, the poster sizes clamp with the viewport) - */
+  --h-fs-2xs: 12px; /* chips, tab labels, kicker (caps/mono only) */
+  --h-fs-xs: 14px; /* meta, receipt lines — floor for any sentence */
+  --h-fs-s: 16px; /* body, inputs (iOS zoom floor) */
+  --h-fs-m: 18px; /* answer options, lead text */
+  --h-fs-l: 20px; /* question stem (phone) */
+  --h-fs-xl: 24px; /* card titles (display) */
+  --h-fs-2xl: 30px; /* section titles, label name on cards */
+  --h-fs-3xl: 38px; /* screen titles */
+  --h-fs-4xl: 48px; /* verdict word, label on profile */
+  --h-fs-5xl: 64px; /* home poster (desktop), certificate label */
+  --h-fs-poster: clamp(44px, 13vw, 96px); /* the one poster line per screen */
+  --h-fs-stem: clamp(20px, 1.2rem + 0.6vw, 26px); /* live question stem */
+
+  --h-lh-caps: 0.95; /* Latin display caps */
+  --h-lh-display-deva: 1.25; /* any display line containing Devanagari */
+  --h-lh-ui: 1.45; /* Latin UI text */
+  --h-lh-deva: 1.6; /* Devanagari UI text (set on :root[lang='hi']) */
+  --h-track-caps: 0.02em; /* display caps */
+  --h-track-kicker: 0.14em; /* mono kicker / file numbers */
+  --h-track-stamp: 0.08em;
+  --h-wght-display: 700;
+  --h-wght-display-2: 600;
+  --h-wght-ui: 400;
+  --h-wght-ui-strong: 600;
+
+  /* ---- Space & layout -------------------------------------------------------- */
+  --h-s-1: 4px;
+  --h-s-2: 8px;
+  --h-s-3: 12px;
+  --h-s-4: 16px;
+  --h-s-5: 20px;
+  --h-s-6: 24px;
+  --h-s-8: 32px;
+  --h-s-10: 40px;
+  --h-s-12: 48px;
+  --h-s-16: 64px;
+  --h-gutter: 16px;
+  --h-maxw: 1200px; /* desktop content max */
+  --h-read: 62ch; /* prose measure */
+  --h-col-play: 560px; /* live question column on desktop */
+  --h-top-h: 56px;
+  --h-nav-h: 64px; /* bottom bar (phone) — plus env(safe-area-inset-bottom) */
+  --h-rail-w: 88px; /* left rail (>= 900px) */
+  --h-tap: 44px; /* minimum target */
+  --h-answer-h: 60px; /* answer option min height */
+  --h-tab-w: 52px; /* answer option letter/shape tab */
+
+  /* ---- Z layers ------------------------------------------------------------- */
+  --h-z-base: 0;
+  --h-z-raised: 1;
+  --h-z-scene: 2; /* inline 3D canvas (never above UI) */
+  --h-z-sticky: 10;
+  --h-z-nav: 20;
+  --h-z-sheet: 40;
+  --h-z-toast: 60;
+  --h-z-ceremony: 70;
+  --h-z-skip: 90;
+
+  /* ---- Motion ---------------------------------------------------------------- */
+  --h-dur-tap: 90ms; /* press-in */
+  --h-dur-quick: 140ms; /* exits, chip toggles */
+  --h-dur-base: 220ms; /* enters, sheet open */
+  --h-dur-slow: 360ms; /* meter fills, file slide */
+  --h-dur-stamp: 420ms; /* THAPPA slam incl. settle */
+  --h-dur-count: 700ms; /* number count-up */
+  --h-dur-ceremony: 900ms; /* ceremony entrance (then it waits for Continue) */
+  --h-ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --h-ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --h-ease-stamp: cubic-bezier(0.25, 1.55, 0.45, 1); /* overshoot then settle */
+  --h-ease-tape: cubic-bezier(0.7, 0, 0.84, 0); /* tape snap: slow-then-sudden */
+  --h-travel: 1; /* multiply distances by this; 0 under reduced motion */
+  --h-press-shift: 2px; /* press = print down: translate(shift, shift) + shadow to --h-shadow-0 */
+}
+
+/* ---------------------------------------------------------------------------
+   "File room at night" — dark
+   --------------------------------------------------------------------------- */
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --h-ground: #121019; /* carbon paper at night */
+  --h-ground-2: #1c1926;
+  --h-paper: #221e2d;
+  --h-sheet: #18251e;
+  --h-receipt: #2a2635;
+  --h-manila: #3d3223; /* lamp-lit file cover */
+  --h-manila-2: #5c4a2c;
+  --h-manila-ink: #f6ebd3;
+
+  --h-ink: #f3f0e8;
+  --h-ink-2: #bcb7c8;
+  --h-ink-3: #8c8799;
+  --h-line: #8e88a0; /* outlines stay >= 3:1 on ground, paper, receipt and manila */
+  --h-hair: #3a3548;
+  --h-shadow-ink: #05040a;
+  --h-scrim: rgb(5 4 10 / 0.7);
+
+  --h-syahi: #9e86ff;
+  --h-syahi-text: #b3a1ff;
+  --h-syahi-soft: #2b2352;
+  --h-syahi-ink: #120c2b;
+
+  --h-tape: #ff5a4e;
+  --h-tape-ink: #2a0603;
+  --h-marker: #5e4d00;
+  --h-brass: #f2c14e;
+  --h-brass-text: #f5cd6a;
+  --h-brass-ink: #231800;
+  --h-margin-rule: rgb(255 90 78 / 0.4);
+
+  --h-pass: #3ed68e;
+  --h-pass-text: #5ee0a2;
+  --h-pass-soft: #173826;
+  --h-pass-ink: #06200f;
+  --h-fail: #ff6a5c;
+  --h-fail-text: #ff8a7f;
+  --h-fail-soft: #3d1a18;
+  --h-fail-ink: #2a0603;
+  --h-wait: #ffb547;
+  --h-wait-text: #ffc56e;
+  --h-wait-soft: #3a2a10;
+  --h-wait-ink: #2a1a00;
+  --h-legal: #2e2a3a;
+  --h-legal-ink: #e2deea;
+
+  --h-slot-a: #2b2352;
+  --h-slot-b: #16303d;
+  --h-slot-c: #3a2f17;
+  --h-slot-d: #3a1b28;
+
+  --h-focus: #b3a1ff;
+
+  --h-halftone: radial-gradient(circle at 1px 1px, rgb(243 240 232 / 0.1) 1px, transparent 1.6px) 0 0 / 7px 7px;
+  --h-ruled: repeating-linear-gradient(transparent 0 27px, rgb(243 240 232 / 0.06) 27px 28px);
+  --h-shadow-accent: #5a44c9;
+  --h-shadow-float: 0 18px 40px rgb(0 0 0 / 0.55);
+}
+
+/* OS preference when the app has not set a theme (mirror of the block above). */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    color-scheme: dark;
+    --h-ground: #121019;
+    --h-ground-2: #1c1926;
+    --h-paper: #221e2d;
+    --h-sheet: #18251e;
+    --h-receipt: #2a2635;
+    --h-manila: #3d3223;
+    --h-manila-2: #5c4a2c;
+    --h-manila-ink: #f6ebd3;
+    --h-ink: #f3f0e8;
+    --h-ink-2: #bcb7c8;
+    --h-ink-3: #8c8799;
+    --h-line: #8e88a0;
+    --h-hair: #3a3548;
+    --h-shadow-ink: #05040a;
+    --h-scrim: rgb(5 4 10 / 0.7);
+    --h-syahi: #9e86ff;
+    --h-syahi-text: #b3a1ff;
+    --h-syahi-soft: #2b2352;
+    --h-syahi-ink: #120c2b;
+    --h-tape: #ff5a4e;
+    --h-tape-ink: #2a0603;
+    --h-marker: #5e4d00;
+    --h-brass: #f2c14e;
+    --h-brass-text: #f5cd6a;
+    --h-brass-ink: #231800;
+    --h-margin-rule: rgb(255 90 78 / 0.4);
+    --h-pass: #3ed68e;
+    --h-pass-text: #5ee0a2;
+    --h-pass-soft: #173826;
+    --h-pass-ink: #06200f;
+    --h-fail: #ff6a5c;
+    --h-fail-text: #ff8a7f;
+    --h-fail-soft: #3d1a18;
+    --h-fail-ink: #2a0603;
+    --h-wait: #ffb547;
+    --h-wait-text: #ffc56e;
+    --h-wait-soft: #3a2a10;
+    --h-wait-ink: #2a1a00;
+    --h-legal: #2e2a3a;
+    --h-legal-ink: #e2deea;
+    --h-slot-a: #2b2352;
+    --h-slot-b: #16303d;
+    --h-slot-c: #3a2f17;
+    --h-slot-d: #3a1b28;
+    --h-focus: #b3a1ff;
+    --h-halftone: radial-gradient(circle at 1px 1px, rgb(243 240 232 / 0.1) 1px, transparent 1.6px) 0 0 / 7px 7px;
+    --h-ruled: repeating-linear-gradient(transparent 0 27px, rgb(243 240 232 / 0.06) 27px 28px);
+    --h-shadow-accent: #5a44c9;
+    --h-shadow-float: 0 18px 40px rgb(0 0 0 / 0.55);
+  }
+}
+
+/* Tokens built from other tokens are re-declared wherever a theme is set, so any subtree can force a
+   theme and get matching shadows and focus rings — e.g. the certificate/share-card export is always
+   light: <div data-theme="light">…</div> inside a dark page. */
+:root,
+[data-theme] {
+  --h-noted: var(--h-syahi); /* NOTED / RECEIVED / ISSUED — neutral official stamp */
+  --h-focus-ring: 0 0 0 2px var(--h-ground), 0 0 0 5px var(--h-focus);
+  --h-shadow-0: 0 0 0 var(--h-shadow-ink); /* pressed */
+  --h-shadow-1: 2px 2px 0 var(--h-shadow-ink);
+  --h-shadow-2: 4px 4px 0 var(--h-shadow-ink); /* files, primary buttons */
+  --h-shadow-3: 6px 6px 0 var(--h-shadow-accent); /* certificate, today's file */
+}
+
+/* Devanagari needs room for matras above and below the line. */
+:root[lang='hi'] {
+  --h-lh-ui: var(--h-lh-deva);
+  --h-lh-caps: var(--h-lh-display-deva);
+}
+
+/* Reduced motion (OS or the in-app Effects setting sets data-motion="reduced"):
+   no travel, no overshoot, no shake — opacity fades only, and short. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --h-travel: 0;
+    --h-press-shift: 0px;
+    --h-dur-stamp: 120ms;
+    --h-dur-slow: 160ms;
+    --h-dur-count: 1ms;
+    --h-dur-ceremony: 160ms;
+    --h-ease-stamp: linear;
+    --h-ease-tape: linear;
+  }
+}
+:root[data-motion='reduced'] {
+  --h-travel: 0;
+  --h-press-shift: 0px;
+  --h-dur-stamp: 120ms;
+  --h-dur-slow: 160ms;
+  --h-dur-count: 1ms;
+  --h-dur-ceremony: 160ms;
+  --h-ease-stamp: linear;
+  --h-ease-tape: linear;
+}
