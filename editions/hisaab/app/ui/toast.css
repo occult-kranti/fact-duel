@@ -1,0 +1,71 @@
+/* ui/toast.css — h-toast: top-centre under the top bar. */
+.h-toasts {
+  position: fixed;
+  z-index: var(--h-z-toast);
+  top: calc(var(--h-top-h) + env(safe-area-inset-top, 0px) + var(--h-s-2));
+  left: 50%;
+  width: min(360px, calc(100% - 2 * var(--h-gutter)));
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-2);
+  pointer-events: none;
+}
+:root[data-chrome='none'] .h-toasts {
+  top: calc(env(safe-area-inset-top, 0px) + var(--h-s-2));
+}
+.h-toast {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--h-s-2);
+  padding: var(--h-s-2) var(--h-s-1) var(--h-s-2) var(--h-s-3);
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-m);
+  background: var(--h-paper);
+  color: var(--h-ink);
+  box-shadow: var(--h-shadow-float);
+  pointer-events: auto;
+  touch-action: pan-y;
+  animation: h-toast-in var(--h-dur-base) var(--h-ease-out) both;
+}
+@keyframes h-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(calc(-8px * var(--h-travel)));
+  }
+}
+.h-toast__icon {
+  display: inline-flex;
+  color: var(--h-syahi-text);
+}
+.h-toast__text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.h-toast__title {
+  font-weight: var(--h-wght-ui-strong);
+  font-size: var(--h-fs-s);
+  line-height: 1.3;
+}
+.h-toast__body {
+  font-size: var(--h-fs-xs);
+  color: var(--h-ink-2);
+}
+.h-toast__close {
+  display: inline-grid;
+  place-items: center;
+  width: var(--h-tap);
+  height: var(--h-tap);
+  padding: 0;
+  border: 0;
+  border-radius: var(--h-r-s);
+  background: transparent;
+  color: var(--h-ink);
+  cursor: pointer;
+}
+.h-toast__close:focus-visible {
+  outline: none;
+  box-shadow: var(--h-focus-ring);
+}

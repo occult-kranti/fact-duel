@@ -1,0 +1,102 @@
+/* ui/stamp.css — h-stamp. */
+.h-stamp {
+  --_c: var(--h-noted);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  max-width: 100%;
+  padding: 0.12em 0.45em;
+  border: 3px solid var(--_c);
+  border-radius: var(--h-r-s);
+  outline: 1.5px solid var(--_c);
+  outline-offset: 2px;
+  color: var(--_c);
+  font-family: var(--h-font-display);
+  font-weight: var(--h-wght-display);
+  font-size: 20px;
+  line-height: 1.05;
+  letter-spacing: var(--h-track-stamp);
+  text-transform: uppercase;
+  white-space: normal;
+  transform: rotate(var(--h-stamp-rot, -3deg));
+  transform-origin: 50% 50%;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  user-select: none;
+}
+[data-theme='dark'] .h-stamp {
+  mix-blend-mode: screen;
+}
+.h-stamp--pass {
+  --_c: var(--h-pass);
+}
+.h-stamp--fail {
+  --_c: var(--h-fail);
+}
+.h-stamp--wait {
+  --_c: var(--h-wait);
+}
+.h-stamp--noted {
+  --_c: var(--h-noted);
+}
+.h-stamp--s {
+  font-size: 16px;
+  border-width: 2px;
+  outline-width: 1px;
+}
+.h-stamp--l {
+  font-size: 26px;
+}
+.h-stamp__icon {
+  flex: none;
+  width: 1em;
+  height: 1em;
+}
+.h-stamp__word {
+  min-width: 0;
+}
+
+/* Motion #3: scale 1.6 → 0.94 → 1, opacity 0 → 1, to the seeded angle. */
+.h-stamp--animate {
+  animation: h-stamp-slam var(--h-dur-stamp) var(--h-ease-stamp) both;
+}
+@keyframes h-stamp-slam {
+  0% {
+    opacity: 0;
+    transform: rotate(var(--h-stamp-rot, -3deg)) scale(1.6);
+  }
+  60% {
+    opacity: 1;
+    transform: rotate(var(--h-stamp-rot, -3deg)) scale(0.94);
+  }
+  100% {
+    opacity: 1;
+    transform: rotate(var(--h-stamp-rot, -3deg)) scale(1);
+  }
+}
+/* Reduced motion: stamps simply appear (a short fade). */
+@keyframes h-stamp-appear {
+  from {
+    opacity: 0;
+  }
+}
+:root[data-motion='reduced'] .h-stamp--animate {
+  animation-name: h-stamp-appear;
+}
+@media (prefers-reduced-motion: reduce) {
+  .h-stamp--animate {
+    animation-name: h-stamp-appear;
+  }
+}
+/* A light subtree inside a dark page (the certificate export) multiplies again. */
+[data-theme='dark'] [data-theme='light'] .h-stamp {
+  mix-blend-mode: multiply;
+}
+
+/* The slam scales a stamp to 1.6× for a few frames. Put animated stamps inside a stage that clips
+   sideways (not a scroll container, so sticky and focus rings still work), or a wide stamp near the
+   edge of a phone makes the page scroll sideways for 400 ms. Cards and receipts: add this class. */
+.h-stamp-stage {
+  overflow-x: clip;
+  overflow-clip-margin: var(--h-gutter);
+}

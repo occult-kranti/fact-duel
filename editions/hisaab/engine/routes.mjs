@@ -18,6 +18,15 @@
  *    which is Kiska Media.
  *  - Kiska Media?: topic 'Media & Speech'. Forward Court: kind 'forward'. Each needs six items.
  *
+ * The money trail (charter §4a, §6), derived from item `tags` and `year` and appended after those:
+ *  - Seedha Khaate Mein / Rahat Kosh / Chunav Se Pehle (`kind` = the tag: 'distribution' | 'relief' |
+ *    'pre-election'): one 'all' route per tag, one per five-year ERA (2000–04 … 2020–26) and one per
+ *    state (the Centre, 'IN', included) whenever that slice holds at least MONEY_MIN items. A money
+ *    route is never topped up: a slice below six has no route.
+ *  - Saal-dar-Saal (`kind: 'year'`): one route per year (2000–2026) with at least YEAR_MIN items,
+ *    across every lane. Thinner adjacent years are merged into a labelled range ('2004–2010') — the
+ *    title and subtitle say so — and never padded with items from other years. See `yearGroups`.
+ *
  * Which six: two per difficulty where the pool allows (topped up from the rest), chosen in a stable
  * hash order salted by the route id — so picks spread across lanes rather than favouring whichever id
  * prefix sorts first — then ordered simple → expert → extreme across the three chapters. The choice is
@@ -33,7 +42,40 @@ import { SECTORS, STATES } from '../bank/schema.mjs';
 export const ROUTE_CARDS = 6;
 /** Items a pool needs before its route exists. A state below six is topped up from the Centre. */
 export const ROUTE_MIN = Object.freeze({ state: 4, sector: 6, media: 6, forward: 6 });
-export const ROUTE_KINDS = Object.freeze(['state', 'sector', 'media', 'forward']);
+export const ROUTE_KINDS = Object.freeze(['state', 'sector', 'media', 'forward', 'distribution', 'relief', 'pre-election', 'year']);
+
+// ---- The money trail (charter §4a, §6) --------------------------------------------------------
+/** The three money-trail modes, in display order. Same values as schema.mjs TAGS. */
+export const MONEY_TAGS = Object.freeze(['distribution', 'relief', 'pre-election']);
+/** Items a money-trail slice (all / era / state) needs before it gets a route. Never topped up. */
+export const MONEY_MIN = 6;
+/** Items a single year needs for a route of its own; thinner adjacent years are merged into a range. */
+export const YEAR_MIN = 6;
+/** The span the money trail and Saal-dar-Saal cover (charter §4a: 26 years). */
+export const YEAR_SPAN = Object.freeze({ from: 2000, to: 2026 });
+/** Five-year eras for the money-trail modes; the last runs to the end of the span. */
+export const ERAS = Object.freeze(
+  [
+    [2000, 2004],
+    [2005, 2009],
+    [2010, 2014],
+    [2015, 2019],
+    [2020, 2026],
+  ].map(([from, to]) => Object.freeze({ id: `${from}-${to}`, from, to, label: yearLabel(from, to) })),
+);
+/** Draft route copy per mode (the design lane may restyle; ids and codes are stable). */
+const MONEY_COPY = Object.freeze({
+  distribution: { title: 'Seedha Khaate Mein', code: 'KHAATA', about: 'money handed out directly' },
+  relief: { title: 'Rahat Kosh', code: 'RAHAT', about: 'relief funds and disaster money' },
+  'pre-election': { title: 'Chunav Se Pehle', code: 'CHUNAV', about: 'what came in the months before a vote' },
+});
+
+/** '2004–2010' (en dash), or '2019' for a single year. Short form for eras: '2000–04'. */
+function yearLabel(from, to, short = true) {
+  if (from === to) return String(from);
+  const tail = short && Math.floor(from / 100) === Math.floor(to / 100) ? String(to).slice(2) : String(to);
+  return `${from}–${tail}`;
+}
 /** The sector Kiska Media covers, so it has no separate Sector File. */
 export const MEDIA_SECTOR = 'Media & Speech';
 /** Chapters of every route: two cards each, in difficulty order. Draft copy; the design lane may polish. */
@@ -240,5 +282,149 @@ export function deriveRoutes(bank) {
       }),
     );
   }
+  routes.push(...moneyRoutes(items), ...yearRoutes(items));
   return Object.freeze(routes);
+}
+
+const inYears = (q, from, to) => Number.isInteger(q.year) && q.year >= from && q.year <= to;
+const tagged = (q, tag) => Array.isArray(q.tags) && q.tags.includes(tag);
+
+/**
+ * The money-trail routes: for each tag, 'all', then each era, then each state (charter order, the
+ * Centre first) — only where the slice holds MONEY_MIN items. Six cards, never padded.
+ */
+export function moneyRoutes(items) {
+  const routes = [];
+  for (const tag of MONEY_TAGS) {
+    const pool = items.filter((q) => tagged(q, tag));
+    if (pool.length < MONEY_MIN) continue;
+    const copy = MONEY_COPY[tag];
+    const slice = (id, sub, scope, cards, title, subtitle, code, extra) =>
+      route({
+        id,
+        kind: tag,
+        title,
+        subtitle,
+        code,
+        stamp: `${title} file`,
+        cards,
+        padded: [],
+        poolSize: sub.length,
+        extra: { tag, scope, ...extra },
+      });
+    const all = pickCards(pool, `money-${tag}`).cards;
+    routes.push(
+      slice(`money-${tag}`, pool, 'all', all, copy.title, `Six receipts on ${copy.about}, from ${pool.length} on file.`, `${copy.code} / ALL`, {}),
+    );
+    for (const era of ERAS) {
+      const sub = pool.filter((q) => inYears(q, era.from, era.to));
+      if (sub.length < MONEY_MIN) continue;
+      const id = `money-${tag}-${era.id}`;
+      routes.push(
+        slice(id, sub, 'era', pickCards(sub, id).cards, `${copy.title} · ${era.label}`, `Six receipts from ${era.label}.`, `${copy.code} / ${era.label.replace('–', '-')}`, {
+          era: era.id,
+          years: Object.freeze([era.from, era.to]),
+        }),
+      );
+    }
+    for (const [code, name] of Object.entries(STATES)) {
+      const sub = pool.filter((q) => q.state === code);
+      if (sub.length < MONEY_MIN) continue;
+      const id = `money-${tag}-${code.toLowerCase()}`;
+      const place = code === 'IN' ? 'the Centre' : name;
+      routes.push(
+        slice(id, sub, 'state', pickCards(sub, id).cards, `${copy.title} · ${code === 'IN' ? 'Centre' : name}`, `Six receipts from ${place}.`, `${copy.code} / ${code}`, {
+          state: code,
+        }),
+      );
+    }
+  }
+  return routes;
+}
+
+/**
+ * Saal-dar-Saal groups over YEAR_SPAN: `[{ from, to, count }]`, chronological, covering every year
+ * that has items (as long as the whole span has YEAR_MIN). A year with YEAR_MIN items stands alone.
+ * A run of thinner years between two such years is cut, left to right, into ranges of at least
+ * YEAR_MIN; a thin remainder joins the range before it in the run. A run too thin for any range of
+ * its own joins the neighbouring group before it (else after it), which then becomes a range. `from`
+ * and `to` are the first and last years that actually have items, so the label never claims an
+ * empty year.
+ */
+export function yearGroups(items) {
+  const count = new Map();
+  for (const q of items) if (inYears(q, YEAR_SPAN.from, YEAR_SPAN.to)) count.set(q.year, (count.get(q.year) ?? 0) + 1);
+  const total = [...count.values()].reduce((a, b) => a + b, 0);
+  if (total < YEAR_MIN) return [];
+  // Blocks, in order: a full year, or a run of thin years (empty years included).
+  const blocks = [];
+  let run = null;
+  for (let y = YEAR_SPAN.from; y <= YEAR_SPAN.to; y++) {
+    const n = count.get(y) ?? 0;
+    if (n >= YEAR_MIN) {
+      run = null;
+      blocks.push({ full: true, years: [y] });
+    } else {
+      if (!run) blocks.push((run = { full: false, years: [] }));
+      run.years.push(y);
+    }
+  }
+  const sum = (years) => years.reduce((a, y) => a + (count.get(y) ?? 0), 0);
+  const groups = [];
+  const orphans = []; // runs too thin to stand alone: { at: index in groups, years }
+  for (const block of blocks) {
+    if (block.full) {
+      groups.push(block.years);
+      continue;
+    }
+    if (sum(block.years) === 0) continue;
+    const chunks = [];
+    let chunk = [];
+    for (const y of block.years) {
+      chunk.push(y);
+      if (sum(chunk) >= YEAR_MIN) {
+        chunks.push(chunk);
+        chunk = [];
+      }
+    }
+    if (sum(chunk) > 0) {
+      if (chunks.length) chunks[chunks.length - 1].push(...chunk);
+      else orphans.push({ at: groups.length, years: chunk });
+    }
+    groups.push(...chunks);
+  }
+  // Fold each orphan run into the group before it (else the one after it). Walk from the end so the
+  // recorded positions stay valid.
+  for (const orphan of orphans.reverse()) {
+    const target = orphan.at > 0 ? orphan.at - 1 : 0;
+    groups[target] = [...groups[target], ...orphan.years].sort((a, b) => a - b);
+  }
+  return groups.map((years) => {
+    const has = years.filter((y) => (count.get(y) ?? 0) > 0);
+    return Object.freeze({ from: has[0], to: has[has.length - 1], count: sum(years) });
+  });
+}
+
+/** One Saal-dar-Saal route per year group (see `yearGroups`), chronological. */
+export function yearRoutes(items) {
+  return yearGroups(items).map(({ from, to, count }) => {
+    const single = from === to;
+    const id = single ? `year-${from}` : `year-${from}-${to}`;
+    const pool = items.filter((q) => inYears(q, from, to));
+    const label = yearLabel(from, to, false);
+    return route({
+      id,
+      kind: 'year',
+      title: label,
+      subtitle: single
+        ? `Six receipts from ${from}, across every file.`
+        : `${from} to ${to} share one file: ${count} cards between them.`,
+      code: `SAAL / ${single ? from : yearLabel(from, to).replace('–', '-')}`,
+      stamp: `${label} file`,
+      cards: pickCards(pool, id).cards,
+      padded: [],
+      poolSize: pool.length,
+      extra: { years: Object.freeze([from, to]), merged: !single },
+    });
+  });
 }

@@ -1,0 +1,262 @@
+/* screens/files/files.css — pieces shared by the Files and money-trail screens (files lane):
+   the section tabs (h-ftabs), the money-mode tabs (h-mtabs), the two-way view switch (h-seg),
+   section heads (h-fsec) and the "being typed" slot (h-typing). Tokens only. */
+
+/* ---- h-ftabs: the Files segmented control (Rajya · Sector · Media · Forwards · Paisa) --------- */
+.h-ftabs {
+  min-width: 0;
+}
+.h-ftabs__list {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-m);
+  background: var(--h-paper);
+  box-shadow: var(--h-shadow-1);
+  overflow: hidden;
+}
+.h-ftabs__item + .h-ftabs__item {
+  border-left: var(--h-bw) solid var(--h-line);
+}
+.h-ftabs__link {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-height: 56px;
+  height: 100%;
+  padding: var(--h-s-1) 2px;
+  color: var(--h-ink);
+  text-decoration: none;
+  text-align: center;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: background var(--h-dur-quick) var(--h-ease-out);
+}
+.h-ftabs__link:hover {
+  background: var(--h-ground-2);
+}
+.h-ftabs__link:active {
+  background: var(--h-ground-2);
+  transform: translate(0, var(--h-press-shift));
+}
+.h-ftabs__link:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 3px var(--h-focus);
+  border-radius: 0;
+}
+.h-ftabs__link[aria-current='page'] {
+  background: var(--h-syahi-soft);
+  color: var(--h-syahi-text);
+  box-shadow: inset 0 -4px 0 var(--h-syahi);
+}
+.h-ftabs__link[aria-current='page']:focus-visible {
+  box-shadow: inset 0 0 0 3px var(--h-focus), inset 0 -4px 0 var(--h-syahi);
+}
+.h-ftabs__icon {
+  display: inline-flex;
+}
+.h-ftabs__label {
+  font-family: var(--h-font-ui);
+  font-weight: var(--h-wght-ui-strong);
+  font-size: var(--h-fs-2xs);
+  line-height: 1.15;
+}
+.h-ftabs__label:lang(hi) {
+  font-size: var(--h-fs-xs);
+  line-height: var(--h-lh-display-deva);
+}
+.h-ftabs__label--long {
+  display: none;
+}
+@media (min-width: 600px) {
+  .h-ftabs__link {
+    flex-direction: row;
+    gap: var(--h-s-2);
+    min-height: 52px;
+    padding-inline: var(--h-s-2);
+  }
+  .h-ftabs__label {
+    font-size: var(--h-fs-xs);
+  }
+  .h-ftabs__label--short {
+    display: none;
+  }
+  .h-ftabs__label--long {
+    display: inline;
+  }
+}
+
+/* ---- h-mtabs: the money-trail modes -------------------------------------------------------------- */
+.h-mtabs__list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--h-s-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.h-mtabs__link {
+  display: flex;
+  align-items: center;
+  gap: var(--h-s-2);
+  min-height: var(--h-tap);
+  height: 100%;
+  padding: var(--h-s-1) var(--h-s-3);
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-m);
+  background: var(--h-paper);
+  color: var(--h-ink);
+  font-weight: var(--h-wght-ui-strong);
+  font-size: var(--h-fs-xs);
+  line-height: 1.2;
+  text-decoration: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform var(--h-dur-tap) var(--h-ease-out);
+}
+.h-mtabs__link:active {
+  transform: translate(var(--h-press-shift), var(--h-press-shift));
+}
+.h-mtabs__link[aria-current='page'] {
+  border-color: var(--h-syahi);
+  background: var(--h-syahi-soft);
+  color: var(--h-syahi-text);
+  box-shadow: inset 0 -3px 0 var(--h-syahi);
+}
+.h-mtabs__link[aria-current='page']:focus-visible {
+  box-shadow: var(--h-focus-ring), inset 0 -3px 0 var(--h-syahi);
+}
+.h-mtabs__icon {
+  display: inline-flex;
+  flex: none;
+}
+.h-mtabs__label {
+  min-width: 0;
+}
+@media (min-width: 720px) {
+  .h-mtabs__list {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* ---- h-seg: a small two-way view switch (Almirah / List) ---------------------------------------- */
+.h-segs {
+  display: inline-flex;
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-m);
+  background: var(--h-paper);
+  overflow: hidden;
+}
+.h-seg {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--h-s-2);
+  min-height: var(--h-tap);
+  padding: 0 var(--h-s-4);
+  border: 0;
+  background: transparent;
+  color: var(--h-ink);
+  font-weight: var(--h-wght-ui-strong);
+  font-size: var(--h-fs-xs);
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.h-seg + .h-seg {
+  border-left: var(--h-bw) solid var(--h-line);
+}
+.h-seg[aria-pressed='true'] {
+  background: var(--h-syahi-soft);
+  color: var(--h-syahi-text);
+  box-shadow: inset 0 -3px 0 var(--h-syahi);
+}
+.h-seg:focus-visible {
+  outline: none;
+  border-radius: 0;
+  box-shadow: inset 0 0 0 3px var(--h-focus);
+}
+
+/* ---- section heads inside a hub ----------------------------------------------------------------- */
+.h-fsec {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-3);
+  min-width: 0;
+}
+.h-fsec__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--h-s-1) var(--h-s-3);
+}
+.h-fsec__title {
+  margin: 0;
+  font-family: var(--h-font-display);
+  font-weight: var(--h-wght-display);
+  font-size: var(--h-fs-xl);
+  line-height: var(--h-lh-caps);
+  letter-spacing: var(--h-track-caps);
+  text-transform: uppercase;
+}
+.h-fsec__title :lang(hi),
+.h-fsec__title:lang(hi) {
+  text-transform: none;
+  line-height: var(--h-lh-display-deva);
+}
+.h-fsec__note {
+  margin: 0;
+  font-size: var(--h-fs-xs);
+  color: var(--h-ink-2);
+}
+.h-fsec__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+  gap: var(--h-s-2) var(--h-s-5);
+  align-items: stretch;
+}
+
+/* ---- a slot whose file is still being typed (real counts, never padded) --------------------------- */
+.h-typing {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-1);
+  margin-top: 24px;
+  padding: var(--h-s-3) var(--h-s-4);
+  border: var(--h-bw) dashed var(--h-line);
+  border-radius: var(--h-r-l);
+  background: var(--h-ground-2);
+  color: var(--h-ink-2);
+  font-size: var(--h-fs-xs);
+}
+.h-typing__k {
+  font-family: var(--h-font-mono);
+  font-size: var(--h-fs-2xs);
+  font-weight: 700;
+  letter-spacing: var(--h-track-kicker);
+  color: var(--h-ink-2);
+}
+.h-typing__t {
+  font-family: var(--h-font-display);
+  font-weight: var(--h-wght-display);
+  font-size: var(--h-fs-l);
+  line-height: var(--h-lh-caps);
+  letter-spacing: var(--h-track-caps);
+  text-transform: uppercase;
+  color: var(--h-ink);
+}
+
+/* A quiet Hinglish one-liner under a header (Latin script in English; never a sentence below 14px). */
+.h-quip {
+  margin: 0;
+  font-size: var(--h-fs-xs);
+  font-weight: var(--h-wght-ui-strong);
+  color: var(--h-ink-2);
+}

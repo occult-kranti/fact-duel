@@ -15,7 +15,7 @@ import { MODE_DURATION, MODE_ROUNDS, RULES } from '@/lib/server/room-engine.mjs'
 import { QUESTIONS } from './server/bank.mjs';
 import { LABELS, labelFor, labelForLevel } from './engine/labels.mjs';
 import { DAILY_SIZE, dailyRoundId, dealDaily, localDay } from './engine/daily.mjs';
-import { ROUTE_KINDS, ROUTE_MIN } from './engine/routes.mjs';
+import { ERAS, MONEY_MIN, MONEY_TAGS, ROUTE_KINDS, ROUTE_MIN, YEAR_MIN, YEAR_SPAN } from './engine/routes.mjs';
 
 /** The deployment base, frozen in by vite.config.hisaab.ts ('/fact-duel/hisaab/' by default). */
 declare const __HISAAB_BASE__: string;
@@ -49,9 +49,12 @@ export function standing(xp: number) {
 }
 
 // ---------------------------------------------------------------------------------------------
-// Routes (charter §6): Rajya Rounds, Sector Files, Kiska Media, Forward Court.
+// Routes (charter §6): Rajya Rounds, Sector Files, Kiska Media, Forward Court, and the money trail —
+// Seedha Khaate Mein, Rahat Kosh, Chunav Se Pehle (from item `tags`) and Saal-dar-Saal (from `year`).
 
-export type RouteKind = 'state' | 'sector' | 'media' | 'forward';
+/** A money-trail mode: the item tag its routes are derived from. */
+export type MoneyTag = 'distribution' | 'relief' | 'pre-election';
+export type RouteKind = 'state' | 'sector' | 'media' | 'forward' | MoneyTag | 'year';
 export type Route = Readonly<{
   id: string;
   kind: RouteKind;
@@ -74,13 +77,91 @@ export type Route = Readonly<{
   poolSize: number;
   state?: string;
   sector?: string;
+  /** Money-trail routes: the tag the pool was drawn from, and which slice of it. */
+  tag?: MoneyTag;
+  scope?: 'all' | 'era' | 'state';
+  /** Money-trail era routes: the ERAS id, e.g. '2020-2026'. */
+  era?: string;
+  /** Era and year routes: the inclusive year span of the pool. */
+  years?: readonly [number, number];
+  /** Year routes: true when thinner adjacent years were merged into one range (the title says so). */
+  merged?: boolean;
 }>;
 
 /** Every playable route, in display order. Grows as lanes are registered in bank/index.mjs. */
 export const ROUTES = ACTIVE_EXPEDITIONS as unknown as readonly Route[];
-export const ROUTE_RULES = Object.freeze({ kinds: ROUTE_KINDS as readonly RouteKind[], min: ROUTE_MIN });
+export const ROUTE_RULES = Object.freeze({
+  kinds: ROUTE_KINDS as readonly RouteKind[],
+  min: ROUTE_MIN,
+  moneyMin: MONEY_MIN as number,
+  yearMin: YEAR_MIN as number,
+});
 export const routeById = (id: string) => ROUTES.find((r) => r.id === id) ?? null;
 export const routesOfKind = (kind: RouteKind) => ROUTES.filter((r) => r.kind === kind);
+
+// ---- The money trail (charter §4a, §6) ------------------------------------------------------------
+
+export type Era = Readonly<{ id: string; from: number; to: number; label: string }>;
+/** The five eras money-trail routes are cut into: 2000–04, 2005–09, 2010–14, 2015–19, 2020–26. */
+export const MONEY_ERAS = ERAS as readonly Era[];
+/** The years the money trail and Saal-dar-Saal cover. */
+export const MONEY_YEARS = YEAR_SPAN as Readonly<{ from: number; to: number }>;
+
+export type MoneyMode = Readonly<{
+  tag: MoneyTag;
+  /** Mode name (Latin, Hinglish) and its Devanagari twin for the poster line. */
+  title: string;
+  titleDevanagari: string;
+  /** Plain-English gloss. */
+  gloss: string;
+  /** One-line brief (charter §6). */
+  line: string;
+}>;
+
+/** The three money-trail modes, in display order. Copy is draft; the design lane may polish. */
+export const MONEY_MODES: readonly MoneyMode[] = Object.freeze(
+  [
+    {
+      tag: 'distribution',
+      title: 'Seedha Khaate Mein',
+      titleDevanagari: 'सीधे खाते में',
+      gloss: 'Straight into the account',
+      line: 'Cash and in-kind transfers, 2000–2026: who passed them, which party, what happened.',
+    },
+    {
+      tag: 'relief',
+      title: 'Rahat Kosh',
+      titleDevanagari: 'राहत कोष',
+      gloss: 'The relief fund',
+      line: 'Relief funds and disaster money: raised, released, disputed, audited.',
+    },
+    {
+      tag: 'pre-election',
+      title: 'Chunav Se Pehle',
+      titleDevanagari: 'चुनाव से पहले',
+      gloss: 'Before the vote',
+      line: 'What was announced, paid or passed in the months before an election, and the result.',
+    },
+  ].map((mode) => Object.freeze(mode as MoneyMode)),
+);
+/** Saal-dar-Saal (year by year) — the fourth money-trail screen, over every lane. */
+export const YEAR_MODE = Object.freeze({
+  title: 'Saal-dar-Saal',
+  titleDevanagari: 'साल-दर-साल',
+  gloss: 'Year by year',
+  line: 'Pick a year, 2000–2026: that year’s cards across every file.',
+});
+
+/** The money-trail tags in display order (engine/routes.mjs MONEY_TAGS; same order as MONEY_MODES). */
+export const MONEY_TAG_ORDER = MONEY_TAGS as readonly MoneyTag[];
+export const moneyMode = (tag: MoneyTag) => MONEY_MODES.find((m) => m.tag === tag) ?? null;
+/** Every route of one money-trail mode: 'all' first, then eras, then states (the Centre first). */
+export const moneyRoutes = (tag: MoneyTag) => ROUTES.filter((r) => r.kind === tag);
+/** Saal-dar-Saal routes, chronological. */
+export const yearRoutes = () => ROUTES.filter((r) => r.kind === 'year');
+/** The Saal-dar-Saal route holding `year` (a single year or a merged range), if the year has cards. */
+export const routeForYear = (year: number) =>
+  yearRoutes().find((r) => r.years && year >= r.years[0] && year <= r.years[1]) ?? null;
 
 // ---------------------------------------------------------------------------------------------
 // Aaj Ka Hisaab: five a day, same for everyone on the same local date.

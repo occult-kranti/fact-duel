@@ -1,0 +1,216 @@
+/*
+ * app/base.css — the edition's global layer: reset, body type, focus, Devanagari rules, screen-reader
+ * utility, layout primitives and the fx particle palette. Tokens come from ../theme/tokens.css
+ * (imported first by app.tsx). `h-` classes, tokens only, no !important.
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  background: var(--h-ground);
+  color: var(--h-ink);
+}
+
+/* Specific enough to win over app/locale.css (JHK's Hindi body line-height) — tokens decide here. */
+html:root body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--h-ground);
+  color: var(--h-ink);
+  font-family: var(--h-font-ui);
+  font-weight: var(--h-wght-ui);
+  font-size: var(--h-fs-s);
+  line-height: var(--h-lh-ui);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  word-break: normal;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+img,
+svg,
+canvas,
+video {
+  display: block;
+  max-width: 100%;
+}
+svg {
+  flex-shrink: 0;
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+/* iOS zooms into anything under 16px. */
+input,
+select,
+textarea {
+  font-size: max(var(--h-fs-s), 1em);
+}
+a {
+  color: var(--h-syahi-text);
+  text-underline-offset: 3px;
+}
+strong,
+b {
+  font-weight: var(--h-wght-ui-strong);
+}
+
+::selection {
+  background: var(--h-syahi-soft);
+  color: var(--h-ink);
+}
+
+/* Focus: a 2px ground gap, then a 3px syahi ring (bible §7). Components that carry their own hard
+   shadow re-declare it as `box-shadow: var(--h-focus-ring), <their shadow>`. */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: none;
+  box-shadow: var(--h-focus-ring);
+  border-radius: var(--h-r-xs);
+}
+
+/* Devanagari: never tracked (it breaks the shirorekha). */
+:lang(hi) {
+  letter-spacing: 0;
+}
+.h-hi {
+  letter-spacing: 0;
+  line-height: var(--h-lh-display-deva);
+}
+
+/* Visually hidden (global so every component can pair a glyph with words). */
+.h-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---- type helpers ---------------------------------------------------------------------------- */
+/* Mono kicker. Case is the author's: write 'F.No. S/UP' or 'LABEL PROMOTION' as it should print. */
+.h-kicker {
+  margin: 0;
+  font-family: var(--h-font-mono);
+  font-size: var(--h-fs-2xs);
+  font-weight: 700;
+  letter-spacing: var(--h-track-kicker);
+  color: var(--h-ink-2);
+}
+/* A kicker written in Devanagari (a lang="hi" span in an English screen) reads in the UI face. */
+.h-kicker[lang='hi'] {
+  font-family: var(--h-font-ui);
+  font-size: var(--h-fs-xs);
+  letter-spacing: 0;
+}
+.h-mono {
+  font-family: var(--h-font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.h-tnum {
+  font-variant-numeric: tabular-nums;
+}
+.h-display {
+  font-family: var(--h-font-display);
+  font-weight: var(--h-wght-display);
+  line-height: var(--h-lh-caps);
+  letter-spacing: var(--h-track-caps);
+  text-transform: uppercase;
+}
+.h-meta {
+  font-size: var(--h-fs-xs);
+  color: var(--h-ink-2);
+}
+.h-link {
+  color: var(--h-syahi-text);
+  font-weight: var(--h-wght-ui-strong);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+/* A text link that is also a ≥ 44px target. */
+.h-link--tap {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--h-tap);
+}
+
+/* ---- layout primitives ------------------------------------------------------------------------ */
+.h-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-gap, var(--h-s-4));
+  min-width: 0;
+}
+.h-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--h-gap, var(--h-s-3));
+  min-width: 0;
+}
+.h-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--h-min, 16rem)), 1fr));
+  gap: var(--h-gap, var(--h-s-5));
+}
+
+/* ---- the fx layer, re-inked for LAL FEETA ------------------------------------------------------
+   components/fx reads --fx-1…5 for particles and confetti. Paper chits in manila, syahi, tape,
+   paper and brass (bible §6 #10). `html:root` outranks fx.css's :root. */
+html:root {
+  --fx-1: var(--h-manila);
+  --fx-2: var(--h-syahi);
+  --fx-3: var(--h-tape);
+  --fx-4: var(--h-paper);
+  --fx-5: var(--h-brass);
+}
+
+/* ---- Hindi locale: no tracking anywhere text may be Devanagari (bible §4.4 rule 1) ---------------
+   `:lang(hi)` alone ties with a single component class, so the tracked components are listed here
+   with a higher specificity. Latin codes lose their tracking in Hindi — the shirorekha wins. */
+:root[lang='hi']
+  :is(
+    .h-kicker,
+    .h-chip,
+    .h-stamp,
+    .h-receipt__k,
+    .h-file__tab,
+    .h-file__title,
+    .h-conf__legend,
+    .h-sheet__title,
+    .h-sheet__summary,
+    .h-ceremony__kicker,
+    .h-title__en,
+    .h-poster__en,
+    .h-display,
+    .h-levelchip__label,
+    .h-cert__head
+  ) {
+  letter-spacing: 0;
+}

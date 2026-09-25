@@ -1,0 +1,85 @@
+/* ui/chip.css — h-chip and the legal status block. */
+.h-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--h-s-1);
+  min-height: 28px;
+  max-width: 100%;
+  padding: 2px var(--h-s-2);
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-s);
+  background: var(--h-paper);
+  color: var(--h-ink);
+  font-family: var(--h-font-mono);
+  font-size: var(--h-fs-2xs);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: var(--h-track-kicker);
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+.h-chip__icon {
+  display: inline-flex;
+  flex: none;
+}
+.h-chip__text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.h-chip--legal {
+  border-color: var(--h-legal-ink);
+  background: var(--h-legal);
+  color: var(--h-legal-ink);
+}
+.h-chip--source {
+  background: var(--h-receipt);
+}
+.h-chip--govt {
+  border-style: dashed;
+  background: var(--h-ground-2);
+  color: var(--h-ink);
+  text-transform: none;
+  letter-spacing: 0.02em;
+}
+.h-chip--kind {
+  border-color: var(--h-syahi-text);
+  background: var(--h-syahi-soft);
+  color: var(--h-syahi-text);
+}
+.h-chip:lang(hi),
+.h-chip :lang(hi) {
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.h-legal {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-2);
+  padding: var(--h-s-2) var(--h-s-3);
+  border: var(--h-bw) solid var(--h-legal-ink);
+  border-radius: var(--h-r-s);
+  background: var(--h-legal);
+  color: var(--h-legal-ink);
+}
+.h-legal__head {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--h-s-2);
+}
+.h-legal__head .h-chip--legal {
+  border-color: var(--h-legal-ink);
+  background: var(--h-receipt);
+}
+.h-legal__asof {
+  font-family: var(--h-font-mono);
+  font-size: var(--h-fs-xs);
+}
+.h-legal__line {
+  margin: 0;
+  font-family: var(--h-font-ui);
+  font-size: var(--h-fs-xs);
+  line-height: 1.5;
+}

@@ -1,0 +1,49 @@
+/* ui/poster.css — the poster line. */
+.h-poster {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-2);
+  font-family: var(--h-font-display);
+  font-weight: var(--h-wght-display);
+  font-size: var(--h-fs-poster);
+  min-width: 0;
+}
+.h-poster--l {
+  font-size: clamp(36px, 9vw, 64px);
+}
+.h-poster__hi {
+  color: var(--h-syahi-text);
+  line-height: var(--h-lh-display-deva);
+  letter-spacing: 0;
+  font-size: 0.72em;
+}
+.h-poster__en {
+  color: var(--h-ink);
+  line-height: var(--h-lh-caps);
+  letter-spacing: var(--h-track-caps);
+  text-transform: uppercase;
+  overflow-wrap: break-word;
+}
+.h-poster__en--overprint {
+  text-shadow: 3px 3px 0 var(--h-syahi-soft);
+}
+.h-poster__swipe {
+  color: inherit;
+  background: linear-gradient(var(--h-marker), var(--h-marker)) 0 88% / 100% 0.42em no-repeat;
+  animation: h-swipe var(--h-dur-slow) var(--h-ease-out) both;
+  padding-inline: 0.05em;
+}
+@keyframes h-swipe {
+  from {
+    background-size: 0 0.42em;
+  }
+}
+:root[data-motion='reduced'] .h-poster__swipe {
+  animation: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .h-poster__swipe {
+    animation: none;
+  }
+}

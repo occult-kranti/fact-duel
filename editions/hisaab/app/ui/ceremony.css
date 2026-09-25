@@ -1,0 +1,91 @@
+/* ui/ceremony.css — h-ceremony: scrim + centred card. */
+.h-ceremony {
+  position: fixed;
+  inset: 0;
+  z-index: var(--h-z-ceremony);
+  display: grid;
+  place-items: center;
+  padding: max(var(--h-gutter), env(safe-area-inset-top, 0px)) var(--h-gutter) max(var(--h-gutter), env(safe-area-inset-bottom, 0px));
+  overflow-y: auto;
+}
+.h-ceremony__scrim {
+  position: fixed;
+  inset: 0;
+  background: var(--h-scrim);
+  animation: h-fade-in var(--h-dur-base) var(--h-ease-out) both;
+}
+.h-ceremony__card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--h-s-3);
+  width: min(420px, 100%);
+  padding: var(--h-s-6) var(--h-s-5) var(--h-s-5);
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-xl);
+  background: var(--h-paper);
+  color: var(--h-ink);
+  box-shadow: var(--h-shadow-float);
+  text-align: center;
+  animation: h-ceremony-in var(--h-dur-ceremony) var(--h-ease-out) both;
+}
+@keyframes h-ceremony-in {
+  from {
+    opacity: 0;
+    transform: translateY(calc(16px * var(--h-travel))) scale(calc(1 - 0.04 * var(--h-travel)));
+  }
+}
+@keyframes h-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+.h-ceremony__slot {
+  display: grid;
+  place-items: center;
+  min-height: 200px;
+  border-radius: var(--h-r-l);
+  background: var(--h-receipt);
+  border: var(--h-bw) dashed var(--h-hair);
+}
+.h-ceremony__stamps {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.h-ceremony__kicker {
+  margin: 0;
+  font-family: var(--h-font-mono);
+  font-size: var(--h-fs-2xs);
+  font-weight: 700;
+  letter-spacing: var(--h-track-kicker);
+  text-transform: uppercase;
+  color: var(--h-ink-2);
+}
+.h-ceremony__title {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-1);
+  font-family: var(--h-font-display);
+  font-weight: var(--h-wght-display);
+  font-size: var(--h-fs-2xl);
+  line-height: var(--h-lh-caps);
+  text-transform: uppercase;
+  overflow-wrap: break-word;
+}
+.h-ceremony__titlehi {
+  font-size: var(--h-fs-xl);
+  line-height: var(--h-lh-display-deva);
+  color: var(--h-syahi-text);
+  text-transform: none;
+}
+.h-ceremony__sub,
+.h-ceremony__also {
+  margin: 0;
+  color: var(--h-ink-2);
+}
+.h-ceremony__also {
+  font-size: var(--h-fs-xs);
+}

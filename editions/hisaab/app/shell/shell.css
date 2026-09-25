@@ -1,0 +1,230 @@
+/* shell/shell.css — the frame: h-top, h-nav (bottom bar ↔ rail at 900px), h-main. */
+.h-app {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---- top bar ----------------------------------------------------------------------------------- */
+.h-top {
+  position: sticky;
+  top: 0;
+  z-index: var(--h-z-nav);
+  display: flex;
+  align-items: center;
+  gap: var(--h-s-1);
+  min-height: calc(var(--h-top-h) + env(safe-area-inset-top, 0px));
+  padding: env(safe-area-inset-top, 0px) max(var(--h-s-2), env(safe-area-inset-right, 0px)) 0
+    max(var(--h-gutter), env(safe-area-inset-left, 0px));
+  border-bottom: var(--h-bw) solid var(--h-line);
+  background: var(--h-ground);
+}
+.h-top__spacer {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.h-wordmark {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  min-height: var(--h-tap);
+  padding-inline: 2px;
+  color: var(--h-ink);
+  font-family: var(--h-font-display);
+  font-weight: var(--h-wght-display);
+  font-size: 26px;
+  line-height: var(--h-lh-display-deva);
+  letter-spacing: 0;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.h-wordmark span {
+  background: linear-gradient(var(--h-syahi-soft), var(--h-syahi-soft)) 0 82% / 100% 0.34em no-repeat;
+}
+.h-levelchip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--h-s-2);
+  min-height: var(--h-tap);
+  min-width: 0;
+  max-width: 46vw;
+  padding: 0 var(--h-s-1);
+  color: var(--h-ink);
+  text-decoration: none;
+}
+.h-levelchip__lv {
+  flex: none;
+  padding: 3px var(--h-s-2);
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-pill);
+  background: var(--h-syahi-soft);
+  color: var(--h-syahi-text);
+  font-family: var(--h-font-mono);
+  font-size: var(--h-fs-xs);
+  font-weight: 700;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.h-levelchip__label {
+  display: none;
+  min-width: 0;
+  font-family: var(--h-font-display);
+  font-weight: var(--h-wght-display-2);
+  font-size: var(--h-fs-m);
+  line-height: var(--h-lh-caps);
+  text-transform: uppercase;
+  letter-spacing: var(--h-track-caps);
+}
+.h-levelchip__label:lang(hi) {
+  line-height: var(--h-lh-display-deva);
+  text-transform: none;
+}
+@media (min-width: 600px) {
+  .h-levelchip__label {
+    display: inline;
+  }
+}
+.h-levelchip:focus-visible,
+.h-wordmark:focus-visible {
+  outline: none;
+  box-shadow: var(--h-focus-ring);
+  border-radius: var(--h-r-s);
+}
+
+/* ---- nav: bottom bar on phones ---------------------------------------------------------------- */
+.h-nav {
+  position: fixed;
+  z-index: var(--h-z-nav);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0 env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+  border-top: var(--h-bw) solid var(--h-line);
+  background: var(--h-paper);
+}
+.h-nav__list {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  height: var(--h-nav-h);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.h-nav__li {
+  display: flex;
+  min-width: 0;
+}
+.h-nav__item {
+  position: relative;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-width: 0;
+  min-height: var(--h-tap);
+  color: var(--h-ink-2);
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.h-nav__label {
+  max-width: 100%;
+  font-size: var(--h-fs-2xs);
+  font-weight: var(--h-wght-ui-strong);
+  line-height: 1.2;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+.h-nav__label:lang(hi) {
+  font-size: var(--h-fs-xs);
+  line-height: 1.3;
+}
+.h-nav__item[aria-current='page'] {
+  color: var(--h-syahi-text);
+}
+.h-nav__item[aria-current='page']::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 18%;
+  right: 18%;
+  height: 3px;
+  border-radius: 0 0 3px 3px;
+  background: var(--h-syahi);
+}
+.h-nav__item:active {
+  transform: translate(var(--h-press-shift), var(--h-press-shift));
+}
+.h-nav__item:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 3px var(--h-focus);
+  border-radius: var(--h-r-s);
+}
+
+/* ---- main ---------------------------------------------------------------------------------------- */
+.h-main {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  outline: none;
+}
+.h-app[data-nav='on'] .h-main {
+  padding-bottom: calc(var(--h-nav-h) + env(safe-area-inset-bottom, 0px));
+}
+.h-app[data-chrome='none'] .h-main {
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.h-screen {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+/* Motion #6 — file slide on screen enter (never on live rooms or pass-and-play). */
+.h-screen--enter {
+  animation: h-screen-in var(--h-dur-base) var(--h-ease-out) both;
+}
+@keyframes h-screen-in {
+  from {
+    opacity: 0;
+    transform: translateY(calc(12px * var(--h-travel)));
+  }
+}
+
+/* ---- ≥ 900px: the nav becomes an 88px left rail under the top bar --------------------------------- */
+@media (min-width: 900px) {
+  .h-nav {
+    top: calc(var(--h-top-h) + env(safe-area-inset-top, 0px));
+    right: auto;
+    width: calc(var(--h-rail-w) + env(safe-area-inset-left, 0px));
+    padding: var(--h-s-3) 0 env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+    border-top: 0;
+    border-right: var(--h-bw) solid var(--h-line);
+  }
+  .h-nav__list {
+    grid-template-columns: 1fr;
+    grid-auto-rows: 76px;
+    height: auto;
+    gap: var(--h-s-1);
+  }
+  .h-nav__item[aria-current='page']::before {
+    top: 14%;
+    bottom: 14%;
+    left: 0;
+    right: auto;
+    width: 3px;
+    height: auto;
+    border-radius: 0 3px 3px 0;
+  }
+  .h-app[data-nav='on'] .h-main {
+    padding-bottom: 0;
+    padding-left: calc(var(--h-rail-w) + env(safe-area-inset-left, 0px));
+  }
+  .h-wordmark {
+    font-size: 30px;
+  }
+}

@@ -1,0 +1,39 @@
+/* ui/tape.css — h-tape. */
+.h-tape {
+  display: flex;
+  height: 12px;
+  pointer-events: none;
+}
+.h-tape__half {
+  flex: 1 1 50%;
+  background: var(--h-tape);
+  border-block: var(--h-bw-thin) solid var(--h-shadow-ink);
+}
+.h-tape--card {
+  /* Full bleed across a padded card: the card sets --h-card-pad (default 16px) and its 2px border. */
+  margin-inline: calc(-1 * var(--h-card-pad, var(--h-s-4)));
+}
+.h-tape--edge {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 4px;
+  height: 6px;
+}
+.h-tape--snapping .h-tape__half {
+  animation: h-tape-snap var(--h-dur-slow) var(--h-ease-tape) forwards;
+}
+.h-tape--snapping .h-tape__half--l {
+  transform-origin: 0 50%;
+  --_rot: -12deg;
+}
+.h-tape--snapping .h-tape__half--r {
+  transform-origin: 100% 50%;
+  --_rot: 12deg;
+}
+@keyframes h-tape-snap {
+  to {
+    transform: translateY(calc(24px * var(--h-travel))) rotate(calc(var(--_rot) * var(--h-travel)));
+    opacity: 0;
+  }
+}

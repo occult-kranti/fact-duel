@@ -1,0 +1,12 @@
+{
+  "name": "HISAAB DO — हिसाब दो",
+  "short_name": "HISAAB DO",
+  "description": "Janta ka paisa. Janta ka sawaal. A satire quiz where every answer comes with a sourced receipt.",
+  "lang": "en-IN",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#e8ece1",
+  "theme_color": "#e8ece1",
+  "icons": [{ "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}

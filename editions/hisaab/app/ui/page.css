@@ -1,0 +1,112 @@
+/* ui/page.css — page column, screen header, empty / error / inline notes. */
+.h-page {
+  width: 100%;
+  max-width: var(--h-maxw);
+  margin-inline: auto;
+  padding: var(--h-s-6) var(--h-gutter) var(--h-s-12);
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-6);
+  min-width: 0;
+}
+.h-page--read {
+  max-width: calc(var(--h-read) + 2 * var(--h-gutter));
+}
+.h-page--play {
+  max-width: calc(var(--h-col-play) + 2 * var(--h-gutter));
+}
+@media (min-width: 900px) {
+  .h-page {
+    padding-top: var(--h-s-8);
+    gap: var(--h-s-8);
+  }
+}
+
+.h-screenhead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--h-s-4);
+}
+.h-screenhead__main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-2);
+  min-width: 0;
+  flex: 1 1 18rem;
+}
+.h-screenhead__aside {
+  flex: 0 1 auto;
+}
+
+.h-title {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-1);
+  font-family: var(--h-font-display);
+  font-weight: var(--h-wght-display);
+  color: var(--h-ink);
+}
+.h-title__hi {
+  font-size: var(--h-fs-2xl);
+  line-height: var(--h-lh-display-deva);
+  color: var(--h-syahi-text);
+  letter-spacing: 0;
+}
+.h-title__en {
+  font-size: var(--h-fs-3xl);
+  line-height: var(--h-lh-caps);
+  text-transform: uppercase;
+  letter-spacing: var(--h-track-caps);
+  overflow-wrap: break-word;
+}
+:root[lang='hi'] .h-title__en:lang(hi) {
+  text-transform: none;
+}
+
+.h-lead {
+  margin: 0;
+  max-width: var(--h-read);
+  font-size: var(--h-fs-l);
+  color: var(--h-ink-2);
+}
+
+.h-empty,
+.h-error {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--h-s-3);
+  padding: var(--h-s-5);
+  border: var(--h-bw) dashed var(--h-line);
+  border-radius: var(--h-r-l);
+  background: var(--h-paper);
+}
+.h-empty__line,
+.h-error__title {
+  margin: 0;
+  font-size: var(--h-fs-m);
+  font-weight: var(--h-wght-ui-strong);
+}
+.h-error {
+  border-style: solid;
+  background: var(--h-wait-soft);
+}
+.h-error__detail {
+  margin: 0;
+  color: var(--h-ink-2);
+}
+
+.h-note {
+  margin: 0;
+  padding: var(--h-s-2) var(--h-s-3);
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-m);
+  background: var(--h-paper);
+  font-size: var(--h-fs-xs);
+}
+.h-note--wait {
+  background: var(--h-wait-soft);
+}

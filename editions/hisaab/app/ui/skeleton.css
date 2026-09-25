@@ -1,0 +1,32 @@
+/* ui/skeleton.css — ruled paper, static. */
+.h-skeleton {
+  position: relative;
+  width: 100%;
+  margin-top: 24px;
+  padding: var(--h-s-4);
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: 0 var(--h-r-l) var(--h-r-l) var(--h-r-l);
+  background: var(--h-paper);
+}
+.h-skeleton__tab {
+  position: absolute;
+  top: -24px;
+  left: calc(-1 * var(--h-bw));
+  height: 24px;
+  padding: 0 var(--h-s-3);
+  border: var(--h-bw) solid var(--h-line);
+  border-bottom: 0;
+  border-radius: var(--h-r-s) var(--h-r-s) 0 0;
+  background: var(--h-ground-2);
+  color: var(--h-ink-2);
+  font-family: var(--h-font-mono);
+  font-size: var(--h-fs-2xs);
+  font-weight: 700;
+  line-height: 22px;
+  letter-spacing: var(--h-track-kicker);
+}
+.h-skeleton__lines {
+  display: block;
+  height: calc(28px * var(--h-skel-lines, 4));
+  background: var(--h-ruled);
+}

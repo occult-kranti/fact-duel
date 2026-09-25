@@ -1,0 +1,246 @@
+/* screens/files/register.css — h-reg, a register that fills as receipts are collected. Receipt rows
+   inside an entry are plain and exact (nothing funny inside a receipt). Tokens only. */
+.h-reg {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-3);
+  min-width: 0;
+  padding: var(--h-s-4);
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-l);
+  background: var(--h-paper);
+  box-shadow: var(--h-shadow-2);
+}
+.h-reg__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--h-s-2);
+}
+.h-reg__title {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  font-family: var(--h-font-display);
+  font-weight: var(--h-wght-display);
+}
+.h-reg__titlehi {
+  font-size: var(--h-fs-m);
+  font-weight: var(--h-wght-display-2);
+  line-height: var(--h-lh-display-deva);
+  color: var(--h-syahi-text);
+}
+.h-reg__titleen {
+  font-size: var(--h-fs-xl);
+  line-height: var(--h-lh-caps);
+  letter-spacing: var(--h-track-caps);
+  text-transform: uppercase;
+}
+.h-reg__count {
+  margin: 0;
+  font-size: var(--h-fs-xs);
+  font-weight: 700;
+}
+.h-reg__lead,
+.h-reg__empty {
+  margin: 0;
+  font-size: var(--h-fs-xs);
+  color: var(--h-ink-2);
+}
+.h-reg__empty {
+  padding: var(--h-s-3);
+  border: var(--h-bw) dashed var(--h-line);
+  border-radius: var(--h-r-m);
+  background: var(--h-ground);
+  color: var(--h-ink);
+  font-weight: var(--h-wght-ui-strong);
+}
+
+.h-reg__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.h-reg__row {
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-m);
+  background: var(--h-receipt);
+}
+.h-reg__summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: 'k chev' 't chev';
+  align-items: center;
+  column-gap: var(--h-s-3);
+  min-height: 56px;
+  padding: var(--h-s-2) var(--h-s-3);
+  cursor: pointer;
+  list-style: none;
+  border-radius: var(--h-r-m);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.h-reg__summary::-webkit-details-marker {
+  display: none;
+}
+.h-reg__summary:focus-visible {
+  outline: none;
+  box-shadow: var(--h-focus-ring);
+}
+.h-reg__rowk {
+  grid-area: k;
+  font-size: var(--h-fs-2xs);
+  font-weight: 700;
+  letter-spacing: var(--h-track-kicker);
+  color: var(--h-ink-2);
+}
+.h-reg__rowt {
+  grid-area: t;
+  font-weight: var(--h-wght-ui-strong);
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+.h-reg__chev {
+  grid-area: chev;
+  transition: transform var(--h-dur-quick) var(--h-ease-out);
+}
+.h-reg__row[open] .h-reg__chev {
+  transform: rotate(180deg);
+}
+.h-reg__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-3);
+  padding: 0 var(--h-s-3) var(--h-s-3);
+  border-top: var(--h-bw) dashed var(--h-hair);
+  padding-top: var(--h-s-3);
+  font-size: var(--h-fs-xs);
+}
+.h-reg__body p {
+  margin: 0;
+}
+.h-reg__asof {
+  font-size: var(--h-fs-xs);
+  color: var(--h-ink-2);
+}
+.h-reg__source {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--h-s-2);
+}
+.h-reg__srclink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--h-s-1);
+  min-height: var(--h-tap);
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: var(--h-fs-xs);
+}
+.h-reg__srclink svg {
+  flex: none;
+}
+
+/* One labelled field inside an entry ("Passed by", "Result", "Poll"). */
+.h-reg__field {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2px;
+}
+.h-reg__fk {
+  font-family: var(--h-font-mono);
+  font-size: var(--h-fs-2xs);
+  font-weight: 700;
+  letter-spacing: var(--h-track-kicker);
+  text-transform: uppercase;
+  color: var(--h-ink-2);
+}
+.h-reg__fv {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 600px) {
+  .h-reg__field {
+    grid-template-columns: 7.5rem minmax(0, 1fr);
+    gap: var(--h-s-3);
+    align-items: baseline;
+  }
+}
+
+/* Sealed entries. */
+.h-reg__sealed {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-2);
+}
+.h-reg__sealedhead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--h-s-1) var(--h-s-2);
+  margin: 0;
+  font-size: var(--h-fs-xs);
+  font-weight: var(--h-wght-ui-strong);
+}
+.h-reg__sealednote {
+  font-weight: var(--h-wght-ui);
+  color: var(--h-ink-2);
+}
+.h-reg__seals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--h-s-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.h-reg__seal {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: var(--h-tap);
+  max-width: 100%;
+  padding: var(--h-s-1) var(--h-s-3) var(--h-s-2);
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-s);
+  background: var(--h-manila);
+  color: var(--h-manila-ink);
+  text-decoration: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform var(--h-dur-tap) var(--h-ease-out);
+}
+.h-reg__seal::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 4px;
+  border-radius: 0 0 calc(var(--h-r-s) - var(--h-bw)) calc(var(--h-r-s) - var(--h-bw));
+  background: var(--h-tape);
+}
+.h-reg__seal:active {
+  transform: translate(var(--h-press-shift), var(--h-press-shift));
+}
+.h-reg__sealk {
+  font-family: var(--h-font-mono);
+  font-size: var(--h-fs-2xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+.h-reg__sealt {
+  font-family: var(--h-font-mono);
+  font-size: var(--h-fs-xs);
+  font-weight: 700;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}

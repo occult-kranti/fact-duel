@@ -1,0 +1,548 @@
+/* screens/home/home.css — Home (design bible §11.2). h-home* / h-mini* classes, tokens only. */
+
+/* ---- layout: one column on phones, the bible's 12-column grid from 900px ---------------------- */
+.h-home__root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-6);
+  min-width: 0;
+}
+.h-home__notes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-2);
+}
+.h-home__notes .h-note {
+  display: flex;
+  align-items: center;
+  gap: var(--h-s-2);
+}
+.h-home__noteicon {
+  flex: none;
+}
+.h-home__who,
+.h-home__today,
+.h-home__resume,
+.h-home__tijori,
+.h-home__quests,
+.h-home__files,
+.h-home__duel {
+  min-width: 0;
+}
+.h-home__who {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-6);
+}
+/* The one poster line: desktop only (the phone leads with the label, bible §11.2 at 390). */
+.h-home__poster {
+  display: none;
+}
+
+@media (min-width: 900px) {
+  .h-home__root {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    align-items: start;
+    gap: var(--h-s-8) var(--h-s-6);
+    grid-template-areas:
+      'who who who who who who who today today today today today'
+      'tijori tijori tijori tijori tijori files files files files files files files'
+      'quests quests quests quests quests quests resume resume resume resume resume resume'
+      'quests quests quests quests quests quests duel duel duel duel duel duel';
+  }
+  .h-home--noresume .h-home__root {
+    grid-template-areas:
+      'who who who who who who who today today today today today'
+      'tijori tijori tijori tijori tijori files files files files files files files'
+      'quests quests quests quests quests quests duel duel duel duel duel duel';
+  }
+  .h-home__who {
+    grid-area: who;
+  }
+  .h-home__today {
+    grid-area: today;
+    /* Line the file's tab up with the label card's top edge beside the poster. */
+    align-self: end;
+  }
+  .h-home__resume {
+    grid-area: resume;
+  }
+  .h-home__tijori {
+    grid-area: tijori;
+  }
+  .h-home__quests {
+    grid-area: quests;
+  }
+  .h-home__files {
+    grid-area: files;
+  }
+  .h-home__duel {
+    grid-area: duel;
+  }
+  .h-home__poster {
+    display: flex;
+  }
+}
+
+/* ---- panels and headings ---------------------------------------------------------------------- */
+.h-home__panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-3);
+  min-width: 0;
+  padding: var(--h-s-4);
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-l);
+  background: var(--h-paper);
+  box-shadow: var(--h-shadow-2);
+}
+@media (min-width: 600px) {
+  .h-home__panel {
+    padding: var(--h-s-5);
+  }
+}
+.h-home__panelhead {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--h-s-3);
+  min-width: 0;
+}
+.h-home__h2 {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  font-family: var(--h-font-display);
+  font-weight: var(--h-wght-display);
+  color: var(--h-ink);
+}
+.h-home__h2hi {
+  font-size: var(--h-fs-m);
+  line-height: var(--h-lh-display-deva);
+  letter-spacing: 0;
+  color: var(--h-syahi-text);
+}
+.h-home__h2en {
+  font-size: var(--h-fs-xl);
+  line-height: var(--h-lh-caps);
+  letter-spacing: var(--h-track-caps);
+  text-transform: uppercase;
+}
+.h-home__h3 {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: var(--h-s-2);
+  min-width: 0;
+  font-family: var(--h-font-display);
+  font-weight: var(--h-wght-display);
+}
+.h-home__h3hi {
+  font-size: var(--h-fs-m);
+  line-height: var(--h-lh-display-deva);
+  letter-spacing: 0;
+  color: var(--h-syahi-text);
+}
+.h-home__h3en {
+  font-size: var(--h-fs-m);
+  line-height: 1.1;
+  letter-spacing: var(--h-track-caps);
+  text-transform: uppercase;
+}
+:root[lang='hi'] :is(.h-home__h2en, .h-home__h3en) {
+  letter-spacing: 0;
+}
+.h-home__empty {
+  margin: 0;
+  font-weight: var(--h-wght-ui-strong);
+}
+.h-home__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--h-s-2) var(--h-s-4);
+  min-width: 0;
+}
+
+/* ---- label block: streak + CL ------------------------------------------------------------------- */
+.h-home__streak {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--h-s-2);
+  min-height: 28px;
+  font-size: var(--h-fs-xs);
+  color: var(--h-ink);
+}
+.h-home__flame {
+  color: var(--h-wait-text);
+}
+.h-home__best {
+  color: var(--h-ink-2);
+}
+.h-home__cl {
+  gap: var(--h-s-2);
+}
+.h-home__cltext {
+  font-family: var(--h-font-ui);
+  font-weight: var(--h-wght-ui-strong);
+  font-size: var(--h-fs-xs);
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* ---- Today's file ----------------------------------------------------------------------------- */
+.h-home__today .h-file {
+  gap: var(--h-s-3);
+}
+.h-home__ready {
+  display: block;
+  font-size: var(--h-fs-s);
+  font-weight: var(--h-wght-ui-strong);
+}
+.h-home__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--h-s-2) var(--h-s-3);
+  margin-top: var(--h-s-3);
+  font-size: var(--h-fs-s);
+}
+.h-home__todaymeter,
+.h-home__resumemeter {
+  margin-top: var(--h-s-1);
+}
+.h-home__todaymeter .h-meter,
+.h-home__resumemeter .h-meter {
+  background: var(--h-paper);
+}
+.h-home__todaymeter .h-meter__copy,
+.h-home__resumemeter .h-meter__copy {
+  color: var(--h-manila-ink);
+}
+.h-home__grid {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+.h-home__cell {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-s);
+}
+.h-home__cell--pass {
+  background: var(--h-pass);
+  color: var(--h-pass-ink);
+}
+.h-home__cell--fail {
+  background: var(--h-fail);
+  color: var(--h-fail-ink);
+}
+.h-home__gridscore {
+  margin-left: var(--h-s-2);
+  font-size: var(--h-fs-m);
+  font-weight: 700;
+}
+.h-home__next {
+  display: block;
+  margin-top: var(--h-s-2);
+  font-size: var(--h-fs-xs);
+}
+
+/* ---- Your tijori ------------------------------------------------------------------------------ */
+.h-home__today-n {
+  flex: none;
+  font-size: var(--h-fs-xs);
+  font-weight: 700;
+  color: var(--h-brass-text);
+}
+.h-home__tijoriart {
+  padding: var(--h-s-2) 0;
+}
+.h-home__scene {
+  --h-scene-h: 280px;
+}
+
+/* ---- Aaj ke 3 kaam ---------------------------------------------------------------------------- */
+.h-home__questcount {
+  flex: none;
+  font-size: var(--h-fs-m);
+  font-weight: 700;
+}
+.h-home__quests-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+.h-home__quest + .h-home__quest {
+  border-top: var(--h-bw) dashed var(--h-hair);
+}
+.h-home__questrow {
+  display: flex;
+  align-items: center;
+  gap: var(--h-s-3);
+  min-height: 60px;
+  padding: var(--h-s-2) var(--h-s-1);
+  color: var(--h-ink);
+  text-decoration: none;
+  border-radius: var(--h-r-s);
+}
+.h-home__questrow--link {
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform var(--h-dur-tap) var(--h-ease-out);
+}
+.h-home__questrow--link:active {
+  transform: translate(var(--h-press-shift), var(--h-press-shift));
+  background: var(--h-ground-2);
+}
+@media (hover: hover) {
+  .h-home__questrow--link:hover {
+    background: var(--h-ground-2);
+  }
+}
+.h-home__tick {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-s);
+  background: var(--h-ground-2);
+  font-size: var(--h-fs-2xs);
+  font-weight: 700;
+  transition: background-color var(--h-dur-slow) var(--h-ease-out);
+}
+.h-home__tick--done {
+  background: var(--h-pass);
+  color: var(--h-pass-ink);
+}
+.h-home__questtext {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.h-home__questlabel {
+  font-size: var(--h-fs-s);
+  font-weight: var(--h-wght-ui-strong);
+  line-height: 1.3;
+}
+.h-home__questmeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--h-s-2);
+  font-size: var(--h-fs-xs);
+}
+.h-home__questdone {
+  color: var(--h-pass-text);
+  font-weight: var(--h-wght-ui-strong);
+}
+.h-home__xp {
+  font-weight: 700;
+  color: var(--h-brass-text);
+}
+.h-home__chev {
+  flex: none;
+  color: var(--h-ink-2);
+}
+.h-home__questnote {
+  margin: 0;
+}
+
+/* ---- file entries: the records room and the money trail --------------------------------------- */
+.h-home__filegroups {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-6);
+  min-width: 0;
+}
+.h-home__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-2);
+  min-width: 0;
+}
+.h-home__grouphead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0 var(--h-s-3);
+  min-width: 0;
+}
+.h-home__grouplink {
+  font-size: var(--h-fs-xs);
+}
+.h-home__groupline {
+  margin: 0;
+}
+
+.h-mini-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--h-s-3);
+}
+@media (min-width: 600px) and (max-width: 899px) {
+  .h-mini-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1200px) {
+  .h-mini-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+.h-mini {
+  display: flex;
+  min-width: 0;
+}
+.h-mini__link {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  min-width: 0;
+  min-height: 132px;
+  margin-top: 20px; /* room for the tab */
+  padding: var(--h-s-3);
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: 0 var(--h-r-m) var(--h-r-m) var(--h-r-m);
+  background: var(--h-manila);
+  color: var(--h-manila-ink);
+  box-shadow: var(--h-shadow-2);
+  text-decoration: none;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    transform var(--h-dur-tap) var(--h-ease-out),
+    box-shadow var(--h-dur-tap) var(--h-ease-out);
+}
+.h-mini__link:active {
+  transform: translate(var(--h-press-shift), var(--h-press-shift));
+  box-shadow: var(--h-shadow-0);
+  background: var(--h-manila-2);
+}
+.h-mini__link:focus-visible {
+  outline: none;
+  box-shadow: var(--h-focus-ring), var(--h-shadow-2);
+}
+.h-mini__tab {
+  position: absolute;
+  top: -20px;
+  left: calc(-1 * var(--h-bw));
+  max-width: calc(100% - 12px);
+  height: 20px;
+  padding: 0 var(--h-s-2);
+  border: var(--h-bw) solid var(--h-line);
+  border-bottom: 0;
+  border-radius: var(--h-r-xs) var(--h-r-xs) 0 0;
+  background: var(--h-manila-2);
+  font-family: var(--h-font-mono);
+  font-size: var(--h-fs-2xs);
+  font-weight: 700;
+  line-height: 18px;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.h-mini__head {
+  display: flex;
+  align-items: center;
+  gap: var(--h-s-2);
+  min-width: 0;
+}
+.h-mini__icon {
+  display: inline-flex;
+  flex: none;
+}
+.h-mini__hi {
+  min-width: 0;
+  font-family: var(--h-font-display);
+  font-weight: var(--h-wght-display-2);
+  font-size: var(--h-fs-s);
+  line-height: var(--h-lh-display-deva);
+  letter-spacing: 0;
+  color: var(--h-syahi-text);
+}
+.h-mini__title {
+  margin-top: var(--h-s-1);
+  font-family: var(--h-font-display);
+  font-weight: var(--h-wght-display);
+  font-size: var(--h-fs-l);
+  line-height: var(--h-lh-caps);
+  letter-spacing: var(--h-track-caps);
+  text-transform: uppercase;
+  overflow-wrap: break-word;
+}
+.h-mini__gloss {
+  font-size: var(--h-fs-xs);
+  line-height: 1.35;
+}
+.h-mini__meta {
+  margin-top: auto;
+  padding-top: var(--h-s-2);
+  font-family: var(--h-font-mono);
+  font-size: var(--h-fs-2xs);
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: 0.02em;
+}
+:root[lang='hi'] :is(.h-mini__title, .h-mini__tab, .h-mini__meta) {
+  letter-spacing: 0;
+}
+:root[lang='hi'] .h-mini__meta {
+  font-family: var(--h-font-ui);
+  font-size: var(--h-fs-xs);
+}
+
+/* ---- Muqabla strip ---------------------------------------------------------------------------- */
+.h-home__duelstrip {
+  gap: var(--h-s-4);
+}
+.h-home__duelcopy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-2);
+  min-width: 0;
+}
+.h-home__duelline {
+  margin: 0;
+  font-weight: var(--h-wght-ui-strong);
+}
+.h-home__bot {
+  margin: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--h-s-2);
+  font-size: var(--h-fs-xs);
+}
+.h-home__bot svg {
+  margin-top: 2px;
+}
+.h-home__duelacts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-3);
+  min-width: 0;
+}

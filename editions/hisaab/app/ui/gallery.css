@@ -1,0 +1,37 @@
+/* ui/gallery.css — #/dev/ui only. */
+.h-gal__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-4);
+  padding-top: var(--h-s-4);
+  border-top: var(--h-bw) dashed var(--h-hair);
+}
+.h-gal__title {
+  font-family: var(--h-font-mono);
+  font-size: var(--h-fs-2xs);
+  font-weight: 700;
+  letter-spacing: var(--h-track-kicker);
+  text-transform: uppercase;
+  color: var(--h-ink-2);
+}
+.h-gal__two {
+  display: grid;
+  gap: var(--h-s-5);
+}
+@media (min-width: 900px) {
+  .h-gal__two {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+  }
+}
+.h-gal__stamps {
+  gap: var(--h-s-6);
+  padding: var(--h-s-4);
+  border-radius: var(--h-r-l);
+  background: var(--h-paper);
+}
+.h-gal__tiles {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(44px, 72px));
+  gap: var(--h-s-2);
+}

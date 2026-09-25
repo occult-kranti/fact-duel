@@ -1,6 +1,7 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @import '../vendor/shadcn-tailwind-4.13.0.css';
+@source not "../editions";
 
 /* Visually-hidden text. Global because every answering surface uses it for the shape + position
    name that pairs with the answer glyphs (app/screens/answer-button.tsx). */

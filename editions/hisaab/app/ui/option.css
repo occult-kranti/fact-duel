@@ -1,0 +1,134 @@
+/* ui/option.css — h-opt, the answer button. No mount animation (live-surface safe). */
+.h-optlist {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-3);
+}
+.h-opt {
+  --_tint: var(--h-slot-a);
+  --_ring: transparent;
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--h-tab-w) minmax(0, 1fr) auto;
+  align-items: stretch;
+  width: 100%;
+  min-height: var(--h-answer-h);
+  padding: 0;
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-m);
+  background: var(--h-paper);
+  color: var(--h-ink);
+  box-shadow: 0 0 0 3px var(--_ring), var(--h-shadow-1);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  overflow: visible;
+  transition:
+    transform var(--h-dur-tap) var(--h-ease-out),
+    box-shadow var(--h-dur-tap) var(--h-ease-out);
+}
+.h-opt--b {
+  --_tint: var(--h-slot-b);
+}
+.h-opt--c {
+  --_tint: var(--h-slot-c);
+}
+.h-opt--d {
+  --_tint: var(--h-slot-d);
+}
+.h-opt:active:not(:disabled) {
+  transform: translate(var(--h-press-shift), var(--h-press-shift));
+  box-shadow: 0 0 0 3px var(--_ring), var(--h-shadow-0);
+}
+.h-opt:focus-visible {
+  outline: none;
+  box-shadow: var(--h-focus-ring), var(--h-shadow-1);
+}
+.h-opt:disabled {
+  cursor: default;
+}
+
+.h-opt__tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border-right: var(--h-bw) solid var(--h-line);
+  border-radius: calc(var(--h-r-m) - 2px) 0 0 calc(var(--h-r-m) - 2px);
+  background: var(--_tint);
+  color: var(--h-ink);
+}
+.h-opt__letter {
+  font-family: var(--h-font-display);
+  font-weight: var(--h-wght-display);
+  font-size: var(--h-fs-l);
+  line-height: 1;
+}
+.h-opt__letter:lang(hi) {
+  line-height: var(--h-lh-display-deva);
+}
+.h-opt__shape {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+.h-opt__label {
+  align-self: center;
+  padding: var(--h-s-3) var(--h-s-3) var(--h-s-3) var(--h-s-4);
+  font-size: var(--h-fs-m);
+  line-height: 1.35;
+  overflow-wrap: break-word;
+}
+.h-opt__mark {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--h-s-1);
+  padding-right: var(--h-s-3);
+  font-size: var(--h-fs-xs);
+  font-weight: var(--h-wght-ui-strong);
+}
+
+/* Locked: 3px syahi ring + lock + "Locked". */
+.h-opt[data-state='locked'] {
+  --_ring: var(--h-syahi);
+}
+.h-opt[data-state='locked'] .h-opt__mark {
+  color: var(--h-syahi-text);
+}
+/* Correct (your pick): 3px pass outline, tab pass-filled with ✓ + shape. */
+.h-opt[data-state='correct'] {
+  --_ring: var(--h-pass);
+}
+.h-opt[data-state='correct'] .h-opt__tab {
+  background: var(--h-pass);
+  color: var(--h-pass-ink);
+}
+.h-opt[data-state='correct'] .h-opt__mark,
+.h-opt[data-state='correct-unchosen'] .h-opt__mark {
+  color: var(--h-pass-text);
+}
+/* Correct, not your pick: dashed pass outline + ✓. */
+.h-opt[data-state='correct-unchosen'] {
+  outline: 3px dashed var(--h-pass);
+  outline-offset: 2px;
+}
+/* Your pick, wrong: tab fail-filled ✕ + shape, body hatched. */
+.h-opt[data-state='wrong-chosen'] {
+  background: repeating-linear-gradient(135deg, var(--h-fail-soft) 0 6px, var(--h-paper) 6px 12px);
+}
+.h-opt[data-state='wrong-chosen'] .h-opt__tab {
+  background: var(--h-fail);
+  color: var(--h-fail-ink);
+}
+.h-opt[data-state='wrong-chosen'] .h-opt__mark {
+  color: var(--h-fail-text);
+}
+/* Everything else after the reveal. */
+.h-opt[data-state='other'] {
+  opacity: 0.55;
+}

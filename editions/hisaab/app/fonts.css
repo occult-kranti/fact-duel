@@ -1,0 +1,14 @@
+/*
+ * app/fonts.css — the edition's self-hosted type (design bible §4.2). Only these five stylesheets load
+ * eagerly. They are the WEIGHT files, not per-subset files: each declares devanagari → latin-ext →
+ * latin faces with unicode-range, so ₹ (U+20B9) resolves to the small latin-ext file and an English
+ * screen never fetches a Devanagari file just to draw ₹. Kalam (the noting hand) is lazy:
+ * ui/fonts.ts loadHandFont(). No third-party request; works offline.
+ *
+ * Mono has no Devanagari (none on Fontsource does): mono slots hold Latin codes, digits and ₹ only.
+ */
+@import '@fontsource-variable/akshar/wght.css'; /* 'Akshar Variable', wght 300–700 (display) */
+@import '@fontsource/mukta/400.css'; /* UI / body */
+@import '@fontsource/mukta/600.css';
+@import '@fontsource/sometype-mono/400.css'; /* typewriter: file numbers, receipts, ₹ */
+@import '@fontsource/sometype-mono/700.css';

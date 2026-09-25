@@ -1,0 +1,557 @@
+/**
+ * screens/home/index.tsx — Home (design bible §11.2; notification rules §9).
+ *
+ * Phone, top to bottom: the label block (label + meter with goal-gradient copy + streak and CL) →
+ * Today's file → continue where you left → Your tijori → Aaj ke 3 kaam → the records room (Rajya,
+ * Sector, Kiska Media?, Forward Court) and the money trail (Seedha Khaate Mein, Rahat Kosh, Chunav Se
+ * Pehle, Saal-dar-Saal) → the Muqabla strip. Desktop (≥ 900px): a 12-column grid, bible §11.2.
+ *
+ * ONE violet primary: Open / Continue today's file → once done, Resume <file> → else Duel Babu-Bot.
+ * Quiet by design: Home raises no toast or ceremony itself (the shell's progression watcher owns the
+ * one CL / quests toast and a pending label ceremony); streak, quests, tijori and meter update in place.
+ * Never "come back" or streak-risk copy. A fresh profile is sent to the first-run poster once a session.
+ */
+import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
+import { CalendarDays, Check, ChevronRight, Flame, Scale, Share2, WifiOff, X } from 'lucide-react';
+import { dayKey } from '@/lib/journal.mjs';
+import { dailyQuests } from '@/lib/progression.mjs';
+import { ROUTES, standing, todaysFive } from '../../../edition';
+import { babuRank, BOT_LINE, BOT_NAME, formatNumber, labelDisplay } from '../../data';
+import { href, navigate, type ScreenProps } from '../../router';
+import { shareDailyGrid } from '../../share';
+import { useAppPlayer } from '../../shell/player';
+import { sceneCapability, Tijori, TijoriArt, tijoriLabel } from '../../three';
+import { Button } from '../../ui/button';
+import { Chip } from '../../ui/chip';
+import { cx } from '../../ui/cx';
+import { FileCard } from '../../ui/file-card';
+import { useLang } from '../../ui/lang';
+import { Meter } from '../../ui/meter';
+import { InlineNote, Page } from '../../ui/page';
+import { Poster } from '../../ui/poster';
+import { Skeleton } from '../../ui/skeleton';
+import { isFreshProfile, startShown } from '../start/first-run';
+import { LabelCard } from '../start/label-card';
+import { FileEntries } from './file-entries';
+import {
+  dailyStatus,
+  questView,
+  receiptStats,
+  resumeRun,
+  type DailyStatus,
+  type QuestItem,
+  type ResumeRun,
+} from './home-data';
+import { usePressCue } from './press-cue';
+import './home.css';
+
+type Primary = 'today' | 'resume' | 'duel';
+
+// ---- small shared hooks ---------------------------------------------------------------------------
+
+const subscribeOnline = (fn: () => void) => {
+  window.addEventListener('online', fn);
+  window.addEventListener('offline', fn);
+  return () => {
+    window.removeEventListener('online', fn);
+    window.removeEventListener('offline', fn);
+  };
+};
+/** navigator.onLine, live. Solo modes work offline (the bank ships in the build). */
+export function useOnline() {
+  return useSyncExternalStore(
+    subscribeOnline,
+    () => navigator.onLine,
+    () => true,
+  );
+}
+
+/** The local day key, refreshed when the tab comes back after midnight. */
+function useToday() {
+  const [day, setDay] = useState(() => dayKey(Date.now()));
+  useEffect(() => {
+    const check = () => setDay(dayKey(Date.now()));
+    window.addEventListener('focus', check);
+    document.addEventListener('visibilitychange', check);
+    return () => {
+      window.removeEventListener('focus', check);
+      document.removeEventListener('visibilitychange', check);
+    };
+  }, []);
+  return day;
+}
+
+type Streak = { current: number; best: number; lastDay: string | null; shields: number };
+
+/**
+ * The streak as it truly stands today. The stored `current` is only rewritten on the next play, so a
+ * run already broken (more missed days than CL can cover) reads 0 here instead of a stale number.
+ */
+function liveStreak(s: Streak | undefined, today: string): { days: number; shields: number; best: number } {
+  if (!s || !s.lastDay) return { days: 0, shields: s?.shields ?? 0, best: s?.best ?? 0 };
+  const [a, b] = [s.lastDay, today].map((k) => {
+    const [y, m, d] = k.split('-').map(Number);
+    return new Date(y, m - 1, d).getTime();
+  });
+  const gap = Math.round((b - a) / 864e5);
+  const missed = Math.max(0, gap - 1);
+  const alive = missed === 0 || s.shields >= missed;
+  return { days: alive ? s.current : 0, shields: s.shields, best: s.best };
+}
+
+// ---- the screen -----------------------------------------------------------------------------------
+
+export default function HomeScreen(_props: ScreenProps) {
+  const player = useAppPlayer();
+  const { t } = useLang();
+  const online = useOnline();
+  const today = useToday();
+  const onPointerDown = usePressCue();
+  const profile = player.profile;
+  const fresh = player.loaded && isFreshProfile(profile);
+
+  // A brand-new player sees the first-run poster first (once per page session).
+  useEffect(() => {
+    if (fresh && !startShown()) navigate(href.start(), { replace: true });
+  }, [fresh]);
+
+  const daily = useMemo(() => todaysFive(), [today]); // eslint-disable-line react-hooks/exhaustive-deps
+  const status = useMemo(
+    () => dailyStatus(profile.journal, daily.day, daily.cards.length),
+    [profile.journal, daily],
+  );
+  const receipts = useMemo(() => receiptStats(profile.journal), [profile.journal, today]); // eslint-disable-line react-hooks/exhaustive-deps
+  const resume = useMemo(() => resumeRun(profile.journeys, ROUTES), [profile.journeys]);
+  const xp = player.progression?.xp ?? 0;
+  const s = standing(xp);
+  const streak = liveStreak(player.progression?.streak as Streak | undefined, today);
+  const quests = useMemo<QuestItem[]>(() => {
+    const q = player.progression?.quests as { day: string | null; items: QuestItem[] } | undefined;
+    if (q && q.day === today && q.items.length) return q.items;
+    // Not rolled yet today: the engine deals exactly these on the first answer (same seed), at 0.
+    return (dailyQuests(profile.epoch ?? 'initial', today) as { items: QuestItem[] }).items;
+  }, [player.progression?.quests, profile.epoch, today]);
+
+  if (!player.loaded || (fresh && !startShown())) {
+    return (
+      <Page screen="home">
+        <h1 className="h-sr">{t('Home', 'होम')}</h1>
+        <Skeleton lines={6} label={t('Opening your files…', 'आपकी फ़ाइलें खुल रही हैं…')} />
+      </Page>
+    );
+  }
+
+  const primary: Primary = !status.done ? 'today' : resume ? 'resume' : 'duel';
+
+  return (
+    <Page screen="home" className={cx('h-home', !resume && 'h-home--noresume')}>
+      <h1 className="h-sr">{t('Home — Hisaab Do', 'होम — हिसाब दो')}</h1>
+      {!online || player.storageError ? (
+        <div className="h-home__notes">
+          {!online ? (
+            <InlineNote tone="wait">
+              <WifiOff aria-hidden="true" size={16} className="h-home__noteicon" />
+              {t(
+                'No network. The files are already on your phone.',
+                'नेटवर्क नहीं है। फ़ाइलें आपके फ़ोन में ही हैं।',
+              )}
+            </InlineNote>
+          ) : null}
+          {player.storageError ? <InlineNote tone="wait">{player.storageError}</InlineNote> : null}
+        </div>
+      ) : null}
+      <div className="h-home__root" onPointerDown={onPointerDown}>
+        <section className="h-home__who" aria-labelledby="h-home-label">
+          <Poster
+            className="h-home__poster"
+            as="p"
+            size="l"
+            hi="जनता का पैसा।"
+            en="Janta ka sawaal."
+            swipe="sawaal"
+          />
+          <LabelCard
+            xp={xp}
+            intro={s.band === 0 && s.level <= 1}
+            headingId="h-home-label"
+            footer={<StreakRow days={streak.days} shields={streak.shields} best={streak.best} />}
+          />
+        </section>
+
+        <section className="h-home__today" aria-label={t("Today's file", 'आज की फ़ाइल')}>
+          <TodayCard day={daily.day} status={status} primary={primary === 'today'} band={s.band} />
+        </section>
+
+        {resume ? (
+          <section className="h-home__resume" aria-label={t('Continue where you left', 'जहाँ छोड़ा था')}>
+            <ResumeCard run={resume} primary={primary === 'resume'} />
+          </section>
+        ) : null}
+
+        <section className="h-home__tijori" aria-labelledby="h-home-tijori">
+          <TijoriPanel count={receipts.count} today={receipts.today} />
+        </section>
+
+        <section className="h-home__quests" aria-labelledby="h-home-quests">
+          <Quests items={quests} />
+        </section>
+
+        <section className="h-home__files" aria-labelledby="h-home-files">
+          <FileEntries journeys={profile.journeys} />
+        </section>
+
+        <section className="h-home__duel" aria-labelledby="h-home-duel">
+          <DuelStrip primary={primary === 'duel'} tier={player.progression?.rank?.tier} />
+        </section>
+      </div>
+    </Page>
+  );
+}
+
+// ---- label block: streak + CL ---------------------------------------------------------------------
+
+function StreakRow({ days, shields, best }: { days: number; shields: number; best: number }) {
+  const { t } = useLang();
+  const dayWord = days === 1 ? t('day', 'दिन') : t('days', 'दिन');
+  return (
+    <>
+      <p className="h-home__streak">
+        <Flame aria-hidden="true" size={18} strokeWidth={2.4} className="h-home__flame" />
+        <span>
+          {t('Streak', 'स्ट्रीक')}: <strong className="h-tnum">{formatNumber(days)}</strong> {dayWord}
+          {best > days ? (
+            <span className="h-home__best">
+              {' '}
+              · {t('best', 'सबसे लंबी')} {formatNumber(best)}
+            </span>
+          ) : null}
+        </span>
+      </p>
+      <Chip
+        kind="plain"
+        className="h-home__cl"
+        title={t(
+          'Casual leave: covers a missed day on its own. 1 per 7-day streak, max 2.',
+          'आकस्मिक अवकाश: छूटा दिन अपने आप ढक लेता है।',
+        )}
+      >
+        <span aria-hidden="true">CL</span>
+        <span className="h-home__cltext">
+          {shields > 0 ? t(`${shields} in hand`, `${shields} बाकी`) : t('1 per 7 days', 'हर 7 दिन पर 1')}
+        </span>
+        <span className="h-sr">
+          {t('Casual leave covers a missed day automatically.', 'आकस्मिक अवकाश छूटा दिन अपने आप ढक लेता है।')}
+        </span>
+      </Chip>
+    </>
+  );
+}
+
+// ---- Today's file ---------------------------------------------------------------------------------
+
+function TodayCard({
+  day,
+  status,
+  primary,
+  band,
+}: {
+  day: string;
+  status: DailyStatus;
+  primary: boolean;
+  band: number;
+}) {
+  const { t } = useLang();
+  const [shared, setShared] = useState<string | null>(null);
+  const state = status.done ? 'cleared' : status.answered > 0 ? 'open' : 'sealed';
+  const label = !status.done
+    ? status.answered > 0
+      ? t("Continue today's file", 'आज की फ़ाइल जारी रखो')
+      : t("Open today's file", 'आज की फ़ाइल खोलो')
+    : t("See today's file", 'आज की फ़ाइल देखो');
+
+  const share = async () => {
+    const results = status.results.map((r) => r === true);
+    const outcome = await shareDailyGrid({ day, results, label: labelDisplay(band).en });
+    setShared(
+      outcome.ok
+        ? outcome.method === 'clipboard'
+          ? t('Copied ✓', 'कॉपी हो गया ✓')
+          : t('Shared ✓', 'भेज दिया ✓')
+        : outcome.reason === 'cancelled'
+          ? null
+          : t('Could not share', 'भेज नहीं पाए'),
+    );
+  };
+
+  return (
+    <FileCard
+      fno={`F.No. D/${day}`}
+      titleHi="आज का हिसाब"
+      title={t("Today's file", 'आज की फ़ाइल')}
+      icon={<CalendarDays size={24} strokeWidth={2.2} />}
+      state={state}
+      emphasis
+      seed={`daily-${day}`}
+      clearedText={`${status.right}/${status.size}`}
+      meta={
+        status.done
+          ? t('Aaj ka hisaab ho gaya. Kal naya file.', 'आज का हिसाब हो गया। कल नई फ़ाइल।')
+          : t(
+              `${status.size} questions · same for everyone today`,
+              `${status.size} सवाल · आज सबके लिए एक जैसे`,
+            )
+      }
+    >
+      {status.done ? (
+        <span className="h-home__grid" role="img" aria-label={`${status.right} of ${status.size} right`}>
+          {status.results.map((r, i) => (
+            <span key={i} className={cx('h-home__cell', r ? 'h-home__cell--pass' : 'h-home__cell--fail')}>
+              {r ? <Check size={16} strokeWidth={3} /> : <X size={16} strokeWidth={3} />}
+            </span>
+          ))}
+          <span className="h-home__gridscore h-mono">
+            {status.right}/{status.size}
+          </span>
+        </span>
+      ) : status.answered > 0 ? (
+        <Meter
+          as="span"
+          className="h-home__todaymeter"
+          value={status.answered}
+          max={status.size}
+          ticks={status.size}
+          label={t("Today's file progress", 'आज की फ़ाइल')}
+          valueText={`${status.answered} of ${status.size} answered`}
+          copy={t(
+            `${status.answered} of ${status.size} answered`,
+            `${status.size} में से ${status.answered} हो गए`,
+          )}
+        />
+      ) : (
+        <span className="h-home__ready">{t('Aaj ka hisaab ready hai.', 'आज का हिसाब तैयार है।')}</span>
+      )}
+      <span className="h-home__actions">
+        {status.done ? (
+          <>
+            <Button variant="paper" size="s" icon={<Share2 size={18} />} onClick={share} aria-live="polite">
+              {shared ?? t('Share grid', 'ग्रिड भेजो')}
+            </Button>
+            <Button variant="ghost" size="s" href={href.aaj()}>
+              {label}
+            </Button>
+          </>
+        ) : (
+          <Button variant={primary ? 'primary' : 'paper'} block href={href.aaj()}>
+            {label}
+          </Button>
+        )}
+      </span>
+      {status.done ? (
+        <span className="h-home__next">{t('New file at midnight.', 'नई फ़ाइल आधी रात को।')}</span>
+      ) : null}
+    </FileCard>
+  );
+}
+
+// ---- continue where you left ----------------------------------------------------------------------
+
+function ResumeCard({ run, primary }: { run: ResumeRun; primary: boolean }) {
+  const { t } = useLang();
+  const { route, answered, total } = run;
+  return (
+    <FileCard
+      fno={`F.No. ${route.code}`}
+      title={route.title}
+      state="open"
+      meta={t('Continue where you left.', 'जहाँ छोड़ा था, वहीं से।')}
+    >
+      <Meter
+        as="span"
+        className="h-home__resumemeter"
+        value={answered}
+        max={total}
+        ticks={total}
+        label={t('File progress', 'फ़ाइल')}
+        valueText={`${answered} of ${total} answered`}
+        copy={`${route.title} · ${answered} ${t('of', 'में से')} ${total}`}
+      />
+      <span className="h-home__actions">
+        <Button variant={primary ? 'primary' : 'paper'} block={primary} href={href.route(route.id)}>
+          {t(`Resume ${route.title}`, `${route.title} जारी रखो`)}
+        </Button>
+      </span>
+    </FileCard>
+  );
+}
+
+// ---- Your tijori -----------------------------------------------------------------------------------
+
+function TijoriPanel({ count, today }: { count: number; today: number }) {
+  const { t } = useLang();
+  const [open, setOpen] = useState(false);
+  const capable = useMemo(() => sceneCapability().ok, []);
+  return (
+    <div className="h-home__panel h-home__tijoripanel">
+      <div className="h-home__panelhead">
+        <h2 className="h-home__h2" id="h-home-tijori">
+          <span className="h-home__h2hi" lang="hi">
+            आपकी तिजोरी
+          </span>
+          <span className="h-home__h2en">Your tijori</span>
+        </h2>
+        {today > 0 ? (
+          <span className="h-home__today-n h-mono">
+            +{formatNumber(today)} {t('today', 'आज')}
+          </span>
+        ) : null}
+      </div>
+      {count === 0 ? (
+        <p className="h-home__empty">
+          {t('Tijori khaali hai. First receipt goes here.', 'तिजोरी ख़ाली है। पहली रसीद यहीं आएगी।')}
+        </p>
+      ) : null}
+      {open ? (
+        <Tijori count={count} newCount={today} height={280} className="h-home__scene" />
+      ) : (
+        <div className="h-home__tijoriart" role="img" aria-label={tijoriLabel(count)}>
+          <TijoriArt count={count} />
+        </div>
+      )}
+      <div className="h-home__row">
+        {capable && count > 0 ? (
+          <Button variant="paper" size="s" onClick={() => setOpen((v) => !v)} aria-expanded={open}>
+            {open ? t('Close tijori', 'तिजोरी बंद करो') : t('Open tijori', 'तिजोरी खोलो')}
+          </Button>
+        ) : null}
+        <a className="h-link h-link--tap" href={href.receipts()}>
+          {t('All receipts', 'सारी रसीदें')}
+        </a>
+      </div>
+    </div>
+  );
+}
+
+// ---- Aaj ke 3 kaam -----------------------------------------------------------------------------------
+
+function Quests({ items }: { items: QuestItem[] }) {
+  const { t, isHi } = useLang();
+  const done = items.filter((q) => q.done).length;
+  return (
+    <div className="h-home__panel">
+      <div className="h-home__panelhead">
+        <h2 className="h-home__h2" id="h-home-quests">
+          <span className="h-home__h2hi" lang="hi">
+            आज के 3 काम
+          </span>
+          <span className="h-home__h2en">Aaj ke 3 kaam</span>
+        </h2>
+        <span className="h-home__questcount h-mono" aria-label={`${done} of ${items.length} done`}>
+          {done}/{items.length}
+        </span>
+      </div>
+      {items.length ? (
+        <ol className="h-home__quests-list">
+          {items.map((q) => {
+            const view = questView(q);
+            const words = isHi ? view.hi : view.en;
+            const body = (
+              <>
+                <span className={cx('h-home__tick', q.done && 'h-home__tick--done')} aria-hidden="true">
+                  {q.done ? (
+                    <Check size={18} strokeWidth={3} />
+                  ) : (
+                    <span className="h-mono">
+                      {Math.min(q.progress, q.target)}/{q.target}
+                    </span>
+                  )}
+                </span>
+                <span className="h-home__questtext">
+                  <span className="h-home__questlabel">{words}</span>
+                  <span className="h-home__questmeta">
+                    {q.done ? (
+                      <span className="h-home__questdone">{t('Done', 'हो गया')}</span>
+                    ) : (
+                      <span className="h-sr">
+                        {Math.min(q.progress, q.target)} {t('of', 'में से')} {q.target}.
+                      </span>
+                    )}
+                    <span className="h-home__xp h-mono">+{q.xp} XP</span>
+                  </span>
+                </span>
+                {q.done ? null : <ChevronRight aria-hidden="true" size={20} className="h-home__chev" />}
+              </>
+            );
+            return (
+              <li key={q.id} className={cx('h-home__quest', q.done && 'h-home__quest--done')}>
+                {q.done ? (
+                  <div className="h-home__questrow">{body}</div>
+                ) : (
+                  <a className="h-home__questrow h-home__questrow--link" href={view.to}>
+                    {body}
+                  </a>
+                )}
+              </li>
+            );
+          })}
+        </ol>
+      ) : (
+        <p className="h-home__empty">
+          {t('Quests arrive with your first answer today.', 'आज के पहले जवाब के साथ काम आएँगे।')}
+        </p>
+      )}
+      <p className="h-meta h-home__questnote">
+        {t(
+          'Quests are optional. They reset at midnight; nothing is lost.',
+          'काम ज़रूरी नहीं हैं। आधी रात को नए आते हैं।',
+        )}
+      </p>
+    </div>
+  );
+}
+
+// ---- Muqabla strip ---------------------------------------------------------------------------------
+
+function DuelStrip({ primary, tier }: { primary: boolean; tier?: string }) {
+  const { t } = useLang();
+  return (
+    <div className="h-home__panel h-home__duelstrip">
+      <div className="h-home__duelcopy">
+        <h2 className="h-home__h2" id="h-home-duel">
+          <span className="h-home__h2hi" lang="hi">
+            मुक़ाबला
+          </span>
+          <span className="h-home__h2en">Muqabla</span>
+        </h2>
+        <p className="h-home__duelline">
+          {t(
+            'Muqabla karo. Babu-Bot bina padhe stamp lagata hai.',
+            'मुक़ाबला करो। Babu-Bot बिना पढ़े ठप्पा लगाता है।',
+          )}
+        </p>
+        <p className="h-home__bot">
+          <Scale aria-hidden="true" size={18} strokeWidth={2.2} />
+          <span>
+            <strong>{BOT_NAME}</strong> — {BOT_LINE}
+          </span>
+        </p>
+        <p className="h-meta">
+          {t('Babu rank', 'बाबू रैंक')}: <strong>{babuRank(tier)}</strong> ·{' '}
+          {t('on this device', 'इस डिवाइस पर')}
+        </p>
+      </div>
+      <div className="h-home__duelacts">
+        <Button variant={primary ? 'primary' : 'paper'} block href={href.duel({ vs: 'bot' })}>
+          {t('Duel Babu-Bot', 'Babu-Bot से मुक़ाबला')}
+        </Button>
+        <div className="h-home__row">
+          <Button variant="paper" size="s" href={href.friend()}>
+            {t('Duel a friend', 'दोस्त से मुक़ाबला')}
+          </Button>
+          <Button variant="ghost" size="s" href={href.pass()}>
+            {t('Pass & Play', 'पास एंड प्ले')}
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}

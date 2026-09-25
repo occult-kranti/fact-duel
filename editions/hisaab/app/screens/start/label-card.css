@@ -1,0 +1,96 @@
+/* screens/start/label-card.css — the inline label card (first run + Home's label block). Tokens only. */
+.h-labelcard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-2);
+  min-width: 0;
+  padding: var(--h-s-5) var(--h-s-4) var(--h-s-4);
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-l);
+  background: var(--h-paper);
+  box-shadow: var(--h-shadow-2);
+}
+/* A syahi edge down the left: the label is the one piece of identity on the page. */
+.h-labelcard::before {
+  content: '';
+  position: absolute;
+  inset: 12px auto 12px -2px;
+  width: 6px;
+  border-radius: 0 var(--h-r-xs) var(--h-r-xs) 0;
+  background: var(--h-syahi);
+}
+.h-labelcard__kicker {
+  color: var(--h-ink-2);
+}
+.h-labelcard__label {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-family: var(--h-font-display);
+  font-weight: var(--h-wght-display);
+  color: var(--h-ink);
+  min-width: 0;
+}
+.h-labelcard__hi {
+  font-size: var(--h-fs-xl);
+  line-height: var(--h-lh-display-deva);
+  letter-spacing: 0;
+  color: var(--h-syahi-text);
+}
+.h-labelcard__en {
+  font-size: var(--h-fs-2xl);
+  line-height: var(--h-lh-caps);
+  letter-spacing: var(--h-track-caps);
+  text-transform: uppercase;
+  overflow-wrap: break-word;
+  text-shadow: 3px 3px 0 var(--h-syahi-soft);
+}
+.h-labelcard__aside {
+  font-family: var(--h-font-ui);
+  font-size: var(--h-fs-xs);
+  font-weight: var(--h-wght-ui-strong);
+  letter-spacing: 0;
+  text-transform: none;
+  text-shadow: none;
+  color: var(--h-ink-2);
+  white-space: nowrap;
+}
+.h-labelcard__line {
+  margin: 0;
+  font-size: var(--h-fs-s);
+  font-weight: var(--h-wght-ui-strong);
+  color: var(--h-ink);
+}
+.h-labelcard__note {
+  margin: 0;
+  padding: var(--h-s-2) var(--h-s-3);
+  border-left: 3px solid var(--h-margin-rule);
+  background: var(--h-sheet);
+  border-radius: 0 var(--h-r-s) var(--h-r-s) 0;
+  font-size: var(--h-fs-xs);
+  color: var(--h-ink);
+}
+.h-labelcard__meter {
+  margin-top: var(--h-s-2);
+}
+.h-labelcard__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--h-s-2) var(--h-s-3);
+  margin-top: var(--h-s-1);
+  min-width: 0;
+}
+:root[lang='hi'] .h-labelcard__en {
+  letter-spacing: 0;
+}
+@media (min-width: 600px) {
+  .h-labelcard {
+    padding: var(--h-s-6) var(--h-s-6) var(--h-s-5);
+  }
+  .h-labelcard__en {
+    font-size: var(--h-fs-3xl);
+  }
+}

@@ -1,0 +1,207 @@
+/* three/three.css — the scene host box and the 2D fallbacks of the four set pieces (bible §10). */
+.h-scenehost {
+  position: relative;
+  width: 100%;
+  min-height: var(--h-scene-h, auto);
+  z-index: var(--h-z-scene);
+}
+.h-scenehost__fallback {
+  width: 100%;
+  height: 100%;
+}
+
+/* ---- TIJORI (2D): a glass-front safe with stacked coin bars, height ∝ count (log after 100) ---- */
+.h-tijori {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--h-s-4);
+}
+.h-tijori__safe {
+  position: relative;
+  flex: none;
+  width: 120px;
+  height: 132px;
+  padding: 10px;
+  border: 3px solid var(--h-line);
+  border-radius: var(--h-r-m);
+  background: var(--h-ground-2);
+  box-shadow: var(--h-shadow-2);
+}
+.h-tijori__glass {
+  position: relative;
+  height: 100%;
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-s);
+  background: var(--h-paper);
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 4px;
+  padding: 0 6px 4px;
+}
+.h-tijori__bar {
+  flex: 1 1 0;
+  border-radius: 3px 3px 0 0;
+  background: repeating-linear-gradient(0deg, var(--h-brass) 0 5px, var(--h-brass-text) 5px 6px);
+  transition: height var(--h-dur-slow) var(--h-ease-out);
+}
+.h-tijori__dial {
+  position: absolute;
+  top: 50%;
+  right: -9px;
+  width: 14px;
+  height: 14px;
+  margin-top: -7px;
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: 50%;
+  background: var(--h-brass);
+}
+.h-tijori__count {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.h-tijori__num {
+  font-family: var(--h-font-mono);
+  font-weight: 700;
+  font-size: var(--h-fs-3xl);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.h-tijori__unit {
+  font-weight: var(--h-wght-ui-strong);
+}
+.h-tijori__note {
+  font-size: var(--h-fs-xs);
+  color: var(--h-ink-2);
+}
+.h-tijori__new {
+  font-family: var(--h-font-mono);
+  font-size: var(--h-fs-xs);
+  font-weight: 700;
+  color: var(--h-brass-text);
+}
+
+/* ---- TARAZU (2D): an SVG scale rotated by the true angle ---- */
+.h-tarazu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--h-s-2);
+}
+.h-tarazu svg {
+  width: min(100%, 320px);
+  height: auto;
+  overflow: visible;
+}
+.h-tarazu__beam {
+  transform-box: view-box;
+  transform-origin: 160px 40px;
+  transition: transform var(--h-dur-slow) var(--h-ease-out);
+}
+.h-tarazu__line {
+  stroke: var(--h-line);
+  stroke-width: 3;
+  fill: none;
+}
+.h-tarazu__pan {
+  fill: var(--h-manila);
+  stroke: var(--h-line);
+  stroke-width: 3;
+}
+.h-tarazu__post {
+  fill: var(--h-ink);
+}
+.h-tarazu__name {
+  fill: var(--h-ink);
+  font-family: var(--h-font-display);
+  font-weight: 700;
+  font-size: 15px;
+  text-transform: uppercase;
+}
+.h-tarazu__score {
+  fill: var(--h-ink);
+  font-family: var(--h-font-mono);
+  font-weight: 700;
+  font-size: 18px;
+}
+.h-tarazu__caption {
+  margin: 0;
+  font-weight: var(--h-wght-ui-strong);
+  text-align: center;
+}
+
+/* ---- THAPPA (2D): the CSS stamp slam ---- */
+.h-thappa {
+  display: grid;
+  place-items: center;
+  min-height: 96px;
+  padding: var(--h-s-4);
+  overflow-x: clip; /* the slam's 1.6× frames never scroll the page sideways */
+  overflow-clip-margin: var(--h-gutter);
+}
+
+/* ---- FILE PILE (2D): six tabs with verdict-coloured edges + tape band + stamp ---- */
+.h-pile {
+  position: relative;
+  display: grid;
+  gap: var(--h-s-3);
+  justify-items: center;
+  overflow-x: clip;
+  overflow-clip-margin: var(--h-gutter);
+}
+.h-pile__stack {
+  position: relative;
+  width: min(100%, 280px);
+  display: flex;
+  flex-direction: column-reverse;
+}
+.h-pile__file {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--h-s-2);
+  height: 26px;
+  margin-top: -6px;
+  padding: 0 var(--h-s-3);
+  border: var(--h-bw) solid var(--h-line);
+  border-left-width: 8px;
+  border-radius: var(--h-r-xs) var(--h-r-s) var(--h-r-s) var(--h-r-xs);
+  background: var(--h-manila);
+  color: var(--h-manila-ink);
+  font-family: var(--h-font-mono);
+  font-size: var(--h-fs-2xs);
+  font-weight: 700;
+}
+.h-pile__file:nth-child(odd) {
+  transform: translateX(calc(4px * var(--h-travel)));
+}
+.h-pile__file--pass {
+  border-left-color: var(--h-pass);
+}
+.h-pile__file--fail {
+  border-left-color: var(--h-fail);
+}
+.h-pile__file--wait {
+  border-left-color: var(--h-wait);
+}
+.h-pile__tape {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 12px;
+  margin-left: -6px;
+  background: var(--h-tape);
+  border-inline: var(--h-bw-thin) solid var(--h-shadow-ink);
+}
+.h-pile__title {
+  margin: 0;
+  font-family: var(--h-font-display);
+  font-weight: var(--h-wght-display);
+  font-size: var(--h-fs-xl);
+  text-transform: uppercase;
+  text-align: center;
+}

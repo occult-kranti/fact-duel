@@ -18,6 +18,10 @@
  *   pnpm dev:hisaab       dev server
  *   pnpm build:hisaab     production build into dist-hisaab/
  *   pnpm preview:hisaab   serve dist-hisaab/ at the base path
+ *
+ * `HISAAB_OUT=<dir> pnpm build:hisaab` writes the build somewhere else (relative to the repo root, or
+ * absolute), so parallel agents and CI jobs can build without emptying each other's dist-hisaab/.
+ * `preview:hisaab` reads the same variable, so `HISAAB_OUT=<dir> pnpm preview:hisaab` serves that build.
  */
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -29,6 +33,8 @@ const repoRoot = path.dirname(fileURLToPath(import.meta.url));
 const editionRoot = path.join(repoRoot, 'editions/hisaab');
 const rawBase = process.env.HISAAB_BASE ?? '/fact-duel/hisaab/';
 const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
+/** Where the build goes: HISAAB_OUT (repo-relative or absolute), else dist-hisaab/. */
+const outDir = process.env.HISAAB_OUT ? path.resolve(repoRoot, process.env.HISAAB_OUT) : path.join(repoRoot, 'dist-hisaab');
 
 /** Swap each shared module for the edition's twin, by resolved file. See editions/hisaab/aliases.mjs. */
 function editionAliases(): Plugin {
@@ -70,7 +76,7 @@ export default defineConfig(({ mode }) => ({
   plugins: [editionAliases(), react()],
   server: { fs: { allow: [repoRoot] } },
   build: {
-    outDir: path.join(repoRoot, 'dist-hisaab'),
+    outDir,
     emptyOutDir: true,
     target: 'es2022',
     chunkSizeWarningLimit: 1200,

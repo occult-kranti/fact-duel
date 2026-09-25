@@ -1,0 +1,159 @@
+/* ui/receipt.css — h-receipt: mono rows, dashed leaders, a zig-zag bottom edge (mask). */
+.h-receipt {
+  --_tooth: var(--h-perf);
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  padding: var(--h-s-4) var(--h-s-4) calc(var(--h-s-5) + var(--_tooth) / 2);
+  border: var(--h-bw) solid var(--h-line);
+  border-bottom: 0;
+  border-radius: var(--h-r-s) var(--h-r-s) 0 0;
+  background: var(--h-receipt);
+  color: var(--h-ink);
+  font-family: var(--h-font-mono);
+  font-size: var(--h-fs-xs);
+  line-height: 1.5;
+  -webkit-mask:
+    linear-gradient(black 0 0) top / 100% calc(100% - var(--_tooth) / 2) no-repeat,
+    conic-gradient(from -45deg at bottom, transparent, black 1deg 89deg, transparent 90deg) bottom / var(--_tooth) calc(var(--_tooth) / 2) repeat-x;
+  mask:
+    linear-gradient(black 0 0) top / 100% calc(100% - var(--_tooth) / 2) no-repeat,
+    conic-gradient(from -45deg at bottom, transparent, black 1deg 89deg, transparent 90deg) bottom / var(--_tooth) calc(var(--_tooth) / 2) repeat-x;
+}
+.h-receipt__rows {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-3);
+}
+.h-receipt__row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-1);
+  min-width: 0;
+  padding-bottom: var(--h-s-3);
+  border-bottom: var(--h-bw) dashed var(--h-hair);
+}
+.h-receipt__row:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+.h-receipt__row--inline {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--h-s-2);
+}
+/* The dashed leader between an inline key and its value. */
+.h-receipt__row--inline .h-receipt__k {
+  flex: none;
+}
+.h-receipt__row--inline .h-receipt__v {
+  flex: 1 1 auto;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  background: linear-gradient(to right, var(--h-hair) 50%, transparent 0) left 60% / 8px 2px repeat-x;
+}
+.h-receipt__row--inline .h-receipt__v > * {
+  padding-left: var(--h-s-2);
+  background: var(--h-receipt);
+}
+.h-receipt__k {
+  font-size: var(--h-fs-2xs);
+  font-weight: 700;
+  letter-spacing: var(--h-track-kicker);
+  color: var(--h-ink-2);
+}
+.h-receipt__v {
+  margin: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-2);
+}
+.h-receipt__row--inline .h-receipt__v {
+  flex-direction: row;
+  align-items: center;
+}
+.h-receipt__xp {
+  font-weight: 700;
+  font-size: var(--h-fs-s);
+  font-variant-numeric: tabular-nums;
+  color: var(--h-brass-text);
+}
+.h-receipt__row:has(+ .h-receipt__row--note) {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+.h-receipt__row--note {
+  margin-top: calc(-1 * var(--h-s-2));
+}
+.h-receipt__note {
+  margin: 0;
+  font-size: var(--h-fs-xs);
+  color: var(--h-ink-2);
+}
+.h-receipt__source {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--h-s-2);
+  min-width: 0;
+}
+.h-receipt__link {
+  display: inline;
+  color: var(--h-syahi-text);
+  font-family: var(--h-font-ui);
+  font-size: var(--h-fs-xs);
+  font-weight: var(--h-wght-ui-strong);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere;
+}
+.h-receipt__link svg {
+  display: inline;
+  margin-left: 4px;
+  vertical-align: -2px;
+}
+.h-receipt__link:focus-visible {
+  outline: none;
+  border-radius: var(--h-r-xs);
+  box-shadow: var(--h-focus-ring);
+}
+.h-receipt__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-1);
+  font-family: var(--h-font-ui);
+}
+.h-receipt__text,
+.h-receipt__poll {
+  font-family: var(--h-font-ui);
+}
+.h-receipt__poll {
+  font-weight: var(--h-wght-ui-strong);
+}
+
+/* Motion #4 — print: rows reveal top-down in 6 steps over 360 ms, once. */
+.h-receipt--printing .h-receipt__rows {
+  animation: h-receipt-print var(--h-dur-slow) steps(6, end) both;
+}
+@keyframes h-receipt-print {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+:root[data-motion='reduced'] .h-receipt--printing .h-receipt__rows {
+  animation: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .h-receipt--printing .h-receipt__rows {
+    animation: none;
+  }
+}
