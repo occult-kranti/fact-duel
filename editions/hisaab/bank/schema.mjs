@@ -61,6 +61,16 @@ export const GOVTS = Object.freeze([
   "President's Rule", 'Other',
 ]);
 
+/**
+ * Mode tags (charter §6): an item may belong to any of the three money-trail modes on top of its
+ * lane. Modes are built from these tags, so an item written in a state lane (e.g. a Ladli Behna
+ * question) can also be dealt in Seedha Khaate Mein without being written twice.
+ */
+export const TAGS = Object.freeze(['distribution', 'relief', 'pre-election']);
+
+/** Party names allowed in `enactedBy[].party` — the GOVTS list minus the non-party entries. */
+const PARTY_OK = (p) => typeof p === 'string' && p.length >= 2 && p.length <= 40;
+
 export const ID_PATTERN = /^h[a-z]{2}\d{3}$/;
 export const AS_OF_PATTERN = /^20\d\d-(0[1-9]|1[0-2])$/;
 
@@ -106,6 +116,39 @@ export function checkItem(q) {
   }
   if (q.people !== undefined) {
     need(Array.isArray(q.people) && q.people.every((n) => typeof n === 'string' && n.length > 1), 'people must be names');
+  }
+  if (q.tags !== undefined) {
+    need(Array.isArray(q.tags) && q.tags.length > 0 && q.tags.every((t) => TAGS.includes(t)), `tags must be from ${TAGS.join('/')}`);
+    need(new Set(q.tags).size === (q.tags?.length ?? 0), 'tags must not repeat');
+  }
+  // Who announced, presented or passed a scheme, budget or bill — a public act, not an allegation.
+  if (q.enactedBy !== undefined) {
+    need(
+      Array.isArray(q.enactedBy) &&
+        q.enactedBy.length > 0 &&
+        q.enactedBy.every(
+          (e) =>
+            e && typeof e.name === 'string' && e.name.length > 1 &&
+            typeof e.role === 'string' && e.role.length > 1 && e.role.length <= 80 &&
+            PARTY_OK(e.party),
+        ),
+      'enactedBy must be [{ name, role, party }]',
+    );
+  }
+  // Results: reach, cost, audit findings, what happened at the next election.
+  if (q.outcome !== undefined) {
+    need(typeof q.outcome === 'string' && q.outcome.length >= 20 && q.outcome.length <= 320, 'outcome 20–320 chars');
+  }
+  // The election a pre-poll measure preceded, and how far ahead of it the measure came.
+  if (q.poll !== undefined) {
+    const p = q.poll;
+    need(p && typeof p.label === 'string' && p.label.length > 3 && p.label.length <= 80, 'poll.label 4–80 chars');
+    need(p && typeof p.month === 'string' && AS_OF_PATTERN.test(p.month), 'poll.month YYYY-MM');
+    if (p?.gapDays !== undefined) need(Number.isInteger(p.gapDays) && p.gapDays >= 0 && p.gapDays <= 800, 'poll.gapDays 0–800');
+    if (p?.result !== undefined) need(typeof p.result === 'string' && p.result.length > 3 && p.result.length <= 160, 'poll.result 4–160 chars');
+  }
+  if (Array.isArray(q.tags) && q.tags.includes('pre-election')) {
+    need(q.poll !== undefined, "items tagged 'pre-election' need poll { label, month }");
   }
   const named = Array.isArray(q.people) && q.people.length > 0;
   if (q.kind === 'scam' || named) {

@@ -111,6 +111,17 @@ export const HISAAB_SCHEMES = Object.freeze([
 ]);
 ```
 
+### 3a. Optional fields (the money trail)
+
+```js
+    tags: ['distribution', 'pre-election'],     // modes: 'distribution' | 'relief' | 'pre-election'
+    enactedBy: [{ name: 'Shivraj Singh Chouhan', role: 'Chief Minister, Madhya Pradesh', party: 'BJP' }],
+    outcome: '…',                               // 20–320 chars: reach, cost, audit, election result
+    poll: { label: 'MP Assembly 2023', month: '2023-11', gapDays: 160, result: 'BJP won 163 of 230' },
+                                                // required when tagged 'pre-election'; gapDays = days
+                                                // from the announcement/first payment to polling day
+```
+
 Rules the test suite (`tests/hisaab-bank.test.mjs`) will enforce: unique ids and question text
 across all lanes; four distinct options; answer text not contained in the question; `correctIndex`
 spread (each slot > 1/8 of a lane); each difficulty ≥ 25% of every lane; `https` sources;
@@ -133,6 +144,39 @@ spread (each slot > 1/8 of a lane); each difficulty ≥ 25% of every lane; `http
 
 Each lane also writes `docs/hisaab/research/<lane>-notes.md`: sources used, items dropped and why,
 and anything the reviewer should double-check.
+
+### 4a. The money trail, 2000–2026 (added by the owner, 25 Sep 2026)
+
+Three modes follow public money handed out directly — who passed it, which party, and what
+happened next — across **26 years (2000–2026)**, Centre and states:
+
+| lane | prefix | file | target | scope |
+|---|---|---|---|---|
+| Distribution — Centre | `hdb` 001–099 | `bank/dist-centre.mjs` | 45 | Central cash and in-kind transfers: MGNREGA wages, JSY, PM-KISAN, PMGKAY, COVID cash to Jan Dhan women, LPG DBT, pensions, loan waivers |
+| Distribution — North & Hindi belt | `hdb` 100–199 | `bank/dist-north.mjs` | 45 | UP, UT, HP, PB, HR, DL, JK, RJ, BR, JH — women's cash schemes, girl-child transfers, cycles/laptops/phones, pensions, farm transfers |
+| Distribution — West & South | `hdb` 200–299 | `bank/dist-west-south.mjs` | 45 | GJ, MH, GA, MP, CT, KA, KL, TN, AP, TG — Ladli Laxmi/Ladli Behna, Ladki Bahin, Gruha Lakshmi, Magalir Urimai, Rythu Bandhu/Bharosa, Amma Vodi, TN TVs/mixers… |
+| Distribution — East & North-East | `hdb` 300–399 | `bank/dist-east.mjs` | 35 | WB, OD, AS, AR, MN, ML, MZ, NL, SK, TR — Kanyashree, Lakshmir Bhandar, KALIA, Subhadra, Orunodoi… |
+| Relief funds — Centre | `hrf` 001–099 | `bank/relief-centre.mjs` | 40 | PMNRF, PM CARES, NDRF/SDRF and Finance Commission disaster money, national disaster and COVID packages |
+| Relief funds — States | `hrf` 100–199 | `bank/relief-states.mjs` | 35 | CM relief funds, Centre–state relief disputes, disaster packages, misuse and audit findings |
+| Before the vote — Union | `hpe` 001–099 | `bank/poll-union.mjs` | 40 | Interim budgets, pre-poll announcements, bills and notifications in the months before Lok Sabha polls |
+| Before the vote — States | `hpe` 100–199 | `bank/poll-states.mjs` | 50 | Pre-poll transfers, sops, budgets and bills before Assembly polls, and each result |
+
+These lanes use the optional fields in §3a and tag every item into its mode(s).
+
+### 4b. Rules specific to the money trail
+
+1. **Naming who passed it is encouraged.** Announcing, presenting or passing a scheme, budget or bill
+   is a public act, not an allegation: record it in `enactedBy` (name, role, party). For "who
+   launched / presented / passed" questions, other real office-holders may be distractors — this is
+   the one exception to §2.4, and it never extends to a question about wrongdoing.
+2. **Timing is a fact; motive is not.** "Announced 47 days before polling" and "first instalment paid
+   before the Model Code of Conduct" are facts. "Vote-buying", "bribe", "freebie" or "revdi" as a
+   description is an opinion — attribute it to whoever said it, with their reply or a court's view.
+3. **Results are the point.** `outcome` states what happened: reach, cost, audit findings,
+   ineligible beneficiaries removed, and, for pre-poll items, the official election result. Say
+   what caused the result only if a named study, survey or court says so, and cite it.
+4. **Every party.** Handouts before elections are made by every party in power; each lane covers
+   whoever governed, and the notes record the `govt` distribution.
 
 ## 5. Controlled vocabularies
 
@@ -157,6 +201,10 @@ and anything the reviewer should double-check.
 | **Duel vs Bot** | Quick Draw / Triple Threat / Gauntlet vs the labelled practice bot | duel service in-process |
 | **Duel a Friend** | same formats, peer-to-peer room code (no server) | P2P transport, same verdict rules |
 | **Pass & Play** | two players, one phone, untimed | local |
+| **Seedha Khaate Mein** (straight into the account) | cash and in-kind transfers 2000–2026 — who passed them, which party, what happened | route over `tags: 'distribution'`, filterable by state and year |
+| **Rahat Kosh** (relief fund) | relief funds and disaster money — raised, released, disputed, audited | route over `tags: 'relief'` |
+| **Chunav Se Pehle** (before the vote) | what was announced, paid or passed in the months before an election, and the result | route over `tags: 'pre-election'`, with the poll countdown on each card |
+| **Saal-dar-Saal** (year by year) | pick a year 2000–2026 → that year's cards across all lanes | route over `year` |
 
 ## 7. Notification budget (fewer than JHK)
 
