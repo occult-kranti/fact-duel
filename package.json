@@ -18,6 +18,9 @@
     "seo:pages": "node scripts/seo-pages.mjs",
     "build:static": "vite build --config vite.config.static.ts",
     "preview:static": "vite preview --config vite.config.static.ts",
+    "build:hisaab": "vite build --config vite.config.hisaab.ts",
+    "dev:hisaab": "vite --config vite.config.hisaab.ts",
+    "preview:hisaab": "vite preview --config vite.config.hisaab.ts",
     "deploy:prepare": "node scripts/deploy-prepare.mjs",
     "db:migrate:remote": "wrangler d1 migrations apply DB --remote --config dist/server/wrangler.deploy.json"
   },
@@ -49,6 +52,7 @@
     "sonner": "^2.0.8",
     "tailwind-merge": "3.6.0",
     "three": "0.185.0",
+    "trystero": "0.25.4",
     "vaul": "^1.1.2",
     "zod": "^3.25.76"
   },

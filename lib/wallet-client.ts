@@ -26,6 +26,8 @@
  * The static build swaps this module for lib/wallet-client-static.ts, which has no server at all.
  */
 
+import { STORAGE } from './storage-names.mjs';
+
 export type WalletMode = 'device' | 'server';
 export type WalletPlacement = 'coins' | 'practice-entry' | 'duel-entry' | 'continue';
 
@@ -106,8 +108,8 @@ export type WalletClient = Readonly<{
 }>;
 
 export const WALLET_ENDPOINT = '/api/wallet';
-export const PRINCIPAL_KEY = 'fd-principal';
-export const PENDING_NONCE_KEY = 'fd-pending-nonce';
+export const PRINCIPAL_KEY = STORAGE.principal;
+export const PENDING_NONCE_KEY = STORAGE.pendingNonce;
 export const GUEST_HEADER = 'x-fd-principal';
 /** Mirrors the server's guest-id shape (wallet-service.mjs PRINCIPAL). */
 export const PRINCIPAL_SHAPE = /^[a-z]{1,8}_[A-Za-z0-9_-]{16,58}$/;

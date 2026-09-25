@@ -13,19 +13,20 @@ import { Database, Volume2 } from 'lucide-react';
 import { AccountPanel } from './account-panel';
 import { gateCopy, readClaimedEmail } from './profile-gate';
 import { useLocale, type Locale } from '../use-locale';
+import { STORAGE } from '@/lib/storage-names.mjs';
 import { LOCALES } from '@/lib/i18n/index.mjs';
 
 /** Persisted as localStorage['fact-duel-motion']. */
 export type MotionPref = 'full' | 'reduced' | 'off';
 
 export const SETTINGS_KEYS = {
-  sound: 'fact-duel-online-sound', // 'on' | 'off'
-  volume: 'fact-duel-volume', // '0'..'1'
-  theme: 'fact-duel-online-theme', // 'dark' | 'light'
-  name: 'fact-duel-name',
-  haptics: 'fact-duel-haptics', // 'on' | 'off'
-  motion: 'fact-duel-motion', // 'full' | 'reduced' | 'off'
-  art: 'fact-duel-art', // 'on' | 'off'
+  sound: STORAGE.sound, // 'on' | 'off'
+  volume: STORAGE.volume, // '0'..'1'
+  theme: STORAGE.theme, // 'dark' | 'light'
+  name: STORAGE.name,
+  haptics: STORAGE.haptics, // 'on' | 'off'
+  motion: STORAGE.motion, // 'full' | 'reduced' | 'off'
+  art: STORAGE.art, // 'on' | 'off'
 } as const;
 
 export type SettingsSheetProps = {

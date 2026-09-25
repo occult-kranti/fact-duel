@@ -12,6 +12,7 @@
  */
 import { dispatch } from './server/duel-service.mjs';
 import { MemoryRoomStore } from './duel-memory-store.mjs';
+import { STORAGE } from './storage-names.mjs';
 import { parseApp } from './redirect-target.mjs';
 
 /** True in this build only. The static entry reads it to render the preview notice. */
@@ -60,7 +61,7 @@ const ACTOR = 'this-device';
  * key. There is no ledger behind the memory store, so it is only recorded on the room's seat;
  * the free coins and the device wallet carry on exactly as before.
  */
-const PRINCIPAL_KEY = 'fd-principal';
+const PRINCIPAL_KEY = STORAGE.principal;
 function principalId(): string | null {
   try {
     const existing = localStorage.getItem(PRINCIPAL_KEY);

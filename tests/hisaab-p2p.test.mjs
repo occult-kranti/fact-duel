@@ -1,0 +1,327 @@
+/**
+ * HISAAB DO — Duel a Friend with no server (editions/hisaab/p2p), over the in-memory transport.
+ *
+ * The host runs the real duel service; the guest talks to it through the transport. These tests pin
+ * that the verdicts are the engine's own (lib/server/room-engine.mjs roundVerdict) including the
+ * 150 ms draw band and the timing checks, that both browsers deal the same deck from the shared seed,
+ * that the handshake refuses mismatched builds, and that a leave settles the room. Pass & Play (one
+ * device, untimed) is covered at the end.
+ */
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { register } from 'node:module';
+
+register('../editions/hisaab/node-aliases.mjs', import.meta.url);
+const p2p = await import('../editions/hisaab/p2p/index.mjs');
+const { roundVerdict, matchWinner, RULES, MODE_ROUNDS } = await import('../lib/server/room-engine.mjs');
+const { createDuelController } = await import('../editions/hisaab/engine/duel-controller.mjs');
+const { QUESTIONS } = await import('../editions/hisaab/server/bank.mjs');
+
+const settle = (ms = 5) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/** A host and a guest on a fresh memory pair, the host on a virtual clock the test moves. */
+async function pair({ mode = 'gauntlet', code = p2p.makeRoomCode(), config = {} } = {}) {
+  const clock = { t: 1_800_000_000_000 };
+  const [a, b] = p2p.createMemoryPair();
+  const host = p2p.createP2PHost({ transport: a, code, name: 'Asha', config: { mode, ...config }, clock: () => clock.t });
+  const guest = p2p.createP2PGuest({ transport: b, code, name: 'Bilal', timeoutMs: 2000 });
+  const created = await host.start();
+  const joined = await guest.join();
+  return { clock, host, guest, created, joined, code, transports: [a, b] };
+}
+
+/** One round: both ready, the countdown passes, both reveal, both answer after the given times. */
+async function playRound(ctx, { host: [hostCorrect, hostMs], guest: [guestCorrect, guestMs] }) {
+  const { clock, host, guest } = ctx;
+  let state = (await host.request({ action: 'state' })).room;
+  const roundId = state.round?.id ?? null;
+  await host.request({ action: 'ready', roundId, rttMs: 0, jitterMs: 0 });
+  await guest.request({ action: 'ready', roundId, rttMs: 0, jitterMs: 0 });
+  state = (await host.request({ action: 'state' })).room;
+  assert.equal(state.phase, 'scheduled');
+  clock.t = state.round.scheduledAt;
+  await host.request({ action: 'reveal', roundId: state.round.id });
+  const g = (await guest.request({ action: 'reveal', roundId: state.round.id })).room;
+  assert.ok(guest.verify(g), 'the host dealt what the shared seed says');
+  const key = guest.expectedDeck(g.config)[g.roundIndex].correctIndex;
+  const pick = (correct) => (correct ? key : (key + 1) % 4);
+  const issued = clock.t;
+  // Receipts land a little after each browser's own reveal-to-input time, inside the transport grace.
+  const answers = [
+    { seat: 'host', at: issued + hostMs + 20, body: { choice: pick(hostCorrect), elapsedMs: hostMs } },
+    { seat: 'guest', at: issued + guestMs + 40, body: { choice: pick(guestCorrect), elapsedMs: guestMs } },
+  ].sort((x, y) => x.at - y.at);
+  for (const answer of answers) {
+    clock.t = answer.at;
+    const session = answer.seat === 'host' ? host : guest;
+    await session.request({ action: 'answer', roundId: g.round.id, attemptId: `${answer.seat}-attempt-${g.round.id}`.replace(/[^A-Za-z0-9_-]/g, '_'), ...answer.body });
+  }
+  const after = (await guest.request({ action: 'state' })).room;
+  const round = after.completedRounds.find((r) => r.id === g.round.id);
+  assert.ok(round, 'the round closed as soon as both answers were in');
+  return { round, room: after };
+}
+
+test('room codes: 8 unambiguous characters, normalised from typed input, keys derived identically', async () => {
+  const code = p2p.makeRoomCode(new Uint8Array([0, 1, 2, 3, 4, 5, 6, 7]));
+  assert.match(code, /^[A-Z2-9]{4}-[A-Z2-9]{4}$/);
+  assert.equal(p2p.normalizeCode(code.toLowerCase().replace('-', ' ')), code);
+  assert.equal(p2p.normalizeCode('ABCD-EFG'), null, 'too short');
+  assert.equal(p2p.normalizeCode('ABCD-EFG0'), null, '0 is not in the alphabet');
+  const [k1, k2] = await Promise.all([p2p.roomKeys(code), p2p.roomKeys(code.toLowerCase())]);
+  assert.deepEqual(k1, k2);
+  assert.match(k1.roomId, /^[a-f0-9]{32}$/);
+  assert.match(k1.invite, /^[A-Za-z0-9_-]{32,64}$/);
+  assert.notDeepEqual(await p2p.roomKeys('ABCD-EFGJ'), k1);
+});
+
+test('the shared seed deals the same deck on both browsers, out of the edition bank', () => {
+  const config = { mode: 'gauntlet' };
+  const one = p2p.dealFromSeed('HJKM-NPQR', config);
+  const two = p2p.dealFromSeed('hjkm npqr', config);
+  assert.deepEqual(one, two);
+  assert.equal(one.length, MODE_ROUNDS.gauntlet);
+  const ids = new Set(QUESTIONS.map((q) => q.id));
+  assert.ok(one.every((q) => ids.has(q.id) && q.domain === 'civics'));
+  assert.notDeepEqual(p2p.dealFromSeed('HJKM-NPQS', config).map((q) => q.id + q.options.join()), one.map((q) => q.id + q.options.join()));
+});
+
+test('host and guest pair, and the guest takes seat 1 of a free friend room', async () => {
+  const ctx = await pair({ mode: 'quick' });
+  assert.equal(ctx.created.room.seat, 0);
+  assert.equal(ctx.joined.room.seat, 1);
+  assert.deepEqual(ctx.joined.room.players.map((p) => p.name), ['Asha', 'Bilal']);
+  assert.equal(ctx.joined.room.config.opponent, 'friend');
+  assert.equal(ctx.joined.room.config.stake, 0);
+  assert.equal(ctx.joined.room.config.duration, 10, 'Quick Draw opens on its own 10 s clock');
+  const clock = await ctx.guest.request({ action: 'clock' });
+  assert.equal(clock.serverNow, ctx.clock.t, 'the guest calibrates against the host clock');
+  await ctx.host.close();
+  await ctx.guest.close();
+});
+
+test('the verdicts are the engine rules: correctness first, then speed, 150 ms is a draw', async () => {
+  const ctx = await pair({ mode: 'gauntlet' });
+  const cases = [
+    { host: [true, 1200], guest: [true, 1400] }, // both right, 200 ms apart → faster wins
+    { host: [true, 2000], guest: [true, 2150] }, // exactly 150 ms → draw
+    { host: [true, 900], guest: [false, 800] }, // only one right → that one, however slow
+    { host: [false, 700], guest: [false, 3000] }, // neither → no point
+    { host: [true, 4100], guest: [true, 1300] }, // guest faster by 2.8 s → guest
+  ];
+  const scores = [0, 0];
+  for (const c of cases) {
+    const { round, room } = await playRound(ctx, c);
+    const expected = roundVerdict([
+      { correct: c.host[0], elapsedMs: c.host[1] },
+      { correct: c.guest[0], elapsedMs: c.guest[1] },
+    ]);
+    assert.equal(round.result.winner, expected.winner, JSON.stringify(c));
+    assert.equal(round.result.reason, expected.reason, JSON.stringify(c));
+    assert.equal(round.result.tieMs, RULES.tieMs);
+    assert.deepEqual(
+      round.receipts.map((r) => r.elapsedMs),
+      [c.host[1], c.guest[1]],
+      'each browser’s own reveal-to-input time is what was judged',
+    );
+    if (expected.winner !== null) scores[expected.winner] += 1;
+    assert.deepEqual(room.scores, scores);
+  }
+  const final = (await ctx.host.request({ action: 'state' })).room;
+  assert.equal(final.phase, 'complete');
+  assert.equal(final.winner, matchWinner(scores));
+  // The band's edge, as the engine draws it: 150 ms apart is a draw, 151 ms is not.
+  assert.equal(roundVerdict([{ correct: true, elapsedMs: 1000 }, { correct: true, elapsedMs: 1150 }]).reason, 'close-result');
+  assert.equal(roundVerdict([{ correct: true, elapsedMs: 1000 }, { correct: true, elapsedMs: 1151 }]).winner, 0);
+  await ctx.host.close();
+  await ctx.guest.close();
+});
+
+test('the engine’s timing check still applies: a forged-short time outside the grace cancels the match', async () => {
+  const ctx = await pair({ mode: 'quick' });
+  const { clock, host, guest } = ctx;
+  await host.request({ action: 'ready', roundId: null });
+  await guest.request({ action: 'ready', roundId: null });
+  const state = (await host.request({ action: 'state' })).room;
+  clock.t = state.round.scheduledAt;
+  await host.request({ action: 'reveal', roundId: state.round.id });
+  await guest.request({ action: 'reveal', roundId: state.round.id });
+  // Claims 400 ms, arrives 4 s after the reveal: residual 3.6 s, far past the 500 ms minimum grace.
+  clock.t += 4000;
+  await guest.request({ action: 'answer', roundId: state.round.id, attemptId: 'forged-attempt-000001', choice: 0, elapsedMs: 400 });
+  clock.t += 100;
+  await host.request({ action: 'answer', roundId: state.round.id, attemptId: 'honest-attempt-000001', choice: 0, elapsedMs: 4000 });
+  const done = (await guest.request({ action: 'state' })).room;
+  assert.equal(done.reason, 'timing-inconsistent');
+  assert.equal(done.winner, null);
+  await host.close();
+  await guest.close();
+});
+
+test('the guest checks the deal: a question that is not the seeded card fails verify()', async () => {
+  const ctx = await pair({ mode: 'quick' });
+  const room = structuredClone(ctx.joined.room);
+  assert.ok(ctx.guest.verify(room), 'nothing revealed yet is trivially consistent');
+  const expected = ctx.guest.expectedDeck(room.config)[0];
+  room.round = { id: 'x', question: { question: expected.question, options: [...expected.options] } };
+  assert.ok(ctx.guest.verify(room));
+  room.round.question.options = [...expected.options].reverse();
+  assert.equal(ctx.guest.verify(room), false, 'a reshuffled option order is caught');
+  room.round.question = { question: 'Some other question?', options: expected.options };
+  assert.equal(ctx.guest.verify(room), false);
+  await ctx.host.close();
+  await ctx.guest.close();
+});
+
+test('only guest actions cross the wire, and only the seated guest may act', async () => {
+  const ctx = await pair({ mode: 'quick' });
+  const [, b] = ctx.transports;
+  const reply = (id) =>
+    new Promise((resolve) => {
+      const off = b.onMessage((m) => {
+        if (m?.t === 'res' && m.id === id) {
+          off();
+          resolve(m);
+        }
+      });
+    });
+  const create = reply(9001);
+  b.send({ t: 'req', id: 9001, body: { action: 'create', token: 'x'.repeat(40) } });
+  assert.equal((await create).error.code, 'invalid_request');
+  const addBot = reply(9002);
+  b.send({ t: 'req', id: 9002, body: { action: 'add_bot', token: ctx.guest.token } });
+  assert.equal((await addBot).error.code, 'invalid_request');
+  const intruder = reply(9003);
+  b.send({ t: 'req', id: 9003, body: { action: 'state', token: 'y'.repeat(40) } });
+  assert.equal((await intruder).error.code, 'room_full');
+  await ctx.host.close();
+  await ctx.guest.close();
+});
+
+test('the handshake refuses a mismatched build, and a guest with no host times out honestly', async () => {
+  const [a, b] = p2p.createMemoryPair();
+  const host = p2p.createP2PHost({ transport: a, code: 'ABCD-EFGH', name: 'Asha' });
+  await host.start();
+  const failed = new Promise((resolve) => host.onError(resolve));
+  b.send({ t: 'hello', protocol: p2p.P2P_PROTOCOL, bank: 'not-this-bank', role: 'guest' });
+  const error = await failed;
+  assert.equal(error.code, 'p2p_mismatch');
+  await assert.rejects(host.request({ action: 'state' }), { code: 'p2p_mismatch' });
+  await host.close();
+
+  const [c] = p2p.createMemoryPair();
+  const lonely = p2p.createP2PGuest({ transport: c, code: 'ABCD-EFGH', name: 'Bilal', timeoutMs: 60 });
+  await assert.rejects(lonely.join(), { code: 'p2p_timeout' });
+  await lonely.close();
+});
+
+test('a guest who disconnects mid-match settles the room as a leave, and the host hears it', async () => {
+  const ctx = await pair({ mode: 'trilogy' });
+  await ctx.host.request({ action: 'ready', roundId: null });
+  await ctx.guest.request({ action: 'ready', roundId: null });
+  const left = new Promise((resolve) => ctx.host.onPeer((event) => event === 'leave' && resolve()));
+  await ctx.transports[1].close();
+  await left;
+  await settle(10);
+  const room = (await ctx.host.request({ action: 'state' })).room;
+  assert.equal(room.phase, 'cancelled');
+  assert.equal(room.reason, 'player-left');
+  await ctx.host.close();
+});
+
+test('end to end in real time: two duel controllers play a Quick Draw over the transport', async () => {
+  const code = p2p.makeRoomCode();
+  const [a, b] = p2p.createMemoryPair({ latencyMs: 15 });
+  const host = p2p.createP2PHost({ transport: a, code, name: 'Asha', config: { mode: 'quick' } });
+  const guest = p2p.createP2PGuest({ transport: b, code, name: 'Bilal' });
+  const hc = createDuelController({ request: host.request, pollMs: { active: 100, waiting: 200, hidden: 200 } });
+  const gc = createDuelController({ request: guest.request, pollMs: { active: 100, waiting: 200, hidden: 200 } });
+  host.onPoke(() => void hc.refresh());
+  guest.onPoke(() => void gc.refresh());
+  hc.adopt(await host.start());
+  gc.adopt(await guest.join());
+  await hc.calibrate(3);
+  await gc.calibrate(3);
+  assert.ok(gc.snapshot().clock.rttMs >= 20, 'the guest measured the transport round trip');
+  await hc.ready();
+  await gc.ready();
+  await new Promise((resolve, reject) => {
+    const deadline = setTimeout(() => reject(new Error('the match did not finish')), 9000);
+    const timer = setInterval(() => {
+      for (const [c, right] of [
+        [hc, true],
+        [gc, false],
+      ]) {
+        const r = c.room;
+        if (r?.round?.question && !r.round.result && c.snapshot().shownRoundId !== r.round.id) {
+          c.markShown();
+          const key = guest.expectedDeck(r.config)[r.roundIndex].correctIndex;
+          setTimeout(() => void c.answer(right ? key : (key + 1) % 4), 120);
+        }
+      }
+      if (hc.room?.settled && gc.room?.settled) {
+        clearTimeout(deadline);
+        clearInterval(timer);
+        resolve();
+      }
+    }, 20);
+  });
+  assert.equal(gc.room.phase, 'complete');
+  assert.equal(gc.room.winner, 0, 'the host answered correctly, the guest did not');
+  assert.equal(gc.room.round.result.reason, 'correct');
+  assert.ok(gc.room.round.receipts.every((r) => r && r.elapsedMs >= 100 && r.elapsedMs < 2000));
+  assert.ok(guest.verify(gc.room));
+  hc.dispose();
+  gc.dispose();
+  await host.close();
+  await guest.close();
+});
+
+test('the BroadcastChannel transport pairs two tabs of one code and reports a leave', async () => {
+  const one = p2p.createBroadcastTransport('ABCD-EFGH');
+  const joined = new Promise((resolve) => one.onPeer((e) => e === 'join' && resolve()));
+  const two = p2p.createBroadcastTransport('abcd-efgh');
+  await joined;
+  const got = new Promise((resolve) => two.onMessage(resolve));
+  one.send({ t: 'poke', n: 1 });
+  assert.deepEqual(await got, { t: 'poke', n: 1 });
+  const left = new Promise((resolve) => one.onPeer((e) => e === 'leave' && resolve()));
+  two.close();
+  await left;
+  one.close();
+});
+
+test('the trust label is on the protocol, where every screen can quote it', () => {
+  assert.match(p2p.P2P_TRUST.label, /trust/i);
+  assert.match(p2p.P2P_TRUST.body, /cheat/);
+});
+
+test('pass & play: one phone, untimed, engine verdicts with speed taken out', () => {
+  let rng = 0.123;
+  const next = () => (rng = (rng * 9301 + 49297) % 233280) / 233280;
+  let s = p2p.startPassAndPlay({ mode: 'trilogy', names: ['Asha', ' '], rng: next });
+  assert.deepEqual(s.names, ['Asha', 'Player 2']);
+  assert.equal(p2p.passAndPlayView(s).question, null, 'nothing shows while the phone is handed over');
+  const play = (right0, right1) => {
+    const key = s.deck[s.roundIndex].correctIndex;
+    s = p2p.reducePassAndPlay(s, { type: 'ready' });
+    assert.equal(p2p.passAndPlayView(s).question.correctIndex, undefined, 'no key before the reveal');
+    s = p2p.reducePassAndPlay(s, { type: 'answer', choice: right0 ? key : (key + 1) % 4 });
+    assert.deepEqual(p2p.passAndPlayView(s).answers, [{ locked: true }, null], 'the first pick stays hidden');
+    s = p2p.reducePassAndPlay(s, { type: 'ready' });
+    s = p2p.reducePassAndPlay(s, { type: 'answer', choice: right1 ? key : (key + 2) % 4 });
+    return p2p.passAndPlayView(s);
+  };
+  assert.equal(play(true, true).result.reason, 'both-correct');
+  assert.deepEqual(s.scores, [0, 0]);
+  s = p2p.reducePassAndPlay(s, { type: 'next' });
+  assert.equal(play(false, true).result.winner, 1);
+  s = p2p.reducePassAndPlay(s, { type: 'next' });
+  const third = play(false, true);
+  assert.equal(third.result.reason, 'correct');
+  assert.deepEqual(s.scores, [0, 2]);
+  s = p2p.reducePassAndPlay(s, { type: 'next' });
+  assert.equal(s.phase, 'complete', 'Triple Threat ends at two wins');
+  assert.equal(p2p.passAndPlayView(s).winner, 1);
+  assert.equal(p2p.reducePassAndPlay(s, { type: 'answer', choice: 0 }), s, 'a finished match ignores input');
+});

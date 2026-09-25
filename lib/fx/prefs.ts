@@ -15,6 +15,8 @@
  *   when the OS `prefers-reduced-motion` media query flips.
  */
 
+import { STORAGE } from '../storage-names.mjs';
+
 export type MotionPref = 'full' | 'reduced' | 'off';
 
 export interface FxPrefs {
@@ -32,10 +34,10 @@ export type PrefKey = keyof FxPrefs;
 
 /** localStorage keys, exported so other code can react to them if it needs to. */
 export const PREF_STORAGE_KEYS: Record<PrefKey, string> = {
-  sound: 'fact-duel-online-sound',
-  volume: 'fact-duel-volume',
-  haptics: 'fact-duel-haptics',
-  motion: 'fact-duel-motion',
+  sound: STORAGE.sound,
+  volume: STORAGE.volume,
+  haptics: STORAGE.haptics,
+  motion: STORAGE.motion,
 };
 
 export const DEFAULT_PREFS: Readonly<FxPrefs> = Object.freeze({

@@ -19,10 +19,13 @@
  * server, no queue, no copy pretending otherwise.
  *
 * Everything injectable is (the transport, timers, the clock), so a node test can script the loop.
- * The guest id read is inlined rather than imported so this module loads in node without a bundler.
+ * The guest id read is inlined rather than imported so this module loads in node without a bundler
+ * (only the dependency-free storage name table, lib/storage-names.mjs, is imported).
  */
+import { STORAGE } from './storage-names.mjs';
+
 /** The guest id the wallet client keeps under lib/auth-client.ts's PRINCIPAL_KEY; absent until minted. */
-const PRINCIPAL_KEY = 'fd-principal';
+const PRINCIPAL_KEY = STORAGE.principal;
 const PRINCIPAL = /^[a-z]{1,8}_[A-Za-z0-9_-]{16,58}$/;
 function readGuestPrincipal(): string | null {
   try {

@@ -2,6 +2,7 @@
 import * as THREE from 'three';
 import { useFrame, useThree } from '@react-three/fiber';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { STORAGE } from '@/lib/storage-names.mjs';
 import { SceneFrame, useSceneState } from './scene-frame';
 import { usePrefersReducedMotion } from './reduced-motion';
 import { BrainCore } from './brain-core';
@@ -71,7 +72,7 @@ const WAKE_MODES = 4;
  * exactly-once ledger and out of ACHIEVEMENTS entirely. A player who clears site data may see it
  * once more; that is the documented price of leaving the achievement count alone.
  */
-const AWOKE_KEY = 'fd.brain.awoke';
+const AWOKE_KEY = STORAGE.brainAwoke;
 /** The shell tightens onto the brain forming inside it between 1.1 s and 1.8 s of the wake. */
 const SNAP_FROM = 1.1;
 const SNAP_TO = 1.8;

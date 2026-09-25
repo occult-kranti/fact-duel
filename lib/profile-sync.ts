@@ -23,6 +23,7 @@
  * no dependency on the auth client; the answer is only ever used as a yes/no.
  */
 import { readProfile } from './passport.mjs';
+import { STORAGE } from './storage-names.mjs';
 
 export type SyncState = 'off' | 'idle' | 'pushing' | 'stale' | 'error';
 export type ServerProfile = { revision: number; state: Record<string, unknown> };
@@ -38,7 +39,7 @@ type ProfileLike = { revision?: unknown; version?: unknown } & Record<string, un
 /** A push lands this long after the last local write, so a burst of taps is one request. */
 export const PUSH_DEBOUNCE_MS = 2000;
 /** Where the device keeps its guest id (the wallet client writes it); sent so a promotion can find it. */
-export const GUEST_STORAGE_KEY = 'fd-principal';
+export const GUEST_STORAGE_KEY = STORAGE.principal;
 const PROFILE_API = '/api/profile';
 const AUTH_API = '/api/auth';
 const TIMEOUT_MS = 8000;

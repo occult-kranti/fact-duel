@@ -1,0 +1,12 @@
+/**
+ * editions/hisaab/engine/expedition-routes.mjs — the edition's stand-in for lib/expedition-routes.mjs.
+ *
+ * The build aliases the JHK route catalogue to this module, so lib/expeditions.mjs — validation,
+ * the run reducer, scoring, readExpeditions — runs the edition's routes unchanged, and the duel
+ * service's `expedition` action deals their cards from the civics bank. The routes are derived from
+ * the served bank on load (engine/routes.mjs), so they grow as lanes are registered.
+ */
+import { QUESTIONS } from '../server/bank.mjs';
+import { deriveRoutes } from './routes.mjs';
+
+export const EXPEDITIONS = deriveRoutes(QUESTIONS);

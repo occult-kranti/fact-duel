@@ -43,6 +43,7 @@ import {
   enterRecap as enterRecapReducer,
   recapFreeToday,
 } from '@/lib/economy/economy.mjs';
+import { STORAGE } from '@/lib/storage-names.mjs';
 import { validReceipt } from '@/lib/ads/provider.mjs';
 import { WebAdProvider } from '@/lib/ads/web-provider.mjs';
 import { floorDueAt, regionOf, serverWalletView, transactWallet, visitStep } from '@/lib/wallet-store.mjs';
@@ -300,7 +301,7 @@ export function useWallet(config = DEFAULT_CONFIG): WalletApi {
       else if (storage.current) void transactWallet<Wallet>(null).then(accept).catch(() => {});
     };
     if (typeof BroadcastChannel !== 'undefined') {
-      channel.current = new BroadcastChannel('fact-duel-wallet');
+      channel.current = new BroadcastChannel(STORAGE.walletChannel);
       channel.current.onmessage = () => {
         if (modeRef.current === 'server') void syncServer();
         else if (storage.current) void transactWallet<Wallet>(null).then(accept).catch(() => {});

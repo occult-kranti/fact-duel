@@ -39,7 +39,8 @@ concurrency:
 
 jobs:
   # The edition lands in stages. Until the tree carries its build (vite.config.hisaab.ts and the
-  # build:hisaab script), there is nothing to publish: say so and exit green rather than red.
+  # build:hisaab script) AND the designed app (editions/hisaab/app/app.tsx — not the engine's dev
+  # shell), there is nothing to publish: say so and exit green rather than red.
   preflight:
     runs-on: ubuntu-latest
     timeout-minutes: 2
@@ -50,7 +51,7 @@ jobs:
       - name: Is the edition build in this tree?
         id: check
         run: |
-          if [ -f vite.config.hisaab.ts ] && node -e 'process.exit(require("./package.json").scripts?.["build:hisaab"] ? 0 : 1)'; then
+          if [ -f vite.config.hisaab.ts ] && [ -f editions/hisaab/app/app.tsx ] && node -e 'process.exit(require("./package.json").scripts?.["build:hisaab"] ? 0 : 1)'; then
             echo "ready=true" >> "$GITHUB_OUTPUT"
           else
             echo "ready=false" >> "$GITHUB_OUTPUT"

@@ -23,10 +23,11 @@ import {
   localizeWhen,
   readLocale,
 } from '@/lib/i18n/index.mjs';
+import { STORAGE } from '@/lib/storage-names.mjs';
 import './locale.css';
 
 /** Persisted as localStorage['fd-locale']: 'en' | 'hi'. */
-export const LOCALE_KEY = 'fd-locale';
+export const LOCALE_KEY = STORAGE.locale;
 export type Locale = 'en' | 'hi';
 
 /** The Devanagari face for Hindi chrome; loaded only while the locale is Hindi. */

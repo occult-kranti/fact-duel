@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { emptyProfile, readProfile, reduceProfile, passportSummary } from '@/lib/passport.mjs';
 import { transactProfile } from '@/lib/profile-store.mjs';
 import { readJournal } from '@/lib/journal.mjs';
+import { STORAGE } from '@/lib/storage-names.mjs';
 import { levelForXp } from '@/lib/progression.mjs';
 import {
   arrivedSignedIn,
@@ -60,14 +61,14 @@ export function usePlayer(room: any, roomEpoch?: string) {
     live.current = true;
     let legacy: string | null = null;
     try {
-      legacy = localStorage.getItem('fact-duel-journal-v1');
+      legacy = localStorage.getItem(STORAGE.legacyJournal);
     } catch {}
     const load = transactProfile(null, legacy)
       .then((value) => {
         everStored.current = true;
         accept(value);
         try {
-          localStorage.removeItem('fact-duel-journal-v1');
+          localStorage.removeItem(STORAGE.legacyJournal);
         } catch {}
       })
       .catch(() => {
@@ -91,7 +92,7 @@ export function usePlayer(room: any, roomEpoch?: string) {
           .catch(() => {});
     };
     if (typeof BroadcastChannel !== 'undefined') {
-      channel.current = new BroadcastChannel('fact-duel-player');
+      channel.current = new BroadcastChannel(STORAGE.playerChannel);
       channel.current.onmessage = refresh;
     }
     window.addEventListener('focus', refresh);
@@ -320,7 +321,7 @@ export function usePlayer(room: any, roomEpoch?: string) {
     const ok = await dispatch({ type: 'reset', newEpoch: crypto.randomUUID() });
     if (ok)
       try {
-        localStorage.removeItem('fact-duel-journal-v1');
+        localStorage.removeItem(STORAGE.legacyJournal);
       } catch {}
   }, [dispatch]);
   const report = useCallback(

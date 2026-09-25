@@ -38,6 +38,7 @@ import { EventsScreen } from './screens/events-screen';
 import { AnalyticsScreen } from './screens/analytics-screen';
 import { RulesScreen } from './screens/rules-screen';
 import { ShowroomScreen } from './screens/showroom-screen';
+import { STORAGE } from '@/lib/storage-names.mjs';
 import { eventModeEvent } from '@/lib/progression.mjs';
 import { MODE_DURATION } from '@/lib/server/room-engine.mjs';
 import {
@@ -66,8 +67,8 @@ function roomId() {
 }
 function safeSave(value: Credentials | null) {
   try {
-    if (value) sessionStorage.setItem('fact-duel-online-seat', JSON.stringify(value));
-    else sessionStorage.removeItem('fact-duel-online-seat');
+    if (value) sessionStorage.setItem(STORAGE.onlineSeat, JSON.stringify(value));
+    else sessionStorage.removeItem(STORAGE.onlineSeat);
   } catch {}
 }
 function parseInvite(text: string) {
@@ -244,7 +245,7 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
         setJoinLink(url.toString());
         history.replaceState({}, '', url.pathname);
       } else {
-        const saved = JSON.parse(sessionStorage.getItem('fact-duel-online-seat') || 'null');
+        const saved = JSON.parse(sessionStorage.getItem(STORAGE.onlineSeat) || 'null');
         if (saved?.roomId && saved?.token) {
           recovered.current = true;
           remember({ ...saved, profileEpoch: saved.profileEpoch ?? 'initial' });

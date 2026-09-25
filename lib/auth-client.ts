@@ -12,7 +12,9 @@
  * throws with the server's reason so the panel can show it.
  */
 
-export const PRINCIPAL_KEY = 'fd-principal';
+import { STORAGE } from './storage-names.mjs';
+
+export const PRINCIPAL_KEY = STORAGE.principal;
 export const AUTH_CHANGED_EVENT = 'fd-auth-change';
 
 /**

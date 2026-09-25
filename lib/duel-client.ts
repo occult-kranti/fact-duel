@@ -7,7 +7,9 @@
  * server (`resolvePrincipal`). That is what lets a room entry be staked on the player's real coin
  * balance: the server refuses an entry for coins from a request with no principal at all.
  */
-const PRINCIPAL_KEY = 'fd-principal';
+import { STORAGE } from './storage-names.mjs';
+
+const PRINCIPAL_KEY = STORAGE.principal;
 const PRINCIPAL = /^[a-z]{1,8}_[A-Za-z0-9_-]{16,58}$/;
 
 /** The guest id this device presents; minted once, null only when storage is unavailable. */

@@ -20,6 +20,7 @@ import type {
   WalletClientOptions,
   ServerOutcome,
 } from './wallet-client';
+import { STORAGE } from './storage-names.mjs';
 
 export type {
   IssueReply,
@@ -34,8 +35,8 @@ export type {
 } from './wallet-client';
 
 export const WALLET_ENDPOINT = '/api/wallet';
-export const PRINCIPAL_KEY = 'fd-principal';
-export const PENDING_NONCE_KEY = 'fd-pending-nonce';
+export const PRINCIPAL_KEY = STORAGE.principal;
+export const PENDING_NONCE_KEY = STORAGE.pendingNonce;
 export const GUEST_HEADER = 'x-fd-principal';
 export const PRINCIPAL_SHAPE = /^[a-z]{1,8}_[A-Za-z0-9_-]{16,58}$/;
 export const PROBE_TIMEOUT_MS = 0;
