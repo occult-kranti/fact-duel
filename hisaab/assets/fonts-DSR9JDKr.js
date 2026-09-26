@@ -1,0 +1,2 @@
+const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["assets/400-CPnWd-06.css"])))=>i.map(i=>d[i]);
+import{t as e}from"./index-Ct76FtOO.js";var t=null;function n(){return t||=e(()=>Promise.resolve({}).then(()=>typeof document<`u`&&document.fonts?document.fonts.load(`400 18px Kalam`):void 0),__vite__mapDeps([0])).then(()=>void 0,()=>void 0),t}export{n as t};

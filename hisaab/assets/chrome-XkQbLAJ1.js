@@ -1,0 +1,1 @@
+import{d as e,s as t}from"./index-Ct76FtOO.js";var n=e(t(),1),r=(0,n.createContext)(()=>{});function i(e){let t=(0,n.useContext)(r);(0,n.useEffect)(()=>(t(e),()=>t(null)),[e,t])}var a=`HISAAB DO`;function o(e){(0,n.useEffect)(()=>{if(!e)return;let t=document.title;return document.title=`${e} · ${a}`,()=>{document.title=t}},[e])}export{o as i,a as n,i as r,r as t};
