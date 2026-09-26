@@ -177,10 +177,12 @@ dated status and the other side before it enters the bank.
   Manipur's CMHT.
 - **Mode holes by state.** No pre-election row for UT, JK, MZ, MN, AR; no plain distribution row for JH
   and NL; no relief row for GA and ML.
-- **Who gets named (F1).** 38 opposition politicians are named as accused or under probe against 2 from
-  the BJP. Add 6–10 items naming BJP or NDA-ally leaders with their clearances (Cunha commission,
-  Vyapam, Bellary mining and the 2011 Lokayukta report, party-switch clean chits behind hgh030, the
-  Chandigarh presiding officer in hel030).
+- **Who gets named (F1).** The balance audit found 38 opposition politicians named as accused or under
+  probe against 2 from the BJP. The `balance-cases` lane (30 items, hgh100+, 26 Sep 2026) adds 28 items
+  naming 44 people on the BJP/NDA side, convictions and clearances alike (Tehelka, Barak, the coffin
+  case, Laxmi Vilas, the Karnataka and Bellary mining cases, Vyapam, party-switch closures), 16 of them
+  from 2000–2013. Re-run the balance tables in `review/balance.md` after the next content batch and
+  keep the named-accused split proportionate to the documented record, not to a quota.
 - **Parties that appear only as villains in their own lane.** TMC (`states-east`); LDF, BRS and YSRCP
   (`states-west-south`); JMM and AAP (`states-north`). Add audited credit items where the record
   supports them.
