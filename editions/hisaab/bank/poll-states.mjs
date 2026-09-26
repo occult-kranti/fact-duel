@@ -259,9 +259,12 @@ export const HISAAB_POLL_STATES = Object.freeze([
     correctIndex: 3,
     explanation:
       "The New Indian Express: Ladli paid instalments at stages of a girl's schooling plus a lump sum of up to ₹1 lakh at 18. A CAG audit reported in 2025 found 16,546 duplicate registrations, and about 9% of beneficiaries enrolled after turning 18, the maturity age, costing ₹180.92 crore.",
+    otherSide:
+      "When the Congress cited the audit in January 2025, an AAP spokesperson called its charges baseless and 'BJP-manufactured lies'.",
     sourceUrl: 'https://www.newindianexpress.com/cities/delhi/2025/Feb/27/ladli-scheme-audit-finds-rs-61838-crore-unclaimed-reveals-massive-irregularities',
     sourceLabel: "The New Indian Express — 'Duplicate registrations': CAG exposes Rs 220 crore irregularities in Ladli scheme (27 Feb 2025)",
     sources: [
+      "https://www.tribuneindia.com/news/delhi/cong-accuses-aap-of-stalling-funds-under-ladli-yojana",
       'https://timesofindia.indiatimes.com/education/news/delhi-replaces-ladli-scheme-with-lakhpati-bitiya-yojana-promises-1-lakh-support-for-girls-education/articleshow/128196828.cms',
       W('2008_Delhi_Legislative_Assembly_election'),
     ],
@@ -323,6 +326,8 @@ export const HISAAB_POLL_STATES = Object.freeze([
     correctIndex: 0,
     explanation:
       "The Hindu: CEO Praveen Kumar ordered distribution stopped 'till the elections process is over' and warned of severe action against officials. The government had recently ordered 10 lakh more sets and tokens had already been issued. Ministers were also told not to announce financial grants or promise roads and drinking water.",
+    otherSide:
+      "No reply from the DMK government to the order was reported as of Sep 2026; the order paused the handout only until the election process was over.",
     sourceUrl: 'https://www.thehindu.com/news/national/tamil-nadu/EC-orders-stoppage-of-free-colour-TV-distribution-in-TN/article14944523.ece',
     sourceLabel: 'The Hindu — EC orders stoppage of free colour TV distribution in TN (2 Mar 2011)',
     sources: ['https://www.thehindu.com/news/Jayalalithaa-rides-wave-decimates-DMK-led-front/article13606860.ece', W('2011_Tamil_Nadu_Legislative_Assembly_election')],
@@ -355,6 +360,8 @@ export const HISAAB_POLL_STATES = Object.freeze([
     correctIndex: 1,
     explanation:
       "Speaking on 19 April, six days after polling, Food Minister C. Divakaran said the scheme was resuming after the Election Commission lifted its ban; APL cards would get 6–10 kg at ₹2 a kg, and ₹250 crore was in the Budget. He rejected Opposition Leader Oommen Chandy's charge that there was no allocation, saying the UDF had once run ₹3 rice without any budget provision.",
+    otherSide:
+      "Food Minister C. Divakaran rejected Oommen Chandy's charge, saying ₹250 crore was in the Budget and the only delay followed the Election Commission's ban.",
     sourceUrl: 'https://www.thehindu.com/news/national/kerala/Rice-at-Rs.-2-a-kg-in-a-day-or-two/article14689272.ece',
     sourceLabel: 'The Hindu — Rice at Rs. 2 a kg in a day or two (19 Apr 2011)',
     sources: ['https://www.indiatoday.in/assembly-elections-2011/kerala/story/kerala-assembly-elections-udf-wins-in-72-seats-against-ldfs-68-133693-2011-05-12'],
@@ -489,7 +496,7 @@ export const HISAAB_POLL_STATES = Object.freeze([
     options: ['₹1,500', '₹2,500', '₹3,100', '₹2,000'],
     correctIndex: 3,
     explanation:
-      "Frontline: the Congress also promised 35 kg of free rice to every card holder and free power to farmers; a BJP election manager dismissed the offers as 'hogwash'. Frontline found even Raman Singh's adversaries crediting his ₹2-a-kg rice. Ten years later the BJP's own manifesto offered ₹3,100.",
+      "Frontline: the Congress also promised 35 kg of free rice to every card holder and free power to farmers; a BJP election manager dismissed the offers as 'hogwash'. Frontline found even Raman Singh's adversaries crediting his ₹2-a-kg rice. Ten years later the BJP's own manifesto made a paddy-price promise too.",
     sourceUrl: 'https://frontline.thehindu.com/politics/food-and-vote/article5338647.ece',
     sourceLabel: 'Frontline — Food and vote (13 Nov 2013)',
     sources: [
@@ -724,6 +731,8 @@ export const HISAAB_POLL_STATES = Object.freeze([
     correctIndex: 2,
     explanation:
       "The Indian Express: Gujarat's Chief Secretary had written that the model code would disrupt flood relief. Former CEC S.Y. Quraishi said the break from simultaneous announcements 'raises some serious questions', and the Congress alleged the BJP had pushed for the delay; Joti said voting would still end before Himachal's count.",
+    otherSide:
+      "CEC A.K. Joti said the decision avoided an unreasonably long model code in Gujarat, and that its voting would wind up before Himachal's results were declared.",
     sourceUrl:
       'https://indianexpress.com/article/india/election-commission-himachal-pradesh-elections-17-gujarat-elections-date-schedule-congress-bjp-virbhadra-singh-vijay-rupani-4887853/',
     sourceLabel: 'The Indian Express — Election Omission: EC announces poll dates for Himachal Pradesh but not for Gujarat (13 Oct 2017)',
@@ -807,6 +816,8 @@ export const HISAAB_POLL_STATES = Object.freeze([
     correctIndex: 1,
     explanation:
       "ET EnergyWorld: the cabinet approved the flat ₹200 bill on 5 June for homes drawing under 1,000 watts, alongside a waiver of such families' power dues as of 1 June. Officials expected 88 lakh families to benefit; 38.9 lakh registered in the first ten days.",
+    otherSide:
+      "No reply from the Madhya Pradesh government to the CAG finding was reported as of Sep 2026.",
     sourceUrl: 'https://energy.economictimes.indiatimes.com/news/power/mp-power-schemes-over-38-lakh-people-register-in-10-days/64946133',
     sourceLabel: 'ET EnergyWorld — Madhya Pradesh power schemes: Over 38 lakh people register in 10 days (11 Jul 2018)',
     sources: [
@@ -1013,7 +1024,7 @@ export const HISAAB_POLL_STATES = Object.freeze([
     options: ['18 to 40', '21 to 65', '25 to 60', '30 to 70'],
     correctIndex: 2,
     explanation:
-      "Times of India: beneficiaries were to get ₹500 to ₹1,000 a month depending on category. More than 1.1 crore women had applied, and officials said the first estimate of 1.6 crore beneficiaries could rise to nearly 2 crore; money would move only after forms were verified.",
+      "Times of India: beneficiaries were to get ₹500 a month at the base rate, more in some categories. More than 1.1 crore women had applied, and officials said the first estimate of 1.6 crore beneficiaries could rise to nearly 2 crore; money would move only after forms were verified.",
     sourceUrl: 'https://timesofindia.indiatimes.com/city/kolkata/lakshmir-bhandar-bank-transfer-from-today/articleshow/85816832.cms',
     sourceLabel: 'Times of India — Lakshmir Bhandar bank transfer from today (1 Sep 2021)',
     sources: [
@@ -1284,6 +1295,8 @@ export const HISAAB_POLL_STATES = Object.freeze([
     correctIndex: 2,
     explanation:
       "Hindustan Times: the ECI listed ₹14,165.66 crore announced at 'button-press' events before the model code began on 16 March, the largest ₹6,394 crore under YSR Asara on 23 January, but not yet sent to banks. Crediting it so close to polling could tilt the level playing field, it said; transfers should follow 13 May. YSRCP leaders blamed a TDP complaint (Hans India).",
+    otherSide:
+      "YSRCP leaders alleged the TDP had conspired to stop welfare money by complaining to the Election Commission; the state had asked a court to allow the transfers.",
     sourceUrl:
       'https://www.hindustantimes.com/india-news/dont-disburse-14-000cr-among-beneficiaries-before-polling-eci-tells-andhra-cm-101715253041498.html',
     sourceLabel: 'Hindustan Times — Don’t disburse ₹14,000cr among beneficiaries before polling: ECI tells Andhra CM (9 May 2024)',
@@ -1464,6 +1477,8 @@ export const HISAAB_POLL_STATES = Object.freeze([
     correctIndex: 2,
     explanation:
       "The Hindu: a BJP minister had posted that women would get ₹3,000 for December and January before 14 January, a day before polling; the Congress complained on 10 January. CM Devendra Fadnavis said it was a continuing scheme. The SEC said ongoing benefits could continue under the code, but not in advance, and no new beneficiaries could be added.",
+    otherSide:
+      "The Chief Minister said Ladki Bahin was a continuing scheme launched before the polls and did not fall under the model code.",
     sourceUrl: 'https://www.thehindu.com/news/national/maharashtra/ladki-bahin-scheme-maharashtra-election-commission-model-code-polls/article70501117.ece',
     sourceLabel: "The Hindu — 'Ladki Bahin' scheme: State Election Commission bars Maharashtra govt from releasing advance installment (12 Jan 2026)",
     sources: ['https://timesofindia.indiatimes.com/india/hotel-politics-returns-to-mumbai-mahayutis-musical-chairs-over-mayor-after-bmc-win-10-things-to-know/articleshow/126639765.cms'],

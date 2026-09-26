@@ -473,7 +473,7 @@ export const HISAAB_GAPS_RELIEF = Object.freeze([
     asOf: "2026-09",
     govt: "NDA",
     question:
-      "Nine days after announcing ₹1,000 crore for Cyclone Tauktae-hit Gujarat, Modi announced ₹1,000 crore after Cyclone Yaas on 28 May 2021. How was it split?",
+      "Nine days after announcing interim aid for Cyclone Tauktae-hit Gujarat, Modi announced interim aid for the states hit by Cyclone Yaas on 28 May 2021. How was it split?",
     options: [
       "All of it to West Bengal, the worst hit",
       "₹500 cr to Odisha now; ₹500 cr for Bengal and Jharkhand by damage",

@@ -14,6 +14,11 @@
   border-bottom: var(--h-bw) solid var(--h-line);
   background: var(--h-ground);
 }
+/* The 8px right edge leaves room for the × button's own padding. Without it (the match result, the final
+   round's receipt) the right gutter matches the left: 16px, or the safe-area inset. */
+.h-roundhead--noleave {
+  padding-right: max(var(--h-gutter), env(safe-area-inset-right, 0px));
+}
 .h-roundhead__ids {
   flex: 1 1 auto;
   min-width: 0;

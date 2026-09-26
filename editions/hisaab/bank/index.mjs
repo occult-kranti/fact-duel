@@ -31,6 +31,7 @@ import { HISAAB_POLL_STATES } from './poll-states.mjs';
 import { HISAAB_GAPS_DIST } from './money-gaps-dist.mjs';
 import { HISAAB_GAPS_RELIEF } from './money-gaps-relief.mjs';
 import { HISAAB_GAPS_POLL } from './money-gaps-poll.mjs';
+import { HISAAB_BALANCE_CASES } from './balance-cases.mjs';
 
 export const LANES = Object.freeze({
   schemes: HISAAB_SCHEMES,
@@ -53,6 +54,7 @@ export const LANES = Object.freeze({
   'money-gaps-dist': HISAAB_GAPS_DIST,
   'money-gaps-relief': HISAAB_GAPS_RELIEF,
   'money-gaps-poll': HISAAB_GAPS_POLL,
+  'balance-cases': HISAAB_BALANCE_CASES,
 });
 
 export const BANK = Object.freeze(Object.values(LANES).flat());

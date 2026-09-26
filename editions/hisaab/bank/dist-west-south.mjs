@@ -500,7 +500,7 @@ export const HISAAB_DIST_WEST_SOUTH = Object.freeze([
     options: ['₹1,000', '₹1,500', '₹2,500', '₹500'],
     correctIndex: 0,
     explanation:
-      "CM Manohar Parrikar announced it in his 2012 budget speech; formally launched on 2 Oct 2012, it was slow to start (the department denied it lacked funds) until 7,700 sanction letters went out on 4 Jan 2013. Married women with a family income up to ₹3 lakh qualified. It pays ₹1,500 in 2026.",
+      "CM Manohar Parrikar announced it in his 2012 budget speech; formally launched on 2 Oct 2012, it was slow to start (the department denied it lacked funds) until 7,700 sanction letters went out on 4 Jan 2013. Married women with a family income up to ₹3 lakh qualified.",
     sourceUrl: 'https://timesofindia.indiatimes.com/city/goa/griha-aadhar-scheme-to-be-launched-today/articleshow/17879571.cms',
     sourceLabel: "Times of India — 'Griha Aadhar' scheme to be launched today (4 Jan 2013)",
     sources: [
@@ -620,6 +620,8 @@ export const HISAAB_DIST_WEST_SOUTH = Object.freeze([
     enactedBy: [{ name: 'N. Chandrababu Naidu', role: 'Chief Minister, Andhra Pradesh', party: 'TDP' }],
     outcome:
       'The state said ₹9,794 crore reached 97.94 lakh SHG members. In the April 2019 poll the YSRCP won 151 of 175 seats and the TDP 23.',
+    otherSide:
+      'The EC ruled for the TDP government: the code does not bar a scheme launched before it took effect whose beneficiaries were already identified, so the last instalment was no breach.',
     poll: { label: 'Andhra Pradesh Assembly 2019', month: '2019-04', result: 'YSRCP won 151 of 175 seats; TDP 23' },
   },
   {
@@ -1025,6 +1027,8 @@ export const HISAAB_DIST_WEST_SOUTH = Object.freeze([
     tags: ['distribution', 'pre-election'],
     enactedBy: [{ name: 'K. Chandrasekhar Rao', role: 'Chief Minister, Telangana', party: 'BRS' }],
     outcome: "The Congress, which had promised ₹15,000 an acre under its own 'Rythu Bharosa', won 64 of 119 seats; the BRS won 39.",
+    otherSide:
+      "The BRS filed a memorandum with the ECI contending that its minister had not publicised the scheme, so there was no code breach; it called the Congress 'anti-farmer' (TOI).",
     poll: { label: 'Telangana Assembly 2023', month: '2023-11', gapDays: 3, result: 'Congress won 64 of 119 seats; BRS 39' },
   },
   {
@@ -1074,7 +1078,7 @@ export const HISAAB_DIST_WEST_SOUTH = Object.freeze([
     options: ['₹65.5 crore', '₹6,550 crore', '₹655 crore', '₹3,000 crore'],
     correctIndex: 2,
     explanation:
-      "Per PIB, the ₹1,000-a-month DBT covers married women over 21, including widows and divorced or deserted women — about 70 lakh in all — and Modi said the government had fulfilled its promise. PRS shows ₹3,000 crore allotted to the scheme in the 2024-25 budget.",
+      "Per PIB, the monthly DBT covers married women over 21, including widows and divorced or deserted women — about 70 lakh in all — and Modi said the government had fulfilled its promise. PRS shows ₹3,000 crore allotted to the scheme in the 2024-25 budget.",
     sourceUrl: 'https://www.pib.gov.in/PressReleasePage.aspx?PRID=2013167',
     sourceLabel: 'PIB — PM Modi launches Mahtari Vandan Yojana in Chhattisgarh (10 Mar 2024)',
     sources: ['https://prsindia.org/budgets/states/chhattisgarh-budget-analysis-2024-25', W('2024_Indian_general_election_in_Chhattisgarh')],
@@ -1129,7 +1133,7 @@ export const HISAAB_DIST_WEST_SOUTH = Object.freeze([
     options: ['Devendra Fadnavis (BJP)', 'Eknath Shinde (Shiv Sena)', 'Sudhir Mungantiwar (BJP)', 'Ajit Pawar (NCP)'],
     correctIndex: 3,
     explanation:
-      "Deputy CM and Finance Minister Ajit Pawar presented the Shinde government's last budget before the Assembly poll on 28 June 2024, weeks after the ruling alliance won 17 of the state's 48 Lok Sabha seats. The scheme pays eligible women aged 21–60 ₹1,500 a month; asked about the pre-poll spending, Pawar said it was within fiscal limits.",
+      "Deputy CM and Finance Minister Ajit Pawar presented the Shinde government's last budget before the Assembly poll on 28 June 2024, weeks after the ruling alliance won 17 of the state's 48 Lok Sabha seats. The scheme pays a monthly sum to eligible women aged 21–60; asked about the pre-poll spending, Pawar said it was within fiscal limits.",
     sourceUrl: 'https://timesofindia.indiatimes.com/city/mumbai/maharashtra-budget-2024-25-key-highlights/articleshow/111337334.cms',
     sourceLabel: 'Times of India — Maharashtra Budget 2024-25: Key highlights (29 Jun 2024)',
     sources: [
@@ -1142,7 +1146,7 @@ export const HISAAB_DIST_WEST_SOUTH = Object.freeze([
       { name: 'Eknath Shinde', role: 'Chief Minister, Maharashtra', party: 'Shiv Sena' },
     ],
     outcome:
-      'Payments began on 14 Aug 2024 with ₹3,000 for July and August; about 80 lakh women were paid by 15 Aug, from 1.6 crore applicants. The BJP-led Mahayuti won 235 of 288 seats on 20 Nov.',
+      'Payments began on 14 Aug 2024 with the July and August instalments paid together; about 80 lakh women were paid by 15 Aug, from 1.6 crore applicants. The BJP-led Mahayuti won 235 of 288 seats on 20 Nov.',
     poll: { label: 'Maharashtra Assembly 2024', month: '2024-11', gapDays: 145, result: 'BJP-led Mahayuti won 235 of 288 seats (BJP 132, Shiv Sena 57, NCP 41)' },
   },
   {

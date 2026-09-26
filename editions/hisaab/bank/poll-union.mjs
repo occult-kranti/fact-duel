@@ -26,6 +26,8 @@ export const HISAAB_POLL_UNION = Object.freeze([
     options: ["Barred their broadcast until polling ended", "Fined the BJP the full cost of the ads", "Ordered the ministry to recover the money", "Let them run with a disclaimer"],
     correctIndex: 0,
     explanation: "Reuters, carried by Rediff on 2 April 2004, reported that the EC banned the slogan's broadcast until voting ended on 10 May, after the Congress said it gave the BJP an unfair boost at taxpayers' expense. Grey Worldwide coined it for a ₹65-crore government campaign; BJP leaders kept using it on the stump.",
+    otherSide:
+      "No reply from the NDA government to the EC ban was reported as of Sep 2026; the ad agency's creative director said the slogan 'was not (meant) to be political' (AFP).",
     sourceUrl: "https://www.rediff.com/business/special/shining/20040402.htm",
     sourceLabel: "Rediff (Reuters) — The man behind 'India Shining' slogan (2 Apr 2004)",
     sources: [
@@ -100,6 +102,8 @@ export const HISAAB_POLL_UNION = Object.freeze([
     options: ["2005", "2008", "2010", "2012"],
     correctIndex: 3,
     explanation: "The six—Bhopal, Bhubaneswar, Jodhpur, Patna, Raipur, Rishikesh—fall under the Pradhan Mantri Swasthya Suraksha Yojana. Alt News notes the NDA lost power months later, the UPA Cabinet approved them in March 2006 and MBBS classes began in 2012; work ran under both governments. A 2011 NIE report called the NDA's push 'election-oriented'.",
+    otherSide:
+      "The Union health ministry has said the six AIIMS are functional, with 16 more at various stages of construction (Alt News, 2021).",
     sourceUrl: "https://www.altnews.in/did-upa-govt-build-only-one-aiims-institute-during-their-tenure-false-claim-viral/",
     sourceLabel: "Alt News — Did UPA govt build only one AIIMS during their tenure? (25 Apr 2021)",
     sources: ["https://www.indiabudget.gov.in/budget_archive/ub2004-05(I)/bs/speecha.htm"],
@@ -404,6 +408,8 @@ export const HISAAB_POLL_UNION = Object.freeze([
     explanation: "The audit also found that 13.46% of 9,334 test-checked accounts were eligible but left out by lenders, and prima facie evidence of tampering with records. Finance Minister P. Chidambaram said action would follow against erring banks and ineligible recipients after inquiries, calling it 'unfortunate that some deserving farmers did not get benefit'.",
     status: "CAG audit findings on lenders' and the Finance Ministry's implementation (tabled 5 Mar 2013); no finding against any named person. The ministry said erring banks and ineligible beneficiaries would face action after inquiries.",
     people: ["P. Chidambaram"],
+    otherSide:
+      "Finance Minister P. Chidambaram said action would follow against erring banks and ineligible recipients after inquiries, calling it 'unfortunate that some deserving farmers did not get benefit'.",
     sourceUrl: "https://www.thehindu.com/news/national/sloppy-loan-waiver-edges-out-deserving-farmers-cag/article4478433.ece",
     sourceLabel: "The Hindu — Sloppy loan waiver edges out deserving farmers: CAG (5 Mar 2013)",
     sources: [
@@ -680,7 +686,7 @@ export const HISAAB_POLL_UNION = Object.freeze([
     question: "In which city did PM Narendra Modi launch Ayushman Bharat PM-JAY on 23 September 2018, seven weeks before five states began voting?",
     options: ["Varanasi", "Raipur", "Bhopal", "Ranchi"],
     correctIndex: 3,
-    explanation: "At the city's Prabhat Tara ground he said the scheme, with cover of up to ₹5 lakh a family a year in government or empanelled private hospitals, would reach 10.74 crore families, about 50 crore people. Chhattisgarh voted from 12 November; four other states followed.",
+    explanation: "At the city's Prabhat Tara ground he said the scheme's yearly family health cover, usable in government or empanelled private hospitals, would reach 10.74 crore families, about 50 crore people. Chhattisgarh voted from 12 November; four other states followed.",
     sourceUrl: "https://www.thehindu.com/news/national/pm-modi-launches-ayushman-bharat-scheme/article25020146.ece",
     sourceLabel: "The Hindu — PM Modi launches Ayushman Bharat healthcare scheme (23 Sep 2018)",
     sources: [
@@ -994,6 +1000,8 @@ export const HISAAB_POLL_UNION = Object.freeze([
     options: ["Information and Broadcasting", "Home Affairs", "Electronics and IT (MeitY)", "Rural Development"],
     correctIndex: 2,
     explanation: "On 21 March 2024 the EC ordered MeitY to halt delivery at once and file a compliance report, after complaints that the messages kept arriving. MeitY said the letters were sent before the Model Code took effect but some were delayed by 'systemic and network constraints' (BOOM).",
+    otherSide:
+      "MeitY told the EC the letters were sent before the Model Code took effect and that some were delayed by 'systemic and network constraints'.",
     sourceUrl: "https://www.thehindu.com/elections/lok-sabha/ec-asks-meity-to-stop-viksit-bharat-whatsapp-messages/article67975397.ece",
     sourceLabel: "The Hindu — Election Commission asks MeitY to stop Viksit Bharat WhatsApp messages (21 Mar 2024)",
     sources: [

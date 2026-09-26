@@ -174,6 +174,8 @@ export const HISAAB_RELIEF_STATES = Object.freeze([
     correctIndex: 3,
     explanation:
       "Of ₹432.18 crore meant for 'Environment and Coastal Protection', ₹284.08 crore went to a coastal housing project — far more than the ₹45.54 crore sanctioned for housing. The CAG found 72 of 228 chosen villages were not on the coast and over 4,000 houses within 10 m of the high-tide line, and said this matched the Kerala High Court's 2012 observations on diversion.",
+    otherSide:
+      "No reply from the Kerala government to the CAG's 2013 finding was reported as of Sep 2026.",
     sourceUrl:
       "https://www.newindianexpress.com/states/kerala/2013/Mar/20/grave-lapses-in-tsunami-rehabilitation-programme-460171.html",
     sourceLabel: "The New Indian Express — 'Grave lapses in Tsunami Rehabilitation Programme' (20 Mar 2013)",
@@ -205,6 +207,8 @@ export const HISAAB_RELIEF_STATES = Object.freeze([
     correctIndex: 1,
     explanation:
       "Justices K.G. Balakrishnan and P.P. Naolekar refused Tamil Nadu's plea to cancel a DMK councillor's bail, rejecting the state's claim that rumours he allegedly spread about relief tokens caused the crush: 'This is because of your sheer negligence.' Over 2,000 people had gathered at a K.K. Nagar school camp on 18 Dec 2005; six had died near another relief camp on 6 Nov.",
+    otherSide:
+      "Tamil Nadu argued that rumours about relief tokens, allegedly spread by an accused DMK councillor, caused the crush; the bench rejected that plea.",
     sourceUrl: "https://www.rediff.com/news/report/stampede/20060127.htm",
     sourceLabel: "Rediff (PTI) — TN govt responsible for December 2005 stampede: SC (27 Jan 2006)",
     sources: ["https://www.thehindu.com/news/national/tamil-nadu/karur-stampede-when-50-people-died-in-two-sunday-stampedes-in-chennai/article70112589.ece"],
@@ -466,6 +470,8 @@ export const HISAAB_RELIEF_STATES = Object.freeze([
     correctIndex: 0,
     explanation:
       "The CAG put spending at about ₹733.53 crore of the package for 2013–16, found delays in paying assistance in 92% of cases, and called the state disaster management authority 'virtually non-functional' before the disaster, which killed more than 4,000 people. The report was tabled in the Assembly on 3 Nov 2015.",
+    otherSide:
+      "No reply from the Uttarakhand government to the CAG report was reported as of Sep 2026.",
     sourceUrl: "https://www.livemint.com/Politics/F94DyJe65ya152ypFp15gO/CAG-report-slams-Uttarakhand-govt.html",
     sourceLabel: "Mint — CAG report slams Uttarakhand govt (6 Nov 2015)",
     tags: ["relief"],
@@ -526,6 +532,8 @@ export const HISAAB_RELIEF_STATES = Object.freeze([
     correctIndex: 0,
     explanation:
       "The CAG said the authority was put under the CM only in November 2013, eight years after the Disaster Management Act, and did not meet once till April 2017. It also faulted releases from Chembarambakkam reservoir and the CMDA for allowing building on water bodies. Minister D. Jayakumar said he 'completely' disagreed and the department would reply.",
+    otherSide:
+      "Minister D. Jayakumar said he 'completely' disagreed with the CAG report and that the department concerned would reply to it.",
     sourceUrl:
       "https://www.indiatoday.in/india/story/cag-report-reveals-tamil-nadu-disaster-management-authority-did-not-meet-even-once-in-4-years-1283293-2018-07-11",
     sourceLabel: "India Today — CAG report reveals TN disaster management authority did not meet even once in 4 years (12 Jul 2018)",
@@ -555,6 +563,8 @@ export const HISAAB_RELIEF_STATES = Object.freeze([
     correctIndex: 3,
     explanation:
       "The Kerala High Court had stayed the clause requiring staff unwilling to donate to file a 'letter of dissent', seeing an element of compulsion. Justices Arun Mishra and Vineet Saran dismissed the state's plea, saying donations need a voluntary spirit; the state remained free to collect from willing donors.",
+    otherSide:
+      "Kerala told the court there was no compulsion to donate and that departments had been told not to list unwilling staff; it said the stay had thwarted a 'noble programme'.",
     sourceUrl: "https://www.thehindu.com/news/national/kerala/sc-junks-kerala-order-on-salary-challenge/article25362589.ece",
     sourceLabel: "The Hindu — SC junks Kerala order on Salary Challenge (29 Oct 2018)",
     sources: [
@@ -635,6 +645,8 @@ export const HISAAB_RELIEF_STATES = Object.freeze([
     correctIndex: 3,
     explanation:
       "Frontline reported the ₹1,200 crore release under the SDRF and NDRF. The Congress said Karnataka was 'humiliated'; its Krishna Byre Gowda said ₹303 crore of it was SDRF money, leaving ₹897 crore from the NDRF. A BJP state general secretary called it a first instalment and said Karnataka was the first of 13 flood-hit states to get aid.",
+    otherSide:
+      "The BJP's state general secretary called the charges baseless, saying 13 states had floods and Karnataka was the first to get relief.",
     sourceUrl: "https://frontline.thehindu.com/the-nation/article29766585.ece",
     sourceLabel: "Frontline — Protests in Karnataka over Centre's flood relief aid (25 Oct 2019)",
     tags: ["relief"],
@@ -700,6 +712,8 @@ export const HISAAB_RELIEF_STATES = Object.freeze([
     correctIndex: 3,
     explanation:
       "KCR announced ₹10,000 for each flood-hit family on 19 Oct 2020; by 18 Nov, 6.64 lakh families had got ₹664 crore. The Congress alleged TRS agents handed out the cash as a 'vote bank' ploy. The SEC paused registration and payments until the 1 Dec poll; they resumed after the results, and about 1.3 lakh applicants were still unpaid in mid-December.",
+    otherSide:
+      "No TRS reply to the Congress's 'vote bank' charge was found (checked Sep 2026); the government paused payments as the SEC ordered and resumed them after the results.",
     sourceUrl: "https://www.thehindu.com/news/cities/Hyderabad/ec-slams-brakes-on-flood-relief-grant/article33127742.ece",
     sourceLabel: "The Hindu — EC slams brakes on flood relief grant (18 Nov 2020)",
     sources: [
@@ -761,11 +775,11 @@ export const HISAAB_RELIEF_STATES = Object.freeze([
     asOf: "2026-09",
     govt: "AAP",
     question:
-      "Delhi's Covid-19 family aid scheme, notified in June 2021, paid ₹50,000 to each family that lost a member to Covid. What else did it pay if the sole breadwinner had died?",
+      "Delhi's Covid-19 family aid scheme, notified in June 2021, paid a one-time ex gratia to each family that lost a member to Covid. What else did it pay if the sole breadwinner had died?",
     options: ["₹2,500 a month", "₹10 lakh insurance cover", "Free rations for five years", "A ₹5 lakh fixed deposit"],
     correctIndex: 0,
     explanation:
-      "Announced by Arvind Kejriwal on 18 May 2021, the Mukhyamantri Covid-19 Pariwar Aarthik Sahayata Yojana had no income limit; children who lost a parent also get ₹2,500 a month till 25. When the Supreme Court approved a national ₹50,000 ex gratia in Oct 2021, it said that sum came over and above state schemes.",
+      "Announced by Arvind Kejriwal on 18 May 2021, the Mukhyamantri Covid-19 Pariwar Aarthik Sahayata Yojana had no income limit; children who lost a parent also get ₹2,500 a month till 25. When the Supreme Court approved the NDMA's national ex gratia in Oct 2021, it said that sum came over and above state schemes.",
     sourceUrl: "https://www.livemint.com/news/india/rs-50k-ex-gratia-monthly-pension-delhi-govt-notifies-scheme-for-covid-victims-kin-11624405671692.html",
     sourceLabel: "Mint — ₹50K ex-gratia, monthly pension: Delhi govt notifies scheme for Covid victims' kin (23 Jun 2021)",
     sources: [
@@ -775,7 +789,7 @@ export const HISAAB_RELIEF_STATES = Object.freeze([
     tags: ["relief"],
     enactedBy: [{ name: "Arvind Kejriwal", role: "Chief Minister, Delhi", party: "AAP" }],
     outcome:
-      "By 13 Dec 2021, 21,235 of 25,100 applicants had got the ₹50,000; about 2,000 declined it and 7,955 were receiving the ₹2,500 monthly aid, the social welfare minister said (TOI).",
+      "By 13 Dec 2021, 21,235 of 25,100 applicants had got the one-time payment; about 2,000 declined it and 7,955 were receiving the ₹2,500 monthly aid, the social welfare minister said (TOI).",
   },
   {
     id: "hrf127",
@@ -795,6 +809,8 @@ export const HISAAB_RELIEF_STATES = Object.freeze([
     correctIndex: 1,
     explanation:
       "Its affidavit, reported by Reuters, listed 22,557 applications and 16,175 approvals; an official said applications had since passed 40,000. The Congress said its surveys showed at least 55,000 deaths; the revenue minister did not respond. In March 2022 the court allowed random checks of 5% of claims in Gujarat, Andhra, Kerala and Maharashtra, where claims far exceeded recorded deaths.",
+    otherSide:
+      "A state government spokesperson said there was a difference between dying of Covid and dying during the pandemic; ex gratia also covers deaths within 30 days of a positive test.",
     sourceUrl: "https://www.aljazeera.com/news/2021/12/14/india-gujarat-covid-deaths-official-tally",
     sourceLabel: "Al Jazeera (Reuters) — India's Gujarat admits to more COVID deaths than official tally (14 Dec 2021)",
     sources: [
@@ -858,6 +874,8 @@ export const HISAAB_RELIEF_STATES = Object.freeze([
     correctIndex: 0,
     explanation:
       "Justices M.R. Shah and B.V. Nagarathna had said SDRF money cannot be diverted for other purposes. The state's counsel said the ₹1,100 crore would go back from the Agriculture Commissioner's personal deposit account within two weeks; the bench said it could then be used for Covid compensation under the Disaster Management Act.",
+    otherSide:
+      "Andhra Pradesh did not contest the bench's view: its counsel agreed to move the money back to the SDRF within two weeks.",
     sourceUrl: "https://www.livelaw.in/top-stories/supreme-court-covid-19-ex-gratia-compensation-andhra-pradesh-state-disaster-relief-fund-204099",
     sourceLabel: "LiveLaw — After SC's criticism, Andhra Pradesh agrees to revert Rs 1,100 crore to SDRF (18 Jul 2022)",
     tags: ["relief"],
@@ -909,6 +927,8 @@ export const HISAAB_RELIEF_STATES = Object.freeze([
     status:
       "Political allegation (May 2024); no official complaint had been filed (The Indian Express, 30 May 2024); the Himachal government called it baseless. No later complaint or probe found (checked Sep 2026).",
     people: ["Narendra Modi", "Jai Ram Thakur", "Sukhvinder Singh Sukhu"],
+    otherSide:
+      "The Chief Minister's media adviser called the 'bandarbant' charge baseless; a state disaster official said SDRF and NDRF money cannot be spent outside MHA conditions.",
     sourceUrl: "https://indianexpress.com/article/political-pulse/decode-politics-why-pm-modi-is-talking-of-bandarbant-in-himachal-9360120/",
     sourceLabel: "The Indian Express — Decode politics: Why PM Modi is talking of 'bandarbant' in Himachal (30 May 2024)",
     sources: ["https://www.hindustantimes.com/cities/chandigarh-news/year-after-monsoon-mayhem-himachal-still-on-long-road-to-recovery-101720193123856.html"],
@@ -968,6 +988,8 @@ export const HISAAB_RELIEF_STATES = Object.freeze([
     correctIndex: 1,
     explanation:
       "A committee chaired by Amit Shah approved ₹3,454 crore after the Centre told the court the Election Commission had cleared the decision. CM Siddaramaiah said it was not even a quarter of what NDRF norms required, vowed to fight on, and said the court had asked both sides to settle the amount. The state had paid ₹2,000 each to over 33 lakh farmers.",
+    otherSide:
+      "The Centre had said the state's disaster fund was enough for relief, and told the Supreme Court the Election Commission had cleared its aid decision.",
     sourceUrl: "https://www.thenewsminute.com/karnataka/union-government-releases-rs-3454-crore-as-drought-relief-to-karnataka",
     sourceLabel: "The News Minute — Union government releases Rs 3,454 crore as drought relief to Karnataka (27 Apr 2024)",
     sources: [
@@ -1035,6 +1057,8 @@ export const HISAAB_RELIEF_STATES = Object.freeze([
     status:
       "Political allegations (Sep 2024); the government said the figures were NDRF-norm estimates, not expenditure; no case or inquiry found (checked Sep 2026).",
     people: ["V.D. Satheesan", "K. Surendran", "Pinarayi Vijayan"],
+    otherSide:
+      "The CM's office said the figures were preliminary estimates under NDRF norms, not actual spending, and that misreporting hurt Kerala's bid for central aid.",
     sourceUrl: "https://www.thenewsminute.com/kerala/wayanad-landslides-kerala-govts-memo-estimating-financial-aid-triggers-controversy",
     sourceLabel: "The News Minute — Wayanad landslides: Kerala govt's memo estimating financial aid triggers controversy (17 Sep 2024)",
     sources: [
@@ -1098,6 +1122,8 @@ export const HISAAB_RELIEF_STATES = Object.freeze([
     correctIndex: 2,
     explanation:
       "The MHA said Punjab had ₹12,589.59 crore in its SDRF and had not yet sent a damage memorandum. CM Bhagwant Mann said only ₹5,012 crore had come into the fund since 2010, of which ₹3,820 crore was spent. The Assembly condemned PM Modi's ₹1,600 crore announcement as 'meagre'; the MHA said ₹805 crore of it had been released.",
+    otherSide:
+      "The Centre said Punjab should use the balance in its disaster response fund and had yet to submit the damage memorandum that NDRF aid requires.",
     sourceUrl: "https://indianexpress.com/article/cities/chandigarh/punjab-flood-relief-mann-says-shah-promised-more-mha-utlise-rs-12589-cr-sdrf-10281114/",
     sourceLabel: "The Indian Express — Punjab flood relief: Mann says Shah promised more; MHA: 'utilise Rs 12,589 cr SDRF' (1 Oct 2025)",
     sources: [

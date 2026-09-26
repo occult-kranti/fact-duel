@@ -100,7 +100,7 @@ export function RouteFinish({ route, record, run, journeys, journal, progression
         continueLabel: t('Continue', 'आगे'),
       });
     } else if (justFinished.wasFirst) {
-      budget.note(`File cleared: ${route.title}`, `${correct}/6 · ${signed(score)} pts`);
+      budget.note(`File cleared: ${route.title}`, `${correct}/6 · ${signed(score)} ${Math.abs(score) === 1 ? 'pt' : 'pts'}`);
     } else if (improved && justFinished.prevBest !== null) {
       budget.note(`Best: ${signed(justFinished.prevBest)} → ${signed(score)}`, route.title);
     }

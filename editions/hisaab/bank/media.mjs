@@ -1348,7 +1348,11 @@ export const HISAAB_MEDIA = Object.freeze([
     "correctIndex": 1,
     "explanation": "The court held Section 66A “constitutionally vague” and outside the reasonable restrictions allowed on free speech. New FIRs under the struck-down provision kept being filed, and in July 2021 the PUCL asked the Supreme Court to stop its further use.",
     "sourceUrl": "https://www.scobserver.in/journal/section-66a-4-must-reads-2/",
-    "sourceLabel": "Supreme Court Observer — Section 66A: 4 must reads (2021)"
+    "sourceLabel": "Supreme Court Observer — Section 66A: 4 must reads (2021)",
+    "sources": [
+      "https://scroll.in/latest/1001749/states-share-equal-responsibility-to-comply-with-sc-judgement-on-section-66a-of-it-act-says-centre"
+    ],
+    "otherSide": "The Centre told the Supreme Court (2021) that policing is a state subject and states share the duty to comply; on 14 July 2021 it directed states and UTs to withdraw all Section 66A cases."
   },
   {
     "id": "hmd044",

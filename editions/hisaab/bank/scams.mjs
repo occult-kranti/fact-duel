@@ -705,6 +705,7 @@ export const HISAAB_SCAMS = Object.freeze([
     sourceUrl: 'https://www.newindianexpress.com/india/2026/May/01/ed-marks-70th-founding-anniversary-with-record-asset-attachments-of-rs-81422-in-fy-2025-26',
     sourceLabel: 'The New Indian Express — ED marks 70th anniversary with record attachments (1 May 2026)',
     sources: ['https://www.livelaw.in/top-stories/2-convictions-in-193-ed-cases-filed-against-political-leaders-in-last-10-years-centre-tells-parliament-286862'],
+    otherSide: 'The ED says about 94% of the money-laundering trials it has completed ended in conviction, and that it filed 657 main prosecution complaints in FY26.',
   },
   {
     id: 'hgh033',
@@ -744,7 +745,8 @@ export const HISAAB_SCAMS = Object.freeze([
     explanation: "The Court said the extensions broke its 2021 order barring further extensions, but let him stay till July 31, 2023 (later Sept 15) citing the FATF review. It upheld the CVC and DSPE Act amendments that let the Centre extend ED and CBI chiefs' terms to five years in the public interest.",
     sourceUrl: 'https://www.livelaw.in/top-stories/supreme-court-sc-enforcement-directorate-director-sanjay-kumar-mishra-central-vigilance-commission-amendment-act-232449',
     sourceLabel: "LiveLaw — Supreme Court invalidates extensions of ED Director's term (11 Jul 2023)",
-    sources: ['https://www.thehindu.com/news/national/sc-allows-sanjay-kumar-mishra-to-continue-as-ed-director-till-september-15/article67127129.ece'],
+    sources: ['https://www.thehindu.com/news/national/sc-allows-sanjay-kumar-mishra-to-continue-as-ed-director-till-september-15/article67127129.ece', 'https://www.deccanherald.com/india/who-is-ed-director-not-important-action-on-corruption-of-cozy-club-of-entitled-dynasts-will-continue-amit-shah-1236028.html'],
+    otherSide: "The Union Home Minister said the ruling upheld the CVC Act amendments passed by Parliament and that the ED's powers to act against the corrupt remain the same.",
   },
   {
     id: 'hgh035',
@@ -843,7 +845,8 @@ export const HISAAB_SCAMS = Object.freeze([
     explanation: 'A retired Supreme Court judge was appointed on March 19, 2019, nearly five years after the Act (passed in 2013 after a nationwide anti-corruption movement) was notified. The government moved after the Supreme Court set a February-end deadline; the selection panel was chaired by the Prime Minister.',
     sourceUrl: 'https://www.thehindu.com/news/national/justice-pc-ghose-appointed-first-lokpal/article26582874.ece',
     sourceLabel: 'The Hindu — Justice P.C. Ghose appointed first Lokpal (19 Mar 2019)',
-    sources: ['https://lawstreet.co/executive/former-supreme-court-judge-justice-pinaki-chandra-ghose-to-be-first-lokpal-chairperson'],
+    sources: ['https://lawstreet.co/executive/former-supreme-court-judge-justice-pinaki-chandra-ghose-to-be-first-lokpal-chairperson', 'https://adrindia.org/content/no-point-keeping-lokpal-appointment-hold-supreme-court-tells-centre'],
+    otherSide: 'The Centre told the Supreme Court (2017) that there was no recognised Leader of the Opposition to sit on the selection panel and that Parliament was weighing amendments to the Lokpal law.',
   },
   {
     id: 'hgh040',

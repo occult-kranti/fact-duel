@@ -34,6 +34,17 @@
  * kept (results are not tied to card ids) but an unfinished run whose cards no longer match is dropped
  * by lib/expeditions.mjs `readExpeditions`, and the player starts that route afresh.
  *
+ * The mix (balance review F2, `ROUTE_MIX`): a state or sector route holds at most two `scam` cards, and
+ * a state route deals every government with three or more items in the state's pool at least one card
+ * that is not a scam card — one of its schemes when the pool holds both its scam cards and a scheme of
+ * its. So a state is never dealt as one party's charge sheet when its pool also holds that party's
+ * schemes and spending. The six are the first set in the hash order that meets every rule, so a route
+ * whose old six already met them keeps them. When the pool cannot meet them all, rules give way in
+ * reverse order of importance: the scheme preference, then governments (smallest share first), then
+ * the two-per-difficulty quotas; the cap goes last. A state short of clean cards takes up to two from
+ * the Centre instead of a third scam card, disclosed exactly as the top-up is. Money-trail, year, Kiska
+ * Media and Forward Court routes have no mix and deal as before.
+ *
  * Route ids come and go with the data (a pool crossing ROUTE_MIN / MONEY_MIN / YEAR_MIN, year ranges
  * regrouping), and `readExpeditions` keeps a stored record only for a key in EXPEDITIONS. So the
  * catalogue the engine reads is `routeCatalogue(bank)`: the live routes plus a RETIRED stub for every
@@ -138,20 +149,164 @@ function ranked(pool, salt) {
     .map((x) => x.q);
 }
 
+// ---- The mix (balance review F2) ----------------------------------------------------------------
+
+/**
+ * The deal rules for the routes that stand for one place or one file. `maxScams`: at most this many
+ * `kind: 'scam'` cards in the six. `govtMin` (state routes): every government with at least this many
+ * items in the pool is dealt a card that is not a scam card — one of its schemes when the pool holds
+ * both its scam cards and its schemes. Kinds not listed deal with no mix.
+ */
+export const ROUTE_MIX = Object.freeze({
+  state: Object.freeze({ maxScams: 2, govtMin: 3 }),
+  sector: Object.freeze({ maxScams: 2 }),
+});
+/** The most cards the Centre ever adds to a state route: a route is at least ROUTE_MIN.state its own. */
+const MAX_TOP_UP = ROUTE_CARDS - ROUTE_MIN.state;
+const isScam = (q) => q.kind === 'scam';
+
+/**
+ * The governments a route must show off the scam file: `min`+ items in `pool`, at least one of them not
+ * a scam card; largest share first, name as the tiebreak. `clean` accepts any of its non-scam cards.
+ * `due` is the card it is owed: one of its schemes when the pool holds its scam cards and a scheme of
+ * its (so a charge sheet is never dealt without what it runs), otherwise `clean`.
+ */
+function governments(pool, min) {
+  const tally = new Map();
+  for (const q of pool) if (typeof q.govt === 'string') tally.set(q.govt, (tally.get(q.govt) ?? 0) + 1);
+  return [...tally]
+    .filter(([govt, n]) => n >= min && pool.some((q) => q.govt === govt && !isScam(q)))
+    .sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0))
+    .map(([govt]) => {
+      const clean = (q) => q.govt === govt && !isScam(q);
+      const scheme = (q) => q.govt === govt && q.kind === 'scheme';
+      const due = pool.some((q) => q.govt === govt && isScam(q)) && pool.some(scheme) ? scheme : clean;
+      return { govt, clean, due };
+    });
+}
+
+/**
+ * Can `chosen` (taken from `order` before index `from`) grow to `k` cards out of `order[from..]` so
+ * that each level L holds at least `need[L]` cards, at most `budget` are scam cards, and every
+ * predicate in `cover` matches one of them? Exact: each government still owed a card is placed on a
+ * level every way the remaining cards allow (they are distinct cards: one government each), and what
+ * is left is a count over (level, scam or not).
+ */
+function canFinish(chosen, order, from, k, need, budget, cover) {
+  const slots = k - chosen.length;
+  const have = [0, 0, 0, 0];
+  let scams = 0;
+  for (const q of chosen) {
+    have[levelIndex(q)] += 1;
+    if (isScam(q)) scams += 1;
+  }
+  const left = budget - scams;
+  const open = cover.filter((ok) => !chosen.some(ok));
+  if (slots < 0 || left < 0 || open.length > slots) return false;
+  const clean = [0, 0, 0, 0];
+  const dirty = [0, 0, 0, 0];
+  const reach = open.map(() => [false, false, false, false]);
+  for (let i = from; i < order.length; i++) {
+    const q = order[i];
+    const L = levelIndex(q);
+    if (isScam(q)) dirty[L] += 1;
+    else clean[L] += 1;
+    for (let j = 0; j < open.length; j++) if (open[j](q)) reach[j][L] = true;
+  }
+  const dirtyTotal = dirty.reduce((a, b) => a + b, 0);
+  const placed = [0, 0, 0, 0];
+  const fits = () => {
+    const rest = slots - open.length;
+    let owed = 0;
+    let forced = 0;
+    let spare = 0;
+    for (let L = 0; L < 4; L++) {
+      const d = Math.max(0, (need[L] ?? 0) - have[L] - placed[L]);
+      const c = clean[L] - placed[L];
+      const f = Math.max(0, d - c); // scam cards this level cannot do without
+      if (f > dirty[L]) return false;
+      owed += d;
+      forced += f;
+      spare += c;
+    }
+    return owed <= rest && forced <= left && spare + Math.min(left, dirtyTotal) >= rest;
+  };
+  const place = (j) => {
+    if (j === open.length) return fits();
+    for (let L = 0; L < 4; L++) {
+      if (!reach[j][L]) continue;
+      placed[L] += 1;
+      const ok = place(j + 1);
+      placed[L] -= 1;
+      if (ok) return true;
+    }
+    return false;
+  };
+  return place(0);
+}
+
+/** The first `k` cards of `order`, in its order, that can still finish under the rules (lex-first). */
+function lexFirst(order, k, need, budget, cover) {
+  const chosen = [];
+  for (let i = 0; i < order.length && chosen.length < k; i++) {
+    chosen.push(order[i]);
+    if (!canFinish(chosen, order, i + 1, k, need, budget, cover)) chosen.pop();
+  }
+  return chosen;
+}
+
+/**
+ * `k` of the pool's own cards. Rules, most important first: at most `budget` scam cards; two per
+ * difficulty where the pool allows; every government in `govts` dealt its `due` card. Where they
+ * cannot all hold, the scheme preference goes first (any clean card will do), then governments from
+ * the smallest share up, then one difficulty quota at a time. The first rule set that can be met is
+ * dealt lex-first in hash order: a pool whose old six already met it keeps them, and with no cap and
+ * no governments this is exactly "two per difficulty, then the rest in hash order".
+ */
+function dealOwn(order, k, budget, govts) {
+  const ladder = [govts.map((g) => g.due), govts.map((g) => g.clean)];
+  for (let m = govts.length - 1; m >= 0; m--) ladder.push(govts.slice(0, m).map((g) => g.clean));
+  const need = LEVELS.map((level) => Math.min(2, order.filter((q) => q.difficulty === level).length));
+  const cleanAt = LEVELS.map((level) => order.filter((q) => q.difficulty === level && !isScam(q)).length);
+  for (;;) {
+    for (const cover of ladder) if (canFinish([], order, 0, k, need, budget, cover)) return lexFirst(order, k, need, budget, cover);
+    // Ease one quota: a level the cap starves of clean cards first, the hardest level first.
+    const L = [2, 1, 0].find((i) => need[i] > cleanAt[i]) ?? [2, 1, 0].find((i) => need[i] > 0);
+    if (L === undefined) return lexFirst(order, k, need, budget, []); // unreachable: k and budget always fit
+    need[L] -= 1;
+  }
+}
+
 /**
  * Six cards out of `pool` (two per difficulty where possible, then the rest of the pool), topped up
  * from `fill` — taken in the order given — when the pool is short. Returns the chosen items in
  * chapter order and which were fill.
+ *
+ * With a `mix` (ROUTE_MIX.state / .sector) the six also keep to its scam cap and government coverage;
+ * a pool without enough clean cards for the cap takes up to MAX_TOP_UP clean cards from `fill` rather
+ * than another scam, and only a pool that cannot keep the cap either way goes over it. Without a mix
+ * the result is what it always was.
  */
-export function pickCards(pool, salt, fill = []) {
+export function pickCards(pool, salt, fill = [], mix = null) {
   const order = ranked(pool, salt);
-  const chosen = [];
-  for (const level of LEVELS) chosen.push(...order.filter((q) => q.difficulty === level).slice(0, 2));
-  for (const q of order) if (chosen.length < ROUTE_CARDS && !chosen.includes(q)) chosen.push(q);
+  const cap = mix?.maxScams ?? Infinity;
+  const own = new Set(order.map((q) => q.id));
+  const clean = order.filter((q) => !isScam(q)).length;
+  const cleanFill = new Set(fill.filter((q) => !own.has(q.id) && !isScam(q)).map((q) => q.id)).size;
+  // The Centre's share: what the pool is short of six, or — under a cap — the clean cards that keep
+  // the scam count down, as far as the fill has them and never past MAX_TOP_UP.
+  const short = Math.max(0, ROUTE_CARDS - order.length);
+  const top = Math.max(short, Math.min(ROUTE_CARDS - cap - clean, cleanFill, MAX_TOP_UP));
+  const k = Math.min(order.length, ROUTE_CARDS - top);
+  const budget = Math.max(cap, k - clean);
+  const chosen = dealOwn(order, k, budget, mix?.govtMin ? governments(order, mix.govtMin) : []);
+  // Top up in the fill's order within the cap; past it only when the fill has nothing else.
   const padded = [];
-  for (const q of fill) {
-    if (chosen.length >= ROUTE_CARDS) break;
-    if (!chosen.some((c) => c.id === q.id)) {
+  for (const capped of [true, false]) {
+    for (const q of fill) {
+      if (chosen.length >= ROUTE_CARDS) break;
+      if (chosen.some((c) => c.id === q.id)) continue;
+      if (capped && isScam(q) && chosen.filter(isScam).length >= budget) continue;
       chosen.push(q);
       padded.push(q.id);
     }
@@ -197,9 +352,11 @@ function route({ id, kind, title, subtitle, code, stamp, cards, padded, poolSize
 
 /**
  * Every route the bank supports, in display order: states (charter order), sectors, Kiska Media,
- * Forward Court. Items outside the civics domain are ignored.
+ * Forward Court. Items outside the civics domain are ignored. `mix` is the deal rules per kind
+ * (default ROUTE_MIX); `{ mix: null }` deals every route without one, as before F2 — which routes
+ * exist never depends on it.
  */
-export function deriveRoutes(bank) {
+export function deriveRoutes(bank, { mix = ROUTE_MIX } = {}) {
   const items = (bank ?? []).filter((q) => q && q.domain === 'civics' && typeof q.id === 'string');
   const routes = [];
   const centre = items.filter((q) => q.state === 'IN');
@@ -214,7 +371,7 @@ export function deriveRoutes(bank) {
       ...ranked(centre.filter((q) => sectors.has(q.topic)), `${salt}:fill`),
       ...ranked(centre.filter((q) => !sectors.has(q.topic)), `${salt}:fill`),
     ];
-    const { cards, padded } = pickCards(pool, salt, fill);
+    const { cards, padded } = pickCards(pool, salt, fill, mix?.state ?? null);
     if (cards.length < ROUTE_CARDS) continue;
     const own = cards.length - padded.length;
     routes.push(
@@ -239,7 +396,7 @@ export function deriveRoutes(bank) {
     const pool = items.filter((q) => q.topic === sector);
     if (pool.length < ROUTE_MIN.sector) continue;
     const id = `sector-${slug(sector)}`;
-    const { cards, padded } = pickCards(pool, id);
+    const { cards, padded } = pickCards(pool, id, [], mix?.sector ?? null);
     routes.push(
       route({
         id,

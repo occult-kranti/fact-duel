@@ -139,7 +139,7 @@ export function VaultFilters({ rows, value, onChange, open, shown }: FiltersProp
 
       <div className="h-vcount">
         <p className="h-vcount__text" role="status">
-          {t(`${shown} of ${rows.length} receipts`, `${rows.length} में से ${shown} रसीदें`)}
+          {t(`${shown} of ${rows.length} ${rows.length === 1 ? 'receipt' : 'receipts'}`, `${rows.length} में से ${shown} ${shown === 1 ? 'रसीद' : 'रसीदें'}`)}
         </p>
         {active || value.status || value.q ? (
           <Button variant="ghost" size="s" icon={<X size={18} strokeWidth={2.4} />} trailing={null} onClick={() => onChange({ q: '', sector: '', state: '', mode: '', status: '', src: '' })}>

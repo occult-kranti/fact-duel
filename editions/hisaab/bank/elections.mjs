@@ -43,6 +43,7 @@ export const HISAAB_ELECTIONS = Object.freeze([
     sourceUrl: SC_EB_JUDGMENT,
     sourceLabel: 'Supreme Court of India — ADR v. Union of India, judgment (15 Feb 2024)',
     sources: [SCO_EB_TIMELINE],
+    otherSide: 'The Union defended the scheme as a way to move political donations into banking channels and shield donors from retribution; the Supreme Court rejected those arguments in Feb 2024.',
   },
   {
     id: 'hel002',
@@ -91,6 +92,7 @@ export const HISAAB_ELECTIONS = Object.freeze([
     sourceUrl: SC_EB_JUDGMENT,
     sourceLabel: 'Supreme Court of India — ADR v. Union of India, judgment (15 Feb 2024)',
     sources: [SCO_EB_TIMELINE],
+    otherSide: 'The Union argued that donor confidentiality protected donors from retribution and that the bonds moved donations into banking channels; the unanimous bench was not persuaded.',
   },
   {
     id: 'hel004',
@@ -182,6 +184,7 @@ export const HISAAB_ELECTIONS = Object.freeze([
       'CPI(M) filed its writ petition on 19 Jan 2018, alongside the NGOs ADR and Common Cause. The Union argued the scheme kept donations in banking channels and shielded donors from retribution; the SC struck it down in Feb 2024.',
     sourceUrl: SCO_EB_TIMELINE,
     sourceLabel: 'Supreme Court Observer — A complete timeline of the Electoral Bond Scheme (14 May 2024)',
+    otherSide: 'The Union argued the scheme kept donations in banking channels and shielded donors from retribution; the Supreme Court struck it down in Feb 2024.',
   },
   {
     id: 'hel008',
@@ -204,6 +207,7 @@ export const HISAAB_ELECTIONS = Object.freeze([
     sourceUrl: 'https://thefederal.com/category/news/electoral-bonds-case-supreme-court-hearing-sbi-plea-dismissed-113272',
     sourceLabel: 'The Federal — Electoral bonds case: SC junks plea, asks SBI to submit details by tomorrow (11 Mar 2024)',
     sources: [SCO_EB_TIMELINE, BS_EB_PARTIES],
+    otherSide: "SBI told the court that matching purchase and encashment data, kept in separate 'silos', was complex and needed time; after the plea was dismissed the ECI published the data on 14 March 2024.",
   },
   {
     id: 'hel009',
@@ -233,6 +237,7 @@ export const HISAAB_ELECTIONS = Object.freeze([
     sources: [
       'https://www.scconline.com/blog/post/2024/03/18/supreme-court-directs-sbi-disclose-conceivable-details-electoral-bonds-including-alphanumeric-number/',
     ],
+    otherSide: "SBI's counsel argued donors had bought bonds on an assurance of anonymity; SBI then disclosed the bond numbers, with its chairman's affidavit, as ordered.",
   },
 
   // ── Electoral bonds: who got, who gave ──────────────────────────────────────
@@ -812,6 +817,7 @@ export const HISAAB_ELECTIONS = Object.freeze([
     sources: [
       'https://www.thehindu.com/news/national/minister-in-cec-ec-selection-panel-fails-perception-test-says-justice-datta-in-split-verdict/article71499280.ece',
     ],
+    otherSide: "The Union sought the larger-bench reference, comparing the selection process with the judges' collegium; the 2023 law stays in force until a larger bench rules.",
   },
   {
     id: 'hel033',
@@ -1074,6 +1080,7 @@ export const HISAAB_ELECTIONS = Object.freeze([
       "The bench ordered status quo ante as on 15 Dec 2015, reinstating the Congress government — the first time the court restored a government after a new one had taken office. The Centre had defended President's Rule, citing a breakdown of law and order. In 2023 the SC referred part of this ruling to a larger bench.",
     sourceUrl: 'https://indianexpress.com/article/political-pulse/arunachal-case-sc-maharashtra-order-8605516/',
     sourceLabel: 'The Indian Express — Looking back at the landmark Arunachal case referred to in the SC Maharashtra order (12 May 2023)',
+    otherSide: "The Centre had defended President's Rule in Arunachal, citing a breakdown of law and order; in 2023 the Supreme Court referred part of this ruling to a larger bench.",
   },
   {
     id: 'hel043',

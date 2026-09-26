@@ -187,7 +187,8 @@ export const HISAAB_STATES_NORTH = Object.freeze([
       'The audit also found only 523 of a planned 1,000 clinics running by March 2023, and among 74 sampled clinics 21 lacked toilets and 10 lacked drinking water. It was tabled by the new BJP government on 28 Feb 2025, weeks after AAP lost power; the clinics had been AAP’s flagship of free primary care.',
     sourceUrl: 'https://www.tribuneindia.com/news/delhi/cag-report-highlights-mohalla-clinic-vacancies-overcrowding-in-hospitals',
     sourceLabel: 'The Tribune — CAG report highlights mohalla clinic vacancies, overcrowding (Feb 2025)',
-    sources: ['https://m.economictimes.com/news/india/keenly-awaited-cag-report-on-state-of-healthcare-in-delhi-tabled-in-assembly/articleshow/118625858.cms'],
+    sources: ['https://m.economictimes.com/news/india/keenly-awaited-cag-report-on-state-of-healthcare-in-delhi-tabled-in-assembly/articleshow/118625858.cms', 'https://www.tribuneindia.com/news/delhi/delhi-assembly-session-ends-on-a-stormy-note', 'https://theshillongtimes.com/2025/03/04/bjp-aap-clash-over-cag-reports-in-delhi-assembly/'],
+    otherSide: "AAP legislators defended their record in the Assembly (Mar 2025): they said the report itself ranked Delhi first in the country on health services, and blamed hiring shortfalls on the Centre's interference.",
   },
   {
     id: 'hst106',
@@ -1231,7 +1232,7 @@ export const HISAAB_STATES_NORTH = Object.freeze([
     asOf: '2026-09',
     govt: 'INC',
     question:
-      "In February 2022, which state's Congress government used its budget to restore the Old Pension Scheme for staff who joined on or after 1 January 2004?",
+      "In February 2022, which state's Congress government used its budget to move staff hired under the National Pension System onto the pension scheme the NPS had replaced?",
     options: ['Himachal Pradesh', 'Punjab', 'Chhattisgarh', 'Rajasthan'],
     correctIndex: 3,
     explanation:

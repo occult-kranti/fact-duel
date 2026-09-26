@@ -217,7 +217,9 @@ export const HISAAB_SCHEMES = Object.freeze([
     explanation: "For 1.93 crore such beneficiaries the average was 3.66 refills a year; a wider analysis of 3.18 crore beneficiaries to Dec 2018 found 3.21. CAG called sustained LPG use \"a big challenge\" and urged that nil- and low-consumption beneficiaries be encouraged to keep refilling.",
     sourceUrl: "https://cag.gov.in/uploads/download_audit_report/2019/Executive_Summary_of_Report_No_14_of_2019_Performance_Audit_of_Pradhan_Mantri_Ujjwala_Yojana_Ministry_of_Petroleum_and_Natural_Gas_0.pdf",
     sourceLabel: "CAG — Performance Audit of PMUY, Report No. 14 of 2019, Executive Summary (Dec 2019)",
+    sources: ["https://cag.gov.in/uploads/download_audit_report/2019/Chapter_6_Transition_of_BPL_households_to_LPG_of_Report_No_14_of_2019_Performance_Audit_of_Pradhan_Mantri_Ujjwala_Yojana_Ministry_of_Petroleum_and_Natural_Gas.pdf"],
     tags: ["distribution"],
+    otherSide: "The Petroleum Ministry told the CAG (2019) that LPG use depends on food and cooking habits, access and price, and that oil companies were pushing 5 kg refills; it largely accepted the audit's recommendations.",
   },
   {
     id: "hsc011",
@@ -237,7 +239,9 @@ export const HISAAB_SCHEMES = Object.freeze([
     explanation: "CAG Report No. 14 of 2019 found 1.98 lakh beneficiaries above 12 cylinders a year — \"improbable\" for BPL households — and 13.96 lakh who took 3 to 41 refills in a single month. It flagged a risk, not proven diversion, and recommended regular review of high-consumption cases.",
     sourceUrl: "https://cag.gov.in/uploads/download_audit_report/2019/Executive_Summary_of_Report_No_14_of_2019_Performance_Audit_of_Pradhan_Mantri_Ujjwala_Yojana_Ministry_of_Petroleum_and_Natural_Gas_0.pdf",
     sourceLabel: "CAG — Performance Audit of PMUY, Report No. 14 of 2019, Executive Summary (Dec 2019)",
+    sources: ["https://cag.gov.in/uploads/download_audit_report/2019/Chapter_6_Transition_of_BPL_households_to_LPG_of_Report_No_14_of_2019_Performance_Audit_of_Pradhan_Mantri_Ujjwala_Yojana_Ministry_of_Petroleum_and_Natural_Gas.pdf"],
     tags: ["distribution"],
+    otherSide: "The Petroleum Ministry told the CAG (2019) that oil companies had been told to monitor Ujjwala refills, that a yearly cap of 15 cylinders was brought in, and that high-selling distributors got show-cause notices.",
   },
   {
     id: "hsc012",
@@ -257,7 +261,9 @@ export const HISAAB_SCHEMES = Object.freeze([
     explanation: "CAG recorded coverage rising to 94.3%, with 7.19 crore Ujjwala connections issued by March 2019 — a real gain — while flagging weak de-duplication, connections to minors and low refill rates.",
     sourceUrl: "https://cag.gov.in/uploads/download_audit_report/2019/Executive_Summary_of_Report_No_14_of_2019_Performance_Audit_of_Pradhan_Mantri_Ujjwala_Yojana_Ministry_of_Petroleum_and_Natural_Gas_0.pdf",
     sourceLabel: "CAG — Performance Audit of PMUY, Report No. 14 of 2019, Executive Summary (Dec 2019)",
+    sources: ["https://cag.gov.in/uploads/download_audit_report/2019/Chapter_6_Transition_of_BPL_households_to_LPG_of_Report_No_14_of_2019_Performance_Audit_of_Pradhan_Mantri_Ujjwala_Yojana_Ministry_of_Petroleum_and_Natural_Gas.pdf"],
     tags: ["distribution"],
+    otherSide: "The oil companies told the CAG that the jump in LPG coverage was itself a measure of the scheme's success, and the Petroleum Ministry largely accepted the audit's recommendations at the exit conference.",
   },
   {
     id: "hsc013",
@@ -381,6 +387,8 @@ export const HISAAB_SCHEMES = Object.freeze([
     explanation: "403 routes (52%) never started; of 371 that did, only 112 finished the three-year concession, and just 54 (7% of those awarded) continued after it. The scheme has continued in later rounds (version 5.2 by July 2023).",
     sourceUrl: "https://factly.in/review-cag-highlights-certain-gaps-in-the-implementation-of-the-rcs-udan-scheme/",
     sourceLabel: "Factly — Review: CAG highlights gaps in implementation of RCS-UDAN (Aug 2023)",
+    sources: ["https://cag.gov.in/uploads/download_audit_report/2023/Report-No.22-English-064d5dc4be9bf67.48739275.pdf"],
+    otherSide: "The Civil Aviation Ministry told the CAG that airlines were still recovering from Covid and the scheme had opened unserved airports; it acknowledged that the way airports were picked for routes could be improved.",
   },
   {
     id: "hsc019",
@@ -1027,6 +1035,8 @@ export const HISAAB_SCHEMES = Object.freeze([
     explanation: "CAG found spending of 8% (2014-15), 37% (2015-16) and 63% (2016-17). By March 2017 NMCG had received ₹3,633 crore of the ₹7,387 crore it was eligible for and used ₹1,836.4 crore — which CAG said indicated poor implementation.",
     sourceUrl: "https://frontline.thehindu.com/the-nation/murky-waters/article10008438.ece",
     sourceLabel: "Frontline — Namami Gange: Murky waters (3 Jan 2018)",
+    sources: ["https://cag.gov.in/uploads/download_audit_report/2017/Chapter_2_Financial_Management_of_Report_No.39_of_2017_-_Performance_Audit_on_Ministry_of_Water_Resources,_River_Development_&_Ganga_Rejuvenation_Union_Government.pdf"],
+    otherSide: "NMCG told the CAG (Aug 2017) that once it became an authority in Dec 2016, sanctions of sewage plants and other works had picked up pace, and that spending would rise by the end of 2017-18.",
   },
   {
     id: "hsc051",
@@ -1046,6 +1056,8 @@ export const HISAAB_SCHEMES = Object.freeze([
     explanation: "The ₹20,000 crore allocation was about four times earlier efforts; officials said ₹4,000 crore had been spent on cleaning the river since the first central plan in 1985. A later CAG audit found funds badly under-used in 2014–17.",
     sourceUrl: "https://frontline.thehindu.com/the-nation/murky-waters/article10008438.ece",
     sourceLabel: "Frontline — Namami Gange: Murky waters (3 Jan 2018)",
+    sources: ["https://cag.gov.in/uploads/download_audit_report/2017/Chapter_2_Financial_Management_of_Report_No.39_of_2017_-_Performance_Audit_on_Ministry_of_Water_Resources,_River_Development_&_Ganga_Rejuvenation_Union_Government.pdf"],
+    otherSide: "On the CAG finding, NMCG replied (Aug 2017) that project sanctions had picked up after it became an authority in Dec 2016 and that it expected higher spending by the end of 2017-18.",
   },
   {
     id: "hsc052",

@@ -82,7 +82,7 @@ export function Certificate({ name, receipts, band, issuedOn, fno, id, className
           ) : (
             <>
               This is to certify that <strong className="h-cert__name">{shownName}</strong> has, after{' '}
-              <strong>{formatNumber(receipts)} sourced receipts</strong>, been officially labelled
+              <strong>{`${formatNumber(receipts)} sourced ${receipts === 1 ? 'receipt' : 'receipts'}`}</strong>, been officially labelled
             </>
           )}
         </p>

@@ -237,8 +237,10 @@ export const HISAAB_STATES_WEST_SOUTH = Object.freeze([
     sourceLabel: "Business Today — 92 lakh beneficiaries removed from Maharashtra’s Ladki Bahin Yojana after verification (13 Jul 2026)",
     sources: [
       "https://scroll.in/latest/1095195/maharashtra-paid-rs-9605-crore-to-ineligible-beneficiaries-of-ladki-bahin-scheme-report",
+      "https://theprint.in/india/81-lakh-women-dropped-from-ladki-bahin-scheme-post-e-kyc-minister-oppn-claims-irregularities/2985655/",
     ],
     tags: ["distribution"],
+    otherSide: "The Women and Child Development Minister said e-KYC was needed to weed out ineligible registrations, that money was being recovered from government employees, and that complaints from verified women were being checked.",
   },
   {
     id: "hst209",
@@ -393,7 +395,11 @@ export const HISAAB_STATES_WEST_SOUTH = Object.freeze([
     sourceLabel: "Scroll — Supreme Court cancels Goa mining leases, asks government to restart the auction process (7 Feb 2018)",
     sources: [
       "https://www.thehindu.com/news/national/supreme-court-cancels-88-mining-leases-in-goa/article61485130.ece",
+      "https://india.mongabay.com/2018/02/uncertainty-continues-in-goa-over-mining-judgment/",
+      "https://www.thehansindia.com/news/national/supreme-court-slams-goa-mining-firm-delay-rejects-review-plea-in-mining-case-696988",
+      "https://www.barandbench.com/news/litigation/goa-mining-supreme-court-slams-goa-govt-vedanta-filing-delayed-review-petitions-retirement-judges",
     ],
+    otherSide: "Goa's government said it would explore every legal option to resume mining; its review petitions, filed in Nov 2019, were dismissed by the Supreme Court in July 2021 as time-barred and on merits.",
   },
   {
     id: "hst215",
@@ -523,6 +529,8 @@ export const HISAAB_STATES_WEST_SOUTH = Object.freeze([
     explanation: "PRS notes GSDP is projected at ₹1.31 lakh crore in 2026-27, below the 2025-26 estimate of ₹1.38 lakh crore, while liabilities rise to 29.3% of GSDP from 27%. The CAG (2025) also flagged ₹706 crore of off-budget borrowings in 2023-24.",
     sourceUrl: "https://prsindia.org/budgets/states/goa-budget-analysis-2026-27",
     sourceLabel: "PRS Legislative Research — Goa Budget Analysis 2026-27 (2026)",
+    sources: ["https://cag.gov.in/uploads/download_audit_report/2025/Chapter-I-06895e6a187b0d1.96146279.pdf"],
+    otherSide: "No reply from Goa's government to the CAG's off-budget borrowing finding is reported as of Sep 2026; the audit report records none on this point.",
   },
   {
     id: "hst220",
@@ -990,8 +998,10 @@ export const HISAAB_STATES_WEST_SOUTH = Object.freeze([
     explanation: "That is about 12% of total spending excluding debt repayment, down from 14% (₹51,034 crore) in 2025-26. The CAG (2025) said the guarantees raised revenue expenditure and the revenue deficit.",
     sourceUrl: "https://prsindia.org/budgets/states/karnataka-budget-analysis-2026-27",
     sourceLabel: "PRS Legislative Research — Karnataka Budget Analysis 2026-27 (2026)",
+    sources: ["https://theprint.in/india/cag-alarm-on-congresss-karnataka-guarantees-sparks-debate-economists-point-to-long-term-impact/2725609/"],
     tags: ["distribution"],
     enactedBy: [{ name: "Siddaramaiah", role: "Chief Minister, Karnataka (presented the 2026-27 budget)", party: "INC" }],
+    otherSide: "The Congress government defends the guarantees: the CM cites studies showing women's workforce participation up 23% due to schemes like Shakthi, and a minister blames fiscal strain on lost central tax devolution.",
   },
   {
     id: "hst238",
@@ -1016,8 +1026,10 @@ export const HISAAB_STATES_WEST_SOUTH = Object.freeze([
     explanation: "The CAG’s State Finances Audit (Report No. 4 of 2025), cited by PRS, said higher allocations to the guarantees cut infrastructure spending by ₹5,229 crore from the previous year, and that the schemes raised revenue expenditure and the revenue deficit. The fiscal deficit rose from 2.14% of GSDP in 2022-23 to 2.97% in 2024-25.",
     sourceUrl: "https://prsindia.org/budgets/states/karnataka-budget-analysis-2026-27",
     sourceLabel: "PRS Legislative Research — Karnataka Budget Analysis 2026-27, citing CAG Report No. 4 of 2025 (2026)",
+    sources: ["https://theprint.in/india/cag-alarm-on-congresss-karnataka-guarantees-sparks-debate-economists-point-to-long-term-impact/2725609/"],
     tags: ["distribution"],
     enactedBy: [{ name: "Siddaramaiah", role: "Chief Minister, Karnataka", party: "INC" }],
+    otherSide: "The state says the schemes pay off (the CM cites studies showing women's workforce participation up 23%) and a minister blames the strain on lost central tax devolution; the CAG also noted the schemes' social gains.",
   },
   {
     id: "hst239",
@@ -1514,6 +1526,8 @@ export const HISAAB_STATES_WEST_SOUTH = Object.freeze([
     explanation: "That was 9.7% of GSDP, PRS notes; such loans are raised by state entities but repaid from the budget, and in 2022-23 the state spent ₹15,499 crore servicing them. AP’s outstanding liabilities rose from 33% of GSDP in 2021-22 to 36% in 2024-25 and are projected at 36% in 2026-27.",
     sourceUrl: "https://prsindia.org/budgets/states/andhra-pradesh-budget-analysis-2026-27",
     sourceLabel: "PRS Legislative Research — Andhra Pradesh Budget Analysis 2026-27, citing CAG Report No. 2 of 2024 (2026)",
+    sources: ["https://www.deccanchronicle.com/southern-states/andhra-pradesh/jagan-quotes-cag-saying-ysrcs-ap-debt-only-rs-64-lakh-crore-1839875"],
+    otherSide: "The YSRCP says the CAG and Assembly papers put the state's debt at ₹6.4 lakh crore, not the ₹10–14 lakh crore its rivals alleged, and that it kept better fiscal discipline than the 2014–19 government despite Covid.",
   },
   {
     id: "hst257",

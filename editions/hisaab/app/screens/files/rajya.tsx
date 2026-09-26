@@ -560,6 +560,7 @@ function StateList({
   useEffect(() => setDraft(query), [query]);
   const rows = [...drawers.values()].sort((a, b) => a.name.localeCompare(b.name, 'en')).filter((d) => matches(d, draft));
   const centreHit = matches({ code: CENTRE, name: 'Centre', nameHi: 'केंद्र' }, draft);
+  const listed = rows.length + (centreHit ? 1 : 0);
   return (
     <div className="h-rajya__listwrap">
       <form className="h-rajya__search" role="search" onSubmit={(e) => e.preventDefault()}>
@@ -583,7 +584,7 @@ function StateList({
         </span>
       </form>
       <p className="h-sr" role="status" aria-live="polite">
-        {t(`${rows.length + (centreHit ? 1 : 0)} files listed`, `${rows.length + (centreHit ? 1 : 0)} फ़ाइलें`)}
+        {t(`${listed} ${listed === 1 ? 'file' : 'files'} listed`, `${listed} ${listed === 1 ? 'फ़ाइल' : 'फ़ाइलें'}`)}
       </p>
       {rows.length || centreHit ? (
         <ul className="h-rajya__list">

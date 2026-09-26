@@ -685,8 +685,13 @@
   flex: none;
   color: var(--h-ink-2);
 }
-.h-trail__all {
-  align-self: flex-start;
+/* The folder's foot: the hub and the money ledger (Paisa Kahan Gaya?), two ≥ 44px text links. */
+.h-trail__links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: var(--h-s-5);
+  min-width: 0;
   font-size: var(--h-fs-xs);
 }
 :root[lang='hi'] :is(.h-trail__title, .h-trail__tab) {

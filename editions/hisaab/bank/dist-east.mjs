@@ -244,7 +244,7 @@ export const HISAAB_DIST_EAST = Object.freeze([
     tags: ['distribution', 'pre-election'],
     enactedBy: [{ name: 'Chandrima Bhattacharya', role: 'Minister of State (Finance), West Bengal', party: 'TMC' }],
     outcome:
-      'Officials said total spending since launch would pass ₹1 lakh crore that year. The BJP won 207 of 294 seats (ECI, after a recount), ending 15 years of TMC rule; its first budget set aside ₹36,000 crore for Annapurna, a ₹3,000-a-month women\'s scheme.',
+      'Officials said total spending since launch would pass ₹1 lakh crore that year. The BJP won 207 of 294 seats (ECI, after a recount), ending 15 years of TMC rule; its first budget set aside ₹36,000 crore for Annapurna Yojana, its own monthly cash scheme for women.',
     poll: { label: 'West Bengal Assembly 2026', month: '2026-04', gapDays: 77, result: 'BJP won 207 seats, TMC 80 (ECI); first BJP government in the state' },
   },
   {
@@ -290,13 +290,13 @@ export const HISAAB_DIST_EAST = Object.freeze([
     options: ['Annapurna Kanya', 'Kanya Ratna', 'Beti Bachao Beti Padhao', 'Lakshmi Kanya'],
     correctIndex: 1,
     explanation:
-      "On Kanya Ratna Divas (14 Aug 2026), formerly Kanyashree Divas, CM Suvendu Adhikari said the yearly scholarship doubles from ₹1,000 to ₹2,000 from the next session, while the one-time ₹25,000 grant at 18 stays. The same day Bengal joined the Centre's Beti Bachao Beti Padhao, which Adhikari said the state had not joined under the TMC.",
+      "On Kanya Ratna Divas (14 Aug 2026), formerly Kanyashree Divas, CM Suvendu Adhikari said the yearly scholarship doubles from ₹1,000 to ₹2,000 from the next session, while the one-time grant at 18 stays. The same day Bengal joined the Centre's Beti Bachao Beti Padhao, which Adhikari said the state had not joined under the TMC.",
     sourceUrl: 'https://indianexpress.com/article/cities/kolkata/bengal-joins-beti-bachao-beti-padhao-suvendu-adhikari-10834375/',
     sourceLabel: "The Indian Express — Bengal joins 'Beti Bachao, Beti Padhao'; Rs 2k aid for schoolgirls from 2027 (15 Aug 2026)",
     sources: ['https://timesofindia.indiatimes.com/city/kolkata/kanyashree-now-kanya-ratna-grant-doubles/articleshow/133248582.cms'],
     tags: ['distribution'],
     enactedBy: [{ name: 'Suvendu Adhikari', role: 'Chief Minister, West Bengal', party: 'BJP' }],
-    outcome: 'On 14 Aug 2026, 9.48 lakh of 10.77 lakh eligible schoolgirls got ₹1,000 and 1.29 lakh got ₹25,000, ₹418 crore in all (IE). The ₹2,000 yearly grant starts with the 2027 session.',
+    outcome: 'On 14 Aug 2026, 9.48 lakh of 10.77 lakh eligible schoolgirls got the ₹1,000 yearly scholarship and 1.29 lakh got the one-time grant at 18, ₹418 crore in all (IE). The ₹2,000 yearly grant starts with the 2027 session.',
   },
   {
     id: 'hdb310',
@@ -311,7 +311,7 @@ export const HISAAB_DIST_EAST = Object.freeze([
     asOf: '2026-09',
     govt: 'BJP',
     question:
-      "Before Bengal's BJP government began moving to the Centre's Ayushman Bharat in July 2026, the TMC-era Swasthya Sathi gave up to ₹5 lakh a year of hospital cover to about how many families?",
+      "Before Bengal's BJP government began moving to the Centre's Ayushman Bharat in July 2026, about how many families did the TMC-era Swasthya Sathi hospital-cover scheme reach?",
     options: ['45 lakh', '1.43 crore', '2.45 crore', '4.5 crore'],
     correctIndex: 2,
     explanation:
@@ -474,6 +474,8 @@ export const HISAAB_DIST_EAST = Object.freeze([
     enactedBy: [{ name: 'Naveen Patnaik', role: 'Chief Minister, Odisha', party: 'BJD' }],
     outcome:
       'The BJD won 117 of 147 seats in 2014, up from 103 (IE). When the state moved to the NFSA, the Congress and BJP alleged cards went to BJD loyalists; over three lakh ineligible people surrendered cards and grievance officers were named (Frontline, 2016).',
+    otherSide:
+      'Frontline said the BJD government at first took no step on the allegations; it then planned cards for all left-out poor families, named district grievance officers and said a BJD MLA’s wife had sought to cancel her card.',
   },
   {
     id: 'hdb315',
@@ -504,6 +506,8 @@ export const HISAAB_DIST_EAST = Object.freeze([
     enactedBy: [{ name: 'Naveen Patnaik', role: 'Chief Minister, Odisha', party: 'BJD' }],
     outcome:
       'More than 37 lakh farmers, sharecroppers and labourers were paid before the model code of conduct halted payments (Frontline). The BJD won 112 of 146 seats polled in 2019. After PM-KISAN began, KALIA\'s payment was cut to ₹4,000 (IE).',
+    otherSide:
+      'Odisha’s cooperation minister said the Finance Commission had praised KALIA (TOI), and Patnaik called it a “progressive” scheme to raise farm employment and self-employment (IE).',
     poll: { label: 'Odisha Assembly 2019', month: '2019-04', gapDays: 111, result: 'BJD won 112 of 146 seats polled; BJP 23, Congress 9' },
   },
   {
@@ -529,12 +533,15 @@ export const HISAAB_DIST_EAST = Object.freeze([
     sources: [
       'https://www.newindianexpress.com/states/odisha/2020/Jul/27/dont-refund-money-received-under-kalia-scheme-bjp-tells-odisha-farmers-2175337.html',
       'https://www.deccanherald.com/india/rs-78226-crore-distributed-to-1272-lakh-ineligible-beneficiaries-under-kalia-scheme-in-odisha-cag-3187529',
+      'https://cag.gov.in/uploads/download_audit_report/2024/chapter-2-066e1a6d3ef1c45.30401355.pdf',
     ],
     status: 'CAG compliance-audit finding (report released 11 Sept 2024). The audit named no individual; it is not a charge against any person.',
     tags: ['distribution'],
     enactedBy: [{ name: 'Naveen Patnaik', role: 'Chief Minister, Odisha', party: 'BJD' }],
     outcome:
       "₹107.64 crore went to 1.28 lakh accounts whose holders' names did not match. Of ₹9,333 crore disbursed, ₹2,060 crore for 2021-22 could not be checked for lack of data. The new BJP government repackaged the scheme as CM-KISAN (IE).",
+    otherSide:
+      "Replying to the CAG in April 2022, the then BJD government said judging ineligibility on SECC data alone 'was not right' and that 2.13 lakh duplicate ration-card cases had been adjusted in later payments.",
   },
   {
     id: 'hdb317',
@@ -784,7 +791,7 @@ export const HISAAB_DIST_EAST = Object.freeze([
       { name: 'Sarbananda Sonowal', role: 'Chief Minister, Assam', party: 'BJP' },
     ],
     outcome:
-      'The NDA won 75 of 126 seats (CNBC-TV18). By April 2026 Orunodoi reached about 40 lakh women at ₹1,250 a month, not ₹3,000, and the BJP again promised ₹3,000 in its 2026 campaign (The Indian Express).',
+      'The NDA won 75 of 126 seats (CNBC-TV18). By April 2026 Orunodoi reached about 40 lakh women but still paid well below ₹3,000 a month, and the BJP again promised ₹3,000 in its 2026 campaign (The Indian Express).',
     poll: { label: 'Assam Assembly 2021', month: '2021-03', result: 'BJP-led NDA won 75 of 126 seats' },
   },
   {

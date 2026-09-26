@@ -130,6 +130,8 @@ export const HISAAB_GAPS_POLL = Object.freeze([
     correctIndex: 0,
     explanation:
       "Frontline listed it among pre-poll moves, with the Bandra–Worli sea link and ₹350 crore for a Shivaji statue. The Bombay High Court had barred further extensions, so the order awaited the Supreme Court's ruling on the state's appeal. Frontline called it 'a clear move to garner the votes' of Mumbai's slum-dwellers, about 75 lakh people, noting that successive governments had used slum regularisation in elections.",
+    otherSide:
+      "The state had challenged the High Court's bar in the Supreme Court, so its order could take effect only after the apex court ruled.",
     sourceUrl: 'https://frontline.thehindu.com/politics/article30188745.ece',
     sourceLabel: 'Frontline — Promises to Mumbai (23 Oct 2009)',
     sources: [
@@ -379,9 +381,12 @@ export const HISAAB_GAPS_POLL = Object.freeze([
     correctIndex: 1,
     explanation:
       'Adults who had passed Class 10, with family income under ₹6 lakh, could register; the phones were due only in the second half of 2017. Registration stopped in January 2017 on an Election Commission order after a BJP complaint under the model code. In April 2017 the Adityanath government scrapped the scheme; the department gave no reason, but sources cited the burden on the exchequer.',
+    otherSide:
+      "The SP government's IT department halted registration itself on 16 Jan 2017, citing the model code; no SP reply to the BJP complaint was reported as of Sep 2026.",
     sourceUrl: 'https://indianexpress.com/article/india/yogi-scraps-smartphone-scheme-of-sp-4618629/',
     sourceLabel: 'The Indian Express — Yogi scraps smartphone scheme of SP (19 Apr 2017)',
     sources: [
+      "https://www.business-standard.com/article/pti-stories/up-govt-stops-registration-of-smartphone-distribution-scheme-117011700027_1.html",
       'https://telecom.economictimes.indiatimes.com/news/akhilesh-yadavs-pet-samajwadi-smartphone-yojana-in-limbo/58272705',
       'https://www.rediff.com/news/report/up-election-bjp-sweeps-assembly-sp-cong-bsp-decimated/20170311.htm',
       'https://www.rediff.com/news/report/up-election-voting-for-first-phase-of-up-polls-begins/20170211.htm',

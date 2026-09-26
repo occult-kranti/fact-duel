@@ -218,7 +218,7 @@ export function certificateShareText(input: CertificateShareInput): string {
   return [
     input.receipts === null
       ? `${certificateName(input.name)} has been officially labelled ${label.en.toUpperCase()}.`
-      : `${certificateName(input.name)} has been officially labelled ${label.en.toUpperCase()} after ${input.receipts} sourced receipts.`,
+      : `${certificateName(input.name)} has been officially labelled ${label.en.toUpperCase()} after ${input.receipts} sourced ${input.receipts === 1 ? 'receipt' : 'receipts'}.`,
     `"${label.line}"`,
     `${url(href.home())}`,
     CERT_FOOTER,

@@ -5,7 +5,8 @@
  *  - The records room: four small manila covers (Rajya Rounds, Sector Files, Kiska Media?, Forward
  *    Court), each a whole-card link.
  *  - The money trail, 2000–2026: ONE manila folder holding four rows (Seedha Khaate Mein, Rahat Kosh,
- *    Chunav Se Pehle, Saal-dar-Saal). A list, not four more covers, so Home stays uncluttered.
+ *    Chunav Se Pehle, Saal-dar-Saal). A list, not four more covers, so Home stays uncluttered. Its foot
+ *    links the money-trail hub and, directly, Paisa Kahan Gaya? (the money ledger, #/money/ledger).
  *
  * Counts are the real route counts from edition.ts; a mode whose lanes are not registered yet says
  * "No files yet", never a padded number. Nothing here is violet-filled (Home's one primary lives above).
@@ -148,9 +149,15 @@ export function FileEntries({ journeys }: { journeys: JourneysLike }) {
             <TrailRow key={e.id} entry={e} />
           ))}
         </ul>
-        <a className="h-link h-link--tap h-trail__all" href={href.money()}>
-          {t('Open the money trail', 'पूरा हिसाब खोलो')}
-        </a>
+        <div className="h-trail__links">
+          <a className="h-link h-link--tap" href={href.money()}>
+            {t('Open the money trail', 'पूरा हिसाब खोलो')}
+          </a>
+          {/* The money ledger (screens/ledger): every measure on one timeline, with sources and downloads. */}
+          <a className="h-link h-link--tap" href={href.ledger()}>
+            {t('Paisa Kahan Gaya? The full ledger', 'पैसा कहाँ गया? पूरा लेखा')}
+          </a>
+        </div>
       </div>
     </div>
   );

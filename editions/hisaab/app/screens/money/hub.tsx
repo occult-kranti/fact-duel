@@ -103,7 +103,7 @@ export function MoneyHub() {
                 href={href.money(m.tag)}
                 progress={
                   routes.length && g.started
-                    ? { value: g.cleared, max: g.total, label: t(`${g.cleared} of ${g.total} files cleared`, `${g.cleared}/${g.total} फ़ाइलें क्लियर`) }
+                    ? { value: g.cleared, max: g.total, label: t(`${g.cleared} of ${g.total} ${g.total === 1 ? 'file' : 'files'} cleared`, `${g.cleared}/${g.total} ${g.total === 1 ? 'फ़ाइल' : 'फ़ाइलें'} क्लियर`) }
                     : undefined
                 }
               >
@@ -119,15 +119,15 @@ export function MoneyHub() {
             title={YEAR_MODE.title}
             icon={ICONS.years}
             meta={t(
-              `${YEAR_MODE.gloss}. ${years.length} files · ${TRAIL_SPAN}`,
-              `${years.length} फ़ाइलें · ${TRAIL_SPAN}`,
+              `${YEAR_MODE.gloss}. ${years.length} ${years.length === 1 ? 'file' : 'files'} · ${TRAIL_SPAN}`,
+              `${years.length} ${years.length === 1 ? 'फ़ाइल' : 'फ़ाइलें'} · ${TRAIL_SPAN}`,
             )}
             state={years.length ? groupState(yearGroup) : 'sealed'}
             seed="money-years"
             href={href.money('years')}
             progress={
               yearGroup.started
-                ? { value: yearGroup.cleared, max: yearGroup.total, label: t(`${yearGroup.cleared} of ${yearGroup.total} files cleared`, `${yearGroup.cleared}/${yearGroup.total} फ़ाइलें क्लियर`) }
+                ? { value: yearGroup.cleared, max: yearGroup.total, label: t(`${yearGroup.cleared} of ${yearGroup.total} ${yearGroup.total === 1 ? 'file' : 'files'} cleared`, `${yearGroup.cleared}/${yearGroup.total} ${yearGroup.total === 1 ? 'फ़ाइल' : 'फ़ाइलें'} क्लियर`) }
                 : undefined
             }
           >

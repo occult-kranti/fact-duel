@@ -43,7 +43,8 @@ export function RoundHead({ room, names, onLeave, leaveLabel, sub }: RoundHeadPr
   const mine = room.scores[me] ?? 0;
   const theirs = room.scores[them] ?? 0;
   return (
-    <header className="h-roundhead">
+    // With no × (the match result, the last round's receipt) the score sits at the right gutter, not 8px.
+    <header className={onLeave ? 'h-roundhead' : 'h-roundhead h-roundhead--noleave'}>
       <div className="h-roundhead__ids">
         <p className="h-roundhead__fmt">{isHi ? <span lang="hi">{formatNameHi(f.mode)}</span> : f.name}</p>
         <p className="h-roundhead__round">{sub ?? roundOf(f.mode, room.roundIndex, isHi)}</p>

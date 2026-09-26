@@ -729,7 +729,7 @@ export async function renderCertificateCard(input: CertificateCardInput): Promis
     loadFaces(t, [
       ['display', 700, `${label.hi} ${latin} ${name.toUpperCase()} ${stampText}`],
       ['ui', 400, `This is to certify that has, after been officially labelled ${label.line} ${label.aside ?? ''}`],
-      ['ui', 600, `${formatNumber(receipts ?? 0)} sourced receipts`],
+      ['ui', 600, `${formatNumber(receipts ?? 0)} sourced ${receipts === 1 ? 'receipt' : 'receipts'}`],
       ['mono', 700, `CERTIFICATE OF LABELLING F.No. ${fno} 0123456789 of`],
       ['mono', 400, `${input.footer} ${input.site}`],
       ['hand', 400, 'Noted. Pl. forward.'],
@@ -796,7 +796,7 @@ export async function renderCertificateCard(input: CertificateCardInput): Promis
           { text: 'This is to certify that ', font: body, color: t.ink },
           { text: name.toUpperCase(), font: nameFont, color: t.ink },
           { text: ' has, after ', font: body, color: t.ink },
-          { text: `${formatNumber(receipts)} sourced receipts`, font: strong, color: t.ink },
+          { text: `${formatNumber(receipts)} sourced ${receipts === 1 ? 'receipt' : 'receipts'}`, font: strong, color: t.ink },
           { text: ', been officially labelled', font: body, color: t.ink },
         ],
     w,

@@ -106,8 +106,9 @@ export function nextUnfinished(routes: readonly Route[], journeys: Journeys): Ro
 /** The file's typed tab ('F.No. S/UP'); one source in data.ts so the lanes never drift. */
 export { fileNo } from '../../data';
 
-/** 'Best 5/6 · 18 pts' (Latin digits). */
-export const bestText = (best: FileStatus['best']) => (best ? `Best ${best.correct}/${CARDS} · ${best.score} pts` : '');
+/** 'Best 5/6 · 18 pts' / 'Best 1/6 · 1 pt' (Latin digits; a score runs −18 to 24, so ±1 is singular). */
+export const bestText = (best: FileStatus['best']) =>
+  best ? `Best ${best.correct}/${CARDS} · ${best.score} ${Math.abs(best.score) === 1 ? 'pt' : 'pts'}` : '';
 
 /** The primary-button words for a file, by where the player stands. */
 export function openWords(status: FileStatus, t: (en: string, hi?: string) => string): string {

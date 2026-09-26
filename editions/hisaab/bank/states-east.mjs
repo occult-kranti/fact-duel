@@ -313,7 +313,8 @@ export const HISAAB_STATES_EAST = Object.freeze([
       'The new BJP government said the previous TMC government had not tabled CAG reports since 2022. The CM said FIRs would be sought if the CAG audit of Cyclone Amphan relief (2020) showed wrongdoing — an announcement, not a finding of guilt; no charge sheet had been reported as of Sept 2026. The audit put 2024-25 debt at 38.66% of GSDP, just above the 38% FRBM benchmark.',
     sourceUrl: NIE_WB_CAG_2026,
     sourceLabel: 'The New Indian Express — WB tables 28 CAG reports after four years (25 Jul 2026)',
-    sources: [PRS_WB_2627],
+    sources: [PRS_WB_2627, 'https://www.outlookindia.com/national/inside-the-cag-audit-of-west-bengals-amphan-relief'],
+    otherSide: 'The TMC rejects BJP allegations over CAG findings, saying audit observations do not by themselves establish wrongdoing, and accuses the BJP of using audit reports for political ends.',
   },
   {
     id: 'hst309',
@@ -459,6 +460,8 @@ export const HISAAB_STATES_EAST = Object.freeze([
     sourceUrl:
       'https://www.newindianexpress.com/cities/bhubaneswar/2026/Apr/02/nrcs-failed-children-of-particularly-vulnerable-tribal-groups-in-need-of-nourishment-cag',
     sourceLabel: 'The New Indian Express — NRCs failed children of particularly vulnerable tribal groups: CAG (2 Apr 2026)',
+    sources: ['https://cag.gov.in/uploads/download_audit_report/2025/Chapter-1-069cbab6fa14b30.84392419.pdf'],
+    otherSide: "The ST & SC Development Department told the CAG (Sept 2025) that funds were not the problem, as it needed the Women and Child department's approval to run the centres, and promised to run them under the programme's next phase.",
   },
   {
     id: 'hst315',
@@ -511,6 +514,8 @@ export const HISAAB_STATES_EAST = Object.freeze([
     sourceUrl:
       'https://www.newindianexpress.com/cities/bhubaneswar/2026/Apr/01/odisha-mining-corporation-pays-rs-4364-crore-penalty-for-illegal-excess-mineral-production',
     sourceLabel: 'The New Indian Express — Odisha Mining Corporation pays Rs 4,364 crore penalty (1 Apr 2026)',
+    sources: ['https://cag.gov.in/uploads/download_audit_report/2025/Audit-Report_No.-6-of-2025_PSU_English-069cb90f7c66626.08739142.pdf'],
+    otherSide: 'The state government told the CAG (May 2024) that the penalties were paid late because OMC was pursuing legal remedies; the CAG said the reply did not explain why output broke the clearance limits.',
   },
 
   // ── Assam ───────────────────────────────────────────────────────────────────
@@ -555,6 +560,8 @@ export const HISAAB_STATES_EAST = Object.freeze([
       'The CAG put the cost at Rs 1,602.66 crore and flagged excess and inadmissible payments to vendors and 215 software utilities added "in a haphazard manner", which it said risked data tampering without an audit trail. It said a valid, error-free NRC had not been achieved and sought action over irregular payments.',
     sourceUrl: 'https://scroll.in/latest/1040532/cag-flags-irregularities-in-assams-nrc-exercise',
     sourceLabel: "Scroll — CAG flags irregularities in Assam's NRC exercise (25 Dec 2022)",
+    sources: ['https://cag.gov.in/uploads/download_audit_report/2022/Report-No.-4-of-2022-Govt.-of-Assam_SEGS-063d89eeff1c6d5.93730240.pdf'],
+    otherSide: "Assam's Home and Political Department replied (Jan 2022) that the NRC was a Government of India project run under Supreme Court supervision, with the state giving only logistic support.",
   },
   {
     id: 'hst319',
@@ -1316,6 +1323,7 @@ export const HISAAB_STATES_EAST = Object.freeze([
       'https://www.newindianexpress.com/india/2026/Jan/14/alleging-illegal-termination-350-sacked-tripura-teachers-write-to-cji-seeking-his-urgent-intervention',
     sourceLabel: 'The New Indian Express — 350 sacked Tripura teachers write to CJI (14 Jan 2026)',
     sources: ['https://www.newindianexpress.com/india/2024/Apr/10/700-under-graduate-teachers-from-tripura-move-sc-against-termination-order'],
+    otherSide: 'The sacked teachers argue the 2003 policy was never notified, and some say they were hired in 2010 and regularised in 2015; groups of them are still litigating in the Supreme Court.',
   },
   {
     id: 'hst350',
@@ -1337,6 +1345,8 @@ export const HISAAB_STATES_EAST = Object.freeze([
       "Only two joint-stock companies paid, and no other government company did. The CAG (2025) called continued investment in loss-making PSUs with negative net worth 'a significant fiscal risk', with returns far below the state's borrowing costs, and urged a review.",
     sourceUrl: PRS_TR_2627,
     sourceLabel: 'PRS Legislative Research — Tripura Budget Analysis 2026-27 (2026), citing CAG Report No. 1 of 2025',
+    sources: ['https://cag.gov.in/uploads/download_audit_report/2025/Report-No.-1-of-2025_SFAR-2023-24-Tripura-(06-06-2025)-069bbe8e1a087a9.43416176.pdf'],
+    otherSide: "No reply from Tripura's government to this finding is reported as of Sep 2026; the CAG report, which includes government replies where received, records none on it.",
   },
   {
     id: 'hst351',
