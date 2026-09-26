@@ -113,7 +113,7 @@ export default function SettingsScreen(_: ScreenProps) {
   const juice = useJuice();
   const [exported, setExported] = useState<'idle' | 'busy' | 'done'>('idle');
   const [confirm, setConfirm] = useState(false);
-  const [deleted, setDeleted] = useState(false);
+  const [deleted, setDeleted] = useState<'ok' | 'failed' | null>(null);
   const volumeId = useId();
   useScreenTitle(t('Settings', 'सेटिंग्स'));
 
@@ -261,9 +261,17 @@ export default function SettingsScreen(_: ScreenProps) {
             <Button variant="ghost" icon={<Trash2 size={18} strokeWidth={2.4} />} trailing={null} onClick={() => setConfirm(true)}>
               {t('Delete my progress', 'मेरी प्रगति मिटाओ')}
             </Button>
-            {deleted ? (
+            {deleted === 'ok' ? (
               <span className="h-set__done" role="status">
                 {t('Deleted. A fresh file.', 'मिटा दिया। नई फ़ाइल।')}
+              </span>
+            ) : deleted === 'failed' ? (
+              <span className="h-set__done" role="alert">
+                {player.storageError ||
+                  t(
+                    'Could not delete: nothing was cleared. Export your data and try again.',
+                    'मिटा नहीं पाए: कुछ भी नहीं मिटा। डेटा एक्सपोर्ट करके फिर कोशिश करें।',
+                  )}
               </span>
             ) : null}
           </div>
@@ -281,9 +289,12 @@ export default function SettingsScreen(_: ScreenProps) {
                 className="h-set__danger"
                 icon={<Trash2 size={18} strokeWidth={2.4} />}
                 onClick={async () => {
+                  // The shared clear() resolves either way; a reset that landed starts a new profile epoch.
+                  // Same epoch after it = the 'Reset could not be saved' path: say so, never "Deleted".
+                  const before = player.epoch();
                   await player.clear();
                   setConfirm(false);
-                  setDeleted(true);
+                  setDeleted(player.epoch() !== before ? 'ok' : 'failed');
                 }}
               >
                 {t('Delete', 'मिटाओ')}

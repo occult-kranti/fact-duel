@@ -44,7 +44,7 @@
 .h-ceremony__slot {
   display: grid;
   place-items: center;
-  min-height: 200px;
+  min-height: 240px; /* bible §5 h-ceremony: the 3D slot is 240px */
   border-radius: var(--h-r-l);
   background: var(--h-receipt);
   border: var(--h-bw) dashed var(--h-hair);

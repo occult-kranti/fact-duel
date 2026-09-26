@@ -252,7 +252,9 @@ export function LiveQuestion({
   return (
     <div className="h-live">
       <RoundHead room={room} names={names} onLeave={onLeave} />
-      {banner}
+      {/* A P2P drop mid-question ('Connection lost — waiting 10 s') lays over the round header instead of
+          pushing the stem and options down under a tapping thumb (bible §11.10: no layout shift). */}
+      {banner ? <div className="h-live__banner">{banner}</div> : null}
       <section ref={card} className="h-live__card" aria-labelledby={`h-live-stem-${rd.id}`}>
         <div className="h-live__top">
           {kicker ? <p className="h-live__kicker">{kicker}</p> : null}

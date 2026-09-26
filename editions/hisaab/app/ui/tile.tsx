@@ -10,6 +10,7 @@
  */
 import { Check } from 'lucide-react';
 import { cx } from './cx';
+import { useLang, type Locale } from './lang';
 import './tile.css';
 
 export type TileState = 'sealed' | 'progress' | 'cleared';
@@ -18,6 +19,8 @@ export type TileProps = {
   code: string;
   /** Full name (accessible name, and shown under the code when `showName`). */
   name: string;
+  /** The Devanagari name, for the accessible name in the Hindi locale (the printed name stays `name`). */
+  nameHi?: string;
   state: TileState;
   progress?: { done: number; total: number };
   selected?: boolean;
@@ -26,23 +29,46 @@ export type TileProps = {
   showName?: boolean;
   /** A wide drawer (the Centre spans 4 columns). */
   wide?: boolean;
+  /**
+   * Roving focus inside a grid that walks by arrow keys: pass 0 for the one tile in the Tab order
+   * (the selected drawer) and -1 for the rest. Omitted, the tile is an ordinary button.
+   */
+  tabIndex?: 0 | -1;
   className?: string;
 };
 
-export function tileLabel(name: string, state: TileState, progress?: { done: number; total: number }) {
-  if (state === 'cleared') return `${name}, file cleared`;
-  if (state === 'progress' && progress) return `${name}, ${progress.done} of ${progress.total} answered`;
-  return `${name}, sealed`;
+/**
+ * The tile's accessible name. It starts with the visible code (WCAG 2.5.3 label in name: the tile shows
+ * 'UP', so the name is 'UP, Uttar Pradesh, sealed'), and speaks Hindi in the Hindi locale.
+ */
+export function tileLabel(
+  name: string,
+  state: TileState,
+  progress?: { done: number; total: number },
+  code?: string,
+  locale: Locale = 'en',
+) {
+  const who = code && code !== name ? `${code}, ${name}` : name;
+  if (locale === 'hi') {
+    if (state === 'cleared') return `${who}, फ़ाइल क्लियर`;
+    if (state === 'progress' && progress) return `${who}, ${progress.total} में से ${progress.done} जवाब`;
+    return `${who}, सीलबंद`;
+  }
+  if (state === 'cleared') return `${who}, file cleared`;
+  if (state === 'progress' && progress) return `${who}, ${progress.done} of ${progress.total} answered`;
+  return `${who}, sealed`;
 }
 
-export function Tile({ code, name, state, progress, selected, onSelect, showName, wide, className }: TileProps) {
+export function Tile({ code, name, nameHi, state, progress, selected, onSelect, showName, wide, tabIndex, className }: TileProps) {
+  const { locale } = useLang();
   const pct = progress && progress.total > 0 ? Math.min(100, (progress.done / progress.total) * 100) : 0;
   return (
     <button
       type="button"
       className={cx('h-tile', `h-tile--${state}`, wide && 'h-tile--wide', className)}
       aria-pressed={!!selected}
-      aria-label={tileLabel(name, state, progress)}
+      aria-label={tileLabel(locale === 'hi' && nameHi ? nameHi : name, state, progress, code, locale)}
+      tabIndex={tabIndex}
       onClick={onSelect ? () => onSelect(code) : undefined}
     >
       <span className="h-tile__code" aria-hidden="true">

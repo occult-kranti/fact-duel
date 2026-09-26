@@ -12,7 +12,8 @@
  * the edition's stricter rules:
  *
  *  1. TOASTS: at most ONE per screen visit. A visit starts on every route change (the shell calls
- *     `newVisit(route.path)`) and when a sheet opens (`useVisit(key)`). While that visit's toast is
+ *     `newVisit(route.path)`) and when a sheet opens (`useVisit(key)`); closing the sheet returns to the
+ *     screen's own visit, its allowance as it was (never a second toast). While that visit's toast is
  *     waiting or on screen, later requests MERGE into it (the caller's `merge` writes the words, else
  *     "<first> · +n more"). Once it has been dismissed, later requests in the same visit go unshown to
  *     the Activity log (Profile › Activity) — logged, never lost. A toast still waiting when the visit
@@ -154,6 +155,12 @@ export function createHisaabBudget(options: { clock?: OverlayClock } = {}) {
   /** This visit's toast: its overlay id while queued or on screen; `used` once it has been shown. */
   let visitToast: { id: string; items: BudgetToastInput[]; shown: boolean } | null = null;
   let visitToastUsed = false;
+  /**
+   * The screen visits a sheet was opened over (`/receipts` under `/receipts#receipt-sheet`), with
+   * whether each had used its toast. Closing the sheet returns to THAT visit and its allowance: a sheet
+   * opening and closing never grants the screen a second toast (bible §9 rule 1).
+   */
+  const parents: { visit: string; used: boolean }[] = [];
   let ceremonyId: string | null = null;
   let live = false;
   let holds = 0;
@@ -229,9 +236,28 @@ export function createHisaabBudget(options: { clock?: OverlayClock } = {}) {
 
   const syncQuiet = () => overlay.setQuiet(live || holds > 0);
 
-  /** A new screen visit (route change, sheet open): the one-toast allowance resets. */
+  /**
+   * A new screen visit (route change, sheet open): the one-toast allowance resets. Two exceptions keep
+   * the allowance: a sub-visit (`<visit>#<sheet>`, what `useVisit` opens) remembers the screen's visit,
+   * and going back from it to that screen (`newVisit('/receipts')` from `/receipts#sheet`) resumes it,
+   * toast already used and all. Any other key is a fresh visit and forgets the remembered ones.
+   */
   function newVisit(key: string) {
     if (key === visit) return;
+    let used = false;
+    if (key.startsWith(`${visit}#`)) parents.push({ visit, used: visitToastUsed || !!visitToast });
+    else {
+      let at = -1;
+      for (let i = parents.length - 1; i >= 0; i -= 1)
+        if (parents[i].visit === key) {
+          at = i;
+          break;
+        }
+      if (at >= 0 && visit.startsWith(`${key}#`)) {
+        used = parents[at].used;
+        parents.length = at;
+      } else parents.length = 0;
+    }
     if (visitToast) {
       const where = inOverlay(visitToast.id);
       if (where && !where.live) {
@@ -243,8 +269,17 @@ export function createHisaabBudget(options: { clock?: OverlayClock } = {}) {
     }
     visit = key;
     visitToast = null;
-    visitToastUsed = false;
+    visitToastUsed = used;
     emit();
+  }
+
+  /**
+   * Close a sub-visit: back to `to` only while `sub` (or a sheet opened inside it) is still the current
+   * visit. When a link inside the sheet has already navigated (the shell's `newVisit('/rules')` ran
+   * first), the new screen's visit stands — the sheet's cleanup must not set it back to the old screen.
+   */
+  function leaveVisit(sub: string, to: string) {
+    if (visit === sub || visit.startsWith(`${sub}#`)) newVisit(to);
   }
 
   /** Ask for this visit's toast. Returns its id, or null when it went to Activity instead. */
@@ -359,6 +394,7 @@ export function createHisaabBudget(options: { clock?: OverlayClock } = {}) {
 
   return {
     newVisit,
+    leaveVisit,
     toast,
     dismissToast,
     ceremony,
@@ -426,15 +462,17 @@ export function useHoldToasts(active: boolean) {
 
 /**
  * A sheet or dialog that counts as a new visit (bible §9.1) while it is open; closing it returns to the
- * screen's visit. `key` defaults to a stable per-component id.
+ * screen's visit — the same visit, so its one toast is not handed out again — unless the player has
+ * already navigated elsewhere from inside the sheet. `key` defaults to a stable per-component id.
  */
 export function useVisit(open: boolean, key?: string) {
   const auto = useId();
   useEffect(() => {
     if (!open) return;
     const before = budget.getSnapshot().visit;
-    budget.newVisit(`${before}#${key ?? auto}`);
-    return () => budget.newVisit(before);
+    const sub = `${before}#${key ?? auto}`;
+    budget.newVisit(sub);
+    return () => budget.leaveVisit(sub, before);
   }, [open, key, auto]);
 }
 

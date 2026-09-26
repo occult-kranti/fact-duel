@@ -8,7 +8,7 @@ import { STORAGE } from '@/lib/storage-names.mjs';
 import { ACHIEVEMENTS, levelForXp, rankForPoints, XP } from '@/lib/progression.mjs';
 import { expeditionStatus } from '@/lib/expeditions.mjs';
 import { ROUTES, UNREACHABLE_ACHIEVEMENTS, type Route } from '../../../edition';
-import { babuRank, CONFIDENCE_DISPLAY, LADDER_DISPLAY, type ConfidenceId } from '../../data';
+import { ACHIEVEMENT_WORDS, babuRank, CONFIDENCE_DISPLAY, LADDER_DISPLAY, type ConfidenceId } from '../../data';
 
 // ---- the player's name (optional; never pre-filled with anything but their own) ---------------------
 
@@ -124,25 +124,19 @@ export function rungLevels(band: number): string {
   if (!r) return '';
   return r.to === null ? `Level ${r.from}+` : `Levels ${r.from}–${r.to}`;
 }
+/** Just the range, '20–24' / '40+' (digits: mono-safe in either locale; the word goes beside it). */
+export function rungRange(band: number): string {
+  const r = LADDER_DISPLAY[band];
+  if (!r) return '';
+  return r.to === null ? `${r.from}+` : `${r.from}–${r.to}`;
+}
 
 // ---- the Stamp Register (achievements, listed silently) ------------------------------------------------
 
 type Achievement = { id: string; name: string; description: string; tier: 'bronze' | 'silver' | 'gold'; hidden: boolean; xp: number };
 
-/**
- * The edition's wording for engine achievements whose JHK text names JHK things (nine sports routes,
- * "facts", "the Vault"). The check behind each is unchanged; only the words follow the edition.
- */
-const EDITION_WORDS: Readonly<Record<string, { name?: string; description?: string }>> = Object.freeze({
-  'all-routes': { name: 'Nine files', description: 'Clear nine files (states, sectors or any other).' },
-  'bold-master': { name: 'Clean file', description: 'Clear a file six for six.' },
-  'scholar-50': { name: 'Receipt clerk', description: 'Collect 50 receipts.' },
-  'scholar-200': { name: 'Record keeper', description: 'Collect 200 receipts.' },
-  'vault-25': { name: 'Kept copies', description: 'Keep a copy of 25 receipts in the Vault.' },
-  'curious-25': { name: 'Reads the noting', description: 'Open 25 receipts in the Vault.' },
-  'friend-rival': { description: 'Finish a duel against a friend (room code or two tabs).' },
-  'mode-tour': { description: 'Finish Quick Draw, Triple Threat and The Gauntlet.' },
-});
+/** The edition's wording for engine achievements (data.ts ACHIEVEMENT_WORDS — shared with Activity). */
+const EDITION_WORDS = ACHIEVEMENT_WORDS;
 
 /**
  * Engine achievements this edition can never award: sports/science tallies. (vault-25 is reachable: a

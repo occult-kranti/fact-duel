@@ -47,9 +47,16 @@
 .h-conf__opt + .h-conf__opt {
   border-left: var(--h-bw) solid var(--h-line);
 }
+/* Selected = the tint + a 3px syahi ring + ✓ (as the opponent cards and Files tabs select). A solid
+   violet fill here would read as a second primary button on every card (bible §5: one per screen). */
 .h-conf__opt--on {
-  background: var(--h-syahi);
-  color: var(--h-syahi-ink);
+  background: var(--h-syahi-soft);
+  color: var(--h-ink);
+  box-shadow: inset 0 0 0 3px var(--h-syahi);
+}
+.h-conf__opt--on .h-conf__name::before {
+  content: '✓ ' / '';
+  color: var(--h-syahi-text);
 }
 .h-conf__input {
   position: absolute;

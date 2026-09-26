@@ -17,7 +17,8 @@
 import { useEffect, useRef } from 'react';
 import { achievementById, levelForXp, progressionDiff } from '@/lib/progression.mjs';
 import { budget, PENDING_LABEL } from '../budget';
-import { babuRank, goalCopy, labelDisplay } from '../data';
+import { achievementName, babuRank, goalCopy, labelDisplay, labelLine } from '../data';
+import { useLang } from '../ui/lang';
 import { useAppPlayer } from './player';
 
 type Progression = {
@@ -30,6 +31,10 @@ type Progression = {
 export function ProgressionWatch() {
   const player = useAppPlayer();
   const prev = useRef<Progression | null>(null);
+  // Activity and the ceremony speak the reader's language (read at the moment of the change).
+  const lang = useLang();
+  const langRef = useRef(lang);
+  langRef.current = lang;
 
   useEffect(() => {
     if (!player.loaded) return;
@@ -38,6 +43,7 @@ export function ProgressionWatch() {
     const before = prev.current;
     prev.current = after;
     if (!before || before === after) return;
+    const { t, isHi } = langRef.current;
     // Another tab's write arrives here too; only the visible tab speaks up.
     const visible = typeof document === 'undefined' || document.visibilityState !== 'hidden';
     const diff = progressionDiff(before, after) as { questsCompleted: string[]; newAchievements: string[]; rankUp: { to: string } | null };
@@ -49,24 +55,31 @@ export function ProgressionWatch() {
       if (visible)
         budget.ceremony({
           kind: 'label',
-          kicker: 'Label promotion',
+          kicker: t('Label promotion', 'लेबल प्रमोशन'),
           title: l.en,
           titleHi: l.hi,
-          subtitle: l.line,
+          subtitle: labelLine(l, isHi),
           stamp: `ISSUED · ${l.en.toUpperCase()}`,
           seed: `band-${l.band}`,
         });
       // Earned in another tab: Home opens this ceremony when the player comes back (finds it by kind).
-      else budget.note(`Now labelled ${l.en}`, l.line, { kind: PENDING_LABEL, data: { band: l.band } });
+      else
+        budget.note(t(`Now labelled ${l.en}`, `अब लेबल: ${l.hi}`), labelLine(l, isHi), {
+          kind: PENDING_LABEL,
+          data: { band: l.band },
+        });
     } else if (to.level > from.level) {
-      budget.note(`Level ${to.level}`, goalCopy(after.xp));
+      budget.note(t(`Level ${to.level}`, `लेवल ${to.level}`), goalCopy(after.xp, isHi ? 'hi' : 'en'));
     }
 
     const quests = diff.questsCompleted
       .map((id) => after.quests.items.find((q) => q.id === id)?.label)
       .filter((x): x is string => !!x);
     const questWords = quests.length
-      ? { title: quests.length === 1 ? 'Quest done' : `${quests.length} quests done`, body: quests.slice(0, 2).join(' · ') }
+      ? {
+          title: quests.length === 1 ? t('Quest done', 'काम पूरा') : t(`${quests.length} quests done`, `${quests.length} काम पूरे`),
+          body: quests.slice(0, 2).join(' · '),
+        }
       : null;
 
     // Bible §9 (Home): the one toast is the CL notice OR the quests summary, never both. The CL
@@ -74,21 +87,31 @@ export function ProgressionWatch() {
     const clUsed = after.streak.shields < before.streak.shields && after.streak.current >= before.streak.current;
     if (clUsed && visible) {
       const used = before.streak.shields - after.streak.shields;
-      budget.toast({ tone: 'streak', title: `Missed a day. ${used} CL used. Streak safe.` });
+      budget.toast({
+        tone: 'streak',
+        title: t(`Missed a day. ${used} CL used. Streak safe.`, `एक दिन छूटा। ${used} CL लगी। स्ट्रीक सुरक्षित।`),
+      });
       if (questWords) budget.note(questWords.title, questWords.body);
     } else {
       if (questWords && visible) budget.toast({ tone: 'quest', ...questWords });
       else if (questWords) budget.note(questWords.title, questWords.body);
       if (after.streak.current !== before.streak.current) {
-        budget.note(`Streak: ${after.streak.current} ${after.streak.current === 1 ? 'day' : 'days'}`);
+        budget.note(
+          t(`Streak: ${after.streak.current} ${after.streak.current === 1 ? 'day' : 'days'}`, `स्ट्रीक: ${after.streak.current} दिन`),
+        );
       }
     }
 
     for (const id of diff.newAchievements) {
+      // The Stamp Register's own words ('Nine files', 'Clean file'), never JHK's ('Every stamp').
       const a = achievementById(id) as { title?: string; name?: string } | undefined;
-      budget.note(`Stamp Register: ${a?.title ?? a?.name ?? id}`);
+      budget.note(`${t('Stamp Register', 'स्टैम्प रजिस्टर')}: ${achievementName(id, a?.title ?? a?.name ?? id)}`);
     }
-    if (diff.rankUp) budget.note(`Promoted to ${babuRank(diff.rankUp.to)}`, 'Babu rank, on this device');
+    if (diff.rankUp)
+      budget.note(
+        t(`Promoted to ${babuRank(diff.rankUp.to)}`, `प्रमोशन: ${babuRank(diff.rankUp.to)}`),
+        t('Babu rank, on this device', 'बाबू रैंक, इसी डिवाइस पर'),
+      );
   }, [player.loaded, player.progression]);
 
   return null;

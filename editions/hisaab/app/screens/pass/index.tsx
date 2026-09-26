@@ -19,7 +19,7 @@ import { ExternalLink, RotateCcw, X } from 'lucide-react';
 import { useJuice } from '@/components/fx';
 import { passAndPlayView, reducePassAndPlay, startPassAndPlay } from '../../../p2p/pass-and-play.mjs';
 import { useHoldToasts, useQuietRound } from '../../budget';
-import { itemById, statusLine } from '../../data';
+import { impersonatesBot, itemById, statusLine } from '../../data';
 import { href, navigate, type ScreenProps } from '../../router';
 import { useChrome, useScreenTitle } from '../../shell/chrome';
 import { sceneCapability } from '../../three/scene-host';
@@ -112,7 +112,8 @@ export default function PassScreen({ route }: ScreenProps) {
     try {
       setError(null);
       // Blank names become "Player 1" / "Player 2" in the player's language (nothing is pre-filled).
-      const who = names.map((n, i) => n.trim() || t(`Player ${i + 1}`, `खिलाड़ी ${i + 1}`)) as [
+      // A typed name that would pass for the bot ('Babu-Bot · BOT') is a Player n too: no bot plays here.
+      const who = names.map((n, i) => (!impersonatesBot(n) && n.trim()) || t(`Player ${i + 1}`, `खिलाड़ी ${i + 1}`)) as [
         string,
         string,
       ];
@@ -558,7 +559,8 @@ function PassResult({
             {sub}
           </p>
           {w === null ? (
-            <p className="h-pass__muted">{t('Barabar. Babu bhi hairaan.', 'बराबर। बाबू भी हैरान।')}</p>
+            // Two humans on one phone: Babu isn't playing, so the draw line doesn't name him.
+            <p className="h-pass__muted">{t('Barabar. File dono ke naam.', 'बराबर। फ़ाइल दोनों के नाम।')}</p>
           ) : null}
           <div className="h-pass__scale">
             {scale ? (

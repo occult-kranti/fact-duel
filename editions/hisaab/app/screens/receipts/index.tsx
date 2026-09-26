@@ -130,6 +130,12 @@ export default function ReceiptsScreen({ route }: ScreenProps) {
   const shown = useMemo(() => applyFilters(rows, filters), [rows, filters.q, filters.sector, filters.state, filters.mode, filters.status, filters.src]); // eslint-disable-line react-hooks/exhaustive-deps
   const aged = rows.filter((r) => r.stale).length;
   const queue = useMemo(() => reviewQueue(journal, rows), [journal, rows]);
+  // Receipts first filed today wait for tomorrow's re-check (reviewQueue): say so when the queue is empty.
+  const newToday = useMemo(() => {
+    const d = new Date();
+    const start = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+    return rows.some((r) => (r.firstAt ?? 0) >= start);
+  }, [rows]);
   // Today's file, read the way Home reads it, so the fallback primary matches Home's.
   const todayFiled = useMemo(() => {
     const daily = todaysFive();
@@ -222,7 +228,12 @@ export default function ReceiptsScreen({ route }: ScreenProps) {
                 'Dobara Jaanch: the cards your memory is due to see again today, untimed. Misses come back sooner.',
                 'दोबारा जाँच: आज दोबारा देखने लायक़ कार्ड, बिना टाइमर। छूटे हुए जल्दी लौटते हैं।',
               )
-            : t('Nothing due for Dobara Jaanch today. Cards come back as your memory needs them.', 'आज दोबारा जाँच के लिए कुछ नहीं। कार्ड ज़रूरत के हिसाब से लौटते हैं।')}
+            : newToday
+              ? t(
+                  'Nothing due for Dobara Jaanch yet. Today’s new receipts come back for a re-check from tomorrow.',
+                  'दोबारा जाँच के लिए अभी कुछ नहीं। आज की नई रसीदें कल से दोबारा जाँच में लौटेंगी।',
+                )
+              : t('Nothing due for Dobara Jaanch today. Cards come back as your memory needs them.', 'आज दोबारा जाँच के लिए कुछ नहीं। कार्ड ज़रूरत के हिसाब से लौटते हैं।')}
         </p>
         {aged > 0 ? (
           <p className="h-vaged" role="note">

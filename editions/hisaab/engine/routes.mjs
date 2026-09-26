@@ -34,6 +34,14 @@
  * kept (results are not tied to card ids) but an unfinished run whose cards no longer match is dropped
  * by lib/expeditions.mjs `readExpeditions`, and the player starts that route afresh.
  *
+ * Route ids come and go with the data (a pool crossing ROUTE_MIN / MONEY_MIN / YEAR_MIN, year ranges
+ * regrouping), and `readExpeditions` keeps a stored record only for a key in EXPEDITIONS. So the
+ * catalogue the engine reads is `routeCatalogue(bank)`: the live routes plus a RETIRED stub for every
+ * other id the derivation could ever produce (`routeIdSpace`). A stub has the same `key`, is in no
+ * enabled domain (so ACTIVE_EXPEDITIONS, the screens and the duel service never offer it) and deals no
+ * cards, but a player's first/best/last, completions and best score on it survive every reload, and
+ * come back into view if the route returns.
+ *
  * Pure and dependency-free apart from the vocabulary; tests call it with synthetic banks.
  */
 import { SECTORS, STATES } from '../bank/schema.mjs';
@@ -427,4 +435,77 @@ export function yearRoutes(items) {
       extra: { years: Object.freeze([from, to]), merged: !single },
     });
   });
+}
+
+// ---- Retired routes (stable identities) ----------------------------------------------------------
+
+/** The domain retired stubs carry: not an enabled domain, so `enabledOnly` leaves them out. */
+export const RETIRED_DOMAIN = 'retired';
+
+/**
+ * Every route id `deriveRoutes` can produce for any bank, with its kind and draft title: each state,
+ * sector, Kiska Media, Forward Court, each money-trail tag × (all, era, state incl. the Centre), and
+ * each Saal-dar-Saal year or year range in YEAR_SPAN. Independent of the data by construction; a test
+ * pins that every derived id is in it.
+ */
+export function routeIdSpace() {
+  const space = [];
+  for (const [code, name] of Object.entries(STATES)) {
+    if (code !== 'IN') space.push({ id: `state-${code.toLowerCase()}`, kind: 'state', title: name, extra: { state: code } });
+  }
+  for (const sector of SECTORS) {
+    if (sector !== MEDIA_SECTOR) space.push({ id: `sector-${slug(sector)}`, kind: 'sector', title: sector, extra: { sector } });
+  }
+  space.push({ id: 'kiska-media', kind: 'media', title: 'Kiska Media?', extra: { sector: MEDIA_SECTOR } });
+  space.push({ id: 'forward-court', kind: 'forward', title: 'Forward Court', extra: {} });
+  for (const tag of MONEY_TAGS) {
+    const title = MONEY_COPY[tag].title;
+    space.push({ id: `money-${tag}`, kind: tag, title, extra: { tag, scope: 'all' } });
+    for (const era of ERAS)
+      space.push({ id: `money-${tag}-${era.id}`, kind: tag, title: `${title} · ${era.label}`, extra: { tag, scope: 'era', era: era.id, years: Object.freeze([era.from, era.to]) } });
+    for (const [code, name] of Object.entries(STATES))
+      space.push({ id: `money-${tag}-${code.toLowerCase()}`, kind: tag, title: `${title} · ${code === 'IN' ? 'Centre' : name}`, extra: { tag, scope: 'state', state: code } });
+  }
+  for (let from = YEAR_SPAN.from; from <= YEAR_SPAN.to; from++) {
+    for (let to = from; to <= YEAR_SPAN.to; to++) {
+      const single = from === to;
+      space.push({ id: single ? `year-${from}` : `year-${from}-${to}`, kind: 'year', title: yearLabel(from, to, false), extra: { years: Object.freeze([from, to]), merged: !single } });
+    }
+  }
+  return space;
+}
+
+/** A retired route: the same id and key as the live one it stands for, no cards, never offered. */
+function retired({ id, kind, title, extra }) {
+  return Object.freeze({
+    id,
+    kind,
+    topic: null,
+    topics: Object.freeze([]),
+    domain: RETIRED_DOMAIN,
+    title,
+    subtitle: 'This file is closed for now. Your record on it is kept.',
+    code: 'CLOSED',
+    stamp: `${title} file`,
+    chapters: CHAPTERS,
+    version: 1,
+    key: `${id}:1`,
+    ids: Object.freeze([]),
+    ownCount: 0,
+    padded: Object.freeze([]),
+    poolSize: 0,
+    retired: true,
+    ...extra,
+  });
+}
+
+/**
+ * The catalogue lib/expeditions.mjs reads (EXPEDITIONS): the live routes of `bank`, in display order,
+ * then a retired stub for every other id in `routeIdSpace()`, so a stored journeys record survives a
+ * bank edit that retires or regroups its route.
+ */
+export function routeCatalogue(bank) {
+  const live = deriveRoutes(bank);
+  const ids = new Set(live.map((r) => r.id));
+  return Object.freeze([...live, ...routeIdSpace().filter((r) => !ids.has(r.id)).map(retired)]);
 }

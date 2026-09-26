@@ -21,6 +21,7 @@ export type ScreenName =
   | 'start'
   | 'files'
   | 'money'
+  | 'ledger'
   | 'route'
   | 'aaj'
   | 'taster'
@@ -88,6 +89,8 @@ const RULES: readonly Rule[] = [
   { pattern: /^\/files\/(states|sectors|media|forwards)$/, name: 'files', keys: ['view'], tab: 'files' },
   { pattern: /^\/money$/, name: 'money', view: 'hub', tab: 'files' },
   { pattern: /^\/money\/(distribution|relief|pre-election|years)$/, name: 'money', keys: ['view'], tab: 'files' },
+  // Paisa Kahan Gaya? — the money ledger (screens/ledger). Filters ride in the query (mode, level, s, p, era, q, v, sort).
+  { pattern: /^\/money\/ledger$/, name: 'ledger', tab: 'files' },
   { pattern: new RegExp(`^/route/${ID}$`), name: 'route', keys: ['id'], tab: 'files' },
   { pattern: /^\/aaj$/, name: 'aaj', tab: 'home' },
   { pattern: new RegExp(`^/q/${ID}$`), name: 'taster', keys: ['id'], tab: 'home' },
@@ -186,6 +189,8 @@ export const href = Object.freeze({
     `#/files${view ? `/${view}` : ''}${queryString(query)}`,
   money: (view?: 'distribution' | 'relief' | 'pre-election' | 'years', query?: Record<string, string | number>) =>
     `#/money${view ? `/${view}` : ''}${queryString(query)}`,
+  /** The money ledger, #/money/ledger?mode=relief&s=UP… (query keys: screens/ledger/lib.ts QUERY_KEYS). */
+  ledger: (query?: Record<string, string | number>) => `#/money/ledger${queryString(query)}`,
   route: (id: string) => `#/route/${encodeURIComponent(id)}`,
   aaj: () => '#/aaj',
   taster: (id: string) => `#/q/${encodeURIComponent(id)}`,

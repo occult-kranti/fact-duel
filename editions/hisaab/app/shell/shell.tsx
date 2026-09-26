@@ -117,8 +117,21 @@ export function Shell() {
   return (
     <ChromeContext.Provider value={setChrome}>
       <div className="h-app" data-chrome={chrome} data-nav={showNav ? 'on' : 'off'}>
+        {/* Skip link: the first Tab stop. A hash router cannot use href="#h-main" as a jump (it would
+            be a route), so the click moves focus itself. Visually hidden until focused. */}
+        {showTop ? (
+          <a
+            className="h-sr h-skip"
+            href="#h-main"
+            onClick={(e) => {
+              e.preventDefault();
+              main.current?.focus();
+            }}
+          >
+            {locale === 'hi' ? <span lang="hi">मुख्य हिस्से पर जाएँ</span> : 'Skip to content'}
+          </a>
+        ) : null}
         {showTop ? <TopBar inert={covered} /> : null}
-        {showNav ? <Nav tab={route.tab} /> : null}
         <main id="h-main" className="h-main" ref={main} tabIndex={-1} inert={covered || undefined} data-route={route.name}>
           <ScreenBoundary resetKey={route.path}>
             <Suspense
@@ -134,6 +147,9 @@ export function Shell() {
             </Suspense>
           </ScreenBoundary>
         </main>
+        {/* After <main> in the DOM (it is position: fixed, so the look is unchanged): a keyboard user
+            reaches the screen's content before the five bottom-bar items that sit visually below it. */}
+        {showNav ? <Nav tab={route.tab} /> : null}
         <ToastHost />
         <CeremonyHost />
         <ProgressionWatch />

@@ -177,10 +177,12 @@
 .h-topicchip:has(.h-topicchip__input:focus-visible) {
   box-shadow: var(--h-focus-ring);
 }
+/* Selected = tint + syahi ring + ✓ (never a solid violet fill: that is the screen's one primary). */
 .h-topicchip--on {
-  background: var(--h-syahi);
+  background: var(--h-syahi-soft);
   border-color: var(--h-syahi);
-  color: var(--h-syahi-ink);
+  color: var(--h-ink);
+  box-shadow: inset 0 0 0 1px var(--h-syahi);
 }
 .h-topicchip--on::before {
   content: '✓';
@@ -280,5 +282,13 @@
   .h-setup__launchin .h-btn--primary {
     flex: 0 1 auto;
     min-width: 18rem;
+  }
+}
+
+/* A phone on its side (844×390, 740×360): the top bar, the bottom bar and a sticky action bar would
+   take half the height. The bar goes back into the flow there, and the content gets the screen. */
+@media (max-height: 480px) and (orientation: landscape) {
+  .h-setup__launch {
+    position: static;
   }
 }

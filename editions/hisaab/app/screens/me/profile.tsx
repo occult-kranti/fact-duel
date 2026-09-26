@@ -77,7 +77,8 @@ export function Profile() {
   const label = labelDisplay(s.band);
   const dates = promotionDates(prog);
   const receipts = countReceipts(player.journal);
-  const issuedOn = dates.get(s.band) ?? Date.now();
+  // The promotion date when it is on record; else the certificate says ISSUED with no date.
+  const issuedOn = dates.get(s.band) ?? null;
   const meter = bandProgress(xp);
   const states = filesCleared(player.profile?.journeys, ['state']);
   const sectors = filesCleared(player.profile?.journeys, ['sector']);

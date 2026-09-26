@@ -18,7 +18,7 @@
  */
 import type { ReactNode } from 'react';
 import { ExternalLink, Flag } from 'lucide-react';
-import { enactedLine, formatNumber, pollLine, sourceKind, type BankItem } from '../data';
+import { enactedLine, formatNumber, otherSideOf, pollLine, sourceKind, type BankItem } from '../data';
 import { href, queryString } from '../router';
 import { GovtChip, LegalStatus, SourceChip } from './chip';
 import { cx } from './cx';
@@ -35,8 +35,8 @@ export type ReceiptProps = {
   /** The XP breakdown in plain words: 'base 20 · fast +15 · combo ×1.25'. */
   xpNote?: string;
   /**
-   * The other side's answer in one clause, when the screen has it separately from the explanation
-   * (bank items carry it inside `explanation`; the noting sheet shows that).
+   * The other side's answer in one clause. Default: the bank item's optional `otherSide` field (the
+   * explanation in the noting sheet carries it too); pass this only to override it.
    */
   otherSide?: ReactNode;
   /** Rows reveal top-down once (motion #4). Never on the live question surface. */
@@ -116,7 +116,8 @@ export function Receipt({ item, receiptNo, xp, xpNote, otherSide, printing, extr
             <LegalStatus status={item.status} asOf={item.asOf} />
           </Row>
         ) : null}
-        {otherSide ? <Row k="OTHER SIDE">{otherSide}</Row> : null}
+        {/* The prop wins; else the bank's own one-clause `otherSide` (charter §2.3). */}
+        {otherSide ?? otherSideOf(item) ? <Row k="OTHER SIDE">{otherSide ?? otherSideOf(item)}</Row> : null}
         {item ? (
           <Row inline k="GOVT THEN">
             <GovtChip govt={item.govt} bare />

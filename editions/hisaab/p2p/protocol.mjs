@@ -10,10 +10,19 @@
  * engine's, not a copy. Any screen that can drive a bot duel through `request()` can drive a friend
  * duel through `session.request()`.
  *
- * Shared seed. The room code seeds the deal: the host creates the room with an RNG seeded from the
- * code, so the deck is `dealFromSeed(code, config)` — which the guest computes from its own copy of
- * the edition bank and checks each revealed question against (`session.verify(room)`). A hello
- * handshake compares protocol and bank fingerprints first, so two different builds refuse to pair.
+ * The room secret. The 8-character code is what people read aloud and type, but it is never used
+ * on the network as it is: `roomSecret(code)` stretches it with PBKDF2 (P2P_KDF) and everything else
+ * comes from that secret — the WebRTC rendezvous topic and password (trystero.mjs), the duel room id,
+ * the invitation token the second seat needs, the deal seed and the rematch rooms (`roomKeys`,
+ * `rematchCode`). The public relays only ever see a hash of the stretched secret, so recovering a
+ * code from what they publish costs P2P_KDF.iterations PBKDF2 rounds per guess (P2P_TRUST.code says
+ * what that leaves exposed).
+ *
+ * Shared seed. The room secret seeds the deal: the host creates the room with an RNG seeded from
+ * `roomKeys(code).seed`, so the deck is `dealFromSeed(seed, config)` — which the guest computes from
+ * its own copy of the edition bank and checks each revealed question against (`session.verify(room)`).
+ * A hello handshake compares protocol and bank fingerprints first (the fingerprint covers every
+ * item's content, not just its id), so two builds with different banks refuse to pair.
  *
  * Honesty. This is CASUAL and TRUST-BASED (`P2P_TRUST`): the host's browser is authoritative, and
  * each browser reports its own reveal-to-input time, which a modified browser can forge. No coins,
@@ -35,7 +44,18 @@ export const P2P_TRUST = Object.freeze({
     "The host's browser runs the match and each browser reports its own reveal-to-answer time, so a " +
     'modified browser could cheat. Fine between friends. No coins and no Babu rank: a friend duel pays XP ' +
     'on each device, and each device keeps its own record.',
+  code:
+    'The room code is the only key to the room. The public relays see a scrambled, stretched form of it ' +
+    'that takes a lot of computing power to reverse, but someone who spends that could still work out a ' +
+    "code later, and with it both players' internet (IP) addresses. Send the code only to your friend.",
 });
+
+/**
+ * How a room code is stretched into the room secret: PBKDF2-HMAC-SHA-256 (WebCrypto has no scrypt or
+ * Argon2). 600,000 rounds is OWASP's figure for PBKDF2-SHA-256; about 0.1 s on a laptop, around a
+ * second on a slow phone, once per code (the secret is cached for the tab).
+ */
+export const P2P_KDF = Object.freeze({ name: 'PBKDF2', hash: 'SHA-256', iterations: 600_000, salt: 'hisaab-do.duel/room-secret/1' });
 
 /** Actions a guest may send. `create` and `add_bot` are the host's alone. */
 export const GUEST_ACTIONS = Object.freeze(['join', 'ready', 'reveal', 'answer', 'state', 'leave', 'clock']);
@@ -78,18 +98,70 @@ const base64url = (bytes) =>
     .replace(/\//g, '_')
     .replace(/=+$/, '');
 
+/** code → Promise<secret>. One stretch per code per tab; rematch rooms are registered by rematchCode. */
+const SECRETS = new Map();
+
 /**
- * What both browsers derive from the code: the room id and the invitation token the duel service
- * requires (so only someone holding the code can take the second seat).
+ * The room secret for a code (base64url, 256 bits of PBKDF2 output). Cached, so the transport and
+ * the session that share a code pay for the stretch once.
+ */
+export function roomSecret(code) {
+  const c = normalizeCode(code);
+  if (!c) return Promise.reject(codeError());
+  let secret = SECRETS.get(c);
+  if (!secret) {
+    secret = (async () => {
+      const subtle = globalThis.crypto.subtle;
+      const key = await subtle.importKey('raw', new TextEncoder().encode(c), 'PBKDF2', false, ['deriveBits']);
+      const bits = await subtle.deriveBits(
+        { name: 'PBKDF2', hash: P2P_KDF.hash, salt: new TextEncoder().encode(P2P_KDF.salt), iterations: P2P_KDF.iterations },
+        key,
+        256,
+      );
+      return base64url(new Uint8Array(bits));
+    })();
+    secret.catch(() => SECRETS.delete(c));
+    SECRETS.set(c, secret);
+  }
+  return secret;
+}
+
+/**
+ * What both browsers derive from the code, all of it from the stretched room secret (never from the
+ * short code itself): the duel room id, the invitation token the duel service requires (so only
+ * someone holding the code can take the second seat), the deal seed, and the WebRTC rendezvous
+ * `topic` and `password` the trystero transport uses.
  */
 export async function roomKeys(code) {
   const c = normalizeCode(code);
   if (!c) throw codeError();
+  const secret = await roomSecret(c);
+  const part = async (label) => sha256(`${P2P_PROTOCOL}:${label}:${secret}`);
   return {
     code: c,
-    roomId: hex(await sha256(`${P2P_PROTOCOL}:room:${c}`)).slice(0, 32),
-    invite: base64url(await sha256(`${P2P_PROTOCOL}:invite:${c}`)),
+    roomId: hex(await part('room')).slice(0, 32),
+    invite: base64url(await part('invite')),
+    seed: base64url(await part('deal')),
+    topic: `duel-${hex(await part('topic')).slice(0, 40)}`,
+    password: base64url(await part('password')),
   };
+}
+
+/**
+ * The code of rematch `n` (1, 2, …) after the room opened with `first`. Both browsers compute the same
+ * one without sending anything but "rematch". It comes from the first room's SECRET, not its code,
+ * and the new room's secret is derived from that secret too (registered here), so a rematch costs no
+ * second stretch. A rematch reuses the first room's transport; its code is never typed.
+ */
+export async function rematchCode(first, n) {
+  const c = normalizeCode(first);
+  if (!c) throw codeError();
+  if (!Number.isSafeInteger(n) || n < 1) throw clientError('Rematch number must be 1 or more.', 'invalid_request', 400);
+  const secret = await roomSecret(c);
+  const next = base64url(await sha256(`${P2P_PROTOCOL}:rematch:${n}:${secret}`));
+  const code = makeRoomCode(await sha256(`${P2P_PROTOCOL}:rematch-code:${next}`));
+  SECRETS.set(code, Promise.resolve(next));
+  return code;
 }
 
 function fnv1a32(text) {
@@ -111,12 +183,34 @@ function mulberry32(seed) {
   };
 }
 
-/** The deal RNG for a room code. Both browsers build the same one. */
-export const seededRng = (code) => mulberry32(fnv1a32(`${P2P_PROTOCOL}:deal:${normalizeCode(code) ?? code}`));
+/** The deal RNG for a seed (`roomKeys(code).seed`). Both browsers build the same one. */
+export const seededRng = (seed) => mulberry32(fnv1a32(`${P2P_PROTOCOL}:deal:${normalizeCode(seed) ?? seed}`));
 
-/** A short fingerprint of a bank (count + ids), compared in the hello so mismatched builds refuse. */
+/** JSON with object keys sorted, so the same content always prints the same way. */
+function canonicalJson(value) {
+  if (Array.isArray(value)) return `[${value.map(canonicalJson).join(',')}]`;
+  if (value && typeof value === 'object')
+    return `{${Object.keys(value)
+      .sort()
+      .map((k) => `${JSON.stringify(k)}:${canonicalJson(value[k])}`)
+      .join(',')}}`;
+  return JSON.stringify(value) ?? 'null';
+}
+const FINGERPRINTS = new WeakMap();
+
+/**
+ * A short fingerprint of a bank, compared in the hello so mismatched builds refuse to pair. It covers
+ * every field of every item (question, options, correctIndex, explanation, status, …), so an editorial
+ * edit under the same id changes it: the host would otherwise deal and score from the old text while
+ * the guest checks and shows the new one.
+ */
 export function bankFingerprint(questions = QUESTIONS) {
-  return `${questions.length}:${fnv1a32(questions.map((q) => q.id).join('|')).toString(16)}`;
+  let fingerprint = FINGERPRINTS.get(questions);
+  if (!fingerprint) {
+    fingerprint = `${questions.length}:${fnv1a32(questions.map(canonicalJson).join('\n')).toString(16)}`;
+    FINGERPRINTS.set(questions, fingerprint);
+  }
+  return fingerprint;
 }
 
 /** A friend room's config, completed the way the host sends it: free, human opponent, format timer. */
@@ -136,10 +230,10 @@ export function friendConfig(config = {}) {
   };
 }
 
-/** The deck a room with this code and config deals: identical on both browsers for the same bank. */
-export function dealFromSeed(code, config, questions = QUESTIONS) {
+/** The deck a room with this seed and config deals: identical on both browsers for the same bank. */
+export function dealFromSeed(seed, config, questions = QUESTIONS) {
   const cfg = normalizeConfig(friendConfig(config), questions);
-  return chooseDeck(questions, cfg, seededRng(code));
+  return chooseDeck(questions, cfg, seededRng(seed));
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -241,8 +335,9 @@ export function createP2PHost({ transport, code, name, config = {}, clock = () =
     guestToken = null,
     closed = false,
     fatal = null;
+  // A fresh RNG per call from the room's seed, as before: the deal is drawn by `create` alone.
   const call = (body, actor) =>
-    dispatch(store, body, { now: clock(), actor, useDatabaseClock: true, principalId: null, rng: seededRng(canonical) });
+    dispatch(store, body, { now: clock(), actor, useDatabaseClock: true, principalId: null, rng: seededRng(keys.seed) });
   const shake = handshake(transport, 'host', bankFingerprint(), (message) => {
     fatal = clientError(message, 'p2p_mismatch', 409);
     errors.emit(fatal);
@@ -352,6 +447,7 @@ export function createP2PGuest({ transport, code, name, timeoutMs = 8000 }) {
     errors = listeners();
   let next = 1,
     fatal = null,
+    keys = null,
     deck = null,
     deckKey = null;
   const failAll = (error) => {
@@ -426,18 +522,19 @@ export function createP2PGuest({ transport, code, name, timeoutMs = 8000 }) {
     /** Wait for the host, then take seat 1. Resolves with `{ room }`. */
     async join() {
       await waitForHost();
-      const keys = await roomKeys(canonical);
+      keys = await roomKeys(canonical);
       return send({ action: 'join', invite: keys.invite, name });
     },
     /** The guest seat's `request()`: same bodies and results as lib/duel-client's. */
     request(body) {
       return send(body ?? {});
     },
-    /** The deck this code deals for the room's config — the guest's own copy of the shared seed. */
+    /** The deck this room deals for its config — the guest's own copy of the shared seed. After join(). */
     expectedDeck(config) {
+      if (!keys) throw clientError('Join the room first.', 'not_ready', 409);
       const key = JSON.stringify(config);
       if (deckKey !== key) {
-        deck = dealFromSeed(canonical, config);
+        deck = dealFromSeed(keys.seed, config);
         deckKey = key;
       }
       return deck;

@@ -1,7 +1,7 @@
 /**
  * screens/receipts/detail.tsx — one receipt in full: the question, the answer, your record on it, the
  * receipt (SOURCE / STATUS + as of / GOVT THEN / money-trail rows), the noting, and the actions —
- * Open source ↗, Keep a copy, Forward this (receipt card), Send as a challenge (no answer), Report a change.
+ * Open source ↗, Keep a copy, Forward this (receipt card), Send as a challenge (answer not marked), Report a change.
  *
  * Keep a copy is the engine's `save` (the "Keep a copy of 2 receipts" quest and the Stamp Register's
  * "Kept copies"). The engine's save is a toggle that pays on every save, so a kept copy stays kept here:
@@ -178,7 +178,9 @@ export function ReceiptDetail({ row, headingLevel = 3 }: { row: ReceiptRow; head
         {row.item ? <ShareButton run={() => shareReceipt(row.item!, 'receipt')} /> : null}
         {row.item ? (
           <ShareButton icon={<Send size={20} strokeWidth={2.4} />} variant="ghost" run={() => shareReceipt(row.item!, 'challenge')}>
-            {t('Send as a challenge (no answer)', 'चुनौती भेजो (बिना जवाब)')}
+            {/* Honest words: the card leaves the answer unmarked, but a case's legal status line always
+                travels with it (charter §2.2) and can give the answer away. */}
+            {t('Send as a challenge (answer not marked)', 'चुनौती भेजो (जवाब चिह्नित नहीं)')}
           </ShareButton>
         ) : null}
         <Button variant="ghost" href={reportHref(row.id)} icon={<Flag size={18} strokeWidth={2.4} />} trailing={null}>

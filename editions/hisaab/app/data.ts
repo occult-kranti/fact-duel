@@ -90,6 +90,15 @@ export const formatNumber = (n: number) => numberFormat.format(n);
 
 /** The item's legal status line, VERBATIM, or null. Never paraphrase, shorten or colour it. */
 export const statusLine = (item: BankItem | null | undefined): string | null => item?.status ?? null;
+/**
+ * The item's one-clause "other side" (charter §2.3: a denial, a contest or a clearance), from the bank's
+ * optional `otherSide` field; null when the item has none. The receipt's OTHER SIDE row and the share
+ * cards read it here.
+ */
+export function otherSideOf(item: BankItem | null | undefined): string | null {
+  const v = (item as { otherSide?: unknown } | null | undefined)?.otherSide;
+  return typeof v === 'string' && v.trim() ? v.trim() : null;
+}
 
 /**
  * The status line with its date, as it must travel in a share or an aria-label:
@@ -313,23 +322,44 @@ export type LabelDisplay = Readonly<{
   en: string;
   /** Aside printed after the Latin label, if any: '(as per the forwards)'. */
   aside?: string;
+  /** The aside's Devanagari twin (Hindi locale). */
+  asideHi?: string;
   line: string;
+  /** The one-liner in Devanagari, for the Hindi locale (drafts — a Hindi reader reviews before release). */
+  lineHi: string;
   /** The Hinglish line, Latin script. */
   hinglish: string;
   from: number;
   to: number | null;
 }>;
 
-const LABEL_EXTRA: ReadonlyArray<{ hi: string; en: string; aside?: string; hinglish: string }> = [
-  { hi: 'अंधभक्त', en: 'Andhbhakt', hinglish: 'Forward pehle, padhna kabhi nahi.' },
-  { hi: 'व्हाट्सऐप यूनिवर्सिटी फ़्रेशर', en: 'WhatsApp University Fresher', hinglish: 'Admission ho gaya. Har group mein hazri.' },
-  { hi: 'प्राइम-टाइम लॉयलिस्ट', en: 'Prime-Time Loyalist', hinglish: 'Anchor ki awaaz yaad, budget nahi.' },
-  { hi: 'न्यूट्रल अंकल', en: 'Neutral Uncle', hinglish: 'Sab chor hain — kaun, yeh check nahi kiya.' },
-  { hi: 'रसीद माँगो', en: 'Receipt Maango', hinglish: 'Ab bill maangne lage ho.' },
-  { hi: 'आरटीआई योद्धा', en: 'RTI Warrior', hinglish: 'Sawaal file karo. 30 din ruko.' },
-  { hi: 'अर्बन नक्सल', en: 'Urban Naxal', aside: '(as per the forwards)', hinglish: 'Metro mein CAG report padhta hai.' },
-  { hi: 'टुकड़े-टुकड़े गैंग', en: 'Tukde-Tukde Gang', hinglish: 'Crore ko tukdon mein ginta hai.' },
-  { hi: 'सर्टिफ़ाइड एंटी-नेशनल', en: 'Certified Anti-National', hinglish: 'Paisa kahan gaya, pata hai. Phir bhi poochta hai.' },
+const LABEL_EXTRA: ReadonlyArray<{ hi: string; en: string; aside?: string; asideHi?: string; lineHi: string; hinglish: string }> = [
+  { hi: 'अंधभक्त', en: 'Andhbhakt', lineHi: 'पहले फ़ॉरवर्ड। पढ़ना कभी नहीं।', hinglish: 'Forward pehle, padhna kabhi nahi.' },
+  {
+    hi: 'व्हाट्सऐप यूनिवर्सिटी फ़्रेशर',
+    en: 'WhatsApp University Fresher',
+    lineHi: 'दाख़िला हो गया। हाज़िरी: हर ग्रुप में।',
+    hinglish: 'Admission ho gaya. Har group mein hazri.',
+  },
+  { hi: 'प्राइम-टाइम लॉयलिस्ट', en: 'Prime-Time Loyalist', lineHi: 'बजट से ज़्यादा एंकर की आवाज़ पहचानते हैं।', hinglish: 'Anchor ki awaaz yaad, budget nahi.' },
+  { hi: 'न्यूट्रल अंकल', en: 'Neutral Uncle', lineHi: '“सब चोर हैं।” कौन-कौन, यह जाँचा नहीं।', hinglish: 'Sab chor hain — kaun, yeh check nahi kiya.' },
+  { hi: 'रसीद माँगो', en: 'Receipt Maango', lineHi: 'अब बिल माँगने लगे हैं।', hinglish: 'Ab bill maangne lage ho.' },
+  { hi: 'आरटीआई योद्धा', en: 'RTI Warrior', lineHi: 'सवाल दायर करते हैं। 30 दिन इंतज़ार करते हैं।', hinglish: 'Sawaal file karo. 30 din ruko.' },
+  {
+    hi: 'अर्बन नक्सल',
+    en: 'Urban Naxal',
+    aside: '(as per the forwards)',
+    asideHi: '(फ़ॉरवर्ड के मुताबिक़)',
+    lineHi: 'मेट्रो में CAG की रिपोर्ट पढ़ते हैं।',
+    hinglish: 'Metro mein CAG report padhta hai.',
+  },
+  { hi: 'टुकड़े-टुकड़े गैंग', en: 'Tukde-Tukde Gang', lineHi: 'करोड़ों को टुकड़ों में गिनते हैं।', hinglish: 'Crore ko tukdon mein ginta hai.' },
+  {
+    hi: 'सर्टिफ़ाइड एंटी-नेशनल',
+    en: 'Certified Anti-National',
+    lineHi: 'पैसा कहाँ गया, पता है। फिर भी पूछते हैं।',
+    hinglish: 'Paisa kahan gaya, pata hai. Phir bhi poochta hai.',
+  },
 ];
 
 /** Everything a label display needs for a band (clamped to the ladder). */
@@ -337,6 +367,10 @@ export function labelDisplay(band: number): LabelDisplay {
   const rung = labelFor(band) as Label;
   const extra = LABEL_EXTRA[rung.band];
   return Object.freeze({ band: rung.band, from: rung.from, to: rung.to, line: rung.line, ...extra });
+}
+/** A label's one-liner in the reader's language: English, or its Devanagari twin in the Hindi locale. */
+export function labelLine(label: LabelDisplay, isHi: boolean): string {
+  return isHi ? label.lineHi : label.line;
 }
 /** The whole ladder for display, band 0 → 8. */
 export const LADDER_DISPLAY: readonly LabelDisplay[] = Object.freeze(LADDER.map((r) => labelDisplay(r.band)));
@@ -382,6 +416,27 @@ export function bandProgress(xp: number): { value: number; max: number } {
 export type XpLogEntry = Readonly<{ id?: string; at: number; kind: string; xp: number; label: string; meta?: Readonly<Record<string, unknown>> }>;
 
 /**
+ * The edition's wording for engine achievements whose JHK text names JHK things (nine sports routes,
+ * "facts", "the Vault"). The check behind each is unchanged; only the words follow the edition. One
+ * table for the Stamp Register (screens/me), Activity (shell/progression-watch) and XP log lines, so
+ * the same stamp never has two names.
+ */
+export const ACHIEVEMENT_WORDS: Readonly<Record<string, Readonly<{ name?: string; description?: string }>>> = Object.freeze({
+  'all-routes': { name: 'Nine files', description: 'Clear nine files (states, sectors or any other).' },
+  'bold-master': { name: 'Clean file', description: 'Clear a file six for six.' },
+  'scholar-50': { name: 'Receipt clerk', description: 'Collect 50 receipts.' },
+  'scholar-200': { name: 'Record keeper', description: 'Collect 200 receipts.' },
+  'vault-25': { name: 'Kept copies', description: 'Keep a copy of 25 receipts in the Vault.' },
+  'curious-25': { name: 'Reads the noting', description: 'Open 25 receipts in the Vault.' },
+  'friend-rival': { description: 'Finish a duel against a friend (room code or two tabs).' },
+  'mode-tour': { description: 'Finish Quick Draw, Triple Threat and The Gauntlet.' },
+});
+/** An achievement's name in the edition's words (the engine's name when the edition keeps it). */
+export function achievementName(id: string | null | undefined, engineName: string): string {
+  return (id && ACHIEVEMENT_WORDS[id]?.name) || engineName;
+}
+
+/**
  * The edition's words for a progression log line. The engine writes JHK's labels ('Expedition card 1 ·
  * correct', 'Discovery · correct', 'New fact', 'Expedition stamped'); every screen that prints XP maps
  * them here, so the words are the same everywhere. `t` picks the Hindi twin in the Hindi locale.
@@ -411,7 +466,7 @@ export function xpLogWords(e: XpLogEntry, t: (en: string, hi?: string) => string
     case 'streak':
       return t('Streak', 'स्ट्रीक');
     case 'achievement':
-      return `${t('Stamp Register', 'स्टैम्प रजिस्टर')}: ${e.label}`;
+      return `${t('Stamp Register', 'स्टैम्प रजिस्टर')}: ${achievementName(typeof m.achievement === 'string' ? m.achievement : null, e.label)}`;
     default:
       return e.label || e.kind;
   }
@@ -431,10 +486,23 @@ export const BOT_LINE_HI = 'बिना सवाल देखे, रैंड
 export const ANONYMOUS = 'Anonymous Janta';
 
 /** A seat's display name: the bot is always Babu-Bot · BOT, whatever the engine calls it. */
+/**
+ * True when a name a HUMAN typed would pass for the bot on someone else's screen: 'Babu-Bot · BOT',
+ * 'babu bot', 'BOT', 'Lucky Guess · BOT' (the engine's bot). N-rules: only the real bot is labelled BOT,
+ * so a human seat never is. 'Robot Raju' or 'Bottle' are fine (BOT must be a word of its own).
+ */
+export function impersonatesBot(name: string | null | undefined): boolean {
+  const n = (name ?? '').normalize('NFKC').toLowerCase();
+  const squashed = n.replace(/[^a-z0-9]+/g, '');
+  return /(^|[^a-z0-9])bot([^a-z0-9]|$)/.test(n) || squashed.includes('babubot') || squashed.includes('luckyguess');
+}
+
 export function seatName(player: { kind?: string; name?: string | null } | null | undefined): string {
   if (!player) return ANONYMOUS;
   if (player.kind === 'bot') return BOT_NAME;
   const name = (player.name ?? '').trim();
+  // A human never shows as the bot (a friend typed 'Babu-Bot · BOT'): the neutral name instead.
+  if (impersonatesBot(name)) return ANONYMOUS;
   return name || ANONYMOUS;
 }
 

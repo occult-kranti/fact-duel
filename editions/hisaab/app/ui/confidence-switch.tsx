@@ -47,8 +47,10 @@ export function ConfidenceSwitch({ value, onChange, disabled, legend, className 
             </span>
             <span className="h-conf__pts">
               <span aria-hidden="true">{c.points}</span>
-              <span className="h-sr">
-                , {c.correct} points if right, {c.wrong === 0 ? 'nothing lost' : `${Math.abs(c.wrong)} lost`} if wrong
+              <span className="h-sr" lang={isHi ? 'hi' : undefined}>
+                {isHi
+                  ? `, सही होने पर ${c.correct} अंक, ग़लत होने पर ${c.wrong === 0 ? 'कुछ नहीं कटेगा' : `${Math.abs(c.wrong)} कटेंगे`}`
+                  : `, ${c.correct} points if right, ${c.wrong === 0 ? 'nothing lost' : `${Math.abs(c.wrong)} lost`} if wrong`}
               </span>
             </span>
           </label>

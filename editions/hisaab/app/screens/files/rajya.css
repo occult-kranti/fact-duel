@@ -139,7 +139,8 @@
     word-break: normal;
     font-weight: var(--h-wght-ui-strong);
   }
-  .h-rajya__grid .h-tile {
+  /* The Centre drawer keeps its own gap: 1px would run 'IN' and 'CENTRE' together ('INCENTRE'). */
+  .h-rajya__grid .h-tile:not(.h-rajya__centre) {
     gap: 1px;
   }
 }
@@ -361,7 +362,7 @@
   outline: none;
 }
 .h-rajya__searchbox input::placeholder {
-  color: var(--h-ink-3);
+  color: var(--h-ink-2); /* placeholder words are text to read: ink-3 is UI-only (4.23:1 on receipt, dark) */
 }
 
 /* ---- list view --------------------------------------------------------------------------------------- */

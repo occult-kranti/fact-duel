@@ -39,6 +39,8 @@
   padding: 0;
   list-style: none;
 }
+/* Bible §5 h-chip: 12px mono is for CAPS only (a mixed-case 12px name reads as body text below the
+   14px floor). Outlet names are plain text chips: no logos, masthead styles or brand colours. */
 .h-media__outlet {
   display: inline-flex;
   align-items: center;
@@ -52,6 +54,8 @@
   font-size: var(--h-fs-2xs);
   font-weight: 700;
   line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: var(--h-track-kicker);
   overflow-wrap: anywhere;
 }
 .h-media__fact {

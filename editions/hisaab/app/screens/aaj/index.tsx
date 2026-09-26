@@ -16,7 +16,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { CalendarDays, Check, Flame, Share2, X } from 'lucide-react';
 import { dailyRoundId, standing, todaysFive, type Card } from '../../../edition';
 import { useHoldToasts } from '../../budget';
-import { formatNumber, itemForCard, labelDisplay, type ConfidenceId } from '../../data';
+import { bandProgress, formatNumber, goalCopy, itemForCard, labelDisplay, labelLine, type ConfidenceId } from '../../data';
 import { goBack, href, type ScreenProps } from '../../router';
 import { shareDailyGrid } from '../../share';
 import { useChrome, useScreenTitle } from '../../shell/chrome';
@@ -27,6 +27,7 @@ import { cx } from '../../ui/cx';
 import { useLang } from '../../ui/lang';
 import { EmptyState, InlineNote, Page, ScreenHeader } from '../../ui/page';
 import { Skeleton } from '../../ui/skeleton';
+import { Meter } from '../../ui/meter';
 import { Kicker } from '../../ui/text';
 import { CardResult, PlayBar, PlayHeader, QuestionCard, revealResult, useLockCues, useNextKey, type SegmentState } from '../route/card';
 import {
@@ -263,8 +264,10 @@ function AajFinish({
   const pts = answers.every((a) => a?.confidence)
     ? answers.reduce((s, a) => s + (callPoints(a?.confidence, a?.correct === true) ?? 0), 0)
     : null;
-  const s = standing(progression?.xp ?? 0);
+  const xpNow = progression?.xp ?? 0;
+  const s = standing(xpNow);
   const label = labelDisplay(s.band);
+  const meter = bandProgress(xpNow);
   const streak = progression?.streak;
   const streakDays = streak && streak.lastDay === day ? streak.current : null;
   const [y, m, d] = day.split('-').map(Number);
@@ -316,12 +319,29 @@ function AajFinish({
               <span lang="hi" className="h-aaj__labelhi">
                 {label.hi}
               </span>
-              <span className="h-aaj__labelen">
+              <span className="h-aaj__labelen" lang="en">
                 {label.en}
-                {label.aside ? <span className="h-aaj__aside"> {label.aside}</span> : null}
+                {label.aside ? (
+                  <span className="h-aaj__aside" lang={isHi && label.asideHi ? 'hi' : undefined}>
+                    {' '}
+                    {isHi && label.asideHi ? label.asideHi : label.aside}
+                  </span>
+                ) : null}
               </span>
             </p>
-            <p className="h-aaj__line">{label.line}</p>
+            <p className="h-aaj__line" lang={isHi ? 'hi' : undefined}>
+              {labelLine(label, isHi)}
+            </p>
+            {/* The goal gradient (bible §8.2): how far today's file moved the player towards the next label. */}
+            <Meter
+              className="h-aaj__meter"
+              value={meter.value}
+              max={meter.max}
+              ticks={5}
+              label={t('Progress to the next label', 'अगले लेबल तक')}
+              valueText={isHi ? `लेवल ${s.level}। ${goalCopy(xpNow, 'hi')}` : `Level ${s.level}. ${goalCopy(xpNow)}`}
+              copy={goalCopy(xpNow, isHi ? 'hi' : 'en')}
+            />
           </div>
           <ul className="h-aaj__facts">
             {streakDays !== null ? (
@@ -362,7 +382,10 @@ function AajFinish({
       <ReceiptStrip
         entries={minis}
         title={t("Today's receipts", 'आज की रसीदें')}
-        lead={t('Forwarding one sends the question without its answer — same five for everyone today.', 'भेजने पर सिर्फ़ सवाल जाता है, जवाब नहीं — आज सबके लिए यही पाँच।')}
+        lead={t(
+          'Forwarding one sends the question and options with the answer unmarked (a case’s legal status line always travels with it) — same five for everyone today.',
+          'भेजने पर सवाल और विकल्प जाते हैं, जवाब चिह्नित नहीं (किसी मामले की क़ानूनी स्थिति हमेशा साथ जाती है) — आज सबके लिए यही पाँच।',
+        )}
         share="challenge"
       />
     </Page>

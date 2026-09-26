@@ -155,3 +155,115 @@ Rs 16,492 cr, with Rs 8,252 cr of it (about half) going to the BJP.
 - `govt: 'BJP'` for Aland (hel034): the BJP governed Karnataka when the deletions were attempted, as
   The Hindu reports.
 - Party-income and ADR items use `govt: 'NDA'` (the Centre) by convention.
+
+## Fact audit (26 Sep 2026)
+
+Independent release-gate audit of all 50 `hel` items. Every `sourceUrl` was fetched and read (the two
+SC judgment PDFs were text-extracted and searched); every item with `status` or `kind: 'scam'` was
+re-searched for news up to 26 Sep 2026 and cross-examined (strongest counter-reading, what would change
+the status, whether the stem implies guilt). Result: 50 checked, 0 dropped, 50 kept; all ids unchanged.
+`node scripts/hisaab-validate.mjs` prints OK for the lane and the whole bank.
+
+### Fixes
+
+- **hel008**: added Business Standard as a second source for the ECI's 14 Mar 2024 publication date.
+- **hel010**: explanation no longer names the second- and third-placed parties (it gave away hel011).
+  Now: BJP Rs 6,060.5 cr of Rs 12,769 cr, more than the next six parties combined; Scroll's fact-check.
+  Added `otherSide`: the Home Minister's "end the dominance of black money" reply (Tribune).
+- **hel011**: explanation no longer names Future Gaming or the Rs 542 cr gift (gave away hel014 and, via
+  "lottery", hel013). Now uses The Wire's finding that TMC's receipts rose after its 2021 win. Source
+  switched to The Wire, because the Business Standard headline ("BJP received more…") gave away hel010
+  on this item's receipt; BS kept in `sources`.
+- **hel012**: explanation no longer lists "BJP, TMC and Congress" (gave away hel010/hel011) or MEIL as
+  BRS's top donor (half of hel015's answer). Now: Rs 410 cr in Apr 2022, nothing after Dec 2023 (Wire).
+- **hel013**: the ED detail was wrong-dated ("probe begun in 2019"; HT, Jun 2026, says the ECIR dates to
+  2014 on a CBI chargesheet over alleged losses to Sikkim's lottery). Rewritten from HT: attachments
+  upheld by the PMLA appellate tribunal (30 May 2025); appeals pending in the Madras HC (notice 9 Jun
+  2026). Removed "SC in Aug 2024 declined a probe" (hel018's answer). Status updated; `otherSide` added
+  (the family says no predicate offence survives, citing Sikkim's affidavit of no loss). Source switched
+  to The Indian Express (21 Mar 2024), because the Scroll headline ("After raids by central agencies…")
+  gave away hel017; Scroll and HT kept in `sources`.
+- **hel014**: stem no longer says "lottery firm Future Gaming" (gave away hel013); it now says "the
+  single biggest buyer of electoral bonds". Explanation names the firm without "lottery".
+- **hel016**: `otherSide` added (Reliance's "not a subsidiary" statement, moved out of the explanation);
+  explanation adds the FY 2021-22 to 2023-24 purchase window from the same PTI page.
+- **hel017**: removed the SC Aug 2024 SIT refusal from explanation and status (hel018's answer). Status
+  now "no court finding of quid pro quo in any bond purchase reported as of Sep 2026". `otherSide`: the
+  FM's "huge assumption" reply (The Hindu). Timing framed as fact; quid pro quo as allegation.
+- **hel018**: status updated: the SC also dismissed Khem Singh Bhati's review plea (The Hindu/PTI,
+  4 Apr 2025). `otherSide`: the court drew no conclusion on facts. Added The Hindu as a source.
+- **hel019**: the explanation attributed "cash up to Rs 2,000 remains permitted" to the SC; in the
+  judgment that line is the petitioners' submission. Reworded as a statement of the law, plus the
+  plea against Section 13A(d) listed in the SC in Aug 2026 (Deccan Chronicle, 27 Aug 2026).
+- **hel020**: added that both parties appealed and withdrew their SC appeals after the Finance Act 2016
+  change (Business Standard, 18 Mar 2018, added to `sources`). The Congress and Vedanta replies moved
+  to `otherSide`.
+- **hel021**: "shielded the BJP and Congress" (hel020's answer) changed to "the two national parties
+  named in a 2014 Delhi HC ruling".
+- **hel026**: "27 of the 251 had been convicted" changed to "27 winners declared past convictions",
+  which is what ADR says.
+- **hel027**: source switched to ADR's "Criminals and crorepatis" page (same party figures), because
+  the other ADR headline ("Record 46%…") gave away hel026 on this item's receipt. Added SP (21 of 37,
+  57%) for context. Note: ADR's "Record 46%" page misprints SP as 45%; 21/37 is 57%.
+- **hel030**: status updated. The Section 340 CrPC proceedings are still pending in the SC; AAP said on
+  23 Sep 2026 it would seek an early hearing (Tribune, added to `sources`). The explanation's "false
+  statement" is now the court's own words ("patent falsehood"). `otherSide`: his defaced-ballots
+  explanation, rejected by the court, and his unconditional apology (Apr 2024).
+- **hel031**: source switched to SCO's case page for the ECI Appointments Act challenge, because the
+  split-verdict headline gave away hel032 on this item's receipt.
+- **hel034**: status updated: charge framing was listed for 16 Sep 2026, with no outcome reported by
+  26 Sep 2026; all seven accused are on bail. "Aadhaar-based OTP checks" corrected to "identity-verified
+  OTP checks (Sept 2025)", as IE reports. Added the 6,018-request audit. `otherSide`: the former MLA and
+  his son deny any role and call the chargesheet politically motivated (The Hindu, 13 Dec 2025, added).
+- **hel035**: removed "in May 2026 the SC upheld it" (hel036's answer). Added SCO's case page (ADR v ECI).
+- **hel037**: replaced a redundant sentence with the court's rejection of the resigned-first argument
+  (The Hindu).
+- **hel038**: **re-angled.** The old item ("how many MLAs resigned, 22") duplicated states-west-south
+  hst224 fact for fact, and its explanation stated hst224's answer. It now asks about the Nov 2020 MP
+  by-polls: BJP 19 of 28 (Scroll, 12 Nov 2020), with ThePrint kept as a source. `govt` INC→BJP. The
+  explanation avoids the number 22.
+- **hel039**: **re-angled.** The old item (why the SC could not restore the MVA government) duplicated
+  states-west-south hst210 exactly. It now asks who may appoint a party's whip under the Tenth Schedule
+  (the political party, not the legislature party), from the same 11 May 2023 judgment (LiveLaw).
+  `otherSide` gives the rebel group's argument. Dropped an unverifiable ThePrint source that returned 403.
+- **hel040**: added the alliance's post-merger strength (33 of 40, ETV Bharat). The MLAs' two-thirds
+  defence moved to `otherSide`.
+- **hel043**: `status` added (a Tenth Schedule disqualification, not a criminal case; HC 18 Sep and SC
+  24 Sep 2026). `otherSide`: counsel's "condone" and "ghar wapsi" argument (IE, 25 Sep 2026).
+- **hel044**: made clear that the Rs 1.35 lakh crore was the CMS chairman's mid-campaign estimate
+  (April 2024), not a post-poll audit.
+- **hel046**: **re-angled.** poll-union hpe036's `outcome` says the 131st Amendment Bill "fell short of
+  a two-thirds majority", which was this item's answer. It now asks the proposed House size: 543 to
+  815 (LawBeat, 17 Apr 2026, now `sourceUrl`; LiveLaw kept). Difficulty expert→extreme.
+- **hel048**: `otherSide` added: the returning officer's ground, and the election-petition route
+  (The Hindu).
+- **hel050**: "held nine parties in contempt" added. `otherSide`: the court's "lenient view", since this
+  was the first poll after its directions.
+- Lane after the audit: simple 17, expert 16, extreme 17; answer slots 13/13/12/12. Items with
+  `otherSide`: hel010, 013, 016, 017, 018, 020, 030, 034, 039, 040, 043, 048, 050. Every item with
+  `status` or `kind: 'scam'` has one.
+
+### Dropped
+
+- None.
+
+### Unresolved or for the reviewer
+
+1. **hel034**: the outcome of the 16 Sep 2026 charge-framing hearing was not reported in any source I
+   could find. Recheck in October.
+2. **hel030**: the Section 340 CrPC proceedings are pending with no listed date. The item names no one;
+   its sources' URLs do.
+3. **hel048**: election petitions against the Surat result were in the Gujarat HC (summons, Jul 2024).
+   I found no later outcome. The item names no one and carries no status; its `otherSide` notes the
+   election-petition route.
+4. **Partial hints, left in place:** hel014 and hel017 name "Future Gaming", which hints at hel013's
+   answer ("Lotteries") without stating it. hel014 and hel015 share ThePrint's headline ("Future Gaming
+   biggest donor to TMC, DMK, YSRCP"), which narrows hel014 to three options on hel015's receipt. The
+   names are kept because the receipts need to identify the donor.
+5. **Other lanes:** states-west-south hst210 and hst224 duplicate the pre-audit hel039 and hel038. The
+   duplication is resolved on our side by re-angling; the owner of that lane may want to know. poll-union
+   hpe036's `outcome` contains the old hel046 answer; that is also resolved here by re-angling.
+6. **hel013** rests on one HT report (Jun 2026) for the current ED status. No Madras HC ruling on the
+   appeals had been reported by 26 Sep 2026.
+7. **hel046** context: the Monsoon session was still not prorogued on 22 Sep 2026, and a special session
+   on women's reservation and delimitation was being mooted. If a fresh Bill passes, add an outcome line.

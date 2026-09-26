@@ -1,7 +1,7 @@
 /**
  * screens/receipts/sheet.tsx — a modal sheet: bottom sheet on phones, a centred panel from 600px.
  * role="dialog" aria-modal, focus moves in and is trapped, Esc and the scrim close it, focus returns
- * to what opened it, the page behind stops scrolling. Rendered into <body> (a portal). While open it counts as a new visit for the
+ * to what opened it, the page behind stops scrolling and is inert (screen, top bar, nav). Rendered into <body> (a portal). While open it counts as a new visit for the
  * notification budget (bible §9.1: "a sheet open = new visit").
  */
 import { useEffect, useId, useRef, type ReactNode } from 'react';
@@ -40,6 +40,10 @@ export function Sheet({ open, onClose, title, kicker, children, visitKey, classN
     const body = document.body;
     const overflow = body.style.overflow;
     body.style.overflow = 'hidden';
+    // aria-modal alone does not stop the page behind from being read or tabbed into by every AT:
+    // make the shell's screen, top bar and nav inert while the sheet is up (toasts stay live).
+    const behind = Array.from(document.querySelectorAll<HTMLElement>('#h-main, .h-top, .h-nav')).filter((el) => !el.inert);
+    for (const el of behind) el.inert = true;
     // Focus the panel itself (not the first link) so a screen reader starts at the title.
     panel.current?.focus({ preventScroll: true });
     const onKey = (e: KeyboardEvent) => {
@@ -65,6 +69,7 @@ export function Sheet({ open, onClose, title, kicker, children, visitKey, classN
     return () => {
       window.removeEventListener('keydown', onKey);
       body.style.overflow = overflow;
+      for (const el of behind) el.inert = false;
       before?.focus?.({ preventScroll: true });
     };
   }, [open]);

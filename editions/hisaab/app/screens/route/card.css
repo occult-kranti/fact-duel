@@ -363,3 +363,11 @@
     min-width: 18rem;
   }
 }
+
+/* A phone on its side (844×390, 740×360): the top bar, the bottom bar and a sticky action bar would
+   take half the height. The bar goes back into the flow there, and the content gets the screen. */
+@media (max-height: 480px) and (orientation: landscape) {
+  .h-playbar {
+    position: static;
+  }
+}

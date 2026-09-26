@@ -75,8 +75,11 @@ test('room codes: 8 unambiguous characters, normalised from typed input, keys de
   assert.notDeepEqual(await p2p.roomKeys('ABCD-EFGJ'), k1);
 });
 
-test('the shared seed deals the same deck on both browsers, out of the edition bank', () => {
+test('the shared seed deals the same deck on both browsers, out of the edition bank', async () => {
   const config = { mode: 'gauntlet' };
+  const [k1, k2] = await Promise.all([p2p.roomKeys('HJKM-NPQR'), p2p.roomKeys('hjkm npqr')]);
+  assert.equal(k1.seed, k2.seed, 'both browsers derive the same seed from the code');
+  assert.deepEqual(p2p.dealFromSeed(k1.seed, config), p2p.dealFromSeed(k2.seed, config));
   const one = p2p.dealFromSeed('HJKM-NPQR', config);
   const two = p2p.dealFromSeed('hjkm npqr', config);
   assert.deepEqual(one, two);
@@ -291,9 +294,110 @@ test('the BroadcastChannel transport pairs two tabs of one code and reports a le
   one.close();
 });
 
+const sha256 = async (text) => new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text)));
+const b64u = (bytes) => Buffer.from(bytes).toString('base64url');
+
+test('the WebRTC rendezvous never carries the short code: topic, password and room keys come from the stretched secret', async () => {
+  const code = 'HJKM-NPQR';
+  // The stretch, recomputed independently: PBKDF2-SHA-256 over the canonical code, OWASP-sized.
+  assert.ok(p2p.P2P_KDF.iterations >= 600_000, 'a guess costs at least 600k PBKDF2 rounds');
+  const material = await crypto.subtle.importKey('raw', new TextEncoder().encode(code), 'PBKDF2', false, ['deriveBits']);
+  const bits = await crypto.subtle.deriveBits(
+    { name: 'PBKDF2', hash: 'SHA-256', salt: new TextEncoder().encode(p2p.P2P_KDF.salt), iterations: p2p.P2P_KDF.iterations },
+    material,
+    256,
+  );
+  const secret = b64u(new Uint8Array(bits));
+  assert.equal(await p2p.roomSecret('hjkm npqr'), secret, 'typed input stretches to the same secret');
+
+  const keys = await p2p.roomKeys(code);
+  const hexOf = async (label) => Buffer.from(await sha256(`${p2p.P2P_PROTOCOL}:${label}:${secret}`)).toString('hex');
+  assert.equal(keys.topic, `duel-${(await hexOf('topic')).slice(0, 40)}`);
+  assert.equal(keys.password, b64u(await sha256(`${p2p.P2P_PROTOCOL}:password:${secret}`)));
+  assert.equal(keys.invite, b64u(await sha256(`${p2p.P2P_PROTOCOL}:invite:${secret}`)));
+  assert.equal(keys.roomId, (await hexOf('room')).slice(0, 32));
+  assert.equal(keys.seed, b64u(await sha256(`${p2p.P2P_PROTOCOL}:deal:${secret}`)));
+  // Before the fix the invite was SHA-256 of the code itself: one fast hash from a 40-bit guess.
+  assert.notEqual(keys.invite, b64u(await sha256(`${p2p.P2P_PROTOCOL}:invite:${code}`)));
+
+  // What trystero is handed (and publishes a SHA-1 of) is the derived topic and password, never the code.
+  const seen = [];
+  const joinRoom = (config, roomId) => {
+    seen.push({ config, roomId });
+    return { makeAction: () => ({ send: async () => {} }), leave: async () => {} };
+  };
+  const transport = await p2p.createTrysteroTransport(code.toLowerCase(), { joinRoom });
+  await transport.close();
+  assert.equal(seen.length, 1);
+  assert.equal(seen[0].roomId, keys.topic);
+  assert.equal(seen[0].config.password, keys.password);
+  assert.equal(seen[0].config.appId, p2p.TRYSTERO_APP_ID);
+  for (const value of [seen[0].roomId, seen[0].config.password])
+    assert.ok(!/HJKM|NPQR/i.test(value) && value !== `duel-${code}`, `${value} does not carry the code`);
+  await assert.rejects(p2p.createTrysteroTransport('nope', { joinRoom }), { code: 'invalid_code' });
+});
+
+test('rematch rooms come from the first room’s secret, agree on both sides and pair without a second stretch', async () => {
+  const first = p2p.makeRoomCode();
+  const [one, again, two] = await Promise.all([
+    p2p.rematchCode(first, 1),
+    p2p.rematchCode(first.toLowerCase(), 1),
+    p2p.rematchCode(first, 2),
+  ]);
+  assert.equal(one, again, 'both browsers derive the same next room');
+  assert.notEqual(one, two);
+  assert.notEqual(one, first);
+  assert.match(one, /^[A-Z2-9]{4}-[A-Z2-9]{4}$/);
+  const secret = await p2p.roomSecret(first);
+  const next = b64u(await sha256(`${p2p.P2P_PROTOCOL}:rematch:1:${secret}`));
+  assert.equal(one, p2p.makeRoomCode(await sha256(`${p2p.P2P_PROTOCOL}:rematch-code:${next}`)), 'from the secret');
+  assert.notEqual(one, p2p.makeRoomCode(await sha256(`hisaab-rematch:${first}:1`)), 'not from the short code');
+  assert.equal(await p2p.roomSecret(one), next, 'the rematch room’s secret is derived, not stretched from its code');
+  await assert.rejects(p2p.rematchCode(first, 0), { code: 'invalid_request' });
+
+  const ctx = await pair({ mode: 'quick', code: one });
+  assert.equal(ctx.joined.room.seat, 1, 'the rematch room pairs');
+  const { round } = await playRound(ctx, { host: [true, 900], guest: [false, 800] });
+  assert.equal(round.result.winner, 0);
+  await ctx.host.close();
+  await ctx.guest.close();
+});
+
+test('the bank fingerprint covers content: the same ids with an edited question or answer key refuse to pair', async () => {
+  const base = QUESTIONS.slice(0, 60);
+  const fp = p2p.bankFingerprint(base);
+  assert.equal(
+    p2p.bankFingerprint(base.map((q) => Object.fromEntries(Object.entries(q).reverse()))),
+    fp,
+    'key order is not content',
+  );
+  const q = base[3];
+  for (const patch of [
+    { question: `${q.question} (edited)` },
+    { correctIndex: (q.correctIndex + 1) % 4 },
+    { options: [...q.options].reverse() },
+    { explanation: `${q.explanation} Edited.` },
+  ]) {
+    const other = base.map((x, i) => (i === 3 ? { ...x, ...patch } : x));
+    assert.deepEqual(other.map((x) => x.id), base.map((x) => x.id), 'same ids, same count');
+    assert.notEqual(p2p.bankFingerprint(other), fp, `an edit to ${Object.keys(patch)[0]} changes the fingerprint`);
+  }
+  // The handshake: a guest on a build whose bank differs only in one item's text and key is refused.
+  const edited = QUESTIONS.map((x, i) => (i === 3 ? { ...x, question: `${x.question} (edited)`, correctIndex: (x.correctIndex + 1) % 4 } : x));
+  assert.notEqual(p2p.bankFingerprint(edited), p2p.bankFingerprint());
+  const [a, b] = p2p.createMemoryPair();
+  const host = p2p.createP2PHost({ transport: a, code: 'ABCD-EFGH', name: 'Asha' });
+  await host.start();
+  const failed = new Promise((resolve) => host.onError(resolve));
+  b.send({ t: 'hello', protocol: p2p.P2P_PROTOCOL, bank: p2p.bankFingerprint(edited), role: 'guest' });
+  assert.equal((await failed).code, 'p2p_mismatch');
+  await host.close();
+});
+
 test('the trust label is on the protocol, where every screen can quote it', () => {
   assert.match(p2p.P2P_TRUST.label, /trust/i);
   assert.match(p2p.P2P_TRUST.body, /cheat/);
+  assert.match(p2p.P2P_TRUST.code, /IP/, 'what a recovered code would expose is said, not implied away');
 });
 
 test('pass & play: one phone, untimed, engine verdicts with speed taken out', () => {

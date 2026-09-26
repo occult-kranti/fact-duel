@@ -185,13 +185,14 @@
 }
 
 /* govt spread */
+/* The spread packs by content width (2–3 entries a line on a phone), not one 30-row column. */
 .h-rules__govt {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 150px), 1fr));
-  gap: var(--h-s-2);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--h-s-2) var(--h-s-5);
 }
 .h-rules__govtrow {
   display: flex;
@@ -298,7 +299,7 @@
   font-size: var(--h-fs-s);
 }
 .h-report__input::placeholder {
-  color: var(--h-ink-3);
+  color: var(--h-ink-2); /* placeholder words are text to read: ink-3 is UI-only (4.23:1 on receipt, dark) */
 }
 .h-report__input:focus-visible {
   box-shadow: var(--h-focus-ring);

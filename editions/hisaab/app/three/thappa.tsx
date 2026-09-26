@@ -32,6 +32,8 @@ export type ThappaProps = {
   scene?: SceneComponent<ThappaSceneProps> | null;
   /** Sound/haptic twins (stamp + correct/wrong, one heavy haptic). Default true. */
   cues?: boolean;
+  /** One line per ' · ' part (see Stamp `stack`): for a narrow slot such as the ceremony's. */
+  stack?: boolean;
   className?: string;
 };
 
@@ -44,7 +46,8 @@ export function ThappaArt({
   animate = true,
   cues = false,
   ghost = false,
-}: Pick<ThappaProps, 'text' | 'kind' | 'seed' | 'onDone'> & { animate?: boolean; cues?: boolean; ghost?: boolean }) {
+  stack = false,
+}: Pick<ThappaProps, 'text' | 'kind' | 'seed' | 'onDone' | 'stack'> & { animate?: boolean; cues?: boolean; ghost?: boolean }) {
   const juice = useJuice();
   useEffect(() => {
     if (!animate || !cues || ghost) return;
@@ -56,12 +59,12 @@ export function ThappaArt({
   }, []);
   return (
     <div className={ghost ? 'h-thappa h-thappa--ghost' : 'h-thappa'} onAnimationEnd={animate && !ghost ? onDone : undefined}>
-      <Stamp kind={kind} seed={seed ?? text} text={text} size="l" animate={animate && !ghost} />
+      <Stamp kind={kind} seed={seed ?? text} text={text} size="l" animate={animate && !ghost} stack={stack} />
     </div>
   );
 }
 
-export function Thappa({ text, kind, seed, onDone, height, scene, cues = true, className }: ThappaProps) {
+export function Thappa({ text, kind, seed, onDone, height, scene, cues = true, stack = false, className }: ThappaProps) {
   const s = seed ?? text;
   const fired = useRef(false);
   const done = useRef(onDone);
@@ -75,9 +78,9 @@ export function Thappa({ text, kind, seed, onDone, height, scene, cues = true, c
     <SceneHost
       piece="thappa"
       label={`Stamped: ${text}.`}
-      fallback={<ThappaArt text={text} kind={kind} seed={s} onDone={once} cues={cues} />}
-      loading={<ThappaArt text={text} kind={kind} seed={s} animate={false} ghost />}
-      after={<ThappaArt text={text} kind={kind} seed={s} animate={false} />}
+      fallback={<ThappaArt text={text} kind={kind} seed={s} onDone={once} cues={cues} stack={stack} />}
+      loading={<ThappaArt text={text} kind={kind} seed={s} animate={false} ghost stack={stack} />}
+      after={<ThappaArt text={text} kind={kind} seed={s} animate={false} stack={stack} />}
       deadlineMs={1200}
       reducedFallback
       scene={scene === null ? undefined : (scene ?? ThappaScene)}

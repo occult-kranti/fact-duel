@@ -47,10 +47,12 @@ export function TopBar({ inert }: { inert?: boolean }) {
       <a
         className="h-levelchip"
         href={href.me()}
+        // WCAG 2.5.3 label in name: the name starts with what the chip prints ('LV 7'), so "click LV 7"
+        // works for voice control; the full words follow.
         aria-label={
           named
-            ? `${t('Level', 'लेवल')} ${s.level}, ${isHi ? label.hi : label.en}. ${t('Your profile', 'आपकी प्रोफ़ाइल')}`
-            : `${t('Level', 'लेवल')} ${player.loaded ? s.level : ''}. ${t('Your profile', 'आपकी प्रोफ़ाइल')}`
+            ? `LV ${s.level}: ${t('Level', 'लेवल')} ${s.level}, ${isHi ? label.hi : label.en}. ${t('Your profile', 'आपकी प्रोफ़ाइल')}`
+            : `LV ${player.loaded ? s.level : ''}: ${t('Level', 'लेवल')} ${player.loaded ? s.level : ''}. ${t('Your profile', 'आपकी प्रोफ़ाइल')}`
         }
       >
         <span className="h-levelchip__lv" aria-hidden="true">

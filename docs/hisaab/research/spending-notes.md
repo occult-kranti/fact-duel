@@ -180,3 +180,94 @@ Not verified, so dropped:
   §2.2 for a non-scam item.
 - hbx042 uses `state: 'GJ'` and `govt: 'BJP'`, because the tender was the Gujarat government's. The
   ₹200 crore Union allocation in the explanation was the NDA Centre's.
+
+## Fact audit (26 Sep 2026)
+
+An independent auditor re-checked all 50 items against their fetched source pages on 26 Sep 2026. Items
+naming a person or describing contested conduct were cross-examined, and the newest reporting was
+searched through Google News RSS and web search. The lane now has **49 items** because hbx046 was
+dropped. `node scripts/hisaab-validate.mjs` prints OK for the whole bank, and `node --test
+tests/hisaab-*.test.mjs` passes (44 pass, 4 todo). The spreads are simple 18 / expert 16 /
+extreme 15, and the answer slots are 13/12/13/11.
+
+### Verified with no change needed
+
+hbx001, 004, 005, 007, 008, 010, 011, 013, 015, 016, 018, 022 (figures), 025, 028, 030, 032, 033, 036, 037,
+041, 042 and 047 were checked figure by figure against the source (Budget at a Glance 2014-15 and
+2026-27; PRS 2021-22, 2022-23, 2024-25 and 2026-27; the RBI press release; BS, IE and The Hindu
+articles; the PM CARES audited statements read from the scanned pages).
+
+- The PM CARES statements are image scans. The 2020-21 and 2024-25 statements were read as images.
+  The 2019-20 statement is JBIG2 and could not be decoded here. Its figures (₹3,076.62 cr receipts,
+  ₹39.68 lakh from abroad) were confirmed from the FY 2019-20 column of the 2020-21 statement, which
+  is now in hbx035 `sources`.
+- The 56.1% debt figure (2025-26 RE) in hbx008 comes from PIB PRID 2221455. PRS's chart shows only 56%.
+
+### Fixes
+
+| id | what changed and why |
+|---|---|
+| hbx002 | Removed "defence (11 paise)" from the explanation. It pointed at hbx011's answer (Defence is the largest ministry). Now compares interest with subsidies (6p) and central sector schemes (17p), both from BAG. |
+| hbx003 | The explanation ranked income tax (21p) above corporation tax (18p), which is hbx004's answer. Now it says only that all taxes bring 64p and non-tax revenue 10p (BAG). |
+| hbx006 | Removed "as pandemic spending jumped (PRS)". The PRS 2022-23 analysis does not say this. |
+| hbx009 | Removed "2024-25 actuals came in below the estimate". It ruled out two of hbx010's four options. Added the PRS figure of 11.5% above the 2025-26 RE, and added PRS to `sources`. |
+| hbx012 | Removed the comparison with Defence's ₹7,84,678 cr. It let a player work out hbx011's answer (about 15%). |
+| hbx014 | Attribution fixed. PRS cites the budget speech for clearing the FCI's dues; PRS did not make that claim itself. |
+| hbx017 | Added Mint (Delhi voted 5 Feb, four days after the Budget) and Frontline (BJP 48, AAP 22) as sources for the outcome and poll fields. |
+| hbx019 | Removed "The Centre accepted it, effective April 2026", which is not on any fetched page. Added the Commission's own reason from BS: states already account for more than two-thirds of non-debt revenues. Added the 2026-27 to 2030-31 period from PRS. |
+| hbx020 | Removed "41%" from the explanation because it is hbx019's answer. |
+| hbx021 | Added `otherSide`: Congress's "stealing from RBI" charge and the FM's reply that questioning the RBI was "outlandish" (Deccan Herald, 27 Aug 2019, added to `sources`). The status wording now claims only what the item does. The distractor ₹2,86,588 cr, which is hbx022's exact answer, became ₹2,40,000 cr. |
+| hbx022 | The distractor ₹1.76 lakh cr was hbx021's answer and also hgh048's 2G figure. It is now ₹1.58 lakh cr. |
+| hbx023 | Removed "the court upheld it 4:1", which is hbx024's answer. Added `otherSide`: the Centre's "well-considered" rationale given to the SC (BS, 2 Jan 2023). Added the RBI's note that currency in circulation had passed its pre-demonetisation level (BS/ANI). |
+| hbx024 | The dissent is now described from the BS verdict report: the power lay in Parliament's power under Entry 36, List I, not in s.26(2). Congress's objection moved to `otherSide`. |
+| hbx026 | Added `otherSide`: the FM said a write-off is not a waiver. Added the 2023-24 figure of ₹1,70,270 cr from the same page. |
+| hbx027 | Removed the `pre-election` tag, the `poll` field and the ECI-announcement outcome. They gave away hpe029's answer ("Polls in Maharashtra and Haryana"), and poll-union already covers that timing. The new outcome is collections of ₹6.63 → ₹5.56 lakh cr (BS/PTI 2023, added to `sources`). |
+| hbx029 | Added `otherSide`: the FM rejected the opposition's self-promotion charge, and the PM's "better and sacred" venue remark (BS/IANS). |
+| hbx031 | **Re-angled.** hpe040's explanation ("plus 40% for sin and luxury goods") gave away the old answer of 40%. The item now asks which item was exempted altogether: individual health insurance (PIB factsheet; HT, 3 Sep 2025). The outcome dates and Bihar result are now sourced: HT (council decision on 3 Sep, effective 22 Sep), The Hindu (first phase on 6 Nov) and HT (NDA 202, BJP 89, JD(U) 85). |
+| hbx034 | Added `otherSide`: the FM said there is no transfer of ownership or land. Congress's quote is now given in full as "legalised loot and organised plunder", and the asset list matches BS. |
+| hbx035 | Removed "gets no budgetary support". It hinted at hrf040's answer ("donations, not from the Consolidated Fund"). Added the FCRA exemption (pmcares.gov.in) and the 2020-21 statement to `sources`. |
+| hbx038 | Added `otherSide`: the petitioner's transparency argument (Mint). |
+| hbx039 | **Re-angled.** hbx039's answer ("not a Government of India fund") and hrf040's answer and outcome gave each other away. The item now asks what the same Sept 2021 reply said barred disclosure in any case: the RTI Act's s.8 third-party bar (IE). **Status updated:** no final ruling is reported on the Article 12 petition as of Sep 2026. In Jan 2026 a Delhi HC bench, in a separate RTI appeal (Girish Mittal / I-T dept), orally said the fund keeps third-party privacy rights (BS and LiveLaw, 13 Jan 2026, added to `sources`). Added `otherSide`: the petitioner's argument. |
+| hbx040 | Added Tata Projects' winning bid of ₹861.90 cr (BS, 16 Sep 2020, already in `sources`). The earlier note saying BS did not state the bid was wrong. |
+| hbx043 | Added `otherSide`: the PM called the loan "virtually free of cost" (BS/The Wire, 2017). |
+| hbx044 | The explanation now gives the CAG's recommendation to fix responsibility, and notes that no later finding was reported (searched Sep 2026: only the Aug 2023 rebuttals and a Sep 2023 PAC briefing). The official's rebuttal moved to `otherSide` and is attributed to "an official", not "officials", as the source says. |
+| hbx045 | Added `otherSide`: the ministry's "gross misrepresentation" statement. Added All India Radio (14 Aug 2023, the ministry's clarification) to `sources`. The explanation separates the ministry's statement (₹152 cr/km) from what "ministry sources" said (₹181.94 cr/km, 12% below estimates). |
+| hbx048 | The motive clause ("meant to capture the fall in oil prices") is now attributed to PTI. |
+| hbx049 | **Re-angled.** Its answer of ₹7,900 cr (Cairn) was the same as hbx050's answer of ₹7,900 cr (MPLADS). It now asks for the total collected from the three firms, about ₹8,000 cr (same BS page). The explanation no longer contains ₹7,900. |
+| hbx050 | Added the November 2021 restoration of MPLADS (₹2 cr per MP for the rest of 2021-22, then ₹5 cr a year; PIB PRID 1770523, added to `sources`). The purpose is attributed to the government. Added `otherSide`: a Congress MP's objection. |
+
+`otherSide` was added to 12 items: hbx021, 023, 024, 026, 029, 034, 038, 039, 043, 044, 045 and 050.
+Each one comes from a page fetched in this audit. Only hbx021 and hbx039 required it under the charter
+(`people` / `status`). There are no `scam` items in this lane.
+
+### Dropped
+
+- **hbx046 (central govt ad spend, which year was highest)**: it duplicates hmd027 in the media lane,
+  which uses the same 15 Dec 2022 Rajya Sabha reply. hmd027's explanation lists the year-by-year
+  figures, so it gives this item's answer away, and hbx046's ₹3,723 cr gave hmd027's answer away. The
+  charter puts govt ad spend in the media lane, so the item was dropped here and the id retired.
+
+### Unresolved or for the reviewer
+
+- **Primary sources that could not be fetched**: rbidocs.rbi.org.in (hbx023's annual-report chapter)
+  still returns a bot page. hbx023 relies on BS/ANI, which quotes the report. The SC demonetisation
+  judgment text (hbx024) was not fetched; the dissent is described from BS's verdict report.
+- **Budget at a Glance URL**: it will point to 2027-28 after 1 Feb 2027. hbx001–004, 009 and 010 must
+  be repointed then (unchanged from the earlier refresh list).
+- **Overlap with poll-union**: hbx017 overlaps hpe039 (Budget 2025 and the Delhi poll), and hbx031
+  overlaps hpe040 (GST 2.0 and the Bihar poll). Their `outcome` and `poll` framing is shared. After the
+  re-angle neither gives the other's answer away, but the owner may want only one of each pair tagged
+  `pre-election`.
+- **Coincidental figures across lanes judged not to be giveaways**: the same value appears in
+  unrelated contexts. Examples: "three times" (hbx001 vs hrf211), 50%, 15% and 10% shares, ₹17,000 cr
+  (hbx016 JJM RE vs hpe025), ₹20,000 cr (Central Vista vs hsc051 Namami Gange), ₹200/₹500 cr
+  (hbx042 vs hmd022/hrf), 9.2% and 4.6% (Bihar and Mizoram state deficits vs hbx006/007), and
+  ₹8,000 cr (hbx049 vs state loan-waiver costs). None of these states another item's fact.
+- **hbx043 bullet train**: headlines from July and Aug 2026 (News18, Railway Supply) report cost
+  escalation, and the final completion date and cost are still open. These were not read in full.
+  The item's "over ₹1 lakh crore" and the minister's 15 Aug 2027 target, dated Jan 2026, remain
+  literally true. Re-check this after Aug 2027.
+- **hbx044**: "no later finding reported" is based on news searches only. The Public Accounts
+  Committee's handling of the Bharatmala report after its Sep 2023 briefing was not traced.
+- **hbx039**: the Delhi HC's Jan 2026 remarks were oral, in a different case (the Girish Mittal RTI
+  appeal). Re-check both cases before the next release.

@@ -14,7 +14,7 @@ import { Check, ExternalLink, RotateCcw, Share2 } from 'lucide-react';
 import { NumberCounter, useJuice } from '@/components/fx';
 import { rankForPoints } from '@/lib/progression.mjs';
 import { absoluteUrl, href } from '../../router';
-import { ANONYMOUS, BABU_RANK_LADDER, babuRank, formatNumber, itemById, statusLine } from '../../data';
+import { ANONYMOUS, BABU_RANK_LADDER, BOT_NAME, babuRank, formatNumber, itemById, statusLine } from '../../data';
 import { shareText, SHARE_FOOTER, type ShareOutcome } from '../../share';
 import { useAppPlayer } from '../../shell/player';
 import { sceneCapability } from '../../three/scene-host';
@@ -147,7 +147,10 @@ export function MatchResult({
       : verdict === 'loss'
         ? t('Haar gaye. Receipts phir bhi aapke.', 'हार गए। रसीदें फिर भी आपकी।')
         : verdict === 'draw'
-          ? t('Barabar. Babu bhi hairaan.', 'बराबर। बाबू भी हैरान।')
+          ? kind === 'bot'
+            ? t('Barabar. Babu bhi hairaan.', 'बराबर। बाबू भी हैरान।')
+            : // Two humans: Babu isn't playing, so the line doesn't name him.
+              t('Barabar. File dono ke naam.', 'बराबर। फ़ाइल दोनों के नाम।')
           : null;
   const margin = verdict === 'cancelled' ? null : marginLine(room, t);
   const xp = xpForMatch(progression?.log, room.id, t);
@@ -168,20 +171,22 @@ export function MatchResult({
   const share = async () => {
     const vsBot = kind === 'bot';
     const fmt = f.name;
+    // The bot travels with its label and its disclosure (N-rules: always BOT, random play disclosed).
     const line =
       verdict === 'win'
         ? vsBot
-          ? `Beat Babu-Bot ${mine}–${theirs} on HISAAB DO.`
+          ? `Beat ${BOT_NAME} ${mine}–${theirs} on HISAAB DO.`
           : `Won a ${fmt} duel ${mine}–${theirs} on HISAAB DO.`
         : verdict === 'loss'
           ? vsBot
-            ? `Lost to Babu-Bot ${mine}–${theirs} on HISAAB DO.`
+            ? `Lost to ${BOT_NAME} ${mine}–${theirs} on HISAAB DO.`
             : `Lost a ${fmt} duel ${mine}–${theirs} on HISAAB DO.`
           : vsBot
-            ? `Drew with Babu-Bot ${mine}–${theirs} on HISAAB DO.`
+            ? `Drew with ${BOT_NAME} ${mine}–${theirs} on HISAAB DO.`
             : `Drew a ${fmt} duel ${mine}–${theirs} on HISAAB DO.`;
+    const disclosure = vsBot ? ' (The bot picks at random and can’t see the question.)' : '';
     setShared(
-      await shareText([`${line} Har sawaal sourced.`, absoluteUrl(href.duel()), SHARE_FOOTER].join('\n')),
+      await shareText([`${line}${disclosure} Har sawaal sourced.`, absoluteUrl(href.duel()), SHARE_FOOTER].join('\n')),
     );
   };
   const shareWord = !shared
@@ -342,10 +347,7 @@ export function MatchResult({
           {rounds.length ? (
             <div className="h-result__rounds">
               <h2 className="h-result__h2">{t('Round receipts', 'राउंड की रसीदें')}</h2>
-              <ol
-                className="h-result__swipe"
-                aria-label={t('Round receipts, swipe sideways', 'राउंड की रसीदें, बगल में स्वाइप करें')}
-              >
+              <ol className="h-result__swipe" aria-label={t('Round receipts', 'राउंड की रसीदें')}>
                 {rounds.map((r) => {
                   const my = r.receipts?.[me] ?? null;
                   // Charter §2.2: a case answer never travels without its legal status, verbatim + as of.
@@ -422,6 +424,10 @@ export function MatchResult({
               {rematch.note}
             </p>
           ) : null}
+          {/* The share outcome is spoken too: the button's words change with no focus move. */}
+          <p className="h-sr" aria-live="polite">
+            {shared && !(shared.reason === 'cancelled') ? shareWord : ''}
+          </p>
           <div className="h-result__actions">
             {verdict !== 'cancelled' ? (
               <Button

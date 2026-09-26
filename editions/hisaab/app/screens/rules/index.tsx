@@ -62,7 +62,12 @@ const STATUS_WORDS: ReadonlyArray<[string, string]> = [
   ['Court dismissed the petition', 'A court refused the petition. That is not always a ruling on the facts; we say what it decided.'],
 ];
 
-const pct = (n: number, total: number) => (total ? Math.round((n / total) * 100) : 0);
+/** A share in whole percent; a small non-zero count reads '<1', never '0' (2 items are not none). */
+const pct = (n: number, total: number) => {
+  if (!total || !n) return '0';
+  const p = Math.round((n / total) * 100);
+  return p === 0 ? '<1' : String(p);
+};
 const signed = (n: number) => (n > 0 ? `+${n}` : n < 0 ? `−${Math.abs(n)}` : '0');
 const xpNum = (key: string) => Number(XP_TABLE[key]);
 const xpBy = (key: string, mode: string) => Number((XP_TABLE[key] as Record<string, number>)[mode]);

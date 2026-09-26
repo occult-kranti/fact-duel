@@ -14,7 +14,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowLeft, Swords } from 'lucide-react';
 import { standing, type Card } from '../../../edition';
 import { useHoldToasts } from '../../budget';
-import { bandProgress, FIRST_LABEL_NOTE, FIRST_LABEL_NOTE_HI, goalCopy, itemById, labelDisplay, type BankItem } from '../../data';
+import { bandProgress, FIRST_LABEL_NOTE, FIRST_LABEL_NOTE_HI, goalCopy, itemById, labelDisplay, labelLine, type BankItem } from '../../data';
 import { goBack, href, type ScreenProps } from '../../router';
 import { useScreenTitle } from '../../shell/chrome';
 import { useAppPlayer } from '../../shell/player';
@@ -236,10 +236,17 @@ function LabelReveal({ xp, first }: { xp: number; first: boolean }) {
         </span>
         <span className="h-reveal__en">
           {l.en}
-          {l.aside ? <span className="h-reveal__aside"> {l.aside}</span> : null}
+          {l.aside ? (
+            <span className="h-reveal__aside" lang={isHi && l.asideHi ? 'hi' : undefined}>
+              {' '}
+              {isHi && l.asideHi ? l.asideHi : l.aside}
+            </span>
+          ) : null}
         </span>
       </h2>
-      <p className="h-reveal__line">{l.line}</p>
+      <p className="h-reveal__line" lang={isHi ? 'hi' : undefined}>
+        {labelLine(l, isHi)}
+      </p>
       {s.band === 0 ? (
         <p className="h-reveal__note" lang={isHi ? 'hi' : undefined}>
           {t(FIRST_LABEL_NOTE, FIRST_LABEL_NOTE_HI)}

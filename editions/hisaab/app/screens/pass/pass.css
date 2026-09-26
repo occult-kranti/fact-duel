@@ -66,11 +66,29 @@
   border: var(--h-bw) solid var(--h-line);
   border-radius: var(--h-r-m);
   background: var(--h-paper);
+  box-shadow: var(--h-shadow-1);
   cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    transform var(--h-dur-tap) var(--h-ease-out),
+    box-shadow var(--h-dur-tap) var(--h-ease-out);
+}
+/* Press = print down (bible §5), as the setup's format cards do. */
+.h-pass__fmt:active {
+  transform: translate(var(--h-press-shift), var(--h-press-shift));
+  box-shadow: var(--h-shadow-0);
 }
 .h-pass__fmt--on {
   background: var(--h-syahi-soft);
-  box-shadow: 0 0 0 3px var(--h-syahi);
+  box-shadow:
+    0 0 0 3px var(--h-syahi),
+    var(--h-shadow-1);
+}
+.h-pass__fmt--on:active {
+  box-shadow:
+    0 0 0 3px var(--h-syahi),
+    var(--h-shadow-0);
 }
 .h-pass__fmt--on .h-pass__fmtname::before {
   content: '✓ ';

@@ -1,6 +1,7 @@
 // HISAAB DO — lane: Elections & money (prefix `hel`). See docs/hisaab/CHARTER.md §2–§5.
 // Research notes, sources, drops and stale-risk items: docs/hisaab/research/elections-notes.md
-// Every item was checked against the page in `sourceUrl` in September 2026.
+// Every item was checked against the page in `sourceUrl` in September 2026, and independently
+// re-audited on 26 Sep 2026 (statuses, otherSide rows, cross-item giveaways): see the notes' "Fact audit".
 
 const SC_EB_JUDGMENT =
   'https://api.sci.gov.in/supremecourt/2017/27935/27935_2017_1_1501_50573_Judgement_15-Feb-2024.pdf';
@@ -10,6 +11,9 @@ const BS_EB_PARTIES =
 const PRINT_ADR_TOP_DONORS = 'https://theprint.in/india/electoral-bond-future-gaming-biggest-donor-to-tmc-dmk-ysrcp/2019061/';
 const ADR_LS2024 = 'https://adrindia.org/content/record-46-of-newly-elected-lok-sabha-mps-facing-criminal-cases';
 const ADR_LS2024_ASSETS = 'https://adrindia.org/content/criminals-and-crorepatis-meet-the-new-mps-of-lok-sabha-2024';
+const WIRE_EB_PARTIES =
+  'https://m.thewire.in/article/politics/top-five-political-parties-saw-electoral-bonds-fortunes-turning-with-election-wins-and-losses';
+const SCROLL_EB_RAIDS = 'https://scroll.in/article/1065267/after-raids-by-central-agencies-these-21-companies-purchased-electoral-bonds';
 
 export const HISAAB_ELECTIONS = Object.freeze([
   // ── Electoral bonds: the law ────────────────────────────────────────────────
@@ -199,7 +203,7 @@ export const HISAAB_ELECTIONS = Object.freeze([
       "SBI said matching buyer and encashment data kept in separate 'silos' was complex. The five-judge bench dismissed the plea, saying the information was readily available, and ordered disclosure by close of business on 12 March; the ECI published the data on 14 March 2024.",
     sourceUrl: 'https://thefederal.com/category/news/electoral-bonds-case-supreme-court-hearing-sbi-plea-dismissed-113272',
     sourceLabel: 'The Federal — Electoral bonds case: SC junks plea, asks SBI to submit details by tomorrow (11 Mar 2024)',
-    sources: [SCO_EB_TIMELINE],
+    sources: [SCO_EB_TIMELINE, BS_EB_PARTIES],
   },
   {
     id: 'hel009',
@@ -249,7 +253,9 @@ export const HISAAB_ELECTIONS = Object.freeze([
     options: ['TMC', 'BJP', 'INC', 'BRS'],
     correctIndex: 1,
     explanation:
-      'The BJP encashed Rs 6,060.5 crore, about 47.5% of the total, followed by TMC (Rs 1,609.5 cr) and INC (Rs 1,421.9 cr). The Union Home Minister argued the BJP got about Rs 6,000 crore with 303 MPs while other parties together got more; fact-checkers disputed his overall total.',
+      "The BJP encashed Rs 6,060.5 crore, over 47.5% of the Rs 12,769 crore encashed in the period, more than the next six parties combined (Business Standard). Scroll's fact-check found the Home Minister's figures understated the BJP's share of all bonds redeemed since 2018.",
+    otherSide:
+      "The Union Home Minister said bonds were brought in 'to end the dominance of black money in politics', and that the BJP got about Rs 6,000 crore with 303 MPs (Tribune, Mar 2024).",
     sourceUrl: BS_EB_PARTIES,
     sourceLabel: 'Business Standard — Electoral bonds: BJP received more funds than the next 6 parties combined (15 Mar 2024)',
     sources: [
@@ -274,10 +280,10 @@ export const HISAAB_ELECTIONS = Object.freeze([
     options: ['INC', 'BJD', 'TMC', 'DMK'],
     correctIndex: 2,
     explanation:
-      "TMC encashed Rs 1,609.5 crore (12.6%), ahead of the Congress (Rs 1,421.9 cr, 11.1%). Its biggest donor, per ADR's later matching of bond numbers, was lottery firm Future Gaming (Rs 542 cr). Receiving bonds was legal under the scheme then in force.",
-    sourceUrl: BS_EB_PARTIES,
-    sourceLabel: 'Business Standard — Electoral bonds: BJP received more funds than the next 6 parties combined (15 Mar 2024)',
-    sources: [PRINT_ADR_TOP_DONORS],
+      "TMC encashed Rs 1,609.5 crore, 12.6% of the total, between April 2019 and January 2024. The Wire found its bond receipts rose after the party's 2021 West Bengal Assembly win. Receiving bonds was legal under the scheme then in force.",
+    sourceUrl: WIRE_EB_PARTIES,
+    sourceLabel: 'The Wire — Top five political parties saw electoral bonds fortunes turning with election wins and losses (Mar 2024)',
+    sources: [BS_EB_PARTIES],
   },
   {
     id: 'hel012',
@@ -296,11 +302,9 @@ export const HISAAB_ELECTIONS = Object.freeze([
     options: ['BJD', 'DMK', 'YSRCP', 'BRS'],
     correctIndex: 3,
     explanation:
-      "After the BJP, TMC and Congress came BRS (Rs 1,214.7 cr), then Odisha's BJD (Rs 775.5 cr). The Wire noted BRS encashed nothing after losing the Telangana Assembly election in December 2023. Per ADR, its top bond donor was Megha Engineering (Rs 195 cr).",
-    sourceUrl:
-      'https://m.thewire.in/article/politics/top-five-political-parties-saw-electoral-bonds-fortunes-turning-with-election-wins-and-losses',
+      "BRS encashed Rs 1,214.7 crore, including Rs 410 crore in April 2022 alone. The Wire found it encashed nothing after losing the Telangana Assembly election in December 2023. Odisha's BJD came fifth with Rs 775.5 crore. Receiving bonds was legal under the scheme then in force.",
+    sourceUrl: WIRE_EB_PARTIES,
     sourceLabel: 'The Wire — Top five political parties saw electoral bonds fortunes turning with election wins and losses (Mar 2024)',
-    sources: [PRINT_ADR_TOP_DONORS],
   },
   {
     id: 'hel013',
@@ -319,12 +323,18 @@ export const HISAAB_ELECTIONS = Object.freeze([
     options: ['Lotteries', 'Telecom', 'Steel', 'Pharmaceuticals'],
     correctIndex: 0,
     explanation:
-      'Future Gaming and Hotel Services, a Coimbatore lottery firm, was the top buyer. Scroll (Project Electoral Bond) reported the ED had attached its assets in 2022–23 in a money-laundering probe begun in 2019. Buying bonds was legal under the scheme; the SC in Aug 2024 declined to order a court-monitored probe into alleged quid pro quo.',
+      "Future Gaming and Hotel Services, a Coimbatore lottery company, was the top buyer. The ED has attached assets of the company and its owner's family in a money-laundering case built on a CBI chargesheet alleging losses to Sikkim's lottery; a PMLA tribunal upheld the attachments in May 2025. Buying bonds was legal under the scheme then in force.",
     status:
-      'ED money-laundering probe reported by Scroll (Mar 2024); no conviction of the company; bond purchases were legal under the scheme then in force.',
-    sourceUrl: 'https://scroll.in/article/1065267/after-raids-by-central-agencies-these-21-companies-purchased-electoral-bonds',
-    sourceLabel: 'Scroll (Project Electoral Bond) — After raids by central agencies, these companies bought electoral bonds (15 Mar 2024)',
-    sources: [BS_EB_PARTIES],
+      'ED money-laundering case: asset attachments upheld by the PMLA appellate tribunal (May 2025); appeals pending in the Madras HC (notice issued Jun 2026); no conviction. Bond purchases were legal under the scheme then in force.',
+    otherSide:
+      "The owner's family argues in the Madras HC that no predicate offence survives, citing a Sikkim government affidavit that the state suffered no loss (Hindustan Times, Jun 2026).",
+    sourceUrl:
+      'https://indianexpress.com/article/india/lottery-king-largest-purchaser-electoral-bonds-donated-across-party-lines-9227219/',
+    sourceLabel: "The Indian Express — 'Lottery king', largest purchaser of electoral bonds, donated across party lines (21 Mar 2024)",
+    sources: [
+      SCROLL_EB_RAIDS,
+      'https://www.hindustantimes.com/india-news/santiago-martin-family-moves-madras-hc-challenging-attachment-of-properties-by-ed-101781003988338.html',
+    ],
   },
   {
     id: 'hel014',
@@ -339,11 +349,11 @@ export const HISAAB_ELECTIONS = Object.freeze([
     asOf: '2026-09',
     govt: 'NDA',
     question:
-      "Per ADR's matching of bond numbers, which party got the most (Rs 542 crore) from the top buyer, lottery firm Future Gaming?",
+      "Per ADR's matching of bond numbers, which party received the most (Rs 542 crore) from the single biggest buyer of electoral bonds?",
     options: ['DMK', 'TMC', 'YSRCP', 'BJP'],
     correctIndex: 1,
     explanation:
-      'Future Gaming gave TMC Rs 542 cr, DMK Rs 503 cr and YSRCP Rs 154 cr, and was the top bond donor to all three; the BJP also received Rs 100 cr from it. Such donations were legal under the scheme then in force.',
+      'The top buyer, Future Gaming and Hotel Services, gave TMC Rs 542 cr, DMK Rs 503 cr and YSRCP Rs 154 cr, and was the top bond donor to all three; the BJP also received Rs 100 cr from it. Such donations were legal under the scheme then in force.',
     sourceUrl: PRINT_ADR_TOP_DONORS,
     sourceLabel: 'ThePrint (PTI) — Electoral bond: Future Gaming biggest donor to TMC, DMK, YSRCP (28 Mar 2024)',
     sources: [
@@ -391,7 +401,9 @@ export const HISAAB_ELECTIONS = Object.freeze([
     options: ['Tata', 'Adani', 'Vedanta', 'Reliance'],
     correctIndex: 3,
     explanation:
-      "PTI reported Qwik's registered address is in Navi Mumbai's Dhirubhai Ambani Knowledge City and that it has links to Reliance Industries. A Reliance spokesperson said: 'Qwik Supply Chain Pvt Ltd is not a subsidiary of any Reliance entity.' Per ADR, the BJP received Rs 375 cr from Qwik.",
+      "PTI reported Qwik's registered address is in Navi Mumbai's Dhirubhai Ambani Knowledge City and that it has links to Reliance Industries. It bought the bonds between FY 2021-22 and 2023-24; per ADR, the BJP received Rs 375 cr from Qwik. Buying bonds was legal under the scheme then in force.",
+    otherSide:
+      "A Reliance Industries spokesperson told PTI: 'Qwik Supply Chain Pvt Ltd is not a subsidiary of any Reliance entity.'",
     sourceUrl:
       'https://theprint.in/economy/reliance-linked-qwik-supply-third-largest-electoral-bond-buyer-reliance-says-co-not-its-subsidiary/2002057/',
     sourceLabel: 'ThePrint (PTI) — Reliance-linked Qwik Supply third largest electoral bond buyer; Reliance says co not its subsidiary (15 Mar 2024)',
@@ -419,10 +431,12 @@ export const HISAAB_ELECTIONS = Object.freeze([
     ],
     correctIndex: 0,
     explanation:
-      "The analysis listed buyers, including Future Gaming and Megha Engineering, that bought bonds after raids or probes; critics alleged quid pro quo. The Union Finance Minister called linking ED searches to purchases a 'huge assumption', and the SC in Aug 2024 declined to order a court-monitored probe.",
+      'The analysis listed buyers, including Future Gaming and Megha Engineering, that bought bonds after raids or probes by the ED, I-T Department, CBI or GST authorities; critics alleged quid pro quo. The timing is a documented fact; a trade of donations for relief is an allegation that no court has upheld.',
     status:
-      'Allegation by media analysts and critics; no court finding of quid pro quo; SC dismissed pleas for a court-monitored SIT (2 Aug 2024).',
-    sourceUrl: 'https://scroll.in/article/1065267/after-raids-by-central-agencies-these-21-companies-purchased-electoral-bonds',
+      'Allegation by media analysts and critics; no court finding of quid pro quo in any bond purchase reported as of Sep 2026.',
+    otherSide:
+      "The Union Finance Minister called linking ED searches to bond purchases a 'huge assumption', adding the donors may have given to regional parties, not the BJP (The Hindu, Mar 2024).",
+    sourceUrl: SCROLL_EB_RAIDS,
     sourceLabel: 'Scroll (Project Electoral Bond) — After raids by central agencies, these companies bought electoral bonds (15 Mar 2024)',
     sources: [
       'https://www.thehindu.com/news/national/huge-assumption-to-link-ed-raids-with-electoral-bond-purchases-says-finance-minister-nirmala-sitharaman/article67955597.ece',
@@ -452,10 +466,16 @@ export const HISAAB_ELECTIONS = Object.freeze([
     correctIndex: 1,
     explanation:
       "On 2 Aug 2024 the court dismissed pleas by Common Cause and CPIL, calling a court-monitored SIT 'premature' and 'inappropriate' while remedies under criminal procedure law had not been invoked. It also refused to order recovery of bond money or reopening of parties' tax assessments.",
-    status: 'Court dismissed the petitions (2 Aug 2024); no court finding on the alleged quid pro quo.',
+    status:
+      'Court dismissed the petitions (2 Aug 2024) and a review plea (reported Apr 2025); no court finding on the alleged quid pro quo as of Sep 2026.',
+    otherSide:
+      'The court said it was drawing no conclusion on the facts: individual quid pro quo claims must first go through the ordinary criminal-law remedies.',
     sourceUrl:
       'https://www.livelaw.in/top-stories/supreme-court-dismisses-pleas-for-sit-investigation-into-electoral-bonds-quid-pro-quo-says-ordinary-remedies-not-invoked-265451',
     sourceLabel: "LiveLaw — Supreme Court dismisses pleas for SIT investigation into electoral bonds 'quid pro quo' (2 Aug 2024)",
+    sources: [
+      'https://www.thehindu.com/news/national/sc-refuses-review-of-decision-against-confiscating-funds-received-via-electoral-bonds/article69412002.ece',
+    ],
   },
 
   // ── Other money rules: cash, foreign money, trusts ─────────────────────────
@@ -476,9 +496,10 @@ export const HISAAB_ELECTIONS = Object.freeze([
     options: ['Rs 500', 'Rs 20,000', 'Rs 2,000', 'Rs 1 lakh'],
     correctIndex: 2,
     explanation:
-      'The 2017 amendment to Section 13A of the Income Tax Act requires donations over Rs 2,000 to come through banking channels. Separately, parties must report to the ECI only donations above Rs 20,000. The SC noted in 2024 that cash funding up to Rs 2,000 remains permitted.',
+      'The 2017 amendment to Section 13A of the Income Tax Act requires donations over Rs 2,000 to come through banking channels. Separately, parties must report to the ECI only donations above Rs 20,000. Cash gifts up to Rs 2,000 remain lawful; a plea to strike down that clause was listed in the Supreme Court in August 2026.',
     sourceUrl: SC_EB_JUDGMENT,
     sourceLabel: 'Supreme Court of India — ADR v. Union of India, judgment (15 Feb 2024)',
+    sources: ['https://www.deccanchronicle.com/legalnews/supreme-court-to-hear-plea-against-cash-donations-to-parties-1982796'],
   },
   {
     id: 'hel020',
@@ -497,9 +518,14 @@ export const HISAAB_ELECTIONS = Object.freeze([
     options: ['INC only', 'BJP only', 'CPI(M) and TMC', 'BJP and INC'],
     correctIndex: 3,
     explanation:
-      'On a petition by ADR, the court held donations from Sterlite and Sesa (Vedanta subsidiaries) to both parties fell foul of the FCRA 1976 and told the Centre and ECI to act within six months. The Congress said no law was broken; Vedanta said the donations followed company law. Finance Act changes in 2016 and 2018 later altered the law retrospectively.',
+      'On a petition by ADR, the court held donations from Sterlite and Sesa (Vedanta subsidiaries) to both parties fell foul of the FCRA 1976 and told the Centre and ECI to act within six months. Both parties appealed, then withdrew their appeals after the Finance Act 2016 changed the definition of a foreign source; a 2018 change made it retrospective.',
+    otherSide:
+      "The Congress said no law was violated; Vedanta said the donations followed company law and were not 'foreign contributions' at all (Business Standard, Mar 2014).",
     sourceUrl: 'https://www.business-standard.com/article/elections-2014/sterlite-sesa-funding-of-cong-bjp-illegal-hc-114032900025_1.html',
     sourceLabel: 'Business Standard — Sterlite, Sesa funding of Cong, BJP illegal: HC (29 Mar 2014)',
+    sources: [
+      'https://www.business-standard.com/article/economy-policy/lok-sabha-passes-bill-to-prevent-scrutiny-of-foreign-poll-funds-to-parties-118031800292_1.html',
+    ],
   },
   {
     id: 'hel021',
@@ -518,7 +544,7 @@ export const HISAAB_ELECTIONS = Object.freeze([
     options: ['5 August 1976', '26 September 2010', '1 April 2014', '26 January 1950'],
     correctIndex: 0,
     explanation:
-      "The 2018 Finance Bill moved the start date from 26 Sept 2010 to 5 Aug 1976, when FCRA 1976 took effect. The Home Ministry said the aim was to keep 'foreign source' consistent with FDI policy; critics said it shielded the BJP and Congress from the 2014 Delhi HC ruling. The Lok Sabha passed it without debate.",
+      "The 2018 Finance Bill moved the start date from 26 Sept 2010 to 5 Aug 1976, when FCRA 1976 took effect. The Home Ministry said the aim was to keep 'foreign source' consistent with FDI policy; critics said it shielded the two national parties named in a 2014 Delhi HC ruling. The Lok Sabha passed it without debate.",
     sourceUrl: 'https://www.pib.gov.in/PressReleaseIframePage.aspx?PRID=1522983',
     sourceLabel: 'PIB (Ministry of Home Affairs) — Amendment in FCRA (7 Mar 2018)',
     sources: [
@@ -633,7 +659,7 @@ export const HISAAB_ELECTIONS = Object.freeze([
     options: ['34%', '46%', '23%', '58%'],
     correctIndex: 1,
     explanation:
-      '251 of 543 winners (46%) declared criminal cases, up from 43% in 2019 and 34% in 2014; 170 (31%) declared serious cases such as murder or crimes against women. Declared cases are not convictions; ADR said 27 of the 251 had been convicted in some case.',
+      '251 of 543 winners (46%) declared criminal cases, up from 43% in 2019 and 34% in 2014; 170 (31%) declared serious cases such as murder or crimes against women. Declared cases are pending cases, not findings of guilt; ADR said 27 winners declared past convictions.',
     sourceUrl: ADR_LS2024,
     sourceLabel: 'ADR — Record 46% of newly-elected Lok Sabha MPs facing criminal cases (Jun 2024)',
   },
@@ -654,9 +680,10 @@ export const HISAAB_ELECTIONS = Object.freeze([
     options: ['BJP', 'INC', 'DMK', 'TMC'],
     correctIndex: 2,
     explanation:
-      'DMK: 13 of 22 winners (59%); INC 49 of 99 (49%); TMC 13 of 29 (45%); BJP 94 of 240 (39%). Among smaller groups, Shiv Sena had 5 of 7 (71%). Declared cases in affidavits are not findings of guilt.',
-    sourceUrl: ADR_LS2024,
-    sourceLabel: 'ADR — Record 46% of newly-elected Lok Sabha MPs facing criminal cases (Jun 2024)',
+      'DMK: 13 of 22 winners (59%); INC 49 of 99 (49%); TMC 13 of 29 (45%); BJP 94 of 240 (39%). Among other parties, SP had 21 of 37 (57%) and Shiv Sena 5 of 7 (71%). Declared cases in affidavits are not findings of guilt.',
+    sourceUrl: ADR_LS2024_ASSETS,
+    sourceLabel: "ADR — 'Criminals and crorepatis': Meet the new MPs of Lok Sabha 2024 (Jun 2024)",
+    sources: [ADR_LS2024],
   },
   {
     id: 'hel028',
@@ -723,13 +750,16 @@ export const HISAAB_ELECTIONS = Object.freeze([
     ],
     correctIndex: 1,
     explanation:
-      "Using Article 142 on 20 Feb 2024, a three-judge bench quashed the 30 Jan result and declared the AAP candidate (backed by Congress) mayor: 12 + 8 = 20 votes to the BJP candidate's 16. It issued a Section 340 CrPC show-cause notice to the presiding officer over a false statement to the court; he tendered an unconditional apology in April 2024.",
+      "Using Article 142 on 20 Feb 2024, a three-judge bench quashed the 30 Jan result and declared the AAP candidate (backed by Congress) mayor: 12 + 8 = 20 votes to the BJP candidate's 16. It found the presiding officer had defaced the eight ballots and began Section 340 CrPC proceedings over what it called a 'patent falsehood' in court.",
     status:
-      'SC quashed the declared result (20 Feb 2024); presiding officer issued a Section 340 CrPC show-cause notice and apologised (Apr 2024); later outcome not verified.',
+      'SC quashed the declared result (20 Feb 2024); Section 340 CrPC proceedings against the presiding officer still pending in the SC (Sep 2026); no conviction.',
+    otherSide:
+      'He told the SC he marked the ballots because he found them defaced; the court rejected that, and he later tendered an unconditional apology (Apr 2024).',
     sourceUrl: 'https://api.sci.gov.in/supremecourt/2024/4999/4999_2024_1_15_50631_Judgement_20-Feb-2024.pdf',
     sourceLabel: 'Supreme Court of India — Kuldeep Kumar v. U.T. Chandigarh, judgment (20 Feb 2024)',
     sources: [
       'https://www.livelaw.in/top-stories/chandigarh-mayor-election-returning-officer-anil-masih-tenders-unconditional-apology-to-suprme-court-254389',
+      'https://www.tribuneindia.com/news/chandigarh/aap-to-move-supreme-court-for-early-hearing-on-anil-masih-case/',
     ],
   },
   {
@@ -750,8 +780,9 @@ export const HISAAB_ELECTIONS = Object.freeze([
     correctIndex: 2,
     explanation:
       'Anoop Baranwal (Mar 2023) set a PM–LoP–CJI panel until Parliament made a law. The 2023 Act swapped the CJI for a Union Cabinet minister nominated by the PM. The judgment itself said its panel applied until Parliament legislated; petitioners say the Act gives the executive dominant control. The challenge is pending (Sept 2026).',
-    sourceUrl: 'https://www.scobserver.in/reports/sc-delivers-split-verdict-sends-eci-appointments-law-challenge-to-larger-bench/',
-    sourceLabel: 'Supreme Court Observer — SC delivers split verdict, sends ECI appointments law challenge to larger bench (23 Sep 2026)',
+    sourceUrl:
+      'https://www.scobserver.in/cases/jaya-thakur-v-union-of-india-challenges-to-the-appointments-of-election-commissioners-act-2023-eci/',
+    sourceLabel: 'Supreme Court Observer — Challenges to the Appointment of Election Commissioners Act, 2023 (case page, Sep 2026)',
   },
   {
     id: 'hel032',
@@ -824,15 +855,18 @@ export const HISAAB_ELECTIONS = Object.freeze([
     options: ['598', '5,994', '59,940', '6 lakh'],
     correctIndex: 1,
     explanation:
-      'The case began in Feb 2023 on an ECI official\'s complaint. The SIT chargesheeted a former BJP MLA and six others (Dec 2025); on 1 Sept 2026 the Karnataka HC declined to quash it and the trial court fixed charge framing. The ex-MLA denies the charges; the accused are on bail. The ECI later added Aadhaar-based OTP checks.',
+      "The case began in Feb 2023 on an ECI official's complaint after checks found 5,994 of 6,018 remote deletion requests targeted active residents. The SIT chargesheeted a former BJP MLA and six others (Dec 2025); on 1 Sept 2026 the Karnataka HC declined to quash it and told them to seek discharge in the trial court. The ECI added identity-verified OTP checks in Sept 2025.",
     status:
-      'Chargesheet filed (Dec 2025); Karnataka HC refused to quash (1 Sep 2026); at charge-framing stage; accused on bail; former MLA denies charges; no conviction.',
+      'Chargesheet filed (Dec 2025); Karnataka HC refused to quash (1 Sep 2026); charge framing listed for 16 Sep 2026, no outcome reported by 26 Sep 2026; all accused on bail; no conviction.',
+    otherSide:
+      'The former MLA and his son deny any role, call the chargesheet politically motivated, and say deletions need official Form 7 checks they could not control (The Hindu, Dec 2025).',
     sourceUrl:
       'https://indianexpress.com/article/legal-news/aland-vote-theft-karnataka-high-court-bjp-guttedar-plea-chargesheet-10858727/',
     sourceLabel: "The Indian Express — Aland 'vote theft': Karnataka High Court rejects former BJP MLA's plea to scrap chargesheet (1 Sep 2026)",
     sources: [
       'https://indianexpress.com/article/cities/bangalore/karnataka-aland-vote-theft-trial-subhash-guttedar-sit-chargesheet-10611427/',
       'https://www.thehindu.com/news/national/karnataka/aland-voter-fraud-chargesheet-names-former-bjp-mla-and-his-son-as-prime-accused/article70389221.ece',
+      'https://www.thehindu.com/news/national/karnataka/aland-vote-theft-case-subhash-guttedar-son-deny-charges-call-it-politically-motivated/article70392757.ece',
     ],
   },
   {
@@ -852,10 +886,13 @@ export const HISAAB_ELECTIONS = Object.freeze([
     options: ['3.66 lakh', '21.5 lakh', '65 lakh', '1.5 crore'],
     correctIndex: 2,
     explanation:
-      'Bihar had 7.89 crore electors on 24 June 2025; the draft had 7.24 crore, with about 65 lakh removed. The final roll (30 Sept 2025) had 7.42 crore after 21.53 lakh additions and 3.66 lakh deletions. Petitioners challenged the exercise; in May 2026 the SC upheld it as aimed at restoring the accuracy of the rolls.',
+      'Bihar had 7.89 crore electors on 24 June 2025; the draft had 7.24 crore, with about 65 lakh removed. The final roll (30 Sept 2025) had 7.42 crore after 21.53 lakh additions and 3.66 lakh deletions. ADR, opposition MPs and others challenged the exercise in the Supreme Court.',
     sourceUrl:
       'https://www.thehindu.com/elections/bihar-assembly/bihar-assembly-polls-final-voter-list-sir-election-commission/article70112730.ece',
     sourceLabel: "The Hindu — 7.42 crore voters on Bihar's final electoral rolls at the end of SIR (30 Sep 2025)",
+    sources: [
+      'https://www.scobserver.in/cases/challenge-to-the-ecis-revision-of-electoral-rolls-in-bihar-sir-association-for-democratic-reforms-v-election-commission-of-india/',
+    ],
   },
   {
     id: 'hel036',
@@ -911,7 +948,7 @@ export const HISAAB_ELECTIONS = Object.freeze([
     ],
     correctIndex: 0,
     explanation:
-      'The court upheld the Speaker\'s disqualification under the Tenth Schedule but held he could not bar them from contesting until the end of the term: "neither under the Constitution nor under the statutory scheme" is disqualification a bar to re-election. They were disqualified by the then Speaker.',
+      'The court upheld the Speaker\'s disqualification under the Tenth Schedule but held he could not bar them from contesting until the end of the term: "neither under the Constitution nor under the statutory scheme" is disqualification a bar to re-election. It rejected the argument that resigning first had wiped out the disqualification.',
     sourceUrl:
       'https://www.thehindu.com/news/national/supreme-court-upholds-speakers-disqualification-of-17-karnataka-mlas/article61619826.ece',
     sourceLabel: "The Hindu — Supreme Court upholds Speaker's disqualification of 17 Karnataka MLAs (13 Nov 2019)",
@@ -922,19 +959,21 @@ export const HISAAB_ELECTIONS = Object.freeze([
     region: 'India',
     state: 'MP',
     topic: 'Elections & Funding',
-    subtopic: 'Madhya Pradesh 2020',
+    subtopic: 'Madhya Pradesh 2020 by-polls',
     kind: 'institution',
     difficulty: 'expert',
     year: 2020,
     asOf: '2026-09',
-    govt: 'INC',
-    question: "Madhya Pradesh's Congress government fell in March 2020 after how many of the party's MLAs resigned?",
-    options: ['16', '22', '10', '30'],
+    govt: 'BJP',
+    question:
+      "After Madhya Pradesh's Congress government fell in March 2020, by-elections were held for 28 Assembly seats that November. How many did the BJP win?",
+    options: ['9', '19', '24', '14'],
     correctIndex: 1,
     explanation:
-      'Twenty-two Congress MLAs, including six ministers, resigned after a senior leader quit the party and joined the BJP. After the Supreme Court ordered a floor test, the chief minister resigned on 20 March 2020, clearing the way for a BJP government.',
-    sourceUrl: 'https://theprint.in/politics/kamal-nath-resigns-as-madhya-pradesh-chief-minister-ahead-of-floor-test/384364/',
-    sourceLabel: 'ThePrint — Kamal Nath resigns as Madhya Pradesh chief minister ahead of floor test (20 Mar 2020)',
+      "The BJP won 19 of the 28 seats, shoring up the new BJP chief minister's wafer-thin majority. Scroll counted 18 of the 25 former Congress MLAs who had switched sides re-elected, and said the Congress, which fielded 14 newcomers, barely campaigned.",
+    sourceUrl: 'https://scroll.in/article/978346/in-charts-how-bjp-swept-the-bye-elections-in-13-states-and-what-it-means',
+    sourceLabel: 'Scroll — In charts: How BJP swept the bye-elections in 13 states, and what it means (12 Nov 2020)',
+    sources: ['https://theprint.in/politics/kamal-nath-resigns-as-madhya-pradesh-chief-minister-ahead-of-floor-test/384364/'],
   },
   {
     id: 'hel039',
@@ -949,21 +988,23 @@ export const HISAAB_ELECTIONS = Object.freeze([
     asOf: '2026-09',
     govt: 'SS',
     question:
-      "In May 2023 the Supreme Court called the Governor's 2022 floor-test call unjustified. Why did it say it could not restore the MVA government?",
+      "Ruling on the 2022 Shiv Sena split in May 2023, who did the Supreme Court say has the power under the anti-defection law to appoint a party's whip in the House?",
     options: [
-      'The Assembly had been dissolved',
-      'Fresh elections had been held',
-      'The CM had resigned without facing the floor test',
-      'The Governor had since retired',
+      'The Speaker of the Assembly',
+      "A majority of the party's MLAs",
+      'The political party',
+      'The Governor',
     ],
     correctIndex: 2,
     explanation:
-      'A five-judge bench held on 11 May 2023 that the Governor had no objective material to doubt the government\'s majority, but status quo ante was impossible because the chief minister resigned before the vote; inviting the rebel faction\'s leader, backed by the BJP, was therefore justified.',
-    sourceUrl: 'https://indianexpress.com/article/india/sc-shiv-sena-uddhav-thackeray-eknath-shinde-maharashtra-8603495/',
-    sourceLabel: "The Indian Express — Governor Koshyari's decision 'unjustified' but cannot restore Uddhav government: SC (11 May 2023)",
-    sources: [
-      'https://theprint.in/india/sc-resumes-hearing-shiv-sena-split-case-shinde-faction-defends-ecs-organisational-majority-test/3043484/',
-    ],
+      "A five-judge bench held on 11 May 2023 that the Tenth Schedule gives that power to the political party, not the legislature party, and that the Speaker acted illegally in recognising the rebel group's nominee as Shiv Sena's chief whip without checking the party's backing.",
+    otherSide:
+      'The rebel group, which formed the government with the BJP, argued that as the majority of Shiv Sena MLAs it was the legislature party and could name the whip (LiveLaw).',
+    sourceUrl:
+      'https://www.livelaw.in/top-stories/supreme-court-shiv-sena-eknath-shinde-gogawale-whip-leader-political-party-228514',
+    sourceLabel:
+      "LiveLaw — Shiv Sena case: Speaker's recognition of the rebel group's leader and whip illegal; only political party can appoint them, says SC (11 May 2023)",
+    sources: ['https://indianexpress.com/article/india/sc-shiv-sena-uddhav-thackeray-eknath-shinde-maharashtra-8603495/'],
   },
   {
     id: 'hel040',
@@ -982,7 +1023,9 @@ export const HISAAB_ELECTIONS = Object.freeze([
     options: ['5', '6', '11', '8'],
     correctIndex: 3,
     explanation:
-      "The eight declared the merger on 14 Sept 2022, saying they were two-thirds of the legislature party as the Tenth Schedule requires. Goa's Speaker dismissed the Congress's disqualification plea in Nov 2024; in July 2026 the SC agreed to examine a challenge before a three-judge bench.",
+      "The eight declared the merger on 14 Sept 2022, taking the ruling alliance to 33 in the 40-seat House. Goa's Speaker dismissed the Congress's disqualification plea in Nov 2024; in July 2026 the SC agreed to hear a challenge before a three-judge bench.",
+    otherSide:
+      'The eight said they made up two-thirds of the Congress legislature party, which the Tenth Schedule treats as a valid merger (TOI, Nov 2024).',
     sourceUrl:
       'https://timesofindia.indiatimes.com/india/goa-speaker-dismisses-disqualification-plea-against-8-congress-mlas-who-joined-bjp-in-2022/articleshow/114852008.cms',
     sourceLabel: 'The Times of India — Goa speaker dismisses disqualification plea against 8 Congress MLAs (1 Nov 2024)',
@@ -1049,7 +1092,11 @@ export const HISAAB_ELECTIONS = Object.freeze([
     options: ['BJP', 'AIMIM', 'INC', 'TDP'],
     correctIndex: 2,
     explanation:
-      "The Speaker had rejected BRS and BJP petitions; the Telangana HC disqualified the Khairatabad MLA on 18 Sept 2026 and a CJI-led bench declined to interfere on 24 Sept. His counsel argued the Tenth Schedule allows a party to condone a member's switch. The Indian Express called it a setback for the ruling Congress.",
+      "The Speaker had rejected BRS and BJP petitions; on 18 Sept 2026 the Telangana HC set that aside and disqualified the Khairatabad MLA, and on 24 Sept a CJI-led bench declined to interfere. He lost the 2024 Lok Sabha race. The Indian Express called the ruling a setback for Telangana's ruling Congress.",
+    status:
+      'Disqualified under the Tenth Schedule (anti-defection law), not a criminal case: Telangana HC order of 18 Sep 2026 upheld by the SC on 24 Sep 2026.',
+    otherSide:
+      "His counsel argued the Tenth Schedule lets a party condone a member's switch, and lets a member who regrets it come back ('ghar wapsi') (Indian Express, Sep 2026).",
     sourceUrl:
       'https://indianexpress.com/article/legal-news/supreme-court-upholds-telangana-mla-danam-nagender-disqualification-10892090/',
     sourceLabel: "The Indian Express — 'Phir aaya Ram': Supreme Court upholds Telangana MLA's disqualification (24 Sep 2026)",
@@ -1073,7 +1120,7 @@ export const HISAAB_ELECTIONS = Object.freeze([
     options: ['Rs 13,500 crore', 'Rs 60,000 crore', 'Rs 5 lakh crore', 'Rs 1.35 lakh crore'],
     correctIndex: 3,
     explanation:
-      'CMS put it at Rs 1.35 lakh crore, more than double the Rs 60,000 crore it estimated for 2019, calling it the costliest election anywhere. It is a think-tank estimate covering direct and indirect spending, not an audited figure; CMS said the BJP accounted for 45% of 2019 spending.',
+      "CMS's chairman put it at Rs 1.35 lakh crore in April 2024, mid-campaign, more than double the Rs 60,000 crore CMS estimated for 2019, and called it the costliest election anywhere. It is a think-tank estimate of direct and indirect spending, not an audited figure; CMS had said the BJP accounted for 45% of 2019 spending.",
     sourceUrl:
       'https://m.economictimes.com/news/elections/lok-sabha/india/2024-ls-polls-pegged-as-costliest-ever-expenditure-may-touch-rs-1-35-lakh-crore-expert/articleshow/109591713.cms',
     sourceLabel: 'The Economic Times (PTI) — 2024 LS polls pegged as costliest ever, expenditure may touch Rs 1.35 lakh crore (25 Apr 2024)',
@@ -1108,26 +1155,20 @@ export const HISAAB_ELECTIONS = Object.freeze([
     topic: 'Elections & Funding',
     subtopic: "Women's reservation & delimitation",
     kind: 'institution',
-    difficulty: 'expert',
+    difficulty: 'extreme',
     year: 2026,
     asOf: '2026-09',
     govt: 'NDA',
     question:
-      "In April 2026, why did the Constitution (131st Amendment) Bill, meant to enlarge the Lok Sabha and operationalise women's reservation, fail?",
-    options: [
-      'The President withheld assent',
-      'It fell short of the two-thirds majority',
-      'The Rajya Sabha rejected it first',
-      'The Supreme Court stayed it',
-    ],
+      'The Constitution (131st Amendment) Bill that the Lok Sabha voted down in April 2026 proposed enlarging the House from 543 seats to how many?',
+    options: ['650', '815', '753', '888'],
     correctIndex: 1,
     explanation:
-      "On 17 Apr 2026 it got 298 votes to 230 of 528 voting, short of two-thirds, and the Centre withdrew the linked Delimitation Bill. The government said expansion was needed to give women 33% without cutting seats; the Opposition said using 2011 Census data would shrink southern and north-eastern states' share.",
-    sourceUrl: 'https://www.livelaw.in/top-stories/lok-sabha-rejects-constitution-131st-bill-2026-on-delimitation-530736',
-    sourceLabel: 'LiveLaw — Lok Sabha rejects Constitution (131st) Amendment Bill 2026; Centre withdraws Delimitation Bill (17 Apr 2026)',
-    sources: [
+      "Moved with a Delimitation Bill based on 2011 Census data, it got 298 votes to 230 on 17 Apr 2026, and the Centre withdrew the linked Bills. The Law Minister said expansion would give women 33% without cutting any existing seat; the Opposition said redrawing seats on 2011 data would shrink southern and north-eastern states' share.",
+    sourceUrl:
       'https://lawbeat.in/top-stories/womens-reservation-push-stalls-as-lok-sabha-rejects-131st-constitution-amendment-bill-1582102',
-    ],
+    sourceLabel: "LawBeat — Women's reservation push stalls as Lok Sabha rejects 131st Constitution Amendment Bill (17 Apr 2026)",
+    sources: ['https://www.livelaw.in/top-stories/lok-sabha-rejects-constitution-131st-bill-2026-on-delimitation-530736'],
   },
   {
     id: 'hel047',
@@ -1177,6 +1218,8 @@ export const HISAAB_ELECTIONS = Object.freeze([
     correctIndex: 3,
     explanation:
       "The returning officer rejected the Congress nominee's and his substitute's papers after proposers filed affidavits denying their signatures; the other candidates withdrew or were rejected, and the BJP candidate was declared elected on 22 April 2024. The Congress alleged the proposers were coerced and approached the EC.",
+    otherSide:
+      "The returning officer rejected the papers after the proposers could not be produced at scrutiny; under the law only an election petition in the High Court can challenge the result.",
     sourceUrl:
       'https://www.thehindu.com/news/national/why-was-mukesh-dalal-bjp-candidate-declared-winner-in-surat/article68103379.ece',
     sourceLabel: 'The Hindu — Why was the BJP candidate declared winner in Surat? Explained (25 Apr 2024)',
@@ -1220,7 +1263,9 @@ export const HISAAB_ELECTIONS = Object.freeze([
     options: ['BJP and INC', 'CPI(M) and NCP', 'RJD and JD(U)', 'LJP and CPI'],
     correctIndex: 1,
     explanation:
-      'It fined INC, BJP, JD(U), RJD, LJP, CPI and RLSP Rs 1 lakh each, and CPI(M) and NCP Rs 5 lakh each for not complying at all with its Feb 2020 order. It also required parties to publish candidates\' criminal cases within 48 hours of selecting them.',
+      'It held nine parties in contempt, fining INC, BJP, JD(U), RJD, LJP, CPI and RLSP Rs 1 lakh each, and CPI(M) and NCP Rs 5 lakh each for not complying at all with its Feb 2020 order. It also required parties to publish candidates\' criminal cases within 48 hours of selecting them.',
+    otherSide:
+      "The court said it took a 'lenient view' because the 2020 Bihar poll was the first held after its directions, and warned parties to comply in future.",
     sourceUrl:
       'https://indianexpress.com/article/india/sc-fines-8-political-parties-for-non-disclosure-of-criminal-info-of-candidates-in-bihar-polls-7447429/',
     sourceLabel: 'The Indian Express — SC fines political parties for non-disclosure of criminal info of candidates in Bihar polls (10 Aug 2021)',

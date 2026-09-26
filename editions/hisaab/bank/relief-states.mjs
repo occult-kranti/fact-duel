@@ -436,6 +436,8 @@ export const HISAAB_RELIEF_STATES = Object.freeze([
       "The RTI replies also showed hotel stays billed at over ₹6,700 a day and ₹25.19 lakh paid by Rudraprayag for officials' food and lodging. Information Commissioner Anil Kumar Sharma forwarded a plea for a CBI or independent probe; CM Harish Rawat instead ordered a chief secretary's inquiry, which found 'no irregularities anywhere'. The BJP kept demanding a CBI probe.",
     status:
       "Allegations from RTI records (May 2015); a committee headed by the chief secretary gave officials a clean chit (17 Jul 2015); the state did not take up the BJP's demand for a CBI probe (The Tribune, Dec 2015). No later proceedings found (checked Sep 2026).",
+    otherSide:
+      "The chief secretary's inquiry ordered by CM Harish Rawat found 'no irregularities anywhere' and gave the officials a clean chit (July 2015).",
     people: ["Harish Rawat", "Anil Kumar Sharma"],
     sourceUrl:
       "https://www.tribuneindia.com/news/archive/uttarakhand/security-breach-at-ias-academy-relief-scam-kept-state-in-news-176430/",
@@ -493,6 +495,8 @@ export const HISAAB_RELIEF_STATES = Object.freeze([
       "Relief workers told the BBC they were pressed to paste 'Amma' stickers on aid and in places made to wait for a minister before handing it out. The AIADMK denied the reports, asked for proof and promised action against 'errant' party workers. On 7 Dec 2015 Jayalalithaa announced ₹5,000 cash for flood-hit families and ₹10,000 for those who lost huts.",
     status:
       "Allegations by relief volunteers (Dec 2015); the AIADMK denied them and promised action against errant workers; no case is recorded in the cited reports.",
+    otherSide:
+      "The AIADMK denied the reports, asked for proof and promised action against any 'errant' party workers.",
     people: ["J. Jayalalithaa"],
     sourceUrl: "https://www.bbc.com/news/world-asia-india-35024134",
     sourceLabel: "BBC News — Chennai floods: India anger over Jayalalitha stickers on aid (7 Dec 2015)",
@@ -659,6 +663,8 @@ export const HISAAB_RELIEF_STATES = Object.freeze([
       "Checking 19.38 lakh beneficiaries in six districts, the CAG found 18,891 repeat transactions to 9,226 people, identical photos in 3,126 claims, and 71% of the house grant in two districts parked in commercial bank accounts. It asked the state to probe and recover the money. TMC leader Kunal Ghosh questioned the report's neutrality.",
     status:
       "CAG audit findings (tabled 25 Jul 2026; audit ordered by the Calcutta High Court, Dec 2020); an audit does not establish criminal liability. The BJP state government said it would seek FIRs; police complaints over Amphan relief have been filed since May 2026, but no chargesheet was reported as of Sep 2026.",
+    otherSide:
+      "TMC leader Kunal Ghosh questioned the report's neutrality; an audit finding does not establish criminal liability.",
     people: ["Kunal Ghosh"],
     sourceUrl: "https://indianexpress.com/article/political-pulse/cag-flags-cyclone-amphan-2020-relief-irregularities-tmc-west-bengal-10811195/",
     sourceLabel: "The Indian Express — 'Same photos, many claims': the CAG's Amphan relief audit (31 Jul 2026)",
@@ -817,6 +823,8 @@ export const HISAAB_RELIEF_STATES = Object.freeze([
       "The 1,267-page chargesheet at the Muvattupuzha vigilance court said the clerk altered flood victims' lists and bank details to route ₹27.73 lakh to co-accused. The accused got statutory bail after delays, which the Opposition said were meant to shield CPI(M) leaders; other bank and collectorate staff got a clean chit.",
     status:
       "Chargesheeted (Feb 2021) before the Muvattupuzha vigilance court; accused on statutory bail; no verdict or conviction reported in sources checked (Sep 2026).",
+    otherSide:
+      "The CPI(M) expelled its local members among the accused in March 2020; other bank and collectorate staff got a clean chit, and no court has ruled on the case.",
     sourceUrl: "https://www.newindianexpress.com/cities/kochi/2021/Feb/09/flood-fund-case-crime-branch-chargesheets-seven-persons-2261442.html",
     sourceLabel: "The New Indian Express — Flood fund case: Crime Branch chargesheets seven persons (9 Feb 2021)",
     sources: [
@@ -990,6 +998,8 @@ export const HISAAB_RELIEF_STATES = Object.freeze([
       "Investigators allege a ₹2–2.5 crore fraud and have named over 100 people, including more than two dozen patwaris. A former tehsildar was arrested on 26 March 2026 after the MP High Court and the Supreme Court refused her anticipatory bail; her lawyers say she was falsely implicated, only signed files prepared by others and received no money.",
     status:
       "FIR (Sep 2023) widened to Prevention of Corruption Act offences in Mar 2026; a former tehsildar arrested (26 Mar 2026) denies the charges; by May 2026 police had arrested at least 30 of 110 accused and prosecution was sanctioned for her and 18 patwaris. No chargesheet or verdict reported (checked Sep 2026).",
+    otherSide:
+      "The arrested former tehsildar denies the charges: her lawyers say she was falsely implicated, only signed files prepared by others and received no money.",
     sourceUrl: "https://indianexpress.com/article/india/from-kbc-fame-to-corruption-arrest-tehsildar-who-sat-opposite-amitabh-bachchan-in-2019-lands-in-jail-10603907/",
     sourceLabel: "The Indian Express — From KBC fame to 'corruption' arrest, tehsildar lands in jail (27 Mar 2026)",
     sources: [
@@ -1148,6 +1158,8 @@ export const HISAAB_RELIEF_STATES = Object.freeze([
       "A three-member bench held on 13 Nov 2023 that the CM may grant up to ₹3 lakh from the fund and found no proof of political motive; one member said cabinet decisions lie outside the Lokayukta Act, while the Lokayukta called the decision-making defective. Then Opposition leader V.D. Satheesan called the verdict biased.",
     status:
       "Lokayukta dismissed the complaint (13 Nov 2023); the Kerala High Court admitted the complainant's challenge and issued notice (Jan 2024); no High Court ruling found (checked Sep 2026).",
+    otherSide:
+      "The Lokayukta found no proof of political motive and held that the CM may grant up to ₹3 lakh from the fund; one member said cabinet decisions lie outside the Lokayukta Act.",
     people: ["Pinarayi Vijayan", "V.D. Satheesan"],
     sourceUrl: "https://www.onmanorama.com/news/kerala/2023/11/13/cmdrf-misuse-lokayukta-verdict.html",
     sourceLabel: "Onmanorama — No evidence to prove CMDRF was misused: Lokayukta rejects petition against Kerala CM (13 Nov 2023)",

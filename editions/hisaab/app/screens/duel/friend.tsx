@@ -21,7 +21,7 @@ import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { Copy, Link2, MessageCircle, Share2, Wifi, WifiOff } from 'lucide-react';
 import * as p2p from '../../../p2p/index.mjs';
 import { useDuel } from '../../use-duel';
-import { ANONYMOUS, BOT_NAME } from '../../data';
+import { ANONYMOUS, BOT_NAME, seatName } from '../../data';
 import { absoluteUrl, href, navigate, type AppRoute } from '../../router';
 import { inviteText, shareInvite, shareText, whatsappUrl, type ShareOutcome } from '../../share';
 import { useChrome, useScreenTitle } from '../../shell/chrome';
@@ -45,7 +45,6 @@ import {
   parseMode,
   parseTopic,
   readName,
-  rematchCode,
   saveName,
   seatNameFor,
   sectorName,
@@ -283,7 +282,8 @@ export function FriendLobby({ route }: { route: AppRoute }) {
     const n = s.n + 1;
     l.transport.send({ t: REMATCH, n });
     try {
-      const code = await rematchCode(s.first, n, p2p.makeRoomCode);
+      // Derived from the first room's stretched secret, not its short code (protocol.mjs).
+      const code = await p2p.rematchCode(s.first, n);
       await s.api.close(); // detaches its listeners; the shared transport stays open
       if (s.role === 'host') {
         const api = p2p.createP2PHost({
@@ -554,6 +554,10 @@ function TrustNote({ via }: { via: Via }) {
           {t(
             'Both browsers find each other through public relays and public STUN servers (Google’s and Cloudflare’s), then talk directly and learn each other’s internet (IP) address, as in any video call. Some office and mobile networks block direct connections, and there is no relay server of ours to fall back on.',
             'दोनों ब्राउज़र पब्लिक रिले और पब्लिक STUN सर्वर (Google और Cloudflare के) से एक-दूसरे को ढूँढते हैं, फिर सीधे बात करते हैं और एक-दूसरे का इंटरनेट (IP) पता जान लेते हैं, जैसे किसी भी वीडियो कॉल में। कुछ दफ़्तर और मोबाइल नेटवर्क सीधा कनेक्शन रोकते हैं, और हमारा कोई रिले सर्वर नहीं है।',
+          )}{' '}
+          {t(
+            p2p.P2P_TRUST.code,
+            'रूम कोड ही रूम की अकेली चाबी है। पब्लिक रिले को इसका बदला और खींचा हुआ रूप दिखता है, जिसे उलटने में बहुत कंप्यूटिंग लगती है, पर जो इतना ख़र्च करे वह बाद में भी कोड निकाल सकता है, और उससे दोनों खिलाड़ियों के इंटरनेट (IP) पते। कोड सिर्फ़ अपने दोस्त को भेजें।',
           )}
         </p>
       )}
@@ -665,7 +669,17 @@ function FriendMatch({
     return () => clearTimeout(id);
   }, [peer, settled, endReason, session.role]);
 
-  const friend = room ? room.players[them]?.name?.trim() || ANONYMOUS : t('your friend', 'आपका दोस्त');
+  // The match is over on this screen (the host is gone, or the P2P link failed for good): stop polling
+  // a peer that will not answer. Each poll would otherwise wait out the 15 s P2P timeout, fail and
+  // reschedule until the player leaves, and nobody reads the result. A rematch builds a new session
+  // (and a new controller), so nothing needs this one again.
+  useEffect(() => {
+    if (endReason !== 'connection-lost' && !fatal) return;
+    controller.dispose();
+  }, [endReason, fatal, controller]);
+
+  // seatName: a friend who typed 'Babu-Bot · BOT' shows as Anonymous Janta (only the real bot is BOT).
+  const friend = room ? seatName(room.players[them]) : t('your friend', 'आपका दोस्त');
   const lost = peer === 'left' && !settled && !endReason;
   const banner = lost ? (
     <p className="h-friend__banner" role="alert">
@@ -878,9 +892,12 @@ function RoomLobby({
           <p className="h-kicker" id="h-lobby-code">
             {t('ROOM CODE', 'रूम कोड')}
           </p>
-          <p className="h-lobby__big h-mono" aria-label={code.split('').join(' ')}>
+          {/* A paragraph takes no aria-label: the code is hidden from screen readers here and spelled out
+              in the line after it. The big line's text stays exactly the code (copy-select, tests). */}
+          <p className="h-lobby__big h-mono" aria-hidden="true">
             {code}
           </p>
+          <p className="h-sr">{code.split('').join(' ')}</p>
           {session.role === 'host' && session.n === 0 ? (
             <div className="h-lobby__invite">
               <Button
@@ -942,7 +959,8 @@ function RoomLobby({
           <ul className="h-lobby__list" aria-live="polite">
             <li className="h-seat">
               <span className="h-seat__who">
-                <span className="h-seat__name">{myName.trim() || ANONYMOUS}</span>
+                {/* What the room was sent (seatNameFor): never a bot-like name, else as typed. */}
+                <span className="h-seat__name">{seatNameFor(myName)}</span>
                 <span className="h-seat__role">
                   {t('You', 'आप')} · {session.role === 'host' ? t('host', 'होस्ट') : t('guest', 'मेहमान')}
                 </span>

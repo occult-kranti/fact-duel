@@ -1,0 +1,453 @@
+/* screens/ledger/chart.css — the ledger's charts (dataviz method, tokens only). Blocks owned here:
+   h-lchart (measures per year: one small multiple per mode on ONE shared scale), h-lbands (days before
+   polling, five bands) and h-lvote (the before-the-vote strips).
+   Marks: one hue (syahi) for every series — identity is the printed name + icon, never a colour, and
+   party is never encoded; columns ≤ 24px with 2px surface gaps and a rounded data-end, square at one
+   hairline baseline; dots ≥ 8px with a 2px surface ring; values and labels in text ink; grid and axes
+   are solid hairlines. */
+
+.h-lchart,
+.h-lbands {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-3);
+  margin: 0;
+  padding: var(--h-s-4);
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-l);
+  background: var(--h-paper);
+  box-shadow: var(--h-shadow-1);
+  min-width: 0;
+}
+.h-lchart__cap,
+.h-lbands__cap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.h-lchart__title {
+  font-weight: var(--h-wght-ui-strong);
+  font-size: var(--h-fs-s);
+}
+.h-lchart__sub {
+  font-size: var(--h-fs-xs);
+  color: var(--h-ink-2);
+}
+/* The readout: the pointed/tapped year's split, in text (its twin for keyboards is the table). */
+.h-lchart__readout {
+  min-height: 1.45em;
+  font-size: var(--h-fs-xs);
+  font-weight: var(--h-wght-ui-strong);
+  color: var(--h-ink);
+}
+
+.h-lchart__strips {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-3);
+  min-width: 0;
+}
+.h-lchart__strip {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-1);
+  min-width: 0;
+}
+.h-lchart__label {
+  display: flex;
+  align-items: center;
+  gap: var(--h-s-2);
+  margin: 0;
+  font-size: var(--h-fs-xs);
+  font-weight: var(--h-wght-ui-strong);
+}
+.h-lchart__icon {
+  display: inline-flex;
+  flex: none;
+}
+.h-lchart__total {
+  margin-left: auto;
+  font-weight: 700;
+}
+.h-lchart__plot {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  height: 56px;
+  border-bottom: var(--h-bw-thin) solid var(--h-line);
+}
+@media (min-width: 900px) {
+  .h-lchart__plot {
+    height: 72px;
+  }
+}
+.h-lchart__col {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 0;
+  padding-inline: 1px;
+  border-radius: 2px 2px 0 0;
+  touch-action: manipulation;
+}
+.h-lchart__col--on {
+  background: var(--h-ground-2);
+}
+.h-lchart__bar {
+  display: block;
+  width: 100%;
+  max-width: 24px;
+  height: max(2px, calc(var(--v) * (100% - 16px)));
+  border-radius: 3px 3px 0 0;
+  background: var(--h-syahi);
+}
+.h-lchart__val {
+  margin-bottom: 2px;
+  font-family: var(--h-font-mono);
+  font-size: var(--h-fs-2xs);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--h-ink);
+  white-space: nowrap;
+  pointer-events: none;
+}
+.h-lchart__axis {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  margin-top: calc(-1 * var(--h-s-2));
+}
+.h-lchart__tick {
+  min-width: 0;
+  font-family: var(--h-font-mono);
+  font-size: var(--h-fs-2xs);
+  font-weight: 700;
+  color: var(--h-ink-2);
+  text-align: center;
+  white-space: nowrap;
+  display: flex;
+  justify-content: center;
+}
+.h-lchart__tick--first {
+  justify-content: flex-start;
+}
+.h-lchart__tick--last {
+  justify-content: flex-end;
+}
+
+.h-lchart__fold {
+  border-top: var(--h-bw-thin) solid var(--h-hair);
+  padding-top: var(--h-s-1);
+}
+.h-lchart__summary {
+  display: flex;
+  align-items: center;
+  gap: var(--h-s-2);
+  min-height: var(--h-tap);
+  font-weight: var(--h-wght-ui-strong);
+  font-size: var(--h-fs-xs);
+  color: var(--h-syahi-text);
+  cursor: pointer;
+  list-style: none;
+}
+.h-lchart__summary::-webkit-details-marker {
+  display: none;
+}
+.h-lchart__chev {
+  transition: transform var(--h-dur-quick) var(--h-ease-out);
+}
+.h-lchart__fold[open] .h-lchart__chev {
+  transform: rotate(90deg);
+}
+.h-lchart__tablewrap {
+  contain: inline-size;
+  max-width: 100%;
+  overflow-x: auto;
+}
+.h-lchart__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--h-fs-xs);
+}
+.h-lchart__table th,
+.h-lchart__table td {
+  padding: var(--h-s-1) var(--h-s-2);
+  border-top: var(--h-bw-thin) solid var(--h-hair);
+  text-align: right;
+}
+.h-lchart__table th:first-child {
+  text-align: left;
+}
+.h-lchart__table thead th {
+  border-top: 0;
+  border-bottom: var(--h-bw) solid var(--h-line);
+  font-weight: var(--h-wght-ui-strong);
+  vertical-align: bottom;
+}
+
+/* ---- days before polling: five bands --------------------------------------------------------------- */
+.h-lbands__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.h-lbands__row {
+  display: grid;
+  grid-template-columns: 8.5rem minmax(0, 1fr) 2.5rem;
+  align-items: center;
+  gap: var(--h-s-3);
+  font-size: var(--h-fs-xs);
+}
+.h-lbands__label {
+  font-weight: var(--h-wght-ui-strong);
+}
+.h-lbands__track {
+  display: flex;
+  align-items: center;
+  height: 16px;
+  border-left: var(--h-bw-thin) solid var(--h-line);
+}
+.h-lbands__bar {
+  display: block;
+  width: max(2px, calc(var(--v) * 100%));
+  height: 16px;
+  border-radius: 0 3px 3px 0;
+  background: var(--h-syahi);
+}
+.h-lbands__val {
+  font-weight: 700;
+  text-align: right;
+}
+
+/* ---- before the vote ----------------------------------------------------------------------------- */
+.h-lvote {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-4);
+  min-width: 0;
+}
+.h-lvote__title {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  font-family: var(--h-font-display);
+  font-weight: var(--h-wght-display);
+  font-size: var(--h-fs-xl);
+  line-height: var(--h-lh-caps);
+  letter-spacing: var(--h-track-caps);
+  text-transform: uppercase;
+}
+.h-lvote__titlehi {
+  font-size: var(--h-fs-l);
+  line-height: var(--h-lh-display-deva);
+  color: var(--h-syahi-text);
+  text-transform: none;
+}
+.h-lvote__caveat {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--h-s-3);
+  padding: var(--h-s-3) var(--h-s-4);
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-m);
+  background: var(--h-sheet);
+  max-width: 48rem;
+}
+.h-lvote__caveat svg {
+  flex: none;
+  margin-top: 2px;
+}
+.h-lvote__caveat p {
+  margin: 0;
+  font-size: var(--h-fs-xs);
+}
+.h-lvote__lead {
+  margin: 0;
+  font-size: var(--h-fs-xs);
+  color: var(--h-ink-2);
+  max-width: var(--h-read);
+}
+.h-lvote__polls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--h-s-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 1200px) {
+  .h-lvote__polls {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.h-lvote__poll {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-2);
+  min-width: 0;
+  padding: var(--h-s-4);
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-l);
+  background: var(--h-paper);
+  box-shadow: var(--h-shadow-1);
+}
+.h-lvote__name {
+  margin: 0;
+  font-family: var(--h-font-ui);
+  font-weight: var(--h-wght-ui-strong);
+  font-size: var(--h-fs-m);
+  line-height: 1.3;
+}
+.h-lvote__month {
+  font-size: var(--h-fs-xs);
+  font-weight: 700;
+  color: var(--h-ink-2);
+  white-space: nowrap;
+}
+.h-lvote__result {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: var(--h-fs-xs);
+}
+.h-lvote__k {
+  font-family: var(--h-font-mono);
+  font-size: var(--h-fs-2xs);
+  font-weight: 700;
+  letter-spacing: var(--h-track-kicker);
+  text-transform: uppercase;
+  color: var(--h-ink-2);
+}
+.h-lvote__k:lang(hi),
+:root[lang='hi'] .h-lvote__k {
+  font-family: var(--h-font-ui);
+  font-size: var(--h-fs-xs);
+  letter-spacing: 0;
+}
+.h-lvote__r {
+  font-weight: var(--h-wght-ui-strong);
+}
+/* One poll's strip: the right edge is polling day (0); each dot is a measure, placed by its gap on the
+   shared day axis; dots on the same day stack upwards. Its own tick labels sit under it. */
+.h-lvote__chart {
+  margin: var(--h-s-1) 10px 0;
+}
+.h-lvote__strip {
+  position: relative;
+  height: calc(16px + var(--stacks, 1) * 14px);
+  border-bottom: var(--h-bw-thin) solid var(--h-line);
+}
+.h-lvote__grid {
+  position: absolute;
+  top: 4px;
+  bottom: 0;
+  width: 1px;
+  background: var(--h-hair);
+}
+.h-lvote__grid--zero {
+  top: 0;
+  width: 2px;
+  margin-right: -1px;
+  background: var(--h-line);
+}
+.h-lvote__dot {
+  position: absolute;
+  bottom: calc(5px + var(--level, 0) * 14px);
+  width: 12px;
+  height: 12px;
+  margin-right: -6px;
+  border-radius: 50%;
+  background: var(--h-syahi);
+  box-shadow: 0 0 0 2px var(--h-paper);
+  cursor: default;
+}
+/* A bigger hit area than the mark (≥ 24px). */
+.h-lvote__dot::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+}
+.h-lvote__dot--on {
+  box-shadow: 0 0 0 2px var(--h-paper), 0 0 0 4px var(--h-ink);
+  z-index: var(--h-z-raised);
+}
+.h-lvote__ticks {
+  position: relative;
+  height: 18px;
+}
+.h-lvote__tick {
+  position: absolute;
+  top: 2px;
+  transform: translateX(50%);
+  font-family: var(--h-font-mono);
+  font-size: var(--h-fs-2xs);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--h-ink-2);
+  white-space: nowrap;
+}
+.h-lvote__tick--zero {
+  transform: none;
+  color: var(--h-ink);
+}
+.h-lvote__tick--end {
+  transform: translateX(100%);
+}
+.h-lvote__measures {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.h-lvote__m {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--h-s-1) var(--h-s-2);
+  border-left: 3px solid transparent;
+  border-radius: 0 var(--h-r-xs) var(--h-r-xs) 0;
+  font-size: var(--h-fs-xs);
+}
+.h-lvote__m--on {
+  border-left-color: var(--h-ink);
+  background: var(--h-ground-2);
+}
+.h-lvote__mname {
+  font-weight: var(--h-wght-ui-strong);
+}
+.h-lvote__mmeta {
+  color: var(--h-ink-2);
+}
+.h-lvote__gap {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--h-s-1);
+  font-family: var(--h-font-mono);
+  font-weight: 700;
+}
+.h-lvote__gap:lang(hi),
+:root[lang='hi'] .h-lvote__gap {
+  font-family: var(--h-font-ui);
+}
+.h-lvote__gap--none {
+  font-family: var(--h-font-ui);
+  font-weight: var(--h-wght-ui-strong);
+  color: var(--h-ink-2);
+}
+.h-lvote__more {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--h-s-2) var(--h-s-4);
+}
+.h-lvote__none {
+  margin: 0;
+  font-weight: var(--h-wght-ui-strong);
+}

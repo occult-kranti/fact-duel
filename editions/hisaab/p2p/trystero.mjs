@@ -9,9 +9,16 @@
  * direct peer connection; strict corporate or carrier NATs can block it (no TURN relay is configured,
  * because that would be a server). The library is loaded lazily, only when a friend duel starts.
  *
+ * The short room code never reaches the relays. trystero publishes SHA-1 of the room id as a public
+ * Nostr tag, and a code alone (31^8, about 40 bits) is cheap to search from that hash, so the room id
+ * and the password both come from the PBKDF2-stretched room secret (protocol.mjs `roomKeys`: `topic`,
+ * `password`); every guess then costs P2P_KDF.iterations rounds.
+ *
  * `createTrysteroTransport(code)` implements the transport contract in transport.mjs. The first peer
  * to appear in the room becomes the partner; any later peer is ignored.
  */
+import { roomKeys } from './protocol.mjs';
+
 export const TRYSTERO_APP_ID = 'hisaab-do.duel.v1';
 
 /**
@@ -20,10 +27,12 @@ export const TRYSTERO_APP_ID = 'hisaab-do.duel.v1';
  *   `joinRoom` swaps the library entry point (tests); `relayUrls` pins the Nostr relays.
  */
 export async function createTrysteroTransport(code, { appId = TRYSTERO_APP_ID, relayUrls, joinRoom } = {}) {
-  const join = joinRoom ?? (await import('trystero')).joinRoom;
+  // Stretch the code while the library loads (both run once per lobby).
+  const [lib, keys] = await Promise.all([joinRoom ? null : import('trystero'), roomKeys(code)]);
+  const join = joinRoom ?? lib.joinRoom;
   const room = join(
-    { appId, password: String(code), ...(relayUrls ? { relayConfig: { urls: relayUrls } } : {}) },
-    `duel-${String(code).toUpperCase()}`,
+    { appId, password: keys.password, ...(relayUrls ? { relayConfig: { urls: relayUrls } } : {}) },
+    keys.topic,
   );
   const action = room.makeAction('duel');
   const messages = new Set(),

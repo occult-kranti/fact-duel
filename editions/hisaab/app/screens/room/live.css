@@ -60,9 +60,11 @@
 .h-roundhead__dash {
   color: var(--h-ink-2);
 }
+/* The BOT disclosure rides here ('You · Babu-Bot · BOT'): a sentence-case line, so the 14px floor. */
 .h-roundhead__who {
   max-width: 44vw;
-  font-size: var(--h-fs-2xs);
+  font-size: var(--h-fs-xs);
+  line-height: 1.25;
   font-weight: var(--h-wght-ui-strong);
   color: var(--h-ink-2);
   text-align: right;
@@ -118,10 +120,19 @@
 
 /* ---- the live question ----------------------------------------------------------------------------------- */
 .h-live {
+  position: relative;
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   min-height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+}
+/* Out of flow, over the round header: the question never moves. Taps pass through to the header's
+   Leave button (the banner only informs). */
+.h-live__banner {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: var(--h-z-raised);
+  pointer-events: none;
 }
 .h-live__card {
   flex: 1 1 auto;

@@ -37,22 +37,36 @@ export type StampProps = {
   animate?: boolean;
   /** Extra words for screen readers ("Correct", "File cleared"). */
   label?: string;
+  /**
+   * Print each ' · ' part on its own line ('FILE CLEARED' over '8/24'), for a big stamp in a narrow
+   * slot: a free wrap would leave the dot hanging at the end of the first line. Still one text node,
+   * so THAPPA's 3D impression reads the same line breaks.
+   */
+  stack?: boolean;
   className?: string;
 };
 
-export function Stamp({ kind, seed, text, size = 'm', animate = false, label, className }: StampProps) {
+export function Stamp({ kind, seed, text, size = 'm', animate = false, label, stack = false, className }: StampProps) {
   const Icon = ICONS[kind];
   const words = text ?? STAMP_WORDS[kind];
+  const printed = stack ? words.split(' · ').join('\n') : words;
   return (
     <span
-      className={cx('h-stamp', `h-stamp--${kind}`, `h-stamp--${size}`, animate && 'h-stamp--animate', className)}
+      className={cx(
+        'h-stamp',
+        `h-stamp--${kind}`,
+        `h-stamp--${size}`,
+        animate && 'h-stamp--animate',
+        stack && printed !== words && 'h-stamp--stack',
+        className,
+      )}
       style={{ ['--h-stamp-rot' as string]: `${stampAngle(seed)}deg` }}
       role="img"
       aria-label={label ? `${label}: ${words}` : words}
     >
       <Icon aria-hidden="true" className="h-stamp__icon" strokeWidth={3} />
       <span className="h-stamp__word" aria-hidden="true">
-        {words}
+        {printed}
       </span>
     </span>
   );

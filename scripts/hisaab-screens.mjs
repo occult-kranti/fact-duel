@@ -19,10 +19,11 @@
  *   first run (#/start) → its primary (Open today's file) → today's card, quiet → the first receipt
  *   and the inline label card → the rest of Aaj Ka Hisaab → its finish → the one-card taster → a state
  *   file (#/route/state-up): card, receipt, all six, the finish and its first-clear ceremony → every
- *   static screen (Home, the four Files views, the money trail hub and its four modes, the Vault and a
- *   receipt's detail, Me, the certificate, Settings, Rules, the duel setup, the P2P join form, Pass &
- *   Play, an empty #/room, a missing route) → a LIVE Triple Threat question vs Babu-Bot (audited while
- *   the clock runs: quiet — no toast, ceremony, nav or 3D canvas) → its round receipt → the result.
+ *   static screen (Home, the four Files views, the money trail hub, its four modes and the money
+ *   ledger, the Vault and a receipt's detail, Me, the certificate, Settings, Rules, the duel setup, the
+ *   P2P join form, Pass & Play, an empty #/room, a missing route) → a LIVE Triple Threat question vs
+ *   Babu-Bot (audited while the clock runs: quiet — no toast, ceremony, nav or 3D canvas) → its round
+ *   receipt → the result.
  *
  * WHAT IT ASSERTS on every screen (thresholds as in scripts/mobile-gate.mjs, with this edition's names):
  *  1. No horizontal overflow: `scrollingElement.scrollWidth <= innerWidth + 1`.
@@ -121,6 +122,7 @@ const STATIC_SCREENS = [
   ['#/money/relief', 'money-relief'],
   ['#/money/pre-election', 'money-pre-election'],
   ['#/money/years', 'money-years'],
+  ['#/money/ledger', 'money-ledger'],
   ['#/receipts', 'receipts'],
   ['#/me', 'me'],
   ['#/me/certificate', 'me-certificate'],

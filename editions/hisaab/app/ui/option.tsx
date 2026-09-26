@@ -29,10 +29,10 @@ export type OptionState = 'idle' | 'locked' | 'correct' | 'wrong-chosen' | 'corr
 export type OptionIndex = 0 | 1 | 2 | 3;
 
 export const OPTION_SLOTS = Object.freeze([
-  { slot: 'a', letter: 'A', letterHi: 'क', shape: 'triangle' },
-  { slot: 'b', letter: 'B', letterHi: 'ख', shape: 'diamond' },
-  { slot: 'c', letter: 'C', letterHi: 'ग', shape: 'circle' },
-  { slot: 'd', letter: 'D', letterHi: 'घ', shape: 'square' },
+  { slot: 'a', letter: 'A', letterHi: 'क', shape: 'triangle', shapeHi: 'त्रिकोण' },
+  { slot: 'b', letter: 'B', letterHi: 'ख', shape: 'diamond', shapeHi: 'हीरा' },
+  { slot: 'c', letter: 'C', letterHi: 'ग', shape: 'circle', shapeHi: 'गोला' },
+  { slot: 'd', letter: 'D', letterHi: 'घ', shape: 'square', shapeHi: 'चौकोर' },
 ] as const);
 
 /** The SVG shape twin for a slot (16px, currentColor). */
@@ -89,29 +89,37 @@ export type OptionProps = {
 };
 
 export function Option({ index, label, labelLang = 'en', state = 'idle', onChoose, disabled, className }: OptionProps) {
-  const { isHi } = useLang();
+  const { isHi, t } = useLang();
   const slot = OPTION_SLOTS[index] ?? OPTION_SLOTS[0];
   const letter = isHi ? slot.letterHi : slot.letter;
+  // Screen-reader words follow the locale (the visible letter is क in Hindi, so is the name's).
+  const hiLang = isHi ? 'hi' : undefined;
   const mark =
     state === 'locked' ? (
       <>
         <Lock aria-hidden="true" size={18} strokeWidth={2.4} />
-        <span>Locked</span>
+        <span lang={hiLang}>{t('Locked', 'लॉक')}</span>
       </>
     ) : state === 'correct' ? (
       <>
         <Check aria-hidden="true" size={20} strokeWidth={3} />
-        <span className="h-sr">Correct answer, your pick</span>
+        <span className="h-sr" lang={hiLang}>
+          {t('Correct answer, your pick', 'सही जवाब, आपका चुनाव')}
+        </span>
       </>
     ) : state === 'correct-unchosen' ? (
       <>
         <Check aria-hidden="true" size={20} strokeWidth={3} />
-        <span className="h-sr">Correct answer</span>
+        <span className="h-sr" lang={hiLang}>
+          {t('Correct answer', 'सही जवाब')}
+        </span>
       </>
     ) : state === 'wrong-chosen' ? (
       <>
         <X aria-hidden="true" size={20} strokeWidth={3} />
-        <span className="h-sr">Your pick, wrong</span>
+        <span className="h-sr" lang={hiLang}>
+          {t('Your pick, wrong', 'आपका चुनाव, ग़लत')}
+        </span>
       </>
     ) : null;
   const glyph = state === 'correct' || state === 'correct-unchosen' ? <Check aria-hidden="true" size={16} strokeWidth={3.2} /> : state === 'wrong-chosen' ? <X aria-hidden="true" size={16} strokeWidth={3.2} /> : null;
@@ -132,8 +140,8 @@ export function Option({ index, label, labelLang = 'en', state = 'idle', onChoos
           <OptionShape index={index} />
         </span>
       </span>
-      <span className="h-sr">
-        Option {slot.letter}, {slot.shape}:
+      <span className="h-sr" lang={hiLang}>
+        {isHi ? `विकल्प ${slot.letterHi}, ${slot.shapeHi}:` : `Option ${slot.letter}, ${slot.shape}:`}
       </span>
       <span className="h-opt__label" lang={labelLang ?? undefined}>
         {label}

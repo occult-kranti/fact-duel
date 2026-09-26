@@ -15,7 +15,8 @@
  * collection time is kept to show "updated since you collected it", and to show a receipt whose item
  * has since been withdrawn from the bank.
  */
-import { isDue, sessionOrder } from '@/lib/journal-review.mjs';
+import { isDue, REVIEW_CAP, sessionOrder } from '@/lib/journal-review.mjs';
+import { dayKey } from '@/lib/journal.mjs';
 import { itemById, sourceKind, type BankItem, type SourceKind } from '../../data';
 
 export type Surface = 'duel' | 'expedition' | 'discovery' | 'recall' | 'event';
@@ -309,8 +310,28 @@ export function facet<T extends string>(rows: readonly ReceiptRow[], pick: (r: R
 /**
  * Today's review queue (the engine's order, capped at 12), limited to receipts with a playable card that
  * is still in the bank: a withdrawn item is never dealt as a quiz again.
+ *
+ * A receipt first filed TODAY and never yet answered in the Vault is not "due": the engine files a
+ * fact met in a file, Aaj or a duel as due the moment it is met (`due: at`, box 0), which on day one
+ * turned every card the player had just answered into "Re-check 12 due" minutes later. Its first look
+ * is tomorrow, as the ladder's first box (1 day) intends. A deck §3.5 seeded today (after a bad run)
+ * is dealt as seeded.
  */
 export function reviewQueue(journal: JournalLike, rows: readonly ReceiptRow[], now: number = Date.now()): string[] {
   const playable = new Set(rows.filter((r) => r.options.length === 4 && !r.withdrawn).map((r) => r.id));
-  return (sessionOrder(journal, now) as string[]).filter((id) => playable.has(id));
+  const today = dayKey(now);
+  const seed = journal?.seed as { at?: unknown; factIds?: unknown } | undefined;
+  const seeded = new Set<string>(
+    seed && typeof seed.at === 'number' && dayKey(seed.at) === today && Array.isArray(seed.factIds)
+      ? (seed.factIds.filter((x) => typeof x === 'string') as string[])
+      : [],
+  );
+  const facts = journal?.facts ?? {};
+  const filedToday = (id: string) => {
+    const f = facts[id];
+    return !!f && typeof f.firstAt === 'number' && dayKey(f.firstAt) === today && !((f.bySurface?.recall ?? 0) > 0);
+  };
+  return (sessionOrder(journal, now, Infinity) as string[])
+    .filter((id) => playable.has(id) && (seeded.has(id) || !filedToday(id)))
+    .slice(0, REVIEW_CAP);
 }

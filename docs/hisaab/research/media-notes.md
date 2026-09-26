@@ -219,3 +219,114 @@ neutrally; it is not a claim about editorial content.
 
 The table's non-item rows (iTV, Sakal, Nandighosha, Kasthuri, Dighvijay, Mega 24, IANS) are
 sourced the same way and can become items without new research.
+
+## Fact audit (26 Sep 2026)
+
+Independent release-gate audit of all 45 items (`hmd001`–`hmd045`) against charter §2. Every `sourceUrl`
+and second source was re-fetched (curl, WebFetch or pypdf for the RIL PDF); newest status was searched
+through Google News RSS and web search up to 26 Sep 2026. Items naming people or describing wrongdoing were
+cross-examined (strongest counter-reading, weakest link in the source chain, "what would make this
+wrong"). Result: **0 drops, 45 kept, ids unchanged**; `otherSide` added to all 40 items that carry
+`status`/`people` (the 5 without are hmd021, hmd024, hmd031, hmd032, hmd043: no person, no status).
+`node scripts/hisaab-validate.mjs` → OK for the whole bank; `tests/hisaab-bank` and `hisaab-edition` pass.
+
+### Factual corrections
+- **hmd023 (Namasthe Telangana ads):** the explanation said K. Chandrasekhar Rao's *wife* sat on the
+  Telangana Publications board. The Wire says his **son K.T. Rama Rao** was on the initial board and
+  that "his wife" (KTR's) joined later. Fixed to the son; the daughter-in-law is not named (private
+  individual). The desktop thewire.in URL renders client-side and states nothing to a fetcher, so
+  `sourceUrl` → `m.thewire.in/article/politics/...` (same article, 20 Jul 2018). Same swap for hmd039.
+- **hmd008 (Dainik Jagran):** stem called Mahendra Mohan Gupta the *current* chairman. A 26 May 2026
+  NCLAT order (Indian Kanoon) says he was chairman-MD of Jagran Prakashan only until 30 Sep 2023, and the
+  family holding company now owns 67.97% (MOM's 60.63% was 2019 data). Stem → "Former Jagran Prakashan
+  chairman"; explanation and status updated; NCLAT order added as a source.
+- **hmd007 (Rajeev Chandrasekhar):** the Onmanorama `sourceUrl` (23 Mar 2025) only said he was
+  *expected* to be named. Replaced with Business Standard/PTI (24 Mar 2025), which reports he was elected
+  Kerala BJP president as sole nominee. Onmanorama kept as a source. Still Keralam BJP chief (Sep 2026 news).
+- **hmd040 (News Live):** stem said "a *sitting* state minister" — that was true in 2019 only. Now "a then
+  state minister"; explanation adds that Himanta Biswa Sarma is now Chief Minister (India TV, 8 Jun 2026).
+- **hmd012 (Jaihind TV):** stem said the owner company "is chaired by" Ramesh Chennithala; the source is
+  from 2023 and he is now Keralam's Home Minister. Stem → "was chaired by ... in 2023".
+- **hmd003 (JioStar):** "63.16% Reliance-owned" merged RIL's direct 16.34% with Viacom18's 46.82%;
+  the joint release says the JV is *controlled* by RIL and owned 16.34% RIL / 46.82% Viacom18 / 36.84%
+  Disney. Reworded to that.
+- **hmd020 (Andhra 2024 blackout) — re-angled.** Its answer (Sakshi TV = former CM's family) was given
+  away by hmd035's stem and vice versa. New question: which court's interim orders got the four channels
+  restored → **Delhi High Court** (vacation bench, 24 Jun 2024, TDSAT on summer break). Sources: The News
+  Minute 30 Jun 2024 (new `sourceUrl`), PTI via Siasat, Storyboard18; ET/Madhyamam kept. correctIndex
+  kept at 3; difficulty kept `expert`. People now S. Niranjan Reddy and Nara Lokesh.
+
+### Status updates (newest reporting to 26 Sep 2026)
+- **hmd013 Darda:** acquitted in the separate Bander case on 27 Mar 2026 (checked in the judgment itself,
+  Indian Kanoon doc 32014909: "all the five accused ... are hereby acquitted"); ED's linked PMLA case
+  dropped 13 Jul 2026 (ANI); SC on 19 Aug 2026 asked the Delhi HC to decide coal appeals within four
+  weeks (The Hindu). Fatehpur (East) conviction appeal: no verdict found. **Warning:** a Moneylife
+  headline (30 Mar 2026) says the court "convicts" Darda in Bander. That is contradicted by the judgment
+  and by ANI/Pioneer, so do not use it. `sourceUrl` → ANI 26 Sep 2023 (states the Chhattisgarh coal block
+  and 4-year sentence) so that the label no longer names the ex-coal secretary. See the giveaways below.
+- **hmd011 Gurbani bill:** SC closed Punjab's deemed-assent plea on 25 Sep 2026 (LiveLaw) after being told
+  queries on the Sikh Gurdwaras (Amendment) Bill had been sent to the state. Status + explanation updated.
+- **hmd015 FCU:** SC issued notice on the Centre's appeal on 10 Mar 2026 but refused to stay the Bombay HC
+  ruling (IFF, Storyboard18). Status updated; the Centre's "no intention to curb satire/criticism" is the otherSide.
+- **hmd017 Arnab Goswami:** quash plea last heard 14 Aug 2026 (Bar & Bench); no ruling found.
+- **hmd022 2G:** HT (28 Feb 2026) says the CBI appeal has been listed 13 times and arguments have not begun,
+  and the ED's leave plea has not been admitted. Added as a source.
+- **hmd025 BBC:** no appeal outcome found. **hmd033 AAP ads:** added the Jan 2023 ₹163.62 crore DIP notice
+  (Tribune/PTI) and the Feb 2025 CAG report coverage (Tribune); no court ruling found.
+- **hmd028 Umlesh Yadav:** the Allahabad HC dismissed her challenge to the disqualification and to s.10A on
+  3 May 2013 (Indian Kanoon). This is added to the status and otherSide.
+- **hmd030 Karnataka:** still not enacted; a separate draft *Responsible Social Media & Digital Safety
+  Bill, 2026* was submitted to the CM in Apr 2026 (South First). Minister Priyank Kharge's defence is the otherSide.
+- **hmd044 sedition:** the BNS replaced the IPC on 1 Jul 2024; the SC issued notice (Aug 2025) on pleas
+  calling BNS s.152 a repackaged sedition law (BOOM, Deccan Herald). Status + explanation updated.
+- **hmd029:** TDSAT ordered TV5 restored on 18 Sep 2019 (The News Minute) — added.
+- **hmd014 NewsClick:** the UAPA case is still pending (cognisance was taken Apr 2024). Not added:
+  an ED FEMA penalty notice of about ₹184 crore (Feb 2026 headline, The Week) was not verified.
+- **hmd042 Kappan:** the UAPA/PMLA cases are unconcluded. Not added: Kerala Police booked him in Sep 2025
+  for unlawful assembly at an anti-UAPA protest (The Hindu/IE headlines). It is a separate, minor matter.
+
+### otherSide sources (one clause each, all from fetched pages)
+Roys' "mutual agreement / constructive" statement (TNM, Dec 2022) · SAT quashed SEBI's 2018 VCPL order (IE)
+· CCI approval with voluntary modifications (JioStar release) · RIL's "fundamental synergy" framing (RIL PDF)
+· Zee–Sony settlement, no residual liability (Moneylife) · Chandra sat as an Independent (PRS) · Chandrasekhar's
+resignation reason, and Republic "editor-controlled" (Scroll, Inc42) · brother a BJP-nominated MP (MOM) · Madras HC
+upheld Sasikala's removal, Dec 2023 (LiveLaw) · MOM's 96.46% is its own estimate (MOM) · SGPC objection and
+CM Mann's reply (The Hindu) · Chennithala's "milestone for the INC" (Emirates 24|7, 2008) · Bander acquittal
+reasoning (judgment) · NewsClick denial (The Wire) · Centre's SC submission (Storyboard18) · CM Vijayan's
+withdrawal (TNM) · Goswami's "political vendetta" (Bar & Bench) · I&B sealed-cover stance (SC Observer) · KTR's
+denial (IE) · TDP/Nara Lokesh denial (Madhyamam) · accused denied and were acquitted (Outlook) · BBC's reply
+(ThePrint) · IFF on the Bhasin judgment (IFF) · Thakur's "not increased" (IE) · Allahabad HC (Indian Kanoon) ·
+ministers did not respond (TNM) · Kharge (MediaNama) · AAP's "illegal orders" (The Hindu) · Sun TV familial
+link, not a party stake (IE) · Priyadarshan's denial (Business Standard/IANS) · Sena leader's conflict-of-interest
+reason (Scroll) · KCR left the T News board (The Wire) · Centre rejects RSF methodology (Tribune/PTI, Mar 2023) ·
+Kappan's denial (Al Jazeera) · Union agreed that s.124A needs re-examination (The Hindu) · Bhaskar's statement (IE).
+"No reply/denial found (searched Sep 2026)" is used only where searches came up empty: hmd023, hmd029 (YSRCP), hmd035,
+hmd036, hmd040.
+
+### Answer giveaways removed (explanation/otherSide text that stated another item's answer)
+- hmd024 listed "157th (2026)" → hmd041's answer. Removed; the explanation now stops at 161st (2023).
+- hmd041 said the 2022 NDTV takeover was by Gautam Adani → hmd001's answer. Removed (and Adani dropped from
+  `people`); hmd002's stem/explanation no longer name Adani (only "AMG Media Networks").
+- hmd016 named "Section 66A of the IT Act" → hmd043's answer. Now "an online-speech offence the SC struck down in 2015".
+- hmd021 listed the Samajwadi Party among owners' parties → hmd008's answer. Now "parties across the spectrum".
+- hmd029 said the 2014 Telangana blocking hit "TV9 and ABN" → hmd019's answer. Replaced with the TDSAT order.
+- hmd012 said Kairali is CPI(M)-backed and Janam leans to the Sangh Parivar → answers of hmd036/hmd037. Removed.
+- hmd035 mentioned the June 2024 blackout; hmd020 linked Sakshi to Jagan and the YSRCP. Resolved by re-angling hmd020.
+- hmd017 "Shiv Sena-led MVA government" → hmd038's answer. Now "Maha Vikas Aghadi government".
+- hmd023 otherSide said "TRS (now BRS)" → hmd039's answer. Now "the state government".
+- hmd013 said the Fatehpur conviction included "a former coal secretary", with the Bander acquittal of "them"
+  → hgh050's answer (H.C. Gupta convicted in some, acquitted in others). Now "his son Devendra and others" / "the Dardas".
+- hmd022 checked against hgh047/hgh048 (2G, scams lane): it does not state "some contradictions" or ₹1.76 lakh crore.
+A string check of every media explanation/otherSide/status against all 910 correct answers in the bank
+leaves only generic matches ("Supreme Court", "Kerala", "₹200"...) in unrelated contexts.
+
+### Drops
+None. Every item's answer is stated on its (possibly replaced) `sourceUrl`.
+
+### Unresolved / re-check next month
+- hmd013 Fatehpur appeal (the SC's four-week direction of 19 Aug 2026 may produce a ruling soon); hmd017 quash
+  plea; hmd015 SC appeal; hmd011 bill queries; hmd022 2G appeal; hmd044 BNS s.152 challenge; hmd030 Karnataka drafts.
+- Kerala was officially renamed **Keralam** (Centre's notification, 25 Aug 2026, per TNM/NDTV/TOI headlines). The
+  items keep "Kerala" because the facts predate the change. The lead should decide a bank-wide style.
+- MOM shareholding figures (hmd006, hmd010, hmd021, hmd040) are still 2018–19 data; only hmd008 has a 2026 figure.
+- Kairali TV's own "about us" page (Mammootty as chairman, Brittas as MD) is http-only, so it was not cited.

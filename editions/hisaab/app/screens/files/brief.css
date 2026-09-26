@@ -48,8 +48,8 @@
   text-transform: uppercase;
   overflow-wrap: break-word;
 }
-.h-brief__title:lang(hi),
-:root[lang='hi'] .h-brief__title {
+/* Only a Devanagari title drops the caps; a Latin one carries lang="en" and stays uppercase. */
+.h-brief__title:lang(hi) {
   text-transform: none;
   line-height: var(--h-lh-display-deva);
   letter-spacing: 0;

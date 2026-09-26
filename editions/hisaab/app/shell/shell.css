@@ -228,3 +228,29 @@
     font-size: 30px;
   }
 }
+
+/* Skip link (a11y): .h-sr hides it; focused, it prints as a paper chip over the top bar. */
+.h-sr.h-skip:focus-visible {
+  position: fixed;
+  top: calc(env(safe-area-inset-top, 0px) + var(--h-s-2));
+  left: max(var(--h-gutter), env(safe-area-inset-left, 0px));
+  z-index: var(--h-z-skip);
+  width: auto;
+  height: auto;
+  min-height: var(--h-tap);
+  margin: 0;
+  padding: var(--h-s-2) var(--h-s-4);
+  display: inline-flex;
+  align-items: center;
+  overflow: visible;
+  clip-path: none;
+  white-space: nowrap;
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-m);
+  background: var(--h-paper);
+  color: var(--h-ink);
+  font-weight: var(--h-wght-ui-strong);
+  text-decoration: none;
+  box-shadow: var(--h-focus-ring);
+  outline: none;
+}

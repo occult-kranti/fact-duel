@@ -148,3 +148,149 @@ Researched and verified in September 2026. Every item has `asOf: '2026-09'`.
    - A December 2025 report (not fetched) mentions ₹416.75 crore and 21 instalments.
 9. **hsc060:** ECLGS 5.0 (May 2026). Uptake and changes to the guarantee cap may follow.
 10. **hsc057:** the freebies case. A ruling by the larger bench would change the explanation.
+
+## Fact audit (26 Sep 2026)
+
+Independent audit of all 60 items. Every `sourceUrl` and every URL in `sources` was fetched on 26 Sep 2026
+(all HTTP 200) and read as HTML text or PDF text (pypdf). Newest reporting was found through Google News RSS
+(links decoded and fetched), not WebSearch. No item was dropped, no id changed, the answer-slot spread
+(15/15/15/15) and difficulty mix are unchanged, and `node scripts/hisaab-validate.mjs` prints OK for the
+whole bank.
+
+### Confirmed as written (numbers and dates match the source)
+
+hsc006, hsc009, hsc012, hsc013, hsc018–hsc030, hsc032–hsc036, hsc038, hsc039, hsc041, hsc042, hsc044–hsc047,
+hsc050, hsc051, hsc053, hsc055 (the DBT dashboard still showed ₹5,14,201.92 crore, 320 schemes and 56
+ministries on 26 Sep 2026), hsc056, hsc058, hsc060. Where these items changed, it was only for a giveaway
+or a clarity point, listed below.
+
+### Fixes
+
+- **hsc001:** the `enactedBy` role said "launched PM-KISAN at Gorakhpur". That gives away hdb029
+  (dist-centre), which asks for the city. The role now reads "released PM-KISAN's first instalment,
+  24 Feb 2019". Added sources for the `outcome`: Hindustan Times (1.01 crore farmers, 24 Feb 2019) and
+  The Hindu (2019 polling began on 11 April, so 46 days is right).
+- **hsc002:** the explanation said 9.59 crore were paid "after land-record, Aadhaar-payment and e-KYC
+  checks". The PIB page does not say that. The explanation now gives what PIB does say: the Nov 2023
+  and June 2024 saturation drives, which added over 1 crore and over 25 lakh eligible farmers. It
+  attributes the mandatory land-seeding, Aadhaar payment and e-KYC to the Mar 2025 Lok Sabha reply
+  (Outlook Business/PTI, now added to `sources`).
+- **hsc003 and hsc004:** added `otherSide` with the minister's Lok Sabha replies. For hsc003:
+  ineligible payees were found by the scheme's own Aadhaar, PFMS and income-tax checks, and states were
+  given procedures to recover the money. For hsc004: the database is now 100% Aadhaar-seeded and e-KYC
+  verified, and states must recover the money.
+- **hsc005:**
+  - The stem now says "a year". The source's cover is ₹5 lakh per family per year.
+  - The distractor "₹10 lakh" was replaced by "₹8 lakh". Since Sept 2024, seniors aged 70+ in families
+    already covered get their own top-up of up to ₹5 lakh, and some states top the cover up to
+    ₹10 lakh, so "₹10 lakh" was arguably correct.
+- **hsc006:** the explanation restated "₹5 lakh", which is the answer to hsc005. It now describes the
+  separate top-up for seniors and the CGHS/ECHS choice instead (PMO page).
+- **hsc007:** added `otherSide`: the Health Ministry says mobile numbers play no role in eligibility
+  (PTI via Medical Dialogues).
+- **hsc008:**
+  - Added `otherSide`: the Health Ministry called the reports misleading, citing pre-authorisation up to
+    three days before admission and deaths reported by the same hospitals (Business Standard).
+  - The explanation now adds the NHA's reply recorded in the CAG report: a check to disable dead
+    patients' IDs was added on 22 Apr 2020. It also says these are audit findings, not a court ruling.
+- **hsc010:** "falling to 3.21 by Dec 2018" was not a like-for-like comparison. CAG's 3.21 comes from a
+  wider analysis of 3.18 crore beneficiaries. The explanation now says so.
+- **hsc011:** the explanation said CAG "asked oil companies to review" high-consumption cases. CAG's
+  recommendation is general, so the explanation now says CAG recommended regular review. It also says
+  CAG flagged a risk of diversion, not proven diversion.
+- **hsc014:** added `otherSide`, the WCD Ministry's Rajya Sabha reply of Feb 2022 (The News Minute):
+  media was stressed early on to change attitudes, and central media spending had since fallen
+  sharply. The Hindu (10 Dec 2021), with the same committee figures, and TNM are now in `sources`.
+- **hsc015:** added The Hindu as a second source.
+- **hsc016:** added `otherSide`, the ministry's reply as recorded by CAG: the field was made
+  non-mandatory, pay-outs were to go to Aadhaar-linked accounts, and 61.14 lakh had been paid by DBT by
+  Oct 2024.
+- **hsc017:** added `otherSide`: the ministry partly blamed low placement on the uncertain economy after
+  Covid-19 (ThePrint, 25 Dec 2025, now in `sources`).
+- **hsc031** (`kind: 'scam'`):
+  - **Explanation:** "enquired into all 14,264" now reads "began enquiries into all 14,264 (reports in
+    for 14,212)", as the reply says. It adds the newest national count: 18,790 complaints, with
+    16,178 from UP, per a Rajya Sabha reply of 30 Mar 2026 (India Today NE).
+  - **Status:** rewritten and dated. These are complaints, not court findings, as of Sep 2026.
+  - **otherSide:** added. UP's reply, and the Jal Shakti Minister's statement in the Lok Sabha
+    (29 Jan 2026) that action was taken against over 4,000 people (The Hindu).
+  - **Sources:** both new sources are in `sources`. No newer national total was found (searched to
+    26 Sep 2026).
+- **hsc036 and hsc037:** removed `enactedBy` (Shivraj Singh Chouhan). It gave away hdb039
+  (dist-centre), which asks which minister piloted the Bill. hdb039 already carries the attribution.
+- **hsc037:** the explanation now includes the states' objection. Madhya Pradesh, Bihar and Jharkhand
+  questioned the 60:40 split, which The Hindu (29 Jun 2026) says lifts most states' share of total
+  spending from about 10% to 40%. This answers the earlier reviewer note asking for the cost-burden
+  critique. Two of the three states are NDA-ruled.
+- **hsc040:** the stem said "MGNREGA … was enacted in which year?". The law was enacted in 2005 as NREGA
+  and renamed MGNREGA in 2009, and 2009 is one of the options. The stem now reads "The rural jobs law
+  later renamed MGNREGA…".
+- **hsc043:** the explanation said opposition-ruled states had "moved back to the Old Pension Scheme".
+  That gives away hst119 (states-north), whose answer is the Old Pension Scheme. It now mentions the
+  March 2023 review committee instead (The Hindu).
+- **hsc048:** "capped premiums at 30%" is now "capped the premium rates the Centre would subsidise at
+  30% (unirrigated) and 25% (irrigated)", as The Indian Express says.
+- **hsc049:**
+  - The distractor "Punjab" was replaced by "Rajasthan". BusinessLine says Punjab never implemented
+    PMFBY, which makes "Punjab left PMFBY" a muddy distractor. Rajasthan stayed in the scheme.
+  - The explanation now names the earlier exits the source gives (Bihar, West Bengal), the ₹4,500 crore
+    premium figure, and the state's own view that PMFBY was a good scheme it would want to rejoin. The
+    Chief Minister is not named.
+- **hsc052:**
+  - The stem now says "as launched in 2022". In July 2026 the forces were reported to be seeking to
+    retain 50–75% of each batch (The Indian Express, 6 Jul 2026). On 6 Aug 2026 the Centre told the
+    Rajya Sabha that 75% of the first batch were expected to exit, and that 50% of CAPF constable
+    vacancies are reserved for them (India Today).
+  - Both sources were added, and the explanation now carries this.
+- **hsc054:**
+  - `poll.gapDays` changed from 50 to 66. The schema counts from the announcement, and the PM launched
+    the scheme on 13 Feb 2024; the Cabinet approved it on 29 Feb, and polling began 19 Apr 2024. The
+    `outcome` was reworded to match.
+  - Added sources for the poll date (The Hindu) and the result, BJP 240 and NDA 293 (BBC).
+- **hsc057:**
+  - Subtopic, stem and explanation now put "freebies" in quotation marks, attributing the word, as
+    charter §4b.2 asks.
+  - Added the newest status: in Feb 2026 the Supreme Court called the pleas of "paramount importance"
+    and said a three-judge bench would hear them (The Indian Express). In July 2026 it declined an
+    urgent hearing (Law Trend). As of Sep 2026 the bench had not ruled.
+- **hsc059:** the explanation now says the supply-hour figures are states' figures from the National
+  Power Portal, as the PIB reply says.
+
+### Dropped
+
+None.
+
+### Checked and left as they are
+
+- **Stems and wording:**
+  - No stem implies guilt.
+  - Wrongdoing wording is attributed: "CAG found/flagged", "complaints", "the committee warned".
+  - No `people` field is needed; `enactedBy` names are public acts.
+- **Distractors:** all are non-person values. Each was re-checked against the source to be really
+  wrong.
+- **hsc028, hsc030:** the "total investment/outlay" distractors are deliberate, because the stems ask for
+  a different figure.
+
+### Unresolved / for the lead
+
+- **Answers that other lanes give away.** These are other lanes' texts, which this audit may not edit:
+  - hdb028's stem says PM-KISAN is "₹6,000-a-year" (the answer to hsc001).
+  - hdb045's stem says Antyodaya gets "a flat 35 kg" (hsc020).
+  - hst146's stem says "on or after 1 January 2004" (hsc043).
+  - hpe224's explanation says "₹416 crore had been recovered" (hsc004).
+  - hdb039's explanation says 125 days (hsc036).
+  - hpe026's and hst147's explanations say PM-JAY is ₹5 lakh (hsc005).
+  - The owners of those lanes may want to re-angle them.
+- **`enactedBy` can itself give away "who launched it" questions in the distribution lanes.** Removing
+  it here fixed hsc036 and hsc037. The lead may want a bank-wide rule, for example "enactedBy is not
+  shown until the matching who-question has been dealt", or a test.
+- **Secondary sources still used where a primary exists:**
+  - hsc014 and hsc015 cite The Quint and The Hindu; the primary is the committee report.
+  - hsc018 cites Factly; the primary is CAG Report 22 of 2023.
+  - hsc050 and hsc051 cite Frontline; the primary is the CAG audit of 2017.
+  - The figures match across outlets, but the CAG PDFs were not located in this pass.
+- **hsc057** uses Law Trend (a legal-news site) only as a second source, for the July 2026 refusal of an
+  urgent hearing. The primary source is The Indian Express.
+- **hsc055** is a live dashboard figure; re-check it monthly.
+- **hsc052:** if the Centre approves a higher Agniveer retention share, the explanation must be updated.
+  The stem is now dated to the scheme "as launched".

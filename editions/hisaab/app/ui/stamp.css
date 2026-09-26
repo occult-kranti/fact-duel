@@ -55,6 +55,11 @@
 .h-stamp__word {
   min-width: 0;
 }
+/* One line per ' · ' part (the `stack` prop): 'FILE CLEARED' over '8/24', never a dot at a line end. */
+.h-stamp--stack .h-stamp__word {
+  white-space: pre-line;
+  text-align: center;
+}
 
 /* Motion #3: scale 1.6 → 0.94 → 1, opacity 0 → 1, to the seeded angle. */
 .h-stamp--animate {

@@ -143,3 +143,154 @@ rankings), hfw039 (tracker).
 Also worth a look: AAP Gujarat "manifesto" fake (Vishvas News, Dec 2022); old photo of the Punjab CM
 in hospital shared as new (DFRAC, Jul 2022); the fake "Telangana Scribe" newspaper about KTR
 (NewsMeter, Apr 2025).
+
+## Fact audit (26 Sep 2026)
+
+Independent audit of all 40 items by a second agent (release gate). Method: every `sourceUrl` and
+every `sources` URL (56 in all) was fetched with curl and read against the item's stem, correct option,
+numbers and dates; 54 returned the page, 2 NDTV links returned 403 to this environment. Newest
+reporting (to 26 Sep 2026) was searched through Google News RSS with link decoding for every item
+that names a person or carries a status. Each item that names a person or describes wrongdoing was
+cross-examined (strongest counter-reading, weakest link in the source chain, what would change the
+verdict). Then a scripted giveaway scan compared the distinctive words and numbers of every correct
+option in the whole bank with this lane's `explanation`/`outcome`/`otherSide`/`status`, and the
+hits were read by hand. Results: **0 items dropped, 0 ids changed, 40 items kept**. `otherSide`
+was added to all 22 items that carry `people`/`status` (no item is `kind: 'scam'`).
+`node scripts/hisaab-validate.mjs` prints OK for the whole bank, and `node --test tests/hisaab-*.test.mjs` passes
+(44 pass, 4 todo).
+
+Lane stats after the audit: answer slots 10/10/10/10; difficulty simple 13 / expert 16 / extreme 11
+(hfw038 moved from extreme to expert). The side-balance table above still holds: no verdict or
+side changed.
+
+### Fixes, item by item
+
+- **hfw002** — "2013 India Today picture" was not in the source (BOOM only says it dates from his
+  Gujarat CM years), so "2013" is removed. otherSide: UNESCO's statement to AFP.
+- **hfw004** — Added BOOM's Nov 2017 fact-check (it flagged the missing context first) as a second
+  source, and updated the status to match. The line "no public record of Modi making such a promise"
+  moved into otherSide as Alt News's counterpoint against Gandhi.
+- **hfw005** — Giveaway. The explanation said the clip used "the same misleading-clip trick earlier
+  used against Gandhi", which answers hfw004. It is rewritten around how the Kannauj clip was cut
+  (Alt News). Deccan Herald's copy of the fact-check is added as a second source. otherSide: no reply
+  was reported from the Congress-linked sharers.
+- **hfw006** — otherSide: Amit Shah's 2015 "a metaphor" explanation (BOOM). The Quint (Apr 2019) is
+  added as a second source.
+- **hfw007** — Newest reporting: no chargesheet or verdict was found. Hyderabad police's five arrests
+  are added, attributed to the police. otherSide: the Congress denial ("He is not involved in any
+  doctored video", The Guardian, 4 May 2024). The Guardian and Gujarat Samachar (arrest, custody,
+  bail plea) are added as sources. The status now reads "on bail; no chargesheet or verdict".
+- **hfw008** — The stem said the clip ended "Vote for justice, vote for Congress". That line belongs
+  to a different clip described by TNM; BOOM's clip ends "Vote for Congress", and the stem is fixed.
+  The status now says what Hindustan Times reported (18 Apr 2024): the FIR was filed at Khar police
+  station against an unidentified person. No arrest was found. HT is added as a source. otherSide: no
+  reply from the Congress sharers was reported, and the FIR names no party.
+- **hfw009** — The status now says the FIR is against unknown persons and was filed on a Congress
+  complaint (The Quint). The poll result (163 of 230) had no source, so ThePrint/PTI (3 Dec 2023) is
+  added. otherSide: the clip's maker has not been identified.
+- **hfw010** — otherSide: the kernel of truth behind the forward (the Modi–Putin call on 2 Mar, and
+  the MEA's "specific inputs"). Vladimir Putin is added to `people`. Alt News (4 Mar 2022) is added as
+  a second source.
+- **hfw011** — otherSide: Toje did praise Modi's capacity for peace in the ABP interview but named no
+  contender. The status now notes BOOM's Sep 2025 re-debunk.
+- **hfw012** — The explanation left out the RBI's central line: "no gold was shifted… in 2014 or
+  thereafter". It is added. Alt News (4 May 2019) is added as a second source. otherSide: the claimant
+  (an unnamed candidate) said he relied on an RTI reply and the RBI's annual reports.
+- **hfw013** — otherSide: the real trigger for the anger (the same GST round taxed pre-packed foods
+  and hospital beds; BOOM). BOOM is added as a second source.
+- **hfw015** — **Status was stale.** Two things were reported after June 2024:
+  - Aug 2024 (FPJ, from RTI documents): MMRDA served the approach-road contractor a ₹1 crore notice
+    over pavement quality.
+  - Sep 2025 (TOI): MMRDA fined a different contractor ₹1 crore over monsoon surface damage on a 2-km
+    stretch of the bridge itself, while saying the bridge was structurally safe.
+
+  Both are now in `outcome` and `status`. Other changes:
+  - "asphalt" is removed from the correct option because no source says it.
+  - The explanation now carries MMRDA's detail from HT: Ramp 5, Ulwe, a service road.
+  - The NDTV link (403 here) is replaced by HT, FPJ and TOI.
+  - otherSide: the BJP/MMRDA reply.
+
+  The June 2024 verdict (the cracks were on the approach road, not the bridge) still stands.
+- **hfw017 / hfw018** — Mutual giveaway. hfw017's explanation said the Congress-win "BBC survey" was
+  a fake, which answers hfw018. hfw018's option and explanation named the pro-BJP fake and "the BBC
+  does no Indian pre-poll surveys", which answers hfw017. The fixes:
+  - hfw017 drops the cross-reference.
+  - hfw018 is re-angled (same id, answer slot and difficulty) to ask whom the forward credited with
+    the survey. The answer is the CIA, KGB and Mossad, per Factly. Its explanation now cites the BBC
+    editor's denial of this survey only.
+- **hfw019** — Indian Express (5 Dec 2015) is added. It confirms the regret, that 1 of 7 photos was
+  merged, and that a twin photo shows no flood outside the window. The superimposition sentence is
+  reworded to that evidence. otherSide: the I&B ministry's 5 Dec 2015 statement.
+- **hfw020** — otherSide: FM Sitharaman's Aug 2021 claim that oil-bond servicing stopped an excise
+  cut (The News Minute), with TNM as a second source. Nirmala Sitharaman is added to `people`. The
+  explanation now notes that Vajpayee's NDA also issued oil bonds (Factly).
+- **hfw025 / hfw026** — Mutual giveaway. Each explanation named the other's hoax ("mirror image" and
+  "reuses an older template"). Both cross-references are removed. hfw026's line about a "BBC graphic
+  that listed Congress fourth" was not in Factly's article anyway. The replacement text is sourced
+  (The Quint's 2018 version; Factly's 2023 debunk).
+- **hfw027** — The Quint (12 May 2020) is added as a second source. otherSide: no reply from Sambit
+  Patra was reported (Google News searched; AFP's check exists but is blocked here).
+- **hfw029** — otherSide: the objections from the Congress and Mamata Banerjee (TOI). Mamata
+  Banerjee is added to `people`. The status now says the MoU ran five years.
+- **hfw030** — otherSide: Modi's own opening line ("whether… bhajans can also be used…") and the
+  Wire Science op-ed critique. India Today (31 Aug 2022) is added as a second source.
+- **hfw032** — The explanation said a Moneycontrol chart was "misread". India Today says
+  Moneycontrol's own graphic carried the wrong figures and was later replaced. Corrected.
+- **hfw033** — Giveaway risk. The "rule of thumb: a real scheme never asks you to forward a link"
+  answered hfw034, so it is removed. otherSide: Chamoli Police's call and PIB's earlier denial
+  (Factly).
+- **hfw034** — "Something no government scheme does" is reworded to Factly's specific point (real
+  schemes register on official portals).
+- **hfw035** — otherSide: PIB Fact Check's May 2026 statement on a similar AI video of the FM ("has
+  not endorsed… any such investment scheme", Mint). Mint is added as a source.
+- **hfw036** — "The ministry said it does not indicate the quantum" is re-attributed. The PIB note
+  cites the media reports as saying the figures do not indicate the quantum of black money.
+- **hfw038** — **Cross-lane giveaway.** hst120 (states-north) asks for the new pay days (answer "5th
+  and 10th"), and hfw038's answer and explanation stated exactly that. A first re-angle (the CM's
+  reason) was also stated in hst120's explanation. The final version:
+  - It now asks what Sukhu said when the BJP called it a financial crisis. Answer: no crisis, the new
+    pay schedule was financial discipline (Business Today, 4 Sep 2024, now the `sourceUrl`; The Hindu
+    moves to `sources`).
+  - The explanation adds "first time in the state's history" (BT).
+  - otherSide: Jai Ram Thakur's "complete crisis" remarks and his figures on loans. He is added to
+    `people`.
+  - Newest reporting goes into `outcome`: the 2026-27 salary deferrals for ministers, MLAs and senior
+    officers after the revenue-deficit grant ended (Indian Express, Mar 2026). No percentages are
+    given, because hst121 asks for the CM's share.
+  - Difficulty is now expert, and the subtopic is renamed.
+- **hfw039** — otherSide: Morning Consult's own weighting method (per The Wire).
+- **hfw040** — **Status was missing a court view.** On 17 Oct 2022 the Supreme Court dismissed
+  Kerala's challenge to the Thiruvananthapuram lease and rejected the argument that the bid was
+  tailor-made (Indian Express). This is added to the status, otherSide and sources. The otherSide
+  also carries minister K Rammohan Naidu's Dec 2024 Lok Sabha reply (DH), and he is added to
+  `people`.
+
+Checked and left as written (the source states the fact): hfw001, hfw003, hfw014, hfw016, hfw021,
+hfw022, hfw023, hfw024, hfw028, hfw031, hfw037.
+
+### Dropped
+
+None.
+
+### Unresolved: for the lead or reviewer
+
+1. **hfw038 and hst120 cover one event** (Himachal's Sept 2024 salary shift). hfw038 no longer states
+   hst120's answer. But hst120's explanation, which I may not edit, still describes the CM's
+   savings rationale, and that nudges players toward hfw038's answer. The Hindu URL kept in hfw038's
+   `sources` also has "5th… 10th" in its slug; `sources` is not rendered in the app today. Consider
+   keeping only one of the pair, or re-angling hst120's explanation.
+2. **hfw008 names film actors** (Aamir Khan, Ranveer Singh) as deepfake targets. They are public
+   figures and accused of nothing, but charter §2.7 lists office holders, candidates and public
+   companies. The lead should confirm this is acceptable, or anonymise to "a Bollywood star".
+3. **hfw007 bail** rests on NDTV's 13 May 2024 report. Its headline is in Google News, but the page
+   returns 403 here. The arrest, custody and bail plea are confirmed by The Guardian and Gujarat
+   Samachar. No chargesheet or trial news was found as of Sep 2026.
+4. **hfw035 otherSide** quotes PIB's May 2026 statement about a *similar* Sitharaman deepfake, not
+   the Feb 2026 video in the question. The wording says so.
+5. **hfw015** — The Aug 2024 ₹1 crore notice is reported by FPJ from an RTI activist's documents,
+   and no MMRDA press release was found. The Sep 2025 fine concerns a different stretch and a
+   different contractor.
+6. **Stale-prone:** hfw021 (the IMF October 2026 WEO is due next month and may move India's rank);
+   hfw039 (the tracker changes weekly); hfw007, hfw008 and hfw009 (open FIRs with no outcome).
+7. **Not fetched:** NDTV (hfw007 bail) and AFP (hfw027) are blocked for this environment's fetchers.
+   The NDTV link for hfw015 was removed.

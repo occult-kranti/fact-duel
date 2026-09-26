@@ -1,6 +1,7 @@
 // HISAAB DO — lane: States, North & Hindi belt (hst100–hst199).
 // UP, UT, HP, PB, HR, DL, JK, RJ, BR, JH. Every item was checked against the page in `sourceUrl`
-// (and `sources`) in September 2026. See docs/hisaab/research/states-north-notes.md for sources,
+// (and `sources`) in September 2026, and independently fact-audited on 26 Sep 2026 (see the
+// "Fact audit" section of the notes). See docs/hisaab/research/states-north-notes.md for sources,
 // drops, contested items and the `govt` convention used in this lane:
 //   govt = the party/arrangement heading the STATE whose record the item is about — for scheme and
 //   spend items, the government that ran/budgeted it; for case items, the government in office when
@@ -29,6 +30,8 @@ export const HISAAB_STATES_NORTH = Object.freeze([
       'The CAG put the loss at ₹2,002.68 crore, citing vends that never opened in non-conforming wards and surrendered zones not re-tendered. AAP said seven of the report’s eight chapters faulted the old policy and that the new one was not implemented as designed. A separate CBI case over the policy ended in discharge in Feb 2026 (CBI has appealed).',
     status:
       'Audit finding, not a court finding. Related CBI case: all 23 accused discharged 27 Feb 2026; CBI revision pending in Delhi HC (as of Sept 2026).',
+    otherSide:
+      'AAP says the first seven of the report’s eight chapters audit the old 2017–21 policy, and that the CAG’s eighth chapter found the new policy was designed to raise revenue and curb smuggling.',
     sourceUrl: 'https://www.tribuneindia.com/news/delhi/2k-cr-loss-cag-report-on-delhi-excise-policy-tabled/amp',
     sourceLabel: 'The Tribune — ₹2k-cr loss: CAG report on Delhi excise policy tabled (Feb 2025)',
     sources: [
@@ -61,6 +64,8 @@ export const HISAAB_STATES_NORTH = Object.freeze([
       'The ED arrested him under the money-laundering law on 21 Mar 2024; the CBI arrested him on 26 Jun 2024. The Supreme Court granted bail in the CBI case on 13 Sep 2024, one judge questioning the timing of that arrest. On 27 Feb 2026 a trial court discharged him and 22 others in the CBI case, finding the conspiracy claim unsupported. He has not been convicted.',
     status:
       'Arrested by ED (21 Mar 2024) and CBI (26 Jun 2024); on bail since Sept 2024; discharged in the CBI case 27 Feb 2026; CBI revision pending in Delhi HC (arguments listed 5–6 Oct 2026); PMLA trial proceedings deferred. Not convicted.',
+    otherSide:
+      'A trial court found no prima facie case and discharged him in the CBI case (Feb 2026); at the Supreme Court his counsel called the CBI arrest an ‘insurance arrest’.',
     people: ['Arvind Kejriwal'],
     sourceUrl:
       'https://www.scobserver.in/journal/supreme-court-grants-bail-to-arvind-kejriwal-in-cbi-case-bench-splits-over-the-validity-of-arrest/',
@@ -84,18 +89,20 @@ export const HISAAB_STATES_NORTH = Object.freeze([
     asOf: '2026-09',
     govt: 'AAP',
     question:
-      'On 27 February 2026, what did a Delhi trial court do in the CBI’s excise-policy corruption case against Arvind Kejriwal, Manish Sisodia and 21 others?',
+      'A trial court discharged Arvind Kejriwal, Manish Sisodia and 21 others in the CBI excise case in Feb 2026. In March, what did the Delhi HC do with its remarks against the CBI’s investigating officer?',
     options: [
-      'Convicted two and acquitted the rest',
-      'Framed charges against all 23',
-      'Sent the case back for a fresh probe',
-      'Discharged all 23 accused',
+      'Expunged them permanently',
+      'Upheld them and ordered action',
+      'Sent them to the Supreme Court',
+      'Stayed them until the next hearing',
     ],
     correctIndex: 3,
     explanation:
-      'The special judge said the chargesheet had gaps and the material pointed to administrative decision-making, not a proven conspiracy. The CBI filed a revision in the Delhi HC the same day; the HC issued notice, stayed the trial court’s remarks against the investigating officer and asked the PMLA court to defer its proceedings.',
+      'Issuing notice on the CBI’s revision, the HC called the remarks prima facie ‘foundationally misconceived’ and stayed them, including a call for departmental action against the officer. The trial judge had found no prima facie case and called the policy the outcome of a consultative process; the CBI says he weighed evidence as if at trial.',
     status:
-      'Discharged by the trial court 27 Feb 2026. CBI revision pending before the Delhi HC (last listed for arguments 5–6 Oct 2026); ED’s money-laundering proceedings deferred. Neither has been convicted.',
+      'Discharged by the trial court 27 Feb 2026. CBI revision pending before the Delhi HC (last listed for arguments 5–6 Oct 2026); connected money-laundering proceedings deferred. Neither has been convicted.',
+    otherSide:
+      'The trial court held the chargesheet disclosed no prima facie case or overarching conspiracy against any of the 23; the HC gave them till its 5–6 Oct 2026 hearing to reply to the CBI’s revision.',
     people: ['Arvind Kejriwal', 'Manish Sisodia'],
     sourceUrl:
       'https://www.scconline.com/blog/post/2026/03/09/del-hc-issues-notice-cbis-challenge-to-discharge-delhi-excise-policy-case/',
@@ -122,11 +129,15 @@ export const HISAAB_STATES_NORTH = Object.freeze([
     options: ['₹12.40 crore', '₹33.66 crore', '₹52.10 crore', '₹91.50 crore'],
     correctIndex: 1,
     explanation:
-      'The audit (signed Nov 2024, tabled by the BJP government in March 2026) flagged a ‘doubtful’ choice of consultants, repeated estimate revisions and higher-specification items. AAP says the BJP spread false claims about the bungalow’s fittings and asked why the media was kept out; the Assembly’s Public Accounts Committee planned a site inspection in Sept 2026.',
-    sourceUrl: 'https://www.tribuneindia.com/news/delhi/common-man-or-conman-bjp-targets-kejriwal-over-cags-findings-on-cm-residence',
-    sourceLabel: 'The Tribune — CAG findings on the Delhi CM residence renovation, with BJP reaction (2025)',
+      'The audit, tabled by the BJP government on 23 Mar 2026, put the overrun at 342% and flagged a ‘doubtful’ choice of consultants, repeated estimate revisions and higher-specification items. The Assembly’s Public Accounts Committee called off a 14 Sept 2026 site visit, alleging its proceedings had been leaked and politicised.',
+    otherSide:
+      'AAP says the BJP lied about a pool, gold commodes and a bar at the bungalow, and dared the committee to take media cameras on its visit (Sept 2026).',
+    sourceUrl: 'https://dailypioneer.com/news/cag-slams-inr-33-66-crore-renovation-of-kejriwal-s-bungalow',
+    sourceLabel: 'The Pioneer — CAG slams ₹33.66 crore renovation of Kejriwal’s bungalow (24 Mar 2026)',
     sources: [
+      'https://www.tribuneindia.com/news/delhi/common-man-or-conman-bjp-targets-kejriwal-over-cags-findings-on-cm-residence',
       'https://www.aninews.in/news/national/general-news/delhi-assembly-committee-to-visit-kejriwal8217s-former-residence-aap-challenges-bjp-over-8216sheesh-mahal8217-claims20260912230147/',
+      'https://www.thehansindia.com/news/cities/new-delhi/breach-of-confidentiality-delhi-assemblys-public-accounts-committee-puts-off-sheesh-mahal-visit-1121923',
     ],
   },
   {
@@ -149,6 +160,7 @@ export const HISAAB_STATES_NORTH = Object.freeze([
       'The AAP government’s scheme issues a free ‘pink ticket’ for each ride on government-run buses. At launch about 8.5 lakh women were regular bus riders; earlier fares ran from ₹5 to ₹25. The rollout came with 13,000 bus marshals for safety.',
     sourceUrl: 'https://www.aljazeera.com/news/2019/10/29/pink-tickets-as-delhi-rolls-out-free-bus-travel-for-women',
     sourceLabel: 'Al Jazeera — Pink tickets as Delhi rolls out free bus travel for women (29 Oct 2019)',
+    sources: ['https://www.thehindu.com/elections/delhi-assembly/delhi-assembly-elections-2020-aap-sweeps-delhi-with-62-seats/article30790189.ece'],
     tags: ['distribution', 'pre-election'],
     enactedBy: [{ name: 'Arvind Kejriwal', role: 'Chief Minister, Delhi', party: 'AAP' }],
     outcome:
@@ -175,6 +187,7 @@ export const HISAAB_STATES_NORTH = Object.freeze([
       'The audit also found only 523 of a planned 1,000 clinics running by March 2023, and among 74 sampled clinics 21 lacked toilets and 10 lacked drinking water. It was tabled by the new BJP government on 28 Feb 2025, weeks after AAP lost power; the clinics had been AAP’s flagship of free primary care.',
     sourceUrl: 'https://www.tribuneindia.com/news/delhi/cag-report-highlights-mohalla-clinic-vacancies-overcrowding-in-hospitals',
     sourceLabel: 'The Tribune — CAG report highlights mohalla clinic vacancies, overcrowding (Feb 2025)',
+    sources: ['https://m.economictimes.com/news/india/keenly-awaited-cag-report-on-state-of-healthcare-in-delhi-tabled-in-assembly/articleshow/118625858.cms'],
   },
   {
     id: 'hst106',
@@ -189,14 +202,17 @@ export const HISAAB_STATES_NORTH = Object.freeze([
     asOf: '2026-09',
     govt: 'BJP',
     question:
-      "Delhi's ₹2,500-a-month scheme for women, budgeted at ₹5,100 crore in March 2025 as the Mahila Samriddhi Yojana, was renamed in 2026. What is it called now?",
+      "Delhi's ₹2,500-a-month scheme for women, budgeted at ₹5,100 crore in March 2025 and promised in the BJP manifesto as the Mahila Samriddhi Yojana, has since been renamed. What is it called now?",
     options: ['Mahila Samman Yojana', 'Ladli Behna Yojana', 'Delhi Lakshmi Yojana', 'Lado Lakshmi Yojana'],
     correctIndex: 2,
     explanation:
-      'The BJP government’s first budget (25 Mar 2025) set aside ₹5,100 crore. It was renamed in July 2026 and the registration portal opened on 1 Aug 2026 — some 16 months after the budget — with the first instalment promised around Raksha Bandhan 2026, for women aged 21–60.',
+      'The BJP government’s first budget (Mar 2025) set aside ₹5,100 crore. Registration for women aged 21–60 opened on 1 Aug 2026, some 16 months later; on 26 Aug the CM handed the first 4,190 sanction letters, with payments due from 1 Sept. Over 9 lakh women had registered by then.',
     sourceUrl: 'https://prsindia.org/files/budget/budget_state/delhi/2025/Delhi_Budget_Analysis_2025-26.pdf',
     sourceLabel: 'PRS Legislative Research — Delhi Budget Analysis 2025-26',
-    sources: ['https://www.socialnews.xyz/2026/07/28/delhi-women-to-register-for-rs-2500-scheme-from-aug-1'],
+    sources: [
+      'https://www.thehindu.com/news/cities/Delhi/lakshmi-scheme-cm-hands-sanction-letters-to-over-4000-women/article71393989.ece',
+      'https://www.socialnews.xyz/2026/07/28/delhi-women-to-register-for-rs-2500-scheme-from-aug-1',
+    ],
     tags: ['distribution'],
     enactedBy: [{ name: 'Rekha Gupta', role: 'Chief Minister, Delhi', party: 'BJP' }],
   },
@@ -226,7 +242,9 @@ export const HISAAB_STATES_NORTH = Object.freeze([
     explanation:
       'CM Bhagwant Mann sacked him on 24 May 2022, and he was arrested the same day on a superintending engineer’s complaint; the HC bailed him in July 2022. In June 2025 police told a Mohali court his voice samples did not match and no concrete evidence of corruption was found; the complainant said he had no objection. Opposition parties called it a clean chit.',
     status:
-      'Arrested 24 May 2022; on bail since 8 Jul 2022; police cancellation report filed 2 Jun 2025 (court’s decision on it not confirmed in sources checked, Sept 2026). Not convicted.',
+      'Arrested 24 May 2022; on HC bail since 8 Jul 2022; police cancellation report filed 2 Jun 2025, Mohali court reserved its decision (no ruling found in sources checked, Sept 2026). Not convicted.',
+    otherSide:
+      'Police told the court his voice samples did not match and no concrete evidence of corruption was found; the complainant said he had no objection to the case being closed.',
     people: ['Vijay Singla', 'Bhagwant Mann'],
     sourceUrl:
       'https://theprint.in/india/punjab-police-files-closure-report-in-corruption-case-against-ex-minister-vijay-singla/2673929/',
@@ -234,6 +252,7 @@ export const HISAAB_STATES_NORTH = Object.freeze([
     sources: [
       'https://www.tribuneindia.com/news/punjab/graft-case-against-singla-dropped-as-voice-samples-didnt-match-cm',
       'https://www.tribuneindia.com/news/punjab/punjab-health-minister-sacked-on-corruption-charges-arrested-397807',
+      'https://www.tribuneindia.com/news/punjab/sacked-punjab-health-minister-vijay-singla-granted-bail-by-punjab-and-haryana-high-court-410588',
     ],
   },
   {
@@ -275,7 +294,7 @@ export const HISAAB_STATES_NORTH = Object.freeze([
     options: ['About 25%', 'About 44.5%', 'About 33%', 'About 60%'],
     correctIndex: 1,
     explanation:
-      'PRS: 44.5% of GSDP, marginally below the 44.8% revised estimate for 2024-25; the state also repays ₹89,449 crore of old debt in 2025-26. For comparison PRS puts Haryana at 26.2% and Rajasthan at 36.5% for the same year.',
+      'PRS: 44.5% of GSDP, marginally below the 44.8% revised estimate for 2024-25; the state also repays ₹89,449 crore of old debt in 2025-26. For comparison PRS puts Haryana at 26.2% and Himachal Pradesh at 40.5% for the same year.',
     sourceUrl: 'https://prsindia.org/files/budget/budget_state/punjab/2025/Punjab_Budget_Analysis_2025-26.pdf',
     sourceLabel: 'PRS Legislative Research — Punjab Budget Analysis 2025-26',
   },
@@ -301,9 +320,11 @@ export const HISAAB_STATES_NORTH = Object.freeze([
     ],
     correctIndex: 3,
     explanation:
-      'The Vigilance Bureau alleges assets of about ₹540 crore beyond known income over 2007–2017, when the SAD-BJP alliance ruled Punjab, and filed a 40,000-page chargesheet in Aug 2025. The Supreme Court granted bail on 2 Feb 2026 after seven months in custody; his counsel called the case political vendetta.',
+      'The Vigilance Bureau alleges about ₹540 crore of wealth amassed over a 2007–2017 check period, when he was an MLA and for some years a minister, and filed a 40,000-page chargesheet in Aug 2025. The Supreme Court granted bail on 2 Feb 2026 after seven months in custody.',
     status:
-      'FIR 2025 under the Prevention of Corruption Act; arrested 25 Jun 2025; chargesheeted Aug 2025; on bail (Supreme Court, Feb 2026); trial pending. Not convicted; he calls the case political vendetta.',
+      'FIR 2025 under the Prevention of Corruption Act; arrested 25 Jun 2025; chargesheeted Aug 2025; on bail (Supreme Court, 2 Feb 2026); trial pending, no charges framed in sources checked (Sept 2026). Not convicted; his counsel calls it political vendetta.',
+    otherSide:
+      'His counsel told the Supreme Court the case is political vendetta, with 295 witnesses and no prospect of the trial ending soon (Feb 2026).',
     people: ['Bikram Singh Majithia'],
     sourceUrl: 'https://www.tribuneindia.com/news/punjab/bikram-majithia-akali-ex-minister-granted-bail-in-disproportionate-assets-case/',
     sourceLabel: 'The Tribune — SC grants bail to Akali leader Bikram Majithia (Feb 2026)',
@@ -329,9 +350,10 @@ export const HISAAB_STATES_NORTH = Object.freeze([
     options: ['₹1 lakh', '₹5 lakh', '₹10 lakh', '₹25 lakh'],
     correctIndex: 2,
     explanation:
-      'The cabinet cleared it on 10 Jul 2025 with no income test, for rollout on 2 Oct 2025, replacing an income-based ₹5 lakh cover; over 550 private hospitals were empanelled at approval. The 2025-26 budget allocated ₹778 crore for it — small beside the state’s ₹20,500 crore power subsidy.',
+      'The cabinet cleared it on 10 Jul 2025 with no income test, replacing an income-based ₹5 lakh cover, and the 2025-26 budget gave it ₹778 crore. The planned 2 Oct 2025 start slipped: it was rolled out on 22 Jan 2026 for all 65 lakh families in the state.',
     sourceUrl: 'https://www.tribuneindia.com/news/punjab/punjab-cabinet-gives-nod-to-scheme-providing-rs-10-lakh-health-cover-to-all-families',
     sourceLabel: 'The Tribune — Punjab Cabinet gives nod to ₹10 lakh health cover for all families (Jul 2025)',
+    sources: ['https://theprint.in/india/punjab-kejriwal-mann-roll-out-mukh-mantri-sehat-yojna-free-cashless-treatment-up-to-rs-10-lakh/2833772/'],
     tags: ['distribution'],
     enactedBy: [{ name: 'Bhagwant Mann', role: 'Chief Minister, Punjab', party: 'AAP' }],
   },
@@ -366,17 +388,19 @@ export const HISAAB_STATES_NORTH = Object.freeze([
     subtopic: 'Manesar land case',
     kind: 'scam',
     difficulty: 'expert',
-    year: 2004,
+    year: 2007,
     asOf: '2026-09',
     govt: 'INC',
     question:
-      "The CBI's Manesar land case says farmers sold about 912 acres cheaply after a 2004 acquisition notice that was later dropped for builders. Which party ran Haryana then?",
+      "The CBI's Manesar case alleges farmers sold land cheaply under threat of acquisition, after which an order of 24 August 2007 released it to builders. Which party ran Haryana when that order was passed?",
     options: ['INLD', 'INC', 'BJP', 'JJP'],
     correctIndex: 1,
     explanation:
-      'The CBI alleges landowners in three villages sold at ₹20–25 lakh an acre under threat of acquisition, costing farmers about ₹1,500 crore. It chargesheeted ex-CM Bhupinder Singh Hooda and others in 2018. The Supreme Court stayed charge-framing against him in Nov 2025; charges were framed against other accused in Jan 2026. Hooda says he trusts the courts.',
+      'The acquisition notice for 912 acres came in Aug 2004; the CBI alleges landowners in three villages then sold at ₹20–25 lakh an acre, a loss of about ₹1,500 crore, before the 2007 release. It chargesheeted ex-CM Bhupinder Singh Hooda and others in 2018. Charges were framed against other accused and firms in Jan 2026.',
     status:
-      'CBI chargesheet 2018; Supreme Court stayed framing of charges against Hooda (17 Nov 2025); trial of other accused and firms under way from 2026. Not convicted.',
+      'CBI chargesheet 2018; Supreme Court stayed proceedings against Hooda (17 Nov 2025), so no charges framed against him; trial of other accused and firms under way from 2026. Not convicted.',
+    otherSide:
+      'Hooda says the matter is sub judice and he has complete faith in the judiciary; the Supreme Court has stayed the proceedings against him.',
     people: ['Bhupinder Singh Hooda'],
     sourceUrl:
       'https://www.tribuneindia.com/news/haryana/what-is-manesar-land-scam-and-why-cbi-court-has-decided-to-start-trial-in-case/',
@@ -391,25 +415,26 @@ export const HISAAB_STATES_NORTH = Object.freeze([
     topic: 'Education & Exams',
     subtopic: 'Cash-for-marks recruitment case',
     kind: 'scam',
-    difficulty: 'simple',
+    difficulty: 'expert',
     year: 2021,
     asOf: '2026-09',
     govt: 'BJP',
     question:
-      "In November 2021 Haryana's Vigilance Bureau arrested a deputy secretary of which body over alleged bribes to raise marks in a dental-surgeon recruitment test?",
-    options: [
-      'Haryana Public Service Commission',
-      'Haryana Staff Selection Commission',
-      'Board of School Education Haryana',
-      'Haryana Police Recruitment Board',
-    ],
+      "Haryana's Vigilance Bureau arrested an HPSC deputy secretary in Nov 2021 over alleged bribes to raise marks in a dental-surgeon recruitment test. About how much cash did the state say had been seized?",
+    options: ['₹3.5 crore', '₹35 lakh', '₹35 crore', '₹350 crore'],
     correctIndex: 0,
     explanation:
-      'Investigators said they seized about ₹3.5 crore in cash, including ₹2.10 crore from an associate, and that HCS-2021 prelims answer sheets were also tampered with. The BJP-JJP government dismissed the officer in Dec 2021; the Congress demanded a High Court-monitored probe and the INLD also attacked the government.',
+      'The dismissal order said ₹2.10 crore of it came from an associate and that HCS-2021 prelims answer sheets were also allegedly tampered with. The BJP-JJP government sacked the officer in Dec 2021; the Congress demanded a probe monitored by the High Court’s chief justice. The ED later brought a linked money-laundering case.',
     status:
-      'Officer arrested Nov 2021 and dismissed from service Dec 2021; later granted bail by the High Court (reported 2023); trial pending as of sources checked. Not convicted.',
+      'Arrested Nov 2021 and dismissed Dec 2021; in ED custody in the linked money-laundering case from Dec 2023 until the High Court granted regular bail (21 Nov 2024); trial pending. Not convicted.',
+    otherSide:
+      'The officer told the court part of the seized cash was an HPSC secret fund for interviews, and that police had not shown who paid or benefited from any bribe (2022).',
     sourceUrl: 'https://theprint.in/india/haryana-deputy-secy-anil-nagar-sacked-in-dental-surgeon-recruitment-exam-scam/778045/',
     sourceLabel: 'ThePrint — Haryana deputy secy sacked in dental surgeon recruitment exam scam (7 Dec 2021)',
+    sources: [
+      'https://timesofindia.indiatimes.com/city/chandigarh/hpsc-cash-for-job-scam-bail-granted-to-key-accused-anil-nagar/articleshow/115543324.cms',
+      'https://timesofindia.indiatimes.com/city/chandigarh/money-seized-was-haryana-public-service-commission-secret-fund-claims-anil-nagar/articleshow/90258585.cms',
+    ],
   },
   {
     id: 'hst115',
@@ -496,7 +521,7 @@ export const HISAAB_STATES_NORTH = Object.freeze([
     options: ['613', '1,226', '2,400', '151'],
     correctIndex: 3,
     explanation:
-      'About 2,400 candidates who had cleared the June prelims sat the test on 17 Aug 2025; many NET/JRF-qualified candidates, including gold medallists, missed the 35% minimum, raising questions about HPSC’s evaluation. The drive covered 2,424 posts in 26 subjects.',
+      'About 2,400 candidates who had cleared the June prelims sat the test on 17 Aug 2025; many NET/JRF-qualified candidates, including gold medallists, missed the 35% minimum and protested. The HPSC secretary said the examination process was robust and marks were given transparently. The drive covered 2,424 posts in 26 subjects.',
     sourceUrl:
       'https://theprint.in/india/education/why-did-haryanas-brightest-fail-hpscs-assistant-professor-exams-an-evaluation-or-education-debate/2799991/',
     sourceLabel: 'ThePrint — Why did Haryana’s brightest fail HPSC’s assistant professor exams? (Dec 2025)',
@@ -525,6 +550,7 @@ export const HISAAB_STATES_NORTH = Object.freeze([
       'https://www.thehindu.com/news/national/other-states/himachal-pradesh-decides-to-restores-ops-for-its-employees/article66373793.ece',
     sourceLabel: 'The Hindu — Himachal Pradesh decides to restore OPS for its employees (13 Jan 2023)',
     tags: ['pre-election'],
+    sources: ['https://www.livemint.com/elections/assembly-elections/election-results-2022-bjp-sets-gujarat-record-congress-wins-himachal-pradesh-11670495701908.html'],
     enactedBy: [{ name: 'Sukhvinder Singh Sukhu', role: 'Chief Minister, Himachal Pradesh', party: 'INC' }],
     outcome:
       'A Congress campaign promise for the 12 Nov 2022 poll, which it won with 40 of 68 seats. The cabinet restored the OPS on 13 Jan 2023; the CM said it would benefit over 1.36 lakh NPS employees.',
@@ -591,7 +617,10 @@ export const HISAAB_STATES_NORTH = Object.freeze([
     options: ['Himachal Sadan', 'HP Tourism reception centre', 'Himachal Emporium', 'Himachal Bhawan'],
     correctIndex: 3,
     explanation:
-      'The court allowed the firm to seek auction of Himachal Bhawan at Mandi House to recover about ₹150 crore. The 340 MW Seli project, allotted in 2009, never came up; the state forfeited the ₹64 crore upfront premium, but an arbitrator ordered it refunded with interest and the state had not paid.',
+      'The court allowed the firm to seek auction of Himachal Bhawan at Mandi House to recover about ₹150 crore. The 340 MW Seli project, allotted in 2009, never came up; the state forfeited the ₹64 crore upfront premium, but an arbitrator ordered it refunded with interest and the state had not paid. No later ruling was found in sources checked (Sept 2026).',
+    otherSide:
+      'The Chief Minister said the ₹64 crore was forfeited under the 2006 hydro policy, that the refund was an arbitrator’s decision the state had challenged, and that it would examine the order.',
+    sources: ['https://www.tribuneindia.com/news/himachal/will-examine-high-court-order-says-cm-sukhu-as-he-faces-heat-over-himachal-bhawan-attachment/amp'],
     sourceUrl:
       'https://www.thehindu.com/news/national/himachal-pradesh/hc-orders-attachment-of-delhis-himachal-bhawan-after-hp-govt-fails-to-clear-dues-of-power-firm/article68885313.ece',
     sourceLabel: 'The Hindu — HC orders attachment of Delhi’s Himachal Bhawan (19 Nov 2024)',
@@ -609,13 +638,16 @@ export const HISAAB_STATES_NORTH = Object.freeze([
     asOf: '2026-09',
     govt: 'INC',
     question:
-      "In March 2024 the CBI chargesheeted 20 institutions and 105 people in Himachal's scholarship scam. About what value of fake claims (2013–2017) did its case cite?",
+      "In March 2024 the CBI chargesheeted 20 institutions and 105 people in Himachal's alleged scholarship scam. About what value of allegedly fake claims (2013–2017) did its case cite?",
     options: ['About ₹18 crore', 'About ₹181 crore', 'About ₹81 crore', 'About ₹1,810 crore'],
     correctIndex: 1,
     explanation:
       'The CBI case (2019, on the state’s request) says about 80% of the money went to private institutions while about 32,000 students did not get their scholarships; 19 people, including institute heads, bank staff and education officials, were arrested. It surfaced when students in Spiti went unpaid for five years.',
     status:
-      'CBI registered the case in 2019; chargesheets filed against 20 institutions and 105 persons (Mar 2024); trial pending. No conviction reported in sources checked.',
+      'CBI case 2019; chargesheets against 20 institutions and 105 persons (Mar 2024); linked ED money-laundering case continuing (Supreme Court cancelled an accused institute chairman’s anticipatory bail, 16 Jul 2026); trials pending; no conviction reported (Sept 2026).',
+    otherSide:
+      'An accused institute chairman told the courts he had cooperated with the probe since 2019; the Supreme Court still set aside his anticipatory bail (Jul 2026). None of the accused has been convicted.',
+    sources: ['https://www.livelawbiz.com/top-stories/supreme-court-sets-aside-anticipatory-bail-granted-to-hgpi-chairman-in-post-matric-scholarship-scam-pmla-case-541499'],
     sourceUrl:
       'https://www.thehindu.com/news/national/himachal-pradesh/himachal-multi-crore-scholarship-scam-cbi-files-charge-sheet-against-20-institutes-105-individuals/article68005966.ece',
     sourceLabel: 'The Hindu — Himachal scholarship scam: CBI files charge sheet against 20 institutes, 105 individuals (29 Mar 2024)',
@@ -661,11 +693,16 @@ export const HISAAB_STATES_NORTH = Object.freeze([
     options: ['26,382', '32,679', '1,20,000', '60,244'],
     correctIndex: 3,
     explanation:
-      'The state cancelled the exam in February and re-held it over five days in August 2024, with about 5 lakh candidates a shift. Soon after, on 2 Mar 2024, the government also cancelled the UPPSC RO/ARO exam over an alleged leak and handed probes to the Special Task Force.',
+      'The state cancelled the exam in February and re-held it over five days in August 2024, with about 5 lakh candidates a shift. The ED alleges the same accused also leaked a second state recruitment paper and used those proceeds to fund this leak; it filed a supplementary chargesheet against 18 accused in Jan 2026.',
     status:
-      'Exam cancelled Feb 2024 and re-conducted Aug 2024; STF arrested alleged leak organisers in 2024; prosecutions pending as of sources checked.',
+      'Exam cancelled Feb 2024 and re-held Aug 2024; STF FIR Mar 2024; ED prosecution complaints Jan 2025 (7 accused, under trial) and Jan 2026 (18 accused); no conviction reported (Sept 2026).',
+    otherSide:
+      'The state cancelled and re-held the exam with free bus travel for candidates, and in July 2024 notified an anti-leak ordinance allowing life terms and fines of up to ₹1 crore.',
     sourceUrl: 'https://theprint.in/india/cancelled-over-paper-leak-up-police-constable-re-exam-now-in-august/2190854/',
     sourceLabel: 'ThePrint (PTI) — Cancelled over paper leak, UP police constable re-exam now in August (25 Jul 2024)',
+    sources: [
+      'https://www.hindustantimes.com/cities/lucknow-news/up-police-ro-aro-paper-leak-cases-enforcement-directorate-files-supplementary-charge-sheet-against-18-accused-under-pmla-101768418602170.html',
+    ],
   },
   {
     id: 'hst126',
@@ -690,9 +727,15 @@ export const HISAAB_STATES_NORTH = Object.freeze([
     correctIndex: 0,
     explanation:
       'The chief minister ordered the cancellation after the question paper allegedly circulated on social media, and the UP Police Special Task Force was asked to investigate. It came days after the constable exam was scrapped for the same reason.',
-    status: 'Exam cancelled 2 Mar 2024; STF investigation; no conviction reported in sources checked.',
+    status:
+      'Exam cancelled 2 Mar 2024; STF investigation; ED prosecution complaints Jan 2025 (under trial) and Jan 2026 (18 accused), jointly with the police constable leak; no conviction reported (Sept 2026).',
+    otherSide:
+      'The government said it cancelled both sessions on evidence it had publicly invited and the commission’s own report, and ordered a re-test within six months.',
     sourceUrl: 'https://theprint.in/india/up-govt-cancels-ro-aro-exam-over-paper-leak/1986280/',
     sourceLabel: 'ThePrint (PTI) — UP govt cancels RO/ARO exam over paper leak (2 Mar 2024)',
+    sources: [
+      'https://www.hindustantimes.com/cities/lucknow-news/up-police-ro-aro-paper-leak-cases-enforcement-directorate-files-supplementary-charge-sheet-against-18-accused-under-pmla-101768418602170.html',
+    ],
   },
   {
     id: 'hst127',
@@ -713,7 +756,9 @@ export const HISAAB_STATES_NORTH = Object.freeze([
     explanation:
       'The CBI’s 2021 case names 17 irrigation officials and 172 others, alleging tenders were not advertised and forged bids made up the quorum; ₹1,437 crore had been spent. Its first chargesheet (Feb 2021) named two officials and four private parties. The probe began after the BJP took office in 2017; no politician has been chargesheeted in these filings.',
     status:
-      'CBI cases registered Nov 2017 and Jul 2021; first chargesheet Feb 2021 against two officials and private parties; trial and further probe pending as of sources checked.',
+      'CBI cases registered Nov 2017 and Jul 2021; first chargesheet Feb 2021 against two officials and private parties; trial and further probe pending; no politician charged (Sept 2026).',
+    otherSide:
+      'No politician has been charged: the CBI’s filings name irrigation officials, firms and their owners. No reply from the Samajwadi Party to the probe was found in sources checked (Sept 2026).',
     sourceUrl:
       'https://www.thehindu.com/news/national/other-states/cbi-registers-fresh-case-in-gomti-river-front-project-irregularities-searches-at-over-40-locations/article35142515.ece',
     sourceLabel: 'The Hindu — Gomti project: CBI conducts raids in 40 locations (5 Jul 2021)',
@@ -773,7 +818,7 @@ export const HISAAB_STATES_NORTH = Object.freeze([
     asOf: '2026-09',
     govt: 'BJP',
     question:
-      'About four months after its inauguration, a stretch of the Ganga Expressway caved in after heavy rain in September 2026. In which district?',
+      'About four months after its inauguration, a stretch of the Ganga Expressway was reported caved in after heavy rain on 1 September 2026. In which district?',
     options: ['Unnao', 'Hardoi', 'Meerut', 'Prayagraj'],
     correctIndex: 0,
     explanation:
@@ -796,11 +841,11 @@ export const HISAAB_STATES_NORTH = Object.freeze([
     asOf: '2026-09',
     govt: 'BJP',
     question:
-      "Uttarakhand's anti-cheating law, passed in February 2023 after recruitment-exam leaks, allows fines of up to how much for those leaking or selling papers?",
+      "Uttarakhand's anti-cheating law, first brought in by ordinance in February 2023 after recruitment-exam leaks, allows fines of up to how much for those leaking or selling papers?",
     options: ['₹10 lakh', '₹1 crore', '₹10 crore', '₹100 crore'],
     correctIndex: 2,
     explanation:
-      'The law also allows life imprisonment. It followed a leak, exposed in 2022, in a UKSSSC graduate-level exam taken by over a lakh aspirants. Yet another UKSSSC exam was hit by an alleged leak in Sept 2025; the CM said over 100 people had been arrested in exam-cheating cases since 2022.',
+      'The Governor signed the ordinance on 10 Feb 2023 and it was later passed as an Act; it also allows life imprisonment. It followed a 2022 leak in a UKSSSC graduate-level exam affecting over a lakh aspirants. Another UKSSSC exam was hit by an alleged leak in Sept 2025; the CM said over 100 people had been arrested in exam-cheating cases since 2022.',
     sourceUrl:
       'https://theprint.in/india/another-exam-another-leak-uttarakhand-cant-plug-gaps-despite-anti-cheating-law-uksssc-stir-spills-over/2750820/',
     sourceLabel: 'ThePrint — Another exam, another leak: Uttarakhand can’t plug gaps despite anti-cheating law (Sep 2025)',
@@ -828,7 +873,11 @@ export const HISAAB_STATES_NORTH = Object.freeze([
     correctIndex: 0,
     explanation:
       'More than one lakh candidates had appeared. After weeks of protests by the Uttarakhand Unemployed Union, the state recommended a CBI probe, and on 11 Oct 2025 the commission cancelled the exam, promising a re-test within three months.',
-    status: 'Exam cancelled 11 Oct 2025; state recommended a CBI probe; investigation pending as of sources checked.',
+    status:
+      'Exam cancelled 11 Oct 2025; CBI took over and chargesheeted three accused; special CBI court found sufficient grounds to frame charges (Aug 2026); trial pending. No conviction.',
+    otherSide:
+      'The commission cancelled the exam and the state sought a CBI probe; one of the three accused argued in court she did not know an exam was under way, but the judge found grounds to proceed.',
+    sources: ['https://timesofindia.indiatimes.com/city/dehradun/court-finds-sufficient-grounds-to-frame-charges-against-3-uksssc-paper-leak-accused/articleshow/133189276.cms'],
     sourceUrl:
       'https://www.thehindu.com/news/national/uttarakhand/paper-leak-uttarakhand-cancels-graduate-level-recruitment-examination-to-be-held-within-three-months/article70151741.ece',
     sourceLabel: 'The Hindu — ‘Paper leak’: Uttarakhand cancels graduate-level recruitment examination (11 Oct 2025)',
@@ -857,7 +906,9 @@ export const HISAAB_STATES_NORTH = Object.freeze([
     explanation:
       'The exam and its results came in March 2016; a panel found irregularities in 2017 and the case went to vigilance in 2019 and the STF in 2022. In Oct 2022 the STF arrested the then commission chairman, a retired forest officer, and the then secretary, at whose house OMR scanning was allegedly done. The BJP government called it zero tolerance.',
     status:
-      'Arrests by the STF in 2022 (incl. the then chairman and secretary); case pending in court as of sources checked. Not convicted.',
+      'Arrests by the STF in Oct 2022 (incl. the then chairman and secretary); case pending in court; no later ruling found in sources checked (Sept 2026). Not convicted.',
+    otherSide:
+      'No public response from the arrested former commission officials was found in sources checked (Sept 2026); none has been convicted.',
     sourceUrl:
       'https://www.thehindu.com/news/national/other-states/retd-indian-forest-service-officer-arrested-in-uttarakhand-state-service-board-recruitment-scam/article65985763.ece',
     sourceLabel: 'The Hindu — Retd. IFS officer arrested in Uttarakhand recruitment scam (8 Oct 2022)',
@@ -920,7 +971,7 @@ export const HISAAB_STATES_NORTH = Object.freeze([
     options: ['About 25%', 'About 44%', 'About 51%', 'About 12%'],
     correctIndex: 0,
     explanation:
-      'PRS: 25% of GSDP, up from a 24% budget estimate for 2024-25 — far below Punjab (44.5%) or J&K. But 60% of Uttarakhand’s revenue receipts are committed to salaries (33%), pensions (16%) and interest (11%).',
+      'PRS: 25% of GSDP, up from a 24% budget estimate for 2024-25 — just below Haryana (26.2%) and Jharkhand (27%). But 60% of Uttarakhand’s revenue receipts are committed to salaries (33%), pensions (16%) and interest (11%).',
     sourceUrl: 'https://prsindia.org/files/budget/budget_state/uttarakhand/2025/Uttarakhand_Budget_Analysis_2025-26.pdf',
     sourceLabel: 'PRS Legislative Research — Uttarakhand Budget Analysis 2025-26',
   },
@@ -943,12 +994,13 @@ export const HISAAB_STATES_NORTH = Object.freeze([
     options: ['Struck down 3–2', 'Referred to a seven-judge bench', 'Upheld unanimously', 'Upheld 3–2'],
     correctIndex: 2,
     explanation:
-      'The Constitution Bench held that the President could notify that Article 370 ceases to operate, a move that also split the state into two Union Territories. After the Oct 2024 Assembly polls an NC–Congress government took office; the Union Home Minister has promised statehood without giving a timeline.',
+      'The Constitution Bench held that the President could notify that Article 370 ceases to operate, a move that also split the state into two Union Territories. The Union Home Minister promised statehood without a timeline; it had still not been restored in Sept 2026, when the Assembly took up a second resolution seeking it.',
     sourceUrl:
       'https://www.thehindu.com/news/national/sc-upholds-abrogation-of-article-370-says-move-was-part-of-70-year-old-exercise-to-integrate-jk-to-the-union/article67626914.ece',
     sourceLabel: 'The Hindu — SC upholds abrogation of Article 370 (11 Dec 2023)',
     sources: [
       'https://www.thehindu.com/elections/jammu-and-kashmir-assembly/after-decisive-mandate-governance-challenges-likely-for-nc-congress-alliance-in-jk-as-key-administrative-powers-remain-with-the-l-g/article68733481.ece',
+      'https://www.hindustantimes.com/cities/chandigarh-news/autumn-session-omar-moves-resolution-in-house-seeks-urgent-statehood-for-jk-101790366541328.html',
     ],
   },
   {
@@ -968,11 +1020,14 @@ export const HISAAB_STATES_NORTH = Object.freeze([
     options: ['Enforcement Directorate', 'Central Bureau of Investigation', 'National Investigation Agency', 'J&K Anti-Corruption Bureau'],
     correctIndex: 1,
     explanation:
-      'The 2001 law (J&K State Lands — Vesting of Ownership to the Occupants — Act) was repealed by the administration in 2018, which had also ordered an Anti-Corruption Bureau probe into prime land being cornered. A petitioner alleged a ₹25,000 crore loss; the court asked the CBI to report every eight weeks. The law was in force from 2001 until its 2018 repeal.',
+      'The 2001 law (J&K State Lands — Vesting of Ownership to the Occupants — Act) was repealed by the administration in 2018, which had also ordered an Anti-Corruption Bureau probe into prime land being cornered. A petitioner alleged a ₹25,000 crore loss; the court asked the CBI to report every eight weeks and held the Act void from the start.',
     status:
-      'HC ordered a CBI probe on 9 Oct 2020; later outcome of the probe and connected review proceedings not verified in sources checked (stale-risk).',
+      'HC ordered a CBI probe 9 Oct 2020; CBI cases followed. In Jan 2026 the HC ruled corruption prosecutions can continue despite the Act being void, but quashed chargesheets where no corrupt intent was shown. No conviction reported (Sept 2026).',
+    otherSide:
+      'In Jan 2026 the High Court quashed chargesheets against some officials and beneficiaries, finding no material that they used corrupt means or gained from the land transfers.',
     sourceUrl: 'https://www.thehindu.com/news/national/other-states/hc-orders-cbi-probe-into-roshni-land-scam-in-jk/article32818909.ece',
     sourceLabel: 'The Hindu — HC orders CBI probe into Roshni land scam in J&K (10 Oct 2020)',
+    sources: ['https://kashmirobserver.net/2026/01/30/roshni-act-void-but-corruption-cases-can-proceed-jk-hc/'],
   },
   {
     id: 'hst139',
@@ -991,12 +1046,15 @@ export const HISAAB_STATES_NORTH = Object.freeze([
     options: ['About 300', 'About 5,000', 'About 12,000', 'About 1,200'],
     correctIndex: 3,
     explanation:
-      'The exam was held on 27 Mar 2022; lists of about 1,300 junior engineers and 1,000 finance account assistants were scrapped too. The CBI filed a chargesheet in Nov 2022 and the ED opened a money-laundering case; in Jul 2024 a Jammu court refused bail to the alleged kingpin, saying the ED probe was still at an early stage.',
-    status: 'CBI chargesheet Nov 2022; ED money-laundering probe ongoing (2024); trial pending. No conviction reported.',
+      'The exam was held on 27 Mar 2022; lists of about 1,300 junior engineers and 1,000 finance account assistants were scrapped too. The CBI chargesheeted 33 accused in Nov 2022 and the ED opened a money-laundering case, alleging a money trail of about ₹2.52 crore from selling the paper.',
+    status:
+      'CBI chargesheet against 33 accused (Nov 2022); ED money-laundering case; special court bailed the alleged kingpin (Nov 2024) and the HC refused to cancel that bail (Apr 2026); trial pending. No conviction reported (Sept 2026).',
+    otherSide:
+      'The accused told the High Court they had kept every bail condition and not tampered with evidence; it refused the ED’s plea to cancel their bail (Apr 2026).',
     sourceUrl:
       'https://www.thehindu.com/news/national/jammu-and-kashmir/jammu-kashmir-sub-inspector-recruitment-exam-paper-leak-case-court-dismisses-bail-plea-of-kingpin/article68459947.ece',
     sourceLabel: 'The Hindu — J&K sub-inspector recruitment exam leak: court dismisses bail plea of kingpin (29 Jul 2024)',
-    sources: ['https://www.thehindu.com/news/national/paper-leak-scam-cbi-chargesheets-15-including-7-security-personnel-in-jk/article67696174.ece'],
+    sources: ['https://www.dailyexcelsior.com/hc-refuses-to-cancel-bail-in-jkssb-paper-leak-case/'],
   },
   {
     id: 'hst140',
@@ -1014,7 +1072,7 @@ export const HISAAB_STATES_NORTH = Object.freeze([
     options: ['About 25%', 'About 36%', 'About 51%', 'About 70%'],
     correctIndex: 2,
     explanation:
-      'PRS: 51% of GSDP at end-2023-24, up from 48% a year earlier — higher than Punjab’s 44.5% budgeted for 2025-26. PRS also flags gaps between the budget’s 2023-24 figures and the CAG’s provisional accounts. Committed spending takes 56% of revenue receipts in 2025-26.',
+      'PRS: 51% of GSDP at end-2023-24, up from 48% a year earlier; outstanding guarantees add another 8% of GSDP (Mar 2025). PRS also flags gaps between the budget’s 2023-24 figures and the CAG’s provisional accounts. Committed spending takes 56% of revenue receipts in 2025-26.',
     sourceUrl: 'https://prsindia.org/files/budget/budget_state/jammu-and-kashmir/2025/J%26K_Budget_Analysis_2025-26.pdf',
     sourceLabel: 'PRS Legislative Research — Jammu and Kashmir Budget Analysis 2025-26',
   },
@@ -1094,7 +1152,9 @@ export const HISAAB_STATES_NORTH = Object.freeze([
     explanation:
       'The Sept 2021 exam was quashed by a single judge on 28 Aug 2025; the SOG has arrested 122 people, including 55 trainee SIs and two RPSC members. The BJP government’s cabinet panel had advised against cancelling, saying 6.3% of examinees were tainted. The bench urged ‘no political appointments’ to the RPSC; a re-exam was held on 20 Sep 2026.',
     status:
-      'Exam cancelled (single judge Aug 2025; division bench upheld 4 Apr 2026); re-exam held 20 Sep 2026; criminal cases against arrested accused pending.',
+      'Exam cancelled (single judge Aug 2025; division bench upheld 4 Apr 2026); re-exam held 20 Sep 2026; criminal cases against arrested accused pending; no conviction reported (Sept 2026).',
+    otherSide:
+      'The state’s cabinet sub-committee had advised against scrapping the recruitment, saying the SOG found only 6.3% of examinees tainted; the High Court bench disagreed.',
     sourceUrl:
       'https://www.thehindu.com/news/national/rajasthan/rajasthan-high-court-upholds-cancellation-of-2021-policesub-inspector-exam-over-paper-leak/article70823951.ece',
     sourceLabel: 'The Hindu — Rajasthan HC upholds cancellation of 2021 police SI exam (4 Apr 2026)',
@@ -1108,26 +1168,24 @@ export const HISAAB_STATES_NORTH = Object.freeze([
     topic: 'Education & Exams',
     subtopic: 'Senior teacher exam 2022 leak',
     kind: 'scam',
-    difficulty: 'simple',
+    difficulty: 'expert',
     year: 2022,
     asOf: '2026-09',
     govt: 'INC',
     question:
-      "In September 2023 the ED arrested a sitting member of which body over the leak of the general-knowledge paper of Rajasthan's December 2022 senior-teacher exam?",
-    options: [
-      'Rajasthan Staff Selection Board',
-      'Rajasthan Public Service Commission',
-      'Board of Secondary Education, Rajasthan',
-      'Union Public Service Commission',
-    ],
+      "In Sept 2023 the ED arrested a sitting RPSC member in the case over the leaked general-knowledge paper of Rajasthan's Dec 2022 senior-teacher exam. How much did police allege he was paid for it?",
+    options: ['₹6 lakh', '₹60 lakh', '₹6 crore', '₹16 crore'],
     correctIndex: 1,
     explanation:
-      'The Rajasthan Police SOG alleged the member took ₹60 lakh to pass the paper to a gang that sold it to candidates for ₹8–10 lakh each; the ED also arrested an alleged broker under the money-laundering law. The allegations are yet to be tested at trial.',
+      'The Rajasthan Police SOG, under the then Congress government, first arrested him in Apr 2023, alleging he took ₹60 lakh to pass the paper to a gang that sold it to candidates for ₹8–10 lakh each; the Opposition BJP sought a CBI probe into the leaks. The ED also arrested an alleged broker. The Governor suspended him and in Apr 2026 sanctioned his prosecution. The allegations are yet to be tested at trial.',
     status:
-      'Arrested by the ED (PMLA) Sept 2023; suspended from the commission; Supreme Court interim bail (Feb 2026) later revoked (Mar 2026), per reports; trial pending. Not convicted.',
+      'Arrested by the SOG (Apr 2023, then bailed) and the ED under PMLA (Sept 2023); suspended; Supreme Court interim bail (9 Feb 2026) revoked (Mar 2026); prosecution sanctioned (Apr 2026); trial pending. Not convicted.',
+    otherSide:
+      'No public statement from the suspended member was found in sources checked (Sept 2026); the ₹60 lakh figure is a police allegation, and he has not been convicted.',
     sourceUrl:
       'https://www.thehindu.com/news/national/other-states/ed-arrests-anil-kumar-meena-rpsc-member-babulal-katara-in-paper-leak-case/article67314716.ece',
     sourceLabel: 'The Hindu — ED arrests RPSC member, broker in paper leak case (16 Sep 2023)',
+    sources: ['https://timesofindia.indiatimes.com/city/jaipur/guv-grants-prosecution-sanction-for-ex-rpsc-member-katara/articleshow/130316992.cms'],
   },
   {
     id: 'hst145',
@@ -1146,13 +1204,19 @@ export const HISAAB_STATES_NORTH = Object.freeze([
     options: ['Chiranjeevi health insurance', 'Indira Rasoi Yojana', 'Jal Jeevan Mission', 'PM Awas Yojana-Gramin'],
     correctIndex: 2,
     explanation:
-      'Joshi headed the Public Health Engineering department, which ran the tap-water mission, in the 2018–23 Congress government. PTI reports describe an alleged ₹900 crore scam; the ED case stems from the ACB FIR. The Supreme Court bailed him in the ED case in Dec 2025. Joshi has denied wrongdoing and called the case a conspiracy.',
+      'Joshi headed the Public Health Engineering department, which ran the tap-water mission, in the 2018–23 Congress government. PTI reports describe an alleged ₹900 crore scam; the ED case stems from the ACB FIR, which alleges firms bribed officials to win tenders. The Supreme Court bailed him in the ED case in Dec 2025.',
     status:
-      'ED arrest 24 Apr 2025 (Supreme Court bail Dec 2025); ACB arrest 7 May 2026, in judicial custody; High Court declined bail in Aug 2026 (reported). Not convicted.',
+      'ED arrest 24 Apr 2025 (Supreme Court bail Dec 2025); ACB arrest 7 May 2026, in judicial custody; ACB chargesheet filed; Rajasthan HC denied bail 13 Aug 2026. Not convicted; calls the case a conspiracy.',
+    otherSide:
+      'Joshi says the case is a conspiracy built on statements by firms he blacklisted as minister; his lawyer says he sat on no bid-evaluation or finance committee that passed the tenders.',
     people: ['Mahesh Joshi'],
     sourceUrl: 'https://theprint.in/india/jjm-scam-former-rajasthan-minister-joshi-sent-to-judicial-custody/2927798/',
     sourceLabel: 'ThePrint (PTI) — JJM ‘scam’: former Rajasthan minister Joshi sent to judicial custody (11 May 2026)',
-    sources: ['https://theprint.in/india/ed-arrests-former-rajasthan-minister-mahesh-joshi-in-money-laundering-case/2602508/'],
+    sources: [
+      'https://theprint.in/india/ed-arrests-former-rajasthan-minister-mahesh-joshi-in-money-laundering-case/2602508/',
+      'https://timesofindia.indiatimes.com/city/jaipur/joshi-held-in-jal-jeevan-laundering-case/articleshow/120595653.cms',
+      'https://www.etvbharat.com/en/state/rajasthan-hc-denies-bail-to-former-minister-mahesh-joshi-and-former-ias-officer-subodh-agrawal-among-other-accused-in-jjm-scam-enn26081304387',
+    ],
   },
   {
     id: 'hst146',
@@ -1171,9 +1235,10 @@ export const HISAAB_STATES_NORTH = Object.freeze([
     options: ['Himachal Pradesh', 'Punjab', 'Chhattisgarh', 'Rajasthan'],
     correctIndex: 3,
     explanation:
-      'The chief minister said the NPS had left employees anxious about old age; a staff federation said over 4 lakh employees would benefit. Himachal followed in Jan 2023. By 2025-26 pensions took 12% of Rajasthan’s revenue receipts (PRS).',
+      'The chief minister said the NPS had left employees anxious about old age and urged other states to rethink it; a staff federation said over 4 lakh employees would benefit. The Hindu called it a populist budget ahead of the 2023 poll. By 2025-26 pensions took 12% of Rajasthan’s revenue receipts (PRS).',
     sourceUrl: 'https://www.thehindu.com/news/national/other-states/old-pension-scheme-revived-in-rajasthan-budget/article65078024.ece',
     sourceLabel: 'The Hindu — Old pension scheme revived in Rajasthan budget (23 Feb 2022)',
+    sources: ['https://prsindia.org/files/budget/budget_state/rajasthan/2025/Rajasthan_Budget_Analysis_2025-26.pdf'],
   },
   {
     id: 'hst147',
@@ -1192,10 +1257,11 @@ export const HISAAB_STATES_NORTH = Object.freeze([
     options: ['₹5 lakh', '₹10 lakh', '₹25 lakh', '₹50 lakh'],
     correctIndex: 2,
     explanation:
-      'In the 2023 campaign Congress promised to raise it to ₹50 lakh; a BJP spokesperson called that impractical, arguing few families’ bills ever crossed the ₹5 lakh offered by the Centre’s Ayushman Bharat. The BJP won the Dec 2023 election and said the previous government’s schemes would continue.',
+      'In the 2023 campaign Congress promised to raise it to ₹50 lakh; a BJP spokesperson called that impractical, arguing few families’ bills ever crossed the ₹5 lakh offered by the Centre’s Ayushman Bharat, and asked the government to publish how many had.',
     sourceUrl:
       'https://www.thehindu.com/elections/rajasthan-assembly/ashok-gehlots-expansion-of-health-cover-under-chiranjeevi-scheme-impractical-says-bjp-leader/article67567361.ece',
     sourceLabel: 'The Hindu — Expansion of health cover under Chiranjeevi scheme ‘impractical’, says BJP leader (Nov 2023)',
+    sources: ['https://www.livemint.com/elections/assembly-elections/bjp-emerges-victorious-in-rajasthan-assembly-election-securing-115-seats-a-recap-10-points-11701651737789.html'],
     tags: ['distribution', 'pre-election'],
     enactedBy: [{ name: 'Ashok Gehlot', role: 'Chief Minister, Rajasthan', party: 'INC' }],
     outcome:
@@ -1244,10 +1310,15 @@ export const HISAAB_STATES_NORTH = Object.freeze([
       'Money from land-acquisition and welfare accounts was allegedly moved to the NGO’s accounts with help from bank and government staff, then spent on property. The CBI took over in Aug 2017. The RJD blamed the Nitish Kumar government; the BJP alleged the NGO got its office lease in 2004 under Rabri Devi.',
     people: ['Nitish Kumar', 'Rabri Devi'],
     status:
-      'CBI re-registered 10 cases in Aug 2017; ED attached assets (₹18.45 crore by Oct 2021) and filed a chargesheet; trials in progress, with some verdicts reported in 2025. No politician charged in sources checked.',
+      'CBI re-registered 10 cases in Aug 2017; ED attached assets (₹18.45 crore by Oct 2021) and filed a chargesheet; first verdict Nov 2025, when a special CBI court convicted three bank and collectorate staff in one case; other trials pending. No politician charged (Sept 2026).',
+    otherSide:
+      'No politician has been charged; in 2017 the RJD blamed the ruling JD(U)-BJP government while the BJP pointed to the NGO’s 2004 office lease under the RJD government.',
     sourceUrl: 'https://www.thehindu.com/news/national/other-states/cbi-takes-over-probe-into-1000-crore-srijan-scam-in-bihar/article61470793.ece',
     sourceLabel: 'The Hindu — CBI re-registers 10 cases linked to Srijan scam (26 Aug 2017)',
-    sources: ['https://www.thehindu.com/news/national/other-states/enforcement-directorate-arrests-one-person-in-srijan-scam-case/article36889215.ece'],
+    sources: [
+      'https://www.thehindu.com/news/national/other-states/enforcement-directorate-arrests-one-person-in-srijan-scam-case/article36889215.ece',
+      'https://www.etvbharat.com/en/state/cbi-court-sentences-three-in-bihars-multi-crore-srijan-scam-enn25111901804',
+    ],
   },
   {
     id: 'hst150',
@@ -1266,13 +1337,18 @@ export const HISAAB_STATES_NORTH = Object.freeze([
     options: ['1990–1997', '2000–2004', '2014–2019', '2004–2009'],
     correctIndex: 3,
     explanation:
-      'The CBI alleges Group D substitutes were hired without public notice while Lalu Prasad was Union Railway Minister, in return for land given to his family and a company they controlled. The court rejected the family’s discharge pleas and framed charges; some railway officials and substitutes were discharged. The family calls the case politically motivated and denies the charges.',
+      'The CBI alleges Group D substitutes were hired while Lalu Prasad was Union Railway Minister, in return for land given to his family and a company they controlled. The court rejected the family’s discharge pleas and framed charges; some railway officials and substitutes were discharged. In Apr 2026 the Supreme Court declined to quash the FIR.',
     status:
-      'CBI case: charges framed 9 Jan 2026; Lalu Prasad and Rabri Devi pleaded not guilty (Feb 2026); trial under way. ED money-laundering case: charge-framing hearing listed 30 Sep 2026. Not convicted.',
+      'CBI case: charges framed 9 Jan 2026; Supreme Court declined to quash the FIR (13 Apr 2026) but let him raise lack of prior sanction at trial; trial under way. ED money-laundering case: charge-framing hearing listed 30 Sep 2026. Not convicted; the family denies the charges.',
+    otherSide:
+      'Lalu Prasad and his family call the case politically motivated and deny the CBI’s charges; the Supreme Court exempted him from appearing in person at the trial.',
     people: ['Lalu Prasad Yadav', 'Rabri Devi'],
     sourceUrl: 'https://www.thehindu.com/news/national/land-for-jobs-case-delhi-court-frames-charges-against-lalu-prasad/article70489533.ece',
     sourceLabel: 'The Hindu — Delhi court frames charges against Lalu Prasad, others in land-for-jobs case (9 Jan 2026)',
-    sources: ['https://theprint.in/india/delhi-court-adjourns-framing-of-charges-in-eds-land-for-job-irctc-cases-against-lalu/3028488/'],
+    sources: [
+      'https://theprint.in/india/delhi-court-adjourns-framing-of-charges-in-eds-land-for-job-irctc-cases-against-lalu/3028488/',
+      'https://www.thehindu.com/news/national/sc-allows-lalu-prasad-to-raise-plea-of-prior-sanction-during-trial/article70856529.ece',
+    ],
   },
   {
     id: 'hst151',
@@ -1312,9 +1388,13 @@ export const HISAAB_STATES_NORTH = Object.freeze([
     options: ['₹2,500', '₹10,000', '₹25,000', '₹1 lakh'],
     correctIndex: 1,
     explanation:
-      'The PM transferred ₹7,500 crore in all on 26 Sep 2025 for the state-funded scheme, which promises up to ₹2 lakh more later based on how the women’s ventures do. Congress called it vote-buying (‘vote revdi’); the NDA went on to win the November 2025 election.',
+      'The PM transferred ₹7,500 crore in all on 26 Sep 2025 for the state-funded scheme, which promises up to ₹2 lakh more later based on how the women’s ventures do. The RJD complained to the Election Commission that further payments on 17, 24 and 31 Oct, after the model code began, broke it.',
     sourceUrl: 'https://www.thehindu.com/elections/bihar-assembly/pm-modi-launches-bihars-mukhyamantri-mahila-rojgar-yojana/article70096776.ece',
     sourceLabel: 'The Hindu — PM Modi launches Bihar’s Mukhyamantri Mahila Rojgar Yojana (26 Sep 2025)',
+    sources: [
+      'https://theprint.in/india/rjd-leader-writes-to-ec-says-bihar-govt-violated-mcc-by-transferring-money-to-women-ahead-of-poll/2774961/',
+      'https://www.hindustantimes.com/india-news/nda-mahagathbandhan-bjp-jdu-rjd-congress-ljp-jan-suraaj-prashant-kishore-tejashwi-seat-tally-101763169862862.html',
+    ],
     tags: ['distribution', 'pre-election'],
     enactedBy: [
       { name: 'Nitish Kumar', role: 'Chief Minister, Bihar', party: 'JD(U)' },
@@ -1367,12 +1447,17 @@ export const HISAAB_STATES_NORTH = Object.freeze([
     options: ['₹171 crore', '₹716 crore', '₹3,210 crore', '₹1,716 crore'],
     correctIndex: 3,
     explanation:
-      'Foundation laid in 2014, it was due in 2019 and missed its deadline eight times; part of it had fallen in wind and rain in April 2022 without action against the builder. The JD(U)-RJD government ordered a probe; the road construction department was then held by Deputy CM Tejashwi Yadav, who promised strict action.',
-    people: ['Tejashwi Yadav'],
+      'Foundation laid in 2014, it was due in 2019 and missed its deadline eight times; part of it had fallen in wind and rain in April 2022 without action against the builder. The JD(U)-RJD government ordered a probe, and the minister holding the road construction portfolio promised strict action against those responsible.',
     status:
-      'State ordered a probe (Jun 2023); action against the contractor firm was reported. No case against any minister reported in sources checked; the named person is cited only as the minister in charge.',
+      'State ordered a probe and served the builder a show-cause notice (Jun 2023); the Patna HC blamed laxity by the state and the contractor (Jun 2023). No case against any minister reported (Sept 2026).',
+    otherSide:
+      'The road construction minister said the firm got a show-cause notice, engineers on the project had been removed, and he had flagged the faulty pier while in opposition.',
     sourceUrl: 'https://www.thehindu.com/news/national/other-states/under-construction-bridge-collapses-in-bihars-bhagalpur/article66931549.ece',
     sourceLabel: 'The Hindu — Under-construction bridge collapses in Bihar’s Bhagalpur; probe ordered (4 Jun 2023)',
+    sources: [
+      'https://www.livemint.com/news/india/bhagalpur-bridge-collapse-bihar-govt-issues-show-cause-notice-to-construction-company-11686064928789.html',
+      'https://www.scconline.com/blog/post/2023/06/17/bhagalpur-bridge-collapsed-due-to-laxity-of-state-government-and-contractor-patna-hc-legal-news/',
+    ],
   },
   {
     id: 'hst155',
@@ -1419,14 +1504,19 @@ export const HISAAB_STATES_NORTH = Object.freeze([
     ],
     correctIndex: 2,
     explanation:
-      'In June 2024 the Jharkhand HC bailed him, saying there were ‘reasons to believe’ he was not guilty; the Supreme Court upheld the bail and his JMM won the Nov 2024 election. In June 2026 the PMLA court rejected his discharge plea, citing ‘grave suspicion’; his lawyers say the ED’s case rests on hearsay.',
+      'In June 2024 the Jharkhand HC bailed him, saying there were ‘reasons to believe’ he was not guilty; the Supreme Court upheld the bail and his JMM won the Nov 2024 election. In June 2026 the PMLA court rejected his discharge plea, citing ‘grave suspicion’, and it has listed framing of charges against him for 30 Sep 2026.',
     status:
-      'Arrested 31 Jan 2024; on bail since 28 Jun 2024; discharge plea rejected 8 Jun 2026; HC refused to stay the trial (18 Sep 2026); charge-framing listed 30 Sep 2026. Not convicted.',
+      'Arrested 31 Jan 2024; on bail since 28 Jun 2024; discharge plea rejected 8 Jun 2026; HC refused to stay proceedings (18 Sep 2026); charges framed against the 16 co-accused, framing against him deferred to 30 Sep 2026. Not convicted; his lawyers say the ED’s case rests on hearsay.',
+    otherSide:
+      'Soren’s lawyers say the ED’s claim that he controlled the 8.86 acres rests on hearsay; in 2024 the High Court saw ‘reasons to believe’ he was not guilty when it bailed him.',
     people: ['Hemant Soren'],
     sourceUrl:
       'https://theprint.in/judiciary/grave-suspicion-against-accused-pmla-court-junks-cm-hemant-sorens-discharge-plea-in-land-parcel-case/2954026/',
     sourceLabel: 'ThePrint — ‘Grave suspicion against accused’: PMLA court junks CM Hemant Soren’s discharge plea (8 Jun 2026)',
-    sources: ['https://theprint.in/india/jkhand-hc-rejects-cms-plea-seeking-discharge-from-criminal-proceedings-in-land-deal-case/3046928/'],
+    sources: [
+      'https://theprint.in/india/jkhand-hc-rejects-cms-plea-seeking-discharge-from-criminal-proceedings-in-land-deal-case/3046928/',
+      'https://www.hindustantimes.com/cities/ranchi-news/money-laundering-case-soren-appears-before-pmla-court-framing-of-charge-deferred-till-sept-30-101790271418947.html',
+    ],
   },
   {
     id: 'hst157',
@@ -1441,18 +1531,23 @@ export const HISAAB_STATES_NORTH = Object.freeze([
     asOf: '2026-09',
     govt: 'JMM',
     question:
-      'IAS officer Pooja Singhal, arrested by the ED in May 2022 and reinstated by Jharkhand in January 2025, faces a case over funds diverted from which scheme?',
+      'IAS officer Pooja Singhal, arrested by the ED in May 2022 and reinstated by Jharkhand in January 2025, faces a case over funds allegedly diverted from which scheme?',
     options: ['PM-KISAN', 'Mid-day meal scheme', 'MGNREGS (rural job guarantee)', 'Swachh Bharat Mission'],
     correctIndex: 2,
     explanation:
-      'The ED alleges embezzlement of about ₹18 crore of MGNREGS funds in Khunti when she was deputy commissioner in 2009–10; she was mines secretary under the JMM government at her arrest. After bail in Dec 2024 the government revoked her suspension; the BJP objected and the ED told the court she could influence the case.',
+      'The ED’s case links her to about ₹18 crore of MGNREGS funds allegedly embezzled in Khunti when she was deputy commissioner in 2009–10; she was mines secretary under the JMM government at her arrest. After bail in Dec 2024 the state revoked her suspension on a panel’s advice; the BJP criticised it. In Sept 2026 the Supreme Court let the trial continue.',
     status:
-      'Arrested 11 May 2022; prosecution complaint filed 2022; bail 7 Dec 2024; suspension revoked Jan 2025; trial pending. Not convicted.',
+      'Arrested by ED 11 May 2022; cognisance taken Jul 2022; bail 7 Dec 2024; suspension revoked Jan 2025; Supreme Court declined to quash cognisance, leaving the sanction question for trial (25 Sep 2026); trial pending. Not convicted.',
+    otherSide:
+      'Her counsel told the Supreme Court the ₹19 crore recovered from her chartered accountant is not attributable to her and that prosecution needed government sanction; the court left sanction open.',
     people: ['Pooja Singhal'],
     sourceUrl:
       'https://theprint.in/india/ias-at-21-arrested-for-mnregs-fund-embezzlement-now-reinstated-the-highs-lows-of-pooja-singhal/2460755/',
     sourceLabel: 'ThePrint — IAS at 21, arrested for MNREGS fund embezzlement, now reinstated (25 Jan 2025)',
-    sources: ['https://theprint.in/india/jpsc-ex-chairman-is-the-latest-4-ias-officers-faced-arrests-in-jharkhand-since-2022/3012576/'],
+    sources: [
+      'https://theprint.in/india/jpsc-ex-chairman-is-the-latest-4-ias-officers-faced-arrests-in-jharkhand-since-2022/3012576/',
+      'https://www.etvbharat.com/en/bharat/money-laundering-trial-to-continue-against-jharkhand-ias-officer-pooja-singhal-sc-enn26092506885',
+    ],
   },
   {
     id: 'hst158',
@@ -1471,13 +1566,18 @@ export const HISAAB_STATES_NORTH = Object.freeze([
     options: ['About ₹3 crore', 'About ₹8 crore', 'About ₹100 crore', 'About ₹32 crore'],
     correctIndex: 3,
     explanation:
-      'The ED arrested the OSD and, on 15 May 2024, Congress minister Alamgir Alam, who then resigned. He spent two years in jail before the Supreme Court granted bail on 11 May 2026; he says he is innocent. The BJP said bail on age and health grounds was not an acquittal.',
+      'The ED arrested the OSD and, on 15 May 2024, Congress minister Alamgir Alam, who then resigned. He spent two years in jail before the Supreme Court granted bail on 11 May 2026; the BJP said bail on age and health grounds was not an acquittal. In Sept 2026 the Supreme Court left the rejection of his discharge plea in place.',
     status:
-      'Arrested by ED 15 May 2024; Supreme Court bail 11 May 2026 (released 14 May); trial pending. Not convicted.',
+      'Arrested by ED 15 May 2024; Supreme Court bail 11 May 2026 (released 14 May); discharge plea rejected by the PMLA court and HC, and the Supreme Court declined to interfere (16 Sep 2026); trial pending. Not convicted; says he is innocent.',
+    otherSide:
+      'Alam calls himself innocent and says he has faith in the judiciary (May 2026).',
     people: ['Alamgir Alam'],
     sourceUrl: 'https://www.thehindu.com/news/national/jharkhand/congress-leader-and-former-jharkhand-minister-alamgir-alam-walks-out-of-jail/article70979362.ece',
     sourceLabel: 'The Hindu — Former Jharkhand minister Alamgir Alam walks out of jail (15 May 2026)',
-    sources: ['https://www.thehindu.com/news/national/ed-arrests-jharkhand-ministers-secretary-latters-domestic-help-after-cash-haul/article68148085.ece'],
+    sources: [
+      'https://www.thehindu.com/news/national/ed-arrests-jharkhand-ministers-secretary-latters-domestic-help-after-cash-haul/article68148085.ece',
+      'https://telanganatoday.com/alamgir-alams-discharge-plea-rejected-by-supreme-court-in-money-laundering-case',
+    ],
   },
   {
     id: 'hst159',
@@ -1495,7 +1595,7 @@ export const HISAAB_STATES_NORTH = Object.freeze([
     options: ['₹1,000', '₹2,500', '₹2,100', '₹1,500'],
     correctIndex: 1,
     explanation:
-      'The 2025-26 budget allocated ₹13,363 crore — 11% of revenue receipts — up from spending of about 7% of receipts in 2024-25. PRS notes similar cash transfers in Maharashtra, West Bengal, Madhya Pradesh and Karnataka.',
+      'PRS: the scheme supports women aged 18 to 50, and revised 2024-25 figures put its cost at ₹7,238 crore that year. PRS notes similar cash transfers for women in Maharashtra, West Bengal, Madhya Pradesh and Karnataka.',
     sourceUrl: 'https://prsindia.org/files/budget/budget_state/jharkhand/2025/Jharkhand_Budget_Analysis_2025-26.pdf',
     sourceLabel: 'PRS Legislative Research — Jharkhand Budget Analysis 2025-26',
     tags: ['distribution'],
@@ -1541,11 +1641,11 @@ export const HISAAB_STATES_NORTH = Object.freeze([
     asOf: '2026-09',
     govt: 'JMM',
     question:
-      "How much did Jharkhand's 2025-26 budget allocate to its women's cash-transfer scheme — about 11% of the state's revenue receipts?",
-    options: ['₹1,336 crore', '₹5,100 crore', '₹13,363 crore', '₹33,630 crore'],
+      "Jharkhand's 2025-26 budget gave its Maiya Samman cash scheme for women ₹13,363 crore, per PRS. About what share of the state's budgeted revenue receipts is that?",
+    options: ['About 2%', 'About 5%', 'About 11%', 'About 25%'],
     correctIndex: 2,
     explanation:
-      'PRS: ₹13,363 crore for the Maiya Samman Yojana, the largest item under social welfare. Even so, Jharkhand commits only 29% of revenue receipts to salaries, pensions and interest (Himachal: 83%) and projects debt at 27% of GSDP.',
+      'PRS: 11%, up from about 7% of receipts in revised 2024-25 figures, and the largest item under social welfare. Even so, Jharkhand commits only 29% of revenue receipts to salaries, pensions and interest and projects debt at 27% of GSDP.',
     sourceUrl: 'https://prsindia.org/files/budget/budget_state/jharkhand/2025/Jharkhand_Budget_Analysis_2025-26.pdf',
     sourceLabel: 'PRS Legislative Research — Jharkhand Budget Analysis 2025-26',
     tags: ['distribution'],

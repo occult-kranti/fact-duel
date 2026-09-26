@@ -53,7 +53,12 @@ export function NameField({ className, compact }: { className?: string; compact?
           : trimmed
             ? ` — ${t(`certificates print the first ${NAME_MAX} characters.`, `प्रमाण पत्र पर पहले ${NAME_MAX} अक्षर छपते हैं।`)}`
             : '.'}
-        {compact ? null : ` ${t('Stored on this device only.', 'सिर्फ़ इसी फ़ोन पर रखा जाता है।')}`}
+        {compact
+          ? null
+          : ` ${t(
+              'Stored on this device. A friend sees it only in a duel room you join.',
+              'इसी फ़ोन पर रखा जाता है। दोस्त को यह सिर्फ़ उस मुक़ाबले के रूम में दिखता है जिसमें आप जुड़ते हैं।',
+            )}`}
       </p>
     </div>
   );

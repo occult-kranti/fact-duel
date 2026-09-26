@@ -232,3 +232,79 @@ function QUESTIONS_KEY(text) {
   assert.ok(q, 'dealt from the edition bank');
   return (options) => options.indexOf(q.options[q.correctIndex]);
 }
+
+test('route identities are stable: a bank edit that retires or regroups a route keeps its stored record', async () => {
+  const { routeCatalogue, routeIdSpace, RETIRED_DOMAIN } = await import('../editions/hisaab/engine/routes.mjs');
+  const { QUESTIONS } = await import('../editions/hisaab/server/bank.mjs');
+  const { EXPEDITIONS, ACTIVE_EXPEDITIONS, validExpeditionCards } = await import('../lib/expeditions.mjs');
+  const { emptyProfile, readProfile, reduceProfile } = await import('../lib/passport.mjs');
+  const { dispatch } = await import('../lib/server/duel-service.mjs');
+
+  // Every id the derivation produces lies in the data-independent id space, and the engine's catalogue
+  // is the live routes plus one retired stub (same key, no cards, never offered) per other id.
+  const space = routeIdSpace().map((r) => r.id);
+  assert.equal(new Set(space).size, space.length, 'the id space has no duplicates');
+  const live = deriveRoutes(QUESTIONS);
+  for (const r of live) assert.ok(space.includes(r.id), `${r.id} is in routeIdSpace()`);
+  assert.equal(EXPEDITIONS.length, space.length);
+  assert.equal(new Set(EXPEDITIONS.map((r) => r.key)).size, EXPEDITIONS.length, 'keys are unique');
+  assert.deepEqual(ACTIVE_EXPEDITIONS.map((r) => r.id), live.map((r) => r.id), 'retired stubs are never offered');
+
+  // Synthetic banks: withdrawing one 2002 item merges 2002 into 2003 (year-2002-2003), withdrawing a
+  // relief item retires the relief files and regroups the years, and adding one item from 2001
+  // regroups year-2002 into year-2001-2002.
+  serial = 0;
+  const yearItem = (year, extra = {}) => ({ ...item(), year, ...extra });
+  const bank = [
+    ...Array.from({ length: 6 }, () => yearItem(2002)),
+    ...Array.from({ length: 6 }, () => yearItem(2003)),
+    ...Array.from({ length: 6 }, () => yearItem(2021, { state: 'MH', tags: ['relief'] })),
+  ];
+  const ids = (b) => new Set(deriveRoutes(b).map((r) => r.id));
+  const before = ids(bank);
+  const edits = {
+    'withdraw a 2002 item': bank.filter((q) => q !== bank[0]),
+    'withdraw a relief item': bank.filter((q) => q !== bank[17]),
+    'add a 2001 item': [...bank, yearItem(2001)],
+  };
+  const expectGone = {
+    'withdraw a 2002 item': ['year-2002', 'year-2003'],
+    // 2021 drops to five items and folds into 2003 (year-2003-2021), so year-2003 goes too.
+    'withdraw a relief item': ['money-relief', 'money-relief-2020-2026', 'money-relief-mh', 'year-2003', 'year-2021'],
+    'add a 2001 item': ['year-2002'],
+  };
+  for (const [name, edited] of Object.entries(edits)) {
+    const after = ids(edited);
+    const gone = [...before].filter((id) => !after.has(id));
+    assert.deepEqual(gone.sort(), expectGone[name].sort(), name);
+    const catalogue = routeCatalogue(edited);
+    for (const id of gone) {
+      const stub = catalogue.find((r) => r.key === `${id}:1`);
+      assert.ok(stub, `${name}: ${id} keeps its key in the catalogue`);
+      assert.equal(stub.retired, true);
+      assert.equal(stub.domain, RETIRED_DOMAIN);
+      assert.deepEqual(stub.ids, []);
+    }
+    assert.deepEqual(
+      catalogue.filter((r) => !r.retired).map((r) => r.id),
+      deriveRoutes(edited).map((r) => r.id),
+      `${name}: the live routes are unchanged`,
+    );
+  }
+
+  // End to end on the served catalogue: a finished record on a retired route survives readProfile,
+  // and the retired route can be neither dealt nor started.
+  const stub = EXPEDITIONS.find((r) => r.retired);
+  const result = { runId: 'run-1', at: 1_800_000_000_000, score: 12, correct: 6, bold: 0 };
+  const record = { run: null, first: result, best: result, last: result, completions: 3, bestScore: 12, folded: false, foldedDay: null };
+  let p = emptyProfile('epoch-1', 1_800_000_000_000);
+  p = { ...p, journeys: { [stub.key]: record, [live[0].key]: record } };
+  const read = readProfile(JSON.parse(JSON.stringify(p)));
+  assert.deepEqual(read.journeys[stub.key], record, `${stub.id}: first, best, last, completions and best score kept`);
+  assert.deepEqual(read.journeys[live[0].key], record);
+  await assert.rejects(dispatch(null, { action: 'expedition', routeId: stub.id }));
+  const { cards } = await dispatch(null, { action: 'expedition', routeId: live[0].id });
+  assert.equal(validExpeditionCards(cards, stub), false, 'no cards validate against a retired route');
+  const started = reduceProfile(read, { type: 'journey-start', epoch: 'epoch-1', at: 1_800_000_100_000, routeId: stub.id, runId: 'run-2', previousRunId: null, cards });
+  assert.equal(started.journeys[stub.key].run, null, 'a retired route cannot be started');
+});

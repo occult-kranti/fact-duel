@@ -17,7 +17,14 @@
  * call it only once the question is actually on screen (after a double requestAnimationFrame, as the
  * arena does) — to the pick, on the monotonic clock. Nothing else is measured.
  *
- * Framework-free: `onChange(snapshot)` fires on every change; React code wraps it in a hook.
+ * Framework-free: `onChange(snapshot)` fires on every change; React code wraps it in a hook. While
+ * a round waits for its reveal, a 150 ms ticker re-renders the 3·2·1 (`countdownMs`); once the question
+ * is out it stays silent, because the timer bar reads `snapshot()` from its own rAF loop — a re-render
+ * of the live card several times a second buys nothing (bible §11.10: no work on the quiet surface).
+ *
+ * Epochs: `adopt()`, `reset()` and `createBot()` start a new epoch. Every response is checked against
+ * the epoch it was sent in AFTER its await, so a reply that lands late (a poll on the wire, a P2P poke,
+ * a ready/answer/leave) can neither bring back a forgotten match nor replace a newly adopted room.
  */
 
 const hexToken = () =>
@@ -77,8 +84,13 @@ export function createDuelController({
     return Math.max(0, room.config.duration * 1000 - (perfNow() - startMark.at));
   }
 
-  /** Newer revisions only: a slow poll landing after a fresh answer must not rewind the screen. */
-  function accept(data) {
+  /**
+   * Newer revisions only: a slow poll landing after a fresh answer must not rewind the screen. `mine`
+   * is the epoch the request was sent in; a reply from an earlier epoch (before `reset()` / `adopt()` /
+   * `createBot()`) is dropped whatever its room id or revision.
+   */
+  function accept(data, mine = epoch) {
+    if (mine !== epoch) return;
     const next = data?.room;
     if (!next) return;
     if (room && next.id === room.id && next.revision < room.revision) return;
@@ -114,8 +126,10 @@ export function createDuelController({
   async function poll(mine) {
     if (disposed || mine !== epoch) return;
     try {
-      accept(await request(withSeat({ action: 'state' })));
+      accept(await request(withSeat({ action: 'state' })), mine);
     } catch (e) {
+      // A failure from an earlier epoch is not this match's error, and must not start a second poll loop.
+      if (mine !== epoch) return;
       error = e?.message || 'Connection interrupted.';
       changed();
       if ([403, 404, 410].includes(e?.status)) return;
@@ -123,16 +137,23 @@ export function createDuelController({
     }
   }
 
-  /** Reveal once the shared countdown has run out; re-render the countdown meanwhile. */
+  /**
+   * Reveal once the shared countdown has run out, and re-render the countdown meanwhile. Once the
+   * question is out (or the round has its result) the tick changes nothing a re-render would show, so
+   * it stays silent: the live card's timer bar reads `snapshot()` from rAF.
+   */
   async function tick() {
     const rd = room?.round;
     if (!rd || revealing || disposed) return;
-    if (countdownMs() === 0 && rd.issuedAt === null && !rd.result) {
+    const waiting = rd.issuedAt === null && !rd.result;
+    if (!waiting) return;
+    if (countdownMs() === 0) {
       revealing = true;
+      const mine = epoch;
       try {
-        accept(await request(withSeat({ action: 'reveal', roundId: rd.id })));
+        accept(await request(withSeat({ action: 'reveal', roundId: rd.id })), mine);
       } catch (e) {
-        if (e?.code !== 'too_early') {
+        if (mine === epoch && e?.code !== 'too_early') {
           error = e?.message || 'Could not open the question.';
           changed();
         }
@@ -143,13 +164,14 @@ export function createDuelController({
   }
 
   async function run(fn) {
+    const mine = epoch;
     busy = true;
     error = '';
     changed();
     try {
       return await fn();
     } catch (e) {
-      error = e?.message || 'Something went wrong.';
+      if (mine === epoch) error = e?.message || 'Something went wrong.';
       throw e;
     } finally {
       busy = false;
@@ -193,8 +215,12 @@ export function createDuelController({
      * the credentials so the caller can hand it to `usePlayer(room, epoch)`.
      */
     async createBot({ name, config, profileEpoch = null }) {
+      // A new match: replies still on the wire for the previous one are dropped from here on.
+      epoch += 1;
+      const mine = epoch;
       return run(async () => {
         if (!clock.samples) await controller.calibrate(3);
+        if (mine !== epoch) return room;
         const draft = {
           roomId: roomIdOf(),
           token: hexToken(),
@@ -211,16 +237,18 @@ export function createDuelController({
             opponent: 'bot',
           },
         };
-        epoch += 1;
         const created = await request({ action: 'create', ...draft });
+        // reset() / adopt() while the room was being created: leave the newer state alone.
+        if (mine !== epoch) return room;
         credentials = { roomId: draft.roomId, token: draft.token };
         controller.profileEpoch = profileEpoch;
-        accept(created);
+        accept(created, mine);
         if (created.room.phase === 'waiting')
           accept(
             await request(
               withSeat({ action: 'ready', roundId: null, rttMs: clock.rttMs, jitterMs: clock.jitterMs }),
             ),
+            mine,
           );
         return room;
       });
@@ -235,6 +263,7 @@ export function createDuelController({
     },
     /** Ready for the next round (a friend room; a bot room readies the human seat by itself). */
     async ready() {
+      const mine = epoch;
       return run(async () => {
         accept(
           await request(
@@ -245,6 +274,7 @@ export function createDuelController({
               jitterMs: clock.jitterMs,
             }),
           ),
+          mine,
         );
         return room;
       });
@@ -276,10 +306,12 @@ export function createDuelController({
     /** Re-send the locked answer unchanged (same attempt id), e.g. after a dropped connection. */
     async resend() {
       if (!pending) return false;
+      const mine = epoch;
       try {
-        accept(await request(withSeat({ action: 'answer', ...pending })));
-        return true;
+        accept(await request(withSeat({ action: 'answer', ...pending })), mine);
+        return mine === epoch;
       } catch (e) {
+        if (mine !== epoch) return false;
         error =
           e?.status === 409 ? e.message : 'Your choice is locked on this screen. Retry sending the same answer.';
         changed();
@@ -288,8 +320,9 @@ export function createDuelController({
     },
     async leave() {
       if (!room) return;
+      const mine = epoch;
       return run(async () => {
-        accept(await request(withSeat({ action: 'leave' })));
+        accept(await request(withSeat({ action: 'leave' })), mine);
       });
     },
     /** Forget the match (after a result, or to start another). */

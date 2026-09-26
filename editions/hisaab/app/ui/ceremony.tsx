@@ -5,10 +5,13 @@
  *
  * Scrim + centred card (r-xl), a 240px 3D slot (THAPPA; 2D stamps until the three lane lands), title,
  * subtitle, one Continue button. role="dialog" aria-modal, focus trapped and restored, Esc = Continue.
- * Paper chits (confetti recoloured by base.css), `levelUp` / `stamp` cue, heavy haptic — once.
+ * Paper chits (confetti recoloured by base.css), `levelUp` / `stamp` cue, heavy haptic — once. Effects
+ * = Off means no confetti at all (Settings promises "No 3D, no confetti, no particles."; the shared
+ * particle layer would otherwise play its reduced-motion ring pulse).
  */
 import { useEffect, useRef } from 'react';
 import { useJuice } from '@/components/fx';
+import { getPrefs } from '@/lib/fx/prefs';
 import { budget, useBudgetSnapshot, type BudgetCeremony } from '../budget';
 import { Thappa, ThappaArt } from '../three/thappa';
 import { Button } from './button';
@@ -21,14 +24,29 @@ function CeremonyCard({ ceremony }: { ceremony: BudgetCeremony }) {
   const [head, ...rest] = ceremony.parts;
   const hasLabel = ceremony.parts.some((p) => p.kind === 'label');
 
-  // Once per ceremony id: cue, haptic, paper chits. Focus the only action; restore focus on close.
+  // Once per ceremony id: cue, haptic, paper chits. Focus the only action; restore focus on close —
+  // to the element that opened it while it is still on the page, else to the screen itself (a route
+  // finish swaps its 'Close the file' button out from under the ceremony: focus must not drop to body).
   useEffect(() => {
     const before = document.activeElement as HTMLElement | null;
     cont.current?.focus();
     juice.sound(hasLabel ? 'levelUp' : 'stamp');
     juice.haptic('heavy');
-    juice.confetti('stamp');
-    return () => before?.focus?.();
+    if (getPrefs().motion !== 'off') juice.confetti('stamp');
+    return () => {
+      // The page is still inert in this cleanup (the shell lifts it on the next commit): wait a frame.
+      requestAnimationFrame(() => {
+        const main = document.getElementById('h-main');
+        if (before?.isConnected && before !== document.body && !before.closest('[inert]')) before.focus();
+        else if (main) {
+          const heading = main.querySelector<HTMLElement>('h1');
+          if (heading) {
+            if (!heading.hasAttribute('tabindex')) heading.setAttribute('tabindex', '-1');
+            heading.focus({ preventScroll: true });
+          } else main.focus({ preventScroll: true });
+        }
+      });
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ceremony.id]);
 
@@ -64,11 +82,11 @@ function CeremonyCard({ ceremony }: { ceremony: BudgetCeremony }) {
         <div className="h-ceremony__slot">
           {ceremony.parts.length === 1 ? (
             // The card already played its cue + heavy haptic on open: the 3D stamp lands silently.
-            <Thappa text={head.stamp} kind="noted" seed={head.seed ?? head.stamp} height={200} cues={false} />
+            <Thappa text={head.stamp} kind="noted" seed={head.seed ?? head.stamp} height={240} cues={false} stack />
           ) : (
             <div className="h-ceremony__stamps" role="img" aria-label={`Stamped: ${ceremony.parts.map((p) => p.stamp).join(', ')}.`}>
               {ceremony.parts.map((p) => (
-                <ThappaArt key={p.kind} text={p.stamp} kind="noted" seed={p.seed ?? p.stamp} />
+                <ThappaArt key={p.kind} text={p.stamp} kind="noted" seed={p.seed ?? p.stamp} stack />
               ))}
             </div>
           )}

@@ -4,7 +4,7 @@
  * always has files, because every lane's items carry a year).
  */
 import { useMemo, type ReactNode } from 'react';
-import { CalendarRange, LifeBuoy, Vote, Wallet } from 'lucide-react';
+import { CalendarRange, LifeBuoy, ScrollText, Vote, Wallet } from 'lucide-react';
 import { MONEY_MODES, moneyRoutes, YEAR_MODE, yearRoutes, type MoneyTag, type Route } from '../../../edition';
 import { formatNumber } from '../../data';
 import { href } from '../../router';
@@ -141,6 +141,24 @@ export function MoneyHub() {
               <span>{TRAIL_YEARS[TRAIL_YEARS.length - 1]}</span>
             </span>
             {YEAR_MODE.line}
+          </FileCover>
+        </li>
+        {/* The money ledger (screens/ledger): every measure on one timeline, with sources and downloads. */}
+        <li>
+          <FileCover
+            fno="F.No. P/LEDGER"
+            titleHi="पैसा कहाँ गया?"
+            title="Paisa Kahan Gaya?"
+            icon={<ScrollText size={24} strokeWidth={2.2} />}
+            meta={t(
+              `The money ledger. Every measure on one timeline, ${TRAIL_SPAN}: filter it, open each source, download it.`,
+              `पैसे का लेखा: हर उपाय एक समयरेखा पर, ${TRAIL_SPAN}।`,
+            )}
+            state="open"
+            seed="money-ledger"
+            href={href.ledger()}
+          >
+            {t('Who passed it, which party governed, the poll it came before, and the result.', 'किसने दिया, किसकी सरकार थी, किस चुनाव से पहले, और नतीजा।')}
           </FileCover>
         </li>
       </ul>

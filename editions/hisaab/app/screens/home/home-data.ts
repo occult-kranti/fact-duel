@@ -203,13 +203,15 @@ const MODE_WORDS: Readonly<Record<string, string>> = Object.freeze({
 export function questView(q: QuestItem): { en: string; hi: string; to: string } {
   const template = questTemplate(q);
   const to = QUEST_HREF[template] ?? href.files();
+  // The two quests that name a sector or a format open the duel setup with it already picked (the
+  // setup reads ?topic= / ?mode=; a sector too small for the format falls back to Mixed there).
   if (template === 'topic-play' && q.topic) {
     const hi = SECTOR_NAMES_HI[q.topic] ?? q.topic;
-    return { en: `Play a ${q.topic} duel`, hi: `${hi} पर एक मुक़ाबला खेलो`, to };
+    return { en: `Play a ${q.topic} duel`, hi: `${hi} पर एक मुक़ाबला खेलो`, to: href.duel({ vs: 'bot', topic: q.topic }) };
   }
   if (template === 'mode-play' && q.mode && MODE_WORDS[q.mode]) {
     const mode = MODE_WORDS[q.mode];
-    return { en: `Play ${mode}`, hi: `${mode} खेलो`, to };
+    return { en: `Play ${mode}`, hi: `${mode} खेलो`, to: href.duel({ vs: 'bot', mode: q.mode }) };
   }
   const words = QUEST_WORDS[template];
   return { en: words?.en ?? q.label, hi: words?.hi ?? q.label, to };

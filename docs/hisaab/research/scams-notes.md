@@ -136,3 +136,89 @@ All statuses were verified against pages read in **September 2026**; every item 
 - **`people` field.** It also lists officials who are not accused, because they are quoted: Nirmala Sitharaman (hgh006), Pankaj Chaudhary (hgh008), Subramanian Swamy as complainant (hgh052). Their `status` lines are written about the accused, not about them.
 - **`govt` tags.** NDA 58, UPA 2 (hgh045 is the 2010 AgustaWestland order and hgh048 the 2010 CAG 2G estimate). Several UPA-era cases (2G, coal, CWG, INX, National Herald) are tagged NDA because the fact asked about (acquittal, appeal, closure, arrest) happened after 2014. Accused people and parties are spread across the spectrum: Congress-era ministers, NDA-era agencies and regulators, and private promoters.
 - **Topic choice.** The National Herald case (hgh052) is filed under `Media & Speech` because it concerns a newspaper's holding company. INX Media is under `Governance & Institutions` because it is about FIPB clearance.
+
+## Fact audit (26 Sep 2026)
+
+Independent release-gate audit of all 60 items. Every `sourceUrl` and every `sources` URL was fetched
+and read (curl + text extraction; WebFetch for pages that refuse scripts). Newest reporting to 26 Sep
+2026 was searched through Google News RSS for every item with people, a `status` or `kind: 'scam'`.
+The whole bank validates OK and `node --test tests/hisaab-*.test.mjs` passes. **No item was dropped**;
+ids, `correctIndex` slots (15/15/15/15) and difficulty split (20/20/20) are unchanged.
+
+### `otherSide` added (42 items)
+
+All 38 items that need one (people, status or scam) now carry `otherSide`, each taken from a page that
+was read: hgh001–hgh010, hgh012–hgh014, hgh016–hgh020, hgh022–hgh024, hgh026, hgh042, hgh045–hgh057,
+hgh059, hgh060. Optional ones were added where an agency or party reply exists: hgh015 (Congress
+conflict-of-interest objection), hgh027 (CBI official: "merely a coincidence"), hgh028 (ED official:
+cannot register cases on its own), hgh030 (CBI/ED officials). Two say no reply was found after a search:
+hgh009 (no public reply from the Wadhawans; uses the SC's bail reasoning) and hgh059 (no reply from
+PACL; uses the Delhi HC's May 2026 attachment ruling).
+
+### Factual corrections
+
+| id | what was wrong | fix and source |
+|---|---|---|
+| hgh049 | "five convictions so far, with sentences stayed by the Delhi HC" is not supported by any source read; The Wire (28 Mar 2026) says at least 19 convictions in 27 decided coal cases | Explanation and status rewritten on The Wire's figures; added the Hindu (19 Aug 2026: SC tells Delhi HC to decide coal appeals) and TOI (30 Jul 2026: SC quashes the 2015 summons to ex-PM Manmohan Singh, added to `people` and `otherSide`) |
+| hgh054 | Stem said the SC "closed the criminal cases" in April 2026 and that the brothers "left India in 2017"; explanation said they "had been declared fugitive economic offenders". The primary source (India Today) refuses fetches. ETLegal (23 Dec 2025) shows the criminal, ED and FEO-Act cases were quashed in Dec 2025; the April 2026 order closed the matter with finality | Stem re-dated to the April 2026 final closure without the unsourced exit year; explanation now gives the Dec 2025 quashing, the ₹5,111.43 crore deposit, ~₹9,800 crore total recovery vs ₹5,383 crore FIR, and the banks' ₹19,283.77 crore dues claim (IE, 19 Mar 2026). New `sourceUrl`: ETLegalWorld (ANI), 16 Apr 2026 |
+| hgh058 | Source (ET, 1 Oct 2018) does not mention the NCLT supersession; "205 of 302 group entities" is not in the CNBC-TV18 page | New `sourceUrl`: TOI (PTI), 1 Oct 2018 (NCLT supersession, ~₹91,000 crore debt); explanation says "over 200 group companies" per CNBC-TV18 |
+| hgh034 | Stem said the SC held "the third extension" illegal; LiveLaw says the Nov 2021 and Nov 2022 extension orders were both held illegal | Stem now says "the 2021 and 2022 extensions" |
+| hgh032 | "(19 persons in FY26)" — the NIE page says 19 convicted "during the current fiscal year", which on 1 May 2026 is ambiguous | Removed the figure |
+| hgh059 | "Promoter died in Aug 2024" — no page read gives the date | Now "has since died" (source: "late promoter") |
+| hgh019 | "bribes … promised to Indian state officials" | Now "Indian government officials" (Business Today); DOJ timing reworded to match Outlook ("said in May 2026 it would drop the case, later calling it primarily foreign") |
+| hgh014 | "Petitioners had alleged irregularities in pricing and the choice of offset partner" is not in the TOI source; NDTV secondary refuses fetches | Explanation rewritten to what TOI states (FIR/probe sought; "roving inquiry" not appropriate; one judge concurred separately); NDTV dropped, The Wire (Feb 2026) added |
+| hgh023 | Stem said "a proven paper leak" (reads as a finding of guilt); explanation said a re-test "would hurt lakhs of honest candidates" (not in source) | "a leak confirmed at some centres"; explanation uses the SC's "cascading effects" wording |
+| hgh025 | "allows seizure of offenders' property" | "convicted offenders' property" (Akashvani) |
+| hgh030 | ED official quoted as saying it "cannot proceed" once the base FIR is closed | Source says it becomes "difficult" to proceed; fixed |
+| hgh029 | CBI share given as "about 1%" | Source says "approximately 1/1.5 per cent"; now "about 1–1.5%" |
+| hgh048 | "('presumptive')" is not the source's word | Now "a notional loss" (HT) |
+| hgh036 | "released Sept 2026" | "reported in Sept 2026" (The Hindu, 1 Sep 2026) |
+| hgh016 | Missing that the PNF moved after a complaint by the NGO Sherpa | Added (France 24, read via WebFetch) |
+
+### Status updates from the newest reporting (to 26 Sep 2026)
+
+- **hgh009 DHFL:** a special CBI court ordered charges framed against the Wadhawans (ET, 1 Aug 2026). Status and explanation updated.
+- **hgh010 ABG Shipyard:** a Delhi court took cognisance of the chargesheets (BS, 13 Aug 2025); ex-chairman denies wrongdoing (Mint, 1 Aug 2026).
+- **hgh013 Kochhar:** Bombay HC stayed the tribunal order upholding ED's attachment (HT, 13 May 2026).
+- **hgh017/hgh018/hgh020 Adani–Hindenburg:** five group firms settled separate SEBI disclosure/audit cases for ₹1.5 crore without admitting or denying findings (LawStreet, 23 Sep 2026).
+- **hgh019 Adani US case:** the judge refused on 4 Sep 2026 to drop charges against the five co-defendants (The Wire, 5 Sep 2026).
+- **hgh022 Buch:** Bombay HC quashed a separate ACB-court FIR order over a 1994 listing (BS, 8 Jul 2026).
+- **hgh023 NEET 2024:** Patna special CBI court framed charges against 52 accused; trial from 1 Oct 2026 (TOI, 25 Sep 2026).
+- **hgh024 NEET 2026:** CBI chargesheeted 13 accused; Delhi fast-track court took cognisance (Mid-day, 19 Aug 2026).
+- **hgh026 Pegasus:** SC hearing of 29 Apr 2025 (The Hindu) added; no 2026 hearing found.
+- **hgh005–hgh007 Mallya:** Feb 2026 statement that he cannot return (DH); ED's 8 Sep 2026 affidavit that recovery does not end the PMLA case (LawBeat, 12 Sep 2026); Bombay HC hearing of 22 Sep 2026 (Bar & Bench).
+- **hgh052 National Herald:** Delhi Police EOW registered a fresh FIR against the Gandhis on 3 Oct 2025 (TNM, 16 Dec 2025); added to status and explanation.
+- **hgh054 Sandesara:** see corrections. **hgh057 Lalit Modi:** SAFEMA tribunal set aside most ED FEMA penalties (LawBeat, 23 Jul 2026).
+- **hgh059 PACL:** Delhi HC quashed some ED attachments (LiveLaw, 15 May 2026).
+- Checked with no change found: hgh002/hgh003 (no extradition yet; Belgian minister undecided), hgh012, hgh016, hgh033 (no hearing date), hgh045/hgh046 (SC listed Michel's plea for 25 Aug 2026; no ruling reported), hgh047/hgh048 (2G appeal pending), hgh053, hgh055 (fresh CBI FIR, 18 Sep 2026, already covered), hgh056.
+
+### Giveaway fixes (answers of other items that were stated in this lane)
+
+| item re-angled | leaked answer of | change |
+|---|---|---|
+| hgh005 | itself leaked by hgh008's stem ("declared 'fugitive economic offenders' under the 2018 Act") and hgh006/hgh007 statuses | Re-angled: now asks what an FEO declaration lets the government do (confiscate property; india.com and Manorama). Same slot (1) and difficulty |
+| hgh056 | new hgh005 answer | Removed "allowing his assets to be confiscated" |
+| hgh047 | media.mjs 2G item states the appeal was admitted in March 2024 and pending, and hgh048 says the appeal is pending | Re-angled: now asks what the Delhi HC said when admitting the appeal ("some contradictions" needing deeper examination, HT 28 Feb 2026). Same slot (3); year 2026 → 2024 |
+| hgh001, hgh004 | hgh002 (UK prison) and hgh003 (Belgium) | "fighting extradition from the UK and Belgium" → "contesting extradition"; statuses now say "in custody abroad" |
+| hgh016 | hgh014 (SC dismissed the Rafale reviews) | Removed "the Supreme Court dismissed pleas for a probe in 2018 and 2019" from explanation and status |
+| hgh017, hgh020 | hgh018 (SEBI closed proceedings without penalty) | "SEBI closed key related-party proceedings" → "SEBI passed final orders" |
+| hgh018 | hgh019 (US case dismissed) and hgh020 (Hindenburg shut down) | Dropped both from status/explanation |
+| hgh023 | hgh024 (NTA cancelled NEET-UG 2026) | Removed "In 2026 the NTA did cancel NEET-UG" |
+| hgh025 | hgh024 | Stem "After the NEET-UG 2026 cancellation" → "After the NEET-UG 2026 leak row" |
+| hgh029 | hgh031 (2 convictions) | Removed "convictions of two ex-ministers" |
+| hgh037 | hgh039 (first Lokpal appointed March 2019) | Stem "since it began work in 2019" → "since it started functioning"; "since 2019-20" → "in four years" |
+| hgh040 | hgh041 (banks must hear borrowers) | "after the SC's ruling on hearing borrowers" → "to comply with a 2023 Supreme Court judgment" |
+
+A scripted cross-bank check (every answer's figures and full text against every other item's question,
+explanation, status, otherSide and outcome) found no other topical leak into or out of this lane; the
+remaining hits are coincidental figures in unrelated items (for example ₹50,000 caps).
+
+### Unresolved, for the reviewer
+
+- **hgh027 / hgh028** both have 95% as the answer (CBI and ED). hgh027's explanation states the CBI's 95%, which can nudge a player on hgh028 by analogy. Both are the reported facts, so they were left.
+- **hgh032** keeps "About 6%" as a distractor. It is wrong for the question (the ED's May 2026 claim of ~94%), but LiveLaw's reading of Dec 2024 Parliament data gives a 6.42% rate on another measure. Consider a different distractor if players complain.
+- **hgh036** ("409") and **hgh060** ("₹625 crore") use real figures for other measures as distractors; both are wrong for the question asked.
+- **hgh049:** TOI (30 Jul 2026) says the SC cancelled "204 of 218" blocks; LiveLaw (2014) and The Hindu (19 Aug 2026) say 214. Kept 214.
+- **hgh003:** The Wire (9 Sep 2026) mentions an April 2026 Antwerp court step addressed to the justice minister, but the sentence was truncated in the fetched page. The item does not depend on it.
+- **Out of lane:** `states-west-south.mjs` **hst255** (AP–SECI solar deal) still gives the US case status as "Allegations in a US SEC complaint and US indictment (Nov 2024), untested in court". The criminal charges against Gautam and Sagar Adani were dismissed with prejudice on 10 Aug 2026 and the SEC claims were settled (Outlook, 11 Aug 2026; see hgh019). That lane's owner should update it.
+- **Blocked pages:** India Today and NDTV refuse both curl and WebFetch. hgh054's India Today source was replaced; hgh014's NDTV secondary was dropped. ThePrint and France 24 pages were read through WebFetch and kept.

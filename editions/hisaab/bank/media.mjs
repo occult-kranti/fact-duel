@@ -26,15 +26,18 @@ export const HISAAB_MEDIA = Object.freeze([
     "correctIndex": 0,
     "explanation": "Adani’s RRPR Holding bought 27.26% of NDTV from founders Prannoy and Radhika Roy for ₹602.3 crore on 30 Dec 2022, lifting RRPR to 56.45%. NDTV had said in Aug 2022 that the VCPL route to RRPR was taken without the founders’ consent. In Jan 2026 the group agreed to buy the rest of news agency IANS, where it already held a majority.",
     "status": "Ownership fact from exchange filings; no allegation against any person.",
+    "otherSide": "The Roys said in Dec 2022 they sold ‘with mutual agreement’ and that talks with Gautam Adani had been ‘constructive’, their suggestions accepted ‘with openness’.",
     "people": [
       "Prannoy Roy",
-      "Radhika Roy"
+      "Radhika Roy",
+      "Gautam Adani"
     ],
     "sourceUrl": "https://www.tribuneindia.com/news/business/adani-buys-roys-27-26-stake-in-ndtv-for-rs-602-cr-466108",
     "sourceLabel": "The Tribune — Adani buys Roys’ 27.26% stake in NDTV for Rs 602 cr (31 Dec 2022)",
     "sources": [
       "https://indianexpress.com/article/business/companies/adani-stake-in-ndtv-open-offer-8107464/",
-      "https://www.thehindu.com/business/markets/adani-group-completes-full-takeover-of-ians-news-agency/article70541841.ece"
+      "https://www.thehindu.com/business/markets/adani-group-completes-full-takeover-of-ians-news-agency/article70541841.ece",
+      "https://www.thenewsminute.com/article/discussions-adani-been-constructive-ndtv-founders-sell-remaining-shares-171271"
     ]
   },
   {
@@ -49,7 +52,7 @@ export const HISAAB_MEDIA = Object.freeze([
     "difficulty": "extreme",
     "year": 2022,
     "govt": "NDA",
-    "question": "The 2009–10 VCPL loan whose conversion handed Adani the NDTV promoter firm’s 29.18% stake in 2022 had itself been funded by a subsidiary of which group?",
+    "question": "The 2009–10 VCPL loan to the Roys’ RRPR Holding, whose conversion in 2022 changed who controlled NDTV, had itself been funded by a subsidiary of which group?",
     "options": [
       "Tata Sons",
       "Bharti Enterprises",
@@ -57,8 +60,9 @@ export const HISAAB_MEDIA = Object.freeze([
       "Essar Group"
     ],
     "correctIndex": 2,
-    "explanation": "VCPL lent ₹403.85 crore to the Roys’ RRPR Holding in 2009–10 against warrants convertible into 99.9% of RRPR, and had raised the money from Reliance Strategic Ventures, a wholly owned RIL unit (Indian Express). Adani’s AMG Media bought VCPL in Aug 2022 and exercised the warrants; NDTV said this was done without the founders’ consent.",
+    "explanation": "VCPL lent ₹403.85 crore to RRPR, the NDTV promoter firm holding 29.18%, in 2009–10 against warrants convertible into 99.9% of RRPR, and raised the money from Reliance Strategic Ventures, a wholly owned RIL unit (Indian Express). AMG Media Networks bought VCPL in Aug 2022 and exercised the warrants; NDTV said this was done without the founders’ consent.",
     "status": "Ownership and financing fact from filings reported by The Indian Express; no allegation against any person.",
+    "otherSide": "SEBI’s 2018 order calling the deal a takeover ‘couched as a loan agreement’ was quashed by the Securities Appellate Tribunal in July 2022, which also cut the penalties.",
     "people": [
       "Prannoy Roy",
       "Radhika Roy"
@@ -86,8 +90,9 @@ export const HISAAB_MEDIA = Object.freeze([
       "Comcast (NBCUniversal)"
     ],
     "correctIndex": 1,
-    "explanation": "Completed on 14 Nov 2024 and valued at ₹70,352 crore, JioStar is 63.16% Reliance-owned (16.34% direct, 46.82% via Viacom18) and 36.84% Disney-owned, with Nita Ambani as chairperson. RSF’s 2026 India profile says Mukesh Ambani owns more than 70 media outlets followed by at least 800 million Indians.",
+    "explanation": "Completed on 14 Nov 2024 and valued at ₹70,352 crore, the JV is controlled by RIL, which holds 16.34% directly and 46.82% through Viacom18; Disney holds 36.84%, and Nita Ambani is chairperson. RSF’s 2026 India profile says Mukesh Ambani owns more than 70 media outlets followed by at least 800 million Indians.",
     "status": "Ownership fact from the companies’ joint release; no allegation.",
+    "otherSide": "The Competition Commission of India approved the deal on 27 Aug 2024, subject to voluntary modifications offered by the parties; EU and other regulators also cleared it.",
     "people": [
       "Nita Ambani",
       "Mukesh Ambani"
@@ -118,8 +123,9 @@ export const HISAAB_MEDIA = Object.freeze([
       "Independent Media Trust"
     ],
     "correctIndex": 3,
-    "explanation": "RIL’s board approved the funding on 29 May 2014 for Independent Media Trust (IMT) to acquire control of Network18 Media & Investments and TV18 Broadcast — about 78% of NW18 and 9% of TV18, plus open offers — citing “fundamental synergy” with its 4G business and digital assets such as Moneycontrol and Firstpost.",
+    "explanation": "RIL’s board approved the funding on 29 May 2014 for Independent Media Trust (IMT) to acquire control of Network18 Media & Investments and its subsidiary TV18 Broadcast — about 78% of NW18 and 9% of TV18 — plus open offers to public shareholders, with RIL as a person acting in concert.",
     "status": "Ownership fact from RIL’s press release; no allegation.",
+    "otherSide": "RIL presented the deal as a digital play with ‘fundamental synergy’ with its 4G business, citing web properties such as Moneycontrol and Firstpost.",
     "sourceUrl": "https://www.ril.com/sites/default/files/2023-01/PR29052014.pdf",
     "sourceLabel": "Reliance Industries — Acquisition of Network18 by Independent Media Trust (press release, 29 May 2014)"
   },
@@ -143,8 +149,9 @@ export const HISAAB_MEDIA = Object.freeze([
       "Netflix India"
     ],
     "correctIndex": 2,
-    "explanation": "Sony’s India unit (formerly Sony Pictures Networks India, now Culver Max) sent Zee a termination notice on 22 Jan 2024 after the deadline passed without an agreed extension. Sony had sought a $90 million termination fee in arbitration; on 27 Aug 2024 both sides settled, withdrawing all claims at the SIAC and the NCLT, with no outstanding obligations either way.",
+    "explanation": "Sony’s India unit (formerly Sony Pictures Networks India, now Culver Max) sent Zee a termination notice on 22 Jan 2024 after the 24-month end date and a 30-day window for extension talks passed without agreement. Sony had sought a $90 million termination fee in arbitration before the two settled.",
     "status": "Corporate dispute settled in Aug 2024 with all claims withdrawn; no finding against anyone.",
+    "otherSide": "Zee and Sony settled on 27 Aug 2024, withdrawing all claims at the SIAC and the NCLT; neither side has any remaining obligation or liability to the other.",
     "sourceUrl": "https://www.moneylife.in/article/zee-sony-settle-merger-dispute-agree-to-withdraw-all-claims-cases/75011.html",
     "sourceLabel": "Moneylife — ZEE, Sony settle merger dispute, agree to withdraw all claims, cases (Aug 2024)",
     "sources": [
@@ -173,6 +180,7 @@ export const HISAAB_MEDIA = Object.freeze([
     "correctIndex": 0,
     "explanation": "PRS lists him as an Independent member from Haryana from 2 Aug 2016 to 1 Aug 2022. The RSF–DataLEADS Media Ownership Monitor (2019) listed him among media owners with political links, noting he was elected “with the help of” BJP lawmakers; Zee Media Corporation owns Zee News.",
     "status": "Held Rajya Sabha office 2016–2022; political-link fact, no allegation.",
+    "otherSide": "Chandra was elected, and sat, as an Independent rather than as a BJP member (PRS MP Track).",
     "people": [
       "Subhash Chandra"
     ],
@@ -202,15 +210,17 @@ export const HISAAB_MEDIA = Object.freeze([
       "Kerala"
     ],
     "correctIndex": 3,
-    "explanation": "Rajeev Chandrasekhar left the board of ARG Outlier Asianet News in 2018; in May 2019 Arnab Goswami bought back shares from Asianet, which stayed a minority investor. His Jupiter Capital controls Asianet News (Malayalam) and Suvarna News (Kannada), per the Media Ownership Monitor. He was elected Kerala BJP chief in March 2025.",
+    "explanation": "Rajeev Chandrasekhar left the board of ARG Outlier Asianet News in 2018; in May 2019 Arnab Goswami bought back shares from Asianet, which stayed a minority investor. The Media Ownership Monitor (2019) found his Jupiter Capital controls Asianet News (Malayalam) and Suvarna News (Kannada). He was elected Kerala BJP chief, as sole nominee, on 24 Mar 2025.",
     "status": "Ownership and party-office facts; no allegation.",
+    "otherSide": "Chandrasekhar said he quit because, as a BJP member, it was in Republic’s ‘best interest’; after the 2019 buyback Republic was described as editor-controlled.",
     "people": [
       "Rajeev Chandrasekhar",
       "Arnab Goswami"
     ],
-    "sourceUrl": "https://www.onmanorama.com/news/kerala/2025/03/23/bjp-new-president-of-kerala-named-as-rajeev-chandrasekhar.html",
-    "sourceLabel": "Onmanorama — Rajeev Chandrasekhar to replace K Surendran as Kerala BJP chief (23 Mar 2025)",
+    "sourceUrl": "https://www.business-standard.com/india-news/ex-union-minister-rajeev-chandrasekhar-is-new-president-of-kerala-bjp-125032400435_1.html",
+    "sourceLabel": "Business Standard (PTI) — Ex-Union Minister Rajeev Chandrasekhar is new president of Kerala BJP (24 Mar 2025)",
     "sources": [
+      "https://www.onmanorama.com/news/kerala/2025/03/23/bjp-new-president-of-kerala-named-as-rajeev-chandrasekhar.html",
       "https://scroll.in/latest/874159/bjp-mp-rajeev-chandrasekhar-resigns-from-board-of-republic-tvs-parent-company",
       "https://inc42.com/buzz/arnab-goswami-takes-control-of-republic-tv-buys-back-shares-from-asianet/",
       "https://india.mom-gmr.org/en/media/detail/outlet/asianet-news/"
@@ -228,7 +238,7 @@ export const HISAAB_MEDIA = Object.freeze([
     "difficulty": "expert",
     "year": 2006,
     "govt": "UPA",
-    "question": "Dainik Jagran chairman Mahendra Mohan Gupta, whose family controls Jagran Prakashan, sat in the Rajya Sabha from 2006 to 2012 for which party?",
+    "question": "Former Jagran Prakashan chairman Mahendra Mohan Gupta, whose family controls the Dainik Jagran publisher, sat in the Rajya Sabha from 2006 to 2012 for which party?",
     "options": [
       "Bharatiya Janata Party",
       "Samajwadi Party",
@@ -236,8 +246,9 @@ export const HISAAB_MEDIA = Object.freeze([
       "Indian National Congress"
     ],
     "correctIndex": 1,
-    "explanation": "The Media Ownership Monitor (RSF and DataLEADS, 2019) records his 2006–12 Samajwadi Party term and notes that his brother Narendra Mohan Gupta had been a BJP Rajya Sabha member. The Gupta family held 60.63% of listed Jagran Prakashan through Jagran Media Network Investment.",
-    "status": "Former MP; ownership and political-link fact, no allegation.",
+    "explanation": "The Media Ownership Monitor (RSF and DataLEADS, 2019) records his 2006–12 Samajwadi Party term. A May 2026 NCLAT order says he was Jagran Prakashan’s chairman-MD from 2005 to Sept 2023 and that the Gupta family’s holding company owns 67.97% of it (MOM put the stake at 60.63% in 2019).",
+    "status": "Former MP and former chairman-MD (to Sept 2023); ownership and political-link fact, no allegation.",
+    "otherSide": "The family’s ties cross parties: MOM notes his brother Narendra Mohan Gupta was a BJP-nominated Rajya Sabha member.",
     "people": [
       "Mahendra Mohan Gupta",
       "Narendra Mohan Gupta"
@@ -245,7 +256,8 @@ export const HISAAB_MEDIA = Object.freeze([
     "sourceUrl": "https://india.mom-gmr.org/en/media/detail/outlet/dainik-jagran/",
     "sourceLabel": "Media Ownership Monitor India (RSF/DataLEADS) — Dainik Jagran (2019)",
     "sources": [
-      "https://india.mom-gmr.org/en/findings/politicalaffiliations/"
+      "https://india.mom-gmr.org/en/findings/politicalaffiliations/",
+      "https://indiankanoon.org/doc/251577/"
     ]
   },
   {
@@ -270,13 +282,17 @@ export const HISAAB_MEDIA = Object.freeze([
     "correctIndex": 0,
     "explanation": "The Indian Express (Jan 2023) reports that the AIADMK, led by Edappadi K. Palaniswami, directly controls News J, while Sasikala’s family runs Jaya TV and its news arm Jaya Plus. In Tamil Nadu the DMK directly runs Kalaignar Seithigal, Sun TV is owned by Kalanithi Maran, and Mega 24 is viewed as the Congress’s channel.",
     "status": "Ownership fact; no allegation in this item.",
+    "otherSide": "Sasikala challenged her 2017 removal from the AIADMK leadership in court; the Madras High Court upheld the party’s decision in Dec 2023.",
     "people": [
       "V.K. Sasikala",
       "Edappadi K. Palaniswami",
       "Kalanithi Maran"
     ],
     "sourceUrl": "https://indianexpress.com/article/political-pulse/tv-channels-sun-tv-sakshi-tv-to-kairali-8402373/",
-    "sourceLabel": "The Indian Express — Up in the air: Sun TV and Sakshi TV to Kairali, channels linked to politicians (25 Jan 2023)"
+    "sourceLabel": "The Indian Express — Up in the air: Sun TV and Sakshi TV to Kairali, channels linked to politicians (25 Jan 2023)",
+    "sources": [
+      "https://www.livelaw.in/high-court/madras-high-court/madras-high-court-sasikala-plea-against-removal-from-party-rejected-243750"
+    ]
   },
   {
     "id": "hmd010",
@@ -300,6 +316,7 @@ export const HISAAB_MEDIA = Object.freeze([
     "correctIndex": 2,
     "explanation": "MOM (2019) calculated the Panda family’s holding in Odisha Television Ltd at 96.46%; OTV’s founder is his wife Jagi Mangat Panda. It describes him as a former BJD member who became BJP national vice-president. RSF cited OTV as an example of how politics and media ownership overlap.",
     "status": "Ownership fact (2019 data); no allegation.",
+    "otherSide": "MOM calls the 96.46% its own estimate from ‘heavy cross shareholding’; no finding of wrongdoing attaches to the family’s ownership.",
     "people": [
       "Baijayant Panda",
       "Jagi Mangat Panda"
@@ -331,12 +348,17 @@ export const HISAAB_MEDIA = Object.freeze([
       "Bahujan Samaj Party"
     ],
     "correctIndex": 1,
-    "explanation": "The Hindu (June 2023) describes PTC as a private channel “often linked to the Shiromani Akali Dal’s Badal family”. The SGPC contested the Sikh Gurdwaras (Amendment) Bill, 2023, arguing the 1925 Act is central law; in Dec 2023 the Governor reserved the bill for the President’s consideration.",
-    "status": "Bill reserved for the President in Dec 2023; no allegation against any person.",
+    "explanation": "The Hindu (June 2023) describes PTC as a private channel “often linked to the Shiromani Akali Dal’s Badal family”. The Governor reserved the Sikh Gurdwaras (Amendment) Bill, 2023 for the President in Dec 2023; on 25 Sep 2026 the Supreme Court closed Punjab’s plea for deemed assent after being told queries on it had been sent to the state.",
+    "status": "Bill reserved for the President (Dec 2023); queries on it were sent to the state and the SC closed Punjab’s deemed-assent plea on 25 Sep 2026. Not law as of 2026-09; no allegation against any person.",
+    "otherSide": "The SGPC opposed the bill, saying the 1925 Act is central law only Parliament can amend; CM Bhagwant Mann said the state was competent to amend it.",
+    "people": [
+      "Bhagwant Mann"
+    ],
     "sourceUrl": "https://www.thehindu.com/news/national/other-states/punjab-assembly-passes-bill-to-ensure-free-telecast-of-gurbani-from-golden-temple/article66989100.ece",
     "sourceLabel": "The Hindu — Punjab Assembly passes bill to ensure free telecast of Gurbani from Golden Temple (20 Jun 2023)",
     "sources": [
-      "https://www.thehindu.com/news/national/punjab-governor-reserves-3-bills-for-presidents-consideration/article67612090.ece"
+      "https://www.thehindu.com/news/national/punjab-governor-reserves-3-bills-for-presidents-consideration/article67612090.ece",
+      "https://www.livelaw.in/top-stories/supreme-court-closes-punjabs-plea-against-governor-reserving-two-bills-for-presidents-assent-551834"
     ]
   },
   {
@@ -351,7 +373,7 @@ export const HISAAB_MEDIA = Object.freeze([
     "difficulty": "expert",
     "year": 2023,
     "govt": "LDF",
-    "question": "Malayalam news channel Jaihind TV, whose owner company is chaired by Ramesh Chennithala, is backed by which party’s Kerala unit?",
+    "question": "Malayalam news channel Jaihind TV, whose owner company was chaired by Ramesh Chennithala in 2023, is backed by which party’s Kerala unit?",
     "options": [
       "CPI(M)",
       "Bharatiya Janata Party",
@@ -359,13 +381,17 @@ export const HISAAB_MEDIA = Object.freeze([
       "Indian National Congress"
     ],
     "correctIndex": 3,
-    "explanation": "The Indian Express (Jan 2023) reports that Jaihind TV is backed by the state Congress, with former Opposition leader Ramesh Chennithala chairing owner Bharat Broadcasting Network Ltd. In the same state, Kairali TV’s owner has CPI(M) backing and Janam TV is known to lean towards the Sangh Parivar.",
+    "explanation": "The Indian Express (Jan 2023) reports that Jaihind TV is backed by the state Congress, with Ramesh Chennithala chairing owner Bharat Broadcasting Network Ltd. The channel went on air in Kerala in August 2007; the same Express report maps channels in the state linked to other parties too.",
     "status": "Ownership/political-link fact; no allegation.",
+    "otherSide": "The link is openly claimed: in 2008 Chennithala, then the state party chief, called Jaihind TV’s Gulf launch ‘a milestone for the INC’.",
     "people": [
       "Ramesh Chennithala"
     ],
     "sourceUrl": "https://indianexpress.com/article/political-pulse/tv-channels-sun-tv-sakshi-tv-to-kairali-8402373/",
-    "sourceLabel": "The Indian Express — Up in the air: Sun TV and Sakshi TV to Kairali, channels linked to politicians (25 Jan 2023)"
+    "sourceLabel": "The Indian Express — Up in the air: Sun TV and Sakshi TV to Kairali, channels linked to politicians (25 Jan 2023)",
+    "sources": [
+      "https://www.emirates247.com/eb247/companies-markets/media/india-s-jaihind-tv-launches-regional-unit-at-studio-city-2008-06-16-1.211759"
+    ]
   },
   {
     "id": "hmd013",
@@ -387,18 +413,21 @@ export const HISAAB_MEDIA = Object.freeze([
       "A KG-basin gas block"
     ],
     "correctIndex": 2,
-    "explanation": "The court convicted him, his son and a former coal secretary over the Fatehpur (East) block allotted to JLD Yavatmal Energy, and gave the Dardas four years. The Delhi HC suspended their sentences on 26 Sep 2023 pending appeal. In a separate Bander coal-block case, a CBI court acquitted them in March 2026.",
-    "status": "Convicted by special CBI court (July 2023, 4 yrs); sentence suspended by Delhi HC on 26 Sep 2023 pending appeal, no appeal verdict found as of 2026-09; acquitted in the separate Bander block case (Mar 2026).",
+    "explanation": "The court convicted him, his son Devendra and others over the Fatehpur (East) block allotted to JLD Yavatmal Energy, and gave the Dardas four years. The Delhi HC suspended their sentences on 26 Sep 2023 pending appeal; in Aug 2026 the SC asked it to decide coal-case appeals within four weeks. In the separate Bander block case, a CBI court acquitted the Dardas on 27 Mar 2026.",
+    "status": "Convicted by special CBI court (July 2023, 4 yrs, Fatehpur East); sentence suspended by Delhi HC on 26 Sep 2023 pending appeal, no appeal verdict found as of 2026-09. Acquitted in the separate Bander case (27 Mar 2026); the ED’s linked PMLA case was dropped (Jul 2026).",
+    "otherSide": "The Dardas are appealing the Fatehpur conviction; in the Bander case the judge found no evidence of conspiracy and called the allocation a policy decision.",
     "people": [
       "Vijay Darda",
       "Devendra Darda"
     ],
-    "sourceUrl": "https://www.outlookindia.com/national/coal-scam-delhi-court-convicts-former-mp-vijay-darda-ex-coal-secretary-h-c-gupta-news-302720",
-    "sourceLabel": "Outlook — Coal scam: Delhi court convicts former MP Vijay Darda, ex-coal secretary H C Gupta (July 2023)",
+    "sourceUrl": "https://aninews.in/news/national/general-news/coal-scam-delhi-hc-suspends-4-yrs-sentence-of-ex-mp-vijay-darda-his-son-and-businessman-manoj-jayaswal20230926204013/",
+    "sourceLabel": "ANI — Coal scam: Delhi HC suspends 4-yr sentence of ex-MP Vijay Darda, his son and businessman Manoj Jayaswal (26 Sep 2023)",
     "sources": [
-      "https://aninews.in/news/national/general-news/coal-scam-delhi-hc-suspends-4-yrs-sentence-of-ex-mp-vijay-darda-his-son-and-businessman-manoj-jayaswal20230926204013/",
-      "https://dailypioneer.com/news/coal-scam-delhi-court-acquits-ex-mp-vijay-darda-former-coal-secretary-hc-gupta",
-      "https://india.mom-gmr.org/en/media/detail/outlet/lokmat/"
+      "https://www.outlookindia.com/national/coal-scam-delhi-court-convicts-former-mp-vijay-darda-ex-coal-secretary-h-c-gupta-news-302720",
+      "https://india.mom-gmr.org/en/media/detail/outlet/lokmat/",
+      "https://indiankanoon.org/doc/32014909/",
+      "https://aninews.in/news/national/general-news/coal-scam-delhi-court-drops-eds-pmla-case-against-ex-mp-vijay-darda-manoj-jayaswal-and-others-after-acquittal-in-cbi-case20260713134407/",
+      "https://www.thehindu.com/news/national/coal-scam-cases-supreme-court-asks-delhi-hc-not-to-stay-trials-dispose-of-appeals-in-four-weeks/article71364054.ece"
     ]
   },
   {
@@ -421,8 +450,9 @@ export const HISAAB_MEDIA = Object.freeze([
       "UAPA cannot be applied to a news portal"
     ],
     "correctIndex": 0,
-    "explanation": "Delhi Police arrested him on 3 Oct 2023. The court held that written grounds of arrest were not supplied before the 4 Oct remand order, vitiating it, and ordered his release. NewsClick called the later UAPA chargesheet “absurd” and “baseless”. In June 2026 the Delhi HC quashed a separate 2020 FIR and ED case over its foreign funding.",
+    "explanation": "Delhi Police arrested him on 3 Oct 2023. The court held that written grounds of arrest were not supplied before the 4 Oct remand order, vitiating it, and ordered his release. In June 2026 the Delhi HC quashed a separate 2020 EOW FIR and the ED case over NewsClick’s foreign funding, calling their continuation a “gross abuse” of the process of law.",
     "status": "Arrested Oct 2023 (UAPA); SC declared arrest invalid and he was released, May 2024; UAPA case not concluded as of 2026-09; separate EOW FIR and ED case quashed by Delhi HC on 10 Jun 2026. Not convicted.",
+    "otherSide": "NewsClick called the UAPA chargesheet ‘absurd’ and ‘baseless’, saying there is no evidence anyone linked to it was involved in terrorist acts.",
     "people": [
       "Prabir Purkayastha"
     ],
@@ -453,12 +483,15 @@ export const HISAAB_MEDIA = Object.freeze([
       "Bombay High Court"
     ],
     "correctIndex": 3,
-    "explanation": "After a split verdict in Jan 2024, tie-breaker Justice A.S. Chandurkar held Rule 3(1)(v) unconstitutional on 20 Sep 2024, and a Division Bench formally struck it down on 26 Sep 2024. The Supreme Court had stayed the notification naming PIB’s unit as the FCU in March 2024.",
-    "status": "Court ruling on a rule; no allegation against any person.",
+    "explanation": "After a split verdict in Jan 2024, tie-breaker Justice A.S. Chandurkar held Rule 3(1)(v) unconstitutional on 20 Sep 2024, and a Division Bench formally struck it down on 26 Sep 2024. The SC had stayed the notification naming PIB’s unit as the FCU in March 2024; in March 2026 it issued notice on the Centre’s appeal but declined to stay the HC ruling.",
+    "status": "Rule struck down by the Bombay HC (Sept 2024); the SC issued notice on the Centre’s appeal on 10 Mar 2026 but refused a stay; pending as of 2026-09. No allegation against any person.",
+    "otherSide": "The Centre told the SC in March 2026 the rule targets misinformation, with ‘no intention… to curb humour, satire, expression of view or criticism’.",
     "sourceUrl": "https://www.thehindu.com/news/national/bombay-hc-formally-strikes-down-centres-fact-check-unit-calls-amended-it-rules-unconstitutional/article68684934.ece",
     "sourceLabel": "The Hindu — Bombay High Court formally strikes down Centre’s Fact Check Unit (26 Sep 2024)",
     "sources": [
-      "https://www.thehindu.com/news/national/supreme-court-stays-it-ministrys-notification-establishing-fact-check-unit-under-pib-to-identify-fake-news/article67975405.ece"
+      "https://www.thehindu.com/news/national/supreme-court-stays-it-ministrys-notification-establishing-fact-check-unit-under-pib-to-identify-fake-news/article67975405.ece",
+      "https://www.storyboard18.com/how-it-works/supreme-court-agrees-to-hear-centre-appeal-on-it-rules-amendment-on-fact-check-unit-91843.htm",
+      "https://internetfreedom.in/supreme-court-of-india-issued-notice-but-refused-any-stay-in-union-of-indias-challenge-to-the-bombay-high-court-judgement-holding-fact-check-unit-to-be-ultra-vires/"
     ]
   },
   {
@@ -481,8 +514,9 @@ export const HISAAB_MEDIA = Object.freeze([
       "The Code of Criminal Procedure"
     ],
     "correctIndex": 1,
-    "explanation": "The ordinance adding Section 118A was issued on 21 Nov 2020. After critics likened it to Section 66A of the IT Act, struck down in 2015, the government put it in abeyance and the Governor signed a repeal ordinance on 25 Nov 2020. CM Pinarayi Vijayan said many, including LDF supporters, had raised concerns.",
+    "explanation": "The ordinance adding Section 118A was issued on 21 Nov 2020. Critics called it a revival of an online-speech offence the Supreme Court had struck down in 2015, and the Editors Guild urged its withdrawal; the government put it in abeyance and the Governor signed a repeal ordinance on 25 Nov 2020.",
     "status": "Law withdrawn by the state government; no allegation against any person.",
+    "otherSide": "CM Pinarayi Vijayan withdrew it, saying many people, including LDF supporters, had raised concerns about the ordinance.",
     "people": [
       "Pinarayi Vijayan"
     ],
@@ -509,8 +543,9 @@ export const HISAAB_MEDIA = Object.freeze([
       "Raigad magistrate court"
     ],
     "correctIndex": 0,
-    "explanation": "The SC granted interim bail on 11 Nov 2020, two days after the Bombay HC refused it, with Justice D.Y. Chandrachud remarking that personal liberty was becoming a casualty. The case had been closed in 2019 and reopened in 2020 under the Shiv Sena-led MVA government, which he calls political vendetta.",
-    "status": "Arrested 4 Nov 2020; interim bail from SC 11 Nov 2020; his plea to quash the FIR was pending in Bombay HC (heard Aug 2026). Not convicted.",
+    "explanation": "The SC granted interim bail on 11 Nov 2020, two days after the Bombay HC refused it, with Justice D.Y. Chandrachud remarking that personal liberty was becoming a casualty. The case had been closed in 2019 and reopened in 2020 under the Maha Vikas Aghadi government; in Aug 2026 the HC said proceedings should not become a “proxy kind of war”.",
+    "status": "Arrested 4 Nov 2020; interim bail from SC 11 Nov 2020; his 2020 plea to quash the FIR was pending in Bombay HC (last heard 14 Aug 2026, no ruling found as of 2026-09). Not convicted.",
+    "otherSide": "Goswami’s counsel told the HC in Aug 2026 that the state reopened the probe without judicial authority, ‘driven by political vendetta’.",
     "people": [
       "Arnab Goswami",
       "D.Y. Chandrachud"
@@ -543,6 +578,7 @@ export const HISAAB_MEDIA = Object.freeze([
     "correctIndex": 2,
     "explanation": "The ministry refused to renew MediaOne’s licence in Jan 2022, citing security concerns shared only in a sealed cover; the Kerala HC upheld the ban in Feb 2022. The SC stayed it and on 5 Apr 2023 quashed it, with CJI D.Y. Chandrachud’s judgment holding that unsubstantiated national-security claims cannot curb press freedom.",
     "status": "Court ruling; no allegation against any person.",
+    "otherSide": "The I&B ministry cited national-security concerns and said the material was too sensitive to share except with the judges in a sealed cover.",
     "people": [
       "D.Y. Chandrachud"
     ],
@@ -569,8 +605,9 @@ export const HISAAB_MEDIA = Object.freeze([
       "10TV and HMTV"
     ],
     "correctIndex": 1,
-    "explanation": "Operators (MSOs) took off TV9 and ABN Andhra Jyothy on 16 June 2014 after a TV9 satire on new TRS legislators and ABN’s critical coverage; CM K. Chandrasekhar Rao later warned he would “bury” media that insulted Telangana. Minister K.T. Rama Rao said the government had not asked or pressured operators to block them.",
+    "explanation": "Operators (MSOs) took off TV9 and ABN Andhra Jyothy on 16 June 2014 after a TV9 satire on new TRS legislators — for which it apologised — and ABN’s critical coverage. CM K. Chandrasekhar Rao later warned he would “bury” media that insulted Telangana. No formal government order to block them was issued.",
     "status": "No formal government order was issued (per The Indian Express); no finding against any person.",
+    "otherSide": "Minister K.T. Rama Rao said the government did not ask or pressure operators, who blocked the channels ‘on their own because nobody wants to watch them’.",
     "people": [
       "K. Chandrasekhar Rao",
       "K.T. Rama Rao"
@@ -590,25 +627,28 @@ export const HISAAB_MEDIA = Object.freeze([
     "difficulty": "expert",
     "year": 2024,
     "govt": "TDP",
-    "question": "Days after the TDP-led government took office in Andhra Pradesh in June 2024, cable operators blacked out four news channels. Which of them is owned by the former CM’s family?",
+    "question": "In June 2024, days after the TDP-led government took office, cable operators in Andhra Pradesh blacked out Sakshi TV, TV9, NTV and 10TV. Which court's interim orders got them restored?",
     "options": [
-      "NTV",
-      "10TV",
-      "TV9 Telugu",
-      "Sakshi TV"
+      "Andhra Pradesh High Court",
+      "Supreme Court",
+      "Telangana High Court",
+      "Delhi High Court"
     ],
     "correctIndex": 3,
-    "explanation": "Members of the state cable operators’ association stopped carrying Sakshi TV, TV9, NTV and 10TV, first on 6 June and again from 21 June 2024. The NBDA sought state intervention and a YSRCP MP alleged government pressure; the TDP denied issuing any directive. Sakshi TV belongs to Jagan Mohan Reddy’s company and is run by his wife, Y.S. Bharathi Reddy.",
-    "status": "Blackout; YSRCP alleged government pressure, TDP denied it; no finding against any person.",
+    "explanation": "Members of the state cable operators’ association stopped carrying the four channels on 6 June and again from 21 June 2024; the NBDA sought state intervention and Opposition Rajya Sabha MP S. Niranjan Reddy alleged government pressure. With the TDSAT on summer break, a Delhi HC vacation bench ordered TV9 Telugu restored on 24 June, and interim orders restored all four.",
+    "status": "Blackout (June 2024); channels restored under Delhi HC interim orders; an Opposition MP alleged government pressure and the TDP denied it; no finding against any person.",
+    "otherSide": "The TDP denied issuing any directive; IT Minister Nara Lokesh said no official orders were given to block the channels.",
     "people": [
-      "Y.S. Jagan Mohan Reddy",
-      "Y.S. Bharathi Reddy"
+      "S. Niranjan Reddy",
+      "Nara Lokesh"
     ],
-    "sourceUrl": "https://m.economictimes.com/industry/media/entertainment/nbda-seeks-andhra-pradesh-governments-intervention-in-channel-blackouts-by-cable-operators/articleshow/111233409.cms",
-    "sourceLabel": "The Economic Times — NBDA seeks Andhra Pradesh government’s intervention in channel blackouts (24 Jun 2024)",
+    "sourceUrl": "https://www.thenewsminute.com/andhra-pradesh/blocking-news-channels-tdp-ysrcp-and-the-media-war",
+    "sourceLabel": "The News Minute — Blocking news channels: TDP, YSRCP and the media war (30 Jun 2024)",
     "sources": [
+      "https://m.economictimes.com/industry/media/entertainment/nbda-seeks-andhra-pradesh-governments-intervention-in-channel-blackouts-by-cable-operators/articleshow/111233409.cms",
       "https://madhyamamonline.com/india/four-news-channels-off-the-air-again-since-naidu-govt-took-power-in-andhra-1301819",
-      "https://indianexpress.com/article/political-pulse/tv-channels-sun-tv-sakshi-tv-to-kairali-8402373/"
+      "https://www.siasat.com/delhi-hc-orders-uninterrupted-transmission-of-tv9-telugu-channel-3050833/",
+      "https://www.storyboard18.com/how-it-works/andhra-pradesh-news-channels-to-be-restored-delhi-high-court-issues-order-35223.htm"
     ]
   },
   {
@@ -631,7 +671,7 @@ export const HISAAB_MEDIA = Object.freeze([
       "58.70%"
     ],
     "correctIndex": 2,
-    "explanation": "Dainik Jagran, Hindustan, Amar Ujala and Dainik Bhaskar held 76.45% — “three out of four readers”. The study of 58 leading outlets said a handful of people own and control Indian media, and its political-affiliations finding flagged owners linked to several parties, from the BJP to the Samajwadi Party and the NCP.",
+    "explanation": "Dainik Jagran, Hindustan, Amar Ujala and Dainik Bhaskar held 76.45% — “three out of four readers”. The study of 58 leading outlets said a handful of people own and control Indian media, and its political-affiliations finding flagged owners linked to parties across the spectrum, national and regional.",
     "sourceUrl": "https://rsf.org/en/media-ownership-monitor-who-owns-media-india",
     "sourceLabel": "RSF — Media Ownership Monitor: Who owns the media in India? (29 May 2019)",
     "sources": [
@@ -658,8 +698,9 @@ export const HISAAB_MEDIA = Object.freeze([
       "₹75 crore"
     ],
     "correctIndex": 0,
-    "explanation": "The Enforcement Directorate alleged the ₹200 crore payment; on 21 Dec 2017 the special court acquitted all accused, saying the prosecution had “miserably failed” to prove its charges. The CBI and ED appealed, and the Delhi HC admitted the CBI’s appeal in March 2024; it was pending as of 2026-09.",
-    "status": "All accused acquitted by special court (21 Dec 2017); CBI appeal admitted by Delhi HC (Mar 2024), pending as of 2026-09.",
+    "explanation": "The Enforcement Directorate alleged the ₹200 crore payment; on 21 Dec 2017 the special court acquitted all accused, saying the prosecution had “miserably failed” to prove its charges. The CBI and ED appealed; the Delhi HC admitted the CBI’s appeal in March 2024, and by Feb 2026 it was still pending with arguments yet to begin.",
+    "status": "All accused acquitted by special court (21 Dec 2017); CBI appeal admitted by Delhi HC (Mar 2024), pending with no ruling found as of 2026-09.",
+    "otherSide": "All the accused denied the charges and were acquitted in Dec 2017; they stand acquitted unless the High Court rules otherwise.",
     "people": [
       "A. Raja",
       "Kanimozhi"
@@ -667,7 +708,8 @@ export const HISAAB_MEDIA = Object.freeze([
     "sourceUrl": "https://www.outlookindia.com/national/2g-scam-verdict-a-raja-kanimozhi-found-guilty-by-special-cbi-court-news-305794",
     "sourceLabel": "Outlook — 2G scam verdict: A Raja, Kanimozhi acquitted by special CBI court (21 Dec 2017)",
     "sources": [
-      "https://www.barandbench.com/news/2g-spectrum-case-six-years-later-delhi-high-court-admits-cbi-appeal-acquittal-a-raja"
+      "https://www.barandbench.com/news/2g-spectrum-case-six-years-later-delhi-high-court-admits-cbi-appeal-acquittal-a-raja",
+      "https://www.hindustantimes.com/cities/delhi-news/kejriwal-acquittal-challenge-may-spark-2g-case-back-into-life-101772216259674.html"
     ]
   },
   {
@@ -690,12 +732,14 @@ export const HISAAB_MEDIA = Object.freeze([
       "₹12.8 crore"
     ],
     "correctIndex": 3,
-    "explanation": "The Wire’s RTI-based analysis (July 2018) put the rise at 387.4%; sister paper Telangana Today went from ₹4.7 lakh to ₹87.3 lakh. Both are published by Telangana Publications, launched by K. Chandrasekhar Rao, whose wife sat on its board. The figures came from the state I&PR department’s own RTI reply.",
+    "explanation": "The Wire’s RTI-based analysis (July 2018) put the rise at 387.4%; sister paper Telangana Today went from ₹4.7 lakh to ₹87.3 lakh. Both are published by Telangana Publications, launched by K. Chandrasekhar Rao, whose son K.T. Rama Rao sat on its initial board. The figures came from the state I&PR department’s own RTI reply.",
     "status": "Government spending data from an RTI reply; no finding of wrongdoing against any person.",
+    "otherSide": "No reply from the state government to the RTI analysis was found in reporting searched to Sep 2026; the figures are the government’s own.",
     "people": [
-      "K. Chandrasekhar Rao"
+      "K. Chandrasekhar Rao",
+      "K.T. Rama Rao"
     ],
-    "sourceUrl": "https://thewire.in/politics/chief-minister-chanrasekhar-rao-telangana-media-owner",
+    "sourceUrl": "https://m.thewire.in/article/politics/chief-minister-chanrasekhar-rao-telangana-media-owner",
     "sourceLabel": "The Wire — When the Chief Minister is also a media owner (20 Jul 2018)"
   },
   {
@@ -718,12 +762,11 @@ export const HISAAB_MEDIA = Object.freeze([
       "161st"
     ],
     "correctIndex": 1,
-    "explanation": "RSF ranked India 140th in 2014, citing “an unprecedented wave of violence against journalists” with eight killed in 2013 and endemic censorship in Kashmir and Chhattisgarh. India later fell to 150th (2022) and a low of 161st (2023), then 151st (2025) and 157th (2026).",
+    "explanation": "RSF ranked India 140th in 2014, citing “an unprecedented wave of violence against journalists” with eight killed in 2013 and endemic censorship in Kashmir and Chhattisgarh. India later fell to 150th in 2022 and to a low of 161st in 2023.",
     "sourceUrl": "https://rsf.org/en/node/79154",
     "sourceLabel": "RSF — World Press Freedom Index 2014",
     "sources": [
-      "https://www.tribuneindia.com/news/nation/world-press-freedom-index-india-slips-11-places-to-161st-rank-media-associations-voice-concern-504444",
-      "https://rsf.org/en/country/india"
+      "https://www.tribuneindia.com/news/nation/world-press-freedom-index-india-slips-11-places-to-161st-rank-media-associations-voice-concern-504444"
     ]
   },
   {
@@ -746,8 +789,9 @@ export const HISAAB_MEDIA = Object.freeze([
       "51%"
     ],
     "correctIndex": 0,
-    "explanation": "The ED said BBC WS India stayed 100% foreign-owned despite the 2019 26% cap for digital news, adding ₹5,000 a day from 15 Oct 2021 and about ₹1.14 crore on each of three directors. Its FEMA case followed a Feb 2023 Income Tax “survey” of BBC offices. The BBC said it had not received the order and was committed to operating within the law.",
-    "status": "ED adjudication order (civil FEMA penalty), Feb 2025; BBC said it had not yet received it.",
+    "explanation": "The ED said BBC WS India stayed 100% foreign-owned despite the 2019 26% cap for digital news, adding ₹5,000 a day from 15 Oct 2021 and about ₹1.14 crore on each of three directors. Its FEMA case followed a Feb 2023 Income Tax “survey” of BBC offices. No appeal outcome was reported as of Sep 2026.",
+    "status": "ED adjudication order (civil FEMA penalty), Feb 2025; BBC said it had not received it; no appeal outcome reported as of 2026-09.",
+    "otherSide": "The BBC said neither it nor its directors had received any ED order and that it was committed to operating within the rules of all countries it is based in, including India.",
     "sourceUrl": "https://theprint.in/india/ed-fines-bbc-india-rs-3-44-crore-for-fema-violations-penalises-3-directors-too/2505840/",
     "sourceLabel": "ThePrint — ED fines BBC World Service India Rs 3.44 crore for FEMA violations (21 Feb 2025)",
     "sources": [
@@ -776,6 +820,7 @@ export const HISAAB_MEDIA = Object.freeze([
     "correctIndex": 2,
     "explanation": "Ruling on the Kashmir communications shutdown, the court held that suspension orders must be published, cannot be indefinite and must be reviewed every seven working days, applying a proportionality test. It treated the internet as a medium for exercising fundamental rights rather than a fundamental right in itself.",
     "status": "Court ruling; the petitioner is a journalist, no allegation against any person.",
+    "otherSide": "The court left the need for the Kashmir shutdown to executive review and declined to rule on the 158 days already imposed, which IFF criticised.",
     "people": [
       "Anuradha Bhasin"
     ],
@@ -802,8 +847,9 @@ export const HISAAB_MEDIA = Object.freeze([
       "₹17,230 crore"
     ],
     "correctIndex": 1,
-    "explanation": "The written reply showed over ₹1,200 crore in 2017-18 and about ₹1,100 crore in 2018-19, then ₹627.67 crore (2019-20), ₹349.09 crore (2020-21), ₹264.78 crore (2021-22) and ₹154.07 crore up to 9 Dec 2022. Minister Anurag Thakur said ad spending had not increased in recent years.",
+    "explanation": "The written reply showed over ₹1,200 crore in 2017-18 and about ₹1,100 crore in 2018-19, ahead of the 2019 general election, then ₹627.67 crore (2019-20), ₹349.09 crore (2020-21), ₹264.78 crore (2021-22) and ₹154.07 crore up to 9 Dec 2022.",
     "status": "Parliament reply; no allegation.",
+    "otherSide": "Minister Anurag Thakur said the data showed advertising and publicity spending ‘has not increased in the last few years’.",
     "people": [
       "Anurag Thakur"
     ],
@@ -831,12 +877,16 @@ export const HISAAB_MEDIA = Object.freeze([
     ],
     "correctIndex": 3,
     "explanation": "The ECI disqualified her from contesting for three years from 20 Oct 2011 under Section 10A of the RP Act for suppressing ₹21,250 spent on ads in two Hindi dailies that were “masquerading as news items”. She had won Bisauli in 2007 on a Rashtriya Parivartan Dal ticket.",
-    "status": "Disqualified by the ECI for three years from 20 Oct 2011 (Section 10A, RP Act; poll-expense accounts); the period has lapsed. No criminal finding in this item.",
+    "status": "Disqualified by the ECI for three years from 20 Oct 2011 (Section 10A, RP Act; poll-expense accounts); Allahabad HC dismissed her challenge on 3 May 2013; the period has lapsed. No criminal finding in this item.",
+    "otherSide": "She challenged the order and Section 10A itself; the Allahabad High Court dismissed her petition in May 2013, holding the ECI had rightly disqualified her.",
     "people": [
       "Umlesh Yadav"
     ],
     "sourceUrl": "https://www.thehindu.com/news/national/paid-news-claims-first-political-scalp-as-ec-disqualifies-mla/article2556366.ece",
-    "sourceLabel": "The Hindu — ‘Paid news’ claims first political scalp as EC disqualifies MLA (21 Oct 2011)"
+    "sourceLabel": "The Hindu — ‘Paid news’ claims first political scalp as EC disqualifies MLA (21 Oct 2011)",
+    "sources": [
+      "https://indiankanoon.org/doc/182843246/"
+    ]
   },
   {
     "id": "hmd029",
@@ -858,10 +908,14 @@ export const HISAAB_MEDIA = Object.freeze([
       "3 days"
     ],
     "correctIndex": 2,
-    "explanation": "Under TRAI rules operators cannot disconnect a channel without 21 days’ notice and a stated reason. Channel executives alleged three state ministers told operators to drop them; the ministers’ offices did not respond to The News Minute. The channels likened it to the 2014 blocking of TV9 and ABN in TRS-ruled Telangana.",
-    "status": "Allegations by channel executives; ministers did not respond; no finding against any person.",
+    "explanation": "Under TRAI rules operators cannot disconnect a channel without 21 days’ notice and a stated reason. Channel executives alleged three state ministers told operators to drop the two channels. On 18 Sep 2019 the telecom tribunal TDSAT ordered operators to restore TV5, noting two private networks had given no discontinuation notice.",
+    "status": "Allegations by channel executives; ministers did not respond; TDSAT ordered TV5 restored (Sept 2019); no finding against any person.",
+    "otherSide": "The ministers’ offices did not respond to The News Minute; no YSRCP denial was found in reporting searched to Sep 2026.",
     "sourceUrl": "https://www.thenewsminute.com/andhra-pradesh/tv5-and-abn-andhra-jyothi-channels-go-cable-networks-ysrcp-behind-ban-109093",
-    "sourceLabel": "The News Minute — TV5 and ABN Andhra Jyothi channels go off cable networks, YSRCP behind ban? (18 Sep 2019)"
+    "sourceLabel": "The News Minute — TV5 and ABN Andhra Jyothi channels go off cable networks, YSRCP behind ban? (18 Sep 2019)",
+    "sources": [
+      "https://www.thenewsminute.com/andhra-pradesh/restore-tv5-news-channel-cable-networks-orders-telecom-tribunal-109216"
+    ]
   },
   {
     "id": "hmd030",
@@ -883,12 +937,18 @@ export const HISAAB_MEDIA = Object.freeze([
       "10 years"
     ],
     "correctIndex": 0,
-    "explanation": "The draft Karnataka Misinformation and Fake News (Prohibition) Bill also proposed fines of up to ₹10 lakh. After criticism from groups such as the Internet Freedom Foundation, the Congress government’s July 2025 redraft dropped “fake news” from the title and no longer stated the penalty quantum. It had not become law as of 2026-09.",
-    "status": "Draft bill; not enacted as of 2026-09.",
+    "explanation": "The draft Karnataka Misinformation and Fake News (Prohibition) Bill also proposed fines of up to ₹10 lakh. After criticism from groups such as the Internet Freedom Foundation, the Congress government’s July 2025 redraft dropped “fake news” from the title and no longer stated the penalty. It had not become law as of Sep 2026.",
+    "status": "Draft bill; not enacted as of 2026-09. A separate draft Responsible Social Media & Digital Safety Bill was submitted to the CM in April 2026.",
+    "otherSide": "IT Minister Priyank Kharge said the aim is ‘not to target those who question or criticise the government’ and disowned the leaked draft as not final.",
+    "people": [
+      "Priyank Kharge"
+    ],
     "sourceUrl": "https://www.newindianexpress.com/states/karnataka/2025/Jul/27/karnataka-government-dilutes-misinformation-bill-drops-fake-news",
     "sourceLabel": "The New Indian Express — Karnataka government dilutes misinformation bill, drops ‘fake news’ (27 Jul 2025)",
     "sources": [
-      "https://internetfreedom.in/statement-on-the-karnataka-misinformation-and-fake-news-prohibition-bill-2025/"
+      "https://internetfreedom.in/statement-on-the-karnataka-misinformation-and-fake-news-prohibition-bill-2025/",
+      "https://www.medianama.com/2025/11/223-misinformation-bill-name-and-shame-offenders/",
+      "https://thesouthfirst.com/karnataka/karnataka-proposes-bill-to-tackle-misinformation-deepfakes-online-harassment/"
     ]
   },
   {
@@ -959,15 +1019,19 @@ export const HISAAB_MEDIA = Object.freeze([
       "₹1,100 crore"
     ],
     "correctIndex": 0,
-    "explanation": "L-G V.K. Saxena ordered the Committee on Content Regulation in Government Advertising’s Sept 2016 finding enforced, with interest. The AAP called the orders “illegal” and said the L-G had no jurisdiction. Separately, in 2023 the SC cited Delhi’s ₹1,100 crore three-year ad budget while pressing it to fund the RRTS project.",
-    "status": "Recovery direction disputed by the AAP; no court finding against any person.",
+    "explanation": "L-G V.K. Saxena ordered the Committee on Content Regulation in Government Advertising’s Sept 2016 finding enforced, with interest; in Jan 2023 the Directorate of Information and Publicity served the AAP a ₹163.62 crore notice including interest. Separately, in 2023 the SC cited Delhi’s ₹1,100 crore three-year ad budget while pressing it to fund the RRTS project.",
+    "status": "Recovery direction (Dec 2022) and notice (Jan 2023) disputed by the AAP; no court ruling on them found as of 2026-09; no finding against any person.",
+    "otherSide": "AAP spokesperson Saurabh Bharadwaj called them ‘illegal orders’, saying the L-G had no jurisdiction to pass them.",
     "people": [
-      "V.K. Saxena"
+      "V.K. Saxena",
+      "Saurabh Bharadwaj"
     ],
     "sourceUrl": "https://www.thehindu.com/news/cities/Delhi/delhi-l-g-directs-chief-secretary-to-recover-9714-crore-from-aam-aadmi-party-for-political-advertisements/article66284313.ece",
     "sourceLabel": "The Hindu — Delhi L-G directs Chief Secretary to recover ₹97.14 crore from AAP for political advertisements (20 Dec 2022)",
     "sources": [
-      "https://www.thehindu.com/news/national/sc-tells-delhi-to-transfer-its-ad-budget-to-pay-for-rrts-project-but-keeps-order-in-abeyance-for-a-week/article67557527.ece"
+      "https://www.thehindu.com/news/national/sc-tells-delhi-to-transfer-its-ad-budget-to-pay-for-rrts-project-but-keeps-order-in-abeyance-for-a-week/article67557527.ece",
+      "https://www.tribuneindia.com/news/nation/aap-gets-recovery-notice-of-rs-163-62-crore-for-political-advertisements-sources-469733",
+      "https://www.tribuneindia.com/news/india/aap-govt-violated-ad-campaign-norms-spending-rose-by-1200-in-5-yrs-cag-report/amp"
     ]
   },
   {
@@ -990,8 +1054,9 @@ export const HISAAB_MEDIA = Object.freeze([
       "Congress"
     ],
     "correctIndex": 2,
-    "explanation": "The Indian Express (Jan 2023) notes that Sun TV is owned by DMK MP Dayanidhi Maran’s elder brother Kalanithi, while the DMK directly runs Kalaignar Seithigal. The Media Ownership Monitor found Kalanithi Maran and his wife own the Sun Group company that publishes the Tamil daily Dinakaran.",
+    "explanation": "The Indian Express (Jan 2023) notes that Sun TV, the most popular of Tamil Nadu’s politically linked channels, is owned by DMK MP Dayanidhi Maran’s elder brother Kalanithi. The Media Ownership Monitor found Kalanithi Maran and his wife wholly own Kal Publications, the Sun Group company that publishes the Tamil daily Dinakaran.",
     "status": "Ownership fact; no allegation.",
+    "otherSide": "The link is familial, not a party stake: The Indian Express contrasts Sun TV with Kalaignar Seithigal, which the DMK runs directly.",
     "people": [
       "Kalanithi Maran",
       "Dayanidhi Maran"
@@ -1022,8 +1087,9 @@ export const HISAAB_MEDIA = Object.freeze([
       "Jana Sena Party"
     ],
     "correctIndex": 1,
-    "explanation": "The Indian Express (Jan 2023) reports that Jagan Mohan Reddy’s company Indira Television launched Sakshi TV in March 2009 and is run by his wife, Y.S. Bharathi Reddy; the Telugu daily Sakshi was launched by Jagati Publications in March 2008. Sakshi TV was among four channels blacked out by cable operators in June 2024.",
+    "explanation": "The Indian Express (Jan 2023) reports that Jagan Mohan Reddy’s company Indira Television launched Sakshi TV in March 2009 and is run by his wife, Y.S. Bharathi Reddy; the Telugu daily Sakshi was launched by Jagati Publications in March 2008.",
     "status": "Ownership fact; no allegation in this item.",
+    "otherSide": "The family’s ownership is open, not disputed: no denial was found in reporting searched to Sep 2026, and Y.S. Bharathi Reddy runs the company.",
     "people": [
       "Y.S. Jagan Mohan Reddy",
       "Y.S. Bharathi Reddy"
@@ -1053,6 +1119,7 @@ export const HISAAB_MEDIA = Object.freeze([
     "correctIndex": 3,
     "explanation": "The Indian Express (2023) reports that Malayalam Communications, owner of Kairali TV and People TV, has the backing of the CPI(M), with party leaders owning a major portion of its shares. PRS lists Brittas as a CPI(M) Rajya Sabha member from Kerala since April 2021.",
     "status": "Ownership/political-link fact; no allegation.",
+    "otherSide": "No denial of the CPI(M) backing by the channel or the party was found in reporting searched to Sep 2026.",
     "people": [
       "John Brittas"
     ],
@@ -1082,8 +1149,9 @@ export const HISAAB_MEDIA = Object.freeze([
       "The Indian Union Muslim League"
     ],
     "correctIndex": 2,
-    "explanation": "Before its launch, chairman and film director Priyadarshan said neither the RSS nor the BJP backed the channel, which he said had about 5,000 shareholders. In 2023 BJP sources told The Indian Express that a planned BJP channel in Tamil Nadu would be “an extension of Janam TV”.",
+    "explanation": "The Indian Express (Jan 2023) says Janam TV, the latest entrant in Kerala’s mediascape, “is known to lean towards the Sangh Parivar”; BJP sources told it a planned BJP channel in Tamil Nadu would be “an extension of Janam TV”.",
     "status": "Editorial-lean description; the channel denied party backing at launch. No allegation.",
+    "otherSide": "Before launch, chairman Priyadarshan said neither the RSS nor the BJP nor any other party backed the channel, citing about 5,000 shareholders.",
     "people": [
       "Priyadarshan"
     ],
@@ -1113,12 +1181,14 @@ export const HISAAB_MEDIA = Object.freeze([
       "BJP"
     ],
     "correctIndex": 0,
-    "explanation": "Uddhav Thackeray had edited the Marathi daily since 2012 and stepped down on becoming Maharashtra CM in Nov 2019 — a party leader said, to avoid a conflict of interest as the paper receives government ads. Party MP Sanjay Raut stayed on as executive editor.",
+    "explanation": "Uddhav Thackeray had edited the Marathi daily since 2012, taking over from his father, party founder Bal Thackeray, and stepped down on becoming Maharashtra CM in Nov 2019. Party MP Sanjay Raut stayed on as executive editor.",
     "status": "Editorial-post fact; no allegation.",
+    "otherSide": "A Shiv Sena leader said Uddhav stepped down as editor to avoid a conflict of interest, since the paper receives government advertisements.",
     "people": [
       "Rashmi Thackeray",
       "Uddhav Thackeray",
-      "Sanjay Raut"
+      "Sanjay Raut",
+      "Bal Thackeray"
     ],
     "sourceUrl": "https://scroll.in/latest/954796/uddhav-thackerays-wife-rashmi-takes-over-as-editor-of-shiv-sena-mouthpiece-saamana",
     "sourceLabel": "Scroll.in — Rashmi Thackeray appointed editor of Shiv Sena’s ‘Saamana’ (1 Mar 2020)"
@@ -1143,12 +1213,13 @@ export const HISAAB_MEDIA = Object.freeze([
       "TRS (now BRS)"
     ],
     "correctIndex": 3,
-    "explanation": "The Wire (2018) reports that T News was started by K. Chandrasekhar Rao with associates on its board; he left the board after becoming Telangana CM, and it is seen as the CM’s channel. Telangana Publications, linked to his family, also runs Namasthe Telangana and Telangana Today.",
+    "explanation": "The Wire (2018) reports that T News was started by K. Chandrasekhar Rao with associates on its board, registered on 12 Jan 2010, and that it is seen as the CM’s channel. Telangana Publications, linked to his family, also runs Namasthe Telangana and Telangana Today.",
     "status": "Ownership fact; no allegation.",
+    "otherSide": "K. Chandrasekhar Rao resigned from T News’s board after becoming Chief Minister (The Wire, 2018).",
     "people": [
       "K. Chandrasekhar Rao"
     ],
-    "sourceUrl": "https://thewire.in/politics/chief-minister-chanrasekhar-rao-telangana-media-owner",
+    "sourceUrl": "https://m.thewire.in/article/politics/chief-minister-chanrasekhar-rao-telangana-media-owner",
     "sourceLabel": "The Wire — When the Chief Minister is also a media owner (20 Jul 2018)",
     "sources": [
       "https://en.wikipedia.org/wiki/T_News"
@@ -1166,7 +1237,7 @@ export const HISAAB_MEDIA = Object.freeze([
     "difficulty": "simple",
     "year": 2019,
     "govt": "BJP",
-    "question": "The Media Ownership Monitor found Assam channel News Live majority-owned by Riniki Bhuyan Sarma, wife of a sitting state minister from which party?",
+    "question": "The Media Ownership Monitor found Assam channel News Live majority-owned by Riniki Bhuyan Sarma, wife of a then state minister from which party?",
     "options": [
       "Indian National Congress",
       "Bharatiya Janata Party",
@@ -1174,8 +1245,9 @@ export const HISAAB_MEDIA = Object.freeze([
       "Asom Gana Parishad"
     ],
     "correctIndex": 1,
-    "explanation": "MOM (2019) recorded 51.33% of owner Pride East Entertainments with Riniki Bhuyan Sarma, and further stakes with the parents of her husband Himanta Biswa Sarma, then Assam’s finance and health minister. RSF cited News Live as an example of how politics and media ownership overlap.",
+    "explanation": "MOM (2019) recorded 51.33% of owner Pride East Entertainments with Riniki Bhuyan Sarma, and further stakes with the parents of her husband Himanta Biswa Sarma, then Assam’s finance and health minister and now its Chief Minister. RSF cited News Live as an example of how politics and media ownership overlap.",
     "status": "Ownership fact (2019 data); no allegation.",
+    "otherSide": "No response from the Sarmas to the MOM findings was found in reporting searched to Sep 2026; the data comes from 2019 company filings.",
     "people": [
       "Riniki Bhuyan Sarma",
       "Himanta Biswa Sarma"
@@ -1183,7 +1255,8 @@ export const HISAAB_MEDIA = Object.freeze([
     "sourceUrl": "https://india.mom-gmr.org/en/media/detail/outlet/news-live/",
     "sourceLabel": "Media Ownership Monitor India (RSF/DataLEADS) — News Live (2019)",
     "sources": [
-      "https://rsf.org/en/media-ownership-monitor-who-owns-media-india"
+      "https://rsf.org/en/media-ownership-monitor-who-owns-media-india",
+      "https://www.indiatvnews.com/north-east/assam/assam-cm-himanta-biswa-sarma-allocates-portfolios-to-newly-inducted-ministers-here-who-got-what-latest-updates-2026-06-08-1044051"
     ]
   },
   {
@@ -1206,16 +1279,18 @@ export const HISAAB_MEDIA = Object.freeze([
       "142nd"
     ],
     "correctIndex": 0,
-    "explanation": "India slipped six places from 151st in 2025 to 157th, scoring 31.96. RSF’s India profile cites violence against journalists and concentrated ownership, saying Mukesh Ambani owns over 70 outlets and that the 2022 NDTV takeover by Gautam Adani “signalled the end of pluralism” in mainstream media.",
+    "explanation": "India slipped six places from 151st in 2025 to 157th, scoring 31.96. RSF’s India profile cites violence against journalists, highly concentrated media ownership and outlets with overt political alignment, and says Mukesh Ambani owns more than 70 media outlets.",
     "status": "RSF ranking and assessment; no allegation of illegality against any person.",
+    "otherSide": "The Centre says it does not subscribe to RSF’s rankings, citing a ‘very low sample size’ and a ‘questionable and non-transparent’ methodology.",
     "people": [
       "Mukesh Ambani",
-      "Gautam Adani"
+      "Anurag Thakur"
     ],
     "sourceUrl": "https://rsf.org/en/country/india",
     "sourceLabel": "RSF — India country profile, World Press Freedom Index 2026",
     "sources": [
-      "https://m.thewire.in/article/media/india-is-157th-out-of-180-countries-on-rsfs-2026-world-press-freedom-index"
+      "https://m.thewire.in/article/media/india-is-157th-out-of-180-countries-on-rsfs-2026-world-press-freedom-index",
+      "https://www.tribuneindia.com/news/nation/government-does-not-agree-with-world-press-freedom-index-union-minister-anurag-thakur-488021"
     ]
   },
   {
@@ -1240,13 +1315,15 @@ export const HISAAB_MEDIA = Object.freeze([
     "correctIndex": 2,
     "explanation": "He was arrested on 5 Oct 2020 en route to cover the death of a Dalit woman who was allegedly gang-raped; UP Police alleged links to the now-banned PFI and invoked UAPA, later adding a money-laundering case. The SC granted bail in Sept 2022, saying every person has a right to free expression; he left jail on 2 Feb 2023.",
     "status": "Arrested Oct 2020 (UAPA, PMLA); on bail, released Feb 2023; SC relaxed bail conditions Nov 2024; cases not concluded as of 2026-09. Not convicted.",
+    "otherSide": "Kappan denies the charges: ‘I had only gone to report… I was only carrying two pens and a notepad.’",
     "people": [
       "Siddique Kappan"
     ],
     "sourceUrl": "https://www.boomlive.in/law/kerala-journalist-siddique-kappan-uapa-pfi-hathras-up-police-20922",
     "sourceLabel": "BOOM — Kerala journalist Siddique Kappan walks out of jail after 2 years (2 Feb 2023)",
     "sources": [
-      "https://www.thehindu.com/news/national/sc-relaxes-journalist-siddique-kappans-bail-condition/article68827976.ece"
+      "https://www.thehindu.com/news/national/sc-relaxes-journalist-siddique-kappans-bail-condition/article68827976.ece",
+      "https://www.aljazeera.com/news/2023/2/2/siddique-kappan-india-journalist-walks-out-of-jail-after-2-years"
     ]
   },
   {
@@ -1293,13 +1370,18 @@ export const HISAAB_MEDIA = Object.freeze([
       "Sedition (Section 124A IPC)"
     ],
     "correctIndex": 3,
-    "explanation": "A bench led by CJI N.V. Ramana on 11 May 2022 kept all Section 124A trials, appeals and proceedings in abeyance and said it expected governments not to register fresh FIRs; it was told about 13,000 people were in jail under the provision. The Centre had told the court it was re-examining the law.",
-    "status": "Court order; no allegation against any person.",
+    "explanation": "A bench led by CJI N.V. Ramana on 11 May 2022 kept all Section 124A trials, appeals and proceedings in abeyance and said it expected governments not to register fresh FIRs; it was told about 13,000 people were in jail under the provision. The BNS replaced the IPC on 1 July 2024; critics say its Section 152 revives sedition.",
+    "status": "Court order (May 2022). The IPC was replaced by the BNS from 1 July 2024, which omits sedition by name; the SC issued notice (Aug 2025) on pleas calling BNS Section 152 a repackaged sedition law. No allegation against any person.",
+    "otherSide": "The Union agreed the provision’s rigours were ‘not in tune with the current social milieu’ and told the court it was re-examining the law.",
     "people": [
       "N.V. Ramana"
     ],
     "sourceUrl": "https://www.thehindu.com/news/national/sc-asks-centre-states-to-not-file-fresh-firs-in-sedition-cases/article65403622.ece",
-    "sourceLabel": "The Hindu — Supreme Court puts colonial sedition law on hold (11 May 2022)"
+    "sourceLabel": "The Hindu — Supreme Court puts colonial sedition law on hold (11 May 2022)",
+    "sources": [
+      "https://www.boomlive.in/law/section-152-bns-vs-section-124-a-ipc-sedition-law-debate-india-29259",
+      "https://www.deccanherald.com/india/sc-to-examine-validity-of-sedition-related-section-152-of-bns-3672310"
+    ]
   },
   {
     "id": "hmd045",
@@ -1321,8 +1403,9 @@ export const HISAAB_MEDIA = Object.freeze([
       "SEBI"
     ],
     "correctIndex": 2,
-    "explanation": "The I-T department then alleged ₹700 crore of tax evasion over six years and bogus expenses; the CBDT said seized material was being examined. Dainik Bhaskar said the searches were the result of its critical journalism on the government’s Covid handling; a group editor said governments had stopped its ads for months.",
-    "status": "Tax-evasion allegations by the CBDT (July 2021); no court finding reported in this item.",
+    "explanation": "The I-T department then alleged ₹700 crore of tax evasion over six years and bogus expenses; the CBDT said seized material was being examined. A Divya Bhaskar editor said the Central and state governments had stopped the paper’s ads for two and a half months. No court finding on the allegations was reported as of Sep 2026.",
+    "status": "Tax-evasion allegations by the CBDT (July 2021); no court finding reported as of 2026-09.",
+    "otherSide": "Dainik Bhaskar said the searches were the result of its critical journalism on the government’s Covid mismanagement.",
     "sourceUrl": "https://indianexpress.com/article/india/dainik-bhaskar-group-it-raid-tax-evasion-7420920/",
     "sourceLabel": "The Indian Express — After raids, I-T alleges Rs 700-cr tax evasion by Dainik Bhaskar Group (25 Jul 2021)"
   }

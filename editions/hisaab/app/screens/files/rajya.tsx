@@ -235,10 +235,11 @@ function Cartogram({
 }) {
   const { t } = useLang();
   const centreState: TileState = centre.total > 0 && centre.cleared === centre.total ? 'cleared' : centre.started ? 'progress' : 'sealed';
+  // Starts with the drawer's visible words ('IN', 'Centre') — WCAG 2.5.3 label in name.
   const centreLabel =
     centreState === 'sealed'
-      ? t(`Centre drawer: ${centre.total} sector files, none opened`, `केंद्र: ${centre.total} सेक्टर फ़ाइलें`)
-      : t(`Centre drawer: ${centre.cleared} of ${centre.total} sector files cleared`, `केंद्र: ${centre.cleared}/${centre.total} सेक्टर फ़ाइलें क्लियर`);
+      ? t(`IN Centre drawer: ${centre.total} sector files, none opened`, `IN केंद्र: ${centre.total} सेक्टर फ़ाइलें`)
+      : t(`IN Centre drawer: ${centre.cleared} of ${centre.total} sector files cleared`, `IN केंद्र: ${centre.cleared}/${centre.total} सेक्टर फ़ाइलें क्लियर`);
   return (
     <div
       className={cx('h-rajya__grid', !loaded && 'h-rajya__grid--loading')}
@@ -264,14 +265,23 @@ function Cartogram({
                 <Tile
                   code={code}
                   name={d.name}
+                  nameHi={d.nameHi}
                   state={st}
                   progress={st === 'progress' ? { done: d.status.done, total: CARDS } : undefined}
                   selected={selected === code}
                   onSelect={onSelect}
+                  tabIndex={selected === code ? 0 : -1}
                   showName
                 />
               ) : (
-                <button type="button" className="h-tile h-rajya__nofile" aria-pressed={selected === code} aria-label={`${d.name}: no file yet`} onClick={() => onSelect(code)}>
+                <button
+                  type="button"
+                  className="h-tile h-rajya__nofile"
+                  aria-pressed={selected === code}
+                  aria-label={t(`${code}, ${d.name}: no file yet`, `${code}, ${d.nameHi || d.name}: अभी फ़ाइल नहीं`)}
+                  tabIndex={selected === code ? 0 : -1}
+                  onClick={() => onSelect(code)}
+                >
                   <span className="h-tile__code" aria-hidden="true">
                     {code}
                   </span>
@@ -291,6 +301,7 @@ function Cartogram({
           className={cx('h-tile', 'h-tile--wide', `h-tile--${centreState}`, 'h-rajya__centre')}
           aria-pressed={selected === CENTRE}
           aria-label={centreLabel}
+          tabIndex={selected === CENTRE ? 0 : -1}
           onClick={() => onSelect(CENTRE)}
         >
           <span className="h-tile__code" aria-hidden="true">
@@ -416,7 +427,7 @@ const Brief = function Brief({ drawer, centre, loaded, isHi, ref }: BriefProps &
             <p className="h-rajya__briefhi" lang="hi">
               केंद्र
             </p>
-            <h2 className="h-rajya__brieftitle" id={headId}>
+            <h2 className="h-rajya__brieftitle" id={headId} lang={isHi ? 'hi' : 'en'}>
               {t('The Centre', 'केंद्र')}
             </h2>
           </div>
@@ -452,7 +463,7 @@ const Brief = function Brief({ drawer, centre, loaded, isHi, ref }: BriefProps &
             <p className="h-rajya__briefhi" lang="hi">
               {drawer.nameHi}
             </p>
-            <h2 className="h-rajya__brieftitle" id={headId}>
+            <h2 className="h-rajya__brieftitle" id={headId} lang="en">
               {drawer.name}
             </h2>
           </div>
@@ -470,7 +481,7 @@ const Brief = function Brief({ drawer, centre, loaded, isHi, ref }: BriefProps &
             <p className="h-rajya__briefhi" lang="hi">
               {drawer.nameHi}
             </p>
-            <h2 className="h-rajya__brieftitle" id={headId}>
+            <h2 className="h-rajya__brieftitle" id={headId} lang="en">
               {drawer.name}
             </h2>
           </div>

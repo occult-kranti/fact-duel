@@ -20,7 +20,20 @@
  *  - both are always light-theme images (they are forwarded, not viewed in the app).
  * Nothing funny is drawn inside a receipt.
  */
-import { asOfText, certificateName, formatNumber, govtText, labelDisplay, LADDER_DISPLAY, sourceHost, sourceKind, stateName, statusLine, type BankItem } from '../data';
+import {
+  asOfText,
+  certificateName,
+  formatNumber,
+  govtText,
+  labelDisplay,
+  LADDER_DISPLAY,
+  otherSideOf,
+  sourceHost,
+  sourceKind,
+  stateName,
+  statusLine,
+  type BankItem,
+} from '../data';
 import { loadHandFont } from '../ui/fonts';
 import { stampAngle } from '../ui/seed';
 
@@ -298,14 +311,8 @@ export type ReceiptCardOptions = {
   link: string;
 };
 
-/**
- * The item's one-clause "other side" (charter §2.3: a denial, a contest or a clearance), from the bank's
- * optional `otherSide` field. Null when the item has none.
- */
-export function otherSideOf(item: BankItem): string | null {
-  const v = (item as { otherSide?: unknown }).otherSide;
-  return typeof v === 'string' && v.trim() ? v.trim() : null;
-}
+/** The item's one-clause "other side" (data.ts — one reader for the receipt and the cards). */
+export { otherSideOf };
 
 const wordSet = (text: string) => new Set(text.toLowerCase().match(/[\p{L}\p{N}]{3,}/gu) ?? []);
 
@@ -682,8 +689,10 @@ export async function receiptCardFit(item: BankItem, variant: CardVariant, link:
 export type CertificateCardInput = {
   name: string | null | undefined;
   band: number;
-  receipts: number;
-  issuedOn: Date | number;
+  /** Null for an earlier rung (the count at promotion is not on record): the clause is left out. */
+  receipts: number | null;
+  /** Null when the promotion date is not on record: the stamp says ISSUED with no date. */
+  issuedOn: Date | number | null;
   /** Printed in the footer (no scheme). */
   site: string;
   /** Footer line; default the certificate's own. */
@@ -710,16 +719,17 @@ export async function renderCertificateCard(input: CertificateCardInput): Promis
   const t = lightTokens();
   const label = labelDisplay(input.band);
   const name = certificateName(input.name);
-  const date = new Date(input.issuedOn);
-  const receipts = Math.max(0, Math.floor(input.receipts));
-  const fno = input.fno ?? `L-${label.band}/${date.getFullYear()}-${String(receipts).padStart(4, '0')}`;
+  const date = input.issuedOn === null ? null : new Date(input.issuedOn);
+  const receipts = input.receipts === null ? null : Math.max(0, Math.floor(input.receipts));
+  const fno = input.fno ?? `L-${label.band}/${(date ?? new Date()).getFullYear()}-${String(receipts ?? 0).padStart(4, '0')}`;
+  const stampText = date ? `ISSUED · ${certDate(date)}` : 'ISSUED';
   const latin = label.en.toUpperCase();
   await Promise.all([
     loadHandFont(),
     loadFaces(t, [
-      ['display', 700, `${label.hi} ${latin} ${name.toUpperCase()} ISSUED ${certDate(date)}`],
+      ['display', 700, `${label.hi} ${latin} ${name.toUpperCase()} ${stampText}`],
       ['ui', 400, `This is to certify that has, after been officially labelled ${label.line} ${label.aside ?? ''}`],
-      ['ui', 600, `${formatNumber(receipts)} sourced receipts`],
+      ['ui', 600, `${formatNumber(receipts ?? 0)} sourced receipts`],
       ['mono', 700, `CERTIFICATE OF LABELLING F.No. ${fno} 0123456789 of`],
       ['mono', 400, `${input.footer} ${input.site}`],
       ['hand', 400, 'Noted. Pl. forward.'],
@@ -776,13 +786,19 @@ export async function renderCertificateCard(input: CertificateCardInput): Promis
   const nameFont = fontOf(t, 'display', 700, 50);
   const lines = wrapRuns(
     ctx,
-    [
-      { text: 'This is to certify that ', font: body, color: t.ink },
-      { text: name.toUpperCase(), font: nameFont, color: t.ink },
-      { text: ' has, after ', font: body, color: t.ink },
-      { text: `${formatNumber(receipts)} sourced receipts`, font: strong, color: t.ink },
-      { text: ', been officially labelled', font: body, color: t.ink },
-    ],
+    receipts === null
+      ? [
+          { text: 'This is to certify that ', font: body, color: t.ink },
+          { text: name.toUpperCase(), font: nameFont, color: t.ink },
+          { text: ' has been officially labelled', font: body, color: t.ink },
+        ]
+      : [
+          { text: 'This is to certify that ', font: body, color: t.ink },
+          { text: name.toUpperCase(), font: nameFont, color: t.ink },
+          { text: ' has, after ', font: body, color: t.ink },
+          { text: `${formatNumber(receipts)} sourced receipts`, font: strong, color: t.ink },
+          { text: ', been officially labelled', font: body, color: t.ink },
+        ],
     w,
   );
   for (const line of lines) {
@@ -830,7 +846,6 @@ export async function renderCertificateCard(input: CertificateCardInput): Promis
   const dotsY = footTop - 46;
   const stampY = dotsY - 120;
   // The stamp sits left on its own line; the babu's hand note sits above it, right-aligned.
-  const stampText = `ISSUED · ${certDate(date)}`;
   ctx.font = fontOf(t, 'display', 700, 40);
   setSpacing(ctx, 40 * 0.08);
   const stampW = ctx.measureText(stampText).width + 40 + 18;
@@ -869,11 +884,15 @@ export async function renderCertificateCard(input: CertificateCardInput): Promis
   ctx.lineTo(x + w, footTop);
   ctx.stroke();
   ctx.restore();
+  // The disclaimer must survive a forward viewed on a phone (1080px → ~360px wide): bold ink at 28px
+  // reads at ~9px there, where 24px ink-2 at 400 was ~8px grey. Two lines at most, then the site.
+  ctx.font = fontOf(t, 'mono', 700, 28);
+  ctx.fillStyle = t.ink;
+  const foot = wrap(ctx, input.footer, w);
+  foot.slice(0, 2).forEach((line, i) => ctx.fillText(line, x, footTop + 40 + i * 34));
   ctx.font = fontOf(t, 'mono', 400, 24);
   ctx.fillStyle = t['ink-2'];
-  const foot = wrap(ctx, input.footer, w);
-  foot.slice(0, 2).forEach((line, i) => ctx.fillText(line, x, footTop + 40 + i * 32));
-  ctx.fillText(input.site, x, footTop + 40 + Math.min(2, foot.length) * 32);
+  ctx.fillText(input.site, x, footTop + 40 + Math.min(2, foot.length) * 34);
 
   return toBlob(canvas);
 }

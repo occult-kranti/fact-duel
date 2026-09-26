@@ -5,7 +5,9 @@
  *   const { controller, snapshot } = useDuel(request);   // request from '@/lib/duel-client' or a P2P session
  *   useQuestionShown(controller, snapshot);              // starts the reveal-to-input clock after paint
  *
- * `snapshot` re-renders on every change (room, countdown, remaining time, error).
+ * `snapshot` re-renders on every change (room, lock, error) and every 150 ms of the 3·2·1 countdown.
+ * It does NOT re-render while the question is up: read `controller.snapshot().remainingMs` from a rAF
+ * loop for the timer bar (screens/room/live.tsx does), so the live card does no work per tick.
  */
 import { useEffect, useLayoutEffect, useState } from 'react';
 import { createDuelController } from '../engine/duel-controller.mjs';

@@ -17,7 +17,7 @@ import { dayKey } from '@/lib/journal.mjs';
 import { dailyQuests } from '@/lib/progression.mjs';
 import { ROUTES, standing, todaysFive } from '../../../edition';
 import { PENDING_LABEL, useActivity, useBudget } from '../../budget';
-import { babuRank, BOT_LINE, BOT_LINE_HI, BOT_NAME, formatNumber, labelDisplay, SECTOR_NAMES_HI, stateNameHi } from '../../data';
+import { babuRank, BOT_LINE, BOT_LINE_HI, BOT_NAME, formatNumber, labelDisplay, labelLine, SECTOR_NAMES_HI, stateNameHi } from '../../data';
 import { href, navigate, type ScreenProps } from '../../router';
 import { shareDailyGrid } from '../../share';
 import { useAppPlayer } from '../../shell/player';
@@ -116,6 +116,7 @@ const handledLabelNotes = new Set<string>();
 function usePendingLabel(loaded: boolean, band: number) {
   const activity = useActivity();
   const budget = useBudget();
+  const { t, isHi } = useLang();
   const visible = useSyncExternalStore(
     subscribeVisibility,
     () => document.visibilityState === 'visible',
@@ -129,14 +130,14 @@ function usePendingLabel(loaded: boolean, band: number) {
     const l = labelDisplay(band);
     budget.ceremony({
       kind: 'label',
-      kicker: 'Label promotion',
+      kicker: t('Label promotion', 'लेबल प्रमोशन'),
       title: l.en,
       titleHi: l.hi,
-      subtitle: l.line,
+      subtitle: labelLine(l, isHi),
       stamp: `ISSUED · ${l.en.toUpperCase()}`,
       seed: `band-${l.band}`,
     });
-  }, [loaded, visible, activity, band, budget]);
+  }, [loaded, visible, activity, band, budget, t, isHi]);
 }
 
 // ---- the screen -----------------------------------------------------------------------------------
@@ -494,8 +495,12 @@ function Quests({ items }: { items: QuestItem[] }) {
           </span>
           <span className="h-home__h2en">Aaj ke 3 kaam</span>
         </h2>
-        <span className="h-home__questcount h-mono" aria-label={`${done} of ${items.length} done`}>
-          {done}/{items.length}
+        {/* A span takes no aria-label (and '1/3' would be read as "one third"): words for screen readers. */}
+        <span className="h-home__questcount h-mono">
+          <span aria-hidden="true">
+            {done}/{items.length}
+          </span>
+          <span className="h-sr">{t(`${done} of ${items.length} done`, `${items.length} में से ${done} पूरे`)}</span>
         </span>
       </div>
       {items.length ? (

@@ -45,8 +45,10 @@ export function CertificateView({ route }: { route: AppRoute }) {
   const band = Number.isInteger(asked) && asked >= 0 && asked <= s.band ? asked : s.band;
   const label = labelDisplay(band);
   const dates = promotionDates(prog);
-  const receipts = countReceipts(player.journal);
-  const issuedOn = dates.get(band) ?? Date.now();
+  // Only what is on record: the promotion date (else the stamp says ISSUED with no date), and the
+  // receipts count only for the rung held now (today's count is not what an earlier rung was earned with).
+  const receipts = band === s.band ? countReceipts(player.journal) : null;
+  const issuedOn = dates.get(band) ?? null;
   const input = { name, band, receipts, issuedOn };
 
   const download = async () => {

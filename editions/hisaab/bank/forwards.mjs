@@ -53,9 +53,11 @@ export const HISAAB_FORWARDS = Object.freeze([
     ],
     correctIndex: 0,
     explanation:
-      "False. BOOM traced the message to 2016; its photo was a 2013 India Today picture from his Gujarat CM office. UNESCO's press office told AFP in 2019 it 'does not establish rankings of political leaders'. The same hoax template has credited UNESCO with naming Jana Gana Mana the 'best anthem' and CPI(M) the 'most honest party'.",
+      "False. BOOM found the message viral since at least 2016; its photo was an India Today picture from his years as Gujarat CM, with no mention of UNESCO. UNESCO confirmed to AFP in 2019 that it gives no such award. The same hoax template has credited UNESCO with naming Jana Gana Mana the 'best anthem' and CPI(M) the 'most honest party'.",
     status: 'Message rated fake by BOOM (Nov 2022) and AFP (2019); no legal matter involved',
     people: ['Narendra Modi'],
+    otherSide:
+      "UNESCO's press office told AFP it 'does not establish rankings of political leaders' performance or give them distinctions such as best prime minister'.",
     sourceUrl: 'https://www.boomlive.in/fact-check/unesco-calls-pm-modi-as-worlds-best-prime-minister-fake-claim-revived-20193',
     sourceLabel: "BOOM — UNESCO Calls PM Modi As World's Best Prime Minister? Fake Claim Revived (27 Nov 2022)",
     sources: ['https://factly.in/indias-jana-gana-mana-was-not-declared-as-the-worlds-best-anthem-by-unesco/'],
@@ -108,11 +110,14 @@ export const HISAAB_FORWARDS = Object.freeze([
     ],
     correctIndex: 1,
     explanation:
-      "Clipped. In the 12 Nov 2017 Patan speech Gandhi said Modi had told potato farmers he would install such a machine, adding 'these are not my words but Narendra Modi's words'. Alt News found the clip, shared in 2017 by the BJP's IT cell head, dropped that line. Alt News also noted there is no public record of Modi making such a promise.",
-    status: 'Clip rated out of context by Alt News (Sep 2020); no legal matter involved',
+      "Clipped. In the 12 Nov 2017 Patan speech Gandhi said Modi had told potato farmers he would install such a machine, adding 'these are not my words but Narendra Modi's words'. Alt News found the clip, shared in 2017 by the BJP's IT cell head, dropped that line; BOOM had flagged the missing context in November 2017.",
+    status: 'Clip rated out of context by BOOM (Nov 2017) and Alt News (Sep 2020); no legal matter involved',
     people: ['Rahul Gandhi', 'Narendra Modi'],
+    otherSide:
+      "Alt News added that Gandhi's own attribution was political rhetoric: it found no record of Modi making any such promise.",
     sourceUrl: 'https://www.altnews.in/potato-gold-machine-remark-revived-to-mock-rahul-gandhi/',
     sourceLabel: "Alt News — 'Potato-gold' machine remark revived to mock Rahul Gandhi (22 Sep 2020)",
+    sources: ['https://www.boomlive.in/gandhi-vs-modi-why-the-humble-potato-is-caught-in-a-political-slugfest'],
   },
   {
     id: 'hfw005',
@@ -136,12 +141,15 @@ export const HISAAB_FORWARDS = Object.freeze([
     ],
     correctIndex: 3,
     explanation:
-      "Edited. Congress supporters trimmed a clip of Modi mocking Gandhi's 'potato-gold' jibe so the words looked like Modi's own promise. Alt News rated it false and said there is no public record of Modi claiming such a machine exists — the same misleading-clip trick earlier used against Gandhi, now turned the other way.",
+      "Edited. Alt News traced the 20-second clip to Modi's April 2019 Kannauj speech, posted in full on the BJP's YouTube channel. Jump cuts joined 'I' from 'I cannot make gold from potatoes' to a later phrase about whoever wants to, then to a line on foreign exchange. In the original Modi was mocking the 'potato-gold' line; Congress supporters shared the cut as his own promise.",
     status: 'Clip rated false by Alt News (Sep 2020); no legal matter involved',
     people: ['Narendra Modi', 'Rahul Gandhi'],
+    otherSide:
+      "No reply was reported from the Congress-linked accounts that shared it, which Alt News found included a Telangana Congress coordinator's handle.",
     sourceUrl:
       'https://www.altnews.in/fact-check-edited-video-is-being-shared-to-falsely-claim-that-aaloo-sona-machine-remarks-belongs-to-pm-modi/',
     sourceLabel: "Alt News — PM Modi's edited clip shared to claim he made the 'potato-gold' machine remark (25 Sep 2020)",
+    sources: ['https://www.deccanherald.com/india/fact-check-pm-modi-s-edited-clip-shared-to-claim-he-made-the-potato-gold-machine-remark-892987.html'],
   },
   {
     id: 'hfw006',
@@ -168,8 +176,11 @@ export const HISAAB_FORWARDS = Object.freeze([
       "Misleading. At a Nov 2013 rally in Kanker (Chhattisgarh) Modi said that if black money stashed abroad were brought back, every poor Indian would get ₹15–20 lakh — BOOM calls it an illustration of the sum abroad, not a deposit pledge, and it is not in the 2014 manifesto. Amit Shah later called it a 'jumla' in an interview.",
     status: 'Speech of Nov 2013; BOOM fact-check (Jan 2019); no legal matter involved',
     people: ['Narendra Modi', 'Amit Shah'],
+    otherSide:
+      "Amit Shah said in 2015 it was 'a way of delivering a speech… a metaphor': recovered black money would fund schemes for the poor, not cash deposits.",
     sourceUrl: 'https://www.boomlive.in/did-modi-promise-to-deposit-rs-15-lakh-in-every-account-a-factcheck',
     sourceLabel: 'BOOM — Did Modi Promise To Deposit Rs 15 Lakh In Every Account?: A FactCheck (22 Jan 2019)',
+    sources: ['https://www.thequint.com/news/webqoof/rajnath-singh-ani-interview-pm-narendra-modi-never-promised-rs-15-lakh-fact-check'],
   },
   {
     id: 'hfw007',
@@ -193,16 +204,20 @@ export const HISAAB_FORWARDS = Object.freeze([
     ],
     correctIndex: 2,
     explanation:
-      "Doctored. BOOM traced it to an April 2023 speech in Chevella, Telangana, where Shah spoke of scrapping a religion-based state quota; the audio was edited to make it about SC/ST/OBC quotas. Delhi Police registered an FIR on 28 April 2024; a Congress social-media coordinator was arrested in May 2024 and granted bail. No verdict has been reported.",
+      "Doctored. BOOM traced it to an April 2023 speech in Chevella, Telangana, where Shah spoke of scrapping a religion-based state quota; the audio was edited to make it about SC/ST/OBC quotas. Delhi Police filed an FIR on 28 April 2024 and in May arrested a Congress social-media coordinator, later bailed; Hyderabad police arrested five people it said had circulated it. No chargesheet or verdict is reported.",
     status:
-      'Video found doctored by BOOM (Apr 2024); Delhi Police FIR (Apr 2024); one arrest (May 2024), bail granted; no verdict reported as of 2026-09',
+      'Video found doctored by BOOM (Apr 2024); Delhi Police FIR (Apr 2024); Congress coordinator arrested (May 2024), on bail; no chargesheet or verdict reported as of 2026-09',
     people: ['Amit Shah'],
+    otherSide:
+      "The Congress confirmed its social-media coordinator's arrest but denied he made or posted the clip: 'He is not involved in any doctored video.'",
     sourceUrl:
       'https://www.boomlive.in/fact-check/fact-check-amit-shah-end-reservation-sc-st-obc-old-video-doctored-muslim-reservation-telangana-fake-news-25083',
     sourceLabel: 'BOOM — Video Of Amit Shah Promising To Scrap SC/ST/OBC Reservation Is Doctored (29 Apr 2024)',
     sources: [
       'https://scroll.in/latest/1067194/delhi-police-registers-fir-in-connection-with-doctored-video-of-amit-shah-on-ending-reservations',
       'https://www.ndtv.com/india-news/congress-leader-arun-reddy-gets-bail-in-amit-shah-fake-video-case-5655818',
+      'https://www.theguardian.com/world/article/2024/may/04/india-opposition-social-media-chief-arrested-over-doctored-video',
+      'https://english.gujaratsamachar.com/news/national/amit-shahs-doctored-video-case-arun-reddy-sent-to-judicial-custody-59093310269',
     ],
   },
   {
@@ -218,7 +233,7 @@ export const HISAAB_FORWARDS = Object.freeze([
     asOf: '2026-09',
     govt: 'NDA',
     question:
-      "April 2024: a video of actor Aamir Khan mocking the '₹15 lakh' promise and ending 'Vote for justice, vote for Congress' went viral. What was it?",
+      "April 2024: a video of actor Aamir Khan mocking the '₹15 lakh' promise and ending with the line 'Vote for Congress' went viral. What was it?",
     options: [
       'Authentic — an unaired 2014 segment from his TV show',
       'Fake — an AI voice clone over a 2014 show promo; he filed an FIR',
@@ -227,15 +242,18 @@ export const HISAAB_FORWARDS = Object.freeze([
     ],
     correctIndex: 1,
     explanation:
-      "Fake. BOOM found the visuals came from a 2014 promo for his show Satyamev Jayate; IIT Jodhpur's Itisaar tool flagged the audio as an AI voice swap. Congress functionaries shared it. Khan's spokesperson said he has never endorsed a party and that an FIR was filed with Mumbai Police's Cyber Crime Cell. A similar deepfake of Ranveer Singh followed.",
+      "Fake. BOOM found the visuals came from a 2014 promo for his show Satyamev Jayate; IIT Jodhpur's Itisaar tool flagged the audio as an AI voice swap. Congress functionaries shared it. Khan's spokesperson said he has never endorsed a party in his 35-year career and had complained to Mumbai Police's Cyber Crime Cell. A similar deepfake of Ranveer Singh followed.",
     status:
-      "Deepfake per BOOM (Apr 2024); FIR filed by the actor's team with Mumbai Police against unnamed persons; no outcome reported as of 2026-09",
+      "Deepfake per BOOM (Apr 2024); Mumbai Police FIR at Khar police station against an unidentified person (Apr 2024); no arrest or outcome reported as of 2026-09",
     people: ['Aamir Khan', 'Ranveer Singh'],
+    otherSide:
+      'No reply was reported from the Congress functionaries who shared it; police registered the case against an unidentified person, not against any party.',
     sourceUrl: 'https://www.boomlive.in/fact-check/aamir-khan-jhumla-congress-bjp-old-video-fact-check-24920',
     sourceLabel: 'BOOM — Congress Functionaries Share AI Voice Clone Of Aamir Khan Targeting PM Modi (16 Apr 2024)',
     sources: [
       'https://www.tribuneindia.com/news/entertainment/aamir-khan-lodges-fir-against-congress-for-alleged-deep-fake-video-used-in-poll-advertisement-611383',
       'https://www.thenewsminute.com/news/ranveer-singh-files-fir-over-deepfake-video-where-he-is-seen-criticising-pm-modi',
+      'https://www.hindustantimes.com/entertainment/bollywood/aamir-khan-deepfake-video-mumbai-police-register-fir-against-unnamed-person-101713424860798.html',
     ],
   },
   {
@@ -261,12 +279,18 @@ export const HISAAB_FORWARDS = Object.freeze([
     correctIndex: 3,
     explanation:
       "Fake. BOOM found the audio was overlaid on footage of his 26 Oct 2023 Chhindwara speech, livestreamed by MP Congress, in which he never mentioned the scheme. Ladli Behna, launched by the BJP state government, then paid ₹1,250 a month. MP Police registered FIRs over election deepfakes, including one on this video (The Quint).",
-    status: 'Audio found fake by BOOM (Nov 2023); FIR registered by MP Police (Nov 2023); no verdict reported as of 2026-09',
+    status:
+      'Audio found fake by BOOM (Nov 2023); FIR against unknown persons registered by Indore police on a Congress complaint (Nov 2023); no arrest or verdict reported as of 2026-09',
     people: ['Kamal Nath'],
+    otherSide:
+      "Nobody has been publicly identified as the clip's maker; Indore police said their deepfake FIRs were against unknown persons and inquiries were under way.",
     sourceUrl:
       'https://www.boomlive.in/fact-check/madhya-pradesh-elections-kamal-nath-congress-to-cancel-laadli-behna-scheme-fact-check-23512',
     sourceLabel: "BOOM — Madhya Pradesh Polls: Video of Kamal Nath's Speech Viral With Fake Audio (3 Nov 2023)",
-    sources: ['https://www.thequint.com/news/india/madhya-pradesh-police-registers-fir-deepfakes-pm-modi-kamal-nath'],
+    sources: [
+      'https://www.thequint.com/news/india/madhya-pradesh-police-registers-fir-deepfakes-pm-modi-kamal-nath',
+      'https://theprint.in/india/bjp-retains-madhya-pradesh-with-two-thirds-majority-wins-163-of-230-assembly-seats/1870542/',
+    ],
     tags: ['pre-election'],
     enactedBy: [{ name: 'Shivraj Singh Chouhan', role: 'Chief Minister, Madhya Pradesh (launched Ladli Behna, 2023)', party: 'BJP' }],
     outcome:
@@ -297,9 +321,12 @@ export const HISAAB_FORWARDS = Object.freeze([
     explanation:
       "Denied. The MEA spokesperson said India received inputs that a route was available and passed them to citizens, 'and I am happy that many could make it', but 'extrapolating that to say that somebody is holding off bombing or this is something we were coordinating is absolutely inaccurate' (The Quint, 3 Mar 2022).",
     status: 'Claim denied by the MEA (3 Mar 2022); no legal matter involved',
-    people: ['Narendra Modi'],
+    people: ['Narendra Modi', 'Vladimir Putin'],
+    otherSide:
+      "The kernel behind it: Modi had spoken to Putin by phone on 2 March, and the MEA said it got 'specific inputs' that a route was open and relayed them.",
     sourceUrl: 'https://www.thequint.com/news/india/mea-denies-claim-russia-stopped-war-six-hours-ukraine-kharkiv-evacuation-of-indians',
     sourceLabel: "The Quint — MEA Denies Claim Russia 'Stopped' War for 6 Hours to Evacuate Indians From Kharkiv (3 Mar 2022)",
+    sources: ['https://www.altnews.in/mea-denies-russia-stopped-war-for-6-hours-at-indias-behest/'],
   },
   {
     id: 'hfw011',
@@ -324,8 +351,10 @@ export const HISAAB_FORWARDS = Object.freeze([
     correctIndex: 2,
     explanation:
       "False. Asked if Modi was a contender, Toje had said he hoped 'every leader in every nation is inspired to do the work' needed to win. He then told ANI a 'fake news tweet' had been sent out and denied saying anything resembling it. Alt News listed many outlets that ran the misquote; it resurfaced again in 2025.",
-    status: 'Quote denied by Asle Toje (Mar 2023); rated false by Alt News and BOOM; no legal matter involved',
+    status: 'Quote denied by Asle Toje (Mar 2023); rated false by Alt News (2023) and BOOM (2023, Sep 2025); no legal matter involved',
     people: ['Asle Toje', 'Narendra Modi'],
+    otherSide:
+      "Toje did praise Modi, telling ABP that powerful leaders like him 'have much more chance and ability' to work for peace, but he named no contender.",
     sourceUrl: 'https://www.altnews.in/media-misreport-nobel-committee-member-did-not-say-modi-biggest-contender-for-peace-prize/',
     sourceLabel: 'Alt News — Media misreport: Nobel committee member did not say Modi biggest contender for Peace Prize (17 Mar 2023)',
     sources: [
@@ -354,11 +383,14 @@ export const HISAAB_FORWARDS = Object.freeze([
     ],
     correctIndex: 0,
     explanation:
-      "The Quint rated the claim false. On 3 May 2019 the RBI said it is normal practice for central banks worldwide to keep part of their gold reserves overseas with other central banks, such as the Bank of England, for safe custody — nothing about it was secret. The claim came from an election candidate and was amplified by Congress's official handle.",
-    status: "Claim rated false by The Quint (May 2019) after the RBI's clarification; no legal matter involved",
+      "The Quint rated the claim false. On 3 May 2019 the RBI said it is normal practice for central banks worldwide to keep gold overseas with other central banks, such as the Bank of England, for safe custody — and that no gold was shifted abroad in 2014 or thereafter. The claim came from an election candidate and was amplified by Congress's official handle.",
+    status: "Claim rated false by The Quint and Alt News (May 2019) after the RBI's clarification; no legal matter involved",
     people: ['Narendra Modi'],
+    otherSide:
+      'The claimant, a South Delhi Lok Sabha candidate, said he drew it from an RTI reply and a study of the RBI’s annual reports.',
     sourceUrl: 'https://www.thequint.com/news/webqoof/rbi-transported-200-tonnes-of-gold-to-switzerland-is-fake-news',
     sourceLabel: "The Quint WebQoof — RBI Didn't 'Secretly' Transfer 200 Tonnes of Gold Overseas in 2014 (5 May 2019)",
+    sources: ['https://www.altnews.in/congress-tweets-misinformation-about-modi-govt-secretly-transferring-200-tonnes-of-gold-out-of-india/'],
   },
   {
     id: 'hfw013',
@@ -383,10 +415,13 @@ export const HISAAB_FORWARDS = Object.freeze([
     correctIndex: 0,
     explanation:
       "Misleading. The 47th GST Council raised the rate on works contracts for roads, bridges, railways, metro, crematoria and similar projects from 12% to 18%. Funeral, burial and crematorium services themselves sit outside GST under Schedule III of the CGST Act. PIB Fact Check also called the claim misleading.",
-    status: 'Claim called misleading by PIB Fact Check and Newschecker (Jul 2022); no legal matter involved',
+    status: 'Claim called misleading by PIB Fact Check, Newschecker and BOOM (Jul 2022); no legal matter involved',
     people: ['Narendra Modi'],
+    otherSide:
+      'The anger had a real trigger: the same GST changes taxed items that had been exempt, such as pre-packed, labelled foods and hospital beds (BOOM).',
     sourceUrl: 'https://newschecker.in/fact-check/gst-on-crematorium-services-misleading',
     sourceLabel: "Newschecker — Central Govt Imposed 18% GST On Crematorium Services? No, It's Untrue (22 Jul 2022)",
+    sources: ['https://www.boomlive.in/fact-check/economy/gst-crematorium-18-fact-check-nirmala-sitharaman-finance-minister-18594'],
   },
   {
     id: 'hfw014',
@@ -431,19 +466,28 @@ export const HISAAB_FORWARDS = Object.freeze([
       "June 2024: Maharashtra Congress chief Nana Patole said Atal Setu, the sea bridge opened that January, had cracked because of corruption. What did the record show?",
     options: [
       'Cracks in the bridge deck; one lane shut for months',
-      'Minor asphalt cracks on an approach-road ramp, not the bridge',
+      'Minor cracks on an approach-road ramp, not on the bridge itself',
       'No cracks at all — the photos were of a bridge abroad',
       'Cracks in the pillars, found by an audit MMRDA ordered',
     ],
     correctIndex: 1,
     explanation:
-      "Misleading. The cracks were on an approach road leading to the Mumbai Trans Harbour Link, not on the sea bridge. MMRDA said there was no structural defect and the cracks were minor surface cracks. The state Congress blamed corruption by the ruling coalition in the state and at the Centre (The Hindu, 21 Jun 2024).",
-    status: 'Allegation by the state Congress chief (Jun 2024); MMRDA said no structural defect; no inquiry finding reported',
+      "Misleading. MMRDA said the minor cracks were at three spots on Ramp 5 of an approach road in Ulwe — a service road, not part of the bridge — with no structural defect, and repairs began at once. The state Congress blamed corruption by the ruling coalition in the state and at the Centre (The Hindu; Hindustan Times, 21–22 Jun 2024).",
+    status:
+      'Corruption allegation by the state Congress chief (Jun 2024); no inquiry finding of corruption reported; MMRDA found no structural defect but served the approach-road contractor a ₹1 crore notice over pavement quality (Aug 2024)',
     people: ['Nana Patole'],
+    otherSide:
+      "The BJP said on X the cracks were on the road leading to the bridge, not on Atal Setu; MMRDA said they posed no threat to the bridge's structure.",
+    outcome:
+      'MMRDA later served the approach-road contractor a ₹1 crore notice for poor pavement quality (FPJ, Aug 2024). In Sep 2025 it fined a different contractor ₹1 crore over monsoon surface damage on a 2-km stretch of the bridge, which it said stayed structurally safe.',
     sourceUrl:
       'https://www.thehindu.com/news/national/within-six-months-of-opening-road-to-indias-longest-sea-bridge-develops-cracks/article68317030.ece',
     sourceLabel: "The Hindu — Road to India's longest sea bridge, Atal Setu, develops cracks after 6 months (21 Jun 2024)",
-    sources: ['https://www.ndtv.com/india-news/cracks-on-atal-setu-alleges-mumbai-congress-chief-bjp-hits-back-5939975'],
+    sources: [
+      'https://www.hindustantimes.com/cities/mumbai-news/minor-cracks-found-on-approach-road-connecting-atal-setu-says-mmrda-101718997360133.html',
+      'https://www.freepressjournal.in/mumbai/atal-setu-pothole-1-crore-fine-imposed-on-the-contractor',
+      'https://timesofindia.indiatimes.com/city/mumbai/after-imposing-rs-1-crore-fine-mmrda-asks-contractor-to-repair-damaged-portion-of-mumbai-trans-harbour-link-in-five-days-and-fully-relay-two-km-stretch-after-monsoon/articleshow/124000198.cms',
+    ],
   },
   {
     id: 'hfw016',
@@ -494,7 +538,7 @@ export const HISAAB_FORWARDS = Object.freeze([
     ],
     correctIndex: 0,
     explanation:
-      "Fake. A BBC spokesperson told Alt News: 'it is fake and does not come from the BBC. The BBC does not support pre-election surveys in India.' The BBC's name had also been misused for fake polls before the 2018 Karnataka and Rajasthan elections — and a mirror-image fake in April 2019 showed Congress winning.",
+      "Fake. A BBC spokesperson told Alt News: 'it is fake and does not come from the BBC. The BBC does not support pre-election surveys in India.' The BBC's name had also been misused for fake polls before the 2018 Karnataka and Rajasthan elections.",
     sourceUrl: 'https://www.altnews.in/fake-pre-poll-survey-by-bbc-predicts-thumping-win-for-bjp-in-lok-sabha-2019/',
     sourceLabel: 'Alt News — Fake: Pre-poll survey by BBC predicts thumping win for BJP in Lok Sabha 2019 (9 Apr 2019)',
   },
@@ -511,16 +555,16 @@ export const HISAAB_FORWARDS = Object.freeze([
     asOf: '2026-09',
     govt: 'NDA',
     question:
-      "April 2019 forward: 'BBC survey says the BJP will lose seats and the Congress party will win the general election.' What did Factly find?",
+      "April 2019 forward, with a BBC link: 'BJP will lose seats and the Congress-led UPA will win the Lok Sabha polls.' Per Factly, who did the forward say had run this survey?",
     options: [
-      'Real — BBC Hindi published it with an Indian polling partner',
-      'Real — but it covered only 12 states, not the whole country',
-      "Fake — the BBC does no Indian pre-poll surveys; a pro-BJP fake ran too",
-      'Unverified — the BBC declined to confirm or deny the survey',
+      'BBC Hindi, working with an Indian polling partner',
+      'The Election Commission, with BBC as media partner',
+      'The CIA, KGB and Mossad — US, Russian and Israeli spy agencies',
+      'Oxford University researchers, for BBC World News',
     ],
     correctIndex: 2,
     explanation:
-      "Fake. Factly noted the BBC has confirmed it does not conduct pre-election surveys in India and is 'always at the center of fake surveys during every election'. Days earlier a similar post citing the BBC had predicted a BJP win. Both sides' supporters borrowed the same trusted logo for opposite results.",
+      "The spy agencies. Factly found the post credited the survey to the CIA, KGB and 'MOSAD' — 'very unbelievable' — and its BBC link led to no survey page. A BBC editor confirmed on Facebook that the BBC had conducted no such survey, so Factly rated the claim false. An outlandish 'who ran it' line is itself a red flag.",
     sourceUrl: 'https://factly.in/fake-bbc-survey-predicts-congress-win/',
     sourceLabel: 'Factly — Fake BBC survey predicts Congress win (13 Apr 2019)',
   },
@@ -546,11 +590,14 @@ export const HISAAB_FORWARDS = Object.freeze([
     ],
     correctIndex: 3,
     explanation:
-      "The image was merged. PIB deleted it and on 4 Dec 2015 called it an 'error of judgement'. Answering a journalist's RTI, the I&B ministry later said two images were merged 'as per previous standard practice' (The Quint, Apr 2018). The aerial survey itself was real; the flooded view in the window was superimposed.",
+      "The image was merged. PIB deleted it and on 4 Dec 2015 called it an 'error of judgement'. Answering a journalist's RTI, the I&B ministry later said two images were merged 'as per previous standard practice' (The Quint, Apr 2018). The aerial survey itself was real; another PIB photo of the same moment showed no flood outside the window (Indian Express).",
     status: 'PIB withdrew the image (Dec 2015); I&B RTI reply (2018); no legal matter involved',
     people: ['Narendra Modi'],
+    otherSide:
+      "The I&B ministry said only one of the seven photos released used the merging technique, and that PIB 'regrets' releasing it (Dec 2015).",
     sourceUrl: 'https://www.thequint.com/news/india/pib-says-photos-merged-in-photoshop-stunt',
     sourceLabel: "The Quint — PM Modi's Morphed Chennai Floods Photo a 'Standard Practice': PIB (4 Apr 2018)",
+    sources: ['https://indianexpress.com/article/india/india-news-india/regret-posting-pm-modis-doctored-pic-pib/'],
   },
   {
     id: 'hfw020',
@@ -574,11 +621,14 @@ export const HISAAB_FORWARDS = Object.freeze([
     ],
     correctIndex: 0,
     explanation:
-      "Misleading. Using the government's reply in Parliament, Factly found the Centre paid ₹73,695.72 crore in oil-bond principal and interest in 2014-15 to 2020-21, while collecting over ₹25 lakh crore in taxes on petroleum products. The bonds were a real UPA-era liability (₹1,34,423 crore pending in 2014), but a small fraction of fuel tax revenue.",
-    status: 'Claim rated misleading by Factly (Apr 2022); no legal matter involved',
-    people: ['Narendra Modi'],
+      "Misleading. Using the government's reply in Parliament, Factly found the Centre paid ₹73,695.72 crore in oil-bond principal and interest in 2014-15 to 2020-21, while collecting over ₹25 lakh crore in taxes on petroleum products. The bonds were a real liability (₹1,34,423 crore pending in 2014; Vajpayee's NDA had issued some too), but small beside fuel tax revenue.",
+    status: 'Claim rated misleading by Factly (Apr 2022) and The News Minute (Aug 2021); no legal matter involved',
+    people: ['Narendra Modi', 'Nirmala Sitharaman'],
+    otherSide:
+      "FM Nirmala Sitharaman said in Aug 2021 that if she did not have the burden of servicing the oil bonds, she could have cut excise duty on fuel.",
     sourceUrl: 'https://factly.in/the-current-increase-in-petrol-prices-has-nothing-to-do-with-the-oil-bonds-issued-during-the-congress-rule/',
     sourceLabel: "Factly — Pending dues for 'Oil Bonds' issued during the UPA are only a fraction of the Taxes collected on Petrol & Diesel (8 Apr 2022)",
+    sources: ['https://www.thenewsminute.com/news/upa-era-oil-bonds-reason-high-fuel-prices-says-fm-fact-check-154038'],
   },
   {
     id: 'hfw021',
@@ -709,7 +759,7 @@ export const HISAAB_FORWARDS = Object.freeze([
     ],
     correctIndex: 2,
     explanation:
-      "Fake. The Quint's WebQoof, which also debunked it in 2017 and 2018, traced the graphic to a website called 'BBC News Point', unconnected to the BBC; the BBC never published such a list. Its mirror image — a fake 'CNN survey' naming the BJP fourth most corrupt — went viral in January 2026.",
+      "Fake. The Quint's WebQoof, which also debunked it in 2017 and 2018, traced the graphic to a website called 'BBC News Point', unconnected to the BBC; the BBC never published such a list. The 2018 version put Congress second, and a BBC journalist asked one sharer to delete it as coming from a 'fake site'.",
     sourceUrl: 'https://www.thequint.com/news/webqoof/bbc-graphic-congress-top-10-most-corrupt-parties-fake-fact-check',
     sourceLabel: 'The Quint WebQoof — Did BBC Find Congress To Be One of the Most Corrupt Parties in the World? No! (3 Oct 2025)',
   },
@@ -735,7 +785,7 @@ export const HISAAB_FORWARDS = Object.freeze([
     ],
     correctIndex: 3,
     explanation:
-      "Fake. Factly found CNN had conducted no survey on corrupt political parties and the viral clip was digitally edited and fabricated. It reuses an older template — a fake 'BBC' graphic that listed Congress fourth — showing how the same hoax gets pointed at whichever party is the target.",
+      "Fake. Factly found CNN had conducted no survey on corrupt political parties and the viral clip was digitally edited and fabricated; it names no channel and no date. CNN has carried Transparency International's rankings of corrupt countries, but Factly found no CNN ranking of parties. Factly had debunked the same claim when it circulated in 2023.",
     sourceUrl: 'https://factly.in/cnn-did-not-conduct-any-survey-ranking-the-bjp-as-the-fourth-most-corrupt-political-party-in-the-world/',
     sourceLabel: 'Factly — CNN did not conduct any survey ranking the BJP as the fourth most corrupt political party in the world (5 Jan 2026)',
   },
@@ -762,10 +812,12 @@ export const HISAAB_FORWARDS = Object.freeze([
     correctIndex: 1,
     explanation:
       "Clipped. In his full remarks Gandhi said zones decided at the national level might not match conditions on the ground, and argued district magistrates and chief ministers should help draw them. Alt News found 'national level' was cropped out to make the line sound absurd; the clip drew over 5 lakh views.",
-    status: 'Clip rated false by Alt News (May 2020); no legal matter involved',
+    status: 'Clip rated false by Alt News and The Quint (May 2020); no legal matter involved',
     people: ['Sambit Patra', 'Rahul Gandhi'],
+    otherSide: 'No reply from Sambit Patra to the Alt News or Quint fact-checks was reported as of Sep 2026.',
     sourceUrl: 'https://www.altnews.in/red-is-green-green-is-red-sambit-patra-shares-clipped-video-to-mock-rahul-gandhi/',
     sourceLabel: "Alt News — 'Red is green, green is red'? Sambit Patra shares clipped video to mock Rahul Gandhi (11 May 2020)",
+    sources: ['https://www.thequint.com/news/webqoof/sambit-patra-shared-clipped-video-of-rahul-gandhi-to-mock-him-fact-check'],
   },
   {
     id: 'hfw028',
@@ -816,8 +868,10 @@ export const HISAAB_FORWARDS = Object.freeze([
     correctIndex: 2,
     explanation:
       "Misleading. Dalmia Bharat signed an MoU with the tourism ministry to spend ₹25 crore over five years on amenities around the fort as a 'Monument Mitra'. The ministry said it involved 'no handing over of monument', no profit-making and ASI oversight. Congress, TMC, CPI(M) and some historians still objected (TOI; ThePrint published the MoU).",
-    status: 'MoU under the Adopt a Heritage scheme (Apr 2018); tourism ministry denied any handover; no court finding',
-    people: ['Narendra Modi'],
+    status: 'Five-year MoU under the Adopt a Heritage scheme (Apr 2018); tourism ministry denied any handover; no court finding',
+    people: ['Narendra Modi', 'Mamata Banerjee'],
+    otherSide:
+      "Critics were not persuaded: the Congress asked which site the BJP government would 'lease out' next, and TMC chief Mamata Banerjee asked why it should be leased out.",
     sourceUrl: 'https://timesofindia.indiatimes.com/city/delhi/no-profit-making-or-touching-of-monument-govt/articleshow/63957340.cms',
     sourceLabel: "Times of India — Opposition sees 'red' over alleged 'auction' of Red Fort, government says charges false (29 Apr 2018)",
     sources: ['https://theprint.in/politics/fact-check-heres-the-red-fort-dalmia-agreement-that-everyone-is-talking-about/54522/'],
@@ -845,10 +899,15 @@ export const HISAAB_FORWARDS = Object.freeze([
     correctIndex: 1,
     explanation:
       "Misleading. In the 28 Aug 2022 episode Modi described bhajan-kirtan gatherings in Madhya Pradesh that were combined with malnutrition awareness and 'balbhoj' meals for children. BOOM found no statement that singing itself would solve malnutrition; many posts drew on an opinion piece critical of the framing.",
-    status: 'Claim rated misleading by BOOM (Sep 2022); no legal matter involved',
+    status: 'Claim rated misleading by BOOM and India Today (Aug–Sep 2022); no legal matter involved',
     people: ['Narendra Modi'],
+    otherSide:
+      "Modi did ask 'whether… bhajans can also be used to remove malnutrition'; a Wire Science op-ed argued the framing sidelined public-health measures.",
     sourceUrl: 'https://www.boomlive.in/fact-check/modi-bhajan-malnutrition-mann-ki-baat-wire-19100',
     sourceLabel: 'BOOM — No, Modi Did Not Say Bhajans Can Solve Malnutrition (1 Sep 2022)',
+    sources: [
+      'https://www.indiatoday.in/fact-check/story/fact-check-no-pm-modi-did-not-say-singing-bhajans-could-help-reduce-malnutrition-1994965-2022-08-31',
+    ],
   },
   {
     id: 'hfw031',
@@ -898,7 +957,7 @@ export const HISAAB_FORWARDS = Object.freeze([
     ],
     correctIndex: 2,
     explanation:
-      "False. The numbers were each lender's entire loan book as of September 2024; the Adani Group's borrowings from these banks are a fraction of that. India Today traced the confusion to a Moneycontrol chart titled 'Lenders exposure to Adani Group companies' that was misread and shared widely.",
+      "False. The numbers were each lender's entire loan book as of September 2024; the Adani Group's borrowings from these banks are a fraction of that. India Today traced it to a graphic titled 'Lenders exposure to Adani Group companies' in a 21 Nov 2024 Moneycontrol article that carried the wrong figures; Moneycontrol later replaced it, but the first version had already spread.",
     sourceUrl:
       'https://www.indiatoday.in/fact-check/story/fact-check-adani-group-rs-120-lakh-crore-loan-indian-banks-data-goof-up-infographic-2637875-2024-11-22',
     sourceLabel: "India Today — Fact Check: Adani Group DIDN'T get Rs 120 lakh crore loan from Indian banks (22 Nov 2024)",
@@ -925,9 +984,11 @@ export const HISAAB_FORWARDS = Object.freeze([
     ],
     correctIndex: 0,
     explanation:
-      "Fake. Factly found neither the BJP nor the PM was offering any free recharge; the links led to dubious websites, and cybercriminals use such messages to steal data. Near-identical 'free recharge' bait has also misused company names. Rule of thumb: a real scheme never asks you to forward a link to claim it.",
+      "Fake. Factly found neither the BJP nor the PM was offering any free recharge; the link asked for a mobile number and led nowhere, and such dubious sites are used for spam, phishing and data theft. Near-identical 'free recharge' bait has also misused company names.",
     status: 'Scam message rated fake by Factly (Jun 2024); no official scheme existed',
     people: ['Narendra Modi'],
+    otherSide:
+      "Chamoli Police (Uttarakhand) called the post fake on 5 Jun 2024; PIB Fact Check had earlier said neither the government nor the PM runs any such free-recharge scheme.",
     sourceUrl: 'https://factly.in/neither-bjp-nor-pm-modi-is-offering-any-free-recharge-on-the-occasion-of-forming-the-government-for-the-third-term/',
     sourceLabel: 'Factly — Neither BJP nor PM Modi is offering any free recharge on the occasion of forming the government for the third term (7 Jun 2024)',
     sources: ['https://factly.in/reliance-jio-is-not-offering-any-free-recharge-on-the-occasion-of-mukesh-ambanis-birthday-and-anant-ambanis-wedding/'],
@@ -954,7 +1015,7 @@ export const HISAAB_FORWARDS = Object.freeze([
     ],
     correctIndex: 3,
     explanation:
-      "Fraudulent. Factly found the link opened a blogspot page asking for personal details and 10 shares to 'complete registration' — something no government scheme does. PIB Fact Check had flagged similar fake laptop, smartphone and scholarship links earlier in 2020, and variants keep resurfacing.",
+      "Fraudulent. Factly found the link opened a blogspot page asking for personal details and 10 shares to 'complete registration'; a real scheme would register students on an official portal, not a blog. PIB Fact Check had flagged similar fake laptop, smartphone and scholarship links earlier in 2020, and variants keep resurfacing.",
     sourceUrl: 'https://factly.in/beware-of-bogus-websites-offering-free-laptops-smartphones-and-scholarships-in-the-name-of-government/',
     sourceLabel: 'Factly — Beware of bogus websites offering free laptops, smartphones, and scholarships in the name of Government (24 Sep 2020)',
   },
@@ -983,8 +1044,13 @@ export const HISAAB_FORWARDS = Object.freeze([
       "Deepfake. Factly traced the visuals to her address at the 12th SBI Banking & Economics Conclave in Mumbai (footage posted in November 2025), where no such scheme was announced; lip-sync mismatches pointed to manipulation. 'Minister endorses investment app' videos are a common fraud template.",
     status: 'Deepfake per Factly (Feb 2026); the minister is the target of the fake, not accused of anything',
     people: ['Nirmala Sitharaman'],
+    otherSide:
+      "Of a similar AI video in May 2026, PIB Fact Check said neither the Finance Minister nor the government 'has endorsed, authorised, or promoted any such investment scheme'.",
     sourceUrl: 'https://factly.in/this-viral-video-of-nirmala-sitharaman-endorsing-a-hyper-profitable-investment-project-is-a-deepfake/',
     sourceLabel: 'Factly — This viral video of Nirmala Sitharaman, endorsing a hyper-profitable investment project, is a deepfake (13 Feb 2026)',
+    sources: [
+      'https://www.livemint.com/money/personal-finance/sitharaman-finance-minister-pib-fact-check-clarify-fake-ai-video-endorse-warns-against-fraudulent-online-investment-scam-11778145179400.html',
+    ],
   },
   {
     id: 'hfw036',
@@ -1008,7 +1074,7 @@ export const HISAAB_FORWARDS = Object.freeze([
     ],
     correctIndex: 0,
     explanation:
-      "True, with context. The ministry accepted the SNB figure (CHF 2.55 billion, up from CHF 899 million) but said it does 'not indicate the quantum' of alleged black money: customer deposits actually fell, fiduciary funds more than halved, and the jump came from bonds, securities and other instruments (PIB, 19 Jun 2021).",
+      "True, with context. The ministry accepted the SNB figure (CHF 2.55 billion, up from CHF 899 million) but noted the figures 'do not indicate the quantum' of alleged black money: customer deposits actually fell, fiduciary funds more than halved, and the jump came from bonds, securities and other instruments (PIB, 19 Jun 2021).",
     sourceUrl: 'https://www.pib.gov.in/PressReleaseIframePage.aspx?PRID=1728429',
     sourceLabel: 'PIB (Ministry of Finance) — Finance Ministry refutes news media reports of alleged black money held by Indians in Switzerland (19 Jun 2021)',
   },
@@ -1046,28 +1112,36 @@ export const HISAAB_FORWARDS = Object.freeze([
     region: 'India',
     state: 'HP',
     topic: 'Jobs & Economy',
-    subtopic: 'Himachal salary-date shift',
+    subtopic: 'Himachal salary delay row',
     kind: 'forward',
-    difficulty: 'extreme',
+    difficulty: 'expert',
     year: 2024,
     asOf: '2026-09',
     govt: 'INC',
     question:
-      "Sept 2024 posts: 'Himachal's Congress government can't pay salaries on time.' What did CM Sukhvinder Singh Sukhu tell the Assembly?",
+      "Sept 2024 posts: 'Himachal's Congress government can't pay salaries on time.' When the BJP called it a financial crisis, what did CM Sukhvinder Singh Sukhu say?",
     options: [
-      'False — salaries were paid on the 1st as always',
-      'True — salaries were withheld for three months',
-      'True — pay would now come on the 5th and pensions on the 10th',
-      'True — only contract staff were paid late, by a week',
+      'That the state was out of cash and needed a central bailout',
+      'That a bank server failure had held up the transfers',
+      'That there was no crisis — the new pay schedule was financial discipline',
+      'That only contract staff were affected, for a single week',
     ],
     correctIndex: 2,
     explanation:
-      "True, with context. Sukhu said pay would come on the 5th and pensions on the 10th because the ₹520 crore revenue-deficit grant arrives on the 6th and the ₹740 crore tax share on the 10th; paying on the 1st meant borrowing at about 7.5%. He was replying to the BJP Leader of Opposition, who raised the delays (The Hindu, 4 Sep 2024).",
+      "True, with context. For the first time in the state's history, salaries and pensions missed the 1st of the month (Business Today). Sukhu denied any financial crisis; in the Assembly he called the new schedule efficient financial management that matches payouts to central receipts and cuts interest on advance loans (The Hindu, 4 Sep 2024).",
     status: "CM's statement in the Assembly (Sep 2024); no wrongdoing alleged",
-    people: ['Sukhvinder Singh Sukhu'],
+    people: ['Sukhvinder Singh Sukhu', 'Jai Ram Thakur'],
+    otherSide:
+      "Leader of Opposition Jai Ram Thakur said 'Himachal is in a complete crisis', noting over ₹24,000 crore borrowed in 20 months against ₹19,600 crore in the BJP's five years.",
+    outcome:
+      "The squeeze deepened: after the Centre's revenue-deficit grant ended, Himachal's 2026-27 budget deferred part of the salaries of ministers, MLAs and senior officers, sparing Class III–IV staff and pensioners (Indian Express, Mar 2026).",
     sourceUrl:
+      'https://www.businesstoday.in/india/story/himachal-is-in-complete-crisis-former-cm-jairam-thakur-as-sukhu-delays-salaries-pensions-of-govt-employees-444388-2024-09-04',
+    sourceLabel: "Business Today — 'Himachal is in complete crisis': Former CM Jairam Thakur as Sukhu govt delays salaries, pensions (4 Sep 2024)",
+    sources: [
       'https://www.thehindu.com/news/national/himachal-pradesh/himachal-govt-to-pay-employee-salaries-on-5th-pension-on-10th-per-month-for-fiscal-prudence/article68605272.ece',
-    sourceLabel: "The Hindu — Himachal govt. to pay employee salaries on 5th, pension on 10th per month for 'fiscal prudence' (4 Sep 2024)",
+      'https://indianexpress.com/article/political-pulse/sukhu-economics-in-cash-strapped-himachal-congress-cms-twin-response-to-fiscal-strain-10598735/',
+    ],
   },
   {
     id: 'hfw039',
@@ -1094,6 +1168,8 @@ export const HISAAB_FORWARDS = Object.freeze([
       "True, with context. Morning Consult's Global Leader Approval tracker did put Modi top at 68% (Akashvani, Mar 2026). The Wire notes it is a US firm's proprietary tracker using non-probability online panels weighted to demographics, so it reflects India's online population, and cross-country league tables built from it are shaky.",
     status: "Approval figure from a private firm's tracker (Mar 2026); no legal matter involved",
     people: ['Narendra Modi'],
+    otherSide:
+      'Morning Consult weights its online panels by age, gender, region and education to match official statistics, and reports a 7-day rolling average.',
     sourceUrl: 'https://m.thewire.in/article/politics/whats-wrong-with-modi-is-the-worlds-most-popular-leader-survey-claim',
     sourceLabel: "The Wire — What's Wrong With 'Modi is the World's Most Popular Leader' Survey Claim? (26 Mar 2026)",
     sources: ['https://newsonair.gov.in/pm-modi-tops-global-popularity-rankings-with-68-approval-says-morning-consult-survey/'],
@@ -1120,12 +1196,18 @@ export const HISAAB_FORWARDS = Object.freeze([
     ],
     correctIndex: 0,
     explanation:
-      "True, with context. The DEA's appraisal note suggested 'not more than two airports will be awarded to the same bidder' and NITI Aayog raised capacity concerns; the PPP panel overruled them and Adani Enterprises won all six (Ahmedabad, Lucknow, Mangaluru, Jaipur, Guwahati, Thiruvananthapuram) for 50 years. The government says the bidding was transparent.",
-    status: 'Allegation made in the Lok Sabha (Feb 2023); government says the process was transparent (Dec 2024); no wrongdoing established',
-    people: ['Rahul Gandhi', 'Narendra Modi'],
+      "True, with context. The DEA's appraisal note suggested 'not more than two airports will be awarded to the same bidder' and NITI Aayog raised capacity concerns; the PPP panel overruled them and Adani Enterprises won all six (Ahmedabad, Lucknow, Mangaluru, Jaipur, Guwahati, Thiruvananthapuram) for 50 years. The government says the bidding was competitive and transparent.",
+    status:
+      'Allegation made in the Lok Sabha (Feb 2023); no wrongdoing found by any court or agency as of 2026-09; Supreme Court upheld the Thiruvananthapuram lease (Oct 2022); minister called the process transparent (Dec 2024)',
+    people: ['Rahul Gandhi', 'Narendra Modi', 'K Rammohan Naidu'],
+    otherSide:
+      "Minister K Rammohan Naidu told the Lok Sabha the leases followed a 'thorough, competitive, transparent process'; the Supreme Court rejected Kerala's plea that the Thiruvananthapuram bid was tailor-made.",
     sourceUrl:
       'https://scroll.in/article/1043531/explained-why-rahul-gandhi-accused-modi-government-of-bending-rules-to-hand-over-airports-to-adani',
     sourceLabel: 'Scroll — Explainer: Why Rahul Gandhi accused Modi government of bending rules to hand over airports to Adani (9 Feb 2023)',
-    sources: ['https://www.deccanherald.com/india/six-airports-leased-out-to-adani-group-through-transparent-process-says-naidu-3304836'],
+    sources: [
+      'https://www.deccanherald.com/india/six-airports-leased-out-to-adani-group-through-transparent-process-says-naidu-3304836',
+      'https://indianexpress.com/article/india/supreme-court-dismisses-kerala-govts-plea-against-handover-of-thiruvananthapuram-airport-to-adani-8213752/',
+    ],
   },
 ]);

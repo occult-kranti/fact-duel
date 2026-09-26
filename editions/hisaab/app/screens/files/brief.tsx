@@ -20,6 +20,8 @@ import { CARDS, fileNo, openWords, statusWords, type FileStatus } from './lib';
 import '../../ui/file-card.css';
 import './brief.css';
 
+const DEVANAGARI = /[\u0900-\u097F]/;
+
 export type BriefFact = { k: string; v: ReactNode };
 
 export type FileBriefProps = {
@@ -74,7 +76,9 @@ export function FileBrief({
               {titleHi}
             </p>
           ) : null}
-          <Heading className="h-brief__title" id={headId}>
+          {/* A Latin title keeps its caps in the Hindi locale ('UTTAR PRADESH', 'KISKA MEDIA?'): it is
+              English (lang="en"); a Devanagari one is lang="hi" and untracked (bible §4.4). */}
+          <Heading className="h-brief__title" id={headId} lang={typeof title === 'string' ? (DEVANAGARI.test(title) ? 'hi' : 'en') : undefined}>
             {title}
           </Heading>
         </div>

@@ -10,7 +10,7 @@
  * not about any party. Other lanes may import this card (e.g. a taster's first receipt).
  */
 import type { ReactNode } from 'react';
-import { bandProgress, FIRST_LABEL_NOTE, FIRST_LABEL_NOTE_HI, goalCopy, labelDisplay, standing } from '../../data';
+import { bandProgress, FIRST_LABEL_NOTE, FIRST_LABEL_NOTE_HI, goalCopy, labelDisplay, labelLine, standing } from '../../data';
 import { cx } from '../../ui/cx';
 import { useLang } from '../../ui/lang';
 import { Meter } from '../../ui/meter';
@@ -52,12 +52,19 @@ export function LabelCard({ xp, intro, as: Heading = 'h2', headingId, footer, cl
         <span className="h-labelcard__hi" lang="hi">
           {label.hi}
         </span>
-        <span className="h-labelcard__en">
+        <span className="h-labelcard__en" lang="en">
           {label.en}
-          {label.aside ? <span className="h-labelcard__aside"> {label.aside}</span> : null}
+          {label.aside ? (
+            <span className="h-labelcard__aside" lang={isHi && label.asideHi ? 'hi' : undefined}>
+              {' '}
+              {isHi && label.asideHi ? label.asideHi : label.aside}
+            </span>
+          ) : null}
         </span>
       </Heading>
-      <p className="h-labelcard__line">{label.line}</p>
+      <p className="h-labelcard__line" lang={isHi ? 'hi' : undefined}>
+        {labelLine(label, isHi)}
+      </p>
       {introNow ? (
         <p className="h-labelcard__note" lang={isHi ? 'hi' : undefined}>
           {t(FIRST_LABEL_NOTE, FIRST_LABEL_NOTE_HI)}

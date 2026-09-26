@@ -16,7 +16,25 @@ import { useDuel, useQuestionShown } from './use-duel';
 import { P2P_TRUST } from '../p2p/protocol.mjs';
 import { createDuelController } from '../engine/duel-controller.mjs';
 
-const box: React.CSSProperties = { border: '1px solid #8886', borderRadius: 8, padding: 12, margin: '12px 0' };
+const box: React.CSSProperties = {
+  border: '1px solid color-mix(in srgb, currentColor 35%, transparent)',
+  borderRadius: 8,
+  padding: 12,
+  margin: '12px 0',
+};
+
+/**
+ * The controller no longer re-renders the live question every 150 ms (the edition's timer bar reads
+ * `snapshot()` from rAF), so this debug readout polls the snapshot on its own clock.
+ */
+function TimeLeft({ controller, roundId }: { controller: { snapshot: () => any }; roundId: string }) {
+  const [ms, setMs] = useState<number | null>(() => controller.snapshot().remainingMs);
+  useEffect(() => {
+    const id = setInterval(() => setMs(controller.snapshot().remainingMs), 100);
+    return () => clearInterval(id);
+  }, [controller, roundId]);
+  return ms == null ? null : <p>Time left: {(ms / 1000).toFixed(1)} s</p>;
+}
 
 function Standing({ player }: { player: ReturnType<typeof usePlayer> }) {
   const s = standing(player.progression?.xp ?? 0);
@@ -174,7 +192,7 @@ function BotDuel({ player, onRoom }: { player: ReturnType<typeof usePlayer>; onR
           {rd?.question && (
             <div>
               <p data-testid="duel-question">{rd.question.question}</p>
-              {snapshot?.remainingMs != null && <p>Time left: {(snapshot.remainingMs / 1000).toFixed(1)} s</p>}
+              {controller && !rd.result ? <TimeLeft controller={controller} roundId={rd.id} /> : null}
               <ol>
                 {rd.question.options.map((option: string, i: number) => (
                   <li key={option}>

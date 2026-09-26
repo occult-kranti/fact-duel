@@ -7,7 +7,7 @@
 import { MODE_ROUNDS } from '@/lib/server/room-engine.mjs';
 import { STORAGE } from '@/lib/storage-names.mjs';
 import { DUEL_FORMATS } from '../../../edition';
-import { ANONYMOUS, BANK_ITEMS, SECTOR_LIST, SECTOR_NAMES_HI } from '../../data';
+import { ANONYMOUS, BANK_ITEMS, impersonatesBot, SECTOR_LIST, SECTOR_NAMES_HI } from '../../data';
 import type { DuelMode } from '../room/lib';
 
 export type Opponent = 'bot' | 'friend' | 'pass';
@@ -119,8 +119,14 @@ export function saveName(name: string) {
   }
 }
 
-/** The seat name sent to the engine (1–24 chars): the typed name, else "Anonymous Janta". */
-export const seatNameFor = (name: string) => name.trim().slice(0, NAME_LIMIT) || ANONYMOUS;
+/**
+ * The seat name sent to the engine (1–24 chars): the typed name, else "Anonymous Janta". A name that
+ * would pass for the bot on the other screen ('Babu-Bot · BOT') is sent as "Anonymous Janta" too.
+ */
+export const seatNameFor = (name: string) => {
+  const clean = name.trim().slice(0, NAME_LIMIT);
+  return clean && !impersonatesBot(clean) ? clean : ANONYMOUS;
+};
 
 // ---- one-shot intents: a tap on the setup screen, carried into the next screen once ----------------------
 
@@ -194,17 +200,4 @@ export function p2pErrorText(e: P2PError, t: (en: string, hi?: string) => string
   }
 }
 
-/**
- * The code for rematch `n` of a room: derived from the first code, so both browsers compute the same
- * next room (and the same seeded deal) without sending anything but "rematch".
- */
-export async function rematchCode(
-  first: string,
-  n: number,
-  make: (bytes: Uint8Array) => string,
-): Promise<string> {
-  const bytes = new Uint8Array(
-    await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`hisaab-rematch:${first}:${n}`)),
-  );
-  return make(bytes);
-}
+// Rematch codes come from the room's stretched secret: `rematchCode` in p2p/protocol.mjs.

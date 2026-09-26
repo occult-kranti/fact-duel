@@ -32,7 +32,13 @@ import { CERT_FOOTER, CERT_SITE } from '../ui/certificate';
 import { otherSideLine, renderCertificateCard, renderReceiptCard } from './card';
 
 export type ShareMethod = 'share' | 'clipboard' | 'download' | 'none';
-export type ShareOutcome = Readonly<{ ok: boolean; method: ShareMethod; reason?: 'cancelled' | 'unsupported' | 'failed' | 'not-implemented' }>;
+export type ShareOutcome = Readonly<{
+  ok: boolean;
+  method: ShareMethod;
+  reason?: 'cancelled' | 'unsupported' | 'failed' | 'not-implemented';
+  /** 'download' only: whether the text twin also reached the clipboard (the button says so only if it did). */
+  copied?: boolean;
+}>;
 export type ReceiptShareVariant = 'challenge' | 'receipt';
 
 export const SHARE_CTA = "Forward this — it's actually sourced";
@@ -170,7 +176,7 @@ export async function shareImage(blob: Blob, filename: string, text: string, tit
   }
   const saved = downloadBlob(blob, filename);
   const copied = await copyText(text);
-  if (saved) return { ok: true, method: 'download' };
+  if (saved) return { ok: true, method: 'download', copied };
   if (copied) return { ok: true, method: 'clipboard' };
   return { ok: false, method: 'none', reason: 'unsupported' };
 }
@@ -198,8 +204,10 @@ export async function shareDailyGrid(input: { day: string; results: readonly boo
 export type CertificateShareInput = {
   name: string | null | undefined;
   band: number;
-  receipts: number;
-  issuedOn: Date | number;
+  /** Null for an earlier rung (the count at promotion is not on record). */
+  receipts: number | null;
+  /** Null when the promotion date is not on record (the stamp says ISSUED, no date). */
+  issuedOn: Date | number | null;
   /** Unused since the card is drawn from data (kept for callers written against the stub). */
   node?: HTMLElement | null;
 };
@@ -208,10 +216,12 @@ export type CertificateShareInput = {
 export function certificateShareText(input: CertificateShareInput): string {
   const label = labelDisplay(input.band);
   return [
-    `${certificateName(input.name)} has been officially labelled ${label.en.toUpperCase()} after ${input.receipts} sourced receipts.`,
+    input.receipts === null
+      ? `${certificateName(input.name)} has been officially labelled ${label.en.toUpperCase()}.`
+      : `${certificateName(input.name)} has been officially labelled ${label.en.toUpperCase()} after ${input.receipts} sourced receipts.`,
     `"${label.line}"`,
     `${url(href.home())}`,
-    'Satire. Not a government document. Every question sourced.',
+    CERT_FOOTER,
   ].join('\n');
 }
 
@@ -257,7 +267,9 @@ export async function shareInvite(code: string, opts: { format?: string } = {}):
 export function shareOutcomeWords(outcome: ShareOutcome, t: (en: string, hi?: string) => string = (en) => en): string | null {
   if (outcome.ok) {
     if (outcome.method === 'clipboard') return t('Copied ✓', 'कॉपी हो गया ✓');
-    if (outcome.method === 'download') return t('Image saved · text copied ✓', 'तस्वीर सेव · टेक्स्ट कॉपी ✓');
+    // Never claim the text was copied when the clipboard refused it.
+    if (outcome.method === 'download')
+      return outcome.copied ? t('Image saved · text copied ✓', 'तस्वीर सेव · टेक्स्ट कॉपी ✓') : t('Image saved ✓', 'तस्वीर सेव ✓');
     return t('Shared ✓', 'भेज दिया ✓');
   }
   if (outcome.reason === 'cancelled') return null;

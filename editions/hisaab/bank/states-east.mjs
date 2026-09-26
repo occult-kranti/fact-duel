@@ -27,6 +27,8 @@ const MPOST_KHANDU_AUG =
   'https://www.millenniumpost.in/big-stories/supreme-court-summons-arunachal-chief-secretary-home-secretary-for-non-cooperation-in-cbi-probe-against-cm-pema-khandu-670794';
 const HINDU_KHANDU_SEP =
   'https://www.thehindu.com/news/national/himachal-pradesh/congress-targets-pm-modi-over-cbi-inquiry-into-irregularities-involving-arunachal-cm/article71480423.ece';
+const ANI_KHANDU_MAY =
+  'https://aninews.in/news/national/politics/i-am-innocent-arunachal-cm-pema-khandu-on-corruption-allegations-vows-to-cooperate-with-cbi-investigation20260505221432/';
 const AIR_MN_PR_REVOKED = 'https://newsonair.gov.in/presidents-rule-revoked-in-manipur/';
 const NIE_ML_BLAST_TOLL =
   'https://www.newindianexpress.com/india/2026/Feb/10/meghalaya-coal-mine-blast-two-more-die-in-assam-hospital-toll-rises-to-30';
@@ -56,7 +58,9 @@ export const HISAAB_STATES_EAST = Object.freeze([
     explanation:
       'The bench led by CJI Sanjiv Khanna voided 25,753 teaching and non-teaching appointments, calling the process "vitiated and tainted" (rank-jumping, mark discrepancies, letters to off-panel candidates). It ordered fresh selection; untainted staff need not refund pay. The state government had appealed the Calcutta HC order of April 2024.',
     status:
-      'Supreme Court judgment, 3 Apr 2025: 25,753 appointments void, fresh selection ordered. Separate CBI/ED criminal cases against former officials pending trial as of Sept 2026; no convictions.',
+      'Supreme Court judgment, 3 Apr 2025: 25,753 appointments void, fresh selection ordered. Separate CBI/ED criminal cases against former officials pending trial as of Sept 2026 (ED filed further charge sheets in June and Aug 2026); no convictions.',
+    otherSide:
+      "The TMC state government had appealed, calling the High Court's order 'arbitrary'; after the verdict the then CM said fresh recruitment would be held within three months.",
     people: ['Sanjiv Khanna'],
     sourceUrl:
       'https://www.tribuneindia.com/news/india/west-bengal-recruitment-row-sc-upholds-hc-verdict-invalidating-25753-teachers-other-staff-in-west-bengal-schools',
@@ -64,6 +68,7 @@ export const HISAAB_STATES_EAST = Object.freeze([
     sources: [
       'https://newsonair.gov.in/sc-upholds-calcutta-hc-order-of-invalidating-appointment-of-more-than-25000-teachers',
       'https://www.tribuneindia.com/news/india/west-bengal-moves-supreme-court-against-calcutta-high-court-order-on-job-scam-614241/amp',
+      'https://www.tribuneindia.com/news/india/ed-files-additional-chargesheet-in-bengals-ssc-assistant-teacher-recruitment-scam/',
     ],
   },
   {
@@ -85,13 +90,17 @@ export const HISAAB_STATES_EAST = Object.freeze([
     explanation:
       'Nearly Rs 50 crore in cash plus gold was seized after ex-education minister Partha Chatterjee was arrested. He was dropped from the cabinet and TMC posts, and said he was a "victim of conspiracy" and the money was not his. He walked out on bail in Nov 2025 after 3+ years in custody; the trial is pending.',
     status:
-      'Arrested by ED, July 2022; charge-sheeted by CBI (Dec 2024); on bail, released Nov 2025. In Sept 2026 the CBI told a special court he breached bail conditions; his lawyer cited ill health. Not convicted; denies wrongdoing.',
+      'Arrested by ED, July 2022; charge-sheeted by the ED and CBI in several school-jobs cases (latest ED filings June and Aug 2026); on bail, released Nov 2025. On 17 Sept 2026 the CBI told a special court he breached bail conditions; his lawyer cited ill health. Not convicted; denies wrongdoing.',
+    otherSide:
+      'Chatterjee called himself "a victim of a conspiracy" and said of the seized cash, "This is not my money"; he has not been convicted.',
     people: ['Partha Chatterjee'],
     sourceUrl: 'https://thefederal.com/category/states/east/west-bengal/school-jobs-scam-case-partha-chatterjee-granted-bail-208647',
     sourceLabel: 'The Federal — School jobs "scam": ex-Bengal minister Partha Chatterjee granted bail after 3 years (26 Sep 2025)',
     sources: [
       'https://www.tribuneindia.com/news/nation/i-am-victim-of-conspiracy-time-will-tell-if-action-against-me-justified-partha-chatterjee-416869',
       'https://www.thehansindia.com/kolkata/cbi-accuses-former-bengal-minister-partha-chatterjee-of-violating-bail-conditions-in-ssc-teachers-recruitment-scam-1122920',
+      'https://zeenews.india.com/india/its-not-mine-this-money-partha-chatterjee-makes-explosive-claim-2491457.html',
+      'https://dailypioneer.com/news/ed-files-fresh-chargesheet-in-bengal-ssc-staff',
     ],
   },
   {
@@ -114,6 +123,8 @@ export const HISAAB_STATES_EAST = Object.freeze([
       'The ED alleges subsidised ration grain was diverted while he was food minister and called him the "ringmaster". A special court granted him bail in Jan 2025 after about 13 months in custody. Mallick calls the case a political "conspiracy". He lost his Habra seat in 2026 and quit his TMC posts in June 2026.',
     status:
       'Arrested by ED, 27 Oct 2023; ED charge sheet filed 12 Dec 2023; on bail since 15 Jan 2025; trial pending as of Sept 2026. Not convicted; says the case is politically motivated.',
+    otherSide:
+      'Mallick calls the case "a deep conspiracy by a political party" and says it is politically motivated; he has not been convicted.',
     people: ['Jyotipriya Mallick'],
     sourceUrl:
       'https://www.theweek.in/news/india/2025/01/15/west-bengal-ration-scam-former-minister-jyotipriya-mallick-gets-bail-walks-out-of-jail-after-13-months.html',
@@ -121,6 +132,8 @@ export const HISAAB_STATES_EAST = Object.freeze([
     sources: [
       'https://www.newindianexpress.com/states/west-bengal/2026/Mar/23/victory-with-record-margin-will-be-answer-to-conspiracy-behind-jailing-me-tmcs-jyotipriya-mallick',
       'https://theprint.in/india/ex-bengal-minister-jyotipriya-mallick-granted-bail-in-ration-case-tmc-hails-courts-decision/2446898/',
+      'https://www.deccanherald.com/india/west-bengal/ed-files-chargesheet-against-bengal-minister-jyoti-priya-mallick-businessman-in-ration-scam-2808053',
+      'https://www.millenniumpost.in/bengal/jyotipriya-mallick-quits-all-tmc-posts-cites-failing-health-664903',
     ],
     tags: ['distribution'],
   },
@@ -143,13 +156,16 @@ export const HISAAB_STATES_EAST = Object.freeze([
     explanation:
       'The tapes, released before the 2016 polls, purportedly showed leaders accepting cash. The four got interim bail and were charge-sheeted by the CBI and the ED in 2021. The ED said its probe would continue against others, incl. Suvendu Adhikari, then BJP opposition leader and CM since May 2026; he was not charge-sheeted, which the TMC called partisan.',
     status:
-      'Four arrested May 2021, on bail; charge-sheeted (CBI May 2021, ED Sept 2021); trial pending. Suvendu Adhikari not charge-sheeted; ED said in Sept 2021 the probe would continue; no later filing found as of Sept 2026. None convicted.',
+      'Four arrested May 2021, on bail; charge-sheeted (CBI May 2021, ED Sept 2021); trial pending. Suvendu Adhikari not charge-sheeted: the CBI said in May 2021 it lacked Lok Sabha sanction to probe him (an MP in 2014); no later filing found as of Sept 2026, nor any public response from him on the Narada allegation. None convicted.',
+    otherSide:
+      'The TMC said the Centre was "using the central agencies to throttle the voice of the opposition"; none of the accused has been convicted.',
     people: ['Suvendu Adhikari'],
     sourceUrl:
       'https://www.aninews.in/news/national/general-news/narada-scam-cbi-arrests-bengal-ministers-firhad-hakim-subrata-mukherjee-others20210517123817/',
     sourceLabel: 'ANI — Narada scam: CBI arrests Bengal ministers Firhad Hakim, Subrata Mukherjee, others (17 May 2021)',
     sources: [
       'https://www.business-standard.com/article/politics/ed-files-chargesheet-against-senior-trinamool-leaders-in-narada-case-121090101448_1.html',
+      'https://scroll.in/latest/995265/narada-case-cbi-says-it-did-not-have-sanction-to-investigate-against-suvendu-adhikari-three-others',
       NIE_WB_CAG_2026,
     ],
   },
@@ -172,12 +188,15 @@ export const HISAAB_STATES_EAST = Object.freeze([
     explanation:
       'The case concerns alleged smuggling of cattle across the India–Bangladesh border; the CBI froze deposits of about Rs 17 crore it linked to him and his family. He got bail from the Supreme Court in the CBI case (July 2024) and from a Delhi court in the ED case (Sept 2024). In July 2026 he joined a rebel camp against the TMC leadership.',
     status:
-      'Arrested by CBI, 11 Aug 2022; on bail in the CBI case (SC, 30 Jul 2024) and the ED case (Sept 2024); trial pending as of Sept 2026. Not convicted.',
+      'Arrested by CBI, 11 Aug 2022; on bail in the CBI case (SC, 30 Jul 2024) and the ED case (Rouse Avenue court, 20 Sept 2024); trial pending as of Sept 2026. Not convicted.',
+    otherSide:
+      'Bailing him, the Supreme Court noted the trial was not going to begin soon; his counsel blamed the ED for the delay. No public denial of the charges by Mondal was found.',
     people: ['Anubrata Mondal'],
     sourceUrl: 'https://lawbeat.in/top-stories/supreme-court-grants-bail-anubrata-mondal-cattle-smuggling-case',
     sourceLabel: 'LawBeat — Supreme Court grants bail to Anubrata Mondal in cattle smuggling case (30 Jul 2024)',
     sources: [
       'https://www.millenniumpost.in/bengal/cattle-smuggling-anubrata-granted-bail-in-ed-case-likely-to-return-to-birbhum-next-week-580393',
+      'https://www.aninews.in/news/national/general-news/cattle-smuggling-case-delhi-court-grants-bail-to-tmcs-anubrata-mondal20240920204044/',
       'https://www.newindianexpress.com/states/west-bengal/2026/Jul/15/abhishek-sent-me-to-jail-told-mamata-four-times-to-remove-him-tmc-rebel-anubrata-madan-echoes-charge',
     ],
   },
@@ -203,15 +222,19 @@ export const HISAAB_STATES_EAST = Object.freeze([
     ],
     correctIndex: 0,
     explanation:
-      'The petition alleged misuse of public funds, mismanagement of bodies and resale of biomedical waste. The Calcutta HC moved the probe to the CBI, which arrested Sandip Ghosh on 2 Sept 2024; the state sanctioned his prosecution in 2025. He remains in custody in this case and has sought bail in the Supreme Court.',
+      "The petition alleged misuse of public funds, mismanagement of bodies and resale of biomedical waste. The Calcutta HC moved the probe to the CBI, which arrested Sandip Ghosh on 2 Sept 2024 and charge-sheeted him. The state sanctioned his prosecution in the CBI case in 2025; the new BJP government cleared the ED's in May 2026. He remains in custody and has sought bail in the Supreme Court.",
     status:
-      'Arrested by CBI, 2 Sept 2024; prosecution sanctioned (2025); in custody. SC issued notice on his bail plea in Aug 2026, CBI reply due 15 Oct 2026. Not convicted.',
+      'Arrested by CBI, 2 Sept 2024; charge-sheeted; prosecution sanctioned (CBI case 2025, ED case May 2026); in custody. SC issued notice on his bail plea in Aug 2026, CBI reply due 15 Oct 2026. Not convicted.',
+    otherSide:
+      'His bail plea says no money trail or unaccounted wealth has been traced to him and that the investigation is complete; he has not been convicted.',
     people: ['Sandip Ghosh'],
     sourceUrl:
       'https://www.livelaw.in/top-stories/supreme-court-seeks-cbi-response-on-sandip-ghoshs-bail-plea-in-rg-kar-medical-hospital-case-547520',
     sourceLabel: "LiveLaw — Supreme Court seeks CBI response on Sandip Ghosh's bail plea in RG Kar case (27 Aug 2026)",
     sources: [
       'https://newsonair.gov.in/cbi-arrests-former-principal-of-r-g-kar-medical-college-and-hospital-dr-sandip-ghosh-over-financial-misconduct',
+      'https://dailypioneer.com/news/slug-lite/the-supreme-court-on-tuesday-issued-notice-to-the-central-bureau-of-investigation-on-the-bail-plea-of-sandip-ghosh-former-principal-of-rg-kar-medical-college-and-hospital-in-the-financial-irregularities-case?year=2026',
+      'https://www.newsonair.gov.in/west-bengal-govt-allows-ed-to-prosecute-former-principal-of-r-g-kar-medical-college-in-financial-irregularity-case/',
     ],
   },
   {
@@ -231,9 +254,11 @@ export const HISAAB_STATES_EAST = Object.freeze([
     options: ['NIA', 'SEBI', 'CBI', 'SFIO'],
     correctIndex: 2,
     explanation:
-      "Saradha collapsed in 2013 after allegedly raising about Rs 2,500 crore from depositors in Bengal, Odisha and the North-East; about Rs 1,900 crore allegedly went unpaid. The court cited the scam's inter-state reach. Its former chairman, in custody since Dec 2016, got Supreme Court bail in Aug 2026 on grounds of prolonged custody.",
+      "Saradha collapsed in 2013 after allegedly raising about Rs 2,500 crore from depositors in Bengal, Odisha and the North-East; about Rs 1,900 crore allegedly went unpaid. The court cited the case's inter-state reach. Its former chairman got Supreme Court bail in a CBI case in Aug 2026, the court noting his custody in it since Dec 2016.",
     status:
-      'Probe transferred to CBI by SC order of 9 May 2014; former chairman granted bail by SC on 18 Aug 2026 after nearly 10 years in custody; trials pending.',
+      'Probe transferred to CBI by SC order of 9 May 2014; former chairman granted bail by SC on 18 Aug 2026 after nearly 10 years in custody in that case; trials pending as of Sept 2026.',
+    otherSide:
+      'The TMC state government had strongly resisted handing the probe to the CBI; the court said state police had made no headway on the conspiracy or the money trail.',
     sourceUrl: 'https://www.scconline.com/blog/post/2026/08/20/sc-grants-bail-to-sudipta-sen-in-saradha-chit-fund-case/',
     sourceLabel: 'SCC Online — SC grants bail to Saradha ex-chairman in chit fund case (20 Aug 2026)',
     sources: ['https://www.moneylife.in/article/supreme-court-asks-cbi-to-probe-saradha-other-ponzi-scams/37324.html'],
@@ -285,7 +310,7 @@ export const HISAAB_STATES_EAST = Object.freeze([
     options: ['About six months', 'Two years', 'Four years', 'Ten years'],
     correctIndex: 2,
     explanation:
-      'The new BJP government said the previous TMC government had not tabled CAG reports since 2022. The CM said FIRs would be sought if the CAG audit of Cyclone Amphan relief (2020) showed wrongdoing — an announcement, not a finding of guilt; no charges were reported as of July 2026. The audit put 2024-25 debt at 38.66% of GSDP, just above the 38% FRBM benchmark.',
+      'The new BJP government said the previous TMC government had not tabled CAG reports since 2022. The CM said FIRs would be sought if the CAG audit of Cyclone Amphan relief (2020) showed wrongdoing — an announcement, not a finding of guilt; no charge sheet had been reported as of Sept 2026. The audit put 2024-25 debt at 38.66% of GSDP, just above the 38% FRBM benchmark.',
     sourceUrl: NIE_WB_CAG_2026,
     sourceLabel: 'The New Indian Express — WB tables 28 CAG reports after four years (25 Jul 2026)',
     sources: [PRS_WB_2627],
@@ -330,17 +355,14 @@ export const HISAAB_STATES_EAST = Object.freeze([
     options: ['Rs 50,000 over five years', 'Rs 10,000 over one year', 'Rs 25,000 over five years', 'Rs 1 lakh over ten years'],
     correctIndex: 0,
     explanation:
-      "Launched on 17 Sept 2024 by the Prime Minister for the new BJP state government, it pays Rs 10,000 a year in two instalments; the first transfer sent Rs 1,250 crore to about 25 lakh women. Odisha's 2026-27 budget allots Rs 10,145 crore to it — about 5% of revenue spending (PRS).",
+      "The new BJP state government's flagship scheme pays Rs 10,000 a year and was expected to cover more than one crore women; the first transfer, on 17 Sept 2024, sent Rs 1,250 crore to about 25 lakh women. Odisha's 2026-27 budget allots Rs 10,145 crore to it — about 5% of revenue spending (PRS).",
     sourceUrl: 'https://www.newsonair.gov.in/pm-to-launch-odisha-govts-flagship-initiative-subhadra-scheme-in-bhubaneswar',
     sourceLabel: "All India Radio — PM launches Odisha government's flagship Subhadra scheme (17 Sep 2024)",
     sources: [PRS_OD_2627],
     tags: ['distribution'],
-    enactedBy: [
-      { name: 'Narendra Modi', role: 'Prime Minister (launched it, 17 Sep 2024)', party: 'BJP' },
-      { name: 'Mohan Charan Majhi', role: 'Chief Minister, Odisha', party: 'BJP' },
-    ],
+    enactedBy: [{ name: 'Mohan Charan Majhi', role: 'Chief Minister, Odisha', party: 'BJP' }],
     outcome:
-      'At the launch the PM set off a first transfer of Rs 1,250 crore to about 25 lakh women (AIR).',
+      'The first transfer, made at the launch on 17 Sept 2024, sent Rs 1,250 crore to about 25 lakh women (AIR); 2026-27 allocation Rs 10,145 crore (PRS).',
   },
   {
     id: 'hst311',
@@ -359,7 +381,7 @@ export const HISAAB_STATES_EAST = Object.freeze([
     options: ['51', '62', '78', '91'],
     correctIndex: 2,
     explanation:
-      'Final results: BJP 78, BJD 51, Congress 14, CPI(M) 1 and three independents. It was the first time the BJP formed a government of its own in Odisha; the BJD had governed since 2000.',
+      'Final results: BJP 78, BJD 51, Congress 14, CPI(M) 1 and three independents. The BJD had governed since 2000; the new BJP government presented its first budget in July 2024.',
     sourceUrl:
       'https://www.outlookindia.com/elections/odisha-vidhan-sabha-result-2024-updates-bjp-majority-bjd-rule-to-end-full-list-of-winners',
     sourceLabel: "Outlook — Odisha Assembly Election Result 2024: BJD's 24-year rule ends (Jun 2024)",
@@ -382,7 +404,7 @@ export const HISAAB_STATES_EAST = Object.freeze([
     options: ['West Bengal', 'Odisha', 'Mizoram', 'Nagaland'],
     correctIndex: 1,
     explanation:
-      'End-2026-27 estimates: Odisha 14.1% of GSDP; West Bengal 38%; Nagaland 41% (excluding central capex loans); Mizoram 43.5%. Odisha also budgets a revenue surplus of 3% of GSDP. Its low debt was built up under the BJD and has continued under the BJP since 2024.',
+      'End-2026-27 estimates: Odisha 14.1% of GSDP; West Bengal 38%; Nagaland 41% (excluding central capex loans); Mizoram 43.5%. Odisha also budgets a revenue surplus of 3% of GSDP; its ratio is up from 13.1% in 2025-26 (revised).',
     sourceUrl: PRS_OD_2627,
     sourceLabel: 'PRS Legislative Research — Odisha Budget Analysis 2026-27 (2026)',
     sources: [PRS_WB_2627, PRS_NL_2627, PRS_MZ_2627],
@@ -433,7 +455,7 @@ export const HISAAB_STATES_EAST = Object.freeze([
     options: ['9', '24', '38', '55'],
     correctIndex: 3,
     explanation:
-      'The CAG said 55 centres, set up at a cost of Rs 3.59 crore, never ran because no budget was provided for operating costs, so at least 8,517 young children and 5,972 pregnant and nursing mothers missed the service. Most of the period audited (2020–March 2024) fell under the BJD government.',
+      'The CAG said 55 centres, set up at a cost of Rs 3.59 crore, never ran because no budget was provided for operating costs, so at least 8,517 young children and 5,972 pregnant and nursing mothers missed the service. The whole period audited (2020–March 2024) fell under the BJD government.',
     sourceUrl:
       'https://www.newindianexpress.com/cities/bhubaneswar/2026/Apr/02/nrcs-failed-children-of-particularly-vulnerable-tribal-groups-in-need-of-nourishment-cag',
     sourceLabel: 'The New Indian Express — NRCs failed children of particularly vulnerable tribal groups: CAG (2 Apr 2026)',
@@ -457,12 +479,15 @@ export const HISAAB_STATES_EAST = Object.freeze([
     explanation:
       "The Crime Branch had arrested 125 people, 114 of them candidates, before the Centre gave the case to the CBI at the state's request (Nov 2025). The CBI says the recruitment board hired a central PSU, which sublet work to a private firm that roped in another agency; a question set was allegedly swapped before printing.",
     status:
-      'CBI charge sheet filed 2 Jan 2026; accused include promoters of two private agencies; trial pending. In Sept 2026 the CBI told the state the board chairman "may be required to be examined"; he is not reported as an accused. No convictions.',
+      'CBI charge sheet filed 2 Jan 2026; accused include promoters of two private agencies; trial pending. In Sept 2026 the CBI told the state the board chairman "may be required to be examined"; he is not named an accused (SC hearing, 24 Sept 2026). No convictions.',
+    otherSide:
+      'The CBI says the private agencies kept the recruitment board "completely in dark"; no public reply from the accused was reported as of Sept 2026.',
     sourceUrl: 'https://www.newindianexpress.com/cities/bhubaneswar/2026/Jan/06/third-party-agencies-changed-si-exam-paper-cbi',
     sourceLabel: 'The New Indian Express — Third-party agencies changed SI exam paper: CBI (6 Jan 2026)',
     sources: [
       'https://www.newindianexpress.com/cities/bhubaneswar/2025/Nov/12/centre-hands-over-odisha-si-recruitment-scam-probe-to-cbi-after-state-request',
       'https://www.newindianexpress.com/states/odisha/2026/Sep/02/cbi-likely-to-question-oprb-chairman-susanta-kumar-nath-over-si-recruitment-scam',
+      'https://www.barandbench.com/news/arent-you-treating-him-as-accused-supreme-court-questions-odisha-for-excluding-ips-officer-from-dgp-selection',
     ],
   },
   {
@@ -482,7 +507,7 @@ export const HISAAB_STATES_EAST = Object.freeze([
     options: ['Rs 980 crore', 'Rs 4,364 crore', 'Rs 11,200 crore', 'Rs 23,500 crore'],
     correctIndex: 1,
     explanation:
-      "The audit (to March 2023) found 14 of OMC's 18 operative mines produced 29.47 million tonnes in 2000-11 beyond clearance limits or without forest clearance. After the Supreme Court's Aug 2017 ruling that such output is illegally mined, OMC paid Rs 4,364.15 crore in penalties; Rs 3,761.88 crore of it between 2017 and 2022. The BJD governed throughout.",
+      "The audit (to March 2023) found 14 of OMC's 18 operative mines produced 29.47 million tonnes in 2000-11 beyond clearance limits or without forest clearance. After the Supreme Court's Aug 2017 ruling that such output is illegally mined, OMC paid Rs 4,364.15 crore in penalties; Rs 3,761.88 crore of it between 2017 and 2022. BJD-led governments were in office throughout.",
     sourceUrl:
       'https://www.newindianexpress.com/cities/bhubaneswar/2026/Apr/01/odisha-mining-corporation-pays-rs-4364-crore-penalty-for-illegal-excess-mineral-production',
     sourceLabel: 'The New Indian Express — Odisha Mining Corporation pays Rs 4,364 crore penalty (1 Apr 2026)',
@@ -548,12 +573,19 @@ export const HISAAB_STATES_EAST = Object.freeze([
     options: ['Agricultural development officers', 'Police sub-inspectors', 'Government school teachers', 'Civil judges'],
     correctIndex: 0,
     explanation:
-      'The case concerned a 2014 recruitment and was investigated for eight years. The court convicted the former chairman, two former commission members and 29 officers who paid for their jobs, and acquitted 11 people, seven of them officers whose appointments had been questioned.',
+      'The case concerned agricultural development officer posts advertised in 2013 and filled in 2014; it was investigated for eight years. The court convicted the former chairman, two former commission members and 29 officers who paid for their jobs, and acquitted 11 people. The Gauhati HC later suspended the sentences pending appeal.',
     status:
-      'Convicted by a special court on 22 Jul 2024 (32 convicted, 11 acquitted); appeals, if any, not verified as of Sept 2026.',
+      'Convicted by a special court on 22 Jul 2024 (32 convicted, 11 acquitted); sentenced 29 Jul 2024 (ex-chairman 14 years). The Gauhati HC suspended the sentences and bailed 26 convicts pending appeal (2024); appeals still pending as of Apr 2026.',
+    otherSide:
+      'The Gauhati High Court suspended the sentences and granted bail to 26 of the convicts in 2024 while their appeals are heard.',
     sourceUrl:
       'https://timesofindia.indiatimes.com/city/guwahati/assam-cash-for-job-scam-apsc-ex-chief-among-32-convicted/articleshow/111937784.cms',
     sourceLabel: 'Times of India — Assam cash-for-job scam: APSC ex-chief among 32 convicted (23 Jul 2024)',
+    sources: [
+      'https://www.newsonair.gov.in/sentences-pronounced-for-apsc-agriculture-development-officer-recruitment-scam',
+      'https://assamtribune.com/assam/gauhati-hc-suspends-verdict-in-apsc-cash-for-jobs-scam-grants-bail-to-26-accused-1549937',
+      'https://thefederal.com/category/states/north-east/assam/apsc-cash-for-job-scam-assam-biggest-recruitment-scandal-at-a-legal-crossroads-240797',
+    ],
   },
   {
     id: 'hst320',
@@ -597,12 +629,12 @@ export const HISAAB_STATES_EAST = Object.freeze([
       'PRS notes the Rs 9,000 covered four months of benefits plus a Rs 4,000 festive bonus. Revised estimates put 2025-26 Orunodoi spending at Rs 6,000 crore, well above earlier years. Results came on 4 May 2026 and the BJP-led alliance was re-elected.',
     sourceUrl: PRS_AS_2627,
     sourceLabel: 'PRS Legislative Research — Assam Budget Analysis 2026-27 (2026)',
-    sources: [AIR_RESULTS_2026],
+    sources: [AIR_RESULTS_2026, 'https://www.newsonair.gov.in/polling-ends-peacefully-for-assembly-elections-in-assam-keralam-and-puducherry'],
     tags: ['distribution', 'pre-election'],
     enactedBy: [{ name: 'Himanta Biswa Sarma', role: 'Chief Minister, Assam', party: 'BJP' }],
     outcome:
-      'About 40 lakh women got Rs 9,000 each on 10 Mar 2026, 30 days before Assam voted on 9 Apr; 2025-26 Orunodoi spending was revised to Rs 6,000 crore (PRS). The BJP won 82 of 126 seats as the NDA took a third straight term.',
-    poll: { label: 'Assam Assembly 2026', month: '2026-04', gapDays: 30, result: 'BJP won 82 of 126 seats; NDA third straight term' },
+      'About 40 lakh women got Rs 9,000 each on 10 Mar 2026, 30 days before Assam voted on 9 Apr; 2025-26 Orunodoi spending was revised to Rs 6,000 crore (PRS). The BJP-led NDA won a third straight term (AIR).',
+    poll: { label: 'Assam Assembly 2026', month: '2026-04', gapDays: 30, result: 'BJP-led NDA won a third straight term, past the 64-seat majority mark' },
   },
   {
     id: 'hst322',
@@ -660,17 +692,19 @@ export const HISAAB_STATES_EAST = Object.freeze([
     asOf: '2026-09',
     govt: 'BJP',
     question:
-      "In April 2026 the Supreme Court told the CBI to hold a preliminary enquiry into Arunachal public-works contracts allegedly given to firms linked to the CM's family. Roughly what value was the court told of?",
+      "In April 2026 the Supreme Court told the CBI to hold a preliminary enquiry into Arunachal public-works contracts allegedly given to firms linked to CM Pema Khandu's family. Roughly what value was the court told of?",
     options: ['About Rs 127 crore', 'About Rs 1,270 crore', 'About Rs 5,400 crore', 'About Rs 12,700 crore'],
     correctIndex: 1,
     explanation:
-      "Petitioners said about Rs 1,270 crore of contracts over 10 years went to four firms tied to relatives of CM Pema Khandu; the enquiry covers 2015–2025. The state called the PIL 'sponsored litigation'. In Aug 2026 the CBI reported state non-cooperation and the court summoned top officials. Congress has sought his resignation; he remains CM.",
+      "Petitioners said about Rs 1,270 crore of contracts over 10 years went to four firms tied to relatives of BJP Chief Minister Pema Khandu; the enquiry covers 2015–2025. The state called the PIL 'sponsored litigation'. In Aug 2026 the CBI reported state non-cooperation and the court summoned top officials. Congress has sought his resignation; he remains CM.",
     status:
-      'Preliminary enquiry ordered by the Supreme Court on 6 Apr 2026, ongoing as of Sept 2026; no FIR or charge sheet reported. Khandu has not been charged; the state called the petition "sponsored litigation".',
+      'Preliminary enquiry ordered by the Supreme Court on 6 Apr 2026; CBI reported state non-cooperation (Jul 2026); ongoing as of Sept 2026, no FIR or charge sheet reported. Khandu has not been charged and says he is innocent.',
+    otherSide:
+      'Khandu said "I am innocent", called the allegations politically motivated and pledged full cooperation with the CBI; the state had called the PIL "sponsored litigation".',
     people: ['Pema Khandu'],
     sourceUrl: MPOST_KHANDU_PE,
     sourceLabel: "Millennium Post (PTI) — SC orders CBI enquiry into award of contracts to firms linked to Arunachal CM's kin (6 Apr 2026)",
-    sources: [MPOST_KHANDU_AUG, HINDU_KHANDU_SEP],
+    sources: [MPOST_KHANDU_AUG, HINDU_KHANDU_SEP, ANI_KHANDU_MAY],
   },
   {
     id: 'hst325',
@@ -689,11 +723,17 @@ export const HISAAB_STATES_EAST = Object.freeze([
     correctIndex: 3,
     explanation:
       "A candidate's complaint after the August 2022 AE (Civil) exam led to arrests by the state police's Special Investigation Cell, and the APPSC secretary and joint secretary were suspended. The CBI took over on 27 Oct 2022 and charge-sheeted 10 accused that December.",
-    status: 'CBI charge sheet against 10 accused filed Dec 2022; trial outcome not verified as of Sept 2026. No convictions found.',
+    status:
+      'CBI charge sheet against 10 accused filed Dec 2022; the state dismissed an officer over the leak in Dec 2024; no trial verdict found as of Sept 2026. No convictions.',
+    otherSide:
+      "The state government itself sought the CBI probe and suspended the commission's secretary and joint secretary; the APPSC chairman resigned on moral grounds.",
     sourceUrl:
       'https://www.newindianexpress.com/india/2022/Dec/09/cbi-files-charge-sheet-in-appsc-question-paper-leak-case-2526546.html',
     sourceLabel: 'The New Indian Express (PTI) — CBI files charge sheet in APPSC question paper leak case (9 Dec 2022)',
-    sources: ['https://news.careers360.com/appsc-examination-paper-leak-secretary-joint-secretary-suspended'],
+    sources: [
+      'https://news.careers360.com/appsc-examination-paper-leak-secretary-joint-secretary-suspended',
+      'https://www.indiatodayne.in/arunachal-pradesh/story/arunachal-government-terminates-service-of-officer-in-appsc-paper-leak-case-1140632-2024-12-19',
+    ],
   },
   {
     id: 'hst326',
@@ -714,12 +754,14 @@ export const HISAAB_STATES_EAST = Object.freeze([
     explanation:
       'The Indian Express reported 33 of the PPA\'s 43 MLAs, including the Speaker, moved, lifting the BJP to 47 in the 60-seat House after a year in which the state saw four chief ministers. Pema Khandu said the PPA had suspended them without notice. He has led BJP governments since.',
     status:
-      'Political event; no case involved. Separately, a Supreme Court-ordered CBI preliminary enquiry into contracts (Apr 2026) was ongoing as of Sept 2026; Khandu has not been charged.',
+      'Political event; no case arises from it. Separately, a Supreme Court-ordered CBI preliminary enquiry into contracts (Apr 2026) was ongoing as of Sept 2026; Khandu has not been charged and says he is innocent.',
+    otherSide:
+      'Khandu said the PPA had suspended the MLAs "without serving a notice or calling for an explanation", calling that "very undemocratic".',
     people: ['Pema Khandu'],
     sourceUrl:
       'https://indianexpress.com/article/india/arunachal-gets-full-fledged-bjp-govt-as-pema-khandu-32-others-join-saffron-party-4453088/',
     sourceLabel: 'The Indian Express — Arunachal gets full-fledged BJP govt as Pema Khandu, 32 others join (31 Dec 2016)',
-    sources: [HINDU_KHANDU_SEP],
+    sources: [HINDU_KHANDU_SEP, ANI_KHANDU_MAY],
   },
   {
     id: 'hst327',
@@ -853,7 +895,7 @@ export const HISAAB_STATES_EAST = Object.freeze([
     options: ['The Supreme Court', 'The Meghalaya High Court', 'The Union Coal Ministry', 'The National Green Tribunal'],
     correctIndex: 3,
     explanation:
-      'In July 2019 the Supreme Court allowed mining again only in compliance with national mining law and rules; the state has said mining outside that framework stays illegal. Deadly accidents at illegal mines have continued, including in 2018, 2021 and 2026.',
+      'In July 2019 the Supreme Court allowed mining again only in compliance with national mining law and rules. Mining outside that framework is illegal, yet deadly accidents at illegal mines have continued, including in 2018, 2021 and 2026.',
     sourceUrl: 'https://theprint.in/india/another-year-another-mining-tragedy-why-meghalayas-rat-holes-wont-stop-killing/594667/',
     sourceLabel: "ThePrint — Another year, another mining tragedy: why Meghalaya's rat-holes won't stop killing (2 Feb 2021)",
     sources: [NIE_ML_BLAST_PROBE],
@@ -875,7 +917,7 @@ export const HISAAB_STATES_EAST = Object.freeze([
     options: ['15', '28', '41', '60'],
     correctIndex: 0,
     explanation:
-      'Water from the nearby Lytein river flooded the mine on 13 Dec 2018. Despite a rescue lasting more than two months that involved the Navy, the bodies of only a few miners were retrieved. The mine was operating despite the 2014 ban.',
+      'Water from the nearby Lytein river flooded the mine on 13 Dec 2018 and all the trapped miners died; after a search lasting months, only two bodies were ever retrieved (ThePrint). The mine was operating despite the 2014 ban.',
     sourceUrl: 'https://theprint.in/india/another-year-another-mining-tragedy-why-meghalayas-rat-holes-wont-stop-killing/594667/',
     sourceLabel: "ThePrint — Another year, another mining tragedy: why Meghalaya's rat-holes won't stop killing (2 Feb 2021)",
     sources: ['https://www.newindianexpress.com/india/2026/Feb/05/18-killed-one-injured-in-blast-at-illegal-coal-mine-in-meghalaya'],
@@ -904,7 +946,9 @@ export const HISAAB_STATES_EAST = Object.freeze([
     explanation:
       'The loss surfaced in the 31st interim report of the High Court-appointed Justice B.P. Katakey committee; one depot that had recorded 1,839 tonnes held about 2.5 tonnes. The HC told the state to act against officials. The minister later said he "cannot blame just the rain" and had no conclusive evidence either way.',
     status:
-      'High Court directed action against officials responsible (July 2025); no charges or convictions reported as of Sept 2026. The committee chair is not accused of anything.',
+      'FIRs lodged (state status report to the High Court, July 2025); HC directed action against officials responsible; no charge sheet or conviction reported as of Sept 2026. The committee chair is not accused of anything.',
+    otherSide:
+      'The minister later said he "cannot blame just the rain" and had no conclusive evidence; the state told the High Court that FIRs had been lodged.',
     people: ['B.P. Katakey'],
     sourceUrl:
       'https://www.newindianexpress.com/india/2025/Jul/28/rain-might-have-washed-it-away-meghalaya-minister-after-4000-tonnes-of-coal-go-missing',
@@ -933,10 +977,17 @@ export const HISAAB_STATES_EAST = Object.freeze([
     explanation:
       'Eighteen bodies were recovered that day; the toll reached 30 within five days as injured miners died in hospitals in Shillong and Silchar, and a later notification cited 31. Police arrested two alleged mine owners, and the state set up a judicial commission under a retired HC judge.',
     status:
-      'FIR registered; two alleged mine owners arrested (Feb 2026); judicial commission appointed 14 Feb 2026, report status not verified as of Sept 2026. No convictions.',
+      'FIR registered; two alleged mine owners arrested (Feb 2026); judicial commission appointed 14 Feb 2026 with six months to report; no report made public as of Sept 2026. No convictions.',
+    otherSide:
+      'CM Conrad Sangma said police were told to take "full action against those responsible" and set up a judicial commission; no reply from the arrested owners was reported.',
+    people: ['Conrad Sangma'],
     sourceUrl: NIE_ML_BLAST_TOLL,
     sourceLabel: 'The New Indian Express — Meghalaya coal mine blast: toll rises to 30 (10 Feb 2026)',
-    sources: [NIE_ML_BLAST_PROBE],
+    sources: [
+      NIE_ML_BLAST_PROBE,
+      'https://www.newindianexpress.com/india/2026/Feb/05/18-killed-one-injured-in-blast-at-illegal-coal-mine-in-meghalaya',
+      'https://india.mongabay.com/2026/02/incident-at-illegal-coal-mine-resurfaces-concerns-about-banned-rat-hole-mining/',
+    ],
   },
 
   // ── Mizoram ─────────────────────────────────────────────────────────────────
@@ -961,7 +1012,7 @@ export const HISAAB_STATES_EAST = Object.freeze([
     ],
     correctIndex: 1,
     explanation:
-      'The ZPM won 27 of 40 seats, unseating the Mizo National Front (10); the BJP won 2 and Congress 1. Congress had ruled from 2008 to 2018 and the MNF from 2018 to 2023. The outgoing chief minister lost his own seat.',
+      "The ZPM won 27 of 40 seats, unseating the Mizo National Front (10); the BJP won 2 and Congress 1. The MNF had governed in 1998–2008 and 2018–23; its outgoing chief minister lost his own seat.",
     sourceUrl:
       'https://www.newindianexpress.com/india/2023/Dec/05/mizoram-zpm-govt-to-be-sworn-in-on-december-8-ex-cm-zoramthanga-quits-as-mnf-chief-2638866.html',
     sourceLabel: 'The New Indian Express — Mizoram ZPM govt to be sworn in on December 8 (5 Dec 2023)',
@@ -1039,7 +1090,7 @@ export const HISAAB_STATES_EAST = Object.freeze([
     region: 'India',
     state: 'NL',
     topic: 'Jobs & Economy',
-    subtopic: 'Backdoor police appointments',
+    subtopic: 'Unadvertised police appointments',
     kind: 'scam',
     difficulty: 'extreme',
     year: 2019,
@@ -1050,12 +1101,18 @@ export const HISAAB_STATES_EAST = Object.freeze([
     options: ['935', '1,780', '3,100', '5,400'],
     correctIndex: 0,
     explanation:
-      'Qualified job-seekers challenged the hiring, noting only 206 posts went through open recruitment. The state argued the appointments were governed by the Nagaland Police Manual. The court let the 935 serve up to six months, ordered an advertised fresh selection and let them apply with age relaxation.',
+      'Qualified job-seekers challenged the hiring, noting only 206 posts went through open recruitment. The state argued the appointments were governed by the Nagaland Police Manual. The court let the 935 serve up to six months and ordered an advertised fresh selection, with age relaxation for them. The Supreme Court declined to interfere in Jan 2025.',
     status:
-      'Appointments quashed by the Gauhati HC (Kohima Bench) on 20 Sept 2024; fresh selection ordered. Appeal status not verified as of Sept 2026. No criminal case involved.',
+      'Appointments quashed by the Gauhati HC (Kohima Bench) on 20 Sept 2024; Supreme Court dismissed an SLP against it on 21 Jan 2025; fresh recruitment advertised Sept 2025. No criminal case involved.',
+    otherSide:
+      'The state argued the appointments were governed by the Nagaland Police Manual; after the ruling the DGP said the posts would be advertised afresh.',
     sourceUrl:
       'https://www.newindianexpress.com/india/2024/Sep/21/gauhati-hc-quashes-backdoor-appointment-of-935-nagaland-police-constables',
     sourceLabel: "The New Indian Express — Gauhati HC quashes 'backdoor' appointment of 935 Nagaland police constables (21 Sep 2024)",
+    sources: [
+      'https://morungexpress.com/nagaland-to-initiate-fresh-process-to-recruit-935-police-constables-as-hc-quashes-previous-recruitments',
+      'https://morungexpress.com/nagalands-legal-landscape-2025-governance-cases-dominate-court-proceedings',
+    ],
   },
   {
     id: 'hst341',
@@ -1141,7 +1198,7 @@ export const HISAAB_STATES_EAST = Object.freeze([
     options: ['Rs 7,200 crore', 'Rs 13,965 crore', 'Rs 21,400 crore', 'Rs 32,000 crore'],
     correctIndex: 1,
     explanation:
-      "Backed by the SDF government from 2004 and completed five years late in 2017, it was the state's largest hydro project. After South Lhonak lake burst, the SKM government agreed to sell its majority stake to the minority partner, pending approval (2024). A 2025 expert-panel nod to rebuild was opposed by parties and citizen groups.",
+      "Backed by the SDF government from 2004 and completed five years late in 2017, it was the state's largest hydro project. After South Lhonak lake burst, the SKM government agreed to sell its majority stake to the minority partner, pending approval (2024). An expert panel's approval to rebuild, reported in Feb 2025, was opposed by parties and citizen groups.",
     sourceUrl: 'https://www.aljazeera.com/economy/2024/4/18/a-flash-flood-and-a-quiet-sale-highlight-indias-sikkims-hydro-problems',
     sourceLabel: "Al Jazeera — A flash flood and a quiet sale highlight Sikkim's hydro problems (18 Apr 2024)",
     sources: [

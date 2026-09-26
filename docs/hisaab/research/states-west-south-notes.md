@@ -211,3 +211,95 @@ Also handle with care:
 | hst263 | TG | INC | scheme | simple | Rythu Bandhu to Rythu Bharosa | [primary](https://www.thehindubusinessline.com/economy/agri-business/telangana-farmers-to-receive-rs-12000-per-acre-annually-under-rythu-bharosa-scheme/article69063900.ece) · [2](https://prsindia.org/budgets/states/telangana-budget-analysis-2026-27) |
 | hst264 | TG | INC | institution | simple | Kancha Gachibowli land | [primary](https://indianexpress.com/article/india/supreme-court-stays-tree-felling-kancha-gachibowli-area-telangana-9922091/) |
 | hst265 | TG | INC | spend | extreme | Six guarantees: cost | [primary](https://prsindia.org/budgets/states/telangana-budget-analysis-2026-27) |
+
+## Fact audit (26 Sep 2026)
+
+Independent release-gate audit of all 66 items (hst200–hst265). Every `sourceUrl` and every URL in
+`sources` was fetched (curl + HTML-to-text; WebFetch for The Week and ThePrint, which block curl).
+Status lines were refreshed against Google News reporting up to 26 Sep 2026. No items dropped; ids
+unchanged. `otherSide` added to all 39 items that have `people`, `status` or `kind: 'scam'` (plus
+hst264). Whole bank: `node scripts/hisaab-validate.mjs` prints OK; `tests/hisaab-bank.test.mjs` passes.
+Lane difficulty is now simple 21 / expert 23 / extreme 22 (hst258 moved simple → expert).
+
+### Private individuals (charter §2.7)
+- **hst227** rebuilt around the public office holder: the stem now asks the condition of ex-excise
+  minister Kawasi Lakhma's SC interim bail (Feb 2026: stay out of Chhattisgarh except for court).
+  The former CM's son is no longer named, described or listed in `people`; the old source (whose
+  headline named him) was replaced by NIE (21 Feb 2026) + Verdictum (3 Feb 2026), neither of which
+  mentions him.
+- **hst239** keeps the daughter unnamed: the stem says "an IT firm owned by a relative of then-CM
+  Pinarayi Vijayan"; stem, explanation and status never name her; the Statesman source whose URL
+  carried her name was dropped; the HT `sourceLabel` was shortened to end at "SFIO charges".
+- **hst200** Morbi: the Oreva MD is a private-company executive (Ajanta Manufacturing Pvt Ltd is
+  not a public company), so his name was removed from explanation, status and `people`.
+- Checked and left unnamed: Chhota Udepur conman (hst205), jumbo-COVID partner (hst212), Goa
+  cash-for-jobs accused (hst215), game-zone co-owners (hst203), coal-levy businessmen and the
+  Congress ex-treasurer (hst228), Mundra accused (hst201), gold-case accused (hst240), MUDA
+  complainant and the CM's wife (hst233), BJP economic-cell convenor (hst226). hst239 and hst233
+  still refer to a relative by relationship because the case is about that allotment/payment.
+
+### Corrections of fact
+- **hst235**: the Nagamohan Das commission said contractors did **not** prove the 40% figure ("may
+  not be 100% true", DH 12 Sep 2025) — the old text only said the minister was evasive. Added the
+  Sept 2025 study committee and the Mar 2026 Council reply that the SIT was not yet formed.
+- **hst246**: the SC **stayed** the ED's TASMAC probe in May 2025 ("crossing all limits") — missing
+  before; status no longer says "ED probe ongoing" without that.
+- **hst255**: US criminal charges against Adani executives dismissed at the DOJ's request (10 Aug
+  2026), SEC case settled for $18m without admission, FCPA counts against five co-defendants still
+  pending (Wire, 5 Sep 2026). US filings name no AP official; Jagan Mohan Reddy added to `people`
+  (he is in the Hindu headline) with "not charged, denies wrongdoing".
+- **hst250**: Down To Earth's "about 400 canteens in the state" (2021) matches Chennai's count
+  only; statewide there were 620 in May 2026 (TOI, official release: 383 GCC + 237 elsewhere).
+  Re-anchored the stem on the May 2026 figure (answer "About 620"), `year` 2026.
+- **hst221**: the Patwari case began as a 2012 Khargone FIR (chargesheet 2014), not "a 2014 chargesheet".
+- **hst238**: removed "partly financed with borrowing" (not in PRS/CAG text); now says the schemes
+  raised revenue expenditure and the revenue deficit (PRS citing CAG Report No. 4 of 2025).
+- **hst223**: the Lokayukta took suo motu cognisance of the statue damage; the Congress MLA's
+  complaint was the earlier (2022) one. BJP's March-2019-work-order reply moved to `otherSide`.
+- **hst229**: PIB release (403 to every fetcher) replaced by TOI (10 Mar 2024); unverifiable
+  "widows/divorced/deserted" detail dropped; "68.47 lakh" (ANI headline) corrected to "about 68
+  lakh" (ANI body: 68,39,592).
+- **hst248**: "(ECI)" attribution replaced by TOI (13 May 2026), which states 108/59/47.
+- **hst242**: "arrested 2020, HC bail 2021" could not be sourced; status now says the Governor
+  sanctioned his prosecution in 2020 (NIE obituary, Jan 2026).
+- **hst233**: Siddaramaiah ceased to be CM on 3 Jun 2026 (D.K. Shivakumar sworn in); stem reworded.
+- **hst243**: "championed as a flagship" replaced by what the source says (launched by the LDF).
+
+### Status refreshed (asOf 2026-09)
+hst201 (Gujarat HC bail for delay Apr 2026; SC refused to cancel Aug 2026) · hst203 (discharge
+refused up to SC Nov 2025; all on bail May 2026) · hst205 (₹21.15 crore since 2016; 10 arrested incl.
+a retired IAS officer; main accused died in custody May 2024) · hst209 (Governor's ED sanction filed
+Aug 2026; CBI case still pre-charge, court rebuked delay pleas Aug 2026) · hst211 (Seclink SC appeal
+deferred Nov 2025) · hst212 (supplementary chargesheet Dec 2024) · hst215 (Crime Branch found no
+evidence for the accused's claims Dec 2025; narco-test plea Jan 2026) · hst226 (CBI FIR naming Baghel,
+Dec 2024; CBI's July 2026 chargesheets vs 66 accused) · hst228 (EOW arrested a Congress leader Jul
+2026) · hst231 (HC refused pre-arrest bail May 2026) · hst233 (HC hearings Aug–Sep 2026; Desai
+commission clearance Sept 2025) · hst234 (third CBI chargesheet; ED questioning Sept 2026) · hst236
+(ED attachment Jan 2026; departmental chargesheet Jul 2026) · hst239 (ED sought FIR, state chose a
+preliminary enquiry, Kerala HC hearing 26 Sep 2026) · hst241 (leaders bailed Jul 2026) · hst245
+(anticipatory bail in the MLA-poaching case; denial Sept 2026) · hst252 (ED found no evidence of
+Naidu's role, Feb 2026) · hst253 (SIT now puts loss at ₹3,500 crore; stem pinned to the July 2025
+₹3,200 crore figure) · hst254 (HC PIL against lease; nothing leased, Jul 2026) · hst259 (CBI probe
+limited to three barrages, Jul 2026).
+
+### Answer giveaways fixed
+- hst229 `outcome` stated ₹655 crore = answer of **hdb238** → replaced with the Jan 2026 cumulative.
+- hst259 `explanation` named Medigadda = answer of **hst260** → "a barrage's piers".
+- hst257 `explanation` stated the Centre's ₹200 = answer of **hdb043** → re-angled.
+- hst207 `enactedBy` listed Ajit Pawar = answer of **hdb240** → removed (Shinde remains).
+- hst207 `sourceLabel` carried "92 lakh" = answer of **hst208** → primary swapped to Scroll.
+- hst248 re-angled to the ₹5,000 lump sum because **hdb237**'s outcome states "1.31 crore".
+- hst258 re-angled to the 67-lakh roll-out because **hdb227**'s stem names Amma Vodi at ₹15,000.
+
+### Unresolved / for other lanes and the reviewer
+- **hdb238** (dist-west-south) explanation states "₹1,000-a-month" = answer of hst229; **hdb216**
+  explanation's "₹4 a litre" (milk subsidy) coincides with hst230's answer. Not editable here.
+- **hgh019** (scams) asks what happened to the US charges in Aug 2026; hst255's `status` must state
+  that dismissal (charter §2.2), so a player who sees hst255's receipt first learns it. Kept out of
+  hst255's explanation/otherSide.
+- Newest reporting not found (searched): Seclink SC appeal after Nov 2025; GPSSB, Chhota Udepur and
+  TSPSC leak trials; Mahakal Lok Lokayukta since Mar 2024; whether Tamil Nadu actually withdrew its
+  TASMAC appeal; formal CBI case number in Kaleshwaram. Gujarat Samachar items dated Jul 2026 on
+  Morbi appear to be re-dated older stories and were not used.
+- High stale risk (re-check monthly): hst239 (FIR decision / HC ruling due), hst245, hst233, hst209,
+  hst255 (co-defendants), hst246, hst253.
