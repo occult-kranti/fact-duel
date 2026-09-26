@@ -1,0 +1,76 @@
+# P2 backlog from the UI review (26 Sep 2026)
+
+Deferred P2 findings from the five review lenses (docs/hisaab/review/*.md hold the detail), plus the final verifier's open notes.
+
+## Review P2s
+- gamification editions/hisaab/app/screens/home/index.tsx: After today's file is done and nothing is left to resume, the screen's only violet button ('Duel Babu-Bot', lines 185/244) sits at the bottom of a page about 2,800 px tall on a phone.
+- gamification lib/progression.mjs: The label mostly measures volume, not knowledge. A wrong answer on a new card pays 3+10+5 = 18 XP against 27 for a right one, and a 0/6 file pays 208 XP. The speed bonus (+15 under 2 s) and 'Speed demon' (under 1.5 s) reward answering 20–35-word questions before reading them.
+- gamification editions/hisaab/app/screens/route/finish.tsx: The first-clear ceremony celebrates a 0/6 run with confetti and 'FILE CLEARED · −3/24' (lines 91-101; ui/ceremony.tsx:30).
+- gamification editions/hisaab/app/screens/me/lib.ts: The 'night-owl' achievement pays +50 XP for playing between 23:00 and 04:00. The 1440 walk earned it ('Stamp Register: Night owl +50').
+- gamification editions/hisaab/app/shell/progression-watch.tsx: Activity and XP lines still use JHK's achievement names. Activity shows 'Stamp Register: Every stamp' or 'Clean sweep' (lines 87-90; data.ts:412-413 xpLogWords) while the Stamp Register itself says 'Nine files' or 'Clean file'.
+- gamification editions/hisaab/app/screens/me/certificate-view.tsx: The line issuedOn = dates.get(band) ?? Date.now() (line 49; also profile.tsx:80) prints today's date as 'ISSUED' when the real promotion date has dropped out of the 40-line log. A certificate for an older rung also uses today's receipt count ('after 214 receipts, been labelled ANDHBHAKT').
+- gamification editions/hisaab/app/three/runtime.ts: Capable phones automatically download the 3D chunk (kit-*.js: 3.16 MB, 1.09 MB gzip) on their first route finish, Aaj finish or match result.
+- gamification editions/hisaab/engine/duel-controller.mjs: The tick at line 142 calls changed() every 150 ms, so the whole Arena → LiveQuestion → OptionList tree re-renders about 7 times a second during the round, even though the timer bar reads the controller from rAF.
+- gamification editions/hisaab/app/screens/room/live.tsx: The round header's score has an aria-label on a <p> whose children are aria-hidden (lines 51-66). A generic element takes no accessible name, so screen readers hear nothing. The same pattern is on the quest count at home/index.tsx:497.
+- gamification editions/hisaab/engine/daily.mjs: The copy says 'same for everyone today' (home/index.tsx:341, aaj/index.tsx:365), but todaysFive() uses the player's local date, not IST as the bible says. Players abroad get a different five.
+- gamification editions/hisaab/app/share/index.ts: shareImage (lines 163-166) returns ok with method 'download' even when copyText failed, so the button says 'Image saved · text copied ✓' when nothing was copied.
+- gamification editions/hisaab/bank/elections.mjs: This is an editorial flag for the editorial lane; the bank is not ours to edit. In item hel048 (Surat 2024), one wrong option reads 'He had a criminal conviction', about a real, identifiable nominee.
+- gamification editions/hisaab/app/screens/files/forwards.tsx: Sealed docket rows print the viral claim word for word with no ruling beside it.
+- gamification editions/hisaab/app/screens/aaj/index.tsx: The finish shows the player's label (lines 313-325) but no meter or 'X to next label' line.
+- gamification editions/hisaab/app/screens/home/home-data.ts: The 'topic-play' and 'mode-play' quest rows (lines 174-175) link to a bare #/duel page.
+- gamification editions/hisaab/app/data.ts: In the Hindi locale, the label block still shows the one-liner in English (for example 'Forwards first. Reads never.').
+- design editions/hisaab/app/ui/confidence-switch.css: Selected states are solid violet fills: .h-conf__opt--on ('Shayad' above the answers on every card) and .h-topicchip--on in screens/duel/setup.css:180 ('Mixed'). The opponent cards and the Files tabs already select with the tint.
+- design editions/hisaab/app/ui/stamp.tsx: Stamp size 's' is 16px (438 hits across the matrix), below the bible's ≥ 20px stamp floor. Contrast is fine on paper: pass 5.22, fail 5.39, wait 5.37, noted 8.19, dark ≥ 5.66.
+- design editions/hisaab/app/ui/receipt.tsx: The OTHER SIDE row never renders: it needs an otherSide prop, and no bank item has the field (grep finds 0). The counterpoint lives only inside the explanation, in the noting.
+- design editions/hisaab/app/screens/route/card.tsx: No ownership chain (h-own: Owner → Holding → Outlet) anywhere; grep for h-own finds 0.
+- design editions/hisaab/app/screens/files/brief.css: The Latin display titles 'Uttar Pradesh', 'Kiska Media?' and 'Forward Court' print in mixed case in Hindi, because :root[lang='hi'] .h-brief__title (brief.css:51-52) and .h-rajya__brieftitle:lang(hi) (rajya.css:249) drop text-transform.
+- design editions/hisaab/app/screens/me/ladder.tsx: Line 84 renders FIRST_LABEL_NOTE in English in the Hindi locale. 'Levels 1–4', 'Level 40+' and the Activity lines are also English.
+- design editions/hisaab/app/screens/room/live.css: .h-roundhead__who ('You · Babu-Bot · BOT', the BOT disclosure under the score pill) is 12px mixed-case UI text.
+- design editions/hisaab/app/screens/room/result.tsx: The share text reads 'Beat Babu-Bot 2–1 on HISAAB DO.' without '· BOT' (lines 171-178).
+- design editions/hisaab/app/screens/settings/index.tsx: Settings is a full page at every width.
+- design editions/hisaab/app/screens/duel/friend.css: .h-friend__fmt and .h-pass__fmt (screens/pass/pass.css) format radio cards have no print-down press state; setup's .h-pickcard has one.
+- design editions/hisaab/app/screens/files/media.css: .h-media__outlet chips are 12px mixed-case mono.
+- design editions/hisaab/app/ui/file-card.css: .h-file__title is --h-fs-xl (24px) below 600px.
+- design editions/hisaab/app/dev-shell.tsx: Line 19 has the raw hex '1px solid #8886', so the skill's token grep does not come back clean.
+- design editions/hisaab/app/ui/ceremony.css: The ceremony 3D slot is 200px (.h-ceremony__slot min-height and ceremony.tsx height={200}).
+- design docs/hisaab/design-bible.md: The app says 'New file at midnight, your time.' while bible §11.7 says 'New file at 00:00 IST'. The engine keys the day to local time (engine/daily.mjs:21), so the app copy is the honest one.
+- mobile-a11y editions/hisaab/app/shell/shell.tsx: There is no skip link, and <Nav> (line 121) precedes <main> in the DOM. On first load a phone keyboard user tabs through the top bar and then the five bottom-bar items, which sit visually below the content, before reaching content.
+- mobile-a11y editions/hisaab/app/ui/ceremony.tsx: The ceremony's cleanup (line 31) focuses the element that opened it. At a route finish that element ('Close the file') has unmounted, so focus drops to <body>.
+- mobile-a11y editions/hisaab/app/screens/receipts/sheet.tsx: The sheet is portalled to <body> with aria-modal, but #h-main, .h-top and .h-nav stay interactive (measured inert=false). The Tab trap, Esc and focus return all work.
+- mobile-a11y editions/hisaab/app/ui/ceremony.tsx: juice.confetti('stamp') (line 30) still runs under Effects Off. lib/fx/particles treats 'off' like 'reduced' and plays a ring pulse, while Settings promises 'No 3D, no confetti, no particles.'
+- mobile-a11y editions/hisaab/app/screens/me/name-field.css: Placeholders use --h-ink-3. On --h-receipt in dark that measures 4.23:1, below the 4.5 text floor. The same rule is at receipts/receipts.css:138 and rules/rules.css:293.
+- mobile-a11y editions/hisaab/app/screens/duel/setup.css: At 844×390 and 740×360 the top bar, nav and a sticky action bar (.h-setup__launch setup.css:234, .h-set__done-bar settings.css:91, .h-playbar route/card.css:274) take 51–56% of the viewport, leaving 160–190px for content.
+- mobile-a11y editions/hisaab/app/ui/option.tsx: Screen-reader names stay English in Hindi. An option shows क but is named 'Option A, triangle:' (line 126). tileLabel (ui/tile.tsx:33–38) returns 'Uttar Pradesh, sealed'. The level chip's aria-label uses label.en (shell/top-bar.tsx:34). The confidence switch's sr text is English (ui/confidence-switch.tsx:50–52).
+- mobile-a11y editions/hisaab/app/ui/tile.tsx: Label in name (WCAG 2.5.3) fails in two places. A tile's visible text is 'UP' but its name, 'Uttar Pradesh, sealed', doesn't contain it (line 45). The level chip shows 'LV 1' but is named 'Level 1, …' (shell/top-bar.tsx:34).
+- mobile-a11y editions/hisaab/app/screens/home/index.tsx: More aria-labels sit on generic span/p elements, which screen readers ignore: the quest count `<span aria-label>` at line 497 reads '1/3' as 'one third'; the certificate rung dots (ui/certificate.tsx:82) read nothing; the lobby code `<p aria-label>` (duel/friend.tsx:843) is read as a word.
+- mobile-a11y editions/hisaab/app/screens/files/rajya.tsx: All 31 tiles are in the Tab order (lines 241–270), even though arrow keys already walk the grid (onArrow).
+- mobile-a11y editions/hisaab/app/screens/room/result.tsx: The share outcome ('Copied ✓', 'Couldn't share') changes the button label (line 424) with no live region. The route card wraps the same text in aria-live (route/card.tsx:288).
+- mobile-a11y editions/hisaab/theme/tokens.css: Every --h-fs-* token (lines 111–122) is in px, so the browser's default font-size setting and 'zoom text only' have no effect. Page zoom works: 200% was measured with no overflow.
+- legal-honesty editions/hisaab/app/screens/receipts/detail.tsx: 'Send as a challenge (no answer)' (line 131) and aaj/index.tsx:365 'without its answer' are not quite true, because the status line (which must travel) often gives the answer away. Example: hfw035's challenge card prints 'Deepfake per Factly…'.
+- legal-honesty editions/hisaab/app/screens/room/result.tsx: The share text at lines 165–181 reads 'Beat Babu-Bot 2–1 on HISAAB DO.', without the BOT tag or the randomness disclosure.
+- legal-honesty editions/hisaab/app/screens/me/name-field.tsx: The field (lines 49–56) accepts any private person's name, and the certificate (ui/certificate.tsx:63–66, share/card.ts:706–720) never says the name was self-chosen. It also says 'Stored on this device only' (line 56), though the name is shown to a friend in a duel room.
+- legal-honesty editions/hisaab/app/share/card.ts: The disclaimer 'Satire. Not a government document.' (lines 805–809) is drawn at 24px mono ink-2 on a 1080px card, which is about 8px when the forward is viewed on a phone. The header (686–700) does not say satire.
+- legal-honesty editions/hisaab/app/screens/room/receipt.tsx: The noting, which carries the other side, is collapsed in duels ('Read the noting', lines 297–301). Dobara (dobara.tsx:118) opens it only after a wrong answer.
+- code editions/hisaab/engine/duel-controller.mjs: poll() (line 114) checks the epoch only before its await, and tick(), resend(), ready(), leave() and createBot's ready check nothing. accept() compares revisions only when the room ids match. So a response that lands after reset() brings back the forgotten room, and a response for the previous room replaces a newly adopted room.
+- code editions/hisaab/engine/duel-controller.mjs: tick() line 142 `} else changed();` fires every 150 ms until the result, so the Arena, LiveQuestion and OptionList subtree re-renders about 7 times a second during the live question. Nothing on screen reads countdownMs or remainingMs from a re-render then: the timer bar reads controller.snapshot() in its own rAF loop.
+- code editions/hisaab/app/budget.ts: useVisit's cleanup (line 437) calls newVisit(before), and newVisit resets visitToastUsed. That causes two problems. (a) Opening and closing a receipt sheet gives the Vault a second toast in the same screen visit. (b) When a link inside the open sheet navigates (the detail's 'Report an error' → #/rules?s=report), the shell's layout-effect newVisit('/rules') runs first and the sheet's passive cleanup then sets the visit back to '/receipts' while /rules is showing.
+- code editions/hisaab/app/screens/duel/friend.tsx: After endReason becomes 'connection-lost' (line 626) or fatal is set, the guest's controller keeps polling a host that has gone. Each poll waits the full 15 s p2p timeout, errors and reschedules, until the player leaves the screen, and nobody reads the result.
+- code editions/hisaab/app/screens/settings/index.tsx: Line 276 always shows 'Deleted. A fresh file.' after `await player.clear()`. But the shared clear() (app/use-player.ts line 320) swallows dispatch's false result from the 'Reset could not be saved' path.
+- code editions/hisaab/app/screens/duel/lib.ts: seatNameFor (line 123) and data.ts seatName (the human branch) show any typed name verbatim. A friend or Pass & Play player can call themselves 'Babu-Bot · BOT' and appear as the bot on the other screen.
+- code editions/hisaab/app/screens/room/live.tsx: `{banner}` (line 247) is rendered above the question card. When the peer drops mid-question, 'Connection lost — waiting 10 s' is inserted there and pushes the stem and options down while the player may be tapping.
+
+## Final verifier notes
+- No fixer regressions found. Everything below was already open or is minor, and was seen in the final PNGs.
+- 1440 cartogram: the Centre drawer label runs together as 'INCENTRE' because of a 1px gap override in rajya.css. It is identical in the pre-fix baseline; compare scratchpad/centre-before.png with centre-after.png.
+- Hindi locale: the label one-liners stay in English ('Forwards first. Reads never.') on Home, the Aaj finish and Me (advisor P2-16 / design P2-6 still open).
+- Round header: the 'You · Babu-Bot · BOT' line under the score pill is 12px mixed-case UI text (design P2-7 still open).
+- The receipt's OTHER SIDE row never renders because no bank item has `otherSide`. The Kiska Media ownership chain (h-own) is absent: a grep finds 0 uses.
+- The file-cleared ceremony stamp wraps 'FILE CLEARED · / 8/24' onto two lines at 390.
+- Match result at 1440: the round-receipt carousel clips the third card at the column edge. Cards stretch to the tallest one, leaving about 250px of blank paper in short cards.
+- The Aaj finish label card has no goal-gradient meter (advisor P2-14 still open).
+- Vault: 'Re-check 12 due' appears minutes after the first session, with every fresh receipt already due. The copy is honest, but it reads oddly on day one.
+- Rules §5 Balance: the govt spread is a long single column of about 30 chips. Small non-zero counts round to '0%' (e.g. 'CPI(M) 2 0%').
+- Pass & Play draw reuses 'Barabar. Babu bhi hairaan.' in a two-human match. This is the bible's copy, but Babu isn't playing.
+- The Aaj finish THAPPA was captured mid-drop, with the stamp body covering the ISSUED impression. This is capture timing, but worth a live look.
+- Capture caveat: full-page shots paint fixed chrome (bottom nav, sticky Next/Rematch bars, the 1440 rail ending at 900px) mid-page. That hides the receipt STATUS row in phone route and duel receipt shots, so I checked STATUS in the 1440 shots and on the finish and result minis instead.
+- Pre-existing dev-only raw hex at editions/hisaab/app/dev-shell.tsx:19.

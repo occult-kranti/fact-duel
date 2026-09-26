@@ -117,6 +117,8 @@ export const HISAAB_SCHEMES = Object.freeze([
     tags: ['distribution', 'pre-election'],     // modes: 'distribution' | 'relief' | 'pre-election'
     enactedBy: [{ name: 'Shivraj Singh Chouhan', role: 'Chief Minister, Madhya Pradesh', party: 'BJP' }],
     outcome: '…',                               // 20–320 chars: reach, cost, audit, election result
+    otherSide: '…',                             // 10–240 chars: the denial, clearance, acquittal or official
+                                                // reply in one clause — the receipt's OTHER SIDE row
     poll: { label: 'MP Assembly 2023', month: '2023-11', gapDays: 160, result: 'BJP won 163 of 230' },
                                                 // required when tagged 'pre-election'; gapDays = days
                                                 // from the announcement/first payment to polling day

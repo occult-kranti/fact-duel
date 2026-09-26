@@ -135,6 +135,11 @@ export function checkItem(q) {
       'enactedBy must be [{ name, role, party }]',
     );
   }
+  // The other side's answer in one clause (charter §2.3): a denial, clearance, acquittal or official
+  // reply. The receipt prints it as its OTHER SIDE row and the share card carries it.
+  if (q.otherSide !== undefined) {
+    need(typeof q.otherSide === 'string' && q.otherSide.length >= 10 && q.otherSide.length <= 240, 'otherSide 10–240 chars');
+  }
   // Results: reach, cost, audit findings, what happened at the next election.
   if (q.outcome !== undefined) {
     need(typeof q.outcome === 'string' && q.outcome.length >= 20 && q.outcome.length <= 320, 'outcome 20–320 chars');
