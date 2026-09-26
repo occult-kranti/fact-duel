@@ -178,3 +178,132 @@ etc.) are left to the three state distribution lanes.
 | MGNREGA fund freeze in Bengal | WB | Mar 2022 freeze | Centre (NDA); courts ordered restart | — | — | — | — | LiveLaw; IE; The Hindu |
 | VB-G RAM G Act | Centre | passed Dec 2025; in force Jul 2026 | Shivraj Singh Chouhan, RD Minister, BJP | 125 days; 60-day farm-season pause | — | ₹1,51,282 cr/yr (Centre ₹95,692 cr) | — | HT; PIB |
 | NFS (Amendment) Bill 2026 (draft) | Centre | draft Jun 2026 | Dept of Food & Public Distribution | AAY: 7 kg/person capped at 35 kg | AAY households | — | — | Kashmir Life (RS reply); The Hindu |
+
+## Verification
+
+Adversarial pass, 26 Sep 2026. I re-fetched every `sourceUrl` and nearly every `sources` URL: 72 pages plus about 20
+new ones, using curl and a text filter, `pypdf` for the budget PDFs and PRS, and NCBI E-utilities for the Lancet
+abstract. I tried to refute each item's answer, figures, dates, `enactedBy`, poll fields and distractors. **45 checked,
+0 dropped, 45 remain.** Nothing needed a replacement item. `node scripts/hisaab-validate.mjs
+editions/hisaab/bank/dist-centre.mjs` prints OK. The cross-lane run with poll-union, schemes, relief-centre and
+dist-north/west-south/east also prints OK, and `node --test tests/hisaab-bank.test.mjs` passes.
+
+### Poll dates and results: Wikipedia removed as a source
+No item cites Wikipedia now. Every poll start date and tally has a non-Wikipedia page, and all gapDays were
+recomputed and match.
+- LS 2004: polling ran 20 Apr–10 May 2004 (Mint, 15 Aug 2026). INC 145 and BJP 138 (Al Jazeera, 3 Jun 2024).
+  hdb005: 3 Feb → 20 Apr 2004 = 77 days.
+- LS 2009: first phase on 16 Apr 2009 (Frontline, "High stakes", 24 Apr 2009). INC 206 and UPA 262 (Indian Express
+  exit-poll look-back, 2024). hdb012 = 412 days; hdb013 = 59.
+- LS 2014: first phase on 7 Apr 2014 (Indian Express, 5 Mar 2014). hdb018 = 276 days; hdb022 = 49.
+- LS 2019: first phase on 11 Apr 2019, and the schedule was announced on 10 Mar 2019 (The Hindu). Scroll says the
+  Model Code applied from that announcement. hdb028 = 69 days; hdb029 = 46; hdb030 = 69.
+- UP 2017: first phase on 11 Feb 2017 (Rediff, 11 Feb 2017). hdb026 = 286 days.
+- UP 2022: first phase on 10 Feb 2022 (Indian Express, 8 Jan 2022). hdb034 = 184 days.
+- Chhattisgarh and five states 2023: The Hindu, HT and ThePrint. The MP result of 163/230 now cites ThePrint (4 Dec
+  2023), because no page cited earlier gave it. LS 2024 was already covered by The Hindu and DW.
+
+### Fixes, item by item
+- **hdb001**: the outcome gave away hdb005's answer ("2 crore (2004)"). It now reads "three steps to 2.5 crore by May
+  2005". The "35 kg carried into the 2013 law" claim now cites The Hindu (Jul 2026).
+- **hdb002**: the outcome said Frontline "found no school meals in the block it visited", which the page does not
+  say. It now says Frontline reported Jharkhand had ignored the direction.
+- **hdb004**: added a verified outcome from the July 2004 budget. Only 11,408 BPL families had joined by May 2004;
+  the scheme was called skewed to the non-poor and redesigned for BPL, with the subsidy raised to ₹200 an individual.
+- **hdb005**: replaced the Wikipedia source with Mint and Al Jazeera.
+- **hdb007**: removed "2023-24" as NFHS-6's year, because the cited Indian Express page does not give it.
+- **hdb008**: the stem changed from "widely credited as the architect" to "has been called the 'unsung architect'",
+  the Hindustan Times wording. HT's date is 13 Sep 2020, not 14 Sep.
+- **hdb010**: the outcome gave away hdb043's answer (₹200). It now cites the 2026 ministry study (a 45% loss in real
+  value).
+- **hdb011**: the outcome gave away a poll-union answer (hpe, NREGS ₹30,100 crore for 2009-10). It now gives
+  2008-09 person-days. The Indian Express label now matches the page's current headline ("MNREGA is now Pujya Bapu
+  Rural Employment Guarantee Act"). Same label fix in hdb014 and hdb041.
+- **hdb012**: the outcome gave away hdb013's answer (3.6 crore farmers). It now gives the 30 Jun 2008 completion. The
+  29 Feb 2008 date and the ₹60,000 crore total are confirmed by The Hindu (Feb 2025), since the budget page does not
+  print its own date.
+- **hdb013**: the explanation gave away hdb012's answer (₹60,000 crore). It now says "more than the 2008 budget had
+  estimated".
+- **hdb014**: added HT (Dec 2025) for the passage of VB-G RAM G.
+- **hdb015**: the explanation stated hdb020's answer (₹6,000). It now says the law "set a higher minimum".
+- **hdb017**: The Hindu's page is a 29 May pre-launch report, so the stem now says the transfer "was to start on 1
+  June", and consumers "were to get" the amount. The Hindu (Nov 2014) confirms the scheme did launch on 1 June 2013
+  and reached 291 districts. The outcome no longer says "by January 2014", because the interim budget gives no date
+  for the LPG figure.
+- **hdb018**: The Hindu (26 Aug 2013) confirms the Lok Sabha passed the Bill that night. Added `people` (Mulayam
+  Singh Yadav, K.V. Thomas) and a `status` line (political remarks, no allegation of wrongdoing). "Food minister"
+  corrected to Minister of State.
+- **hdb019**: removed "81.35 crore people", which is the answer to a schemes-lane item (hsc019).
+- **hdb021**: **re-angled**. Poll-union already has a twin item on the same CAG audit that asks the 8.5% ineligible
+  share and whose explanation gives 13.46%, the figure hdb021 asked. Both items are tagged `distribution`, so each
+  would give the other away in Seedha Khaate Mein. hdb021 now asks about the ₹164.60 crore a private bank was
+  reimbursed, against the rules, for loans to microfinance institutions. That fact is on the same Hindu page and
+  poll-union does not use it. Added a `status` line; no person or bank is named. No CBI case over the audit turned
+  up in reporting.
+- **hdb022**: replaced the Wikipedia source with the Indian Express 2014 schedule.
+- **hdb023**: the ET page did not tie Dharmendra Pradhan to PAHAL. Added ET EnergyWorld (Dec 2015; Pradhan, as
+  petroleum minister, presented PAHAL's Guinness certificate to the PM) and The Hindu (Nov 2014 relaunch in 54
+  districts).
+- **hdb025**: the date was wrong. The CAG report was tabled in Parliament on Friday 12 Aug 2016, so the explanation
+  now says "August 2016", not "July". The Hindu first reported the findings on 20 Jul. The label date is now 13 Aug
+  2016. "Actual 6.27-cylinder average" is corrected to "2014-15 national average".
+- **hdb026**: replaced the Wikipedia source with Rediff. The Ballia launch is also asked by sample.mjs `hzz` item,
+  but sample.mjs is not served (index.mjs), so this item was kept.
+- **hdb027**: removed a direct statement of hdb020's answer (₹6,000).
+- **hdb028**: the budget speech was paraphrased more exactly (first instalment "paid in that financial year").
+  Replaced Wikipedia with The Hindu's 2019 schedule. sample.mjs asks the same 1 Dec 2018 date, but it is not served.
+- **hdb029**: the status line was made clearer, and the 10 Mar 2019 Model Code date now cites Scroll instead of
+  Wikipedia.
+- **hdb030**: added The Hindu (2019 schedule) and DW for the poll fields.
+- **hdb032**: the 44% figure came from the government's reply in Parliament (Factly), not "finance ministry data".
+  It is now attributed that way, with 8.72 crore given.
+- **hdb034**: the explanation gave away hdb026's answer (Ballia). It now says the PM spoke by video conference.
+  Replaced Wikipedia with the Indian Express 2022 schedule.
+- **hdb035**: dropped "first" from the stem, because the PM announced it at both Durg and Ratlam that day and the
+  order is not sourced. The status now names Jairam Ramesh and says no ECI finding appears in reporting checked to
+  Sep 2026 (Google News searches found none). Added ThePrint for MP 163/230.
+- **hdb036**: after the 30 Aug 2023 cut of ₹200 for all consumers, Ujjwala households' combined benefit could be
+  read as ₹400 or ₹500, which were two of the distractors. The stem now asks for the targeted subsidy "from ₹200 to
+  what", and the options are ₹250/₹300/₹400/₹500. The quote is now exact: Thakur announced the August cut "on the
+  occasion of Rakshabandhan and Onam". Mizoram (ZPM) was removed from `poll.result` because no cited page gives it;
+  the outcome now says "of the four states counted on 3 December".
+- **hdb037**: the ₹42 crore was incentives "disbursed", not "sanctioned" (PIB).
+- **hdb038**: removed "₹300", which gave away hdb036's answer.
+- **hdb040**: **the outcome was stale**. The BJP won the 2026 West Bengal Assembly election (Business Standard, 4 May
+  2026), and the jobs guarantee resumed in Bengal as VB-G RAM G on 1 Jul 2026 "after almost four years" (The Hindu,
+  2 Jul 2026). The outcome now says so. Also removed "the BJP alleges corruption in the state", which none of the
+  cited pages say; the sources attribute the allegation to the Centre ("alleging financial irregularities",
+  "embezzlement"). Added `people` (Mamata Banerjee, and Justices Vikram Nath and Sandeep Mehta) and a `status` line
+  (an allegation, not a finding; no person accused). The Supreme Court date of 27 Oct 2025 is confirmed by LiveLaw's
+  own 27 Oct story and by the Indian Express; The Hindu's "September 27" is a slip. The `govt: 'NDA'` / `state: 'WB'`
+  convention is unchanged.
+- **hdb042**: **the stipend was stale**. ETCFO (23 Jul 2026) says ₹4,500 + ₹500 + ₹6,000 was the original design,
+  and round III raised the stipend to ₹9,000 (and widened the age band to 18–25). The explanation now gives both.
+- **hdb044**: removed "₹6,000" (hdb020's answer). The outcome now adds 64.65 lakh biometric enrolments (PIB, 21 Aug
+  2026).
+- **hdb045**: the "less per head" rationale is now attributed to the ministry, via its Daily Excelsior statement.
+  The Bill is still a draft; no introduction or Cabinet approval was found in reporting to 25 Sep 2026.
+
+### Confirmed with no change needed
+hdb003, hdb006, hdb009, hdb016 (the Lancet abstract via E-utilities: from under 5% to 44%, and 3.7 fewer perinatal
+deaths per 1,000), hdb020, hdb024, hdb031, hdb033, hdb039, hdb041 and hdb043. Their answers, numbers, dates, names
+and distractors all check out against the fetched pages.
+
+### Charter checks
+- Motive words are attributed with a reply: "bribe for votes" (Chidambaram, with Modi's reply, hdb029), "blatant
+  violation" (Jairam Ramesh, with Modi's reply, hdb035), and "moved with elections in mind" (Mulayam Singh Yadav,
+  with K.V. Thomas's assurance, hdb018). No cause of any election result is claimed.
+- Person distractors appear only in "who piloted/launched" questions (hdb008, hdb039), which §4b.1 allows. None of
+  the wrongdoing-context items (hdb021, hdb025, hdb040) has a person as an option.
+- No private individuals. The Hindu's Bandlapalli piece names a job-card holder, who stays out.
+- `govt`: NDA 28, UPA 17. Every era is still covered.
+
+### Still open (re-check monthly)
+- hdb045: the NFS (Amendment) Bill may be introduced, changed or dropped.
+- hdb043: any revision of the NSAP ₹200 rate.
+- hdb035: any later ECI action on the Model Code complaint (none found).
+- hdb040: Bengal's pending MGNREGS dues "to be released after verification" (The Hindu, Jul 2026).
+- Running totals: hdb024, hdb030, hdb031, hdb037, hdb042 and hdb044.
+- These earlier notes are superseded by this section: "Wikipedia used only as a second source for polling start
+  dates" (no longer used at all), and the hdb040 stale-risk line about whether work restarted (it did, on 1 Jul
+  2026).

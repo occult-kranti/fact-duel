@@ -109,9 +109,14 @@
     font-size: var(--h-fs-2xl);
   }
 }
+/* The CLEARED stamp sits in the bottom-right corner (where the tape was), size l (≥ 24px on manila). */
+.h-file__corner {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 var(--h-s-1) var(--h-s-1) 0;
+}
 .h-file__stamp {
   flex: none;
-  margin: 2px 4px 0 0;
 }
 .h-file__meta,
 .h-file__extra {

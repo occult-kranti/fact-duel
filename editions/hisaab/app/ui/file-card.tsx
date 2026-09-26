@@ -7,7 +7,8 @@
  *   <FileCard fno="F.No. D/2026-09-25" title="Today's file" state="open" emphasis
  *     progress={{ value: 2, max: 5, label: '2 of 5 answered' }} onClick={open} />
  *
- * States: sealed (red tape band, "Sealed" in words), open (meter), cleared (✓ CLEARED stamp, syahi tab).
+ * States: sealed (red tape band, "Sealed" in words), open (meter), cleared (✓ CLEARED stamp at the manila
+ * size in the bottom-right corner, syahi tab).
  */
 import type { MouseEventHandler, ReactNode } from 'react';
 import { Meter } from './meter';
@@ -91,7 +92,6 @@ export function FileCard({
           ) : null}
           <span className="h-file__title">{title}</span>
         </span>
-        {state === 'cleared' ? <Stamp kind="noted" seed={seed ?? fno} text={clearedText} size="s" className="h-file__stamp" /> : null}
       </span>
       {meta ? <span className="h-file__meta">{meta}</span> : null}
       {state === 'sealed' ? <span className="h-sr">Sealed. The tape is cut on the first card.</span> : null}
@@ -99,6 +99,13 @@ export function FileCard({
       {children ? <span className="h-file__extra">{children}</span> : null}
       {progress ? (
         <Meter as="span" className="h-file__meter" value={progress.value} max={progress.max} label={progress.label} valueText={progress.label} copy={progress.copy} />
+      ) : null}
+      {state === 'cleared' ? (
+        // Bottom-right corner, where the tape sat, at the manila size (≥ 24px, bible §5): the title
+        // keeps the full width on a phone.
+        <span className="h-file__corner">
+          <Stamp kind="noted" seed={seed ?? fno} text={clearedText} size="l" className="h-file__stamp" />
+        </span>
       ) : null}
     </>
   );

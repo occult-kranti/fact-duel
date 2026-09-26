@@ -1,21 +1,28 @@
 /**
- * screens/money/index.tsx — STUB (foundation lane). The files lane (money trail) replaces this file.
- * Views: hub (#/money), distribution (Seedha Khaate Mein), relief (Rahat Kosh), pre-election
- * (Chunav Se Pehle), years (Saal-dar-Saal). Spec: CHARTER.md §4a, §6. API: app/README.md.
+ * screens/money/index.tsx — the money trail, 2000–2026 (charter §4a, §6; files lane). Views:
+ *   #/money                 the hub: four files — Seedha Khaate Mein, Rahat Kosh, Chunav Se Pehle,
+ *                           Saal-dar-Saal
+ *   #/money/distribution    Seedha Khaate Mein (item tag 'distribution')
+ *   #/money/relief          Rahat Kosh ('relief')
+ *   #/money/pre-election    Chunav Se Pehle ('pre-election'): every file carries the poll countdown chip
+ *   #/money/years           Saal-dar-Saal: the 2000 → 2026 year strip (?y=2019 selects, ?v=list lists)
+ *
+ * Files come from the routes the foundation derives (edition.ts moneyRoutes / yearRoutes): six cards
+ * each, never padded. A mode whose lanes are not registered yet shows the "being typed" file with the
+ * real count; the same screen lists the files once the lanes land. Hubs are quiet (bible §9).
  */
-import { moneyMode, moneyRoutes, MONEY_MODES, YEAR_MODE, yearRoutes, type MoneyTag } from '../../../edition';
+import type { MoneyTag } from '../../../edition';
 import type { ScreenProps } from '../../router';
-import { StubScreen } from '../../shell/stub-screen';
+import { MoneyHub } from './hub';
+import { ModeView } from './mode';
+import { YearsView } from './years';
+
+const TAGS: readonly MoneyTag[] = ['distribution', 'relief', 'pre-election'];
 
 export default function MoneyScreen({ route }: ScreenProps) {
   const view = route.view ?? 'hub';
-  const mode = view === 'hub' || view === 'years' ? null : moneyMode(view as MoneyTag);
-  const title = mode ? mode.title : view === 'years' ? YEAR_MODE.title : 'The money trail';
-  const titleHi = mode ? mode.titleDevanagari : view === 'years' ? YEAR_MODE.titleDevanagari : 'पैसे का हिसाब';
-  const lines = [...MONEY_MODES.map((m) => `${m.title}: ${moneyRoutes(m.tag).length} routes`), `${YEAR_MODE.title}: ${yearRoutes().length} routes`];
-  return (
-    <StubScreen route={route} title={title} titleHi={titleHi} spec="CHARTER §4a, §6" lane="files (port 5183)">
-      <p className="h-meta">{lines.join(' · ')} (routes appear as the money-trail lanes are registered).</p>
-    </StubScreen>
-  );
+  if (view === 'years') return <YearsView route={route} />;
+  const tag = TAGS.find((t) => t === view);
+  if (tag) return <ModeView key={tag} tag={tag} />;
+  return <MoneyHub />;
 }

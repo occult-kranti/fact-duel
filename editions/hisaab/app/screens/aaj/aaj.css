@@ -1,0 +1,157 @@
+/* screens/aaj/aaj.css — the Aaj Ka Hisaab finish (the card itself is route/card.css). */
+.h-aaj__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--h-s-6);
+  align-items: start;
+  min-width: 0;
+}
+.h-aaj__stamp {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--h-s-3);
+  min-width: 0;
+  padding: var(--h-s-4);
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-l);
+  background: var(--h-receipt);
+  box-shadow: var(--h-shadow-2);
+}
+/* The 2D THAPPA fills the scene box, so the stamp sits in its middle (the 3D scene takes the same box). */
+.h-aaj__stamp .h-thappa {
+  min-height: var(--h-scene-h, 96px);
+}
+.h-aaj__date {
+  display: flex;
+  align-items: center;
+  gap: var(--h-s-2);
+  margin: 0;
+  font-family: var(--h-font-mono);
+  font-size: var(--h-fs-xs);
+  font-weight: 700;
+  color: var(--h-ink-2);
+}
+.h-aaj__summary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-4);
+  min-width: 0;
+}
+.h-aaj__cells {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--h-s-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.h-aaj__cell {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-m);
+  box-shadow: var(--h-shadow-1);
+}
+.h-aaj__cell--pass {
+  background: var(--h-pass);
+  color: var(--h-pass-ink);
+}
+.h-aaj__cell--fail {
+  background: var(--h-fail-soft);
+  color: var(--h-fail-text);
+  background-image: repeating-linear-gradient(135deg, transparent 0 6px, var(--h-hair) 6px 8px);
+}
+.h-aaj__score {
+  margin: 0;
+  font-weight: var(--h-wght-ui-strong);
+  font-size: var(--h-fs-l);
+}
+.h-aaj__score .h-mono {
+  font-weight: 700;
+}
+.h-aaj__label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-1);
+  padding: var(--h-s-4);
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-l);
+  background: var(--h-paper);
+}
+.h-aaj__labelname {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  font-family: var(--h-font-display);
+  font-weight: var(--h-wght-display);
+}
+.h-aaj__labelhi {
+  font-size: var(--h-fs-l);
+  line-height: var(--h-lh-display-deva);
+  color: var(--h-syahi-text);
+  letter-spacing: 0;
+}
+.h-aaj__labelen {
+  font-size: var(--h-fs-2xl);
+  line-height: var(--h-lh-caps);
+  letter-spacing: var(--h-track-caps);
+  text-transform: uppercase;
+  overflow-wrap: break-word;
+}
+.h-aaj__aside {
+  font-family: var(--h-font-ui);
+  font-weight: var(--h-wght-ui);
+  font-size: var(--h-fs-xs);
+  letter-spacing: 0;
+  text-transform: none;
+}
+.h-aaj__line {
+  margin: 0;
+  color: var(--h-ink-2);
+}
+.h-aaj__facts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.h-aaj__facts li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--h-s-2);
+}
+.h-aaj__facts svg {
+  margin-top: 3px;
+}
+.h-aaj__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-3);
+}
+.h-aaj__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--h-s-2) var(--h-s-3);
+}
+@media (min-width: 900px) {
+  .h-aaj__grid {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: var(--h-s-8);
+  }
+  .h-aaj__stamp {
+    min-height: 320px;
+  }
+}
+
+/* The inline label card after the first receipt ever (bible §11.1): in place, never a ceremony. */
+.h-aaj__label {
+  margin-top: var(--h-s-4);
+}

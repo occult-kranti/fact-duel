@@ -1,10 +1,12 @@
 /**
- * screens/me/index.tsx — STUB (foundation lane). The me (port 5186) lane replaces this file.
- * Spec: docs/hisaab/design-bible.md §11.14. API: editions/hisaab/app/README.md.
+ * screens/me/index.tsx — the Me tab (design bible §11.14):
+ *   #/me              → Profile: the label ladder, stats, calibration, Stamp Register, Activity
+ *   #/me/certificate  → the Certificate of Labelling (one per rung held; ?band=n picks an earlier one)
  */
 import type { ScreenProps } from '../../router';
-import { StubScreen } from '../../shell/stub-screen';
+import { CertificateView } from './certificate-view';
+import { Profile } from './profile';
 
 export default function MeScreen({ route }: ScreenProps) {
-  return <StubScreen route={route} title="Me" titleHi="मैं" spec="bible §11.14" lane="me (port 5186)" />;
+  return route.view === 'certificate' ? <CertificateView route={route} /> : <Profile />;
 }

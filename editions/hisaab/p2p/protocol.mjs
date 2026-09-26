@@ -33,7 +33,8 @@ export const P2P_TRUST = Object.freeze({
   label: 'Casual · trust-based',
   body:
     "The host's browser runs the match and each browser reports its own reveal-to-answer time, so a " +
-    'modified browser could cheat. Fine between friends. No coins, no ranking; each device keeps its own record.',
+    'modified browser could cheat. Fine between friends. No coins and no Babu rank: a friend duel pays XP ' +
+    'on each device, and each device keeps its own record.',
 });
 
 /** Actions a guest may send. `create` and `add_bot` are the host's alone. */

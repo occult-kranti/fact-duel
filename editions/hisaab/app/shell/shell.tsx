@@ -105,7 +105,11 @@ export function Shell() {
   }, []);
 
   const Screen =
-    route.name === 'dev' ? DEV_SCREENS[route.view === 'ui' ? 'ui' : 'engine'] : route.name === 'not-found' ? null : SCREENS[route.name];
+    route.name === 'dev'
+      ? DEV_SCREENS[route.view === 'ui' || route.view === 'three' ? route.view : 'engine']
+      : route.name === 'not-found'
+        ? null
+        : SCREENS[route.name];
   const covered = !!ceremony;
   const showTop = chrome !== 'none';
   const showNav = chrome === 'full' && !covered;

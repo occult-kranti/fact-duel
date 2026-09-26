@@ -1,0 +1,69 @@
+/* screens/room/arena.css — the match frame and the "Leave the room?" dialog. Tokens only. */
+.h-arena {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+}
+.h-arena--pad {
+  padding: var(--h-s-8) var(--h-gutter);
+}
+.h-arena__error {
+  width: calc(100% - 2 * var(--h-gutter));
+  max-width: var(--h-col-play);
+  margin: 0 auto var(--h-s-4);
+  padding: var(--h-s-2) var(--h-s-3);
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-m);
+  background: var(--h-wait-soft);
+  font-size: var(--h-fs-xs);
+}
+
+/* ---- Leave the room? ------------------------------------------------------------------------------------- */
+.h-leave {
+  width: min(26rem, calc(100% - 2 * var(--h-gutter)));
+  max-width: none;
+  padding: var(--h-s-5);
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-xl);
+  background: var(--h-paper);
+  color: var(--h-ink);
+  box-shadow: var(--h-shadow-float);
+}
+.h-leave::backdrop {
+  background: var(--h-scrim);
+}
+.h-leave__title {
+  font-family: var(--h-font-display);
+  font-weight: var(--h-wght-display);
+  font-size: var(--h-fs-2xl);
+  line-height: var(--h-lh-caps);
+  letter-spacing: var(--h-track-caps);
+  text-transform: uppercase;
+}
+.h-leave__title:lang(hi),
+:root[lang='hi'] .h-leave__title {
+  line-height: var(--h-lh-display-deva);
+  letter-spacing: 0;
+  text-transform: none;
+}
+.h-leave__body {
+  margin-top: var(--h-s-3);
+  color: var(--h-ink-2);
+}
+.h-leave__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--h-s-3);
+  margin-top: var(--h-s-5);
+}
+
+/* #/room's screen box */
+.h-roomscreen {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}

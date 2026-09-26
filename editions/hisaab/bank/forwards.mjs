@@ -267,6 +267,11 @@ export const HISAAB_FORWARDS = Object.freeze([
       'https://www.boomlive.in/fact-check/madhya-pradesh-elections-kamal-nath-congress-to-cancel-laadli-behna-scheme-fact-check-23512',
     sourceLabel: "BOOM — Madhya Pradesh Polls: Video of Kamal Nath's Speech Viral With Fake Audio (3 Nov 2023)",
     sources: ['https://www.thequint.com/news/india/madhya-pradesh-police-registers-fir-deepfakes-pm-modi-kamal-nath'],
+    tags: ['pre-election'],
+    enactedBy: [{ name: 'Shivraj Singh Chouhan', role: 'Chief Minister, Madhya Pradesh (launched Ladli Behna, 2023)', party: 'BJP' }],
+    outcome:
+      'The fake clip spread before polling on 17 Nov 2023, while Ladli Behna paid ₹1,250 a month. The BJP won 163 of 230 seats when results came on 3 Dec 2023.',
+    poll: { label: 'Madhya Pradesh Assembly 2023', month: '2023-11', result: 'BJP won 163 of 230 seats' },
   },
   {
     id: 'hfw010',

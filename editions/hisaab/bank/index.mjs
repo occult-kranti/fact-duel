@@ -19,6 +19,18 @@ import { HISAAB_STATES_EAST } from './states-east.mjs';
 import { HISAAB_MEDIA } from './media.mjs';
 import { HISAAB_ELECTIONS } from './elections.mjs';
 import { HISAAB_FORWARDS } from './forwards.mjs';
+// The money trail, 2000–2026 (charter §4a): transfers, relief funds, before-the-vote measures.
+import { HISAAB_DIST_CENTRE } from './dist-centre.mjs';
+import { HISAAB_DIST_NORTH } from './dist-north.mjs';
+import { HISAAB_DIST_WEST_SOUTH } from './dist-west-south.mjs';
+import { HISAAB_DIST_EAST } from './dist-east.mjs';
+import { HISAAB_RELIEF_CENTRE } from './relief-centre.mjs';
+import { HISAAB_RELIEF_STATES } from './relief-states.mjs';
+import { HISAAB_POLL_UNION } from './poll-union.mjs';
+import { HISAAB_POLL_STATES } from './poll-states.mjs';
+import { HISAAB_GAPS_DIST } from './money-gaps-dist.mjs';
+import { HISAAB_GAPS_RELIEF } from './money-gaps-relief.mjs';
+import { HISAAB_GAPS_POLL } from './money-gaps-poll.mjs';
 
 export const LANES = Object.freeze({
   schemes: HISAAB_SCHEMES,
@@ -30,6 +42,17 @@ export const LANES = Object.freeze({
   media: HISAAB_MEDIA,
   elections: HISAAB_ELECTIONS,
   forwards: HISAAB_FORWARDS,
+  'dist-centre': HISAAB_DIST_CENTRE,
+  'dist-north': HISAAB_DIST_NORTH,
+  'dist-west-south': HISAAB_DIST_WEST_SOUTH,
+  'dist-east': HISAAB_DIST_EAST,
+  'relief-centre': HISAAB_RELIEF_CENTRE,
+  'relief-states': HISAAB_RELIEF_STATES,
+  'poll-union': HISAAB_POLL_UNION,
+  'poll-states': HISAAB_POLL_STATES,
+  'money-gaps-dist': HISAAB_GAPS_DIST,
+  'money-gaps-relief': HISAAB_GAPS_RELIEF,
+  'money-gaps-poll': HISAAB_GAPS_POLL,
 });
 
 export const BANK = Object.freeze(Object.values(LANES).flat());

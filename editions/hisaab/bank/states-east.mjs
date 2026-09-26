@@ -122,6 +122,7 @@ export const HISAAB_STATES_EAST = Object.freeze([
       'https://www.newindianexpress.com/states/west-bengal/2026/Mar/23/victory-with-record-margin-will-be-answer-to-conspiracy-behind-jailing-me-tmcs-jyotipriya-mallick',
       'https://theprint.in/india/ex-bengal-minister-jyotipriya-mallick-granted-bail-in-ration-case-tmc-hails-courts-decision/2446898/',
     ],
+    tags: ['distribution'],
   },
   {
     id: 'hst303',
@@ -261,6 +262,11 @@ export const HISAAB_STATES_EAST = Object.freeze([
       'https://www.thequint.com/news/bengal-cash-transfer-scheme-bjp-government-non-payment-women-woes',
       'https://www.theweek.in/news/india/2026/05/27/west-bengal-women-s-welfare-scheme-annapurna-bhandar-application-forms-out-here-s-who-will-benefit.html',
     ],
+    tags: ['distribution'],
+    enactedBy: [
+      { name: 'Suvendu Adhikari', role: 'Chief Minister, West Bengal', party: 'BJP' },
+      { name: 'Swapan Dasgupta', role: 'Finance Minister, West Bengal (presented the 2026-27 budget)', party: 'BJP' },
+    ],
   },
   {
     id: 'hst308',
@@ -328,6 +334,13 @@ export const HISAAB_STATES_EAST = Object.freeze([
     sourceUrl: 'https://www.newsonair.gov.in/pm-to-launch-odisha-govts-flagship-initiative-subhadra-scheme-in-bhubaneswar',
     sourceLabel: "All India Radio — PM launches Odisha government's flagship Subhadra scheme (17 Sep 2024)",
     sources: [PRS_OD_2627],
+    tags: ['distribution'],
+    enactedBy: [
+      { name: 'Narendra Modi', role: 'Prime Minister (launched it, 17 Sep 2024)', party: 'BJP' },
+      { name: 'Mohan Charan Majhi', role: 'Chief Minister, Odisha', party: 'BJP' },
+    ],
+    outcome:
+      'At the launch the PM set off a first transfer of Rs 1,250 crore to about 25 lakh women (AIR).',
   },
   {
     id: 'hst311',
@@ -400,6 +413,8 @@ export const HISAAB_STATES_EAST = Object.freeze([
     sourceUrl: PRS_OD_1920,
     sourceLabel: 'PRS Legislative Research — Odisha Budget Analysis 2019-20 (2019)',
     sources: [PRS_OD_2627],
+    tags: ['distribution'],
+    enactedBy: [{ name: 'Niranjan Pujari', role: 'Finance Minister, Odisha (presented the 2019-20 budget)', party: 'BJD' }],
   },
   {
     id: 'hst314',
@@ -560,6 +575,7 @@ export const HISAAB_STATES_EAST = Object.freeze([
       'It rose to Rs 1,000 in 2021 and Rs 1,250 in 2022. Beneficiaries grew from 17 lakh (2020-21) to 24 lakh (2024-25) and payouts from Rs 850 crore to Rs 3,680 crore. PRS puts 2025-26 spending at Rs 6,000 crore (revised) and the 2026-27 allocation at Rs 3,700 crore.',
     sourceUrl: PRS_AS_2627,
     sourceLabel: 'PRS Legislative Research — Assam Budget Analysis 2026-27 (2026)',
+    tags: ['distribution'],
   },
   {
     id: 'hst321',
@@ -582,6 +598,11 @@ export const HISAAB_STATES_EAST = Object.freeze([
     sourceUrl: PRS_AS_2627,
     sourceLabel: 'PRS Legislative Research — Assam Budget Analysis 2026-27 (2026)',
     sources: [AIR_RESULTS_2026],
+    tags: ['distribution', 'pre-election'],
+    enactedBy: [{ name: 'Himanta Biswa Sarma', role: 'Chief Minister, Assam', party: 'BJP' }],
+    outcome:
+      'About 40 lakh women got Rs 9,000 each on 10 Mar 2026, 30 days before Assam voted on 9 Apr; 2025-26 Orunodoi spending was revised to Rs 6,000 crore (PRS). The BJP won 82 of 126 seats as the NDA took a third straight term.',
+    poll: { label: 'Assam Assembly 2026', month: '2026-04', gapDays: 30, result: 'BJP won 82 of 126 seats; NDA third straight term' },
   },
   {
     id: 'hst322',
@@ -791,6 +812,7 @@ export const HISAAB_STATES_EAST = Object.freeze([
       "PRS: the state expects a further Rs 2,140 crore under this head in 2026-27, plus a Rs 2,250 crore gap-filling grant. The 2025-26 grant came while Manipur was under President's Rule (Feb 2025 to Feb 2026).",
     sourceUrl: PRS_MN_2627,
     sourceLabel: 'PRS Legislative Research — Manipur Budget Analysis 2026-27 (2026)',
+    tags: ['relief'],
   },
   {
     id: 'hst331',
@@ -1168,6 +1190,8 @@ export const HISAAB_STATES_EAST = Object.freeze([
       'It covers eligible non-working, unwed, widowed, divorced or separated mothers. Other SKM schemes include Bahini (free sanitary pads for secondary-school girls) and Vatsalaya (up to Rs 3 lakh for IVF treatment). Observers linked such schemes to the SKM sweep of 2024.',
     sourceUrl: NIE_SKM_2024,
     sourceLabel: 'The New Indian Express — Welfare schemes do wonders for SKM in Sikkim (2 Jun 2024)',
+    tags: ['distribution'],
+    enactedBy: [{ name: 'Prem Singh Tamang', role: 'Chief Minister, Sikkim', party: 'SKM' }],
   },
   {
     id: 'hst347',

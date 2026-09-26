@@ -18,6 +18,7 @@ import {
   type MoneyTag,
   type Route,
 } from '../../../edition';
+import { SECTOR_NAMES_HI } from '../../data';
 import { href } from '../../router';
 
 // ---- receipts (the tijori) ---------------------------------------------------------------------
@@ -134,6 +135,7 @@ export type QuestItem = {
   xp: number;
   done: boolean;
   topic?: string;
+  mode?: string;
 };
 
 /**
@@ -142,8 +144,10 @@ export type QuestItem = {
  */
 const QUEST_WORDS: Readonly<Record<string, { en: string; hi: string }>> = Object.freeze({
   'answer-3': { en: 'Answer 3 questions correctly', hi: '3 सवाल सही करो' },
-  'open-2': { en: 'Read 2 notings', hi: '2 नोटिंग पढ़ो' },
-  'save-2': { en: 'Keep 2 receipts in your Vault', hi: '2 रसीदें वॉल्ट में रखो' },
+  // Both count in the Vault only: 'open' is the engine's first open of a receipt there (receipts/index.tsx),
+  // 'save' is a receipt's "Keep a copy" button (receipts/detail.tsx).
+  'open-2': { en: 'Open 2 unopened receipts in the Vault', hi: 'वॉल्ट में 2 बिना खुली रसीदें खोलो' },
+  'save-2': { en: 'Keep a copy of 2 receipts', hi: '2 रसीदों की कॉपी रखो' },
   'discovery-1': { en: 'Answer one untimed card', hi: 'एक बिना टाइमर वाला कार्ड करो' },
   'play-1': { en: 'Play any duel', hi: 'कोई भी मुक़ाबला खेलो' },
   'expedition-cards-2': { en: 'Answer 2 file cards', hi: 'फ़ाइल के 2 कार्ड करो' },
@@ -163,7 +167,7 @@ const QUEST_WORDS: Readonly<Record<string, { en: string; hi: string }>> = Object
 /** Where a quest is done (a link from its row). */
 const QUEST_HREF: Readonly<Record<string, string>> = Object.freeze({
   'answer-3': href.aaj(),
-  'open-2': href.aaj(),
+  'open-2': href.receipts(),
   'save-2': href.receipts(),
   'discovery-1': href.aaj(),
   'play-1': href.duel(),
@@ -186,11 +190,29 @@ const QUEST_HREF: Readonly<Record<string, string>> = Object.freeze({
 /** The template id of an engine quest item (`<day>:<template>` when `template` is absent). */
 export const questTemplate = (q: QuestItem) => q.template ?? q.id.split(':').pop() ?? q.id;
 
-/** Display words (EN / HI) and destination for one quest. Topic and mode quests keep the engine's words. */
+const MODE_WORDS: Readonly<Record<string, string>> = Object.freeze({
+  quick: 'Quick Draw',
+  trilogy: 'Triple Threat',
+  gauntlet: 'The Gauntlet',
+});
+
+/**
+ * Display words (EN / HI) and destination for one quest. A topic quest names one of the 13 sectors
+ * ("Play a Health duel"); a mode quest names a duel format. Unknown templates keep the engine's words.
+ */
 export function questView(q: QuestItem): { en: string; hi: string; to: string } {
   const template = questTemplate(q);
+  const to = QUEST_HREF[template] ?? href.files();
+  if (template === 'topic-play' && q.topic) {
+    const hi = SECTOR_NAMES_HI[q.topic] ?? q.topic;
+    return { en: `Play a ${q.topic} duel`, hi: `${hi} पर एक मुक़ाबला खेलो`, to };
+  }
+  if (template === 'mode-play' && q.mode && MODE_WORDS[q.mode]) {
+    const mode = MODE_WORDS[q.mode];
+    return { en: `Play ${mode}`, hi: `${mode} खेलो`, to };
+  }
   const words = QUEST_WORDS[template];
-  return { en: words?.en ?? q.label, hi: words?.hi ?? q.label, to: QUEST_HREF[template] ?? href.files() };
+  return { en: words?.en ?? q.label, hi: words?.hi ?? q.label, to };
 }
 
 // ---- the entry points ------------------------------------------------------------------------------
@@ -201,8 +223,10 @@ export type Entry = {
   fno: string;
   title: string;
   titleHi: string;
-  /** Plain-English gloss. */
+  /** Plain-English gloss (Hinglish stays Latin in the English locale). */
   gloss: string;
+  /** The gloss in Devanagari, for the Hindi locale (drafts for the Hindi review). */
+  glossHi: string;
   to: string;
   /** Routes this entry opens onto (0 = none registered yet). */
   files: number;
@@ -226,6 +250,7 @@ export function recordsEntries(journeys: JourneysLike): Entry[] {
       title: 'Rajya Rounds',
       titleHi: 'राज्य राउंड्स',
       gloss: 'State by state',
+      glossHi: 'राज्य-दर-राज्य',
       to: href.files('states'),
       ...count(journeys, routesOfKind('state')),
     },
@@ -235,6 +260,7 @@ export function recordsEntries(journeys: JourneysLike): Entry[] {
       title: 'Sector Files',
       titleHi: 'सेक्टर फ़ाइलें',
       gloss: 'Kisko mila, kitna mila',
+      glossHi: 'किसको मिला, कितना मिला',
       to: href.files('sectors'),
       ...count(journeys, routesOfKind('sector')),
     },
@@ -244,6 +270,7 @@ export function recordsEntries(journeys: JourneysLike): Entry[] {
       title: 'Kiska Media?',
       titleHi: 'किसका मीडिया?',
       gloss: 'Who owns the news',
+      glossHi: 'ख़बर किसकी है',
       to: href.files('media'),
       ...count(journeys, routesOfKind('media')),
     },
@@ -253,6 +280,7 @@ export function recordsEntries(journeys: JourneysLike): Entry[] {
       title: 'Forward Court',
       titleHi: 'फ़ॉरवर्ड अदालत',
       gloss: 'Viral claims, ruled on',
+      glossHi: 'वायरल दावे, फ़ैसले के साथ',
       to: href.files('forwards'),
       ...count(journeys, routesOfKind('forward')),
     },
@@ -270,6 +298,12 @@ const MONEY_GLOSS: Readonly<Record<MoneyTag, string>> = Object.freeze({
   'pre-election': 'Months before a vote',
 });
 
+const MONEY_GLOSS_HI: Readonly<Record<MoneyTag, string>> = Object.freeze({
+  distribution: 'नक़द और सीधी मदद',
+  relief: 'राहत और आपदा का पैसा',
+  'pre-election': 'वोट से पहले के महीने',
+});
+
 /** The money trail, 2000–2026 (charter §4a, §6): three tag modes + Saal-dar-Saal. */
 export function moneyEntries(journeys: JourneysLike): Entry[] {
   const years = yearRoutes();
@@ -282,6 +316,7 @@ export function moneyEntries(journeys: JourneysLike): Entry[] {
       title: m.title,
       titleHi: m.titleDevanagari,
       gloss: MONEY_GLOSS[m.tag],
+      glossHi: MONEY_GLOSS_HI[m.tag],
       to: href.money(m.tag),
       ...count(journeys, moneyRoutes(m.tag)),
     })),
@@ -291,6 +326,7 @@ export function moneyEntries(journeys: JourneysLike): Entry[] {
       title: YEAR_MODE.title,
       titleHi: YEAR_MODE.titleDevanagari,
       gloss: YEAR_MODE.gloss,
+      glossHi: 'हर साल की अलग फ़ाइल',
       to: href.money('years'),
       span,
       ...count(journeys, years),

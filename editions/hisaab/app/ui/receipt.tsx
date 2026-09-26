@@ -3,16 +3,26 @@
  *
  *   <Receipt item={itemById(card.factId)} receiptNo={215} xp={32} xpNote="base 20 · fast +15" printing />
  *
- * Rows, in this order: RECEIPT # · XP / SOURCE (label + ↗, source-type chip) / STATUS (the legal
- * status VERBATIM in the neutral legal block + "as of") / OTHER SIDE / GOVT THEN (neutral chip) — then,
- * for money-trail items, ENACTED BY (name · role · party) and RESULT (outcome + the poll line).
- * Nothing funny happens inside a receipt: every row is plain and exact.
+ * Rows, in this order: RECEIPT # · XP (with the item's F.No. under it) / SOURCE (label + ↗,
+ * source-type chip) / STATUS (the legal status VERBATIM in the neutral legal block + "as of") / OTHER
+ * SIDE / GOVT THEN (neutral chip) — then, for money-trail items, ENACTED BY (name · role · party) and
+ * RESULT (outcome + the poll line). Nothing funny happens inside a receipt: every row is plain and exact.
+ *
+ * The corrections route (bible §11.17): with an `item`, the receipt prints its F.No. (the id readers
+ * cite) and closes with "Report an error" → the Rules page's report form, pre-filled with that id, in
+ * a new tab (so a duel between rounds, a P2P room or a file in progress is not left behind).
+ * A screen that already offers its own report action beside the receipt passes `report={false}`.
+ *
+ * Bank text stays English in the Hindi locale (bible §2.3), so the slip's rows are lang="en" (WCAG
+ * 3.1.2); the as-of date inside them carries the reader's lang, and the report link is in the page's.
  */
 import type { ReactNode } from 'react';
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink, Flag } from 'lucide-react';
 import { enactedLine, formatNumber, pollLine, sourceKind, type BankItem } from '../data';
+import { href, queryString } from '../router';
 import { GovtChip, LegalStatus, SourceChip } from './chip';
 import { cx } from './cx';
+import { useLang } from './lang';
 import './receipt.css';
 
 export type ReceiptProps = {
@@ -35,8 +45,16 @@ export type ReceiptProps = {
   extra?: ReadonlyArray<readonly [string, ReactNode]>;
   /** Heading for screen readers (default "Receipt"). */
   label?: string;
+  /** "Report an error" at the foot (default: on whenever `item` is set). */
+  report?: boolean;
   className?: string;
 };
+
+/** The Rules page's report form, pre-filled with a bank item's id (bible §11.17). */
+export const reportErrorHref = (id: string) => `${href.rules()}${queryString({ s: 'report', id })}`;
+
+/** The F.No. a reader cites for a bank item: 'F.No. HSC001'. */
+export const itemFileNo = (id: string) => `F.No. ${id.toUpperCase()}`;
 
 function Row({ k, children, inline }: { k: ReactNode; children: ReactNode; inline?: boolean }) {
   return (
@@ -49,14 +67,30 @@ function Row({ k, children, inline }: { k: ReactNode; children: ReactNode; inlin
 
 export const receiptNumber = (n: number | string) => (typeof n === 'number' ? `#${String(Math.max(0, Math.floor(n))).padStart(4, '0')}` : n);
 
-export function Receipt({ item, receiptNo, xp, xpNote, otherSide, printing, extra, label = 'Receipt', className }: ReceiptProps) {
+export function Receipt({ item, receiptNo, xp, xpNote, otherSide, printing, extra, label = 'Receipt', report, className }: ReceiptProps) {
+  const { t } = useLang();
   const poll = pollLine(item);
+  const fno = item?.id ? itemFileNo(item.id) : null;
+  const numbered = receiptNo !== undefined || xp !== undefined;
+  const showReport = (report ?? true) && !!item?.id;
   return (
     <section className={cx('h-receipt', printing && 'h-receipt--printing', className)} aria-label={label}>
-      <dl className="h-receipt__rows">
-        {receiptNo !== undefined || xp !== undefined ? (
-          <Row inline k={receiptNo !== undefined ? `RECEIPT ${receiptNumber(receiptNo)}` : 'RECEIPT'}>
+      <dl className="h-receipt__rows" lang="en">
+        {numbered ? (
+          <Row
+            inline
+            k={
+              <>
+                {receiptNo !== undefined ? `RECEIPT ${receiptNumber(receiptNo)}` : 'RECEIPT'}
+                {fno ? <span className="h-receipt__fno">{fno}</span> : null}
+              </>
+            }
+          >
             {xp !== undefined ? <span className="h-receipt__xp">{`${xp >= 0 ? '+' : '−'}${formatNumber(Math.abs(xp))} XP`}</span> : '—'}
+          </Row>
+        ) : fno ? (
+          <Row inline k="F.No.">
+            <span className="h-receipt__fnov">{item!.id.toUpperCase()}</span>
           </Row>
         ) : null}
         {xpNote ? (
@@ -109,6 +143,19 @@ export function Receipt({ item, receiptNo, xp, xpNote, otherSide, printing, extr
           </Row>
         ))}
       </dl>
+      {showReport ? (
+        <p className="h-receipt__foot">
+          {/* A new tab: a duel between rounds, a P2P room or a file in progress stays where it was. */}
+          <a className="h-receipt__report" href={reportErrorHref(item!.id)} target="_blank" rel="noopener">
+            <Flag aria-hidden="true" size={16} strokeWidth={2.4} />
+            <span>{t('Report an error', 'ग़लती बताओ')}</span>
+            <span className="h-sr">
+              {' '}
+              <span lang="en">{fno}</span> {t('(opens in a new tab)', '(नए टैब में)')}
+            </span>
+          </a>
+        </p>
+      ) : null}
     </section>
   );
 }

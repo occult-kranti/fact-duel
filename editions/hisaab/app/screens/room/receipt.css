@@ -1,0 +1,185 @@
+/*
+ * screens/room/receipt.css — the round receipt between rounds (bible §11.11). Phone: one column,
+ * answers → stamp → receipt → noting, a sticky action bar. ≥ 900px: answers left | receipt right.
+ */
+.h-rreceipt {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.h-rreceipt__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--h-s-6);
+  width: 100%;
+  max-width: var(--h-maxw);
+  margin-inline: auto;
+  padding: var(--h-s-5) var(--h-gutter) var(--h-s-6);
+}
+.h-rreceipt__answers,
+.h-rreceipt__evidence {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-4);
+  min-width: 0;
+}
+.h-rreceipt__kicker {
+  font-family: var(--h-font-mono);
+  font-size: var(--h-fs-2xs);
+  font-weight: 700;
+  letter-spacing: var(--h-track-kicker);
+  text-transform: uppercase;
+  color: var(--h-ink-2);
+  overflow-wrap: anywhere;
+}
+:root[lang='hi'] .h-rreceipt__kicker {
+  font-family: var(--h-font-ui);
+  font-size: var(--h-fs-xs);
+  letter-spacing: 0;
+  text-transform: none;
+}
+.h-rreceipt__stem {
+  font-weight: var(--h-wght-ui-strong);
+  font-size: var(--h-fs-l);
+  line-height: 1.35;
+  overflow-wrap: break-word;
+}
+
+/* who picked what */
+.h-rreceipt__seats {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-2);
+  margin: 0;
+  padding: var(--h-s-3);
+  border: var(--h-bw) dashed var(--h-line);
+  border-radius: var(--h-r-m);
+  background: var(--h-paper);
+  list-style: none;
+}
+.h-seatline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--h-s-1) var(--h-s-2);
+  font-size: var(--h-fs-xs);
+}
+.h-seatline__name {
+  font-weight: var(--h-wght-ui-strong);
+  overflow-wrap: anywhere;
+}
+.h-seatline__name::after {
+  content: ':';
+}
+.h-seatline__v {
+  font-weight: var(--h-wght-ui-strong);
+}
+.h-seatline__v--pass {
+  color: var(--h-pass-text);
+}
+.h-seatline__v--fail {
+  color: var(--h-fail-text);
+}
+.h-seatline__v--wait {
+  color: var(--h-wait-text);
+}
+.h-seatline__ms {
+  color: var(--h-ink-2);
+}
+.h-seatline__note {
+  color: var(--h-ink-2);
+}
+.h-pick {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 0 6px;
+  border: var(--h-bw-thin) solid var(--h-line);
+  border-radius: var(--h-r-xs);
+  background: var(--h-ground-2);
+  font-family: var(--h-font-mono);
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+/* verdict: stamp + copy + the true round line */
+.h-rreceipt__verdict {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--h-s-3);
+}
+.h-rreceipt__stage {
+  padding: var(--h-s-2) var(--h-s-2) var(--h-s-1);
+}
+.h-rreceipt__copy {
+  font-size: var(--h-fs-m);
+  font-weight: var(--h-wght-ui-strong);
+}
+.h-rreceipt__line {
+  font-size: var(--h-fs-s);
+  color: var(--h-ink-2);
+}
+.h-rreceipt__audits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--h-s-2);
+}
+/* Surprise Audit: the brass chip (bible §2.1) — its words and icon carry it, not the colour. */
+.h-chip.h-audit {
+  border-color: var(--h-line);
+  background: var(--h-brass);
+  color: var(--h-brass-ink);
+}
+.h-rreceipt__src {
+  font-size: var(--h-fs-xs);
+}
+
+/* the action bar: sticky at the bottom (a room has no nav) */
+.h-rreceipt__bar {
+  position: sticky;
+  bottom: 0;
+  z-index: var(--h-z-sticky);
+  margin-top: auto;
+  padding: var(--h-s-3) max(var(--h-gutter), env(safe-area-inset-right, 0px))
+    calc(var(--h-s-3) + env(safe-area-inset-bottom, 0px)) max(var(--h-gutter), env(safe-area-inset-left, 0px));
+  border-top: var(--h-bw) solid var(--h-line);
+  background: var(--h-ground);
+}
+.h-rreceipt__barin {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-2);
+  width: 100%;
+  max-width: var(--h-maxw);
+  margin-inline: auto;
+}
+.h-rreceipt__ready {
+  font-size: var(--h-fs-xs);
+  font-weight: var(--h-wght-ui-strong);
+  color: var(--h-ink-2);
+}
+.h-rreceipt__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--h-s-3);
+}
+.h-rreceipt__actions .h-btn--primary {
+  flex: 1 1 8rem;
+}
+
+@media (min-width: 900px) {
+  .h-rreceipt__grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--h-s-10);
+    padding-top: var(--h-s-8);
+    align-items: start;
+  }
+  .h-rreceipt__actions .h-btn--primary {
+    flex: 0 1 auto;
+    min-width: 16rem;
+  }
+}

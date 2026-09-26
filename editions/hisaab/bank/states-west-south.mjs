@@ -124,6 +124,8 @@ export const HISAAB_STATES_WEST_SOUTH = Object.freeze([
     explanation: "The BJP government’s scheme spreads ₹50,000 across Classes 9 to 12 to keep girls in secondary school. By July 2025 the state said it had disbursed ₹924 crore to more than 10 lakh girl students.",
     sourceUrl: "https://www.thehindu.com/news/national/gujarat/gujarats-namo-lakshmi-yojana-disburses-924-crore-benefits-over-10-lakh-girl-students/article69796544.ece",
     sourceLabel: "The Hindu — Gujarat’s ‘Namo Lakshmi Yojana’ disburses ₹924 crore, benefits over 10 lakh girl students (11 Jul 2025)",
+    tags: ["distribution"],
+    enactedBy: [{ name: "Bhupendra Patel", role: "Chief Minister, Gujarat", party: "BJP" }],
   },
   {
     id: "hst205",
@@ -192,6 +194,14 @@ export const HISAAB_STATES_WEST_SOUTH = Object.freeze([
     sources: [
       "https://scroll.in/latest/1095195/maharashtra-paid-rs-9605-crore-to-ineligible-beneficiaries-of-ladki-bahin-scheme-report",
     ],
+    tags: ["distribution", "pre-election"],
+    enactedBy: [
+      { name: "Eknath Shinde", role: "Chief Minister, Maharashtra", party: "Shiv Sena" },
+      { name: "Ajit Pawar", role: "Deputy CM and Finance Minister, Maharashtra (budget of 28 Jun 2024)", party: "NCP" },
+    ],
+    outcome:
+      "Announced in the 28 Jun 2024 budget, 145 days before Maharashtra voted on 20 Nov; the Mahayuti won 230 of 288 seats. RTI data later showed ₹76,261 crore spent in two years, including ₹9,605 crore paid to beneficiaries found ineligible (Scroll).",
+    poll: { label: "Maharashtra Assembly 2024", month: "2024-11", gapDays: 145, result: "BJP-led Mahayuti won 230 of 288 seats; BJP 132" },
   },
   {
     id: "hst208",
@@ -214,6 +224,7 @@ export const HISAAB_STATES_WEST_SOUTH = Object.freeze([
     sources: [
       "https://scroll.in/latest/1095195/maharashtra-paid-rs-9605-crore-to-ineligible-beneficiaries-of-ladki-bahin-scheme-report",
     ],
+    tags: ["distribution"],
   },
   {
     id: "hst209",
@@ -315,6 +326,7 @@ export const HISAAB_STATES_WEST_SOUTH = Object.freeze([
     sources: [
       "https://lawtrend.in/bombay-high-court-grants-bail-to-sujit-patkar-in-covid-19-jumbo-centre-scam/",
     ],
+    tags: ["relief"],
   },
   {
     id: "hst213",
@@ -459,6 +471,8 @@ export const HISAAB_STATES_WEST_SOUTH = Object.freeze([
     sources: [
       "https://timesofindia.indiatimes.com/city/goa/50k-griha-aadhar-recipients-risk-removal-without-docus/articleshow/130723570.cms",
     ],
+    tags: ["distribution"],
+    enactedBy: [{ name: "Pramod Sawant", role: "Chief Minister, Goa", party: "BJP" }],
   },
   {
     id: "hst219",
@@ -499,6 +513,12 @@ export const HISAAB_STATES_WEST_SOUTH = Object.freeze([
     sourceLabel: "PRS Legislative Research — Madhya Pradesh Budget Analysis 2026-27 (2026)",
     sources: [
       "https://www.aninews.in/news/national/general-news/mp-cm-mohan-yadav-to-transfer-rs-1500-ladli-behna-installment-additional-rs-250-as-raksha-bandhan-gift-today20260819130847",
+    ],
+    tags: ["distribution"],
+    enactedBy: [
+      { name: "Shivraj Singh Chouhan", role: "Chief Minister, Madhya Pradesh (launched it in 2023)", party: "BJP" },
+      { name: "Jagdish Devda", role: "Deputy CM, Madhya Pradesh (presented the 2026-27 budget)", party: "BJP" },
+      { name: "Mohan Yadav", role: "Chief Minister, Madhya Pradesh", party: "BJP" },
     ],
   },
   {
@@ -711,6 +731,10 @@ export const HISAAB_STATES_WEST_SOUTH = Object.freeze([
     sources: [
       "https://www.aninews.in/news/national/general-news/chhattisgarh-cm-vishnu-deo-sai-to-transfer-rs-64134-crore-to-6847-lakh-women-across-the-state20260130051453",
     ],
+    tags: ["distribution"],
+    enactedBy: [{ name: "Narendra Modi", role: "Prime Minister (launched it and paid the first instalment)", party: "BJP" }],
+    outcome:
+      "The PM launched it in March 2024 with a first instalment of ₹655 crore in all, paid by DBT (PIB).",
   },
   {
     id: "hst230",
@@ -730,6 +754,8 @@ export const HISAAB_STATES_WEST_SOUTH = Object.freeze([
     explanation: "The Congress government’s 2020 flagship bought dung to make organic fertiliser. From Hareli 2022 it added urine, procured by gauthan committees and self-help groups, to make a pesticide and a liquid fertiliser.",
     sourceUrl: "https://indianexpress.com/article/india/chhattisgarh-baghel-government-buying-cow-urine-make-pesticide-fertiliser-8056924/",
     sourceLabel: "The Indian Express — Chhattisgarh: Baghel government starts buying cow urine at Rs 4 a litre (28 Jul 2022)",
+    tags: ["distribution"],
+    enactedBy: [{ name: "Bhupesh Baghel", role: "Chief Minister, Chhattisgarh", party: "INC" }],
   },
   {
     id: "hst231",
@@ -777,6 +803,8 @@ export const HISAAB_STATES_WEST_SOUTH = Object.freeze([
     explanation: "PRS puts the three items at about 17% of revenue receipts in 2026-27. The 16th Finance Commission noted the state’s debt rose from 11.5% of GSDP in 2011-12 to 24.7% in 2023-24; PRS projects outstanding liabilities at 21.4% of GSDP at the end of 2026-27.",
     sourceUrl: "https://prsindia.org/budgets/states/chhattisgarh-budget-analysis-2026-27",
     sourceLabel: "PRS Legislative Research — Chhattisgarh Budget Analysis 2026-27 (2026)",
+    tags: ["distribution"],
+    enactedBy: [{ name: "O.P. Choudhary", role: "Finance Minister, Chhattisgarh (presented the 2026-27 budget)", party: "BJP" }],
   },
   {
     id: "hst233",
@@ -903,6 +931,8 @@ export const HISAAB_STATES_WEST_SOUTH = Object.freeze([
     explanation: "That is about 12% of total spending excluding debt repayment, down from 14% (₹51,034 crore) in 2025-26. The CAG (2025) said the guarantees raised revenue expenditure and the revenue deficit.",
     sourceUrl: "https://prsindia.org/budgets/states/karnataka-budget-analysis-2026-27",
     sourceLabel: "PRS Legislative Research — Karnataka Budget Analysis 2026-27 (2026)",
+    tags: ["distribution"],
+    enactedBy: [{ name: "Siddaramaiah", role: "Chief Minister, Karnataka (presented the 2026-27 budget)", party: "INC" }],
   },
   {
     id: "hst238",
@@ -927,6 +957,8 @@ export const HISAAB_STATES_WEST_SOUTH = Object.freeze([
     explanation: "The CAG’s State Finances Audit (Report No. 4 of 2025), cited by PRS, said higher allocations to the guarantees cut infrastructure spending by ₹5,229 crore from the previous year and that the schemes were partly financed with borrowing. The fiscal deficit rose from 2.14% of GSDP in 2022-23 to 2.97% in 2024-25.",
     sourceUrl: "https://prsindia.org/budgets/states/karnataka-budget-analysis-2026-27",
     sourceLabel: "PRS Legislative Research — Karnataka Budget Analysis 2026-27, citing CAG Report No. 4 of 2025 (2026)",
+    tags: ["distribution"],
+    enactedBy: [{ name: "Siddaramaiah", role: "Chief Minister, Karnataka", party: "INC" }],
   },
   {
     id: "hst239",
@@ -1084,6 +1116,8 @@ export const HISAAB_STATES_WEST_SOUTH = Object.freeze([
     explanation: "PRS’s summary of the 2026-27 budget, presented on 19 June 2026, lists the scheme’s ₹25-lakh cover for all families; the budget also raised the rubber support price from ₹200 to ₹250 a kg. Kerala targets a fiscal deficit of 3.5% of GSDP.",
     sourceUrl: "https://prsindia.org/budgets/states/kerala-budget-analysis-2026-27",
     sourceLabel: "PRS Legislative Research — Kerala Budget Analysis 2026-27 (2026)",
+    tags: ["distribution"],
+    enactedBy: [{ name: "V. D. Satheesan", role: "Chief Minister, Kerala (presented the 2026-27 budget)", party: "INC" }],
   },
   {
     id: "hst245",
@@ -1186,6 +1220,11 @@ export const HISAAB_STATES_WEST_SOUTH = Object.freeze([
     explanation: "The scheme normally pays ₹1,000 a month; the payout included a ₹2,000 ‘special summer assistance’. The AIADMK leader of opposition said it showed ‘fear of election defeat’ and noted the DMK had taken 28 months after coming to power to start the ₹1,000 transfers.",
     sourceUrl: "https://www.thehindu.com/news/national/tamil-nadu/opposition-parties-slam-tamil-nadu-cm-stalin-5000-payout-to-women-under-kalaignar-magalir-urimai-thogai-scheme/article70627629.ece",
     sourceLabel: "The Hindu — Opposition parties slam Tamil Nadu CM Stalin’s ₹5,000 payout to women under Kalaignar Magalir Urimai scheme (13 Feb 2026)",
+    tags: ["distribution", "pre-election"],
+    enactedBy: [{ name: "M.K. Stalin", role: "Chief Minister, Tamil Nadu", party: "DMK" }],
+    outcome:
+      "Announced by mid-February 2026 for 1.31 crore women; Tamil Nadu voted on 23 Apr 2026. The debutant TVK emerged as the largest party with 108 of 234 seats; the DMK won 59 and the AIADMK 47 (ECI).",
+    poll: { label: "Tamil Nadu Assembly 2026", month: "2026-04", result: "TVK won 108 of 234; DMK 59; AIADMK 47 (ECI)" },
   },
   {
     id: "hst249",
@@ -1210,6 +1249,8 @@ export const HISAAB_STATES_WEST_SOUTH = Object.freeze([
     sources: [
       "https://www.newindianexpress.com/states/tamil-nadu/2026/Jun/16/cm-breakfast-scheme-expanded-up-to-class-8-in-tamil-nadu",
     ],
+    tags: ["distribution"],
+    enactedBy: [{ name: "M.K. Stalin", role: "Chief Minister, Tamil Nadu", party: "DMK" }],
   },
   {
     id: "hst250",
@@ -1229,6 +1270,8 @@ export const HISAAB_STATES_WEST_SOUTH = Object.freeze([
     explanation: "Launched in Feb 2013, the canteens were then turning out about 45 lakh idlis a day for breakfast. When the rival DMK came to power in 2021 it kept the scheme and its name, and announced 200 more canteens in semi-urban areas, Down To Earth reported.",
     sourceUrl: "https://www.downtoearth.org.in/governance/how-tamil-nadu-s-amma-canteen-scheme-stood-the-test-of-time-77776",
     sourceLabel: "Down To Earth — How Tamil Nadu’s Amma Canteen scheme stood the test of time (5 Jul 2021)",
+    tags: ["distribution"],
+    enactedBy: [{ name: "J. Jayalalithaa", role: "Chief Minister, Tamil Nadu (launched it, Feb 2013)", party: "AIADMK" }],
   },
   {
     id: "hst251",
@@ -1396,6 +1439,7 @@ export const HISAAB_STATES_WEST_SOUTH = Object.freeze([
     explanation: "The allocation covers nearly 62 lakh beneficiaries. For pensioners aged 60–79 under the central old-age scheme, the Centre pays ₹200 into bank accounts and the state ₹3,800 in cash at the doorstep.",
     sourceUrl: "https://www.newindianexpress.com/states/andhra-pradesh/2026/Sep/23/rs-33485-crore-for-ntr-bharosa-pensions-in-2026-27-minister-kondapalli-srinivas",
     sourceLabel: "The New Indian Express — Rs 33,485 crore for NTR Bharosa pensions in 2026-27 (23 Sep 2026)",
+    tags: ["distribution"],
   },
   {
     id: "hst258",
@@ -1418,6 +1462,11 @@ export const HISAAB_STATES_WEST_SOUTH = Object.freeze([
     sources: [
       "https://m.economictimes.com/news/india/andhra-naidu-talliki-vandanam-rs-8745-crore-benefit-mothers-schoolchildren/articleshow/121778604.cms",
     ],
+    tags: ["distribution", "pre-election"],
+    enactedBy: [{ name: "N. Chandrababu Naidu", role: "Chief Minister, Andhra Pradesh", party: "TDP" }],
+    outcome:
+      "A ‘Super Six’ promise of the TDP–Jana Sena–BJP alliance for the 13 May 2024 poll, which it swept (TDP 135, Jana Sena 21, BJP 8 of 175). The first roll-out, from 12 June 2025, was to send ₹8,745 crore to nearly 67 lakh mothers.",
+    poll: { label: "Andhra Pradesh Assembly 2024", month: "2024-05", result: "TDP 135, Jana Sena 21, BJP 8 of 175; YSRCP 11" },
   },
   {
     id: "hst259",
@@ -1543,6 +1592,8 @@ export const HISAAB_STATES_WEST_SOUTH = Object.freeze([
     sourceUrl: "https://www.thehindubusinessline.com/economy/agri-business/telangana-farmers-to-receive-rs-12000-per-acre-annually-under-rythu-bharosa-scheme/article69063900.ece",
     sourceLabel: "BusinessLine (ANI) — Telangana farmers to receive ₹12,000 per acre annually under Rythu Bharosa scheme (5 Jan 2025)",
     sources: ["https://prsindia.org/budgets/states/telangana-budget-analysis-2026-27"],
+    tags: ["distribution"],
+    enactedBy: [{ name: "A. Revanth Reddy", role: "Chief Minister, Telangana", party: "INC" }],
   },
   {
     id: "hst264",
@@ -1586,5 +1637,7 @@ export const HISAAB_STATES_WEST_SOUTH = Object.freeze([
     explanation: "About 85% goes to Rythu Bharosa (₹18,000 crore), Cheyutha pensions (₹14,861 crore), Indiramma houses (₹5,500 crore) and the Mahalaxmi scheme (₹4,305 crore). The guarantees take 21% of revenue receipts, down from 24% in 2025-26; outstanding liabilities are projected at 28.7% of GSDP.",
     sourceUrl: "https://prsindia.org/budgets/states/telangana-budget-analysis-2026-27",
     sourceLabel: "PRS Legislative Research — Telangana Budget Analysis 2026-27 (2026)",
+    tags: ["distribution"],
+    enactedBy: [{ name: "Bhatti Vikramarka Mallu", role: "Deputy CM, Telangana (presented the 2026-27 budget)", party: "INC" }],
   },
 ]);

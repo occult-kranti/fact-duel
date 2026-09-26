@@ -22,7 +22,7 @@ import {
 } from 'lucide-react';
 import { useJuice } from '@/components/fx';
 import { routesOfKind, type Route } from '../../../edition';
-import { SECTOR_LIST, SECTOR_NAMES_HI, stateName, BANK_ITEMS } from '../../data';
+import { SECTOR_LIST, SECTOR_NAMES_HI, BANK_ITEMS } from '../../data';
 import { href, Link, navigate, type AppRoute } from '../../router';
 import { useScreenTitle } from '../../shell/chrome';
 import { Button } from '../../ui/button';
@@ -31,9 +31,8 @@ import { useLang } from '../../ui/lang';
 import { Meter } from '../../ui/meter';
 import { Page, ScreenHeader } from '../../ui/page';
 import { Skeleton } from '../../ui/skeleton';
-import { Stamp } from '../../ui/stamp';
-import { Tape } from '../../ui/tape';
-import { bestText, CARDS, fileNo, fileStatus, nextUnfinished, openWords, revealIfHidden, routeItems, statusWords, useMedia, usePlayerFiles, type FileStatus } from './lib';
+import { bestText, CARDS, fileNo, fileStatus, nextUnfinished, openWords, revealIfHidden, statusWords, useMedia, usePlayerFiles, type FileStatus } from './lib';
+import { FileCover } from './cover';
 import { FilesTabs } from './tabs';
 import '../../ui/file-card.css';
 import './sectors.css';
@@ -54,6 +53,23 @@ const ICONS: Readonly<Record<string, ReactNode>> = {
   'Governance & Institutions': <Building2 size={24} strokeWidth={2.2} />,
   'Jobs & Economy': <Briefcase size={24} strokeWidth={2.2} />,
   'Environment & Land': <Mountain size={24} strokeWidth={2.2} />,
+};
+
+/** The same lines in Devanagari for the Hindi locale (draft — a Hindi reader reviews). */
+const QUIPS_HI: Readonly<Record<string, string>> = {
+  'Welfare & Subsidies': 'किसको मिला, कितना मिला।',
+  'Farm & Food': 'खेत से थाली तक, हिसाब किसका।',
+  Health: 'इलाज का बिल, भरा किसने।',
+  'Education & Exams': 'पेपर से रिज़ल्ट तक, फ़ाइल कहाँ।',
+  Infrastructure: 'पुल, सड़क, और उनका बिल।',
+  'Banking & Finance': 'लोन लिया किसने, चुकाया किसने।',
+  'Energy & Mining': 'कोयला, बिजली, और आवंटन।',
+  'Defence & Security': 'सौदा किसका, फ़ाइल कहाँ।',
+  'Elections & Funding': 'चंदा आया कहाँ से।',
+  'Media & Speech': 'चैनल किसका, पैसा किसका।',
+  'Governance & Institutions': 'फ़ाइल किसने रोकी, किसने चलाई।',
+  'Jobs & Economy': 'नौकरी के आँकड़े, किसके पास।',
+  'Environment & Land': 'ज़मीन किसकी, जंगल किसका।',
 };
 
 /** One deadpan Hinglish line per sector (Latin script). Questions, never accusations. */
@@ -149,7 +165,7 @@ export function SectorsView({ route }: { route: AppRoute }) {
             {t('files cleared', 'फ़ाइलें क्लियर')}
           </>
         ) : (
-          'Koi file clear nahi. Abhi tak.'
+          t('Koi file clear nahi. Abhi tak.', 'कोई फ़ाइल क्लियर नहीं। अभी तक।')
         )}
       </p>
 
@@ -193,52 +209,23 @@ function FolderButton({ folder, selected, expanded, wide, onChoose }: { folder: 
   const { t, isHi } = useLang();
   const { route: r, status, sector } = folder;
   if (!r) return null;
-  const hi = SECTOR_NAMES_HI[sector];
   const isMedia = sector === MEDIA;
   return (
-    <button
-      type="button"
-      className={cx('h-file', `h-file--${status.state === 'progress' ? 'open' : status.state}`, 'h-file--action', 'h-sect__file')}
-      aria-expanded={wide ? undefined : expanded}
-      aria-pressed={wide ? selected : undefined}
-      aria-controls={wide ? 'h-sect-brief' : undefined}
+    <FileCover
+      className="h-sect__file"
+      fno={fileNo(r)}
+      icon={ICONS[sector]}
+      titleHi={SECTOR_NAMES_HI[sector]}
+      title={isMedia ? (isHi ? 'किसका मीडिया?' : 'Kiska Media?') : sector}
+      meta={`${isMedia ? `${t('Media & Speech', 'मीडिया और अभिव्यक्ति')} · ` : ''}${CARDS} ${t('cards', 'कार्ड')} · ${r.poolSize} ${t('on file', 'फ़ाइल में')}${status.best ? ` · ${bestText(status.best)}` : ''}`}
+      state={status.state === 'progress' ? 'open' : status.state}
+      seed={r.id}
+      progress={status.running ? { value: status.done, max: CARDS, ticks: CARDS, label: t(`${status.done} of ${CARDS} answered`, `${status.done}/${CARDS} जवाब`) } : undefined}
+      expanded={wide ? undefined : expanded}
+      pressed={wide ? selected : undefined}
+      controls={wide ? 'h-sect-brief' : undefined}
       onClick={onChoose}
-    >
-      <span className="h-file__tab">{fileNo(r)}</span>
-      <span className="h-file__head">
-        <span className="h-file__icon" aria-hidden="true">
-          {ICONS[sector]}
-        </span>
-        <span className="h-file__titles">
-          {hi ? (
-            <span className="h-file__titlehi" lang="hi">
-              {hi}
-            </span>
-          ) : null}
-          <span className="h-file__title">{isMedia ? (isHi ? 'किसका मीडिया?' : 'Kiska Media?') : sector}</span>
-        </span>
-        {status.state === 'cleared' ? <Stamp kind="noted" seed={r.id} text="CLEARED" size="s" className="h-file__stamp" /> : null}
-      </span>
-      <span className="h-file__meta">
-        {isMedia ? `${t('Media & Speech', 'मीडिया और अभिव्यक्ति')} · ` : ''}
-        {CARDS} {t('cards', 'कार्ड')} · {r.poolSize} {t('on file', 'फ़ाइल में')}
-        {status.best ? ` · ${bestText(status.best)}` : ''}
-      </span>
-      {status.state === 'sealed' ? <span className="h-sr">Sealed. The tape is cut on the first card.</span> : null}
-      {status.state === 'sealed' ? <Tape /> : null}
-      {status.running ? (
-        <Meter
-          as="span"
-          className="h-file__meter"
-          value={status.done}
-          max={CARDS}
-          ticks={CARDS}
-          label={t('Cards answered', 'जवाब दिए कार्ड')}
-          valueText={`${status.done} of ${CARDS} answered`}
-          copy={`${status.done} of ${CARDS} answered`}
-        />
-      ) : null}
-    </button>
+    />
   );
 }
 
@@ -246,10 +233,8 @@ function SectorBrief({ folder, loaded, inline }: { folder: Folder; loaded: boole
   const { t, isHi } = useLang();
   const headId = useId();
   const { route: r, status, sector } = folder;
-  const items = useMemo(() => (r ? routeItems(r) : []), [r]);
   if (!r) return null;
   if (!loaded) return <Skeleton lines={4} label={t('Opening the file', 'फ़ाइल खुल रही है')} />;
-  const places = [...new Set(items.map((q) => stateName(q.state)))];
   const isMedia = sector === MEDIA;
   return (
     <section
@@ -262,7 +247,15 @@ function SectorBrief({ folder, loaded, inline }: { folder: Folder; loaded: boole
         {isHi && SECTOR_NAMES_HI[sector] ? <span lang="hi">{SECTOR_NAMES_HI[sector]}</span> : isMedia ? 'Kiska Media?' : sector}
       </h2>
       <p className="h-quip">
-        {isMedia ? 'Kiska Media?' : sector}: {QUIPS[sector]}
+        {isHi ? (
+          <span lang="hi">
+            {isMedia ? 'किसका मीडिया?' : (SECTOR_NAMES_HI[sector] ?? sector)}: {QUIPS_HI[sector]}
+          </span>
+        ) : (
+          <>
+            {isMedia ? 'Kiska Media?' : sector}: {QUIPS[sector]}
+          </>
+        )}
       </p>
       <p className="h-sect__status">{statusWords(status, t)}</p>
       {status.running ? (
@@ -274,10 +267,6 @@ function SectorBrief({ folder, loaded, inline }: { folder: Folder; loaded: boole
           <dd>
             {CARDS} {t('cards', 'कार्ड')} · {r.poolSize} {t('on file', 'फ़ाइल में')}
           </dd>
-        </div>
-        <div>
-          <dt>{t('From', 'कहाँ से')}</dt>
-          <dd>{places.join(' · ')}</dd>
         </div>
         <div>
           <dt>{t('Chapters', 'अध्याय')}</dt>

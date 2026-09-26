@@ -12,11 +12,12 @@
  * Never "come back" or streak-risk copy. A fresh profile is sent to the first-run poster once a session.
  */
 import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
-import { CalendarDays, Check, ChevronRight, Flame, Scale, Share2, WifiOff, X } from 'lucide-react';
+import { CalendarDays, Check, ChevronRight, Flame, FolderOpen, Scale, Share2, WifiOff, X } from 'lucide-react';
 import { dayKey } from '@/lib/journal.mjs';
 import { dailyQuests } from '@/lib/progression.mjs';
 import { ROUTES, standing, todaysFive } from '../../../edition';
-import { babuRank, BOT_LINE, BOT_NAME, formatNumber, labelDisplay } from '../../data';
+import { PENDING_LABEL, useActivity, useBudget } from '../../budget';
+import { babuRank, BOT_LINE, BOT_LINE_HI, BOT_NAME, formatNumber, labelDisplay, SECTOR_NAMES_HI, stateNameHi } from '../../data';
 import { href, navigate, type ScreenProps } from '../../router';
 import { shareDailyGrid } from '../../share';
 import { useAppPlayer } from '../../shell/player';
@@ -58,7 +59,7 @@ const subscribeOnline = (fn: () => void) => {
   };
 };
 /** navigator.onLine, live. Solo modes work offline (the bank ships in the build). */
-export function useOnline() {
+function useOnline() {
   return useSyncExternalStore(
     subscribeOnline,
     () => navigator.onLine,
@@ -99,6 +100,45 @@ function liveStreak(s: Streak | undefined, today: string): { days: number; shiel
   return { days: alive ? s.current : 0, shields: s.shields, best: s.best };
 }
 
+const subscribeVisibility = (fn: () => void) => {
+  document.addEventListener('visibilitychange', fn);
+  return () => document.removeEventListener('visibilitychange', fn);
+};
+
+/**
+ * The shell's progression watcher logs a promotion that lands while this tab is hidden (earned in
+ * another tab) to Activity with kind PENDING_LABEL ({ band }) instead of opening its ceremony. Bible §9 (Home):
+ * such a promotion, earned elsewhere and not yet shown, opens the `label` ceremony here — once, and
+ * only if no label ceremony has been raised since. Ceremonies raised while a round was live are queued
+ * by the budget itself and need nothing from Home.
+ */
+const handledLabelNotes = new Set<string>();
+function usePendingLabel(loaded: boolean, band: number) {
+  const activity = useActivity();
+  const budget = useBudget();
+  const visible = useSyncExternalStore(
+    subscribeVisibility,
+    () => document.visibilityState === 'visible',
+    () => false,
+  );
+  useEffect(() => {
+    if (!loaded || !visible) return;
+    const latest = activity.find((e) => e.kind === 'ceremony:label' || e.kind === PENDING_LABEL);
+    if (!latest || latest.kind !== PENDING_LABEL || handledLabelNotes.has(latest.id)) return;
+    handledLabelNotes.add(latest.id);
+    const l = labelDisplay(band);
+    budget.ceremony({
+      kind: 'label',
+      kicker: 'Label promotion',
+      title: l.en,
+      titleHi: l.hi,
+      subtitle: l.line,
+      stamp: `ISSUED · ${l.en.toUpperCase()}`,
+      seed: `band-${l.band}`,
+    });
+  }, [loaded, visible, activity, band, budget]);
+}
+
 // ---- the screen -----------------------------------------------------------------------------------
 
 export default function HomeScreen(_props: ScreenProps) {
@@ -125,6 +165,7 @@ export default function HomeScreen(_props: ScreenProps) {
   const xp = player.progression?.xp ?? 0;
   const s = standing(xp);
   const streak = liveStreak(player.progression?.streak as Streak | undefined, today);
+  usePendingLabel(player.loaded, s.band);
   const quests = useMemo<QuestItem[]>(() => {
     const q = player.progression?.quests as { day: string | null; items: QuestItem[] } | undefined;
     if (q && q.day === today && q.items.length) return q.items;
@@ -358,10 +399,18 @@ function TodayCard({
 function ResumeCard({ run, primary }: { run: ResumeRun; primary: boolean }) {
   const { t } = useLang();
   const { route, answered, total } = run;
+  const titleHi =
+    route.kind === 'state' && route.state
+      ? stateNameHi(route.state)
+      : route.kind === 'sector' && route.topic
+        ? SECTOR_NAMES_HI[route.topic]
+        : undefined;
   return (
     <FileCard
       fno={`F.No. ${route.code}`}
       title={route.title}
+      titleHi={titleHi}
+      icon={<FolderOpen size={24} strokeWidth={2.2} />}
       state="open"
       meta={t('Continue where you left.', 'जहाँ छोड़ा था, वहीं से।')}
     >
@@ -371,13 +420,13 @@ function ResumeCard({ run, primary }: { run: ResumeRun; primary: boolean }) {
         value={answered}
         max={total}
         ticks={total}
-        label={t('File progress', 'फ़ाइल')}
+        label={t(`${route.title}: file progress`, `${route.title}: फ़ाइल`)}
         valueText={`${answered} of ${total} answered`}
-        copy={`${route.title} · ${answered} ${t('of', 'में से')} ${total}`}
+        copy={t(`${answered} of ${total} answered`, `${total} में से ${answered} हो गए`)}
       />
       <span className="h-home__actions">
         <Button variant={primary ? 'primary' : 'paper'} block={primary} href={href.route(route.id)}>
-          {t(`Resume ${route.title}`, `${route.title} जारी रखो`)}
+          {t(`Resume ${route.title}`, `${titleHi ?? route.title} जारी रखो`)}
         </Button>
       </span>
     </FileCard>
@@ -387,7 +436,7 @@ function ResumeCard({ run, primary }: { run: ResumeRun; primary: boolean }) {
 // ---- Your tijori -----------------------------------------------------------------------------------
 
 function TijoriPanel({ count, today }: { count: number; today: number }) {
-  const { t } = useLang();
+  const { t, locale } = useLang();
   const [open, setOpen] = useState(false);
   const capable = useMemo(() => sceneCapability().ok, []);
   return (
@@ -411,9 +460,9 @@ function TijoriPanel({ count, today }: { count: number; today: number }) {
         </p>
       ) : null}
       {open ? (
-        <Tijori count={count} newCount={today} height={280} className="h-home__scene" />
+        <Tijori count={count} newCount={today} height={280} trigger="mount" className="h-home__scene" />
       ) : (
-        <div className="h-home__tijoriart" role="img" aria-label={tijoriLabel(count)}>
+        <div className="h-home__tijoriart" role="img" aria-label={tijoriLabel(count, locale)}>
           <TijoriArt count={count} />
         </div>
       )}
@@ -531,7 +580,7 @@ function DuelStrip({ primary, tier }: { primary: boolean; tier?: string }) {
         <p className="h-home__bot">
           <Scale aria-hidden="true" size={18} strokeWidth={2.2} />
           <span>
-            <strong>{BOT_NAME}</strong> — {BOT_LINE}
+            <strong>{BOT_NAME}</strong> — {t(BOT_LINE, BOT_LINE_HI)}
           </span>
         </p>
         <p className="h-meta">

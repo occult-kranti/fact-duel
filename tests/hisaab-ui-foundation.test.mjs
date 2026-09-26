@@ -514,6 +514,29 @@ test('data: source chips, status lines, labels, the BOT label and the certificat
   assert.equal(data.certificateName('A very very long player name indeed'), 'A very very long pla');
   assert.equal(data.normalizePersonName('Shri. N. Chandrababu  Naidu'), 'n chandrababu naidu');
 
+  // …nor anyone who is, or looks like, a public figure, party, outlet, institution or community (bible
+  // §8.5): the certificate is the one artefact that puts a label on a typed name, and it is forwarded.
+  const neverPrinted = [
+    'Mamata Banerjee', 'Yogi Adityanath', 'PM Modi', 'Modi ji', 'Kejriwal', 'नरेंद्र मोदी', 'मोदी जी',
+    'Nаrendra Modi', // Cyrillic а
+    'ᴍᴏᴅɪ', 'Ｍｏｄｉ', 'M0di', 'Mo​di', 'N a r e n d r a M o d i', 'NarendraModiFan',
+    'Mamta Bannerjee', 'केजरीवाल', 'Kejriwal ji ki jai', 'Yogi ji', 'CM', 'Stalin Anna',
+    'BJP', 'Congress', 'NDTV', 'Republic TV', 'Godi Media', 'IT Cell', 'Pappu', 'Didi', 'भाजपा', 'RSS',
+    'Supreme Court', 'Prime Minister', 'Muslims', 'মমতা', // a script the gate cannot check
+  ];
+  for (const n of neverPrinted) assert.equal(data.certificateName(n), 'Anonymous Janta', `never prints ${JSON.stringify(n)}`);
+  for (const n of ['Asha', 'Rahul', 'Priya Sharma', 'Sharma', 'Rohan Modi', 'Anna Shah', 'Yogi Sharma', 'Christian', 'आशा देवी']) {
+    assert.equal(data.certificateName(n), n, `${n} prints`);
+  }
+  assert.equal(data.nameBlock('Ольга'), 'script');
+  assert.equal(data.nameBlock('BJP'), 'public');
+  assert.equal(data.nameBlock('  '), 'empty');
+  assert.equal(data.certificateName('Asha‮'), 'Asha', 'bidi controls are never printed');
+  const longHi = 'अभिषेक कुमार शर्मा वर्मा चतुर्वेदी त्रिपाठी';
+  const clipped = data.certificateName(longHi);
+  assert.ok(clipped.length < longHi.length && longHi.startsWith(clipped), 'a long Devanagari name is trimmed');
+  assert.ok(!/[\u093C-\u094D]$/.test(clipped) || /[\u093E-\u094C]$/.test(clipped), 'never cut after a half letter');
+
   // The cartogram: every state once, the Centre as the drawer, Devanagari names for all.
   const cells = data.CARTOGRAM.flat().filter(Boolean);
   assert.equal(cells.length, 30);
@@ -538,6 +561,50 @@ function walk(dir) {
   }
   return out;
 }
+
+test('progression: with visitCreditsStreak off (the edition), 30 visit-only days earn no streak and no XP; JHK keeps its default', async () => {
+  const { emptyProgression, reduceProgression, setProgressionOptions, progressionOptions } = await import('../lib/progression.mjs');
+  assert.equal(progressionOptions().visitCreditsStreak, true, 'JHK default: a visit credits the streak');
+  const DAY = 86_400_000;
+  const start = Date.UTC(2026, 8, 1, 6);
+  const days = (fn) => {
+    let prog = emptyProgression();
+    for (let d = 0; d < 30; d++) prog = fn(prog, start + d * DAY);
+    return prog;
+  };
+  try {
+    setProgressionOptions({ visitCreditsStreak: false });
+    const visits = days((p, at) => reduceProgression(p, [{ kind: 'visit' }], at, { epoch: 'e' }));
+    assert.equal(visits.streak.current, 0);
+    assert.equal(visits.xp, 0);
+    assert.equal(visits.quests.day.length > 0, true, 'a visit still rolls the daily quests');
+    // A day with play still counts.
+    const played = reduceProgression(emptyProgression(), [{ kind: 'visit' }, { kind: 'open', factId: 'hsc001', topic: 'Health' }], start, { epoch: 'e' });
+    assert.equal(played.streak.current, 1);
+  } finally {
+    setProgressionOptions({ visitCreditsStreak: true });
+  }
+  const jhk = days((p, at) => reduceProgression(p, [{ kind: 'visit' }], at, { epoch: 'e' }));
+  assert.equal(jhk.streak.current, 30, 'the default is unchanged');
+});
+
+test('progression: with rankHumanMatches off (the edition), a friend duel pays XP but never moves the Babu rank', async () => {
+  const { emptyProgression, reduceProgression, setProgressionOptions } = await import('../lib/progression.mjs');
+  const at = Date.UTC(2026, 8, 1, 6);
+  const win = (bot) => [{ kind: 'match', mode: 'trilogy', outcome: 'win', bot, scores: [2, 1], topic: 'all', topics: [], matchId: `m-${bot}` }];
+  const jhk = reduceProgression(emptyProgression(), win(false), at, { epoch: 'e' });
+  assert.ok(jhk.rank.points > 0, 'JHK default: a win against a person moves the rank');
+  try {
+    setProgressionOptions({ rankHumanMatches: false });
+    const friend = reduceProgression(emptyProgression(), win(false), at, { epoch: 'e' });
+    assert.equal(friend.rank.points, 0, 'no rank from a friend duel');
+    assert.ok(friend.xp > 0, 'it still pays XP');
+    const bot = reduceProgression(emptyProgression(), win(true), at, { epoch: 'e' });
+    assert.ok(bot.rank.points > 0, 'a bot duel still ranks');
+  } finally {
+    setProgressionOptions({ rankHumanMatches: true });
+  }
+});
 
 test('the UI code keeps the design rules: tokens only, no JHK classes, every screen module present', () => {
   const edition = path.join(ROOT, 'editions/hisaab');

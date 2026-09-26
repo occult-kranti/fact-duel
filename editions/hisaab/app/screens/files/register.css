@@ -161,10 +161,16 @@
   text-transform: uppercase;
   color: var(--h-ink-2);
 }
+:root[lang='hi'] .h-reg__fk {
+  font-family: var(--h-font-ui);
+  font-size: var(--h-fs-xs);
+  letter-spacing: 0;
+}
 .h-reg__fv {
+  min-width: 0;
+}
+.h-reg__fv p {
   margin: 0;
-  padding: 0;
-  list-style: none;
 }
 @media (min-width: 600px) {
   .h-reg__field {
@@ -243,4 +249,108 @@
   font-weight: 700;
   line-height: 1.25;
   overflow-wrap: anywhere;
+}
+.h-reg__seal:focus-visible,
+.h-reg__bubble:focus-visible {
+  outline: none;
+  box-shadow: var(--h-focus-ring);
+}
+
+/* Sealed claims (Forward Court): a generic paper chat bubble — no messenger green, ticks or chrome. */
+.h-reg__seals--bubbles {
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+.h-reg__seals--bubbles > li {
+  max-width: 34rem;
+}
+.h-reg__bubble {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-1);
+  padding: var(--h-s-2) var(--h-s-3) var(--h-s-2);
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-m) var(--h-r-m) var(--h-r-m) var(--h-r-xs);
+  background: var(--h-paper);
+  color: var(--h-ink);
+  text-decoration: none;
+  box-shadow: var(--h-shadow-1);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    transform var(--h-dur-tap) var(--h-ease-out),
+    box-shadow var(--h-dur-tap) var(--h-ease-out);
+}
+.h-reg__bubble:active {
+  transform: translate(var(--h-press-shift), var(--h-press-shift));
+  box-shadow: var(--h-shadow-0);
+}
+.h-reg__bubblehead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--h-s-1) var(--h-s-2);
+  min-width: 0;
+}
+.h-reg__trial {
+  flex: 0 1 auto;
+}
+.h-reg__trialpart {
+  white-space: nowrap;
+}
+/* दावा · फ़ैसला बंद: Devanagari is read, not a caps code, so it takes the 14px floor (bible §4.3). */
+.h-reg__trial:lang(hi) {
+  font-family: var(--h-font-ui);
+  font-size: var(--h-fs-xs);
+}
+.h-reg__fwd {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--h-s-1);
+  font-size: var(--h-fs-xs);
+  font-style: italic;
+  color: var(--h-ink-2);
+}
+.h-reg__claim {
+  font-size: var(--h-fs-s);
+  line-height: 1.4;
+}
+.h-reg__bubblecta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--h-s-1) var(--h-s-3);
+  font-size: var(--h-fs-xs);
+  color: var(--h-ink-2);
+}
+.h-reg__ctaword {
+  font-weight: var(--h-wght-ui-strong);
+  color: var(--h-syahi-text);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+.h-reg__more {
+  align-self: flex-start;
+  min-height: var(--h-tap);
+  padding: 0 var(--h-s-3);
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-m);
+  background: var(--h-paper);
+  color: var(--h-ink);
+  font-weight: var(--h-wght-ui-strong);
+  font-size: var(--h-fs-xs);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.h-reg__more:active {
+  transform: translate(var(--h-press-shift), var(--h-press-shift));
+}
+.h-reg__done {
+  margin: 0;
+  font-size: var(--h-fs-xs);
+  font-weight: var(--h-wght-ui-strong);
 }

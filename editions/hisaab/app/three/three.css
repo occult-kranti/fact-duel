@@ -1,13 +1,68 @@
 /* three/three.css — the scene host box and the 2D fallbacks of the four set pieces (bible §10). */
+/* The box reserves the scene's height whenever a 3D scene is wanted (pending → 3d → done), so the page
+   never jumps when the chunk arrives; plain 2D keeps its natural height. Defaults per piece (bible §10). */
 .h-scenehost {
+  --h-scene-default: 280px;
   position: relative;
   width: 100%;
-  min-height: var(--h-scene-h, auto);
+  min-width: 0;
   z-index: var(--h-z-scene);
+}
+.h-scenehost--tarazu {
+  --h-scene-default: 240px;
+}
+.h-scenehost--thappa {
+  --h-scene-default: 180px;
+}
+.h-scenehost--pile {
+  --h-scene-default: 260px;
+}
+@media (min-width: 900px) {
+  .h-scenehost--tijori {
+    --h-scene-default: 360px;
+  }
+  .h-scenehost--tarazu {
+    --h-scene-default: 320px;
+  }
+  .h-scenehost--pile {
+    --h-scene-default: 340px;
+  }
+}
+.h-scenehost[data-scene='pending'],
+.h-scenehost[data-scene='3d'],
+.h-scenehost[data-scene='done'] {
+  height: var(--h-scene-h, var(--h-scene-default));
 }
 .h-scenehost__fallback {
   width: 100%;
   height: 100%;
+  display: grid;
+  align-content: center;
+}
+/* While the chunk loads and until the first frame: the stand-in, then a cross-fade to the scene. */
+.h-scenehost__under {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  align-content: center;
+  transition:
+    opacity var(--h-dur-base) var(--h-ease-out),
+    visibility 0s linear var(--h-dur-base);
+}
+.h-scenehost__under[data-ready='true'] {
+  opacity: 0;
+  visibility: hidden;
+}
+.h-scenehost > .h-t3 {
+  opacity: 0;
+  transition: opacity var(--h-dur-base) var(--h-ease-out);
+}
+.h-scenehost[data-scene-ready='true'] > .h-t3 {
+  opacity: 1;
+}
+.h-t3__canvas--hold {
+  display: grid;
+  place-items: center;
 }
 
 /* ---- TIJORI (2D): a glass-front safe with stacked coin bars, height ∝ count (log after 100) ---- */
@@ -83,6 +138,11 @@
   font-weight: 700;
   color: var(--h-brass-text);
 }
+/* The word beside the number is UI type: the mono face never carries Devanagari. */
+.h-tijori__newword {
+  font-family: var(--h-font-ui);
+  font-weight: var(--h-wght-ui-strong);
+}
 
 /* ---- TARAZU (2D): an SVG scale rotated by the true angle ---- */
 .h-tarazu {
@@ -138,9 +198,19 @@
   display: grid;
   place-items: center;
   min-height: 96px;
+  height: 100%;
   padding: var(--h-s-4);
   overflow-x: clip; /* the slam's 1.6× frames never scroll the page sideways */
   overflow-clip-margin: var(--h-gutter);
+}
+
+/* The invisible copy THAPPA's 3D scene measures (line breaks, size, centre) so its ink impression
+   matches the 2D stamp that replaces it. Unrotated: the scene applies the seeded tilt itself. */
+.h-thappa--ghost {
+  visibility: hidden;
+}
+.h-thappa--ghost .h-stamp {
+  transform: none;
 }
 
 /* ---- FILE PILE (2D): six tabs with verdict-coloured edges + tape band + stamp ---- */

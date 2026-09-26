@@ -1,0 +1,108 @@
+/* screens/route/finish.css — the route finish: scene | summary from 900px, mini receipts below (bible §11.13). */
+.h-finish__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--h-s-6);
+  align-items: start;
+  min-width: 0;
+}
+.h-finish__scene {
+  min-width: 0;
+  padding: var(--h-s-4);
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-l);
+  background: var(--h-paper);
+  box-shadow: var(--h-shadow-2);
+}
+.h-finish__summary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-4);
+  min-width: 0;
+}
+.h-finish__facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(6.5rem, 1fr));
+  gap: var(--h-s-3);
+  margin: 0;
+}
+.h-finish__fact {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--h-s-3);
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-m);
+  background: var(--h-paper);
+  min-width: 0;
+}
+.h-finish__fact dt {
+  font-family: var(--h-font-mono);
+  font-size: var(--h-fs-2xs);
+  font-weight: 700;
+  letter-spacing: var(--h-track-kicker);
+  text-transform: uppercase;
+  color: var(--h-ink-2);
+}
+:root[lang='hi'] .h-finish__fact dt {
+  font-family: var(--h-font-ui);
+  font-size: var(--h-fs-xs);
+  text-transform: none;
+  letter-spacing: 0;
+}
+.h-finish__fact dd {
+  margin: 0;
+  font-weight: 700;
+  font-size: var(--h-fs-2xl);
+  line-height: 1.1;
+}
+.h-finish__fact--xp dd {
+  color: var(--h-brass-text);
+}
+.h-finish__of {
+  font-size: var(--h-fs-s);
+  color: var(--h-ink-2);
+}
+.h-finish__best {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--h-s-2);
+  font-weight: var(--h-wght-ui-strong);
+  font-size: var(--h-fs-m);
+}
+.h-finish__calib {
+  margin: 0;
+  padding: var(--h-s-3) var(--h-s-4);
+  border-left: 4px solid var(--h-syahi);
+  background: var(--h-paper);
+  border-radius: 0 var(--h-r-m) var(--h-r-m) 0;
+  font-size: var(--h-fs-s);
+}
+.h-finish__xp,
+.h-finish__padded {
+  margin: 0;
+  font-size: var(--h-fs-xs);
+  color: var(--h-ink-2);
+}
+.h-finish__xpnote {
+  overflow-wrap: break-word;
+}
+.h-finish__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-3);
+}
+.h-finish__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--h-s-2) var(--h-s-3);
+}
+@media (min-width: 900px) {
+  .h-finish__grid {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: var(--h-s-8);
+  }
+}

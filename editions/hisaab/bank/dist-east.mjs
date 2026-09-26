@@ -14,25 +14,25 @@ export const HISAAB_DIST_EAST = Object.freeze([
     region: 'India',
     state: 'WB',
     topic: 'Farm & Food',
-    subtopic: 'Rs 2-a-kg rice (2009)',
+    subtopic: 'Subsidised rice (2009)',
     kind: 'scheme',
     difficulty: 'extreme',
     year: 2009,
     asOf: '2026-09',
     govt: 'CPI(M)',
     question:
-      'Subsidised rice at ₹2 a kg was introduced in West Bengal in 2009 by the Centre and the Left Front government. About how many people below the poverty line did it cover?',
+      'The Centre and West Bengal\'s Left Front government introduced subsidised rice for poor families in 2009. About how many people below the poverty line did it cover?',
     options: ['2.64 crore', '64 lakh', '26 lakh', '6.4 lakh'],
     correctIndex: 0,
     explanation:
-      "The Indian Express reported the 2009 scheme covered 2.64 crore people below the poverty line and was one of several incentives offered in Maoist-affected Jangalmahal. A right-to-food adviser to Supreme Court commissioners told the paper rations under the Left government had been irregular; the TMC government that followed reworked the scheme.",
+      "The Indian Express reported the 2009 scheme covered 2.64 crore people below the poverty line and was one of several incentives offered in Maoist-affected areas; by 2016 Jangalmahal families bought it at ₹2 a kg. A right-to-food adviser to Supreme Court commissioners told the paper rations under the Left government had been irregular; the TMC government that followed reworked the scheme.",
     sourceUrl:
       'https://indianexpress.com/article/india/india-news-india/west-bengal-assembly-elections-2016-in-jangalmahal-village-that-once-went-hungry-parivartan-takes-the-form-of-affordable-rice/',
     sourceLabel:
       "The Indian Express — In Jangalmahal village that once went hungry, 'parivartan' takes the form of affordable rice (28 Mar 2016)",
     tags: ['distribution'],
     outcome:
-      'The Left Front lost power in 2011 after 34 years. The new TMC government raised the number of beneficiaries by about 20% to 3.2 crore, and by 2016 ration dealers in Jangalmahal described supply as regular (The Indian Express).',
+      'The Left Front lost power in 2011 after 34 years. The new TMC government raised the number of beneficiaries by 20% to 3.2 crore, and by 2016 ration dealers in Jangalmahal said distribution was working flawlessly (The Indian Express).',
   },
   {
     id: 'hdb301',
@@ -52,10 +52,9 @@ export const HISAAB_DIST_EAST = Object.freeze([
     correctIndex: 1,
     explanation:
       'Kanyashree is a conditional cash transfer: a yearly grant for girls aged 13–18 (₹750, raised to ₹1,000 in 2018) and a one-time ₹25,000 at 18. It won the UN Public Service Award in 2017. In January 2018 the CM said it cost ₹1,250 crore a year and ₹5,000 crore had been spent; the 2023-24 budget said it had covered 81 lakh girls.',
-    sourceUrl:
-      'https://www.thehindu.com/news/national/why-is-child-marriage-still-high-in-west-bengal-explained/article67716959.ece',
-    sourceLabel: 'The Hindu — Why is child marriage still high in West Bengal? | Explained (7 Jan 2024)',
-    sources: ['https://www.thehindu.com/news/national/bengal-assistance-for-marriage-of-poor-women/article22613215.ece'],
+    sourceUrl: 'https://www.thehindu.com/news/national/bengal-assistance-for-marriage-of-poor-women/article22613215.ece',
+    sourceLabel: 'The Hindu — Bengal assistance for marriage of poor women (31 Jan 2018)',
+    sources: ['https://www.thehindu.com/news/national/why-is-child-marriage-still-high-in-west-bengal-explained/article67716959.ece'],
     tags: ['distribution'],
     enactedBy: [{ name: 'Mamata Banerjee', role: 'Chief Minister, West Bengal', party: 'TMC' }],
     outcome:
@@ -111,7 +110,7 @@ export const HISAAB_DIST_EAST = Object.freeze([
     options: ['₹2,000 an acre', '₹3,000 an acre', '₹4,000 an acre', '₹5,000 an acre'],
     correctIndex: 3,
     explanation:
-      'It paid ₹5,000 an acre a year in two instalments (pro rata for smaller plots) and ₹2 lakh to the family of a farmer aged 18–60 who died. It was rolled out on 15 Feb 2019 with ₹1,000 crore budgeted. Bengal did not then implement the Centre\'s PM-KISAN; its agriculture minister said the state had its own scheme.',
+      'It paid ₹5,000 a year to a farmer with an acre of land, in two instalments, and ₹2 lakh to the family of a farmer aged 18–60 who died. It was rolled out on 15 Feb 2019 with ₹1,000 crore budgeted. Bengal did not then implement the Centre\'s PM-KISAN; its agriculture minister said the state had its own scheme.',
     sourceUrl:
       'https://indianexpress.com/article/cities/kolkata/krishak-bandhu-scheme-rs-500-crore-disbursed-to-37-lakh-farmers-in-eight-months-6079520/',
     sourceLabel: 'The Indian Express — Krishak Bandhu Scheme: Rs 500 crore disbursed to 37 lakh farmers in eight months (21 Oct 2019)',
@@ -149,7 +148,7 @@ export const HISAAB_DIST_EAST = Object.freeze([
     sourceLabel: 'The Indian Express — After Kanyashree, Bengal govt bags WSIS award for its Sabuj Sathi scheme (10 Sep 2020)',
     tags: ['distribution'],
     enactedBy: [{ name: 'Mamata Banerjee', role: 'Chief Minister, West Bengal', party: 'TMC' }],
-    outcome: "About 85 lakh cycles for over ₹2,700 crore between 2015 and 2020, by the government's own count; the WSIS prize was its second global award after Kanyashree's UN prize.",
+    outcome: "About 85 lakh cycles for over ₹2,700 crore between 2015 and 2020, by the government's own count; the WSIS prize followed Kanyashree's 2017 UN Public Service Award (IE).",
   },
   {
     id: 'hdb305',
@@ -168,7 +167,7 @@ export const HISAAB_DIST_EAST = Object.freeze([
     options: ['About 25 lakh', 'Over 1 crore', 'Over 3 crore', 'Over 5 crore'],
     correctIndex: 1,
     explanation:
-      'Mamata Banerjee said over 1 crore people visited more than 10,000 camps in two weeks; 64 lakh enrolled in the first phase (1–11 Dec). The camps offered at least 11 schemes, including Kanyashree, Khadya Sathi food security, Rupashree and pensions for Scheduled Caste citizens (Taposili Bandhu).',
+      'Mamata Banerjee said over 1 crore people visited more than 10,000 camps in two weeks; 64 lakh enrolled in the first phase (1–11 Dec). The camps offered at least 11 schemes, including Kanyashree, Khadya Sathi food security, Rupashree and pensions for Scheduled Caste citizens (Taposili Bondhu).',
     sourceUrl:
       'https://www.livemint.com/news/india/bengal-s-duare-sarkar-reached-over-1-crore-people-in-2-weeks-cm-mamata-11608367316616.html',
     sourceLabel: "Mint — Bengal's 'Duare Sarkar' reached over 1 crore people in 2 weeks: CM Mamata (19 Dec 2020)",
@@ -198,7 +197,7 @@ export const HISAAB_DIST_EAST = Object.freeze([
     options: ['₹600', '₹750', '₹1,000', '₹1,200'],
     correctIndex: 2,
     explanation:
-      'Minister of State (Finance) Chandrima Bhattacharya\'s budget of 8 Feb 2024 raised general-category payments from ₹500 to ₹1,000 and SC/ST payments from ₹1,000 to ₹1,200, allotting ₹14,400 crore for about 2.11 crore women. The TMC had started the scheme in Sept 2021 after promising it before that year\'s Assembly poll.',
+      'Chandrima Bhattacharya, Minister of State (Independent Charge) for Finance, tabled the budget on 8 Feb 2024: general-category payments rose from ₹500 to ₹1,000 and SC/ST payments from ₹1,000 to ₹1,200, with ₹14,400 crore for about 2.11 crore women. The TMC had started the scheme in Sept 2021 after promising it before that year\'s Assembly poll.',
     sourceUrl: 'https://www.thehindu.com/news/national/other-states/west-bengal-state-budget-2024/article67824908.ece',
     sourceLabel: 'The Hindu — Sops galore in West Bengal Budget 2024-25 ahead of Lok Sabha polls (8 Feb 2024)',
     sources: [
@@ -207,7 +206,7 @@ export const HISAAB_DIST_EAST = Object.freeze([
     ],
     tags: ['distribution', 'pre-election'],
     enactedBy: [
-      { name: 'Chandrima Bhattacharya', role: 'Minister of State (Finance), West Bengal', party: 'TMC' },
+      { name: 'Chandrima Bhattacharya', role: 'Minister of State (Independent Charge), Finance, West Bengal', party: 'TMC' },
       { name: 'Mamata Banerjee', role: 'Chief Minister, West Bengal', party: 'TMC' },
     ],
     outcome:
@@ -237,6 +236,7 @@ export const HISAAB_DIST_EAST = Object.freeze([
     sourceLabel:
       'The Indian Express — Ahead of Bengal 2026 Assembly elections, TMC govt announces Rs 500 hike for Lakshmir Bhandar beneficiaries (5 Feb 2026)',
     sources: [
+      'https://results.eci.gov.in/ResultAcGenMay2026/partywiseresult-S25.htm',
       'https://www.thehindu.com/elections/west-bengal-assembly/day-after-landslide-victory-bjps-bengal-tally-climbs-to-207-with-recount-win/article70942946.ece',
       'https://newsonair.gov.in/polling-to-be-held-in-single-phase-in-tamilnadu-on-23rd-april-two-phase-polling-in-west-bengal-to-be-held-on-23rd-and-29th-of-next-month/',
       'https://www.thehindu.com/news/national/west-bengal/in-its-first-budget-west-bengal-bjp-government-pushes-for-jobs-industries-and-welfarism/article71133177.ece',
@@ -244,8 +244,8 @@ export const HISAAB_DIST_EAST = Object.freeze([
     tags: ['distribution', 'pre-election'],
     enactedBy: [{ name: 'Chandrima Bhattacharya', role: 'Minister of State (Finance), West Bengal', party: 'TMC' }],
     outcome:
-      'Officials said total spending since launch would pass ₹1 lakh crore that year. The BJP won 207 of 294 seats (after a recount), ending 15 years of TMC rule; its first budget set aside ₹36,000 crore for Annapurna, a ₹3,000-a-month women\'s scheme.',
-    poll: { label: 'West Bengal Assembly 2026', month: '2026-04', gapDays: 77, result: 'BJP won 207 of 294 seats; TMC about 80' },
+      'Officials said total spending since launch would pass ₹1 lakh crore that year. The BJP won 207 of 294 seats (ECI, after a recount), ending 15 years of TMC rule; its first budget set aside ₹36,000 crore for Annapurna, a ₹3,000-a-month women\'s scheme.',
+    poll: { label: 'West Bengal Assembly 2026', month: '2026-04', gapDays: 77, result: 'BJP won 207 seats, TMC 80 (ECI); first BJP government in the state' },
   },
   {
     id: 'hdb308',
@@ -286,11 +286,11 @@ export const HISAAB_DIST_EAST = Object.freeze([
     asOf: '2026-09',
     govt: 'BJP',
     question:
-      "In August 2026 West Bengal's new BJP government renamed the TMC-era Kanyashree cash scheme for schoolgirls. What is it called now?",
+      "West Bengal's new BJP government has rebranded the TMC-era Kanyashree cash scheme for schoolgirls. What was it called by August 2026?",
     options: ['Annapurna Kanya', 'Kanya Ratna', 'Beti Bachao Beti Padhao', 'Lakshmi Kanya'],
     correctIndex: 1,
     explanation:
-      "On Kanya Ratna Divas (14 Aug), formerly Kanyashree Divas, CM Suvendu Adhikari said the yearly scholarship doubles from ₹1,000 to ₹2,000 from the next session, while the one-time ₹25,000 grant at 18 stays. The same day Bengal joined the Centre's Beti Bachao Beti Padhao, which the TMC government had not implemented.",
+      "On Kanya Ratna Divas (14 Aug 2026), formerly Kanyashree Divas, CM Suvendu Adhikari said the yearly scholarship doubles from ₹1,000 to ₹2,000 from the next session, while the one-time ₹25,000 grant at 18 stays. The same day Bengal joined the Centre's Beti Bachao Beti Padhao, which Adhikari said the state had not joined under the TMC.",
     sourceUrl: 'https://indianexpress.com/article/cities/kolkata/bengal-joins-beti-bachao-beti-padhao-suvendu-adhikari-10834375/',
     sourceLabel: "The Indian Express — Bengal joins 'Beti Bachao, Beti Padhao'; Rs 2k aid for schoolgirls from 2027 (15 Aug 2026)",
     sources: ['https://timesofindia.indiatimes.com/city/kolkata/kanyashree-now-kanya-ratna-grant-doubles/articleshow/133248582.cms'],
@@ -327,6 +327,39 @@ export const HISAAB_DIST_EAST = Object.freeze([
     outcome:
       'Swasthya Sathi families are to get cards usable in more than 36,000 Ayushman-empanelled hospitals across India; whether the cards will be co-branded was undecided in June 2026.',
   },
+  {
+    id: 'hdb338',
+    domain: 'civics',
+    region: 'India',
+    state: 'WB',
+    topic: 'Welfare & Subsidies',
+    subtopic: 'Annapurna first payout (2026)',
+    kind: 'scheme',
+    difficulty: 'expert',
+    year: 2026,
+    asOf: '2026-09',
+    govt: 'BJP',
+    question:
+      "When Bengal's BJP government made the first Annapurna payments to women on 1 July 2026, how many of about 1.6 crore applications did CM Suvendu Adhikari say were rejected?",
+    options: ['26 lakh', '2.6 lakh', '60 lakh', '80 lakh'],
+    correctIndex: 0,
+    explanation:
+      "Adhikari said about 1.1 crore women were credited that morning and about 1.3 crore cleared; he cited deaths, deletions from voter rolls, duplicate accounts and doubts over citizenship or domicile (The Indian Express). Mamata Banerjee accused the BJP of adding eligibility conditions after promising the aid to all women before the poll (Telangana Today).",
+    sourceUrl:
+      'https://indianexpress.com/article/cities/kolkata/annapurna-yojana-first-tranche-credited-26-lakh-applications-rejected-suvendu-adhikari-10766931/',
+    sourceLabel: 'The Indian Express — Annapurna Yojana first tranche credited; 26 lakh applications rejected (1 Jul 2026)',
+    sources: [
+      'https://www.thehindu.com/news/national/west-bengal/1st-tranche-of-funds-under-annapurna-yojana-transferred-to-11-crore-women-beneficiaries-bengal-cm/article71169447.ece',
+      'https://telanganatoday.com/mamata-accuses-bjp-of-breaking-promise-on-annapurna-bhandar-aid-for-women',
+      'https://indianexpress.com/article/cities/kolkata/ahead-of-bengal-2026-assembly-elections-tmc-govt-announces-rs-500-hike-for-lakshmir-bhandar-beneficiaries-10515653/',
+      'https://www.thehindu.com/news/national/west-bengal/in-its-first-budget-west-bengal-bjp-government-pushes-for-jobs-industries-and-welfarism/article71133177.ece',
+      'https://ddnews.gov.in/en/no-eligible-woman-in-bengal-to-miss-annapurna-benefits-says-pm-narendra-modi-1-58-cr-beneficiaries-get-money/',
+    ],
+    tags: ['distribution'],
+    enactedBy: [{ name: 'Suvendu Adhikari', role: 'Chief Minister, West Bengal', party: 'BJP' }],
+    outcome:
+      'After re-applications, the state paid 1.58 crore women on 17 Sept 2026 (DD News), against about 2.2 crore on Lakshmir Bhandar in Feb 2026 (IE). The June 2026 budget set aside ₹36,000 crore for Annapurna (The Hindu).',
+  },
 
   // ───────────────────────── Odisha ─────────────────────────
   {
@@ -335,24 +368,28 @@ export const HISAAB_DIST_EAST = Object.freeze([
     region: 'India',
     state: 'OD',
     topic: 'Farm & Food',
-    subtopic: 'Kashipur and cheap rice (2001)',
+    subtopic: 'Kashipur and the BPL ration (2001)',
     kind: 'scheme',
     difficulty: 'extreme',
     year: 2001,
     asOf: '2026-09',
     govt: 'BJD',
     question:
-      "After at least 20 deaths in Odisha's Kashipur block in 2001 among people who had eaten mango-kernel gruel, the state ensured poor families 16 kg of rice a month at what price?",
-    options: ['₹1 a kg', '₹2 a kg', '₹3 a kg', '₹4.75 a kg'],
+      "As deaths in Odisha's Kashipur block made headlines in 2001, what did a below-poverty-line family there pay for its 16 kg monthly rice ration, per Frontline?",
+    options: ['₹1 a kg', '₹2 a kg', '₹6.50 a kg', '₹4.75 a kg'],
     correctIndex: 3,
     explanation:
-      'Frontline records that a year after Naveen Patnaik became Chief Minister, the Kashipur deaths in Rayagada district made headlines, and the government ensured families below the poverty line 16 kg of rice a month at ₹4.75 a kg. It later paid above the central subsidy to cut the price to ₹2 (2008) and ₹1 a kg (2013).',
-    sourceUrl:
+      "Frontline (Oct 2001) found about 15,000 Kashipur families had BPL status, each entitled to 16 kg of rice a month at ₹4.75 a kg, which the Rayagada Collector admitted was not enough. He put the deaths at under 20 and blamed food poisoning or natural causes; villagers said over 70 died of hunger. The state later cut the price to ₹2 (2008) and ₹1 a kg (2013).",
+    sourceUrl: 'https://frontline.thehindu.com/other/article30252199.ece',
+    sourceLabel: 'Frontline — The spectre of starvation (13 Oct 2001)',
+    sources: [
+      'https://frontline.thehindu.com/other/article30159821.ece',
+      'https://www.hindustantimes.com/analysis/deaths-in-kandhamal-due-to-mango-kernel-bring-back-focus-on-tribal-deprivation-101730731285644.html',
       'https://frontline.thehindu.com/the-nation/naveen-odisha-state-witnesses-transformation-under-cm-naveen-patnaik/article38482544.ece',
-    sourceLabel: 'Frontline — Naveen Odisha: State witnesses transformation under CM Naveen Patnaik (6 May 2022)',
+    ],
     tags: ['distribution'],
-    enactedBy: [{ name: 'Naveen Patnaik', role: 'Chief Minister, Odisha', party: 'BJD' }],
-    outcome: 'Frontline reported in 2022 that there had been no starvation deaths in the state for many years.',
+    outcome:
+      'HT later put the 2001 Kashipur toll at 24. In Nov 2024 two women in Kandhamal died after a mango-kernel meal; the BJD blamed missed rations, and the BJP government said the village had drawn its rice quota and the gruel had turned toxic (HT).',
   },
   {
     id: 'hdb312',
@@ -371,14 +408,18 @@ export const HISAAB_DIST_EAST = Object.freeze([
     options: ['2001', '2005', '2009', '2014'],
     correctIndex: 0,
     explanation:
-      "Frontline: launched in 2001, it had more than six lakh women's SHGs with over 70 lakh members, and got its own department in 2021. The state provides seed money and revolving funds, links groups to credit and pays interest subvention. Not to be confused with the Union women and child development ministry's Mission Shakti.",
+      "The Hindu: launched in 2001 to bring women into self-help groups, it grew to over six lakh SHGs with more than 70 lakh women and became a full department (in 2021, per Frontline). The state offers SHGs 0% interest on loans up to ₹3 lakh and pays about ₹200 crore towards interest subvention. Not to be confused with the Union women and child development ministry's Mission Shakti.",
     sourceUrl:
+      'https://www.thehindu.com/news/national/other-states/behind-the-bjds-electoral-successes-in-odisha-are-women-shgs/article66022675.ece',
+    sourceLabel: "The Hindu — Behind the BJD's electoral successes in Odisha are women SHGs (17 Oct 2022)",
+    sources: [
+      'https://frontline.thehindu.com/cover-story/article27321197.ece',
       'https://frontline.thehindu.com/the-nation/naveen-odisha-state-witnesses-transformation-under-cm-naveen-patnaik/article38482544.ece',
-    sourceLabel: 'Frontline — Naveen Odisha: State witnesses transformation under CM Naveen Patnaik (6 May 2022)',
-    sources: ['https://frontline.thehindu.com/cover-story/article27321197.ece'],
+    ],
     tags: ['distribution'],
     enactedBy: [{ name: 'Naveen Patnaik', role: 'Chief Minister, Odisha', party: 'BJD' }],
-    outcome: 'By 2019–22 the network counted over six lakh groups and 70 lakh members (Frontline); a separate Mission Shakti department was created in 2021.',
+    outcome:
+      'Bank credit to SHGs rose from ₹1,036 crore in 2016-17 to ₹4,190 crore in 2020-21, and the state gave SHGs about ₹5,000 crore of government work a year (The Hindu, 2022).',
   },
   {
     id: 'hdb313',
@@ -397,10 +438,10 @@ export const HISAAB_DIST_EAST = Object.freeze([
     options: ['78', '103', '112', '117'],
     correctIndex: 1,
     explanation:
-      'Frontline notes the state bore cost above the central subsidy to sell rice to the poor at ₹2 a kg from 1 Aug 2008. The Indian Express recorded the BJD\'s 103 seats in 2009, which it bettered with 117 in 2014. No study cited here links either result to the rice scheme.',
+      'Frontline (2016) notes the state bore cost above the central subsidy to sell rice to the poor at ₹2 a kg from 1 Aug 2008, "a few months before the elections". The Indian Express recorded the BJD\'s 103 seats in 2009, which it bettered with 117 in 2014. No study cited here links either result to the rice scheme.',
     sourceUrl: 'https://indianexpress.com/article/political-pulse/naveen-is-orissa-cm-for-record-fourth-time/',
     sourceLabel: 'The Indian Express — Naveen is Orissa CM for record fourth time (22 May 2014)',
-    sources: ['https://frontline.thehindu.com/the-nation/naveen-odisha-state-witnesses-transformation-under-cm-naveen-patnaik/article38482544.ece'],
+    sources: ['https://frontline.thehindu.com/the-nation/egg-on-the-face/article8182741.ece'],
     tags: ['distribution', 'pre-election'],
     enactedBy: [{ name: 'Naveen Patnaik', role: 'Chief Minister, Odisha', party: 'BJD' }],
     outcome: 'The BJD returned with 103 of 147 seats in April 2009. The rice price was cut again to ₹1 a kg from February 2013.',
@@ -422,14 +463,17 @@ export const HISAAB_DIST_EAST = Object.freeze([
     options: ['Nothing', '50 paise', '₹1', '₹2'],
     correctIndex: 2,
     explanation:
-      'Odisha had sold rice at ₹2 a kg since August 2008, paying above the central subsidy, and lowered the price to ₹1 a kg in February 2013. In October 2018 it added its own food security scheme for 25 lakh people left out of the National Food Security Act (Frontline).',
-    sourceUrl:
-      'https://frontline.thehindu.com/the-nation/naveen-odisha-state-witnesses-transformation-under-cm-naveen-patnaik/article38482544.ece',
-    sourceLabel: 'Frontline — Naveen Odisha: State witnesses transformation under CM Naveen Patnaik (6 May 2022)',
-    sources: ['https://indianexpress.com/article/political-pulse/naveen-is-orissa-cm-for-record-fourth-time/'],
+      'Odisha had sold rice at ₹2 a kg since August 2008, paying above the central subsidy, and cut the price to ₹1 a kg from 1 Feb 2013; BPL families got 25 kg a month at that price (Frontline). In October 2018 it added its own food security scheme for 25 lakh people left out of the National Food Security Act (The Wire).',
+    sourceUrl: 'https://frontline.thehindu.com/the-nation/egg-on-the-face/article8182741.ece',
+    sourceLabel: 'Frontline — Egg on the face (3 Feb 2016)',
+    sources: [
+      'https://m.thewire.in/article/government/naveen-patnaik-odisha-food-security-scheme',
+      'https://indianexpress.com/article/political-pulse/naveen-is-orissa-cm-for-record-fourth-time/',
+    ],
     tags: ['distribution'],
     enactedBy: [{ name: 'Naveen Patnaik', role: 'Chief Minister, Odisha', party: 'BJD' }],
-    outcome: 'In the 2014 Assembly poll the BJD won 117 of 147 seats, up from 103 in 2009, and Naveen Patnaik began a record fourth term (The Indian Express).',
+    outcome:
+      'The BJD won 117 of 147 seats in 2014, up from 103 (IE). When the state moved to the NFSA, the Congress and BJP alleged cards went to BJD loyalists; over three lakh ineligible people surrendered cards and grievance officers were named (Frontline, 2016).',
   },
   {
     id: 'hdb315',
@@ -445,10 +489,10 @@ export const HISAAB_DIST_EAST = Object.freeze([
     govt: 'BJD',
     question:
       "Announcing the KALIA farm-aid scheme on 21 Dec 2018, months before the 2019 polls, Naveen Patnaik rejected what the Congress and BJP were offering Odisha's farmers. What was it?",
-    options: ['Free farm electricity', 'A bonus over the paddy MSP', 'Zero-premium crop insurance', 'A farm-loan waiver'],
+    options: ['Free farm electricity', 'Free seeds and fertiliser', 'Zero-premium crop insurance', 'A farm-loan waiver'],
     correctIndex: 3,
     explanation:
-      "KALIA budgeted ₹10,180 crore over three years: ₹10,000 a year for small and marginal farm families, ₹12,500 for landless households and interest-free crop loans up to ₹50,000. Patnaik said loan waivers 'will not pay in the future'. The BJP and Congress called KALIA a poll gimmick; the state said the Finance Commission had praised it.",
+      "KALIA budgeted ₹10,180 crore over three years: ₹10,000 a year for small and marginal farm families, ₹12,500 per landless household for activities such as goat rearing, and interest-free crop loans up to ₹50,000. Patnaik said loan waivers 'will not pay in the future'. The BJP and Congress called KALIA a poll gimmick; the state said the Finance Commission had praised it.",
     sourceUrl: 'https://indianexpress.com/article/india/odisha-cm-skips-loan-waiver-declares-financial-aide-for-farmers-5504787/',
     sourceLabel: 'The Indian Express — Odisha CM skips loan waiver, declares financial aid for farmers (22 Dec 2018)',
     sources: [
@@ -479,16 +523,18 @@ export const HISAAB_DIST_EAST = Object.freeze([
     options: ['12.72 lakh', '6.36 lakh', '3.18 lakh', '1.06 lakh'],
     correctIndex: 0,
     explanation:
-      "The CAG said 12.72 lakh ineligible people got ₹782.26 crore, with 'remote chances of recovery', and ₹107.64 crore went to 1.28 lakh accounts whose names did not match. In 2020 the BJD government had served refund notices on about 3.41 lakh farmers; the BJP, then in opposition, urged farmers not to repay and blamed officials.",
+      "The CAG said 12.72 lakh ineligible people got ₹782.26 crore, 9.76 lakh of them already flagged by the department during implementation, with 'remote chances of recovery'. In 2020 the BJD government served refund notices on about 3.41 lakh farmers; the BJP, then in opposition, urged farmers not to repay and blamed officials.",
     sourceUrl: 'https://indianexpress.com/article/india/782-crore-went-to-ineligible-beneficiaries-kalia-scheme-9565567/',
     sourceLabel: "The Indian Express — Rs 782 crore went to 'ineligible beneficiaries': CAG on farmers support scheme (13 Sep 2024)",
     sources: [
       'https://www.newindianexpress.com/states/odisha/2020/Jul/27/dont-refund-money-received-under-kalia-scheme-bjp-tells-odisha-farmers-2175337.html',
+      'https://www.deccanherald.com/india/rs-78226-crore-distributed-to-1272-lakh-ineligible-beneficiaries-under-kalia-scheme-in-odisha-cag-3187529',
     ],
+    status: 'CAG compliance-audit finding (report released 11 Sept 2024). The audit named no individual; it is not a charge against any person.',
     tags: ['distribution'],
     enactedBy: [{ name: 'Naveen Patnaik', role: 'Chief Minister, Odisha', party: 'BJD' }],
     outcome:
-      'Of ₹9,333 crore disbursed, ₹2,060 crore for 2021-22 could not be checked because data was not provided. The new BJP government repackaged the scheme as CM-KISAN.',
+      "₹107.64 crore went to 1.28 lakh accounts whose holders' names did not match. Of ₹9,333 crore disbursed, ₹2,060 crore for 2021-22 could not be checked for lack of data. The new BJP government repackaged the scheme as CM-KISAN (IE).",
   },
   {
     id: 'hdb317',
@@ -514,7 +560,7 @@ export const HISAAB_DIST_EAST = Object.freeze([
     sources: ['https://www.outlookindia.com/elections/odisha-vidhan-sabha-result-2024-updates-bjp-majority-bjd-rule-to-end-full-list-of-winners'],
     tags: ['distribution', 'pre-election'],
     enactedBy: [{ name: 'Naveen Patnaik', role: 'Chief Minister, Odisha', party: 'BJD' }],
-    outcome: 'The BJD lost the 2024 Assembly poll after 24 years in power: BJP 78, BJD 51, Congress 14 of 147 seats (Outlook).',
+    outcome: 'Yearly spending on the pensions rose from ₹2,685 crore to ₹3,683 crore (CMO via PTI). The BJD then lost power in the 2024 Assembly poll: BJP 78, BJD 51, Congress 14 of 147 seats (Outlook).',
     poll: { label: 'Odisha Assembly 2024', month: '2024-05', gapDays: 93, result: 'BJP won 78 of 147 seats; BJD 51' },
   },
   {
@@ -538,10 +584,110 @@ export const HISAAB_DIST_EAST = Object.freeze([
     sourceUrl:
       'https://www.newindianexpress.com/states/odisha/2024/Jul/26/gjay-replaces-biju-swasthya-kalyan-yojana-as-health-takes-8-per-cent-of-odishas-budget',
     sourceLabel: 'The New Indian Express — GJAY replaces Biju Swasthya Kalyan Yojana as health takes 8 per cent of Odisha\'s budget (26 Jul 2024)',
-    sources: ['https://health.economictimes.indiatimes.com/news/policy/j-p-nadda-to-launch-ayushman-bharat-scheme-in-odisha-on-april-11/120048927'],
+    sources: [
+      'https://health.economictimes.indiatimes.com/news/policy/nadda-launches-ayushman-bharat-scheme-in-odisha/120221765',
+      'https://health.economictimes.indiatimes.com/news/policy/j-p-nadda-to-launch-ayushman-bharat-scheme-in-odisha-on-april-11/120048927',
+    ],
     tags: ['distribution'],
     enactedBy: [{ name: 'Mohan Charan Majhi', role: 'Chief Minister, Odisha', party: 'BJP' }],
     outcome: 'Health spending was budgeted at ₹21,200 crore for 2024-25, up about 32% and roughly 8% of the budget (NIE).',
+  },
+
+  {
+    id: 'hdb336',
+    domain: 'civics',
+    region: 'India',
+    state: 'OD',
+    topic: 'Welfare & Subsidies',
+    subtopic: "Mo Kudia ('My Hut', 2008)",
+    kind: 'scheme',
+    difficulty: 'expert',
+    year: 2008,
+    asOf: '2026-09',
+    govt: 'BJD',
+    question:
+      "In 2008 Naveen Patnaik's government started the 'Mo Kudia' (My Hut) housing scheme from Odisha's own funds. Whom was it first meant for?",
+    options: [
+      'Families hit by the 1999 super cyclone',
+      'Poor families left off the new BPL list',
+      'Families displaced by mining projects',
+      'Tribal families granted forest rights',
+    ],
+    correctIndex: 1,
+    explanation:
+      "UNI reported in Jan 2008 that each beneficiary would get ₹25,000 from state funds after the Centre pressed Odisha to draw up its BPL list from the 2002 survey, which the state said would leave out at least 10 lakh beneficiaries; the Madhu Babu pension began for the same reason. In Nov 2008, 5,000 Mo Kudia houses were sanctioned for BPL families in violence-hit Kandhamal (NIE).",
+    sourceUrl: 'https://timesofindia.indiatimes.com/city/bhubaneswar/Government-renames-Mo-Kudia-scheme/articleshow/42329187.cms',
+    sourceLabel: 'The Times of India — Government renames Mo Kudia scheme (12 Sep 2014)',
+    sources: [
+      'https://www.oneindia.com/2008/01/30/government-to-launch-new-housing-scheme-for-poor-1201717937.html',
+      'https://www.newindianexpress.com/states/odisha/2008/nov/01/5000-houses-under-mo-kudia-scheme-3615.html',
+    ],
+    tags: ['distribution'],
+    enactedBy: [{ name: 'Naveen Patnaik', role: 'Chief Minister, Odisha', party: 'BJD' }],
+    outcome:
+      'By 2014 the state paid ₹70,000–75,000 a house and had targeted about 15 lakh households over five years; in Sept 2014 Mo Kudia was folded into the new Biju Pucca Ghar scheme (TOI).',
+  },
+  {
+    id: 'hdb337',
+    domain: 'civics',
+    region: 'India',
+    state: 'OD',
+    topic: 'Welfare & Subsidies',
+    subtopic: 'Biju Pucca Ghar (2014)',
+    kind: 'spend',
+    difficulty: 'extreme',
+    year: 2014,
+    asOf: '2026-09',
+    govt: 'BJD',
+    question:
+      'Launching Biju Pucca Ghar in Sept 2014 to keep a BJD manifesto promise, Naveen Patnaik said its yearly budget would rise in phases from ₹330 crore to about how much?',
+    options: ['₹800 crore', '₹1,500 crore', '₹3,000 crore', '₹6,000 crore'],
+    correctIndex: 2,
+    explanation:
+      "The scheme subsumed Mo Kudia and aimed to turn every rural kutcha house into a pucca one, with houses allotted in the name of the household's woman member (Business Standard/PTI; OTV). The Times of India reported the renaming came 'without any clear cut modalities' and with no decision yet on raising the unit cost.",
+    sourceUrl:
+      'https://www.business-standard.com/article/economy-policy/naveen-announces-pucca-houses-for-odisha-s-rural-inhabitants-114091101168_1.html',
+    sourceLabel: "Business Standard (PTI) — Naveen announces pucca houses for Odisha's rural inhabitants (11 Sep 2014)",
+    sources: [
+      'https://odishatv.in/odisha-news/otherstories/naveen-launches-biju-pucca-ghara-yojana-55563',
+      'https://timesofindia.indiatimes.com/city/bhubaneswar/Government-renames-Mo-Kudia-scheme/articleshow/42329187.cms',
+      'https://www.thehindu.com/news/national/odisha/mohan-majhi-government-in-odisha-changes-names-of-21-schemes/article68922501.ece',
+      'https://www.newindianexpress.com/states/odisha/2025/Mar/31/antyodaya-gruha-yojana-launched-cm-hands-dole-to-60k-beneficiaries',
+    ],
+    tags: ['distribution'],
+    enactedBy: [{ name: 'Naveen Patnaik', role: 'Chief Minister, Odisha', party: 'BJD' }],
+    outcome:
+      'The BJP government that took over in 2024 discontinued Biju Pucca Ghar (The Hindu). In March 2025 CM Mohan Charan Majhi launched Antyodaya Gruha Yojana at ₹1.2 lakh a house, saying Biju Pucca Ghar had built fewer houses at a slower pace (NIE).',
+  },
+  {
+    id: 'hdb335',
+    domain: 'civics',
+    region: 'India',
+    state: 'OD',
+    topic: 'Welfare & Subsidies',
+    subtopic: 'Subhadra launch (2024)',
+    kind: 'scheme',
+    difficulty: 'simple',
+    year: 2024,
+    asOf: '2026-09',
+    govt: 'BJP',
+    question:
+      "Odisha's Subhadra cash scheme for women, the new BJP government's flagship, was launched in Bhubaneswar on 17 Sept 2024. Who launched it?",
+    options: ['Governor Raghubar Das', 'Deputy CM Pravati Parida', 'Union minister Dharmendra Pradhan', 'PM Narendra Modi'],
+    correctIndex: 3,
+    explanation:
+      "The PMO said Narendra Modi launched Subhadra, the state's flagship and the largest single women-centric scheme, expected to cover over 1 crore women, and started transfers to more than 10 lakh women that day. CM Mohan Charan Majhi later said all eligible women were covered within six and a half months.",
+    sourceUrl: 'https://www.pmindia.gov.in/en/news_updates/pm-launches-subhadra-the-largest-women-centric-scheme-in-bhubaneswar-odisha/',
+    sourceLabel: "PM India (PMO) — PM launches 'SUBHADRA', the largest women-centric scheme, in Bhubaneswar, Odisha (17 Sep 2024)",
+    sources: [
+      'https://www.thehindu.com/news/national/odisha/odisha-cm-majhi-distributes-5000-crore-to-one-crore-women-under-subhadra-scheme/article69913544.ece',
+    ],
+    tags: ['distribution'],
+    enactedBy: [
+      { name: 'Narendra Modi', role: 'Prime Minister', party: 'BJP' },
+      { name: 'Mohan Charan Majhi', role: 'Chief Minister, Odisha', party: 'BJP' },
+    ],
+    outcome: 'On 9 Aug 2025 Majhi paid the third instalment, ₹5,000 crore, to about one crore women on Raksha Bandhan (The Hindu).',
   },
 
   // ───────────────────────── Assam ─────────────────────────
@@ -638,7 +784,7 @@ export const HISAAB_DIST_EAST = Object.freeze([
       { name: 'Sarbananda Sonowal', role: 'Chief Minister, Assam', party: 'BJP' },
     ],
     outcome:
-      'The NDA won 75 of 126 seats and Sarma became CM. By April 2026 Orunodoi reached about 40 lakh women at ₹1,250 a month, not the ₹3,000 mentioned in 2021 (The Indian Express).',
+      'The NDA won 75 of 126 seats (CNBC-TV18). By April 2026 Orunodoi reached about 40 lakh women at ₹1,250 a month, not ₹3,000, and the BJP again promised ₹3,000 in its 2026 campaign (The Indian Express).',
     poll: { label: 'Assam Assembly 2021', month: '2021-03', result: 'BJP-led NDA won 75 of 126 seats' },
   },
   {
@@ -654,7 +800,7 @@ export const HISAAB_DIST_EAST = Object.freeze([
     asOf: '2026-09',
     govt: 'BJP',
     question: "Under Assam's Nijut Moina monthly stipend for girl students, launched in 2024, what makes a girl lose the payment?",
-    options: ['Failing a single exam', 'Family income above ₹2 lakh', 'Marrying before finishing her degree', 'Moving to a government college'],
+    options: ['Studying outside her home district', 'Family income above ₹2 lakh', 'Marrying before finishing her degree', 'Moving to a government college'],
     correctIndex: 2,
     explanation:
       "CM Himanta Biswa Sarma paid the first instalment on 6 Oct 2024: ₹1,000 a month in higher secondary, ₹1,250 for degree and ₹2,500 for postgraduate students, for 10 months a year; private-college students are excluded. The Congress said the government was 'creating beneficiaries'; Sarma said dropouts would otherwise rise.",
@@ -684,13 +830,14 @@ export const HISAAB_DIST_EAST = Object.freeze([
     options: ['₹15,000', '₹40,000', '₹60,000', '₹85,000'],
     correctIndex: 3,
     explanation:
-      "Members get ₹10,000 first, then ₹25,000 and ₹50,000 if the money is used productively. Sarma handed out cheques across constituencies from late 2025 and called it 'not a vote-centric scheme'. He also said Bihar's ₹10,000 women's scheme, paid before its November 2025 poll, followed Assam's model.",
+      "Members get ₹10,000 first, then ₹25,000 and ₹50,000 if the money is used productively (TOI). Sarma handed out cheques across constituencies from Oct 2025 and called it 'not a vote-centric scheme'; the Congress alleged beneficiaries were pressed into BJP activity and promised its own ₹50,000 'without political conditions' (IE).",
     sourceUrl:
       'https://indianexpress.com/article/political-pulse/the-asoni-election-schemes-for-women-may-decide-assam-contest-but-price-rise-remains-a-worry-10614409/',
     sourceLabel: "The Indian Express — The 'asoni' election: Schemes for women may decide Assam contest (2 Apr 2026)",
     sources: [
       'https://timesofindia.indiatimes.com/city/guwahati/born-in-assam-tested-in-bihar-women-self-employment-scheme-sets-template-for-state-polls/articleshow/125333702.cms',
       'https://newsonair.gov.in/bjp-set-to-form-government-in-west-bengal-and-assam-nda-retains-puducherry/',
+      'https://results.eci.gov.in/ResultAcGenMay2026/partywiseresult-S03.htm',
     ],
     tags: ['distribution', 'pre-election'],
     enactedBy: [{ name: 'Himanta Biswa Sarma', role: 'Chief Minister, Assam', party: 'BJP' }],
@@ -717,7 +864,7 @@ export const HISAAB_DIST_EAST = Object.freeze([
     options: ['₹11,000', '₹5,500', '₹3,000', '₹1,100'],
     correctIndex: 0,
     explanation:
-      "Frontline reports that Zoramthanga's government discontinued the New Land Use Policy, first run in four blocks from 1985, and gave ₹11,000 each to 53,288 families under MIP, ₹30.38 crore in all. The Congress's later NLUP offered ₹1.26 lakh per beneficiary over five years.",
+      "Frontline reports that Zoramthanga's government discontinued the New Land Use Policy, first run in four blocks from 1985, and gave 53,288 families ₹11,000 per beneficiary under MIP. The Congress's later NLUP offered ₹1.26 lakh per beneficiary over five years.",
     sourceUrl: 'https://frontline.thehindu.com/politics/playing-the-piper/article5389646.ece',
     sourceLabel: 'Frontline — Playing the Piper (27 Nov 2013)',
     tags: ['distribution'],
@@ -738,17 +885,17 @@ export const HISAAB_DIST_EAST = Object.freeze([
     govt: 'INC',
     question:
       "Mizoram's New Land Use Policy, launched in January 2011 to wean farmers off jhum (slash-and-burn) cultivation, was the flagship of which chief minister?",
-    options: ['Zoramthanga (MNF)', 'Lal Thanhawla (Congress)', 'Lalduhoma (ZPM)', 'Laldenga (MNF)'],
+    options: ['Zoramthanga (MNF)', 'Lalthanhawla (Congress)', 'Lalduhoma (ZPM)', 'Laldenga (MNF)'],
     correctIndex: 1,
     explanation:
-      'Lal Thanhawla said in Aug 2013 that the ₹2,873.13-crore NLUP had met its target of 1.2 lakh farmers in three years, at ₹1.26 lakh per beneficiary over five years. The Congress had won 32 of 40 seats in 2008 on the promise, after the mautam bamboo flowering destroyed crops of 1.3 lakh families.',
+      'Lalthanhawla said in Aug 2013 that the ₹2,873.13-crore NLUP had met its target of 1.2 lakh farmers in three years, at ₹1.26 lakh per beneficiary over five years. The Congress had won 32 of 40 seats in 2008 on the promise, after the mautam bamboo flowering hit the crops of 1.3 lakh families.',
     sourceUrl: 'https://frontline.thehindu.com/politics/playing-the-piper/article5389646.ece',
     sourceLabel: 'Frontline — Playing the Piper (27 Nov 2013)',
     sources: [
       'https://www.newindianexpress.com/elections/mizoram-elections/2018/Dec/12/mnf-bounces-back-to-power-in-mizoram-congress-loses-last-bastion-in-northeast-1910214.html',
     ],
     tags: ['distribution'],
-    enactedBy: [{ name: 'Lal Thanhawla', role: 'Chief Minister, Mizoram', party: 'INC' }],
+    enactedBy: [{ name: 'Lalthanhawla', role: 'Chief Minister, Mizoram', party: 'INC' }],
     outcome: 'The Congress was re-elected in Nov 2013 with 34 of 40 seats, then fell to five in 2018 as the MNF won 26 (NIE).',
   },
   {
@@ -857,9 +1004,13 @@ export const HISAAB_DIST_EAST = Object.freeze([
     sourceUrl:
       'https://indianexpress.com/article/north-east-india/tripura/tripura-identifies-60000-fake-ration-card-holders-detects-ineligible-social-security-pension-beneficiaries-5355053/',
     sourceLabel: "The Indian Express — Tripura govt identifies 60,000 fake ration card holders, detects 'ineligible' pension beneficiaries (13 Sep 2018)",
+    sources: [
+      'https://www.indiatodayne.in/tripura/story/tripura-nears-100-per-cent-aadhaar-e-kyc-for-ration-cards-62000-fake-cards-cancelled-1361790-2026-03-18',
+    ],
     tags: ['distribution'],
     enactedBy: [{ name: 'Biplab Kumar Deb', role: 'Chief Minister, Tripura', party: 'BJP' }],
-    outcome: 'Social-security pensioners paid fell from 4.19 lakh registered to 4.14 lakh by July 2018, while the BJP said it would still raise pensions from ₹700 to ₹2,000 as promised.',
+    outcome:
+      'The cards were cancelled in 2018; in March 2026 the food minister told the Assembly e-KYC was nearly complete, and officials said no fake cards remained (India Today NE). Social pensioners paid fell from 4.19 lakh registered to 4.14 lakh by July 2018 (IE).',
   },
   {
     id: 'hdb330',
@@ -874,21 +1025,24 @@ export const HISAAB_DIST_EAST = Object.freeze([
     asOf: '2026-09',
     govt: 'BJP',
     question:
-      "Tripura's BJP government raised social pensions to ₹2,000 a month in September 2022, about five months before the Assembly poll. What had they paid under the Left Front in 2018?",
+      "Tripura's BJP government raised social pensions to ₹2,000 a month in the run-up to the 2023 Assembly poll. What did the pension pay when the Left Front left office in 2018?",
     options: ['₹300', '₹500', '₹700', '₹1,000'],
     correctIndex: 2,
     explanation:
-      "The BJP's 2018 Vision Document promised to lift pensions from ₹700 to ₹2,000 (The Indian Express, 2018). In Dec 2024 the Congress alleged 40,622 people had been wrongly excluded, that pensioners fell from 4.19 lakh to 3.78 lakh and that the rise was paid for by cutting names; the government had said in 2018 it was removing fake beneficiaries.",
+      "The BJP's 2018 Vision Document promised to lift pensions from ₹700 to ₹2,000 (IE, 2018). In Dec 2022 CM Manik Saha listed the rise to ₹2,000 among his government's achievements; a Congress leader dated the announcement to Sept 2022. In Dec 2024 the Congress alleged 40,622 people were wrongly excluded; in 2018 the government said it was weeding out fake beneficiaries.",
     sourceUrl:
-      'https://timesofindia.indiatimes.com/city/guwahati/tripura-congress-slams-bjp-for-excluding-thousands-from-pension-benefits/articleshow/116148200.cms',
-    sourceLabel: 'The Times of India — Cong accuses BJP govt in Tripura of depriving poor of social benefits (9 Dec 2024)',
-    sources: [
       'https://indianexpress.com/article/north-east-india/tripura/tripura-identifies-60000-fake-ration-card-holders-detects-ineligible-social-security-pension-beneficiaries-5355053/',
+    sourceLabel: "The Indian Express — Tripura govt identifies 60,000 fake ration card holders, detects 'ineligible' pension beneficiaries (13 Sep 2018)",
+    sources: [
+      'https://tripuratimes.com/ttimes/developmental-activities-taking-place-across-tripura-in-full-swing-cm-5251.html',
+      'https://timesofindia.indiatimes.com/city/guwahati/tripura-congress-slams-bjp-for-excluding-thousands-from-pension-benefits/articleshow/116148200.cms',
+      'https://eastmojo.com/premium/2023/02/03/tripura-2023-bjp-promised-a-lot-in-2018-delivered-precious-little/',
       'https://frontline.thehindu.com/politics/tripura-assembly-election-2023-bjp-returns-as-tipra-motha-plays-spoilsport-for-left-congress-combine/article66576255.ece',
     ],
     tags: ['distribution', 'pre-election'],
     enactedBy: [{ name: 'Manik Saha', role: 'Chief Minister, Tripura', party: 'BJP' }],
-    outcome: 'The BJP–IPFT kept Tripura on 16 Feb 2023 with 33 of 60 seats (BJP 32), down from 44 in 2018; TIPRA Motha won 13 and the Left–Congress 14 (Frontline).',
+    outcome:
+      'A state official told EastMojo pensioners fell from 3.71 lakh to 3.18 lakh under the BJP; the CPI(M) said about a lakh were dropped. The BJP–IPFT kept Tripura in Feb 2023 with 33 of 60 seats, down from 44 in 2018 (Frontline).',
     poll: { label: 'Tripura Assembly 2023', month: '2023-02', result: 'BJP–IPFT won 33 of 60 seats; TIPRA Motha 13, Left–Congress 14' },
   },
 

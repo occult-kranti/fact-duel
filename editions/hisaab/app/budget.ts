@@ -90,12 +90,17 @@ export type BudgetCeremony = Readonly<{
 export type ActivityEntry = Readonly<{
   id: string;
   at: number;
-  /** 'toast' | 'ceremony:<kind>' | 'update' */
+  /**
+   * 'toast' | 'ceremony:<kind>' | 'update', or a structured in-place kind a screen looks for:
+   * 'pending:label' = a label promotion earned while this tab was hidden (Home opens its ceremony).
+   */
   kind: string;
   title: string;
   body?: string;
   /** False when the budget kept it off screen (it only lives here). */
   shown: boolean;
+  /** Structured detail for a screen that reacts to this entry (e.g. `{ band: 4 }` on 'pending:label'). */
+  data?: Readonly<Record<string, string | number>>;
   /** The visit it happened in (route path). */
   visit: string;
 }>;
@@ -116,6 +121,8 @@ export type BudgetSnapshot = Readonly<{
 }>;
 
 export const TOASTS_PER_VISIT = 1;
+/** Activity kind of a label promotion earned while the tab was hidden; `data.band` is the new band. */
+export const PENDING_LABEL = 'pending:label';
 export const CEREMONY_KINDS: readonly CeremonyKind[] = Object.freeze(['label', 'file']);
 /** How long a toast stays (bible §5 h-toast: 4 s; paused while hovered or focused). */
 export const TOAST_MS = 4000;
@@ -311,9 +318,13 @@ export function createHisaabBudget(options: { clock?: OverlayClock } = {}) {
     }
   }
 
-  /** Log an in-place update to Activity (level inside a band, a Stamp Register entry, rank, streak). */
-  function note(title: string, body?: string) {
-    log({ kind: 'update', title, body, shown: false });
+  /**
+   * Log an in-place update to Activity (level inside a band, a Stamp Register entry, rank, streak).
+   * `opts.kind` replaces 'update' for an entry a screen looks for by kind, never by its words
+   * ('pending:label'); `opts.data` carries its structured detail.
+   */
+  function note(title: string, body?: string, opts: { kind?: string; data?: Readonly<Record<string, string | number>> } = {}) {
+    log({ kind: opts.kind ?? 'update', title, body, shown: false, ...(opts.data ? { data: Object.freeze({ ...opts.data }) } : {}) });
     emit();
   }
 

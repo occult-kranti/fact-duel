@@ -1,0 +1,119 @@
+/* screens/files/brief.css — h-brief, the manila file brief holding a hub's one primary action.
+   Built on ui/file-card.css (h-file, h-file__tab). Tokens only. */
+.h-brief {
+  gap: var(--h-s-3);
+  scroll-margin-top: calc(var(--h-top-h) + env(safe-area-inset-top, 0px) + var(--h-s-8));
+}
+.h-brief__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--h-s-3);
+  min-width: 0;
+}
+.h-brief__titles {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.h-brief__kicker {
+  margin: 0 0 var(--h-s-1);
+  font-family: var(--h-font-mono);
+  font-size: var(--h-fs-2xs);
+  font-weight: 700;
+  letter-spacing: var(--h-track-kicker);
+  text-transform: uppercase;
+}
+:root[lang='hi'] .h-brief__kicker {
+  font-family: var(--h-font-ui);
+  font-size: var(--h-fs-xs);
+  letter-spacing: 0;
+}
+.h-brief__hi {
+  margin: 0;
+  font-family: var(--h-font-display);
+  font-weight: var(--h-wght-display-2);
+  font-size: var(--h-fs-l);
+  line-height: var(--h-lh-display-deva);
+  color: var(--h-syahi-text);
+}
+.h-brief__title {
+  margin: 0;
+  font-family: var(--h-font-display);
+  font-weight: var(--h-wght-display);
+  font-size: var(--h-fs-2xl);
+  line-height: var(--h-lh-caps);
+  letter-spacing: var(--h-track-caps);
+  text-transform: uppercase;
+  overflow-wrap: break-word;
+}
+.h-brief__title:lang(hi),
+:root[lang='hi'] .h-brief__title {
+  text-transform: none;
+  line-height: var(--h-lh-display-deva);
+  letter-spacing: 0;
+}
+.h-brief__statusrow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--h-s-2) var(--h-s-3);
+}
+.h-brief__stamp {
+  flex: none;
+  padding: var(--h-s-1) var(--h-s-1) var(--h-s-1) 0;
+}
+.h-brief__status {
+  margin: 0;
+  font-weight: var(--h-wght-ui-strong);
+}
+.h-brief__meter .h-meter {
+  background: var(--h-paper);
+}
+.h-brief__lead {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-2);
+  min-width: 0;
+  font-size: var(--h-fs-xs);
+}
+.h-brief__lead p {
+  margin: 0;
+}
+.h-brief__facts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-2);
+  margin: 0;
+}
+.h-brief__facts > div {
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr);
+  gap: var(--h-s-2);
+  align-items: baseline;
+}
+.h-brief__facts dt {
+  font-family: var(--h-font-mono);
+  font-size: var(--h-fs-2xs);
+  font-weight: 700;
+  letter-spacing: var(--h-track-kicker);
+  text-transform: uppercase;
+}
+:root[lang='hi'] .h-brief__facts dt {
+  font-family: var(--h-font-ui);
+  font-size: var(--h-fs-xs);
+  letter-spacing: 0;
+  text-transform: none;
+}
+.h-brief__facts dd {
+  margin: 0;
+  min-width: 0;
+  font-size: var(--h-fs-xs);
+}
+/* Secondary link under the button: centred, a full 44px target. */
+.h-brief > .h-link--tap {
+  align-self: center;
+  text-align: center;
+}

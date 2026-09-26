@@ -37,6 +37,9 @@ export type CertificateProps = {
 const MONTHS = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
 export const certificateDate = (d: Date) => `${String(d.getDate()).padStart(2, '0')} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
 
+/** Labels longer than this (in Latin characters) print one size down. */
+const LONG_LABEL = 18;
+
 export function Certificate({ name, receipts, band, issuedOn, fno, id, className }: CertificateProps) {
   const label = labelDisplay(band);
   const date = new Date(issuedOn);
@@ -61,7 +64,8 @@ export function Certificate({ name, receipts, band, issuedOn, fno, id, className
           This is to certify that <strong className="h-cert__name">{shownName}</strong> has, after{' '}
           <strong>{formatNumber(receipts)} sourced receipts</strong>, been officially labelled
         </p>
-        <h2 className="h-cert__label">
+        {/* Long rungs ('WhatsApp University Fresher') step down a size so the 4:5 frame keeps its room. */}
+        <h2 className={cx('h-cert__label', label.en.length > LONG_LABEL && 'h-cert__label--long')}>
           <span className="h-cert__labelhi" lang="hi">
             {label.hi}
           </span>

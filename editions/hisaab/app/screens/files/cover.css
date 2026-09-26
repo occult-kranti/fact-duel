@@ -1,0 +1,16 @@
+/* screens/files/cover.css — h-cover: the files lane's file cover (ui/file-card.css anatomy) with the
+   CLEARED stamp on the bottom-right corner, where the tape sat. Tokens only. */
+.h-cover .h-file__extra {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--h-s-2);
+}
+.h-cover .h-file__meter .h-meter__copy {
+  font-size: var(--h-fs-xs);
+}
+.h-cover__stamp {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 var(--h-s-1) var(--h-s-1) 0;
+}

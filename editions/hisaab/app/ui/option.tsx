@@ -10,6 +10,14 @@
  * reshuffle what the engine dealt. Accessible name: "Option A, triangle: <label>".
  * LIVE-SURFACE SAFE: no mount animation, no correctness styling until you pass `correctIndex`
  * (only after `round.result`); press feedback and the lock state are the only motion.
+ *
+ * Keys 1–4 / A–D (WCAG 2.1.4): they answer ONLY while keyboard focus is inside the question — the
+ * list's question container (`[data-h-question]`, `.h-qcard`, `.h-live__card`, `.h-pass__play`,
+ * `.h-dobara`, else its nearest section). A dictated word or a stray key elsewhere never locks an
+ * answer. Screens move focus to the stem when a card appears (tabIndex -1), so the keys work at once.
+ *
+ * Labels are bank text, which stays English in the Hindi locale (bible §2.3): `.h-opt__label` carries
+ * lang="en" (WCAG 3.1.2) unless `labelLang` says otherwise.
  */
 import { useEffect, useLayoutEffect, useRef, type ReactNode } from 'react';
 import { Check, Lock, X } from 'lucide-react';
@@ -72,13 +80,15 @@ export function optionState(index: number, chosen: number | null | undefined, co
 export type OptionProps = {
   index: number;
   label: ReactNode;
+  /** Language of the label (default 'en': bank text). Pass null to inherit the page's language. */
+  labelLang?: string | null;
   state?: OptionState;
   onChoose?: (index: number) => void;
   disabled?: boolean;
   className?: string;
 };
 
-export function Option({ index, label, state = 'idle', onChoose, disabled, className }: OptionProps) {
+export function Option({ index, label, labelLang = 'en', state = 'idle', onChoose, disabled, className }: OptionProps) {
   const { isHi } = useLang();
   const slot = OPTION_SLOTS[index] ?? OPTION_SLOTS[0];
   const letter = isHi ? slot.letterHi : slot.letter;
@@ -125,7 +135,9 @@ export function Option({ index, label, state = 'idle', onChoose, disabled, class
       <span className="h-sr">
         Option {slot.letter}, {slot.shape}:
       </span>
-      <span className="h-opt__label">{label}</span>
+      <span className="h-opt__label" lang={labelLang ?? undefined}>
+        {label}
+      </span>
       {mark ? <span className="h-opt__mark">{mark}</span> : null}
     </button>
   );
@@ -140,24 +152,71 @@ export type OptionListProps = {
   onChoose?: (index: number) => void;
   /** Disable further taps (after the lock, or while waiting). */
   disabled?: boolean;
-  /** Answer with keys 1–4 / A–D while this list is mounted and enabled. */
+  /** Answer with keys 1–4 / A–D while this list is enabled AND focus is inside its question. */
   keys?: boolean;
+  /** Language of the option labels (default 'en': bank text). Pass null to inherit. */
+  labelLang?: string | null;
   /** Accessible name of the group (default "Answers"). */
   label?: string;
   className?: string;
 };
 
-export function OptionList({ options, chosen = null, correctIndex = null, onChoose, disabled, keys = true, label = 'Answers', className }: OptionListProps) {
+/** The open modal on top (showModal, or role=dialog aria-modal like the ceremony), if any. */
+function openModal(): Element | null {
+  const aria = document.querySelector('[role="dialog"][aria-modal="true"]');
+  if (aria) return aria;
+  for (const d of Array.from(document.querySelectorAll('dialog[open]'))) {
+    try {
+      if (d.matches(':modal')) return d;
+    } catch {
+      return d; // no :modal support: treat an open <dialog> as modal
+    }
+  }
+  return null;
+}
+
+/** The containers a question's shortcut keys belong to (the screens' question cards). */
+export const QUESTION_SCOPE = '[data-h-question], .h-qcard, .h-live__card, .h-pass__play, .h-dobara';
+
+/** The question container around `el` — a known card, else its nearest section, else its parent. */
+export function questionScope(el: Element | null): Element | null {
+  if (!el) return null;
+  return el.closest(QUESTION_SCOPE) ?? el.closest('section, article, [role="dialog"], dialog') ?? el.parentElement;
+}
+
+/**
+ * True when keyboard focus sits inside `scope` (an element, or a selector matched from the focused
+ * element outwards). The gate for any single-key shortcut (WCAG 2.1.4): a route's "N / →" for the
+ * next card uses `focusWithin('.h-play')`, so a dictated "n" elsewhere does nothing.
+ */
+export function focusWithin(scope: Element | string | null | undefined): boolean {
+  if (typeof document === 'undefined' || !scope) return false;
+  const active = document.activeElement;
+  if (!active || active === document.body) return false;
+  return typeof scope === 'string' ? !!active.closest(scope) : scope.contains(active);
+}
+
+export function OptionList({ options, chosen = null, correctIndex = null, onChoose, disabled, keys = true, labelLang = 'en', label = 'Answers', className }: OptionListProps) {
   const choose = useRef(onChoose);
+  const list = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
     choose.current = onChoose;
   });
   useEffect(() => {
     if (!keys || disabled) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey) return;
+      if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey || e.repeat) return;
+      const own = list.current;
+      // Only while focus is inside this question (WCAG 2.1.4): never from the page at large.
+      if (!own || !focusWithin(questionScope(own))) return;
       const t = e.target as HTMLElement | null;
       if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+      // A modal is on top (a <dialog open>, an aria-modal sheet, the ceremony) and this list is not in
+      // it: its keys are its own.
+      const inDialog = t?.closest?.('dialog[open], [aria-modal="true"]');
+      if (inDialog && !inDialog.contains(own)) return;
+      const modal = openModal();
+      if (modal && !modal.contains(own)) return;
       const k = e.key.toLowerCase();
       const i = '1234'.indexOf(k) !== -1 ? '1234'.indexOf(k) : 'abcd'.indexOf(k);
       if (i < 0 || i >= options.length) return;
@@ -168,9 +227,9 @@ export function OptionList({ options, chosen = null, correctIndex = null, onChoo
     return () => window.removeEventListener('keydown', onKey);
   }, [keys, disabled, options.length]);
   return (
-    <div className={cx('h-optlist', className)} role="group" aria-label={label}>
+    <div ref={list} className={cx('h-optlist', className)} role="group" aria-label={label}>
       {options.map((text, i) => (
-        <Option key={i} index={i} label={text} state={optionState(i, chosen, correctIndex)} onChoose={onChoose} disabled={disabled} />
+        <Option key={i} index={i} label={text} labelLang={labelLang} state={optionState(i, chosen, correctIndex)} onChoose={onChoose} disabled={disabled} />
       ))}
     </div>
   );

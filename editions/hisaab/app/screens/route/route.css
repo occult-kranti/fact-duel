@@ -1,0 +1,34 @@
+/* screens/route/route.css — route-player specifics on top of card.css. */
+.h-route__padded,
+.h-route__replay {
+  font-weight: var(--h-wght-ui-strong);
+}
+.h-route__fold {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.h-route__confirm {
+  scroll-margin-bottom: calc(var(--h-s-16) + var(--h-s-12));
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-2);
+  padding: var(--h-s-4);
+  border: var(--h-bw) dashed var(--h-line);
+  border-radius: var(--h-r-m);
+  background: var(--h-paper);
+  font-size: var(--h-fs-xs);
+}
+.h-route__confirm p {
+  margin: 0;
+}
+.h-route__confirmrow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--h-s-2) var(--h-s-3);
+}
+
+/* The inline label card after the first receipt ever (bible §11.1): in place, never a ceremony. */
+.h-route__label {
+  margin-top: var(--h-s-4);
+}

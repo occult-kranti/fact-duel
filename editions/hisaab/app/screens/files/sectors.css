@@ -1,0 +1,168 @@
+/* screens/files/sectors.css — Sector Files (bible §11.4): a cabinet of 13 manila files; phone: a
+   stack with the brief expanded inline under the chosen file; ≥ 900px: cabinet grid + sticky brief.
+   Built on ui/file-card.css. Tokens only. */
+.h-sect__tally {
+  margin: calc(-1 * var(--h-s-3)) 0 0;
+  font-size: var(--h-fs-xs);
+  font-weight: var(--h-wght-ui-strong);
+  color: var(--h-ink-2);
+}
+.h-sect__tally .h-mono {
+  font-weight: 700;
+  color: var(--h-ink);
+}
+
+.h-sect__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--h-s-6);
+  align-items: start;
+  min-width: 0;
+}
+.h-sect__cabinet {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--h-s-3) var(--h-s-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  min-width: 0;
+}
+.h-sect__slot {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  scroll-margin-top: calc(var(--h-top-h) + env(safe-area-inset-top, 0px) + var(--h-s-4));
+}
+.h-sect__file {
+  flex: 1 1 auto;
+}
+.h-sect__file .h-file__meta {
+  font-size: var(--h-fs-xs);
+}
+/* The expanded file on a phone: its brief hangs under it like the file's first page. */
+.h-sect__slot--open > .h-sect__file {
+  border-radius: 0 var(--h-r-l) 0 0;
+  box-shadow: none;
+  background: var(--h-manila-2);
+}
+.h-sect__side {
+  min-width: 0;
+}
+@media (min-width: 600px) and (max-width: 899.98px) {
+  .h-sect__cabinet {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  /* The inline brief spans both columns under its file's row. */
+  .h-sect__slot--open {
+    grid-column: 1 / -1;
+  }
+}
+@media (min-width: 900px) {
+  .h-sect__layout {
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
+    gap: var(--h-s-8);
+  }
+  /* Beside the brief there is room for one file a row until 1200px, two until 1320px, then three. */
+  .h-sect__cabinet {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .h-sect__side {
+    position: sticky;
+    top: calc(var(--h-top-h) + env(safe-area-inset-top, 0px) + var(--h-s-4));
+  }
+}
+@media (min-width: 1200px) {
+  .h-sect__cabinet {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1320px) {
+  .h-sect__cabinet {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Two or three files a row: step the titles down so 'INFRASTRUCTURE' stays whole. */
+@media (min-width: 600px) {
+  .h-sect__file .h-file__title {
+    font-size: var(--h-fs-xl);
+  }
+}
+@media (min-width: 1320px) {
+  .h-sect__file .h-file__title {
+    font-size: var(--h-fs-l);
+  }
+}
+
+/* ---- the brief ---------------------------------------------------------------------------------- */
+.h-sect__brief {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-3);
+  min-width: 0;
+  padding: var(--h-s-4);
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-l);
+  background: var(--h-paper);
+  box-shadow: var(--h-shadow-2);
+}
+.h-sect__brief--inline {
+  border-top: 0;
+  border-radius: 0 0 var(--h-r-l) var(--h-r-l);
+  box-shadow: var(--h-shadow-2);
+}
+.h-sect__brieftitle {
+  margin: 0;
+  font-family: var(--h-font-display);
+  font-weight: var(--h-wght-display);
+  font-size: var(--h-fs-2xl);
+  line-height: var(--h-lh-caps);
+  letter-spacing: var(--h-track-caps);
+  text-transform: uppercase;
+  overflow-wrap: break-word;
+}
+.h-sect__brieftitle :lang(hi),
+.h-sect__brieftitle:lang(hi) {
+  text-transform: none;
+  line-height: var(--h-lh-display-deva);
+  color: var(--h-syahi-text);
+}
+.h-sect__status {
+  margin: 0;
+  font-weight: var(--h-wght-ui-strong);
+}
+.h-sect__facts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-2);
+  margin: 0;
+}
+.h-sect__facts > div {
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr);
+  gap: var(--h-s-2);
+  align-items: baseline;
+}
+.h-sect__facts dt {
+  font-family: var(--h-font-mono);
+  font-size: var(--h-fs-2xs);
+  font-weight: 700;
+  letter-spacing: var(--h-track-kicker);
+  text-transform: uppercase;
+  color: var(--h-ink-2);
+}
+:root[lang='hi'] .h-sect__facts dt {
+  font-family: var(--h-font-ui);
+  font-size: var(--h-fs-xs);
+  letter-spacing: 0;
+  text-transform: none;
+}
+.h-sect__facts dd {
+  margin: 0;
+  min-width: 0;
+  font-size: var(--h-fs-xs);
+}
+.h-sect__brief > .h-link--tap {
+  align-self: flex-start;
+}

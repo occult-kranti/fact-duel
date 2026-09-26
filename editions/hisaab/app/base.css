@@ -15,6 +15,40 @@ html {
   text-size-adjust: 100%;
   background: var(--h-ground);
   color: var(--h-ink);
+  /* Focus Not Obscured (WCAG 2.4.11): keyboard focus, anchor jumps and scrollIntoView stop clear of the
+     sticky top bar, the fixed bottom nav and the screens' sticky action bars. The reserves below add
+     up; each is 0 unless that bar is on screen. */
+  --_sp-nav: 0px;
+  --_sp-bar: 0px;
+  scroll-padding-top: calc(var(--h-top-h) + env(safe-area-inset-top, 0px) + var(--h-s-2));
+  scroll-padding-bottom: calc(
+    var(--_sp-nav) + var(--_sp-bar) + env(safe-area-inset-bottom, 0px) + var(--h-s-2)
+  );
+}
+/* No top bar in a live room or pass-and-play. */
+html[data-chrome='none'] {
+  scroll-padding-top: calc(env(safe-area-inset-top, 0px) + var(--h-s-2));
+}
+/* The phone's bottom nav (the rail at >= 900px takes no height). */
+html:has(.h-app[data-nav='on']) {
+  --_sp-nav: var(--h-nav-h);
+}
+/* A sticky action bar above it: Settings' Done, the duel launch bar, a route card's Next, the round
+   receipt's and the result's action bars (a primary plus a secondary, stacked on phones). */
+html:has(.h-set__done-bar, .h-setup__launch, .h-playbar, .h-rreceipt__bar, .h-result__bar) {
+  --_sp-bar: calc(var(--h-s-16) + var(--h-s-16));
+}
+@media (min-width: 900px) {
+  html:has(.h-app[data-nav='on']) {
+    --_sp-nav: 0px;
+  }
+  /* Settings' Done bar is static on desktop; the others are single-row bars there. */
+  html:has(.h-set__done-bar, .h-setup__launch, .h-playbar, .h-rreceipt__bar, .h-result__bar) {
+    --_sp-bar: var(--h-s-16);
+  }
+  html:has(.h-set__done-bar):not(:has(.h-setup__launch, .h-playbar, .h-rreceipt__bar, .h-result__bar)) {
+    --_sp-bar: 0px;
+  }
 }
 
 /* Specific enough to win over app/locale.css (JHK's Hindi body line-height) — tokens decide here. */
@@ -122,12 +156,6 @@ b {
   letter-spacing: var(--h-track-kicker);
   color: var(--h-ink-2);
 }
-/* A kicker written in Devanagari (a lang="hi" span in an English screen) reads in the UI face. */
-.h-kicker[lang='hi'] {
-  font-family: var(--h-font-ui);
-  font-size: var(--h-fs-xs);
-  letter-spacing: 0;
-}
 .h-mono {
   font-family: var(--h-font-mono);
   font-variant-numeric: tabular-nums;
@@ -189,6 +217,35 @@ html:root {
   --fx-3: var(--h-tape);
   --fx-4: var(--h-paper);
   --fx-5: var(--h-brass);
+}
+
+/* ---- Devanagari never sets in the mono face (bible §4.4 rule 2) ----------------------------------
+   Sometype Mono has no Devanagari, so a mono 12px kicker, chip or as-of line in Hindi fell back to
+   Mukta at 12px bold. Any of these labels whose language is Hindi — the Hindi locale, or a lang="hi"
+   span in an English screen — reads in the UI face at the 14px sentence floor, untracked. A Latin code
+   that should stay mono in the Hindi locale ('F.No. S/UP', a source kind, a govt tag) carries
+   lang="en" and keeps its mono. */
+:root
+  :is(
+    .h-kicker,
+    .h-chip,
+    .h-legal__asof,
+    .h-sheet__title,
+    .h-sheet__summary,
+    .h-ceremony__kicker,
+    .h-receipt__k,
+    .h-conf__legend,
+    .h-pick__letter
+  ):lang(hi) {
+  font-family: var(--h-font-ui);
+  font-size: var(--h-fs-xs);
+  letter-spacing: 0;
+}
+
+/* The digits helper keeps its size; Hindi words inside it ('5 सवाल', 'लेवल 20+') take the UI face. */
+:root .h-mono:lang(hi) {
+  font-family: var(--h-font-ui);
+  letter-spacing: 0;
 }
 
 /* ---- Hindi locale: no tracking anywhere text may be Devanagari (bible §4.4 rule 1) ---------------

@@ -1,0 +1,94 @@
+/* three/lab.css — the hidden set-piece lab (#/dev/three). */
+.h-lab__controls {
+  display: grid;
+  gap: var(--h-s-3);
+  margin-block: var(--h-s-4);
+}
+.h-lab__choice {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+.h-lab__choice legend {
+  margin-bottom: var(--h-s-1);
+  font-family: var(--h-font-mono);
+  font-size: var(--h-fs-2xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--h-ink-2);
+}
+.h-lab__chips,
+.h-lab__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--h-s-2);
+}
+.h-lab__chip {
+  min-height: 44px;
+  padding: 0 var(--h-s-3);
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-pill);
+  background: var(--h-paper);
+  color: var(--h-ink);
+  font: inherit;
+  font-size: var(--h-fs-xs);
+  font-weight: var(--h-wght-ui-strong);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.h-lab__chip[aria-pressed='true'] {
+  background: var(--h-syahi-soft);
+  border-color: var(--h-syahi);
+  color: var(--h-syahi-text);
+}
+.h-lab__chip:focus-visible {
+  outline: none;
+  box-shadow: var(--h-focus-ring);
+}
+.h-lab__note {
+  margin: 0;
+  font-size: var(--h-fs-xs);
+  color: var(--h-ink-2);
+}
+.h-lab__stage {
+  display: grid;
+  gap: var(--h-s-4);
+}
+@media (min-width: 900px) {
+  .h-lab__stage {
+    grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  }
+}
+.h-lab__panel {
+  min-width: 0;
+  padding: var(--h-s-4);
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-l);
+  background: var(--h-paper);
+  box-shadow: var(--h-shadow-2);
+}
+.h-lab__h2 {
+  margin: 0 0 var(--h-s-3);
+  font-family: var(--h-font-display);
+  font-weight: var(--h-wght-display);
+  font-size: var(--h-fs-xl);
+  line-height: var(--h-lh-caps);
+  text-transform: uppercase;
+}
+.h-lab__stats {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-family: var(--h-font-mono);
+  font-size: var(--h-fs-xs);
+  font-variant-numeric: tabular-nums;
+}
+.h-lab__stats th,
+.h-lab__stats td {
+  padding: 4px 8px;
+  border-bottom: 1px solid var(--h-hair);
+  text-align: left;
+  white-space: nowrap;
+}

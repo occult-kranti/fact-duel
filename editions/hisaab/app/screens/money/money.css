@@ -1,0 +1,156 @@
+/* screens/money/money.css — the money-trail hub and mode views (charter §4a, §6). Built on
+   ui/file-card.css and screens/files/files.css (h-fsec, h-quip). Tokens only. */
+.h-money__quip {
+  margin-top: calc(-1 * var(--h-s-3));
+}
+.h-money__next {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--h-s-2) var(--h-s-4);
+}
+.h-money__next .h-meta {
+  margin: 0;
+}
+@media (max-width: 599.98px) {
+  .h-money__next > .h-btn {
+    width: 100%;
+  }
+}
+
+.h-money__modes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
+  gap: var(--h-s-2) var(--h-s-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  align-items: stretch;
+}
+.h-money__modes > li {
+  display: flex;
+  min-width: 0;
+}
+.h-money__modes .h-file {
+  flex: 1 1 auto;
+}
+
+/* The Saal-dar-Saal cover's spark: cards on file per year, 2000 → 2026 (decorative; the real chart,
+   with values and a table twin, is one tap in). Bars from one baseline, 4px round data-ends. */
+.h-money__spark {
+  display: flex;
+  align-self: stretch;
+  align-items: flex-end;
+  gap: 2px;
+  height: 40px;
+  margin: var(--h-s-1) 0 2px;
+  border-bottom: var(--h-bw-thin) solid var(--h-manila-ink);
+}
+.h-money__sparkbar {
+  flex: 1 1 0;
+  max-width: 10px;
+  border-radius: 2px 2px 0 0;
+  background: var(--h-syahi);
+}
+.h-money__sparkaxis {
+  display: flex;
+  align-self: stretch;
+  justify-content: space-between;
+  margin-bottom: var(--h-s-2);
+  font-family: var(--h-font-mono);
+  font-size: var(--h-fs-2xs);
+  font-weight: 700;
+}
+
+/* ---- a mode ------------------------------------------------------------------------------------- */
+.h-money__tally {
+  margin: 0;
+  font-size: var(--h-fs-xs);
+  color: var(--h-ink-2);
+}
+.h-money__tally .h-mono {
+  font-weight: 700;
+  color: var(--h-ink);
+}
+.h-money__legend {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--h-s-2);
+  margin: calc(-1 * var(--h-s-3)) 0 0;
+  max-width: var(--h-read);
+  font-size: var(--h-fs-xs);
+  color: var(--h-ink-2);
+}
+.h-money__legend svg {
+  margin-top: 3px;
+  color: var(--h-ink);
+}
+.h-money__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--h-s-8);
+  align-items: start;
+  min-width: 0;
+}
+.h-money__side {
+  min-width: 0;
+}
+.h-money__main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-8);
+  min-width: 0;
+}
+@media (min-width: 900px) {
+  .h-money__layout {
+    grid-template-columns: minmax(300px, 380px) minmax(0, 1fr);
+  }
+  .h-money__side {
+    position: sticky;
+    top: calc(var(--h-top-h) + env(safe-area-inset-top, 0px) + var(--h-s-4));
+  }
+}
+.h-money__files {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.h-money__files > li {
+  display: flex;
+  min-width: 0;
+}
+.h-money__files .h-file {
+  flex: 1 1 auto;
+}
+
+/* The poll countdown chip: a fact, set neutral (paper + ink), a timer icon as its twin. */
+.h-money__poll {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--h-s-1);
+  max-width: 100%;
+  min-height: 28px;
+  padding: 3px var(--h-s-2);
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-s);
+  background: var(--h-paper);
+  color: var(--h-ink);
+  font-family: var(--h-font-mono);
+  font-size: var(--h-fs-2xs);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.h-money__poll svg {
+  flex: none;
+}
+.h-money__pollrange {
+  display: block;
+  margin-top: var(--h-s-2);
+  font-size: var(--h-fs-xs);
+}
+
+.h-money__typing {
+  max-width: 34rem;
+}

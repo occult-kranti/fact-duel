@@ -54,6 +54,7 @@ export const HISAAB_DIST_NORTH = Object.freeze([
     sourceUrl: 'https://socialjusticehry.gov.in/old-age-samman-allowance-scheme/',
     sourceLabel: 'Government of Haryana, Social Justice & Empowerment — Old Age Samman Allowance Scheme (rate history, updated Jul 2026)',
     sources: [
+      'https://www.rediff.com/news/report/haryana-election-inld-puts-up-worst-ever-show-in-haryana/20191024.htm',
       'https://www.newindianexpress.com/india/2024/Sep/23/congress-on-course-to-sweep-haryana-polls-set-to-repeat-2005-performance-surjewala',
       'https://en.wikipedia.org/wiki/2005_Haryana_Legislative_Assembly_election',
     ],
@@ -61,7 +62,7 @@ export const HISAAB_DIST_NORTH = Object.freeze([
     enactedBy: [{ name: 'Om Prakash Chautala', role: 'Chief Minister, Haryana', party: 'INLD' }],
     outcome:
       'The INLD lost the 3 Feb 2005 poll: Congress won 67 of 90 seats and the INLD fell to 9. The next government, under Bhupinder Singh Hooda, raised the allowance again to ₹500–700 from March 2009.',
-    poll: { label: 'Haryana Assembly 2005', month: '2005-02', gapDays: 94, result: 'Congress won 67 of 90 seats; INLD fell from 47 to 9' },
+    poll: { label: 'Haryana Assembly 2005', month: '2005-02', gapDays: 94, result: 'Congress won 67 of 90 seats; INLD 9' },
   },
 
   // ───────────────────────── 2005–2009 ─────────────────────────
@@ -109,7 +110,10 @@ export const HISAAB_DIST_NORTH = Object.freeze([
       'Hindustan Times reported the SP government estimated ₹250 crore a year, and that the Prime Minister had turned down a request for central funds. Registrations surged — Agra’s graduate sign-ups rose about tenfold in a month. The BSP government later scrapped the dole; Akhilesh Yadav revived it at ₹1,000 a month in 2012.',
     sourceUrl: 'https://www.hindustantimes.com/india/unemployment-dole/story-4nNvKmDAYGRN0MfOx1iDKP.html',
     sourceLabel: 'Hindustan Times — Unemployment dole (26 Mar 2006)',
-    sources: ['https://www.newindianexpress.com/india/2012/Sep/10/unemployment-dole-in-up-404601.html'],
+    sources: [
+      'https://www.bhaskar.com/news/up-luck-bjp-alleges-against-akhilesh-yadav-government-by-cag-report-5601325-pho.html',
+      'https://www.newindianexpress.com/india/2012/Sep/10/unemployment-dole-in-up-404601.html',
+    ],
     tags: ['distribution'],
     enactedBy: [{ name: 'Mulayam Singh Yadav', role: 'Chief Minister, Uttar Pradesh', party: 'SP' }],
     outcome:
@@ -183,7 +187,7 @@ export const HISAAB_DIST_NORTH = Object.freeze([
     options: [
       'A ₹22,000 savings certificate meant to grow to ₹1 lakh at 18',
       'A ₹5,000 cash grant at birth',
-      'A bicycle and ₹25,000 on reaching Class 11',
+      'A ₹500 monthly stipend until she turns 18',
       'A housing plot in her mother’s name',
     ],
     correctIndex: 0,
@@ -215,10 +219,13 @@ export const HISAAB_DIST_NORTH = Object.freeze([
     options: ['₹400 a month', '₹1,000 a month', '₹500–700 a month', '₹1,200 a month'],
     correctIndex: 2,
     explanation:
-      'The Social Justice department’s rate history shows ₹300 from Nov 2004, ₹500–700 from 1 Mar 2009 and ₹1,000 from 1 Jan 2014, both hikes under Hooda’s Congress government. Rules have since been eased: anyone 60 or older with family income up to ₹3 lakh a year now qualifies.',
+      'The Social Justice department’s rate history shows ₹300 from Nov 2004, ₹500–700 from 1 Mar 2009 and ₹1,000 from 1 Jan 2014, both hikes under Hooda’s Congress government. Rules have since been eased: anyone 60 or older whose own and spouse’s income is up to ₹3 lakh a year now qualifies.',
     sourceUrl: 'https://socialjusticehry.gov.in/old-age-samman-allowance-scheme/',
     sourceLabel: 'Government of Haryana, Social Justice & Empowerment — Old Age Samman Allowance Scheme (rate history, updated Jul 2026)',
-    sources: ['https://en.wikipedia.org/wiki/2009_Haryana_Legislative_Assembly_election'],
+    sources: [
+      'https://frontline.thehindu.com/cover-story/article30185748.ece',
+      'https://en.wikipedia.org/wiki/2009_Haryana_Legislative_Assembly_election',
+    ],
     tags: ['distribution', 'pre-election'],
     enactedBy: [{ name: 'Bhupinder Singh Hooda', role: 'Chief Minister, Haryana', party: 'INC' }],
     outcome:
@@ -240,7 +247,7 @@ export const HISAAB_DIST_NORTH = Object.freeze([
     asOf: '2026-09',
     govt: 'BSP',
     question:
-      'Mayawati’s Mahamaya Garib Arthik Madad Yojana, launched in November 2010, promised about 31 lakh poor families how much a month?',
+      'Mayawati’s Mahamaya Garib Arthik Madad Yojana, launched in November 2010 for about 31 lakh people in poor (BPL) families, promised each beneficiary how much a month?',
     options: ['₹150', '₹300', '₹500', '₹1,000'],
     correctIndex: 1,
     explanation:
@@ -250,7 +257,7 @@ export const HISAAB_DIST_NORTH = Object.freeze([
     tags: ['distribution'],
     enactedBy: [{ name: 'Mayawati', role: 'Chief Minister, Uttar Pradesh', party: 'BSP' }],
     outcome:
-      'Aimed at about 31 lakh BPL families, with ₹535 crore set aside for the first phase; the first ₹1,800 instalment covered October 2010 to March 2011.',
+      'Aimed at about 31 lakh people in BPL families, with ₹535 crore set aside for the first phase; the first ₹1,800 instalment covered October 2010 to March 2011.',
   },
   {
     id: 'hdb109',
@@ -295,6 +302,9 @@ export const HISAAB_DIST_NORTH = Object.freeze([
     correctIndex: 2,
     explanation:
       'The audit, tabled in May 2017, said the scheme required deposits straight into bank accounts, yet ₹8.07 crore went on seating and refreshments and ₹6.99 crore on bussing about 1.26 lakh beneficiaries to events, many with CM Akhilesh Yadav. The government accepted the figures but argued payment through bank accounts was “not binding”.',
+    status:
+      'CAG audit finding (report tabled in the UP Assembly, May 2017), not a court finding; no case against any person reported in sources checked (Sept 2026). The then government’s reply is recorded in the report.',
+    people: ['Akhilesh Yadav'],
     sourceUrl: 'https://indianexpress.com/article/india/to-distribute-rs-20-crore-akhilesh-govt-splurged-rs-15-crore-on-functions-cag-4662910/',
     sourceLabel: 'The Indian Express — To distribute Rs 20 crore, Akhilesh govt splurged Rs 15 crore on functions: CAG (19 May 2017)',
     tags: ['distribution'],
@@ -320,6 +330,8 @@ export const HISAAB_DIST_NORTH = Object.freeze([
     correctIndex: 0,
     explanation:
       'HP supplied 14.81 lakh laptops for ₹2,822.71 crore and 14.35 lakh were handed out, the CAG said, while ₹598.33 crore lay unspent and three CM-attended distribution events cost ₹7.47 crore against ₹1.50 crore allowed. A companion free-tablet plan was dropped despite ₹604.78 crore budgeted.',
+    status:
+      'CAG audit finding (tabled in the UP Assembly, Mar 2015), not a court finding; no case against any person and no SP response reported in sources checked (Sept 2026).',
     sourceUrl: 'https://indianexpress.com/article/cities/lucknow/free-laptops-cag-punches-holes-says-excessively-funded-yet-short-of-target/',
     sourceLabel: 'The Indian Express — Free laptops: CAG punches holes, says excessively funded yet short of target (27 Mar 2015)',
     tags: ['distribution'],
@@ -335,16 +347,16 @@ export const HISAAB_DIST_NORTH = Object.freeze([
     topic: 'Banking & Finance',
     subtopic: 'Bhamashah card (relaunch 2014)',
     kind: 'scheme',
-    difficulty: 'simple',
+    difficulty: 'expert',
     year: 2014,
     asOf: '2026-09',
     govt: 'BJP',
     question:
-      'Relaunched by Vasundhara Raje on 15 August 2014, Rajasthan’s Bhamashah card came with a bank account in whose name?',
-    options: ['The eldest son', 'The woman head of the family', 'Every adult member', 'The land-owning farmer'],
+      'Relaunched by Vasundhara Raje on 15 August 2014, Rajasthan’s Bhamashah card promised families free health insurance worth how much for major illnesses?',
+    options: ['₹50,000', '₹3 lakh', '₹1 lakh', '₹5 lakh'],
     correctIndex: 1,
     explanation:
-      'Raje said the card would carry pensions, health insurance, rations and scholarships, with money going to an account only the female head of the household could operate. She said the idea began in her 2003–08 term, when about 50 lakh people were covered, before her Congress successor Ashok Gehlot discontinued it.',
+      'Business Standard (via Rediff): cover of ₹30,000 for routine and ₹3 lakh for major illnesses, with pensions, rations and scholarships paid into an account only the woman head of the family could operate. Raje said the idea began in her 2003–08 term, when about 50 lakh people were covered, before her Congress successor Ashok Gehlot discontinued it.',
     sourceUrl: 'https://www.rediff.com/business/slide-show/slide-show-1-bhamashah-a-scheme-to-trump-aadhaar-in-rajasthan/20140818.htm',
     sourceLabel: 'Rediff / Business Standard — Bhamashah: A scheme to trump Aadhaar in Rajasthan (18 Aug 2014)',
     tags: ['distribution'],
@@ -371,9 +383,10 @@ export const HISAAB_DIST_NORTH = Object.freeze([
     options: ['₹1 lakh', '₹2.5 lakh', '₹10 lakh', '₹6.5 lakh'],
     correctIndex: 3,
     explanation:
-      'ETV Bharat reports ₹1,000 a month is credited for girls from families earning under ₹75,000 a year, and about ₹6.5 lakh is paid at 21. Begun in eight districts, it had 2.03 lakh girls enrolled by March 2026, minister Sakina Itoo said. In Aug 2026 banks had paused new accounts pending a renewed MoU and funds.',
+      'At launch the state said it would deposit ₹1,000 a month for 14 years for each eligible girl (family income under ₹75,000 a year), and she would get about ₹6.5 lakh at 21 (The Tribune, 2015). Minister Sakina Itoo said 2.03 lakh girls were enrolled by March 2026; in Aug 2026 banks had paused new accounts pending a renewed MoU and funds (ETV Bharat).',
     sourceUrl: 'https://www.etvbharat.com/en/bharat/funding-delays-and-missing-mou-stall-ladli-beti-scheme-in-jammu-kashmir-enn26080704343',
     sourceLabel: 'ETV Bharat — Funding delays and missing MoU stall Ladli Beti scheme in Jammu Kashmir (7 Aug 2026)',
+    sources: ['https://www.tribuneindia.com/news/archive/community/ladli-beti-scheme-to-be-implemented-in-six-districts-130107/'],
     tags: ['distribution'],
     enactedBy: [{ name: 'Mufti Mohammad Sayeed', role: 'Chief Minister, Jammu & Kashmir', party: 'PDP' }],
     outcome:
@@ -396,7 +409,7 @@ export const HISAAB_DIST_NORTH = Object.freeze([
     options: ['A and B', 'C and D', 'E, F, G and H', 'All categories'],
     correctIndex: 2,
     explanation:
-      'The Hindu reported a sliding waiver on dues up to 30 Nov 2016: 25% for categories A and B, 50% for C, 75% for D and 100% for E to H. Free water and cheaper power were AAP’s two main 2015 poll planks; Kejriwal said the Delhi Jal Board still had a ₹176 crore surplus despite the subsidy.',
+      'The Hindu reported a sliding waiver on pending bills: 25% for categories A and B, 50% for C, 75% for D and 100% for E to H. Free water and cheaper power were AAP’s two main 2015 poll planks; Kejriwal said the Delhi Jal Board still had a ₹176 crore surplus despite the subsidy.',
     sourceUrl: 'https://www.thehindu.com/news/cities/Delhi/One-year-of-AAP-Kejriwal-waives-Delhi-water-bills-till-November/article60580066.ece',
     sourceLabel: 'The Hindu — One year of AAP: Kejriwal waives Delhi water bills till November (14 Feb 2016)',
     tags: ['distribution'],
@@ -442,7 +455,7 @@ export const HISAAB_DIST_NORTH = Object.freeze([
     asOf: '2026-09',
     govt: 'SP',
     question:
-      'In August 2016, six months before the UP poll, the SP government began paying meritorious Class 12-pass girls how much each under the revamped Kanya Vidya Dhan?',
+      'In August 2016, six months before the UP poll, the SP government handed meritorious Class 12-pass girls how much each under the amended Kanya Vidya Dhan scheme?',
     options: ['₹10,000', '₹20,000', '₹50,000', '₹30,000'],
     correctIndex: 3,
     explanation:
@@ -452,6 +465,7 @@ export const HISAAB_DIST_NORTH = Object.freeze([
     sources: [
       'https://www.bhaskar.com/news/up-luck-budget-laptop-unemployment-kanya-vidya-schemes-lok-sabha-elections-4653612-nor.html',
       'https://www.prabhatkhabar.com/state/uttar-pradesh/up-akhilesh-yadav-kanya-vidya-dhan-yojana-50000-12th-pass-girls-students-scheme-benefit-2026',
+      'https://www.rediff.com/news/report/up-election-bjp-sweeps-assembly-sp-cong-bsp-decimated/20170311.htm',
       'https://en.wikipedia.org/wiki/2017_Uttar_Pradesh_Legislative_Assembly_election',
     ],
     tags: ['distribution', 'pre-election'],
@@ -503,7 +517,7 @@ export const HISAAB_DIST_NORTH = Object.freeze([
     options: ['5%', '12%', '27.5%', '60%'],
     correctIndex: 2,
     explanation:
-      'Shabana Mitra (IIM Bangalore) and Kalle Moene (University of Oslo) surveyed 20,000+ people in Bihar, Jharkhand and UP in 2016. They found enrolment rose over 30% in the scheme’s first year, and recipients were 22.9% more likely to finish school, 5% more likely to finish college, 4.17% less likely to work in farming, and married about six months later.',
+      'Shabana Mitra (IIM Bangalore) and Kalle Moene (University of Oslo) surveyed 20,000+ people in Bihar, Jharkhand and UP in 2016; earlier work they cite found enrolment rose over 30% in the first year. They found recipients 22.9% more likely to finish school, 5% more likely to finish college, 4.17% less likely to work in farming, and married about six months later.',
     sourceUrl: 'https://www.ideasforindia.in/topics/social-identity/wheels-of-power-long-term-effects-of-the-bihar-cycle-programme',
     sourceLabel: 'Ideas for India — Wheels of power: Long-term effects of the Bihar Cycle Programme (5 Mar 2019)',
     tags: ['distribution'],
@@ -531,7 +545,10 @@ export const HISAAB_DIST_NORTH = Object.freeze([
       'The Times of India reported the waiver covered overdue short-term cooperative-bank loans at a cost of ₹8,000 crore, alongside a permanent farmers’ debt-relief commission and a land-revenue exemption. Congress members, demanding a complete waiver, called it a betrayal and briefly disrupted the House.',
     sourceUrl: 'https://timesofindia.indiatimes.com/india/rajasthan-announces-loan-waiver-for-farmers-to-cost-rs-8000-crore/articleshow/62887502.cms',
     sourceLabel: 'The Times of India — Rajasthan announces loan waiver for farmers, to cost Rs 8,000 crore (12 Feb 2018)',
-    sources: ['https://en.wikipedia.org/wiki/2018_Rajasthan_Legislative_Assembly_election'],
+    sources: [
+      'https://indianexpress.com/article/political-pulse/in-2018-rajasthan-cong-won-by-much-higher-margins-than-bjp-swept-rural-seats-9009374/',
+      'https://en.wikipedia.org/wiki/2018_Rajasthan_Legislative_Assembly_election',
+    ],
     tags: ['distribution', 'pre-election'],
     enactedBy: [{ name: 'Vasundhara Raje', role: 'Chief Minister, Rajasthan', party: 'BJP' }],
     outcome: 'Cost put at ₹8,000 crore. The BJP lost the 7 Dec 2018 poll: the Congress won 100 of 199 seats and the BJP 73.',
@@ -554,7 +571,7 @@ export const HISAAB_DIST_NORTH = Object.freeze([
     options: ['₹50,000', '₹1 lakh', '₹5 lakh', '₹2 lakh'],
     correctIndex: 3,
     explanation:
-      'HT: 5.63 lakh farmers with about ₹2,700 crore of cooperative loans were picked for the first phase, with commercial-bank loans to follow. The Congress had promised a complete waiver; the BKU called it “fake” and AAP’s Sukhpal Khaira cited certificates for ₹7–12. Officials said 3.2 lakh cases had been verified.',
+      'HT: 5.63 lakh farmers with about ₹2,700 crore of cooperative loans were picked for the first phase, with commercial-bank loans to follow. The BKU, saying the Congress had promised a complete waiver, called it “fake”; AAP’s Sukhpal Khaira cited certificates for ₹7–12. Officials said 3.2 lakh cases had been verified.',
     sourceUrl: 'https://www.hindustantimes.com/punjab/punjab-begins-farm-debt-waiver-farmers-aap-protest/story-tm9rhL84ScLBmyBoD19BFL.html',
     sourceLabel: 'Hindustan Times — Punjab begins farm debt waiver, farmers, AAP protest (7 Jan 2018)',
     tags: ['distribution'],
@@ -582,7 +599,10 @@ export const HISAAB_DIST_NORTH = Object.freeze([
       'The Hindu: homes using 201–400 units got about a 50% subsidy. Kejriwal said about 35% of consumers use under 200 units in summer and 70% in winter, and that it was not possible earlier because the power companies’ finances were weak. The BJP and Congress called it an “election gimmick”.',
     sourceUrl: 'https://www.thehindu.com/news/national/other-states/free-electricity-for-delhiites-using-up-to-200-units/article28789468.ece',
     sourceLabel: 'The Hindu — Free electricity for Delhiites using up to 200 units (2 Aug 2019)',
-    sources: ['https://en.wikipedia.org/wiki/2020_Delhi_Legislative_Assembly_election'],
+    sources: [
+      'https://www.thehindu.com/elections/delhi-assembly/delhi-assembly-elections-2020-aap-sweeps-delhi-with-62-seats/article30790189.ece',
+      'https://en.wikipedia.org/wiki/2020_Delhi_Legislative_Assembly_election',
+    ],
     tags: ['distribution', 'pre-election'],
     enactedBy: [{ name: 'Arvind Kejriwal', role: 'Chief Minister, Delhi', party: 'AAP' }],
     outcome: 'Free up to 200 units, about half-price up to 400. The AAP won 62 of 70 seats on 8 Feb 2020.',
@@ -605,15 +625,19 @@ export const HISAAB_DIST_NORTH = Object.freeze([
     options: ['₹21,000', '₹41,000', '₹31,000', '₹51,000'],
     correctIndex: 2,
     explanation:
-      'Speaking at the PM-KISAN launch in Ranchi, Das said the state scheme would start in April with cash in May, on top of the Centre’s ₹6,000 a year — “double benefits” of a “double engine” government. A Hazaribag farmer with 3.5 acres told HT he expected ₹26,000 a year from the two schemes.',
+      'Speaking at the PM-KISAN launch in Ranchi, Das said the state scheme would start in April with cash in May, on top of the Centre’s ₹6,000 a year — “double benefits” of a “double engine” government. The first state instalment was actually paid on 10 August 2019: ₹482 crore to 13.6 lakh farmers (Dainik Bhaskar).',
     sourceUrl: 'https://www.hindustantimes.com/ranchi/jharkhand-s-5-2-lakh-farmers-get-first-instalment-of-centre-s-kisan-income-scheme/story-wMrzBDMWDr8FokdH7914dK.html',
     sourceLabel: 'Hindustan Times — Jharkhand’s 5.2 lakh farmers get first instalment of Centre’s Kisan income scheme (25 Feb 2019)',
-    sources: ['https://indianexpress.com/elections/jharkhand-assembly-election-results-hemant-soren-raghubar-das-bjp-jmm-congress-rjd-6181900/'],
+    sources: [
+      'https://www.bhaskar.com/jharkhand/ranchi/news/raghubar-das-says-farmers-are-the-axis-of-the-culture-of-jharkhand-state-01662467.html',
+      'https://indianexpress.com/article/india/jharkhand-to-vote-in-five-phases-from-november-30-6098807/',
+      'https://indianexpress.com/elections/jharkhand-assembly-election-results-hemant-soren-raghubar-das-bjp-jmm-congress-rjd-6181900/',
+    ],
     tags: ['distribution', 'pre-election'],
     enactedBy: [{ name: 'Raghubar Das', role: 'Chief Minister, Jharkhand', party: 'BJP' }],
     outcome:
-      'The BJP lost the Nov–Dec 2019 poll: the JMM–Congress–RJD alliance won 47 of 81 seats, and Das lost Jamshedpur East to BJP rebel Saryu Roy.',
-    poll: { label: 'Jharkhand Assembly 2019', month: '2019-11', result: 'JMM–Congress–RJD won 47 of 81 seats; BJP 25' },
+      'About ₹900 crore reached 26 lakh farmers by 11 Oct 2019 (Dainik Bhaskar). The BJP lost the Nov–Dec 2019 poll: the JMM–Congress–RJD alliance won 47 of 81 seats, and Das lost Jamshedpur East to BJP rebel Saryu Roy.',
+    poll: { label: 'Jharkhand Assembly 2019', month: '2019-11', gapDays: 112, result: 'JMM–Congress–RJD won 47 of 81 seats; BJP 25' },
   },
 
   // ───────────────────────── 2020–2026 ─────────────────────────
@@ -659,7 +683,7 @@ export const HISAAB_DIST_NORTH = Object.freeze([
     options: ['Doubled it to ₹6 a unit', 'Withdrew it, keeping 300 free units a month', 'Extended it to shops', 'Made it permanent by law'],
     correctIndex: 1,
     explanation:
-      'The cut covered homes with loads up to 7 kW. Finance Minister Harpal Singh Cheema said ending it would yield ₹1,500–1,800 crore a year and that the 300 free units a month would continue. Punjab Congress chief Amrinder Singh Raja Warring called the withdrawal a “blatant betrayal”.',
+      'The cut covered homes with loads up to 7 kW; in 2021 AAP’s Raghav Chadha had called it an “election stunt”. Finance Minister Harpal Singh Cheema said ending it would yield ₹1,500–1,800 crore a year and that the 300 free units a month would continue. Punjab Congress chief Amrinder Singh Raja Warring called the withdrawal a “blatant betrayal”.',
     sourceUrl: 'https://www.business-standard.com/india-news/punjab-cabinet-withdraws-previous-cong-govt-s-decision-of-subsidised-power-124090500693_1.html',
     sourceLabel: 'Business Standard (PTI) — Punjab Cabinet withdraws previous Cong govt’s decision of subsidised power (5 Sep 2024)',
     sources: [
@@ -716,7 +740,10 @@ export const HISAAB_DIST_NORTH = Object.freeze([
       'Hindustan Times: the main 2021-22 budget had no provision; the ₹7,301.52-crore supplementary budget of 18 Aug 2021 set aside ₹3,000 crore to reach about one crore young people. Yogi Adityanath planned to hand 60,000 phones and 40,000 tablets to final-year students at the Lucknow launch on Vajpayee’s birth anniversary.',
     sourceUrl: 'https://www.hindustantimes.com/cities/lucknow-news/up-govt-to-start-distribution-of-free-tablets-smartphones-today-101640371641503.html',
     sourceLabel: 'Hindustan Times — UP govt to start distribution of free tablets, smartphones today (25 Dec 2021)',
-    sources: ['https://en.wikipedia.org/wiki/2022_Uttar_Pradesh_Legislative_Assembly_election'],
+    sources: [
+      'https://scroll.in/latest/1019252/we-showed-bjps-seats-can-be-reduced-akhilesh-yadav-on-up-poll-results',
+      'https://en.wikipedia.org/wiki/2022_Uttar_Pradesh_Legislative_Assembly_election',
+    ],
     tags: ['distribution', 'pre-election'],
     enactedBy: [{ name: 'Yogi Adityanath', role: 'Chief Minister, Uttar Pradesh', party: 'BJP' }],
     outcome:
@@ -741,6 +768,8 @@ export const HISAAB_DIST_NORTH = Object.freeze([
     correctIndex: 0,
     explanation:
       'Reviewing Nuh district, Khemka noted ₹270.84 crore had reached 8,77,538 families — about ₹3,086 each against ₹12,000 due for 2019-20 and 2020-21 — and that richer districts dominated (Karnal 10.4% of beneficiaries, Nuh 2.4%), suggesting incomes were not verified. The Indian Express report carried no government reply.',
+    status:
+      'An officer’s internal review of government data (June 2021), not an audit or court finding; no government reply and no case against any person found in sources checked (Sept 2026).',
     sourceUrl: 'https://indianexpress.com/article/cities/chandigarh/haryanas-mukhya-mantri-parivar-samridhi-yojana-maximum-poor-families-availing-benefits-are-from-richest-districts-7369790/',
     sourceLabel: 'The Indian Express — Haryana’s Mukhya Mantri Parivar Samridhi Yojana: ‘Maximum poor families availing benefits are from richest districts’ (22 Jun 2021)',
     tags: ['distribution'],
@@ -766,6 +795,8 @@ export const HISAAB_DIST_NORTH = Object.freeze([
     correctIndex: 3,
     explanation:
       'Per TNIE, 4.9 lakh of 8.84 lakh active beneficiaries (55%) had not received their dues as of Dec 2022; 16,546 duplicate registrations were found; Aadhaar checks began only in May 2023; and yearly enrolments fell 69% between 2009-10 and 2020-21. The WCD department said it had issued public notices — the audit counted two.',
+    status:
+      'CAG audit finding as reported by TNIE (Feb 2025), not a court finding; no case against any person reported in sources checked (Sept 2026).',
     sourceUrl: 'https://www.newindianexpress.com/cities/delhi/2025/Feb/27/ladli-scheme-audit-finds-rs-61838-crore-unclaimed-reveals-massive-irregularities',
     sourceLabel: 'The New Indian Express — ‘Duplicate registrations’: CAG exposes Rs 220 crore irregularities in Ladli scheme (27 Feb 2025)',
     tags: ['distribution'],
@@ -793,7 +824,10 @@ export const HISAAB_DIST_NORTH = Object.freeze([
       'The Indian Express: homes using up to 60 units a month pay nothing and those up to 125 units pay ₹1 a unit, from April 2022 — about 11 lakh consumers, at ₹60 crore extra; farm power fell from 50 to 30 paise a unit. The same day he raised the income limit for welfare pensions from ₹35,000 to ₹50,000.',
     sourceUrl: 'https://indianexpress.com/article/cities/shimla/himachal-pradesh-statehood-day-jai-ram-thakur-announcement-free-power-7741486/',
     sourceLabel: 'The Indian Express — Himachal Statehood Day: CM Jai Ram Thakur announces free power to households consuming 60 units per month (25 Jan 2022)',
-    sources: ['https://en.wikipedia.org/wiki/2022_Himachal_Pradesh_Legislative_Assembly_election'],
+    sources: [
+      'https://www.livemint.com/elections/assembly-elections/election-results-2022-bjp-sets-gujarat-record-congress-wins-himachal-pradesh-11670495701908.html',
+      'https://en.wikipedia.org/wiki/2022_Himachal_Pradesh_Legislative_Assembly_election',
+    ],
     tags: ['distribution', 'pre-election'],
     enactedBy: [{ name: 'Jai Ram Thakur', role: 'Chief Minister, Himachal Pradesh', party: 'BJP' }],
     outcome:
@@ -899,7 +933,11 @@ export const HISAAB_DIST_NORTH = Object.freeze([
       'TOI listed the bids: the Congress’s Bhupinder Hooda ₹6,000, the INLD ₹7,500 and the JJP ₹5,100. About 17.85 lakh people drew the pension, at a 2023-24 cost of ₹5,538 crore. Political scientists quoted called it “competitive populism” aimed at rural opinion-makers.',
     sourceUrl: 'https://timesofindia.indiatimes.com/city/chandigarh/handful-still-handy-why-haryana-parties-love-wooing-the-old/articleshow/112710215.cms',
     sourceLabel: 'The Times of India — Handful, still handy: Why Haryana parties love wooing the old (22 Aug 2024)',
-    sources: ['https://socialjusticehry.gov.in/old-age-samman-allowance-scheme/', 'https://scroll.in/latest/1074176/haryana-election-result-counting-of-votes-to-begin-at-8-am'],
+    sources: [
+      'https://socialjusticehry.gov.in/old-age-samman-allowance-scheme/',
+      'https://www.newindianexpress.com/india/2024/Sep/23/congress-on-course-to-sweep-haryana-polls-set-to-repeat-2005-performance-surjewala',
+      'https://scroll.in/latest/1074176/haryana-election-result-counting-of-votes-to-begin-at-8-am',
+    ],
     tags: ['distribution', 'pre-election'],
     enactedBy: [{ name: 'Manohar Lal Khattar', role: 'Chief Minister, Haryana', party: 'BJP' }],
     outcome:
@@ -928,11 +966,15 @@ export const HISAAB_DIST_NORTH = Object.freeze([
     ],
     correctIndex: 0,
     explanation:
-      'The cabinet had cleared ₹1,000 a month for non-taxpaying women earlier that month (first announced in the March 2024 budget), and Kejriwal promised ₹2,100 if re-elected. The notices called form collection by any party “without authority”. CM Atishi called them false, blamed BJP pressure and promised action against the officers.',
+      'The cabinet had cleared ₹1,000 a month for non-taxpaying women on 12 Dec (first announced in the March 2024 budget), and Kejriwal promised ₹2,100 if re-elected. The notices called form collection by any party “without authority”. CM Atishi called them false, blamed BJP pressure and promised action against the officers. On a Congress complaint, the L-G then ordered an inquiry into the form drive.',
+    status:
+      'L-G ordered an inquiry through the divisional commissioner into form collection by non-government persons (28 Dec 2024); no outcome, FIR or charge against any named person reported in sources checked (Sept 2026). AAP called the notices false.',
+    people: ['Atishi', 'Arvind Kejriwal'],
     sourceUrl: 'https://indianexpress.com/article/cities/delhi/delhi-departments-notices-aap-schemes-kejriwal-9743477/',
     sourceLabel: 'The Indian Express — Schemes launched by Kejriwal, Atishi disowned by Delhi govt’s own departments (25 Dec 2024)',
     sources: [
       'https://www.business-standard.com/elections/delhi-elections/kejriwal-promises-rs-2-100-monthly-aid-to-women-ahead-of-delhi-elections-124121200580_1.html',
+      'https://www.thehindu.com/news/cities/Delhi/aap-scheme-faces-probe-over-illegal-data-collection-charge/article69036595.ece',
       'https://frontline.thehindu.com/news/delhi-election-results-2025-bjp-wins-46-seats-ends-aap-rule/article69195445.ece',
     ],
     tags: ['distribution', 'pre-election'],
@@ -957,7 +999,7 @@ export const HISAAB_DIST_NORTH = Object.freeze([
     asOf: '2026-09',
     govt: 'JMM',
     question:
-      'Jharkhand’s cabinet approved raising Maiya Samman from ₹1,000 to ₹2,500 a month how long before the ECI announced the 2024 poll schedule on 15 October?',
+      'Jharkhand’s cabinet approved a steep rise in the monthly Maiya Samman payment to women how long before the ECI announced the 2024 poll schedule on 15 October?',
     options: ['One week', 'One month', 'One day', 'Three months'],
     correctIndex: 2,
     explanation:
@@ -967,12 +1009,13 @@ export const HISAAB_DIST_NORTH = Object.freeze([
     sources: [
       'https://indianexpress.com/article/india/jharkhand-assembly-election-jmm-bjp-sops-9613054/',
       'https://frontline.thehindu.com/politics/jharkhand-election-results-2024-jmm-alliance-wins-majority-bjp-tribal-strategy-fails/article68902569.ece',
+      'https://www.newindianexpress.com/india/2025/Mar/20/maiyan-samman-yojana-jharkhand-government-to-release-list-of-deleted-beneficiaries',
     ],
     tags: ['distribution', 'pre-election'],
     enactedBy: [{ name: 'Hemant Soren', role: 'Chief Minister, Jharkhand', party: 'JMM' }],
     outcome:
       'The JMM-led alliance won 56 of 81 seats in the 13 and 20 Nov polls, the first time Jharkhand re-elected a sitting government; the 2025-26 budget then set aside ₹13,363 crore for the scheme.',
-    poll: { label: 'Jharkhand Assembly 2024', month: '2024-11', gapDays: 102, result: 'JMM-led alliance won 56 of 81 seats; JMM alone 34' },
+    poll: { label: 'Jharkhand Assembly 2024', month: '2024-11', gapDays: 30, result: 'JMM-led alliance won 56 of 81 seats; JMM alone 34' },
   },
   {
     id: 'hdb136',
@@ -991,7 +1034,7 @@ export const HISAAB_DIST_NORTH = Object.freeze([
     options: ['₹700', '₹1,500', '₹2,000', '₹1,100'],
     correctIndex: 3,
     explanation:
-      'The Indian Express: about 1.09 crore pensioners, at an extra ₹921.41 crore a year, from July 2025. Tejashwi Yadav called it copying the RJD’s ₹1,500 promise; Prashant Kishor said Jan Suraaj’s ₹2,000 pledge had forced it. On 11 July Nitish transferred ₹1,227.27 crore to 1.11 crore pensioners.',
+      'The Indian Express: about 1.09 crore pensioners, from July 2025. Tejashwi Yadav called it copying the RJD’s ₹1,500 promise; Prashant Kishor said Jan Suraaj’s ₹2,000 pledge had forced it. On 11 July Nitish transferred ₹1,227.27 crore to 1.11 crore pensioners.',
     sourceUrl: 'https://indianexpress.com/article/india/bihar-govt-increases-old-age-widow-pension-by-rs-700-per-month-10080035/',
     sourceLabel: 'The Indian Express — Cometh the polls, cometh the doles: Nitish announces three-fold hike in social security pension (21 Jun 2025)',
     sources: [
@@ -1021,7 +1064,7 @@ export const HISAAB_DIST_NORTH = Object.freeze([
     options: ['About 18 lakh', 'About 1.8 lakh', 'About 5 lakh', 'About 50 lakh'],
     correctIndex: 0,
     explanation:
-      'TNIE: government sources blamed mismatched bank details, bank accounts not seeded with Aadhaar, pending KYC, and fraud by form-filling operators found in physical checks. Minister Chamra Linda told the Assembly the government would consider publishing the deleted names with reasons, as BJP MLA Neera Yadav demanded.',
+      'TNIE: government sources blamed mismatched bank details, bank accounts not seeded with Aadhaar and pending KYC, plus irregularities found in physical checks after reports of fraud by form-filling operators. Minister Chamra Linda told the Assembly the government would consider publishing the deleted names with reasons, as BJP MLA Neera Yadav demanded.',
     sourceUrl: 'https://www.newindianexpress.com/india/2025/Mar/20/maiyan-samman-yojana-jharkhand-government-to-release-list-of-deleted-beneficiaries',
     sourceLabel: 'The New Indian Express — Maiyan Samman Yojana: Jharkhand government to release list of deleted beneficiaries (20 Mar 2025)',
     tags: ['distribution'],
@@ -1041,7 +1084,7 @@ export const HISAAB_DIST_NORTH = Object.freeze([
     asOf: '2026-09',
     govt: 'BJP',
     question:
-      'The BJP promised ₹2,100 a month to Haryana women in 2024. When the first Lado Lakshmi instalment was paid on 1 November 2025, about how many women received it?',
+      'The BJP promised monthly cash to all Haryana women before the 2024 poll. When the first Lado Lakshmi instalment was paid on 1 November 2025, about how many women received it?',
     options: ['20 lakh', '5.22 lakh', '52 lakh', '76.7 lakh'],
     correctIndex: 1,
     explanation:
@@ -1066,7 +1109,7 @@ export const HISAAB_DIST_NORTH = Object.freeze([
     asOf: '2026-09',
     govt: 'Other',
     question:
-      'Omar Abdullah’s first budget (March 2025) raised social pensions for over 10 lakh people in J&K. How much a month do recipients above 80 now get?',
+      'Omar Abdullah’s first budget (March 2025) raised social pensions for over 10 lakh people in J&K. How much a month did it set for recipients above 80?',
     options: ['₹1,000', '₹1,250', '₹2,000', '₹1,500'],
     correctIndex: 2,
     explanation:
@@ -1092,7 +1135,7 @@ export const HISAAB_DIST_NORTH = Object.freeze([
     asOf: '2026-09',
     govt: 'JDU',
     question:
-      'In February 2026, what became of Jan Suraaj’s Supreme Court plea against ₹10,000 payments to women under Bihar’s Mahila Rojgar Yojana during the 2025 poll?',
+      'In February 2026, what became of Jan Suraaj’s Supreme Court plea against cash payments to women under Bihar’s Mahila Rojgar Yojana during the 2025 poll?',
     options: [
       'The Court froze further payments',
       'The Court ordered the ECI to recount votes',
@@ -1101,11 +1144,16 @@ export const HISAAB_DIST_NORTH = Object.freeze([
     ],
     correctIndex: 3,
     explanation:
-      'The bench of CJI Surya Kant and Justice Joymalya Bagchi questioned treating a government policy as a corrupt practice — “It’s for the people to vote out their policy” — but said the freebies issue was being examined seriously. Jan Suraaj argued ₹15,600 crore was paid pre-poll and 25–35 lakh women enrolled after the model code began.',
+      'The bench of CJI Surya Kant and Justice Joymalya Bagchi questioned treating a government policy as a corrupt practice — “It’s for the people to vote out their policy” — but said freebies were being examined seriously. Jan Suraaj argued ₹15,600 crore was paid pre-poll and 25–35 lakh women enrolled after the model code began; in March 2026 it said it had filed in the Patna HC.',
+    status:
+      'Supreme Court plea withdrawn with liberty on 6 Feb 2026 (no ruling on merits); Jan Suraaj said on 23 Mar 2026 it had petitioned the Patna High Court; no HC ruling reported in sources checked (Sept 2026).',
     sourceUrl: 'https://www.verdictum.in/court-updates/supreme-court/prashant-kishore-refuses-jan-suraaj-party-plea-scheme-providing-10k-women-during-bihar-election-1606691',
     sourceLabel: 'Verdictum — Supreme Court refuses to entertain Jan Suraaj plea on ₹10,000 scheme for women during Bihar election (6 Feb 2026)',
     sources: [
+      'https://www.livehindustan.com/bihar/jansuraj-files-petition-in-high-court-to-against-bihar-assembly-election-results-had-setback-in-supreme-court-201774285355680.html',
       'https://www.hindustantimes.com/cities/patna-news/25mn-more-bihar-women-get-10k-each-as-grant-for-establishing-startups-101771252968341.html',
+      'https://timesofindia.indiatimes.com/city/patna/tejashwi-slams-nda-govt-over-unfulfilled-mmry-promise/articleshow/130563169.cms',
+      'https://navbharattimes.indiatimes.com/government-schemes/bihar/raksha-bandhan-gift-for-women-in-bihar-600-crore-transferred-to-accounts-of-5-lakh-jeevika-didi/articleshow/133561915.cms',
       'https://www.pmindia.gov.in/en/news_updates/pm-launches-bihars-mukhyamantri-mahila-rojgar-yojana/',
       'https://theprint.in/india/rjd-leader-writes-to-ec-says-bihar-govt-violated-mcc-by-transferring-money-to-women-ahead-of-poll/2774961/',
     ],
@@ -1115,7 +1163,7 @@ export const HISAAB_DIST_NORTH = Object.freeze([
       { name: 'Narendra Modi', role: 'Prime Minister (launched the scheme)', party: 'BJP' },
     ],
     outcome:
-      'By Feb 2026 Bihar had paid ₹10,000 each to 1.81 crore women (₹18,100 crore), 1.56 crore of them between 26 Sep and 28 Nov 2025; the promised top-up of up to ₹2 lakh was still unpaid in April 2026, the RJD said.',
+      'By Feb 2026, ₹10,000 each had gone to 1.81 crore women (₹18,100 crore), 1.56 crore of them from 26 Sep to 28 Nov 2025. The RJD said in April 2026 later instalments were unpaid; in Aug 2026 one lakh women got a ₹20,000 second instalment.',
     poll: { label: 'Bihar Assembly 2025', month: '2025-11', gapDays: 41, result: 'NDA won 202 of 243 seats; Jan Suraaj won none' },
   },
   {
@@ -1136,15 +1184,21 @@ export const HISAAB_DIST_NORTH = Object.freeze([
     correctIndex: 0,
     explanation:
       'Finance Minister Harpal Singh Cheema announced the Mukh Mantri Mawan Dhiyan Satikar Yojana — ₹1,000 a month for adult women, more for some groups — and said about 97% of women qualify; only government employees, MPs/MLAs and income-tax payers are left out. It came nearly four years after the AAP’s 2022 win.',
+    status:
+      'A PIL challenging the scheme’s mandatory voter-ID clause was listed in the Punjab and Haryana High Court for 5 Oct 2026; no ruling as of Sept 2026.',
     sourceUrl: 'https://indianexpress.com/article/cities/chandigarh/punjab-budget-2026-women-monthly-assistance-mawan-dhiyan-satikar-yojana-10571040/',
     sourceLabel: 'The Indian Express — Punjab Budget 2026: AAP fulfills pre-poll guarantee with monthly cash for 97% women (8 Mar 2026)',
+    sources: [
+      'https://www.hindustantimes.com/cities/chandigarh-news/punjab-76l-women-registered-under-mawan-dheeyan-satkar-yojana-says-mann-101787767970675.html',
+      'https://www.tribuneindia.com/news/punjab/mawan-dheeyan-scheme-challenged-in-high-court-as-vote-buying-move-over-mandatory-voter-id-clause/',
+    ],
     tags: ['distribution'],
     enactedBy: [
       { name: 'Bhagwant Mann', role: 'Chief Minister, Punjab', party: 'AAP' },
       { name: 'Harpal Singh Cheema', role: 'Finance Minister, Punjab', party: 'AAP' },
     ],
     outcome:
-      '₹9,300 crore budgeted for 2026-27 inside an ₹18,304 crore women-and-welfare package; the next Punjab Assembly poll is due by early 2027.',
+      '₹9,300 crore budgeted inside an ₹18,304 crore welfare package; Mann said 76.11 lakh women had registered by Aug 2026. A PIL listed for 5 Oct 2026 alleges its voter-ID requirement is meant to secure votes. Punjab votes by early 2027.',
   },
   {
     id: 'hdb142',
@@ -1166,7 +1220,6 @@ export const HISAAB_DIST_NORTH = Object.freeze([
       'In March 2026 CM Pushkar Singh Dhami transferred ₹145.93 crore by DBT to 33,251 girls for 2025-26 — 5,913 newborns and 27,338 who had passed Class 12. The state says ₹1,168.49 crore has gone to 3,77,784 girls since the scheme began.',
     sourceUrl: 'https://garhwalpost.in/cm-transfers-rs-145-93-crores-to-beneficiaries-under-nanda-gaura-yojana-through-dbt/',
     sourceLabel: 'Garhwal Post — CM transfers Rs 145.93 crores to beneficiaries under Nanda Gaura Yojana through DBT (2 Mar 2026)',
-    sources: ['https://www.newindianexpress.com/thesundaystandard/2021/Apr/18/gaura-devi-kanyadhan-yojana-giving-wings-to-dreams-of-girls-with-just-small-sums-2291330.html'],
     tags: ['distribution'],
     enactedBy: [{ name: 'Pushkar Singh Dhami', role: 'Chief Minister, Uttarakhand', party: 'BJP' }],
     outcome: '₹1,168.49 crore to 3,77,784 girls since inception, per the state; ₹145.93 crore to 33,251 girls for 2025-26.',
@@ -1184,11 +1237,13 @@ export const HISAAB_DIST_NORTH = Object.freeze([
     asOf: '2026-09',
     govt: 'BJP',
     question:
-      'Delhi Lakshmi Yojana, the BJP government’s ₹2,500-a-month scheme notified in August 2026, requires applicants to upload what — a condition now challenged in the High Court?',
+      'Delhi’s BJP government launched its ₹2,500-a-month scheme for poor women in August 2026. Applicants must upload what — a condition now challenged in the High Court?',
     options: ['A police verification certificate', 'Proof of 20 years’ residence', 'An endorsement letter from their MP or MLA', 'A bank guarantee'],
     correctIndex: 2,
     explanation:
       'In PILs, petitioners say the rule adds an unguided political step between the state and poor women. The High Court asked the government to explain it, remarking the problem was that it is the only route. A 15 Sep affidavit said similar schemes elsewhere need lawmakers’ recommendations and the rule is not arbitrary; about 7.33 lakh endorsed applications had come in.',
+    status:
+      'PILs pending in the Delhi High Court (listed 17 Sep 2026 after the government’s 15 Sep affidavit); no ruling reported in sources checked (Sept 2026).',
     sourceUrl: 'https://www.hindustantimes.com/cities/delhi-news/not-the-only-state-govt-defends-mla-nod-in-aid-scheme-101789580916570.html',
     sourceLabel: 'Hindustan Times — ‘Not the only state’: Delhi defends MLA nod in Lakshmi Yojana scheme (17 Sep 2026)',
     sources: [
@@ -1199,7 +1254,7 @@ export const HISAAB_DIST_NORTH = Object.freeze([
     tags: ['distribution'],
     enactedBy: [{ name: 'Rekha Gupta', role: 'Chief Minister, Delhi', party: 'BJP' }],
     outcome:
-      'Aimed at up to 17 lakh women: ₹1,500 a month goes to a recurring deposit locked till 31 July 2029 and ₹1,000 to a digital-rupee wallet. Payments were due from 1 Sep 2026; the PILs were pending in September.',
+      'Aimed at up to 17 lakh women: ₹1,500 a month goes to a recurring deposit locked till 31 July 2029 and ₹1,000 to a digital-rupee wallet. Launched on 26 Aug 2026 with payments scheduled from 1 Sep; the PILs were pending in September.',
   },
   {
     id: 'hdb144',
@@ -1214,21 +1269,31 @@ export const HISAAB_DIST_NORTH = Object.freeze([
     asOf: '2026-09',
     govt: 'INC',
     question:
-      'Himachal’s Congress government announced its ₹1,500-a-month Pyari Behna scheme for women in March 2024, before the Lok Sabha poll. When did the cabinet approve it statewide?',
-    options: ['April 2024', 'March 2025', 'It is still unapproved', 'May 2026'],
+      'Himachal notified its ₹1,500-a-month Pyari Behna scheme for women weeks before the 2024 Lok Sabha poll. When the cabinet extended it in May 2026, which women did it cover?',
+    options: [
+      'All women aged 18–60, with no income limit',
+      'Only widows and single women over 40',
+      'Only women who head BPL households',
+      'Women aged 18–59 in families earning under ₹2 lakh',
+    ],
     correctIndex: 3,
     explanation:
-      'CM Sukhvinder Sukhu first said ₹800 crore would reach 5 lakh women from 2024-25. The May 2026 approval covers women aged 18–59 in families earning under ₹2 lakh, about 2 lakh in phase one, with no outlay announced (ET). LoP Jai Ram Thakur objected that it came while a model code for panchayat polls was in force.',
+      'CM Sukhvinder Sukhu announced it on 4 Mar 2024 (₹800 crore for 5 lakh women) and it was notified on 14 Mar, but was then extended area by area (Kinnaur in April 2026). ET: about 2 lakh women in phase one, no outlay announced. The BJP called the May 2026 decision a breach of the panchayat-poll code; minister Harshwardhan Chauhan called it routine.',
+    status:
+      'BJP complaint to the State Election Commission over the May 2026 cabinet decisions; the SEC said it would place it before the Commission; no finding reported in sources checked (Sept 2026).',
     sourceUrl: 'https://m.economictimes.com/news/india/himachal-pradesh-clears-rs-1500-aid-for-women-in-4th-year-of-power/articleshow/131284831.cms',
     sourceLabel: 'The Economic Times — Himachal Pradesh clears Rs 1,500 aid for women in 4th year of power (24 May 2026)',
     sources: [
+      'https://www.hindustantimes.com/cities/chandigarh-news/himachal-issues-notification-for-granting-1-500-monthly-financial-aid-to-women-101710436971845.html',
       'https://www.business-standard.com/india-news/parties-gear-up-for-iwd-delhi-hp-govts-announce-honorariums-for-women-124030401106_1.html',
+      'https://www.thehindu.com/news/national/himachal-pradesh/himachal-cm-sukhu-announces-1500-monthly-aid-for-eligible-women-in-kinnaur/article70864775.ece',
+      'https://www.aninews.in/news/national/general-news/himachal-bjp-alleges-mcc-violation-over-state-cabinet-meeting-amid-pri-polls-congress-rejects-charges20260523030700',
       'https://indianexpress.com/article/political-pulse/lotus-bloom-in-himachal-as-bjp-wins-all-4-ls-seats-9372291/',
     ],
     tags: ['distribution', 'pre-election'],
     enactedBy: [{ name: 'Sukhvinder Singh Sukhu', role: 'Chief Minister, Himachal Pradesh', party: 'INC' }],
     outcome:
-      'The BJP swept Himachal’s four Lok Sabha seats on 1 June 2024; statewide payments were approved only in May 2026, in the government’s fourth year.',
+      'The BJP swept Himachal’s four Lok Sabha seats on 1 June 2024; statewide payments for families under ₹2 lakh were cleared only in May 2026, in the government’s fourth year.',
     poll: { label: 'Lok Sabha 2024 (Himachal Pradesh)', month: '2024-06', gapDays: 89, result: 'BJP won all 4 seats' },
   },
   {
@@ -1253,6 +1318,6 @@ export const HISAAB_DIST_NORTH = Object.freeze([
     sourceLabel: 'The Times of India — Uttarakhand CM Dhami announces free bus travel, Pink e-Buses for women on Raksha Bandhan (28 Aug 2026)',
     tags: ['distribution'],
     enactedBy: [{ name: 'Pushkar Singh Dhami', role: 'Chief Minister, Uttarakhand', party: 'BJP' }],
-    outcome: 'Free travel extended to women aged 60–64 from August 2026; Uttarakhand’s next Assembly poll is due by early 2027.',
+    outcome: 'Free travel extended to women aged 60–64 (announced 28 Aug 2026); Uttarakhand’s next Assembly poll is due by early 2027.',
   },
 ]);

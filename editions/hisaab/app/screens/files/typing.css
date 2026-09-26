@@ -1,0 +1,82 @@
+/* screens/files/typing.css — h-typefile, a file still being typed (the designed empty state).
+   A sealed manila cover with a sheet in the typewriter: ruled lines and a static caret (no blinking —
+   calm and reduced-motion safe). Tokens only. */
+.h-typefile {
+  gap: var(--h-s-3);
+}
+.h-typefile__head {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--h-s-3);
+  min-width: 0;
+}
+.h-typefile__icon {
+  display: inline-flex;
+  flex: none;
+  margin-top: 2px;
+}
+.h-typefile__titles {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.h-typefile__hi {
+  margin: 0;
+  font-family: var(--h-font-display);
+  font-weight: var(--h-wght-display-2);
+  font-size: var(--h-fs-l);
+  line-height: var(--h-lh-display-deva);
+  color: var(--h-syahi-text);
+}
+.h-typefile__title {
+  margin: 0;
+  font-family: var(--h-font-display);
+  font-weight: var(--h-wght-display);
+  font-size: var(--h-fs-xl);
+  line-height: var(--h-lh-caps);
+  letter-spacing: var(--h-track-caps);
+  text-transform: uppercase;
+  overflow-wrap: break-word;
+}
+.h-typefile__line {
+  margin: 0;
+  font-size: var(--h-fs-m);
+  font-weight: var(--h-wght-ui-strong);
+}
+.h-typefile__sheet {
+  position: relative;
+  height: 56px;
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-s);
+  background: var(--h-ruled), var(--h-paper);
+  background-position: 0 6px, 0 0;
+}
+/* One typed line and the carriage: a static caret after it (no blinking — calm, reduced-motion safe). */
+.h-typefile__sheet::before {
+  content: '';
+  position: absolute;
+  left: var(--h-s-3);
+  top: 20px;
+  width: 46%;
+  height: 8px;
+  border-radius: var(--h-r-xs);
+  background: var(--h-ground-2);
+}
+.h-typefile__caret {
+  position: absolute;
+  left: calc(46% + var(--h-s-3) + 4px);
+  top: 14px;
+  width: 3px;
+  height: 20px;
+  background: var(--h-syahi);
+}
+.h-typefile__count {
+  margin: 0;
+  font-size: var(--h-fs-xs);
+}
+.h-typefile__action {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-2);
+}

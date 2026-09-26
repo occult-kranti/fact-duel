@@ -75,6 +75,22 @@
   flex-direction: row;
   align-items: center;
 }
+.h-receipt__row--inline .h-receipt__k:has(.h-receipt__fno) {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+/* The F.No. readers cite (bible §11.17), under RECEIPT #. */
+.h-receipt__fno,
+.h-receipt__fnov {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.h-receipt__fnov {
+  font-size: var(--h-fs-xs);
+  color: var(--h-ink);
+}
 .h-receipt__xp {
   font-weight: 700;
   font-size: var(--h-fs-s);
@@ -101,7 +117,11 @@
   min-width: 0;
 }
 .h-receipt__link {
-  display: inline;
+  /* A 44px tap target without moving the row: 12px of padding above and below, taken back by the
+     margins (the flex row blockifies the link, so its box — padding included — is the target). */
+  display: inline-block;
+  padding-block: 12px;
+  margin-block: -12px;
   color: var(--h-syahi-text);
   font-family: var(--h-font-ui);
   font-size: var(--h-fs-xs);
@@ -135,6 +155,38 @@
 }
 .h-receipt__poll {
   font-weight: var(--h-wght-ui-strong);
+}
+
+/* The corrections route at the foot: "Report an error" → the Rules page's form, pre-filled. */
+.h-receipt__foot {
+  margin: var(--h-s-3) 0 0;
+  padding-top: var(--h-s-1);
+  border-top: var(--h-bw) dashed var(--h-hair);
+}
+.h-receipt__report {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--h-s-2);
+  min-height: var(--h-tap);
+  color: var(--h-ink-2);
+  font-family: var(--h-font-ui);
+  font-size: var(--h-fs-xs);
+  font-weight: var(--h-wght-ui-strong);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.h-receipt__report:hover {
+  color: var(--h-syahi-text);
+}
+.h-receipt__report:focus-visible {
+  outline: none;
+  border-radius: var(--h-r-xs);
+  box-shadow: var(--h-focus-ring);
+}
+/* The Vault's receipt detail carries its own "Report a change or an error" in its actions. */
+.h-rdetail .h-receipt__foot {
+  display: none;
 }
 
 /* Motion #4 — print: rows reveal top-down in 6 steps over 360 ms, once. */

@@ -241,3 +241,74 @@ From `states-north.mjs` (not edited — outside this lane's write scope):
 Borderline, left out: hst111 (Punjab ₹10 lakh health cover) and hst147 (Rajasthan Chiranjeevi) are
 insurance entitlements rather than transfers; hst119 and hst146 (Old Pension Scheme) concern government
 employees' pensions, not public handouts.
+
+## Verification
+
+Adversarial re-check, 26 Sep 2026, by a second agent. Every `sourceUrl` and every URL in `sources` was
+re-fetched (curl + HTML/JSON-LD text; WebFetch for ThePrint and LiveLaw, which block scripts) and read
+against the item. Every `gapDays` was recomputed by hand, and every poll result was checked against a
+non-Wikipedia news source. Cross-lane overlap was checked against `poll-states`, `states-north` and the
+other `dist-*` lanes. **46 checked, 0 dropped, 46 kept.** Validator: OK. Whole bank and cross-lane
+`checkBank`: OK. `node --test tests/hisaab-*.test.mjs`: 40/40 pass.
+
+### Fixes
+
+| id | problem found | fix |
+|---|---|---|
+| hdb101 | "INLD fell from 47" came from Wikipedia only | `poll.result` → "Congress won 67 of 90 seats; INLD 9"; added Rediff (24 Oct 2019), which gives INLD 9 (2005) and Congress 67 |
+| hdb103 | IE 2017 describes the Mulayam-era dole as ₹1,000 for 30–40-year-olds, which conflicts with the answer | Kept ₹500 on the contemporaneous HT (26 Mar 2006) and added Dainik Bhaskar (CAG story), which says ₹500 under Mulayam and that the scheme was shut after the BSP took over in 2007 |
+| hdb106 | one distractor was the real sister scheme launched the same day (the flagged item) | replaced with "A ₹500 monthly stipend until she turns 18"; the explanation still describes the sister scheme |
+| hdb107 | "family income up to ₹3 lakh" — the official page says own plus spouse's income; the 40/31 result came from Wikipedia only | wording fixed; added Frontline (20 Nov 2009): Congress 40, INLD 31 |
+| hdb108 | The Hindu says "31 lakh **people** belonging to BPL families", not 31 lakh families | stem and outcome reworded |
+| hdb110 | CAG criticism names Akhilesh Yadav, but the item had no status | added `status` (audit finding, not a court finding; no case) and `people` |
+| hdb111 | CAG audit item had no status | added `status` |
+| hdb112 | the answer (account in the woman head's name) is stated in the stem of **hpe106** (poll-states, Bhamashah 2008) | rewritten to ask about another fact on the same page: health cover of ₹3 lakh for major illnesses (₹30,000 for routine care is in the explanation, not in the options); simple → expert |
+| hdb113 | mechanics behind "₹6.5 lakh at 21" were not stated (flagged) | added The Tribune (8 Sep 2015): ₹1,000 a month for 14 years, then ₹6.5 lakh at 21; removed "eight districts" (Tribune 2015 said six at launch) |
+| hdb114 | "dues up to 30 Nov 2016" is almost certainly a typo in The Hindu (the announcement was in Feb 2016) | date removed; the category-wise waiver is unchanged |
+| hdb116 | "began paying … revamped": Bhaskar shows ₹30,000 cheques were already paid from 27 Sep 2012 | stem → "handed … under the amended scheme"; added Rediff (11 Mar 2017): BJP 312, SP 47 |
+| hdb118 | "enrolment +30% in the first year" was credited to Mitra & Moene, but I4I cites it from earlier work (Muralidharan & Prakash) | now attributed to "earlier work they cite" |
+| hdb119 | poll result came from Wikipedia only | added IE (1 Nov 2023): Congress 100, BJP 73 |
+| hdb120 | "The Congress had promised a complete waiver" was written as fact; the source attributes it to the BKU | now attributed to the BKU |
+| hdb121 | poll result came from Wikipedia only | added The Hindu (11 Feb 2020): AAP 62, BJP 8 |
+| hdb122 | `gapDays` was missing (flagged); the item quoted a private farmer's arithmetic | first state instalment was 10 Aug 2019 (₹482 cr to 13.6 lakh farmers; Dainik Bhaskar, 11 Oct 2019) and the first phase was 30 Nov 2019 (IE, 2 Nov 2019), so **gapDays = 112**; farmer quote replaced by that fact; outcome adds ~₹900 cr to 26 lakh farmers by 11 Oct 2019 |
+| hdb124 | balance: AAP attacking the cut in 2021 was missing | added Raghav Chadha's 2021 "election stunt" remark (India Today, already in `sources`) |
+| hdb126 | poll result came from Wikipedia only | added Scroll (11 Mar 2022): BJP 255, SP 111 |
+| hdb127 | no status on an officer's critique | added `status`; searched again (Google News) for a government reply and found none |
+| hdb128 | CAG audit item had no status | added `status` |
+| hdb129 | poll result came from Wikipedia only | added Mint (8 Dec 2022): Congress 40, BJP 25 |
+| hdb133 | poll date not sourced outside Wikipedia | added TNIE (23 Sep 2024): polling on 5 Oct |
+| hdb134 | the L-G ordered an inquiry into the form drive (28 Dec 2024) on a Congress complaint, and this was missing; two named leaders in a "fraudulent" context had no status | explanation adds the inquiry; `status` and `people` added (no FIR, charge or outcome reported); The Hindu (28 Dec 2024) added; "earlier that month" → 12 Dec. `gapDays` 55 confirmed (12 Dec 2024 → 5 Feb 2025) |
+| hdb135 | the stem stated ₹2,500, which is **hst159**'s answer; `gapDays` 102 counted from the 3 Aug launch, but the stem's measure is the 14 Oct cabinet approval | stem no longer states the amounts; **gapDays 102 → 30** (14 Oct → 13 Nov 2024); TNIE added as the source for ₹13,363 cr |
+| hdb136 | IE's "extra ₹921.41 crore a year" does not add up (1.09 crore × ₹700 × 12 ≈ ₹9,160 crore) | figure removed |
+| hdb137 | "fraud by operators found in physical checks" went further than the source | → "irregularities found in physical checks after reports of fraud by form-filling operators" |
+| hdb138 | the stem stated ₹2,100, which is **hst115**'s answer | stem → "monthly cash to all Haryana women"; ThePrint re-read (WebFetch) confirms 5.22 lakh, Saturday 1 Nov 2025, and AIDWA's "less than four percent" |
+| hdb139 | "how much do recipients above 80 **now** get" could go stale | → "how much did it set" |
+| hdb140 | the stem stated ₹10,000 (**hst152**'s answer); whether the Patna HC petition was filed was unverified (flagged); the "₹2 lakh unpaid" line was stale | stem reworded. **Filed:** Jan Suraaj said on 23 Mar 2026 that it had petitioned the Patna HC (Live Hindustan); no ruling found. `status` added. Outcome: RJD's April 2026 claim now cited (TOI, 28 Apr 2026); in Aug 2026, 1 lakh women got a ₹20,000 second instalment (Navbharat Times, 27 Aug 2026) |
+| hdb141 | outcome stopped at the March budget | added 76.11 lakh women registered by Aug 2026 (HT) and a PIL on the voter-ID clause listed for 5 Oct 2026 (The Tribune, 24 Sep 2026). The petitioner's motive claim is attributed. `status` added |
+| hdb142 | the TNIE 2021 extra source covers the predecessor Gaura Devi scheme (gives ₹52,000, conflicting) and names a private individual | removed from `sources` |
+| hdb143 | "notified in August 2026" is wrong: the scheme was gazetted on 24 Apr 2025 as Mahila Samriddhi and launched on 26 Aug 2026 (ANI; TNIE); the stem also named the scheme, which is **hst106**'s answer | stem → "launched … in August 2026", without the name; `status` added (PILs pending, listed 17 Sep 2026, no ruling found); outcome → "payments scheduled from 1 Sep" |
+| hdb144 | the answer "the cabinet approved it statewide in May 2026" was ambiguous: the scheme was **notified on 14 Mar 2024** (HT) and extended area by area (Kinnaur, Apr 2026, The Hindu). The government's reply to the MCC charge was missing | rewritten: "which women did the May 2026 decision cover?" (answer: aged 18–59, family income under ₹2 lakh). Added the reply from minister Harshwardhan Chauhan ("routine") and `status` on the BJP complaint to the SEC (ANI, 23 May 2026). `gapDays` 89 kept (4 Mar → 1 Jun 2024) |
+| hdb145 | "from August 2026" — the source gives no start date | → "announced 28 Aug 2026" |
+
+Confirmed with no change: hdb100, 102, 104, 105, 109, 115, 117, 123, 125, 130, 131, 132. The flagged items
+hdb110, 111, 117, 124, 127, 137 and 138 read fairly against their sources: opinion words are attributed
+and the other side's position is included.
+
+Recomputed `gapDays` (all others match): 101 = 94, 106 = 91, 107 = 226, 116 = 179 (from the 16 Aug 2016
+announcement; 177 if counted from the Raksha Bandhan cheques on 18 Aug), 119 = 298, 121 = 191,
+**122 = 112 (new)**, 124 = 111, 126 = 47, 129 = 291, 130 = 107, 133 = 278, 134 = 55, **135 = 30
+(was 102)**, 136 = 138, 140 = 41, 144 = 89.
+
+Counts after verification: simple 14 · expert 17 · extreme 15; correctIndex 12/11/11/12; `govt`
+distribution unchanged. The pre-poll table above is superseded for hdb122 (112) and hdb135 (30).
+
+### Still unverified (watch list)
+
+- hdb140 — outcome of the Patna HC petition (filed per Jan Suraaj, Mar 2026).
+- hdb143 — HC ruling on the MP/MLA endorsement rule; whether payments were actually credited from 1 Sep 2026.
+- hdb134 — outcome of the L-G-ordered inquiry (Dec 2024).
+- hdb141 — PIL hearing on 5 Oct 2026. AAP says an earlier HC matter produced no stay (TOI, 24 Jul 2026); that proceeding was not read in full.
+- hdb144 — any SEC finding; date of the first statewide payment.
+- hdb113 — "₹450 crore in 2025-26" is the CM's budget-speech figure as quoted by ETV. It looks high next to 16,165 new girls, so treat it as a quote.
+- hdb116 — which date to count `gapDays` from (announcement vs first cheques), a two-day difference.
+- The lane is still not registered in `editions/hisaab/bank/index.mjs` (outside this lane's write scope).

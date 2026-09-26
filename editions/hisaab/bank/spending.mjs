@@ -257,6 +257,7 @@ export const HISAAB_SPENDING = Object.freeze([
     explanation: "Food subsidy (₹2,27,629 crore) and fertiliser subsidy (₹1,70,799 crore) are 87% of total subsidies of ₹4,54,773 crore, per PRS; LPG subsidy is just 2.6%. In 2025-26, food subsidy overshot its budget by 12% and fertiliser subsidy by 11% at the revised stage.",
     sourceUrl: "https://prsindia.org/files/budget/budget_parliament/2026/Union_Budget_Analysis-2026-27.pdf",
     sourceLabel: "PRS Legislative Research — Union Budget 2026-27 Analysis (1 Feb 2026)",
+    tags: ["distribution"],
   },
   {
     id: "hbx014",
@@ -276,6 +277,7 @@ export const HISAAB_SPENDING = Object.freeze([
     explanation: "The revised 2020-21 food subsidy was ₹4,22,618 crore — 266% above the ₹1,15,570 crore budgeted — as the Centre used the budget to clear the Food Corporation of India's pending food-subsidy dues, per PRS. The 2021-22 budget then allotted ₹2,42,836 crore.",
     sourceUrl: "https://prsindia.org/files/budget/budget_parliament/2021/Union%20Budget%20Analysis%20-%202021-22_0.pdf",
     sourceLabel: "PRS Legislative Research — Union Budget 2021-22 Analysis (Feb 2021)",
+    tags: ["distribution"],
   },
   {
     id: "hbx015",
@@ -296,6 +298,7 @@ export const HISAAB_SPENDING = Object.freeze([
     sourceUrl: "https://prsindia.org/files/budget/budget_parliament/2024/Union_Budget_Analysis_2024-25.pdf",
     sourceLabel: "PRS Legislative Research — Union Budget 2024-25 Analysis (July 2024)",
     sources: ["https://prsindia.org/files/budget/budget_parliament/2026/Union_Budget_Analysis-2026-27.pdf"],
+    tags: ["distribution"],
   },
   {
     id: "hbx016",
@@ -335,6 +338,11 @@ export const HISAAB_SPENDING = Object.freeze([
     sourceUrl: "https://prsindia.org/files/budget/budget_parliament/2026/Union_Budget_Analysis-2026-27.pdf",
     sourceLabel: "PRS Legislative Research — Union Budget 2026-27 Analysis (1 Feb 2026)",
     sources: ["https://www.business-standard.com/budget/news/budget-2025-tax-free-income-limit-under-new-regime-rises-to-rs-12-lakh-125020101583_1.html"],
+    tags: ["pre-election"],
+    enactedBy: [{ name: "Nirmala Sitharaman", role: "Union Finance Minister (presented Budget 2025-26)", party: "BJP" }],
+    outcome:
+      "Presented on 1 Feb 2025; Delhi voted four days later, on 5 Feb, and the BJP won 48 of 70 seats to AAP’s 22. Income-tax receipts for 2025-26 were later revised to ₹13,12,000 crore against ₹14,38,000 crore budgeted (PRS).",
+    poll: { label: "Delhi Assembly 2025", month: "2025-02", gapDays: 4, result: "BJP won 48 of 70 seats; AAP 22" },
   },
   {
     id: "hbx018",
@@ -532,6 +540,11 @@ export const HISAAB_SPENDING = Object.freeze([
     explanation: "The Taxation Laws (Amendment) Ordinance set an optional 22% rate (25.17% effective with surcharge and cess) and 15% for new manufacturing firms. The Finance Ministry estimated revenue forgone at ₹1,45,000 crore and pitched the cut as a boost to investment and 'Make in India'.",
     sourceUrl: "https://www.pib.gov.in/PressReleasePage.aspx?PRID=1585641",
     sourceLabel: "PIB (Ministry of Finance) — Corporate tax rates slashed to 22% for domestic companies (20 Sep 2019)",
+    tags: ["pre-election"],
+    enactedBy: [{ name: "Nirmala Sitharaman", role: "Union Finance Minister (announced the cut in Goa, 20 Sep 2019)", party: "BJP" }],
+    outcome:
+      "Announced on 20 Sep 2019, a day before the ECI set 21 Oct polls in Maharashtra and Haryana; revenue forgone was put at ₹1,45,000 crore. The BJP–Shiv Sena alliance won 161 of 288 in Maharashtra; Haryana returned a hung House with the BJP on 40 of 90.",
+    poll: { label: "Maharashtra & Haryana Assembly 2019", month: "2019-10", gapDays: 31, result: "Maharashtra: BJP 105, Shiv Sena 56, NCP 54 of 288. Haryana: BJP 40 of 90, Congress 31 (hung)" },
   },
   {
     id: "hbx028",
@@ -609,6 +622,11 @@ export const HISAAB_SPENDING = Object.freeze([
     explanation: "PIB: GST on tobacco products rose from 28% to 40%, and large cars moved to a flat 40% with no cess. Small cars and two-wheelers up to 350cc fell from 28% to 18%, cement from 28% to 18%, and many daily food items to 5% or nil.",
     sourceUrl: "https://www.pib.gov.in/FactsheetDetails.aspx?Id=150302",
     sourceLabel: "PIB — Factsheet: GST Reforms for a New Generation (20 Sep 2025)",
+    tags: ["pre-election"],
+    enactedBy: [{ name: "Nirmala Sitharaman", role: "Union Finance Minister; heads the GST Council that approved it", party: "BJP" }],
+    outcome:
+      "The GST Council approved the 5%/18% structure and a 40% slab on 3 Sep 2025; the rates took effect on 22 Sep, 45 days before Bihar’s first phase of polling on 6 Nov. The NDA won 202 of 243 seats in Bihar.",
+    poll: { label: "Bihar Assembly 2025", month: "2025-11", gapDays: 45, result: "NDA won 202 of 243 seats; BJP 89, JD(U) 85" },
   },
   {
     id: "hbx032",
@@ -688,6 +706,8 @@ export const HISAAB_SPENDING = Object.freeze([
     sourceUrl: "https://pmcares.gov.in/assets/donation/pdf/Audited%20Statement.PDF",
     sourceLabel: "PM CARES Fund — Audited receipts and payments account, period ended 31 Mar 2020",
     sources: ["https://pmcares.gov.in/en/web/page/about_us"],
+    tags: ["relief"],
+    enactedBy: [{ name: "Narendra Modi", role: "Prime Minister; ex-officio Chairman of the PM CARES Fund", party: "BJP" }],
   },
   {
     id: "hbx036",
@@ -707,6 +727,7 @@ export const HISAAB_SPENDING = Object.freeze([
     explanation: "Of ₹3,976 crore disbursed in 2020-21, ₹1,392.83 crore bought 6.6 crore vaccine doses, ₹1,311.34 crore went on 50,000 ventilators, ₹1,000 crore to states for migrants and ₹201.58 crore on 162 oxygen plants. Receipts plus opening balance that year totalled ₹10,990 crore.",
     sourceUrl: "https://pmcares.gov.in/assets/donation/pdf/Audited_Statement_2020_21.pdf",
     sourceLabel: "PM CARES Fund — Audited receipts and payments account 2020-21",
+    tags: ["relief"],
   },
   {
     id: "hbx037",
@@ -726,6 +747,7 @@ export const HISAAB_SPENDING = Object.freeze([
     explanation: "It closed 2024-25 with ₹8,452.07 crore, including ₹7,846.65 crore in FDs that earned ₹469 crore interest that year. Payments in 2024-25 were under ₹1 crore (₹87.85 lakh, under PM CARES for Children). The accounts are audited by a chartered-accountant firm and posted on the fund's website.",
     sourceUrl: "https://pmcares.gov.in/assets/donation/pdf/Audited_Statement_2024_25.pdf",
     sourceLabel: "PM CARES Fund — Audited receipts and payments account 2024-25 (signed Aug 2026)",
+    tags: ["relief"],
   },
   {
     id: "hbx038",
@@ -746,6 +768,7 @@ export const HISAAB_SPENDING = Object.freeze([
     sourceUrl: "https://www.livelaw.in/top-stories/sc-dismisses-plea-to-transfer-pm-cares-funds-to-ndrf-saysfresh-national-disaster-plan-for-covid-19-not-needed-161577",
     sourceLabel: "LiveLaw — SC dismisses plea to transfer PM CARES funds to NDRF (18 Aug 2020)",
     sources: ["https://www.livemint.com/news/india/no-transfer-of-money-from-pm-cares-to-disaster-relief-fund-sc-11597732268728.html"],
+    tags: ["relief"],
   },
   {
     id: "hbx039",
@@ -767,6 +790,7 @@ export const HISAAB_SPENDING = Object.freeze([
     sourceUrl: "https://indianexpress.com/article/cities/delhi/pm-cares-fund-not-a-fund-of-government-of-india-hc-told-7528391/",
     sourceLabel: "Indian Express — PM-CARES Fund not a fund of Government of India, Delhi HC told (23 Sep 2021)",
     sources: ["https://www.livelaw.in/top-stories/pm-cares-funds-not-a-public-authority-under-rti-act-affirms-appellate-authority-in-pmo-159152"],
+    tags: ["relief"],
   },
   {
     id: "hbx040",
@@ -983,5 +1007,7 @@ export const HISAAB_SPENDING = Object.freeze([
     sourceUrl: "https://www.business-standard.com/article/news-ani/pm-ministers-mps-to-get-30-pc-less-salary-mplad-funds-suspended-for-2-years-120040600896_1.html",
     sourceLabel: "Business Standard (ANI) — PM, ministers, MPs to get 30% less salary; MPLAD funds suspended for 2 years (6 Apr 2020)",
     sources: ["https://www.business-standard.com/article/news-ani/move-on-mp-s-salaries-good-mplad-fund-should-not-be-suspended-manish-tewari-120040601556_1.html"],
+    tags: ["relief"],
+    enactedBy: [{ name: "Prakash Javadekar", role: "Union Minister (announced the Cabinet decision, Apr 2020)", party: "BJP" }],
   },
 ]);

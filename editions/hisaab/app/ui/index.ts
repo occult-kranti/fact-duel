@@ -9,7 +9,7 @@
 export { Button, IconButton, buttonClass, type ButtonProps, type ButtonVariant, type ButtonSize, type IconButtonProps } from './button';
 export { FileCard, type FileCardProps, type FileState } from './file-card';
 export { Tape, type TapeProps } from './tape';
-export { Option, OptionList, OptionShape, optionState, OPTION_SLOTS, type OptionProps, type OptionListProps, type OptionState, type OptionIndex } from './option';
+export { focusWithin, Option, OptionList, OptionShape, optionState, OPTION_SLOTS, QUESTION_SCOPE, questionScope, type OptionProps, type OptionListProps, type OptionState, type OptionIndex } from './option';
 export { Stamp, STAMP_WORDS, type StampProps, type StampKind } from './stamp';
 export { Receipt, receiptNumber, type ReceiptProps } from './receipt';
 export { NotingSheet, type NotingSheetProps } from './noting-sheet';

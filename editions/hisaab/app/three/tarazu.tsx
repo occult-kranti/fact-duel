@@ -1,14 +1,18 @@
 /**
  * three/tarazu.tsx — TARAZU, the balance scale on the match result (bible §10).
- * STUB: final props API + the 2D fallback (an SVG scale rotated by the TRUE angle).
  *
  *   <Tarazu scores={[2, 1]} names={['You', 'Babu-Bot · BOT']} winner={0} />
  *
- * Angle = score difference × 6°, max 24°, towards the winner; a draw settles level. Mount it 250 ms
- * after the verdict text renders; it never mounts during a round (SceneHost refuses while live), and
- * it must unmount before a rematch countdown.
+ * One file-block weight drops into a seat's pan per round won; the beam (a Rapier revolute joint) tips
+ * and its limits are the TRUE angle: score difference × 6°, at most 24°, towards the winner; a draw
+ * settles level. Mount it 250 ms after the verdict text renders; it never mounts during a round
+ * (SceneHost refuses while live) and must unmount before a rematch countdown. Names and scores are
+ * printed under the pans. 2D fallback: the same scale in SVG at the same angle.
  */
 import { SceneHost, type SceneComponent } from './scene-host';
+import { TarazuScene } from './scenes';
+
+export type TarazuSceneProps = { scores: readonly [number, number]; names: readonly [string, string]; winner: 0 | 1 | null; angle: number; onSettled?: () => void };
 
 export type TarazuProps = {
   /** Round wins per seat, [seat 0, seat 1] — the true score. */
@@ -17,28 +21,44 @@ export type TarazuProps = {
   names: readonly [string, string];
   /** The winning seat, or null for a draw / no result. */
   winner: 0 | 1 | null;
+  /** Box height; default 240 (phone) / 320 (≥ 900px). */
   height?: number;
-  scene?: SceneComponent<{ scores: readonly [number, number]; names: readonly [string, string]; winner: 0 | 1 | null; angle: number }>;
+  /** Lazy 3D scene; defaults to the Rapier scale. Pass `null` to force the 2D art. */
+  scene?: SceneComponent<TarazuSceneProps> | null;
+  /** Sound/haptic twins (a low thump per weight, medium haptic on settle). Default true. */
+  cues?: boolean;
+  /** Called once the beam has settled at the true angle (3D), for a settle cue. */
+  onSettled?: () => void;
   className?: string;
 };
 
-/** The beam's final angle in degrees (negative tips left, towards seat 0). */
+/**
+ * The beam's final angle in degrees (negative tips left, towards seat 0): the TRUE round difference
+ * × 6°, capped at 24°. Level on a draw, with no winner, or if the score does not favour `winner`.
+ */
 export function tarazuAngle(scores: readonly [number, number], winner: 0 | 1 | null): number {
   if (winner === null) return 0;
-  const diff = Math.abs(scores[0] - scores[1]);
-  const deg = Math.min(24, Math.max(6, diff * 6));
+  const diff = (scores[winner] ?? 0) - (scores[winner === 0 ? 1 : 0] ?? 0);
+  if (!(diff > 0)) return 0;
+  const deg = Math.min(24, diff * 6);
   return winner === 0 ? -deg : deg;
 }
 
 export function tarazuLabel(scores: readonly [number, number], names: readonly [string, string], winner: 0 | 1 | null) {
-  if (winner === null) return `Scale level: ${names[0]} ${scores[0]}, ${names[1]} ${scores[1]}.`;
+  if (winner === null || tarazuAngle(scores, winner) === 0) return `Scale level: ${names[0]} ${scores[0]}, ${names[1]} ${scores[1]}.`;
   const w = winner;
   const l = w === 0 ? 1 : 0;
-  return `Scale tips to ${names[w]}: ${scores[w]} rounds to ${scores[l]}.`;
+  return `Scale tips to ${names[w]}: ${scores[w]} ${scores[w] === 1 ? 'round' : 'rounds'} to ${scores[l]}.`;
 }
 
-export function TarazuArt({ scores, names, winner }: Pick<TarazuProps, 'scores' | 'names' | 'winner'>) {
-  const angle = tarazuAngle(scores, winner);
+/** A pan prints ≤ 14 characters: a longer name is cut at 13 with an ellipsis, never mid-word silently. */
+export const panName = (name: string) => {
+  const n = String(name ?? '').trim();
+  return n.length > 14 ? `${n.slice(0, 13).trimEnd()}…` : n;
+};
+
+export function TarazuArt({ scores, names, winner, level = false }: Pick<TarazuProps, 'scores' | 'names' | 'winner'> & { level?: boolean }) {
+  const angle = level ? 0 : tarazuAngle(scores, winner);
   return (
     <div className="h-tarazu" aria-hidden="true">
       <svg viewBox="0 0 320 200" focusable="false">
@@ -50,32 +70,41 @@ export function TarazuArt({ scores, names, winner }: Pick<TarazuProps, 'scores' 
           <path className="h-tarazu__line" d="M40 40 L15 110 M40 40 L65 110 M280 40 L255 110 M280 40 L305 110" />
           <path className="h-tarazu__pan" d="M5 110 H75 Q72 132 40 132 Q8 132 5 110 Z" />
           <path className="h-tarazu__pan" d="M245 110 H315 Q312 132 280 132 Q248 132 245 110 Z" />
-          <text className="h-tarazu__score" x="40" y="126" textAnchor="middle">
-            {scores[0]}
-          </text>
-          <text className="h-tarazu__score" x="280" y="126" textAnchor="middle">
-            {scores[1]}
-          </text>
+          {level ? null : (
+            <>
+              <text className="h-tarazu__score" x="40" y="126" textAnchor="middle">
+                {scores[0]}
+              </text>
+              <text className="h-tarazu__score" x="280" y="126" textAnchor="middle">
+                {scores[1]}
+              </text>
+            </>
+          )}
         </g>
         <text className="h-tarazu__name" x="40" y="196" textAnchor="middle">
-          {names[0].slice(0, 14)}
+          {panName(names[0])}
         </text>
         <text className="h-tarazu__name" x="280" y="196" textAnchor="middle">
-          {names[1].slice(0, 14)}
+          {panName(names[1])}
         </text>
       </svg>
     </div>
   );
 }
 
-export function Tarazu({ scores, names, winner, height, scene, className }: TarazuProps) {
+export function Tarazu({ scores, names, winner, height, scene, cues = true, onSettled, className }: TarazuProps) {
+  const safe: [number, number] = [Math.max(0, Math.floor(scores[0] ?? 0)), Math.max(0, Math.floor(scores[1] ?? 0))];
   return (
     <SceneHost
-      label={tarazuLabel(scores, names, winner)}
-      fallback={<TarazuArt scores={scores} names={names} winner={winner} />}
-      scene={scene}
-      props={{ scores, names, winner, angle: tarazuAngle(scores, winner) }}
+      piece="tarazu"
+      label={tarazuLabel(safe, names, winner)}
+      fallback={<TarazuArt scores={safe} names={names} winner={winner} />}
+      loading={<TarazuArt scores={safe} names={names} winner={winner} level />}
+      deadlineMs={2600}
+      scene={scene === null ? undefined : (scene ?? TarazuScene)}
+      props={{ scores: safe, names, winner, angle: tarazuAngle(safe, winner), onSettled }}
       height={height}
+      cues={cues}
       className={className}
     />
   );

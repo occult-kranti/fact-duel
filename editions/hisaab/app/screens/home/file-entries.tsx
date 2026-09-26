@@ -1,12 +1,17 @@
 /**
  * screens/home/file-entries.tsx — Home's entry points into the files (design bible §11.2 "four small
- * files", charter §6 game modes): the records room (Rajya Rounds, Sector Files, Kiska Media?, Forward
- * Court) and the money trail, 2000–2026 (Seedha Khaate Mein, Rahat Kosh, Chunav Se Pehle,
- * Saal-dar-Saal). Small manila covers, each a whole-card link; counts are the real route counts
- * (a mode whose lanes are not registered yet says so, never a padded number).
+ * files", charter §6 game modes).
+ *
+ *  - The records room: four small manila covers (Rajya Rounds, Sector Files, Kiska Media?, Forward
+ *    Court), each a whole-card link.
+ *  - The money trail, 2000–2026: ONE manila folder holding four rows (Seedha Khaate Mein, Rahat Kosh,
+ *    Chunav Se Pehle, Saal-dar-Saal). A list, not four more covers, so Home stays uncluttered.
+ *
+ * Counts are the real route counts from edition.ts; a mode whose lanes are not registered yet says
+ * "No files yet", never a padded number. Nothing here is violet-filled (Home's one primary lives above).
  */
 import type { ReactNode } from 'react';
-import { Banknote, CalendarRange, Gavel, Grid3x3, Layers, LifeBuoy, Newspaper, Vote } from 'lucide-react';
+import { Banknote, CalendarRange, ChevronRight, Gavel, Grid3x3, Layers, LifeBuoy, Newspaper, Vote } from 'lucide-react';
 import { formatNumber } from '../../data';
 import { href } from '../../router';
 import { useLang } from '../../ui/lang';
@@ -17,13 +22,14 @@ const ICONS: Readonly<Record<string, ReactNode>> = {
   sector: <Layers size={20} strokeWidth={2.2} />,
   media: <Newspaper size={20} strokeWidth={2.2} />,
   forward: <Gavel size={20} strokeWidth={2.2} />,
-  distribution: <Banknote size={20} strokeWidth={2.2} />,
-  relief: <LifeBuoy size={20} strokeWidth={2.2} />,
-  'pre-election': <Vote size={20} strokeWidth={2.2} />,
-  years: <CalendarRange size={20} strokeWidth={2.2} />,
+  distribution: <Banknote size={22} strokeWidth={2.2} />,
+  relief: <LifeBuoy size={22} strokeWidth={2.2} />,
+  'pre-election': <Vote size={22} strokeWidth={2.2} />,
+  years: <CalendarRange size={22} strokeWidth={2.2} />,
 };
 
-function MiniFile({ entry }: { entry: Entry }) {
+/** "12 files · 2 cleared" / "1 file · 6 cards" / "No files yet" — the real counts, in the locale. */
+function useCountLine(entry: Entry) {
   const { t } = useLang();
   const files =
     entry.files === 0
@@ -32,9 +38,13 @@ function MiniFile({ entry }: { entry: Entry }) {
         ? t('1 file · 6 cards', '1 फ़ाइल · 6 कार्ड')
         : t(`${formatNumber(entry.files)} files`, `${formatNumber(entry.files)} फ़ाइलें`);
   const cleared =
-    entry.cleared > 0
-      ? t(` · ${formatNumber(entry.cleared)} cleared`, ` · ${formatNumber(entry.cleared)} पूरी`)
-      : '';
+    entry.cleared > 0 ? t(`${formatNumber(entry.cleared)} cleared`, `${formatNumber(entry.cleared)} पूरी`) : null;
+  return { files, cleared };
+}
+
+function MiniFile({ entry }: { entry: Entry }) {
+  const { t } = useLang();
+  const { files, cleared } = useCountLine(entry);
   return (
     <li className="h-mini">
       <a className="h-mini__link" href={entry.to}>
@@ -48,12 +58,40 @@ function MiniFile({ entry }: { entry: Entry }) {
           </span>
         </span>
         <span className="h-mini__title">{entry.title}</span>
-        <span className="h-mini__gloss">{entry.gloss}</span>
+        <span className="h-mini__gloss">{t(entry.gloss, entry.glossHi)}</span>
         <span className="h-mini__meta">
-          {files}
-          {cleared}
-          {entry.span ? ` · ${entry.span}` : ''}
+          <span className="h-mini__count">{files}</span>
+          {cleared ? <span className="h-mini__count"> · {cleared}</span> : null}
         </span>
+      </a>
+    </li>
+  );
+}
+
+function TrailRow({ entry }: { entry: Entry }) {
+  const { t } = useLang();
+  const { files, cleared } = useCountLine(entry);
+  return (
+    <li className="h-trail__item">
+      <a className="h-trail__row" href={entry.to}>
+        <span className="h-trail__icon" aria-hidden="true">
+          {ICONS[entry.id]}
+        </span>
+        <span className="h-trail__names">
+          <span className="h-trail__hi" lang="hi">
+            {entry.titleHi}
+          </span>
+          <span className="h-trail__title">{entry.title}</span>
+          <span className="h-trail__meta">
+            <span>{t(entry.gloss, entry.glossHi)}</span>
+            <span className="h-trail__count">
+              {files}
+              {cleared ? ` · ${cleared}` : ''}
+              {entry.span && entry.files > 0 ? ` · ${entry.span}` : ''}
+            </span>
+          </span>
+        </span>
+        <ChevronRight aria-hidden="true" size={20} className="h-trail__chev" />
       </a>
     </li>
   );
@@ -86,29 +124,33 @@ export function FileEntries({ journeys }: { journeys: JourneysLike }) {
           ))}
         </ul>
       </div>
-      <div className="h-home__group">
-        <div className="h-home__grouphead">
-          <h3 className="h-home__h3">
+
+      <div className="h-trail" role="group" aria-labelledby="h-home-trail">
+        <span className="h-trail__tab" aria-hidden="true">
+          F.No. P/2000–26
+        </span>
+        <div className="h-trail__head">
+          <h3 className="h-home__h3" id="h-home-trail">
             <span lang="hi" className="h-home__h3hi">
               पैसा कहाँ गया?
             </span>{' '}
-            <span className="h-home__h3en">The money trail · 2000–2026</span>
+            <span className="h-home__h3en">{t('The money trail', 'पैसे का हिसाब')}</span>
           </h3>
-          <a className="h-link h-link--tap h-home__grouplink" href={href.money()}>
-            {t('Open the trail', 'पूरा हिसाब')}
-          </a>
+          <p className="h-trail__line">
+            {t(
+              '2000–2026. Who passed it, which party, what happened next.',
+              '2000–2026. किसने पास किया, कौन-सी पार्टी, फिर क्या हुआ।',
+            )}
+          </p>
         </div>
-        <p className="h-meta h-home__groupline">
-          {t(
-            'Who passed it, which party, what happened next.',
-            'किसने पास किया, कौन-सी पार्टी, फिर क्या हुआ।',
-          )}
-        </p>
-        <ul className="h-mini-grid" role="list">
+        <ul className="h-trail__list" role="list">
           {money.map((e) => (
-            <MiniFile key={e.id} entry={e} />
+            <TrailRow key={e.id} entry={e} />
           ))}
         </ul>
+        <a className="h-link h-link--tap h-trail__all" href={href.money()}>
+          {t('Open the money trail', 'पूरा हिसाब खोलो')}
+        </a>
       </div>
     </div>
   );

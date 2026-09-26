@@ -1,0 +1,312 @@
+/* screens/settings/settings.css — Settings: grouped controls on paper, radio cards, switches, the
+   volume slider, the delete confirm and the Done bar. Tokens only, h- classes. */
+
+.h-set__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-3);
+  min-width: 0;
+}
+.h-set__h2 {
+  margin: 0;
+  font-family: var(--h-font-display);
+  font-weight: var(--h-wght-display);
+  font-size: var(--h-fs-xl);
+  line-height: var(--h-lh-caps);
+  letter-spacing: var(--h-track-caps);
+  text-transform: uppercase;
+}
+:root[lang='hi'] .h-set__h2 {
+  letter-spacing: 0;
+  line-height: var(--h-lh-display-deva);
+}
+.h-set__hint {
+  margin: 0;
+  font-size: var(--h-fs-xs);
+  color: var(--h-ink-2);
+}
+.h-set__card {
+  display: flex;
+  flex-direction: column;
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-l);
+  background: var(--h-paper);
+  box-shadow: var(--h-shadow-1);
+}
+.h-set__card > * + * {
+  border-top: var(--h-bw) dashed var(--h-hair);
+}
+.h-set__static {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--h-s-1) var(--h-s-2);
+  padding: var(--h-s-3) var(--h-s-4);
+  border: var(--h-bw) dashed var(--h-line);
+  border-radius: var(--h-r-m);
+  font-size: var(--h-fs-xs);
+}
+.h-set__static > svg {
+  flex: none;
+}
+.h-set__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--h-s-3);
+}
+.h-set__done {
+  font-size: var(--h-fs-xs);
+  font-weight: var(--h-wght-ui-strong);
+}
+.h-set__confirm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-3);
+  padding: var(--h-s-4);
+  border: var(--h-bw) solid var(--h-fail-text);
+  border-radius: var(--h-r-m);
+  background: var(--h-fail-soft);
+}
+.h-set__confirmq {
+  margin: 0;
+  font-weight: var(--h-wght-ui-strong);
+}
+.h-btn.h-set__danger {
+  --_fg: var(--h-fail-text);
+  --_bd: var(--h-fail-text);
+}
+.h-set__links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--h-s-1) var(--h-s-5);
+}
+.h-set__links .h-link {
+  gap: var(--h-s-2);
+}
+.h-set__done-bar {
+  position: sticky;
+  bottom: calc(var(--h-nav-h) + env(safe-area-inset-bottom, 0px));
+  z-index: var(--h-z-sticky);
+  margin-inline: calc(-1 * var(--h-gutter));
+  padding: var(--h-s-3) var(--h-gutter);
+  border-top: var(--h-bw) solid var(--h-line);
+  background: var(--h-ground);
+}
+@media (min-width: 900px) {
+  .h-set__done-bar {
+    position: static;
+    margin-inline: 0;
+    padding: var(--h-s-2) 0 0;
+    border-top: 0;
+    max-width: 360px;
+  }
+}
+
+/* ---- radio cards ------------------------------------------------------------------------------- */
+.h-choice {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+  gap: var(--h-s-2);
+}
+@media (max-width: 599px) {
+  .h-choice--many {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.h-choice__opt {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) 20px;
+  gap: var(--h-s-2);
+  align-items: center;
+  min-height: 52px;
+  padding: var(--h-s-2) var(--h-s-3);
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-m);
+  background: var(--h-paper);
+  box-shadow: var(--h-shadow-1);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    transform var(--h-dur-tap) var(--h-ease-out),
+    box-shadow var(--h-dur-tap) var(--h-ease-out);
+}
+.h-choice__opt:active {
+  transform: translate(var(--h-press-shift), var(--h-press-shift));
+  box-shadow: var(--h-shadow-0);
+}
+.h-choice__opt--on {
+  background: var(--h-syahi-soft);
+  box-shadow: inset 0 0 0 2px var(--h-syahi), var(--h-shadow-1);
+}
+.h-choice__opt:has(.h-choice__radio:focus-visible) {
+  box-shadow: var(--h-focus-ring), var(--h-shadow-1);
+}
+.h-choice__radio {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.h-choice__icon {
+  display: inline-flex;
+  color: var(--h-syahi-text);
+}
+.h-choice__icon:empty {
+  display: none;
+}
+.h-choice__text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  grid-column: 2;
+}
+.h-choice__opt:not(:has(.h-choice__icon)) .h-choice__text {
+  grid-column: 1 / 3;
+}
+.h-choice__label {
+  font-weight: var(--h-wght-ui-strong);
+  line-height: 1.3;
+}
+/* "हिन्दी" is set in Akshar (already loaded for the edition's Devanagari titles), so an English session
+   never fetches Mukta's Devanagari file for one word (bible §2.3, §4.2). */
+.h-choice__label[lang='hi'] {
+  font-family: var(--h-font-display);
+  font-weight: var(--h-wght-display-2);
+}
+.h-choice__sub {
+  font-size: var(--h-fs-xs);
+  color: var(--h-ink-2);
+}
+.h-choice__tick {
+  grid-column: 3;
+  display: inline-flex;
+  color: var(--h-syahi-text);
+}
+
+/* ---- switches -------------------------------------------------------------------------------------- */
+.h-switchrow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--h-s-3);
+  padding: var(--h-s-3) var(--h-s-4);
+  min-width: 0;
+}
+.h-switchrow__text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.h-switchrow__label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--h-s-2);
+  font-weight: var(--h-wght-ui-strong);
+}
+.h-switchrow__icon {
+  display: inline-flex;
+  color: var(--h-syahi-text);
+}
+.h-switchrow__sub {
+  font-size: var(--h-fs-xs);
+  color: var(--h-ink-2);
+}
+.h-switch {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--h-s-2);
+  min-height: var(--h-tap);
+  min-width: var(--h-tap);
+  padding: 0 var(--h-s-1);
+  border: 0;
+  border-radius: var(--h-r-pill);
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.h-switch:focus-visible {
+  box-shadow: var(--h-focus-ring);
+  border-radius: var(--h-r-pill);
+}
+.h-switch__track {
+  position: relative;
+  display: inline-block;
+  width: 52px;
+  height: 30px;
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-pill);
+  background: var(--h-ground-2);
+  transition: background-color var(--h-dur-quick) var(--h-ease-out);
+}
+.h-switch__knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: 50%;
+  background: var(--h-paper);
+  transition: transform var(--h-dur-quick) var(--h-ease-out);
+}
+.h-switch[aria-checked='true'] .h-switch__track {
+  background: var(--h-syahi);
+}
+.h-switch[aria-checked='true'] .h-switch__knob {
+  transform: translateX(22px);
+  background: var(--h-syahi-ink);
+}
+.h-switch__word {
+  min-width: 2.2em;
+  font-family: var(--h-font-mono);
+  font-weight: 700;
+  font-size: var(--h-fs-xs);
+  text-transform: uppercase;
+}
+:root[lang='hi'] .h-switch__word {
+  font-family: var(--h-font-ui);
+  text-transform: none;
+}
+
+/* ---- volume ---------------------------------------------------------------------------------------- */
+.h-volume {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-1);
+  padding: var(--h-s-3) var(--h-s-4);
+}
+.h-volume--off {
+  color: var(--h-ink-2);
+}
+.h-volume__label {
+  font-size: var(--h-fs-xs);
+  font-weight: var(--h-wght-ui-strong);
+}
+.h-volume__range {
+  width: 100%;
+  min-height: var(--h-tap);
+  margin: 0;
+  accent-color: var(--h-syahi);
+  cursor: pointer;
+}
+.h-volume__range:disabled {
+  cursor: not-allowed;
+}
+.h-volume__range:focus-visible {
+  box-shadow: var(--h-focus-ring);
+  border-radius: var(--h-r-s);
+}

@@ -149,6 +149,11 @@ export const HISAAB_STATES_NORTH = Object.freeze([
       'The AAP government’s scheme issues a free ‘pink ticket’ for each ride on government-run buses. At launch about 8.5 lakh women were regular bus riders; earlier fares ran from ₹5 to ₹25. The rollout came with 13,000 bus marshals for safety.',
     sourceUrl: 'https://www.aljazeera.com/news/2019/10/29/pink-tickets-as-delhi-rolls-out-free-bus-travel-for-women',
     sourceLabel: 'Al Jazeera — Pink tickets as Delhi rolls out free bus travel for women (29 Oct 2019)',
+    tags: ['distribution', 'pre-election'],
+    enactedBy: [{ name: 'Arvind Kejriwal', role: 'Chief Minister, Delhi', party: 'AAP' }],
+    outcome:
+      'Rolled out on 29 Oct 2019 for about 8.5 lakh women who rode buses regularly, with 13,000 bus marshals; Delhi voted 102 days later, on 8 Feb 2020. AAP won 62 of 70 seats and the BJP 8.',
+    poll: { label: 'Delhi Assembly 2020', month: '2020-02', gapDays: 102, result: 'AAP won 62 of 70 seats; BJP 8' },
   },
   {
     id: 'hst105',
@@ -192,6 +197,8 @@ export const HISAAB_STATES_NORTH = Object.freeze([
     sourceUrl: 'https://prsindia.org/files/budget/budget_state/delhi/2025/Delhi_Budget_Analysis_2025-26.pdf',
     sourceLabel: 'PRS Legislative Research — Delhi Budget Analysis 2025-26',
     sources: ['https://www.socialnews.xyz/2026/07/28/delhi-women-to-register-for-rs-2500-scheme-from-aug-1'],
+    tags: ['distribution'],
+    enactedBy: [{ name: 'Rekha Gupta', role: 'Chief Minister, Delhi', party: 'BJP' }],
   },
 
   // ───────────────────────────── PUNJAB ─────────────────────────────
@@ -249,6 +256,8 @@ export const HISAAB_STATES_NORTH = Object.freeze([
       'PRS puts it at ₹20,500 crore, 1.5% above 2024-25; in 2023-24 Punjab spent ₹18,177 crore (20% of revenue receipts). The state itself calls rising power subsidies a concern, and the 15th Finance Commission linked Punjab’s long-term finances to rationalising free farm power.',
     sourceUrl: 'https://prsindia.org/files/budget/budget_state/punjab/2025/Punjab_Budget_Analysis_2025-26.pdf',
     sourceLabel: 'PRS Legislative Research — Punjab Budget Analysis 2025-26',
+    tags: ['distribution'],
+    enactedBy: [{ name: 'Harpal Singh Cheema', role: 'Finance Minister, Punjab (presented the 2025-26 budget)', party: 'AAP' }],
   },
   {
     id: 'hst109',
@@ -323,6 +332,8 @@ export const HISAAB_STATES_NORTH = Object.freeze([
       'The cabinet cleared it on 10 Jul 2025 with no income test, for rollout on 2 Oct 2025, replacing an income-based ₹5 lakh cover; over 550 private hospitals were empanelled at approval. The 2025-26 budget allocated ₹778 crore for it — small beside the state’s ₹20,500 crore power subsidy.',
     sourceUrl: 'https://www.tribuneindia.com/news/punjab/punjab-cabinet-gives-nod-to-scheme-providing-rs-10-lakh-health-cover-to-all-families',
     sourceLabel: 'The Tribune — Punjab Cabinet gives nod to ₹10 lakh health cover for all families (Jul 2025)',
+    tags: ['distribution'],
+    enactedBy: [{ name: 'Bhagwant Mann', role: 'Chief Minister, Punjab', party: 'AAP' }],
   },
   {
     id: 'hst112',
@@ -422,6 +433,8 @@ export const HISAAB_STATES_NORTH = Object.freeze([
       'https://www.tribuneindia.com/news/haryana/cm-nayab-saini-launches-deendayal-lado-lakshmi-yojana-eligible-women-to-receive-rs-2100-monthly',
     sourceLabel: 'The Tribune — CM Nayab Saini launches Deendayal Lado Lakshmi Yojana (25 Sep 2025)',
     sources: ['https://prsindia.org/files/budget/budget_state/haryana/2025/Haryana_Budget_Analysis_2025-26.pdf'],
+    tags: ['distribution'],
+    enactedBy: [{ name: 'Nayab Singh Saini', role: 'Chief Minister, Haryana', party: 'BJP' }],
   },
   {
     id: 'hst116',
@@ -463,6 +476,8 @@ export const HISAAB_STATES_NORTH = Object.freeze([
       'PRS records the rise to ₹8,000 an acre, and the subsidy for direct sowing of paddy going from ₹4,000 to ₹4,500 an acre. The scheme pays farmers to switch away from water-guzzling paddy.',
     sourceUrl: 'https://prsindia.org/files/budget/budget_state/haryana/2025/Haryana_Budget_Analysis_2025-26.pdf',
     sourceLabel: 'PRS Legislative Research — Haryana Budget Analysis 2025-26',
+    tags: ['distribution'],
+    enactedBy: [{ name: 'Nayab Singh Saini', role: 'Chief Minister, Haryana (presented the 2025-26 budget)', party: 'BJP' }],
   },
   {
     id: 'hst118',
@@ -509,6 +524,11 @@ export const HISAAB_STATES_NORTH = Object.freeze([
     sourceUrl:
       'https://www.thehindu.com/news/national/other-states/himachal-pradesh-decides-to-restores-ops-for-its-employees/article66373793.ece',
     sourceLabel: 'The Hindu — Himachal Pradesh decides to restore OPS for its employees (13 Jan 2023)',
+    tags: ['pre-election'],
+    enactedBy: [{ name: 'Sukhvinder Singh Sukhu', role: 'Chief Minister, Himachal Pradesh', party: 'INC' }],
+    outcome:
+      'A Congress campaign promise for the 12 Nov 2022 poll, which it won with 40 of 68 seats. The cabinet restored the OPS on 13 Jan 2023; the CM said it would benefit over 1.36 lakh NPS employees.',
+    poll: { label: 'Himachal Assembly 2022', month: '2022-11', result: 'Congress won 40 of 68 seats; BJP 25' },
   },
   {
     id: 'hst120',
@@ -599,6 +619,7 @@ export const HISAAB_STATES_NORTH = Object.freeze([
     sourceUrl:
       'https://www.thehindu.com/news/national/himachal-pradesh/himachal-multi-crore-scholarship-scam-cbi-files-charge-sheet-against-20-institutes-105-individuals/article68005966.ece',
     sourceLabel: 'The Hindu — Himachal scholarship scam: CBI files charge sheet against 20 institutes, 105 individuals (29 Mar 2024)',
+    tags: ['distribution'],
   },
   {
     id: 'hst124',
@@ -860,6 +881,7 @@ export const HISAAB_STATES_NORTH = Object.freeze([
       '181 structures were declared unsafe. By mid-2023 officials said ₹26 crore in compensation had reached 118 families and ₹1 lakh immediate relief 324 families, while residents said payouts fell short of relocation costs. Hydropower tunnelling, unchecked construction and loose soil were among causes cited.',
     sourceUrl: 'https://theprint.in/india/six-months-on-fresh-sinkhole-revives-fears-of-subsidence-in-joshimath/1657087/',
     sourceLabel: 'ThePrint — Six months on, fresh sinkhole revives fears of subsidence in Joshimath (2023)',
+    tags: ['relief'],
   },
   {
     id: 'hst135',
@@ -1021,6 +1043,8 @@ export const HISAAB_STATES_NORTH = Object.freeze([
       'The same budget, presented on 7 Mar 2025, raised free ration for Antyodaya Anna Yojana families to 10 kg and launched Mission YUVA with a target of 4.25 lakh jobs over five years.',
     sourceUrl: 'https://prsindia.org/files/budget/budget_state/jammu-and-kashmir/2025/J%26K_Budget_Analysis_2025-26.pdf',
     sourceLabel: 'PRS Legislative Research — Jammu and Kashmir Budget Analysis 2025-26',
+    tags: ['distribution'],
+    enactedBy: [{ name: 'Omar Abdullah', role: 'Chief Minister, Jammu & Kashmir (presented the 2025-26 budget)', party: 'JKNC' }],
   },
   {
     id: 'hst142',
@@ -1172,6 +1196,11 @@ export const HISAAB_STATES_NORTH = Object.freeze([
     sourceUrl:
       'https://www.thehindu.com/elections/rajasthan-assembly/ashok-gehlots-expansion-of-health-cover-under-chiranjeevi-scheme-impractical-says-bjp-leader/article67567361.ece',
     sourceLabel: 'The Hindu — Expansion of health cover under Chiranjeevi scheme ‘impractical’, says BJP leader (Nov 2023)',
+    tags: ['distribution', 'pre-election'],
+    enactedBy: [{ name: 'Ashok Gehlot', role: 'Chief Minister, Rajasthan', party: 'INC' }],
+    outcome:
+      'In the 2023 campaign the Congress promised to raise the cover to ₹50 lakh. Rajasthan voted on 25 Nov 2023; the BJP won 115 of 199 seats and the Congress 69.',
+    poll: { label: 'Rajasthan Assembly 2023', month: '2023-11', result: 'BJP won 115 of 199 seats; Congress 69' },
   },
   {
     id: 'hst148',
@@ -1286,6 +1315,14 @@ export const HISAAB_STATES_NORTH = Object.freeze([
       'The PM transferred ₹7,500 crore in all on 26 Sep 2025 for the state-funded scheme, which promises up to ₹2 lakh more later based on how the women’s ventures do. Congress called it vote-buying (‘vote revdi’); the NDA went on to win the November 2025 election.',
     sourceUrl: 'https://www.thehindu.com/elections/bihar-assembly/pm-modi-launches-bihars-mukhyamantri-mahila-rojgar-yojana/article70096776.ece',
     sourceLabel: 'The Hindu — PM Modi launches Bihar’s Mukhyamantri Mahila Rojgar Yojana (26 Sep 2025)',
+    tags: ['distribution', 'pre-election'],
+    enactedBy: [
+      { name: 'Nitish Kumar', role: 'Chief Minister, Bihar', party: 'JD(U)' },
+      { name: 'Narendra Modi', role: 'Prime Minister (launched it and made the first transfer)', party: 'BJP' },
+    ],
+    outcome:
+      '₹7,500 crore reached 75 lakh women on 26 Sep 2025, 41 days before Bihar’s first phase of polling on 6 Nov. The NDA won 202 of 243 seats (BJP 89, JD(U) 85); the RJD won 25.',
+    poll: { label: 'Bihar Assembly 2025', month: '2025-11', gapDays: 41, result: 'NDA won 202 of 243 seats; BJP 89, JD(U) 85' },
   },
   {
     id: 'hst153',
@@ -1461,6 +1498,7 @@ export const HISAAB_STATES_NORTH = Object.freeze([
       'The 2025-26 budget allocated ₹13,363 crore — 11% of revenue receipts — up from spending of about 7% of receipts in 2024-25. PRS notes similar cash transfers in Maharashtra, West Bengal, Madhya Pradesh and Karnataka.',
     sourceUrl: 'https://prsindia.org/files/budget/budget_state/jharkhand/2025/Jharkhand_Budget_Analysis_2025-26.pdf',
     sourceLabel: 'PRS Legislative Research — Jharkhand Budget Analysis 2025-26',
+    tags: ['distribution'],
   },
   {
     id: 'hst160',
@@ -1510,5 +1548,6 @@ export const HISAAB_STATES_NORTH = Object.freeze([
       'PRS: ₹13,363 crore for the Maiya Samman Yojana, the largest item under social welfare. Even so, Jharkhand commits only 29% of revenue receipts to salaries, pensions and interest (Himachal: 83%) and projects debt at 27% of GSDP.',
     sourceUrl: 'https://prsindia.org/files/budget/budget_state/jharkhand/2025/Jharkhand_Budget_Analysis_2025-26.pdf',
     sourceLabel: 'PRS Legislative Research — Jharkhand Budget Analysis 2025-26',
+    tags: ['distribution'],
   },
 ]);

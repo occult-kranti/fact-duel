@@ -43,17 +43,28 @@
   line-height: 1;
   letter-spacing: 0.02em;
 }
+/* Names wrap at spaces only — never 'Chhattisgar/h' (a name is a word, not a code). */
 .h-tile__name {
   max-width: 100%;
   font-size: var(--h-fs-2xs);
   line-height: 1.1;
   text-align: center;
-  overflow-wrap: anywhere;
+  overflow-wrap: normal;
+  word-break: normal;
 }
 .h-tile__glyph {
   position: absolute;
   top: 3px;
   right: 3px;
+}
+/* A phone-size drawer (< 72px): the cleared ✓ sits under the code instead of on top of it ('UP✓'). */
+.h-tile {
+  container-type: inline-size;
+}
+@container (max-width: 71.98px) {
+  .h-tile__glyph {
+    position: static;
+  }
 }
 .h-tile__frac {
   font-family: var(--h-font-mono);

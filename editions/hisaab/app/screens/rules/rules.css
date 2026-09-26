@@ -1,0 +1,345 @@
+/* screens/rules/rules.css — Rules & Sources / Corrections: noting-sheet sections in a 62ch column,
+   a TOC dropdown on phones and a sticky TOC from 900px, the legend, tables and the report form.
+   Tokens only, h- classes. */
+
+.h-rules__top {
+  margin-top: calc(-1 * var(--h-s-3));
+}
+.h-rules__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--h-s-5);
+  align-items: start;
+}
+.h-rules__side {
+  min-width: 0;
+}
+.h-rules__col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-5);
+  min-width: 0;
+  max-width: calc(var(--h-read) + 2 * var(--h-s-6));
+}
+@media (min-width: 900px) {
+  .h-rules__grid {
+    grid-template-columns: 240px minmax(0, 1fr);
+    gap: var(--h-s-8);
+  }
+  .h-rules__side {
+    position: sticky;
+    top: calc(var(--h-top-h) + env(safe-area-inset-top, 0px) + var(--h-s-4));
+  }
+}
+
+/* ---- TOC ----------------------------------------------------------------------------------------- */
+.h-rules__toc {
+  min-width: 0;
+}
+.h-rules__toclist {
+  list-style: none;
+  margin: 0;
+  padding: var(--h-s-2);
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-m);
+  background: var(--h-paper);
+}
+.h-rules__toclink {
+  display: flex;
+  align-items: center;
+  min-height: var(--h-tap);
+  padding: var(--h-s-1) var(--h-s-2);
+  border-radius: var(--h-r-s);
+  color: var(--h-ink);
+  font-size: var(--h-fs-xs);
+  font-weight: var(--h-wght-ui-strong);
+  text-decoration: none;
+}
+.h-rules__toclink:hover {
+  background: var(--h-ground-2);
+}
+.h-rules__toclink[aria-current='location'] {
+  background: var(--h-syahi-soft);
+  color: var(--h-syahi-text);
+}
+.h-rules__tocsel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-1);
+}
+.h-rules__toclabel {
+  font-size: var(--h-fs-xs);
+  font-weight: var(--h-wght-ui-strong);
+}
+.h-rules__select {
+  width: 100%;
+  min-height: var(--h-tap);
+  padding: var(--h-s-2) var(--h-s-3);
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-m);
+  background: var(--h-receipt);
+  color: var(--h-ink);
+  font-size: var(--h-fs-s);
+}
+.h-rules__select:focus-visible {
+  box-shadow: var(--h-focus-ring);
+  border-radius: var(--h-r-m);
+}
+
+/* ---- sections (noting sheets) ------------------------------------------------------------------- */
+.h-rules__sec {
+  scroll-margin-top: calc(var(--h-top-h) + env(safe-area-inset-top, 0px) + var(--h-s-4));
+}
+.h-rules__h2 {
+  margin: 0;
+  font-family: var(--h-font-display);
+  font-weight: var(--h-wght-display);
+  font-size: var(--h-fs-xl);
+  line-height: 1.05;
+  letter-spacing: var(--h-track-caps);
+  text-transform: uppercase;
+}
+:root[lang='hi'] .h-rules__h2 {
+  letter-spacing: 0;
+  line-height: var(--h-lh-display-deva);
+}
+.h-rules__h3 {
+  margin: var(--h-s-4) 0 var(--h-s-2);
+  font-family: var(--h-font-ui);
+  font-weight: var(--h-wght-ui-strong);
+  font-size: var(--h-fs-m);
+  line-height: 1.3;
+}
+.h-rules__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-3);
+  min-width: 0;
+  font-size: var(--h-fs-s);
+}
+.h-rules__body > .h-rules__h3:first-child {
+  margin-top: 0;
+}
+.h-rules__body p {
+  margin: 0;
+}
+.h-rules__hing {
+  font-weight: var(--h-wght-ui-strong);
+}
+.h-rules__fine {
+  font-size: var(--h-fs-xs);
+  color: var(--h-ink-2);
+}
+.h-rules__empty {
+  padding: var(--h-s-3);
+  border: var(--h-bw) dashed var(--h-line);
+  border-radius: var(--h-r-m);
+  font-size: var(--h-fs-xs);
+}
+.h-rules__ol,
+.h-rules__ul {
+  margin: 0;
+  padding-left: 1.3em;
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-2);
+}
+.h-rules__stress {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--h-s-2);
+  padding: var(--h-s-3);
+  border: var(--h-bw) solid var(--h-legal-ink);
+  border-radius: var(--h-r-s);
+  background: var(--h-legal);
+  color: var(--h-legal-ink);
+  font-weight: var(--h-wght-ui-strong);
+}
+
+/* legend and definitions */
+.h-rules__legend,
+.h-rules__defs {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-2);
+}
+.h-rules__legendrow {
+  display: grid;
+  grid-template-columns: 124px minmax(0, 1fr);
+  gap: var(--h-s-3);
+  align-items: center;
+}
+.h-rules__legendrow dd,
+.h-rules__def dd {
+  margin: 0;
+  font-size: var(--h-fs-xs);
+}
+.h-rules__def {
+  padding: var(--h-s-2) 0;
+  border-bottom: var(--h-bw) dashed var(--h-hair);
+}
+.h-rules__def dt {
+  font-weight: var(--h-wght-ui-strong);
+}
+
+/* govt spread */
+.h-rules__govt {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 150px), 1fr));
+  gap: var(--h-s-2);
+}
+.h-rules__govtrow {
+  display: flex;
+  align-items: center;
+  gap: var(--h-s-2);
+  min-width: 0;
+  font-size: var(--h-fs-xs);
+}
+.h-rules__pct {
+  color: var(--h-ink-2);
+}
+
+/* tables */
+.h-rules__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--h-fs-xs);
+}
+.h-rules__table th,
+.h-rules__table td {
+  padding: var(--h-s-2);
+  border-bottom: var(--h-bw) dashed var(--h-hair);
+  text-align: left;
+  vertical-align: top;
+}
+.h-rules__table th {
+  font-family: var(--h-font-mono);
+  font-size: var(--h-fs-2xs);
+  letter-spacing: var(--h-track-kicker);
+  text-transform: uppercase;
+  color: var(--h-ink-2);
+}
+/* लेबल / लेवल: never tracked, and never mono (no mono covers Devanagari) — bible §4.4. */
+.h-rules__table th:lang(hi) {
+  font-family: var(--h-font-ui);
+  font-size: var(--h-fs-xs);
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* change log + lanes */
+.h-rules__log {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-3);
+}
+.h-rules__logrow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--h-s-1);
+  font-size: var(--h-fs-xs);
+}
+@media (min-width: 600px) {
+  .h-rules__logrow {
+    grid-template-columns: 110px minmax(0, 1fr);
+    gap: var(--h-s-3);
+  }
+}
+.h-rules__logdate {
+  color: var(--h-ink-2);
+}
+.h-rules__lanes {
+  margin: 0;
+  padding-left: 1.3em;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
+  gap: var(--h-s-1) var(--h-s-4);
+  font-size: var(--h-fs-xs);
+}
+
+/* ---- report form ---------------------------------------------------------------------------------- */
+.h-report {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-3);
+  min-width: 0;
+}
+.h-report__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-1);
+  min-width: 0;
+}
+.h-report__label {
+  font-weight: var(--h-wght-ui-strong);
+  font-size: var(--h-fs-s);
+}
+.h-report__opt {
+  font-weight: var(--h-wght-ui);
+  font-size: var(--h-fs-xs);
+  color: var(--h-ink-2);
+}
+.h-report__input {
+  width: 100%;
+  min-height: var(--h-tap);
+  padding: var(--h-s-2) var(--h-s-3);
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-s);
+  background: var(--h-receipt);
+  color: var(--h-ink);
+  font-size: var(--h-fs-s);
+}
+.h-report__input::placeholder {
+  color: var(--h-ink-3);
+}
+.h-report__input:focus-visible {
+  box-shadow: var(--h-focus-ring);
+  border-radius: var(--h-r-s);
+}
+.h-report__area {
+  resize: vertical;
+  line-height: 1.45;
+}
+.h-report__match {
+  margin: 0;
+  padding: var(--h-s-2) var(--h-s-3);
+  border-left: 4px solid var(--h-syahi);
+  background: var(--h-paper);
+  font-size: var(--h-fs-xs);
+}
+.h-report__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--h-s-3);
+}
+.h-report__fine {
+  font-size: var(--h-fs-xs);
+  color: var(--h-ink-2);
+}
+.h-report__previewsum {
+  min-height: var(--h-tap);
+  display: flex;
+  align-items: center;
+  font-size: var(--h-fs-xs);
+  font-weight: var(--h-wght-ui-strong);
+  cursor: pointer;
+}
+.h-report__pre {
+  margin: 0;
+  padding: var(--h-s-3);
+  border: var(--h-bw) dashed var(--h-line);
+  border-radius: var(--h-r-s);
+  background: var(--h-receipt);
+  font-family: var(--h-font-mono);
+  font-size: var(--h-fs-xs);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}

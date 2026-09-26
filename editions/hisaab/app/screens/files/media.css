@@ -1,0 +1,61 @@
+/* screens/files/media.css — Kiska Media? (bible §11.5). Outlet names are plain mono text chips — no
+   logos, masthead lettering or brand colours. Tokens only. */
+.h-media__quip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--h-s-1) var(--h-s-2);
+  margin-top: calc(-1 * var(--h-s-3));
+}
+.h-media__quipnote {
+  font-weight: var(--h-wght-ui);
+}
+
+.h-media__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--h-s-6);
+  align-items: start;
+  min-width: 0;
+}
+.h-media__file {
+  min-width: 0;
+}
+@media (min-width: 900px) {
+  .h-media__layout {
+    grid-template-columns: minmax(300px, 400px) minmax(0, 1fr);
+    gap: var(--h-s-8);
+  }
+  .h-media__file {
+    position: sticky;
+    top: calc(var(--h-top-h) + env(safe-area-inset-top, 0px) + var(--h-s-4));
+  }
+}
+
+.h-media__outlets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--h-s-1) var(--h-s-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.h-media__outlet {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 2px var(--h-s-2);
+  border: var(--h-bw-thin) solid var(--h-line);
+  border-radius: var(--h-r-s);
+  background: var(--h-paper);
+  color: var(--h-ink);
+  font-family: var(--h-font-mono);
+  font-size: var(--h-fs-2xs);
+  font-weight: 700;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+.h-media__fact {
+  margin: 0;
+  font-size: var(--h-fs-xs);
+  line-height: 1.5;
+}

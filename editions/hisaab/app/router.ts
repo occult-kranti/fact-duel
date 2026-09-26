@@ -51,7 +51,7 @@ export type AppRoute = Readonly<{
   /**
    * The sub-view inside a screen module, or null. files: 'hub' | 'states' | 'sectors' | 'media' |
    * 'forwards'. money: 'hub' | 'distribution' | 'relief' | 'pre-election' | 'years'. duel: 'setup' |
-   * 'friend'. me: 'profile' | 'certificate'. dev: 'engine' | 'ui'.
+   * 'friend'. me: 'profile' | 'certificate'. dev: 'engine' | 'ui' | 'three'.
    */
   view: string | null;
   /** Path parameters: `id` for #/route/:id and #/q/:id. */
@@ -103,6 +103,7 @@ const RULES: readonly Rule[] = [
   // Engine debugging only; never linked from the UI.
   { pattern: /^\/dev$/, name: 'dev', view: 'engine', tab: null, chrome: 'none' },
   { pattern: /^\/dev\/ui$/, name: 'dev', view: 'ui', tab: null },
+  { pattern: /^\/dev\/three$/, name: 'dev', view: 'three', tab: null },
 ];
 
 function parseQuery(text: string): Record<string, string> {

@@ -24,10 +24,14 @@ export const SCREENS: Readonly<Record<Exclude<ScreenName, 'dev' | 'not-found'>, 
   rules: lazy(() => import('../screens/rules')),
 });
 
-/** Engine debugging (#/dev) and the component gallery (#/dev/ui). Never linked from the UI. */
-export const DEV_SCREENS: Readonly<Record<'engine' | 'ui', Screen>> = Object.freeze({
+/**
+ * Engine debugging (#/dev), the component gallery (#/dev/ui) and the set-piece lab (#/dev/three).
+ * Never linked from the UI.
+ */
+export const DEV_SCREENS: Readonly<Record<'engine' | 'ui' | 'three', Screen>> = Object.freeze({
   engine: lazy(() => import('../dev-shell').then((m) => ({ default: m.DevShell as ComponentType<ScreenProps> }))),
   ui: lazy(() => import('../ui/gallery')),
+  three: lazy(() => import('../three/lab') as Promise<{ default: ComponentType<ScreenProps> }>),
 });
 
 /** Default document titles (a screen may refine it with useScreenTitle). */

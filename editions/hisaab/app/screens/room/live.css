@@ -1,0 +1,235 @@
+/*
+ * screens/room/live.css — the round header, the typed 3·2·1 and the LIVE question (bible §11.10).
+ * Quiet surface: no animation, no transition on the timer, no correctness colours. Tokens only.
+ */
+
+/* ---- round header (a room has no top bar) ------------------------------------------------------------ */
+.h-roundhead {
+  display: flex;
+  align-items: center;
+  gap: var(--h-s-3);
+  min-height: var(--h-top-h);
+  padding: var(--h-s-2) max(var(--h-s-2), env(safe-area-inset-right, 0px)) var(--h-s-2)
+    max(var(--h-gutter), env(safe-area-inset-left, 0px));
+  border-bottom: var(--h-bw) solid var(--h-line);
+  background: var(--h-ground);
+}
+.h-roundhead__ids {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.h-roundhead__fmt {
+  font-family: var(--h-font-display);
+  font-weight: var(--h-wght-display);
+  font-size: var(--h-fs-m);
+  line-height: var(--h-lh-caps);
+  letter-spacing: var(--h-track-caps);
+  text-transform: uppercase;
+}
+.h-roundhead__fmt :lang(hi) {
+  line-height: var(--h-lh-display-deva);
+  text-transform: none;
+}
+.h-roundhead__round {
+  font-size: var(--h-fs-xs);
+  color: var(--h-ink-2);
+}
+.h-roundhead__score {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  min-width: 0;
+}
+.h-roundhead__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px var(--h-s-3);
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-pill);
+  background: var(--h-paper);
+  font-size: var(--h-fs-l);
+  font-weight: 700;
+  line-height: 1.3;
+}
+.h-roundhead__dash {
+  color: var(--h-ink-2);
+}
+.h-roundhead__who {
+  max-width: 44vw;
+  font-size: var(--h-fs-2xs);
+  font-weight: var(--h-wght-ui-strong);
+  color: var(--h-ink-2);
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+.h-roundhead__leave {
+  flex: none;
+}
+
+/* ---- 3 · 2 · 1 --------------------------------------------------------------------------------------------- */
+.h-count {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--h-s-3);
+  padding: var(--h-s-8) var(--h-gutter);
+  text-align: center;
+}
+.h-count__num {
+  font-size: 96px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--h-ink);
+}
+.h-count__vs {
+  font-family: var(--h-font-display);
+  font-weight: var(--h-wght-display);
+  font-size: var(--h-fs-xl);
+  line-height: var(--h-lh-caps);
+  letter-spacing: var(--h-track-caps);
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+:root[lang='hi'] .h-count__vs {
+  line-height: var(--h-lh-display-deva);
+  letter-spacing: 0;
+  text-transform: none;
+}
+.h-count__v {
+  color: var(--h-syahi-text);
+}
+.h-count__meta {
+  font-size: var(--h-fs-xs);
+  color: var(--h-ink-2);
+}
+.h-count__note {
+  max-width: 34rem;
+  font-size: var(--h-fs-xs);
+  color: var(--h-ink-2);
+}
+
+/* ---- the live question ----------------------------------------------------------------------------------- */
+.h-live {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+}
+.h-live__card {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--h-s-6);
+  width: 100%;
+  max-width: calc(var(--h-col-play) + 2 * var(--h-gutter));
+  margin-inline: auto;
+  padding: var(--h-s-5) var(--h-gutter) var(--h-s-4);
+}
+/* The reveal marker (live.tsx) sets data-shown in the frame the clock starts. */
+.h-live__card:not([data-shown]) {
+  visibility: hidden;
+}
+.h-live__top {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-2);
+}
+.h-live__kicker {
+  font-family: var(--h-font-mono);
+  font-size: var(--h-fs-2xs);
+  font-weight: 700;
+  letter-spacing: var(--h-track-kicker);
+  text-transform: uppercase;
+  color: var(--h-ink-2);
+}
+.h-live__kicker:lang(hi),
+:root[lang='hi'] .h-live__kicker {
+  font-family: var(--h-font-ui);
+  font-size: var(--h-fs-xs);
+  letter-spacing: 0;
+  text-transform: none;
+}
+.h-live__stem {
+  font-family: var(--h-font-ui);
+  font-weight: var(--h-wght-ui-strong);
+  font-size: var(--h-fs-stem);
+  line-height: 1.3;
+  overflow-wrap: break-word;
+}
+/* The stem takes focus at the reveal (so it is read, and the answer keys work) but it is not a
+   control: no ring on the quiet surface. */
+.h-live__stem:focus,
+.h-live__stem:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+.h-live__bottom {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-3);
+}
+/* 6px ink bar, driven from rAF; `transition: none` by rule (never red, never shaking). */
+.h-live__timer {
+  height: 6px;
+  border-radius: var(--h-r-pill);
+  background: var(--h-ground-2);
+  overflow: hidden;
+}
+.h-live__bar {
+  height: 100%;
+  width: 100%;
+  background: var(--h-ink);
+  transform-origin: left center;
+  transition: none;
+}
+.h-live__status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--h-s-2);
+  min-height: var(--h-tap);
+  font-size: var(--h-fs-xs);
+  font-weight: var(--h-wght-ui-strong);
+  color: var(--h-ink-2);
+  text-align: center;
+}
+.h-live__keys {
+  font-weight: var(--h-wght-ui);
+}
+/* The key hint is for keyboards (desktop); phones read only "First tap locks." */
+.h-live__keyhint {
+  display: none;
+}
+@media (min-width: 900px) and (hover: hover) {
+  .h-live__keyhint {
+    display: inline;
+  }
+}
+.h-live__error {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--h-s-2);
+  padding: var(--h-s-2) var(--h-s-3);
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-m);
+  background: var(--h-wait-soft);
+  font-size: var(--h-fs-xs);
+}
+
+@media (min-width: 900px) {
+  .h-live__card {
+    justify-content: flex-start;
+    gap: var(--h-s-8);
+    padding-top: var(--h-s-10);
+  }
+}

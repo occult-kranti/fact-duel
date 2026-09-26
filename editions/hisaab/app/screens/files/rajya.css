@@ -89,8 +89,18 @@
   text-transform: uppercase;
   letter-spacing: var(--h-track-caps);
 }
+.h-rajya__centrename:lang(hi) {
+  letter-spacing: 0; /* never track Devanagari (bible §4.4) */
+  text-transform: none;
+}
 .h-rajya__centre .h-tile__frac {
   margin-left: var(--h-s-1);
+}
+/* Phone and tablet tiles (≤ 72px): the ✓ of a cleared drawer sits under its code, not on it. */
+@media (max-width: 1199.98px) {
+  .h-rajya__grid .h-tile--cleared .h-tile__glyph {
+    position: static;
+  }
 }
 /* 320–359px: seven 44px drawers need the full width — bleed into the gutters, 1px seams. */
 @media (max-width: 359.98px) {
@@ -119,10 +129,15 @@
 }
 @media (min-width: 1200px) {
   .h-rajya__grid {
+    grid-template-columns: repeat(7, minmax(44px, 84px));
     gap: 8px;
   }
+  /* Small names under the codes (bible §11.3). Names wrap at spaces only — never 'Chhattisgar/h'. */
   .h-rajya__grid .h-tile__name {
     display: block;
+    overflow-wrap: normal;
+    word-break: normal;
+    font-weight: var(--h-wght-ui-strong);
   }
   .h-rajya__grid .h-tile {
     gap: 1px;
@@ -238,9 +253,16 @@
 .h-rajya__brieftitle:lang(hi) {
   text-transform: none;
 }
+.h-rajya__statusrow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--h-s-2) var(--h-s-3);
+}
 .h-rajya__stamp {
   flex: none;
-  padding: var(--h-s-2) var(--h-s-1);
+  padding: var(--h-s-1) var(--h-s-1) var(--h-s-1) 0;
 }
 .h-rajya__briefstatus {
   margin: 0;

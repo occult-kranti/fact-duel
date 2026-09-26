@@ -1,0 +1,879 @@
+/**
+ * share/card.ts — the 1080 × 1350 (4:5) PNG cards, drawn with the Canvas 2D API (design bible §8.4,
+ * §11.14). No DOM capture library, no network, no server: fonts are the self-hosted faces the page
+ * already uses, colours are read from the LIGHT theme tokens (tokens.css stays the only source of
+ * truth — there is no colour literal in this file), and the result is a Blob.
+ *
+ *   const blob = await renderReceiptCard(item, 'challenge', { link });   // question + four options, NO answer
+ *   const blob = await renderReceiptCard(item, 'receipt', { link });     // answer + SOURCE + STATUS + as of
+ *   const blob = await renderCertificateCard({ name, band, receipts, issuedOn });
+ *
+ * Honesty rules held here, whatever the caller does:
+ *  - an item with a legal `status` prints it VERBATIM with its as-of date, in the neutral legal block,
+ *    on BOTH variants (charter §2.2: a card about a case never travels without the case's status);
+ *  - an item with an `otherSide` clause (charter §2.3; the optional one-clause bank field) prints it as
+ *    the OTHER SIDE row after STATUS on both variants — on the challenge card only if it does not give
+ *    the answer away, else a pointer to the receipt;
+ *  - the challenge variant never prints or marks the answer;
+ *  - every receipt card says "Satire. Every question sourced."; the certificate says "Satire. Not a
+ *    government document." and prints `certificateName(name)` ("Anonymous Janta" for anyone in the bank);
+ *  - both are always light-theme images (they are forwarded, not viewed in the app).
+ * Nothing funny is drawn inside a receipt.
+ */
+import { asOfText, certificateName, formatNumber, govtText, labelDisplay, LADDER_DISPLAY, sourceHost, sourceKind, stateName, statusLine, type BankItem } from '../data';
+import { loadHandFont } from '../ui/fonts';
+import { stampAngle } from '../ui/seed';
+
+export const CARD_W = 1080;
+export const CARD_H = 1350;
+
+export type CardVariant = 'challenge' | 'receipt';
+
+// ---- tokens -----------------------------------------------------------------------------------------
+
+const TOKEN_NAMES = [
+  'ground',
+  'ground-2',
+  'paper',
+  'receipt',
+  'ink',
+  'ink-2',
+  'line',
+  'hair',
+  'shadow-ink',
+  'syahi',
+  'syahi-text',
+  'syahi-soft',
+  'syahi-ink',
+  'legal',
+  'legal-ink',
+  'manila',
+  'tape',
+  'slot-a',
+  'slot-b',
+  'slot-c',
+  'slot-d',
+  'font-display',
+  'font-ui',
+  'font-mono',
+  'font-hand',
+] as const;
+type TokenName = (typeof TOKEN_NAMES)[number];
+type Tokens = Record<TokenName, string>;
+
+/** The light theme's tokens, resolved by the browser from tokens.css (a detached light subtree). */
+function lightTokens(): Tokens {
+  const probe = document.createElement('div');
+  probe.setAttribute('data-theme', 'light');
+  probe.setAttribute('aria-hidden', 'true');
+  probe.style.display = 'none';
+  document.body.appendChild(probe);
+  const cs = getComputedStyle(probe);
+  const out = {} as Tokens;
+  for (const name of TOKEN_NAMES) out[name] = cs.getPropertyValue(`--h-${name}`).trim();
+  probe.remove();
+  // A stylesheet that failed to load would leave these empty: fall back to canvas-safe keywords.
+  const fallback: Partial<Tokens> = {
+    ground: 'white',
+    'ground-2': 'gainsboro',
+    paper: 'white',
+    receipt: 'white',
+    ink: 'black',
+    'ink-2': 'dimgray',
+    line: 'black',
+    hair: 'silver',
+    'shadow-ink': 'black',
+    syahi: 'rebeccapurple',
+    'syahi-text': 'rebeccapurple',
+    'syahi-soft': 'lavender',
+    'syahi-ink': 'white',
+    legal: 'gainsboro',
+    'legal-ink': 'black',
+    manila: 'wheat',
+    tape: 'firebrick',
+    'slot-a': 'lavender',
+    'slot-b': 'lightblue',
+    'slot-c': 'wheat',
+    'slot-d': 'mistyrose',
+    'font-display': 'sans-serif',
+    'font-ui': 'sans-serif',
+    'font-mono': 'monospace',
+    'font-hand': 'cursive',
+  };
+  for (const name of TOKEN_NAMES) if (!out[name]) out[name] = fallback[name] ?? 'black';
+  return out;
+}
+
+// ---- canvas helpers ---------------------------------------------------------------------------------
+
+type Ctx = CanvasRenderingContext2D;
+type FontRole = 'display' | 'ui' | 'mono' | 'hand';
+
+function fontOf(t: Tokens, role: FontRole, weight: number, size: number) {
+  return `${weight} ${Math.round(size)}px ${t[`font-${role}`]}`;
+}
+
+/** Wait for every face the card draws with (only the subsets its text needs are fetched). */
+async function loadFaces(t: Tokens, uses: ReadonlyArray<[FontRole, number, string]>) {
+  if (typeof document === 'undefined' || !document.fonts?.load) return;
+  await Promise.all(uses.map(([role, weight, text]) => document.fonts.load(fontOf(t, role, weight, 40), text || 'A').catch(() => [])));
+}
+
+function setSpacing(ctx: Ctx, px: number) {
+  const c = ctx as Ctx & { letterSpacing?: string };
+  if ('letterSpacing' in c) c.letterSpacing = `${px}px`;
+}
+
+function roundRect(ctx: Ctx, x: number, y: number, w: number, h: number, r: number) {
+  const rr = Math.max(0, Math.min(r, w / 2, h / 2));
+  ctx.beginPath();
+  ctx.moveTo(x + rr, y);
+  ctx.lineTo(x + w - rr, y);
+  ctx.arcTo(x + w, y, x + w, y + rr, rr);
+  ctx.lineTo(x + w, y + h - rr);
+  ctx.arcTo(x + w, y + h, x + w - rr, y + h, rr);
+  ctx.lineTo(x + rr, y + h);
+  ctx.arcTo(x, y + h, x, y + h - rr, rr);
+  ctx.lineTo(x, y + rr);
+  ctx.arcTo(x, y, x + rr, y, rr);
+  ctx.closePath();
+}
+
+/** Greedy word wrap; a word wider than the line (a URL) is broken by characters. */
+function wrap(ctx: Ctx, text: string, max: number): string[] {
+  const words = String(text ?? '').split(/\s+/).filter(Boolean);
+  const lines: string[] = [];
+  let line = '';
+  const pushLong = (word: string) => {
+    let part = '';
+    for (const ch of Array.from(word)) {
+      if (part && ctx.measureText(part + ch).width > max) {
+        lines.push(part);
+        part = ch;
+      } else part += ch;
+    }
+    return part;
+  };
+  for (const word of words) {
+    const next = line ? `${line} ${word}` : word;
+    if (ctx.measureText(next).width <= max) {
+      line = next;
+      continue;
+    }
+    if (line) lines.push(line);
+    line = ctx.measureText(word).width > max ? pushLong(word) : word;
+  }
+  if (line) lines.push(line);
+  return lines.length ? lines : [''];
+}
+
+type Run = { text: string; font: string; color: string };
+
+/** Wrap several differently-styled runs as one paragraph (word by word). */
+function wrapRuns(ctx: Ctx, runs: readonly Run[], max: number) {
+  type Piece = { text: string; font: string; color: string; w: number; space: number };
+  const pieces: Piece[] = [];
+  for (const run of runs) {
+    ctx.font = run.font;
+    const space = ctx.measureText(' ').width;
+    const words = run.text.split(/(\s+)/);
+    let pendingSpace = false;
+    for (const w of words) {
+      if (!w) continue;
+      if (/^\s+$/.test(w)) {
+        pendingSpace = true;
+        if (pieces.length) pieces[pieces.length - 1].space = space;
+        continue;
+      }
+      pieces.push({ text: w, font: run.font, color: run.color, w: ctx.measureText(w).width, space: 0 });
+      pendingSpace = false;
+    }
+    void pendingSpace;
+  }
+  const lines: Piece[][] = [];
+  let cur: Piece[] = [];
+  let width = 0;
+  for (const p of pieces) {
+    const prev = cur[cur.length - 1];
+    const add = (prev ? prev.space : 0) + p.w;
+    if (cur.length && width + add > max) {
+      lines.push(cur);
+      cur = [p];
+      width = p.w;
+    } else {
+      cur.push(p);
+      width += add;
+    }
+  }
+  if (cur.length) lines.push(cur);
+  return lines;
+}
+
+function drawRunLine(ctx: Ctx, line: ReadonlyArray<{ text: string; font: string; color: string; w: number; space: number }>, x: number, y: number) {
+  let cx = x;
+  line.forEach((p, i) => {
+    ctx.font = p.font;
+    ctx.fillStyle = p.color;
+    ctx.fillText(p.text, cx, y);
+    cx += p.w + (i < line.length - 1 ? p.space : 0);
+  });
+}
+
+/** A rubber stamp (bible §5 h-stamp): double border, seeded tilt, multiply ink. */
+function drawStamp(ctx: Ctx, t: Tokens, text: string, cx: number, cy: number, seed: string, size: number, color: string) {
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate((stampAngle(seed) * Math.PI) / 180);
+  ctx.globalCompositeOperation = 'multiply';
+  ctx.font = fontOf(t, 'display', 700, size);
+  setSpacing(ctx, size * 0.08);
+  const w = ctx.measureText(text).width;
+  const padX = size * 0.5;
+  const h = size * 1.35;
+  ctx.strokeStyle = color;
+  ctx.lineWidth = Math.max(4, size * 0.12);
+  roundRect(ctx, -w / 2 - padX, -h / 2, w + padX * 2, h, size * 0.25);
+  ctx.stroke();
+  ctx.lineWidth = Math.max(2, size * 0.05);
+  const o = size * 0.22;
+  roundRect(ctx, -w / 2 - padX - o, -h / 2 - o, w + (padX + o) * 2, h + o * 2, size * 0.32);
+  ctx.stroke();
+  ctx.fillStyle = color;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(text, 0, size * 0.05);
+  ctx.restore();
+  setSpacing(ctx, 0);
+}
+
+/** The four answer shapes (▲ ◆ ● ■), the colour-blind twin of each slot. */
+function drawShape(ctx: Ctx, index: number, cx: number, cy: number, r: number, color: string) {
+  ctx.save();
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  if (index === 0) {
+    ctx.moveTo(cx, cy - r);
+    ctx.lineTo(cx + r, cy + r * 0.85);
+    ctx.lineTo(cx - r, cy + r * 0.85);
+  } else if (index === 1) {
+    ctx.moveTo(cx, cy - r);
+    ctx.lineTo(cx + r, cy);
+    ctx.lineTo(cx, cy + r);
+    ctx.lineTo(cx - r, cy);
+  } else if (index === 2) {
+    ctx.arc(cx, cy, r * 0.92, 0, Math.PI * 2);
+  } else {
+    ctx.rect(cx - r * 0.82, cy - r * 0.82, r * 1.64, r * 1.64);
+  }
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+}
+
+function newCanvas(): { canvas: HTMLCanvasElement; ctx: Ctx } {
+  const canvas = document.createElement('canvas');
+  canvas.width = CARD_W;
+  canvas.height = CARD_H;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) throw new Error('canvas-unavailable');
+  ctx.textBaseline = 'alphabetic';
+  return { canvas, ctx };
+}
+
+function toBlob(canvas: HTMLCanvasElement): Promise<Blob> {
+  return new Promise((resolve, reject) => canvas.toBlob((b) => (b ? resolve(b) : reject(new Error('png-failed'))), 'image/png'));
+}
+
+/** 'https://occult-kranti.github.io/fact-duel/hisaab/#q=hsc001' → without the scheme, for print. */
+export const printableLink = (link: string) => link.replace(/^https?:\/\//, '');
+
+// ---- the receipt card ---------------------------------------------------------------------------------
+
+const LETTERS = ['A', 'B', 'C', 'D'];
+const SLOT_TOKENS: TokenName[] = ['slot-a', 'slot-b', 'slot-c', 'slot-d'];
+const FOOTER = 'Satire. Every question sourced.';
+
+export type ReceiptCardOptions = {
+  /** The absolute taster link printed on the card (…/hisaab/#q=<id>). */
+  link: string;
+};
+
+/**
+ * The item's one-clause "other side" (charter §2.3: a denial, a contest or a clearance), from the bank's
+ * optional `otherSide` field. Null when the item has none.
+ */
+export function otherSideOf(item: BankItem): string | null {
+  const v = (item as { otherSide?: unknown }).otherSide;
+  return typeof v === 'string' && v.trim() ? v.trim() : null;
+}
+
+const wordSet = (text: string) => new Set(text.toLowerCase().match(/[\p{L}\p{N}]{3,}/gu) ?? []);
+
+/**
+ * Whether `text` would give a challenge's answer away: it uses a word of the correct option that neither
+ * the question nor any wrong option uses (so "Joshi has denied wrongdoing" gives away "Mahesh Joshi").
+ */
+export function givesAnswerAway(item: BankItem, text: string): boolean {
+  const shared = wordSet([item.question, ...item.options.filter((_, i) => i !== item.correctIndex)].join(' '));
+  const said = wordSet(text);
+  for (const w of wordSet(item.options[item.correctIndex] ?? '')) if (!shared.has(w) && said.has(w)) return true;
+  return false;
+}
+
+/** The pointer a challenge prints in place of an other-side clause that would name the answer. */
+export const OTHER_SIDE_ON_RECEIPT = 'On the receipt: it names the answer.';
+
+/** The OTHER SIDE line a card or its text prints for `variant`, or null. */
+export function otherSideLine(item: BankItem, variant: CardVariant): string | null {
+  const other = otherSideOf(item);
+  if (!other) return null;
+  return variant === 'challenge' && givesAnswerAway(item, other) ? OTHER_SIDE_ON_RECEIPT : other;
+}
+
+/** The kicker line: sector · state · year (plain facts, mono caps). */
+function cardKicker(item: BankItem) {
+  return [item.topic, stateName(item.state), String(item.year)].join(' · ').toUpperCase();
+}
+
+/**
+ * Lay the receipt card out at text scale `s` (1 = full size). With `draw` false it only measures and
+ * returns the bottom y of the content, so the caller can shrink `s` until everything fits.
+ */
+function layoutReceipt(ctx: Ctx, t: Tokens, item: BankItem, variant: CardVariant, link: string, s: number, draw: boolean): number {
+  const M = 64; // page margin
+  const panelX = M;
+  const panelY = 176;
+  const panelW = CARD_W - M * 2;
+  const pad = 52;
+  const x = panelX + pad;
+  const maxW = panelW - pad * 2;
+  let y = panelY + pad;
+  const status = statusLine(item);
+  const other = otherSideLine(item, variant);
+
+  const text = (value: string, role: FontRole, weight: number, size: number, color: string, lh = 1.3, width = maxW, left = x) => {
+    ctx.font = fontOf(t, role, weight, size);
+    const lines = wrap(ctx, value, width);
+    for (const line of lines) {
+      y += size * lh;
+      if (draw) {
+        ctx.fillStyle = color;
+        ctx.fillText(line, left, y - size * (lh - 1) * 0.5 - size * 0.18);
+      }
+    }
+    return lines.length;
+  };
+
+  // kicker
+  ctx.font = fontOf(t, 'mono', 700, 24);
+  setSpacing(ctx, 3);
+  y += 24;
+  if (draw) {
+    ctx.fillStyle = t['ink-2'];
+    ctx.fillText(`F.NO. ${item.id.toUpperCase()} · ${cardKicker(item)}`.slice(0, 70), x, y);
+  }
+  setSpacing(ctx, 0);
+  y += 22;
+
+  if (variant === 'challenge') {
+    text(item.question, 'ui', 600, 50 * s, t.ink, 1.28);
+    y += 26 * s;
+    // the four options, fixed order, no answer marked
+    const tab = 92;
+    item.options.forEach((opt, i) => {
+      ctx.font = fontOf(t, 'ui', 400, 36 * s);
+      const lines = wrap(ctx, opt, maxW - tab - 40);
+      const h = Math.max(96 * s, lines.length * 36 * s * 1.3 + 40 * s);
+      if (draw) {
+        roundRect(ctx, x, y, maxW, h, 20);
+        ctx.fillStyle = t.paper;
+        ctx.fill();
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = t.line;
+        ctx.stroke();
+        // left tab: letter over shape on the slot tint
+        ctx.save();
+        roundRect(ctx, x, y, maxW, h, 20);
+        ctx.clip();
+        ctx.fillStyle = t[SLOT_TOKENS[i]];
+        ctx.fillRect(x, y, tab, h);
+        ctx.restore();
+        ctx.beginPath();
+        ctx.moveTo(x + tab, y);
+        ctx.lineTo(x + tab, y + h);
+        ctx.strokeStyle = t.line;
+        ctx.lineWidth = 4;
+        ctx.stroke();
+        ctx.font = fontOf(t, 'display', 700, 34);
+        ctx.fillStyle = t.ink;
+        ctx.textAlign = 'center';
+        ctx.fillText(LETTERS[i], x + tab / 2, y + h / 2 + 3);
+        ctx.textAlign = 'left';
+        drawShape(ctx, i, x + tab / 2, y + h / 2 + 19, 8, t.ink);
+        ctx.font = fontOf(t, 'ui', 400, 36 * s);
+        ctx.fillStyle = t.ink;
+        const block = lines.length * 36 * s * 1.3;
+        let ly = y + (h - block) / 2 + 36 * s;
+        for (const line of lines) {
+          ctx.fillText(line, x + tab + 24, ly);
+          ly += 36 * s * 1.3;
+        }
+      }
+      y += h + 18 * s;
+    });
+    y += 6 * s;
+    text('Jawab + receipt: open the link. No account needed.', 'ui', 600, 30 * s, t['syahi-text'], 1.3);
+  } else {
+    text(item.question, 'ui', 400, 34 * s, t['ink-2'], 1.32, maxW - 40);
+    y += 22 * s;
+    ctx.font = fontOf(t, 'mono', 700, 22);
+    setSpacing(ctx, 3);
+    y += 22;
+    if (draw) {
+      ctx.fillStyle = t['ink-2'];
+      ctx.fillText('ANSWER', x, y);
+    }
+    setSpacing(ctx, 0);
+    y += 8;
+    text(item.options[item.correctIndex], 'ui', 600, 50 * s, t.ink, 1.22, maxW - 260);
+    if (draw) drawStamp(ctx, t, 'SOURCED', x + maxW - 118, y - 44 * s, `share-${item.id}`, 34, t.syahi);
+    y += 20 * s;
+  }
+
+  // rows: SOURCE · STATUS (both variants) · OTHER SIDE (both variants) · GOVT THEN
+  const rule = () => {
+    y += 22 * s;
+    if (draw) {
+      ctx.save();
+      ctx.setLineDash([12, 10]);
+      ctx.strokeStyle = t.hair;
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(x + maxW, y);
+      ctx.stroke();
+      ctx.restore();
+    }
+    y += 10 * s;
+  };
+  const key = (k: string) => {
+    ctx.font = fontOf(t, 'mono', 700, 22);
+    setSpacing(ctx, 3);
+    y += 30 * s;
+    if (draw) {
+      ctx.fillStyle = t['ink-2'];
+      ctx.fillText(k, x, y);
+    }
+    setSpacing(ctx, 0);
+    y += 6 * s;
+  };
+  const chip = (label: string, cx: number, cy: number, fill: string, stroke: string, ink: string, dashed = false) => {
+    ctx.font = fontOf(t, 'mono', 700, 22);
+    setSpacing(ctx, 2);
+    const w = ctx.measureText(label).width + 28;
+    if (draw) {
+      ctx.save();
+      if (dashed) ctx.setLineDash([8, 6]);
+      roundRect(ctx, cx, cy, w, 42, 10);
+      ctx.fillStyle = fill;
+      ctx.fill();
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = stroke;
+      ctx.stroke();
+      ctx.restore();
+      ctx.fillStyle = ink;
+      ctx.fillText(label, cx + 14, cy + 29);
+    }
+    setSpacing(ctx, 0);
+    return w;
+  };
+
+  if (variant === 'receipt' || status || other) rule();
+  if (variant === 'receipt') {
+    key('SOURCE');
+    y += 6 * s;
+    const cw = chip(sourceKind(item), x, y, t.receipt, t.line, t.ink);
+    ctx.font = fontOf(t, 'mono', 400, 22);
+    if (draw) {
+      ctx.fillStyle = t['ink-2'];
+      ctx.fillText(sourceHost(item.sourceUrl), x + cw + 16, y + 29);
+    }
+    y += 42;
+    text(item.sourceLabel, 'ui', 400, 30 * s, t.ink, 1.3);
+  }
+  if (status) {
+    if (variant === 'receipt') rule();
+    key('STATUS');
+    y += 8 * s;
+    // the neutral legal block: every status looks the same (never red for alleged, green for acquitted)
+    ctx.font = fontOf(t, 'ui', 400, 29 * s);
+    const lines = wrap(ctx, status, maxW - 48);
+    const blockH = 42 + 20 * s + lines.length * 29 * s * 1.4 + 28 * s;
+    const top = y;
+    if (draw) {
+      roundRect(ctx, x, top, maxW, blockH, 14);
+      ctx.fillStyle = t.legal;
+      ctx.fill();
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = t['legal-ink'];
+      ctx.stroke();
+    }
+    const cw = chip('LEGAL STATUS', x + 20, top + 18 * s, t.receipt, t['legal-ink'], t['legal-ink']);
+    ctx.font = fontOf(t, 'mono', 400, 24);
+    if (draw) {
+      ctx.fillStyle = t['legal-ink'];
+      ctx.fillText(asOfText(item.asOf), x + 20 + cw + 16, top + 18 * s + 30);
+    }
+    let ly = top + 18 * s + 42 + 20 * s;
+    ctx.font = fontOf(t, 'ui', 400, 29 * s);
+    for (const line of lines) {
+      ly += 29 * s * 1.4;
+      if (draw) {
+        ctx.fillStyle = t['legal-ink'];
+        ctx.fillText(line, x + 24, ly - 29 * s * 0.3);
+      }
+    }
+    y = top + blockH;
+  }
+  if (other) {
+    // charter §2.3: the other side's answer is part of the fact — plain ink, nothing funny
+    if (variant === 'receipt' || status) rule();
+    key('OTHER SIDE');
+    y += 4 * s;
+    text(other, 'ui', 400, 29 * s, t.ink, 1.35);
+  }
+  if (variant === 'receipt') {
+    rule();
+    y += 12 * s;
+    ctx.font = fontOf(t, 'mono', 700, 22);
+    setSpacing(ctx, 3);
+    if (draw) {
+      ctx.fillStyle = t['ink-2'];
+      ctx.fillText('GOVT THEN', x, y + 29);
+    }
+    const kw = ctx.measureText('GOVT THEN').width;
+    setSpacing(ctx, 0);
+    chip(govtText(item.govt).replace(/^Govt then: /, ''), x + kw + 24, y, t['ground-2'], t.line, t.ink, true);
+    y += 42;
+  }
+  return y + pad;
+}
+
+function drawReceiptFrame(ctx: Ctx, t: Tokens, bottom: number, link: string) {
+  const M = 64;
+  const panelX = M;
+  const panelY = 176;
+  const panelW = CARD_W - M * 2;
+  // ground
+  ctx.fillStyle = t.ground;
+  ctx.fillRect(0, 0, CARD_W, CARD_H);
+  // wordmark (Devanagari above, Latin caps) and the tape band
+  ctx.font = fontOf(t, 'display', 700, 64);
+  ctx.fillStyle = t['syahi-text'];
+  ctx.fillText('हिसाब दो', M, 104);
+  const hiW = ctx.measureText('हिसाब दो').width;
+  ctx.font = fontOf(t, 'display', 700, 44);
+  setSpacing(ctx, 1);
+  ctx.fillStyle = t.ink;
+  ctx.fillText('HISAAB DO', M + hiW + 24, 100);
+  setSpacing(ctx, 0);
+  ctx.font = fontOf(t, 'mono', 700, 22);
+  setSpacing(ctx, 3);
+  ctx.fillStyle = t['ink-2'];
+  ctx.textAlign = 'right';
+  ctx.fillText('SHOW US THE ACCOUNTS', CARD_W - M, 98);
+  ctx.textAlign = 'left';
+  setSpacing(ctx, 0);
+  ctx.fillStyle = t.tape;
+  ctx.fillRect(M, 132, 180, 10);
+
+  // the receipt panel: hard shadow, outline, zig-zag bottom (bible §5 h-receipt)
+  const tooth = 32;
+  const panelBottom = Math.min(bottom, CARD_H - 190);
+  const path = (dx: number, dy: number) => {
+    const x0 = panelX + dx;
+    const y0 = panelY + dy;
+    const x1 = x0 + panelW;
+    const yb = panelBottom + dy;
+    const r = 20;
+    ctx.beginPath();
+    ctx.moveTo(x0 + r, y0);
+    ctx.lineTo(x1 - r, y0);
+    ctx.arcTo(x1, y0, x1, y0 + r, r);
+    ctx.lineTo(x1, yb);
+    const teeth = Math.floor(panelW / tooth);
+    const step = panelW / teeth;
+    for (let i = 0; i < teeth; i++) {
+      const xr = x1 - i * step;
+      ctx.lineTo(xr - step / 2, yb + tooth / 2);
+      ctx.lineTo(xr - step, yb);
+    }
+    ctx.lineTo(x0, y0 + r);
+    ctx.arcTo(x0, y0, x0 + r, y0, r);
+    ctx.closePath();
+  };
+  path(10, 10);
+  ctx.fillStyle = t['shadow-ink'];
+  ctx.fill();
+  path(0, 0);
+  ctx.fillStyle = t.receipt;
+  ctx.fill();
+  ctx.lineWidth = 4;
+  ctx.strokeStyle = t.line;
+  ctx.stroke();
+
+  // footer
+  ctx.font = fontOf(t, 'ui', 600, 34);
+  ctx.fillStyle = t.ink;
+  ctx.fillText(FOOTER, M, CARD_H - 92);
+  ctx.font = fontOf(t, 'mono', 400, 22);
+  ctx.fillStyle = t['ink-2'];
+  const lines = wrap(ctx, printableLink(link), CARD_W - M * 2);
+  lines.slice(0, 2).forEach((line, i) => ctx.fillText(line, M, CARD_H - 52 + i * 28));
+}
+
+/** The receipt share card as a PNG blob (1080 × 1350, light). */
+export async function renderReceiptCard(item: BankItem, variant: CardVariant, opts: ReceiptCardOptions): Promise<Blob> {
+  const t = lightTokens();
+  const sample = [item.question, ...item.options, item.status ?? '', otherSideLine(item, variant) ?? '', item.sourceLabel].join(' ');
+  await loadFaces(t, [
+    ['display', 700, 'हिसाब दो HISAAB DO ABCD SOURCED'],
+    ['ui', 400, sample],
+    ['ui', 600, `${item.question} ${item.options[item.correctIndex]} ${FOOTER}`],
+    ['mono', 400, `${opts.link} as of 0123456789`],
+    ['mono', 700, 'F.NO. SOURCE STATUS OTHER SIDE GOVT THEN LEGAL'],
+  ]);
+  const { canvas, ctx } = newCanvas();
+  const { scale, bottom } = fitReceipt(ctx, t, item, variant, opts.link);
+  drawReceiptFrame(ctx, t, bottom, opts.link);
+  layoutReceipt(ctx, t, item, variant, opts.link, scale, true);
+  return toBlob(canvas);
+}
+
+/** Where the receipt panel must end (the footer sits below it). */
+const RECEIPT_LIMIT = CARD_H - 190;
+
+/** The fit loop: the largest text scale (≥ 0.5, in 0.04 steps) at which the content ends above the footer. */
+function fitReceipt(ctx: Ctx, t: Tokens, item: BankItem, variant: CardVariant, link: string) {
+  let scale = 1;
+  for (; scale > 0.5; scale -= 0.04) if (layoutReceipt(ctx, t, item, variant, link, scale, false) <= RECEIPT_LIMIT) break;
+  const bottom = layoutReceipt(ctx, t, item, variant, link, scale, false);
+  return { scale, bottom };
+}
+
+/**
+ * The card audit: how a receipt card fits without drawing it — the text scale the fit loop settles on,
+ * the content's bottom and whether it ends above the footer. `fits: false` means text would run past the
+ * panel even at the smallest scale. Browser-only (it measures with the page's fonts).
+ */
+export async function receiptCardFit(item: BankItem, variant: CardVariant, link: string): Promise<{ scale: number; bottom: number; limit: number; fits: boolean }> {
+  const t = lightTokens();
+  await loadFaces(t, [
+    ['ui', 400, [item.question, ...item.options, item.status ?? '', otherSideLine(item, variant) ?? '', item.sourceLabel].join(' ')],
+    ['ui', 600, `${item.question} ${item.options[item.correctIndex]}`],
+  ]);
+  const { ctx } = newCanvas();
+  const { scale, bottom } = fitReceipt(ctx, t, item, variant, link);
+  return { scale: Math.round(scale * 100) / 100, bottom: Math.round(bottom), limit: RECEIPT_LIMIT, fits: bottom <= RECEIPT_LIMIT };
+}
+
+// ---- the certificate ------------------------------------------------------------------------------------
+
+export type CertificateCardInput = {
+  name: string | null | undefined;
+  band: number;
+  receipts: number;
+  issuedOn: Date | number;
+  /** Printed in the footer (no scheme). */
+  site: string;
+  /** Footer line; default the certificate's own. */
+  footer: string;
+  fno?: string;
+};
+
+const CERT_MONTHS = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+const certDate = (d: Date) => `${String(d.getDate()).padStart(2, '0')} ${CERT_MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+
+/** Largest size (≤ max) at which `text` fits `width` on at most `maxLines` lines. */
+function fitSize(ctx: Ctx, t: Tokens, role: FontRole, weight: number, text: string, width: number, max: number, min: number, maxLines: number) {
+  for (let size = max; size > min; size -= 2) {
+    ctx.font = fontOf(t, role, weight, size);
+    const lines = wrap(ctx, text, width);
+    if (lines.length <= maxLines && lines.every((l) => ctx.measureText(l).width <= width)) return { size, lines };
+  }
+  ctx.font = fontOf(t, role, weight, min);
+  return { size: min, lines: wrap(ctx, text, width) };
+}
+
+/** The Certificate of Labelling as a PNG blob (1080 × 1350, ALWAYS light). */
+export async function renderCertificateCard(input: CertificateCardInput): Promise<Blob> {
+  const t = lightTokens();
+  const label = labelDisplay(input.band);
+  const name = certificateName(input.name);
+  const date = new Date(input.issuedOn);
+  const receipts = Math.max(0, Math.floor(input.receipts));
+  const fno = input.fno ?? `L-${label.band}/${date.getFullYear()}-${String(receipts).padStart(4, '0')}`;
+  const latin = label.en.toUpperCase();
+  await Promise.all([
+    loadHandFont(),
+    loadFaces(t, [
+      ['display', 700, `${label.hi} ${latin} ${name.toUpperCase()} ISSUED ${certDate(date)}`],
+      ['ui', 400, `This is to certify that has, after been officially labelled ${label.line} ${label.aside ?? ''}`],
+      ['ui', 600, `${formatNumber(receipts)} sourced receipts`],
+      ['mono', 700, `CERTIFICATE OF LABELLING F.No. ${fno} 0123456789 of`],
+      ['mono', 400, `${input.footer} ${input.site}`],
+      ['hand', 400, 'Noted. Pl. forward.'],
+    ]),
+  ]);
+  const { canvas, ctx } = newCanvas();
+
+  // ground + the card with its 6px (here 16px) syahi hard shadow (bible §5 h-cert)
+  ctx.fillStyle = t.ground;
+  ctx.fillRect(0, 0, CARD_W, CARD_H);
+  const cx = 56;
+  const cy = 56;
+  const cw = CARD_W - 56 * 2 - 16;
+  const ch = CARD_H - 56 * 2 - 16;
+  roundRect(ctx, cx + 16, cy + 16, cw, ch, 48);
+  ctx.fillStyle = t.syahi;
+  ctx.fill();
+  roundRect(ctx, cx, cy, cw, ch, 48);
+  ctx.fillStyle = t.receipt;
+  ctx.fill();
+  ctx.lineWidth = 4;
+  ctx.strokeStyle = t.line;
+  ctx.stroke();
+
+  const pad = 64;
+  const x = cx + pad;
+  const w = cw - pad * 2;
+  let y = cy + pad;
+
+  // header: typed title + file number, rule under it
+  ctx.font = fontOf(t, 'mono', 700, 26);
+  setSpacing(ctx, 4);
+  ctx.fillStyle = t.ink;
+  y += 26;
+  ctx.fillText('CERTIFICATE OF LABELLING', x, y);
+  const fnoText = `F.No. ${fno}`;
+  const titleW = ctx.measureText('CERTIFICATE OF LABELLING').width;
+  if (titleW + ctx.measureText(fnoText).width + 40 <= w) {
+    ctx.textAlign = 'right';
+    ctx.fillText(fnoText, x + w, y);
+    ctx.textAlign = 'left';
+  } else {
+    y += 36;
+    ctx.fillText(fnoText, x, y);
+  }
+  setSpacing(ctx, 0);
+  y += 24;
+  ctx.fillRect(x, y, w, 4);
+  y += 30;
+
+  // "This is to certify that NAME has, after N sourced receipts, been officially labelled"
+  const body = fontOf(t, 'ui', 400, 38);
+  const strong = fontOf(t, 'ui', 600, 38);
+  const nameFont = fontOf(t, 'display', 700, 50);
+  const lines = wrapRuns(
+    ctx,
+    [
+      { text: 'This is to certify that ', font: body, color: t.ink },
+      { text: name.toUpperCase(), font: nameFont, color: t.ink },
+      { text: ' has, after ', font: body, color: t.ink },
+      { text: `${formatNumber(receipts)} sourced receipts`, font: strong, color: t.ink },
+      { text: ', been officially labelled', font: body, color: t.ink },
+    ],
+    w,
+  );
+  for (const line of lines) {
+    y += 56;
+    drawRunLine(ctx, line, x, y);
+  }
+  y += 34;
+
+  // the label: Devanagari above in syahi, Latin caps with the riso overprint
+  const hi = fitSize(ctx, t, 'display', 700, label.hi, w, 84, 44, 2);
+  ctx.font = fontOf(t, 'display', 700, hi.size);
+  ctx.fillStyle = t['syahi-text'];
+  for (const line of hi.lines) {
+    y += hi.size * 1.25;
+    ctx.fillText(line, x, y - hi.size * 0.2);
+  }
+  y += 8;
+  const en = fitSize(ctx, t, 'display', 700, latin, w - 10, 138, 64, 2);
+  ctx.font = fontOf(t, 'display', 700, en.size);
+  setSpacing(ctx, en.size * 0.02);
+  for (const line of en.lines) {
+    y += en.size * 0.95;
+    ctx.fillStyle = t['syahi-soft'];
+    ctx.fillText(line, x + 7, y + 7);
+    ctx.fillStyle = t.ink;
+    ctx.fillText(line, x, y);
+  }
+  setSpacing(ctx, 0);
+  if (label.aside) {
+    y += 44;
+    ctx.font = fontOf(t, 'ui', 400, 32);
+    ctx.fillStyle = t.ink;
+    ctx.fillText(label.aside, x, y);
+  }
+  y += 26;
+  ctx.font = fontOf(t, 'ui', 400, 36);
+  ctx.fillStyle = t['ink-2'];
+  for (const line of wrap(ctx, label.line, w)) {
+    y += 50;
+    ctx.fillText(line, x, y);
+  }
+
+  // bottom block, anchored to the card's foot: stamp + hand note, rung dots, footer
+  const footTop = cy + ch - pad - 88;
+  const dotsY = footTop - 46;
+  const stampY = dotsY - 120;
+  // The stamp sits left on its own line; the babu's hand note sits above it, right-aligned.
+  const stampText = `ISSUED · ${certDate(date)}`;
+  ctx.font = fontOf(t, 'display', 700, 40);
+  setSpacing(ctx, 40 * 0.08);
+  const stampW = ctx.measureText(stampText).width + 40 + 18;
+  setSpacing(ctx, 0);
+  drawStamp(ctx, t, stampText, x + 12 + stampW / 2, stampY, `cert-${label.band}`, 40, t.syahi);
+  ctx.save();
+  ctx.translate(x + w - 8, stampY - 82);
+  ctx.rotate((-3 * Math.PI) / 180);
+  ctx.font = fontOf(t, 'hand', 400, 44);
+  ctx.fillStyle = t['syahi-text'];
+  ctx.textAlign = 'right';
+  ctx.fillText('Noted. Pl. forward.', 0, 0);
+  ctx.restore();
+
+  const r = 13;
+  LADDER_DISPLAY.forEach((rung, i) => {
+    const dx = x + r + i * (r * 2 + 14);
+    ctx.beginPath();
+    ctx.arc(dx, dotsY, r, 0, Math.PI * 2);
+    ctx.fillStyle = rung.band <= label.band ? t.syahi : t.paper;
+    ctx.fill();
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = t.line;
+    ctx.stroke();
+  });
+  ctx.font = fontOf(t, 'mono', 700, 26);
+  ctx.fillStyle = t.ink;
+  ctx.fillText(`${label.band + 1} of ${LADDER_DISPLAY.length}`, x + LADDER_DISPLAY.length * (r * 2 + 14) + 10, dotsY + 9);
+
+  ctx.save();
+  ctx.setLineDash([14, 10]);
+  ctx.strokeStyle = t.line;
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.moveTo(x, footTop);
+  ctx.lineTo(x + w, footTop);
+  ctx.stroke();
+  ctx.restore();
+  ctx.font = fontOf(t, 'mono', 400, 24);
+  ctx.fillStyle = t['ink-2'];
+  const foot = wrap(ctx, input.footer, w);
+  foot.slice(0, 2).forEach((line, i) => ctx.fillText(line, x, footTop + 40 + i * 32));
+  ctx.fillText(input.site, x, footTop + 40 + Math.min(2, foot.length) * 32);
+
+  return toBlob(canvas);
+}

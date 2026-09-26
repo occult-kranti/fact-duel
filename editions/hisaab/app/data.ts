@@ -8,10 +8,11 @@
  * Loads in node too (tests/hisaab-ui-foundation.test.mjs): no JSX, no DOM.
  */
 import { CONFIDENCE, CONFIDENCE_ORDER } from '@/lib/expeditions.mjs';
-import { RANK_TIERS } from '@/lib/progression.mjs';
+import { RANK_TIERS, XP } from '@/lib/progression.mjs';
 import { BANK } from '../bank/index.mjs';
-import { SECTORS, STATES } from '../bank/schema.mjs';
-import { LADDER, labelFor, standing, type Label, type MoneyTag } from '../edition';
+import { GOVTS, SECTORS, STATES } from '../bank/schema.mjs';
+import { LADDER, labelFor, standing, type Label, type MoneyTag, type Route } from '../edition';
+import { COMMON_SURNAMES, GROUP_NAMES, PUBLIC_FIGURES, PUBLIC_NAMES } from './public-names';
 
 /** The label maths from edition.ts, re-exported so screens need one import for label copy. */
 export { LADDER, labelFor, labelForLevel, standing, type Label } from '../edition';
@@ -288,6 +289,20 @@ export const CARTOGRAM: ReadonlyArray<ReadonlyArray<string | null>> = Object.fre
 /** Where the Centre drawer sits: row 6, columns 3–6 (0-based), 4 wide. */
 export const CARTOGRAM_CENTRE = Object.freeze({ code: 'IN', row: 6, col: 3, span: 4 });
 
+// ---- file numbers ------------------------------------------------------------------------------------
+
+/**
+ * The typed tab on a route's file (bible §2.1): 'F.No. S/UP' for a state, 'F.No. X/WEL' for a sector,
+ * else the route's own code with tidy slashes ('F.No. MEDIA/KISKA'). One source, so the Files hub and
+ * the route player never print two numbers for one file.
+ */
+export function fileNo(route: Pick<Route, 'kind' | 'code' | 'state'>): string {
+  const tail = route.code.split('/').pop()?.trim() ?? route.code;
+  if (route.kind === 'state' && route.state) return `F.No. S/${route.state}`;
+  if (route.kind === 'sector') return `F.No. X/${tail}`;
+  return `F.No. ${route.code.replace(/\s*\/\s*/g, '/')}`;
+}
+
 // ---- labels and levels (charter §1, bible §4.5) ------------------------------------------------
 
 export type LabelDisplay = Readonly<{
@@ -328,19 +343,24 @@ export const LADDER_DISPLAY: readonly LabelDisplay[] = Object.freeze(LADDER.map(
 
 /** The first-sighting line under Andhbhakt (bible §4.5). */
 export const FIRST_LABEL_NOTE = 'Everyone starts here — of anyone, for anything. Receipts get you out.';
+/** Its Devanagari twin for the Hindi locale (draft — a Hindi reader reviews before release). */
+export const FIRST_LABEL_NOTE_HI = 'सब यहीं से शुरू करते हैं — किसी के भी, किसी भी बात पर। रसीदें ही यहाँ से निकालती हैं।';
 
 /**
  * Goal-gradient copy for the band meter (bible §8.2): "2 levels to Receipt Maango" → "180 XP to
  * Receipt Maango" → "One good file away." At the top rung: "Top rung. Keep asking."
+ * `locale: 'hi'` gives the same thresholds in Devanagari ("रसीद माँगो तक 2 लेवल"; drafts for review).
  */
-export function goalCopy(xp: number): string {
+export function goalCopy(xp: number, locale: 'en' | 'hi' = 'en'): string {
+  const hi = locale === 'hi';
   const s = standing(xp);
-  if (s.band >= LADDER.length - 1) return 'Top rung. Keep asking.';
+  if (s.band >= LADDER.length - 1) return hi ? 'सबसे ऊँचा पायदान। पूछते रहो।' : 'Top rung. Keep asking.';
   const next = labelDisplay(s.band + 1);
   const levelsLeft = next.from - s.level;
-  if (levelsLeft >= 2) return `${levelsLeft} levels to ${next.en}`;
+  if (levelsLeft >= 2) return hi ? `${next.hi} तक ${levelsLeft} लेवल` : `${levelsLeft} levels to ${next.en}`;
   const xpLeft = Math.max(0, s.toNext - s.into);
-  return xpLeft <= ONE_FILE_XP ? 'One good file away.' : `${formatNumber(xpLeft)} XP to ${next.en}`;
+  if (xpLeft <= ONE_FILE_XP) return hi ? 'बस एक अच्छी फ़ाइल दूर।' : 'One good file away.';
+  return hi ? `${next.hi} तक ${formatNumber(xpLeft)} XP` : `${formatNumber(xpLeft)} XP to ${next.en}`;
 }
 /** A first run of six cards answered well pays at least this much XP (lib/progression.mjs XP table). */
 const ONE_FILE_XP = 100;
@@ -356,12 +376,57 @@ export function bandProgress(xp: number): { value: number; max: number } {
   return { value: Math.min(5, s.level - first + s.progress), max: 5 };
 }
 
+// ---- XP log lines in the edition's words (bible §12) -------------------------------------------------
+
+/** One line of `progression.log` (lib/progression.mjs logEntry). */
+export type XpLogEntry = Readonly<{ id?: string; at: number; kind: string; xp: number; label: string; meta?: Readonly<Record<string, unknown>> }>;
+
+/**
+ * The edition's words for a progression log line. The engine writes JHK's labels ('Expedition card 1 ·
+ * correct', 'Discovery · correct', 'New fact', 'Expedition stamped'); every screen that prints XP maps
+ * them here, so the words are the same everywhere. `t` picks the Hindi twin in the Hindi locale.
+ */
+export function xpLogWords(e: XpLogEntry, t: (en: string, hi?: string) => string = (en) => en): string {
+  const m = (e.meta ?? {}) as Record<string, unknown>;
+  switch (e.kind) {
+    case 'expedition-answer': {
+      const n = Number(m.index ?? 0) + 1;
+      const again = m.fresh === false ? t(' (already met)', ' (पहले मिल चुका)') : '';
+      return m.correct ? `${t(`Card ${n} right`, `कार्ड ${n} सही`)}${again}` : `${t(`Card ${n} answered`, `कार्ड ${n} जवाब`)}${again}`;
+    }
+    case 'discovery':
+      return m.correct ? t('Card right', 'कार्ड सही') : t('Card answered', 'कार्ड जवाब');
+    case 'fact':
+      return e.xp === XP_PER_FACT ? t('New receipt', 'नई रसीद') : t('New receipts', 'नई रसीदें');
+    case 'quest':
+      return `${t('Quest', 'काम')}: ${e.label}`;
+    case 'quests-bonus':
+      return t('All three quests done', 'तीनों काम पूरे');
+    case 'expedition-complete':
+      return m.first ? t('File cleared, first time', 'फ़ाइल पहली बार क्लियर') : t('File finished', 'फ़ाइल पूरी');
+    case 'open':
+      return t('Source opened', 'सोर्स खोला');
+    case 'recall':
+      return t('First attempt', 'पहली कोशिश');
+    case 'streak':
+      return t('Streak', 'स्ट्रीक');
+    case 'achievement':
+      return `${t('Stamp Register', 'स्टैम्प रजिस्टर')}: ${e.label}`;
+    default:
+      return e.label || e.kind;
+  }
+}
+/** XP for one new fact (lib/progression.mjs XP.fact), to tell "New receipt" from "New receipts". */
+const XP_PER_FACT = (XP as { fact: number }).fact;
+
 // ---- duels: seats, the bot, Babu rank ---------------------------------------------------------
 
 /** The practice bot's display name everywhere in this edition (bible §2.1). Always with BOT. */
 export const BOT_NAME = 'Babu-Bot · BOT';
 /** Its disclosure line — shown wherever the bot is offered or plays. */
 export const BOT_LINE = "Picks at random. Can't see the question.";
+/** Its Devanagari twin for the Hindi locale (draft — a Hindi reader reviews before release). */
+export const BOT_LINE_HI = 'बिना सवाल देखे, रैंडम चुनता है।';
 /** The name used when a player has not given one (and on certificates matching a real person). */
 export const ANONYMOUS = 'Anonymous Janta';
 
@@ -432,92 +497,412 @@ export function pollLine(item: BankItem | null | undefined): string | null {
 /** 'Govt then: NDA' — the neutral govt chip text (never a party colour). */
 export const govtText = (govt: string) => `Govt then: ${govt}`;
 
-// ---- the certificate name rule (bible §8.4) -------------------------------------------------------
+// ---- the certificate name rule (bible §8.4, §8.5) -------------------------------------------------
+//
+// A certificate puts a label on a typed name and is built to be forwarded, so the name must never be,
+// or look like, a real person, a party, an outlet, an institution or a community. The typed name is
+// normalised (NFKC, invisible and bidi characters removed, accents and look-alike digits folded),
+// Devanagari is transliterated, and it is compared, loosely, against the bank's `people` / `enactedBy`
+// and the names in ./public-names.ts. Letters from any script other than Latin and Devanagari (a
+// Cyrillic 'а' in 'Nаrendra', small capitals, another Indic script we cannot check) mean the name is
+// not printed. When in doubt it prints "Anonymous Janta": a false alarm costs a player their name on
+// one certificate; a miss puts a label on a real person.
 
-const HONORIFICS = new Set(['shri', 'sri', 'shree', 'smt', 'shrimati', 'kumari', 'km', 'dr', 'mr', 'mrs', 'ms', 'prof', 'justice', 'late', 'sir']);
+const HONORIFICS = new Set([
+  'shri', 'sri', 'shree', 'smt', 'shrimati', 'shreemati', 'kumari', 'km', 'dr', 'mr', 'mrs', 'ms', 'prof',
+  'justice', 'late', 'sir', 'pm', 'cm', 'dy', 'deputy', 'minister', 'mp', 'mla', 'hon', 'honble', 'ji',
+  'jee', 'sahab', 'saheb', 'sahib', 'saab', 'bhai', 'bhaiya', 'didi', 'behenji', 'amma', 'anna', 'netaji',
+  'shriman', 'sriman', 'madam', 'respected', 'adarniya', 'mananiya', 'maananiya',
+]);
+/** Titles that point at an office holder even with no name after them ("PM", "CM sahab"). */
+const TITLES = new Set(['pm', 'cm', 'dy', 'deputy', 'minister', 'mp', 'mla', 'hon', 'honble', 'justice', 'netaji', 'behenji', 'didi', 'amma']);
+
+/** Invisible, joiner and bidi-control characters: never printed, never compared. */
+const INVISIBLE = /[­͏؜ᅟᅠ឴឵᠋-᠏​-‏‪-‮⁠-⁯ㅤ︀-️﻿ﾠ\u{E0000}-\u{E007F}]/gu;
+/** Combining accents on Latin letters (not Devanagari signs). */
+const LATIN_MARKS = /[̀-ͯ᪰-᫿᷀-᷿⃐-⃿︠-︯]/g;
+/** Latin letters with no decomposition that real names use. Any other non-ASCII Latin letter (small
+ *  capitals, IPA look-alikes) is not a name we can check. */
+const LATIN_EXTRA: Readonly<Record<string, string>> = { ø: 'o', æ: 'ae', œ: 'oe', ß: 'ss', ł: 'l', đ: 'd', ð: 'd', þ: 'th', ŧ: 't', ħ: 'h', ı: 'i' };
+/** Look-alike digits and signs inside a word: 'M0di', 'K3jriwal', 'Pa$$u'. */
+const LEET: Readonly<Record<string, string>> = { '0': 'o', '1': 'i', '3': 'e', '4': 'a', '5': 's', '7': 't', '8': 'b', '@': 'a', $: 's', '!': 'i', '|': 'l' };
+const DEVA = /[ऀ-ॿ꣠-ꣿ]/;
+
+/** The printable form of a typed name: NFKC, invisible/bidi characters removed, spaces collapsed. */
+export function cleanName(name: unknown): string {
+  return String(name ?? '')
+    .normalize('NFKC')
+    .replace(INVISIBLE, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+// ---- Devanagari → Latin (for comparison only) --------------------------------------------------
+
+const DV_CONS: Readonly<Record<string, string>> = {
+  क: 'k', ख: 'kh', ग: 'g', घ: 'gh', ङ: 'n', च: 'ch', छ: 'chh', ज: 'j', झ: 'jh', ञ: 'n', ट: 't', ठ: 'th', ड: 'd',
+  ढ: 'dh', ण: 'n', त: 't', थ: 'th', द: 'd', ध: 'dh', न: 'n', ऩ: 'n', प: 'p', फ: 'ph', ब: 'b', भ: 'bh', म: 'm',
+  य: 'y', र: 'r', ऱ: 'r', ल: 'l', ळ: 'l', ऴ: 'l', व: 'v', श: 'sh', ष: 'sh', स: 's', ह: 'h',
+  क़: 'q', ख़: 'kh', ग़: 'g', ज़: 'z', ड़: 'r', ढ़: 'rh', फ़: 'f', य़: 'y',
+};
+const DV_NUKTA: Readonly<Record<string, string>> = { क: 'q', ख: 'kh', ग: 'g', ज: 'z', ड: 'r', ढ: 'rh', फ: 'f', य: 'y' };
+const DV_VOWEL: Readonly<Record<string, string>> = {
+  अ: 'a', आ: 'aa', इ: 'i', ई: 'ii', उ: 'u', ऊ: 'uu', ऋ: 'ri', ए: 'e', ऐ: 'ai', ओ: 'o', औ: 'au', ऑ: 'o', ऍ: 'e', ऎ: 'e', ऒ: 'o',
+};
+const DV_MATRA: Readonly<Record<string, string>> = {
+  'ा': 'aa', 'ि': 'i', 'ी': 'ii', 'ु': 'u', 'ू': 'uu', 'ृ': 'ri', 'े': 'e', 'ै': 'ai', 'ो': 'o', 'ौ': 'au', 'ॉ': 'o', 'ॅ': 'e', 'ॆ': 'e', 'ॊ': 'o',
+};
+const DV_LABIAL = new Set(['प', 'फ', 'ब', 'भ', 'म']);
+
+/** A Devanagari word in rough Latin ('नरेंद्र' → 'narendr', 'मोदी' → 'modii'); the final schwa drops. */
+export function transliterateDevanagari(word: string): string {
+  const cs = Array.from(word.normalize('NFC'));
+  let out = '';
+  for (let i = 0; i < cs.length; i++) {
+    const c = cs[i];
+    if (DV_CONS[c] !== undefined) {
+      let base = DV_CONS[c];
+      let j = i + 1;
+      if (cs[j] === '़') {
+        base = DV_NUKTA[c] ?? base;
+        j++;
+      }
+      const next = cs[j];
+      if (next === '्') {
+        out += base; // virama: no vowel
+        i = j;
+      } else if (next !== undefined && DV_MATRA[next] !== undefined) {
+        out += base + DV_MATRA[next];
+        i = j;
+      } else {
+        out += base + (j >= cs.length ? '' : 'a'); // the inherent vowel, dropped at the end of a word
+        i = j - 1;
+      }
+    } else if (DV_VOWEL[c] !== undefined) out += DV_VOWEL[c];
+    else if (c === 'ं') out += DV_LABIAL.has(cs[i + 1]) ? 'm' : 'n'; // anusvara
+    else if (c === 'ः') out += 'h'; // visarga
+    else if (c >= '०' && c <= '९') out += String(c.charCodeAt(0) - 0x0966);
+    // candrabindu, nukta alone, avagraha and anything else: nothing
+  }
+  return out;
+}
+
+// ---- tokens, folds and skeletons -------------------------------------------------------------------
+
+type NameTok = Readonly<{ fold: string; skel: string; deva: boolean }>;
+
+/** Romanisation-tolerant form: vowel length, w/v and a final -y folded ('Modee', 'Mody' → 'modi'). */
+function latinFold(t: string): string {
+  return t
+    .replace(/a{2,}/g, 'a')
+    .replace(/e{2,}|i{2,}/g, 'i')
+    .replace(/o{2,}|u{2,}/g, 'u')
+    .replace(/w/g, 'v')
+    .replace(/([^aeiou])y$/, '$1i');
+}
+/** Consonant skeleton ('Mamta Bannerjee' and 'ममता बनर्जी' both → 'mt' 'bnrj'). */
+function skeleton(fold: string): string {
+  return fold
+    .replace(/c(?!h)/g, 'k')
+    .replace(/q/g, 'k')
+    .replace(/x/g, 'ks')
+    .replace(/z/g, 'j')
+    .replace(/f/g, 'p')
+    .replace(/([bcdgjklmnprstv])h/g, '$1')
+    .replace(/ng(?![aeiou])/g, 'n')
+    .replace(/[aeiouy]/g, '')
+    .replace(/(.)\1+/g, '$1');
+}
+function tok(word: string): NameTok {
+  const deva = DEVA.test(word);
+  const latin = deva ? transliterateDevanagari(word) : word;
+  const fold = latinFold(latin);
+  return { fold, skel: skeleton(fold), deva };
+}
+
+type Scanned = Readonly<{ tokens: NameTok[]; words: string[]; unsupported: boolean }>;
+
+/** Split a name into comparable tokens; `unsupported` when it holds letters we cannot check. */
+function scanName(name: unknown): Scanned {
+  const s = cleanName(name).normalize('NFKD').replace(LATIN_MARKS, '').normalize('NFC').toLowerCase();
+  let unsupported = false;
+  let mapped = '';
+  for (const ch of s) {
+    if (/\p{L}/u.test(ch) && !/[a-z]/.test(ch) && !DEVA.test(ch)) {
+      if (LATIN_EXTRA[ch] !== undefined) mapped += LATIN_EXTRA[ch];
+      else {
+        unsupported = true;
+        mapped += ' ';
+      }
+    } else mapped += ch;
+  }
+  const words: string[] = [];
+  for (const raw of mapped.split(/\s+/)) {
+    if (!raw) continue;
+    // Look-alike digits count as letters only inside a word that has letters.
+    const w = /[a-z]/.test(raw) ? raw.replace(/[013457@$!|8]/g, (c) => LEET[c] ?? c) : raw;
+    for (const part of w.split(/[^a-z0-9ऀ-ॿ꣠-ꣿ]+/)) {
+      if (!part) continue;
+      if (/[a-z]/.test(part) && DEVA.test(part)) unsupported = true; // one word, two scripts
+      words.push(part);
+    }
+  }
+  return { tokens: words.map(tok), words, unsupported };
+}
+
+const HONORIFIC_FOLDS = new Set([...HONORIFICS].map((h) => latinFold(h)));
+const TITLE_FOLDS = new Set([...TITLES].map((h) => latinFold(h)));
+/** Honorifics that are also given names: dropped only after the first word ('Stalin Anna', not 'Anna Shah'). */
+const NAME_TOO = new Set(['anna']);
+/** The name without its honorifics ('PM Modi ji' → 'Modi'). */
+const stripHonorifics = (toks: readonly NameTok[]) =>
+  toks.filter((t, i) => !HONORIFIC_FOLDS.has(t.fold) || (i === 0 && NAME_TOO.has(t.fold)));
+/** Runs of single letters joined into one word: 'N a r e n d r a' → 'narendra'. */
+function joinLetters(toks: readonly NameTok[]): NameTok[] {
+  const out: NameTok[] = [];
+  let run: NameTok[] = [];
+  const flush = () => {
+    if (run.length >= 2) out.push(tok(run.map((t) => t.fold).join('')));
+    else out.push(...run);
+    run = [];
+  };
+  for (const t of toks) {
+    if (!t.deva && t.fold.length === 1) run.push(t);
+    else {
+      flush();
+      out.push(t);
+    }
+  }
+  flush();
+  return out;
+}
 
 /**
- * Normalise a person's name for comparison: Unicode NFKD, accents stripped, lower case, punctuation
- * to spaces, honorifics (Shri, Smt, Dr…) dropped. Devanagari letters are kept, so a Devanagari name
- * compares with itself. 'Dr. N. Chandrababu  Naidu' → 'n chandrababu naidu'.
+ * Do two tokens name the same word? Folds must match; when either side is Devanagari (transliteration
+ * is rough) a consonant skeleton of three or more ('kjrvl') also counts; and, `loose` — inside a listed
+ * full name, where every other word must match too — so does one edit on words of five letters or more
+ * ('Mamta Bannerjee').
+ */
+function same(a: NameTok, b: NameTok, loose = false): boolean {
+  if (a.fold === b.fold) return true;
+  if (!(loose || a.deva || b.deva)) return false;
+  if (a.skel.length >= 3 && a.skel === b.skel) return true;
+  return loose && a.fold.length >= 5 && b.fold.length >= 5 && oneEditApart(a.fold, b.fold);
+}
+/** Levenshtein distance ≤ 1 ('mamta' ~ 'mamata', 'bannerji' ~ 'banerji'). */
+function oneEditApart(a: string, b: string): boolean {
+  if (Math.abs(a.length - b.length) > 1) return false;
+  let i = 0;
+  while (i < a.length && i < b.length && a[i] === b[i]) i++;
+  if (a.length === b.length) return a.slice(i + 1) === b.slice(i + 1);
+  return a.length > b.length ? a.slice(i + 1) === b.slice(i) : a.slice(i) === b.slice(i + 1);
+}
+
+/**
+ * Normalise a person's name for comparison: Unicode NFKC then NFKD, accents stripped, lower case,
+ * punctuation to spaces, honorifics (Shri, Smt, Dr, PM, ji…) dropped. Devanagari letters are kept.
+ * 'Dr. N. Chandrababu  Naidu' → 'n chandrababu naidu'.
  */
 export function normalizePersonName(name: string): string {
   return String(name ?? '')
+    .normalize('NFKC')
+    .replace(INVISIBLE, '')
     .normalize('NFKD')
-    .replace(/[̀-ͯ]/g, '')
+    .replace(LATIN_MARKS, '')
+    .normalize('NFC')
     .toLowerCase()
-    .replace(/[^a-z0-9ऀ-ॿ]+/g, ' ')
+    .replace(/[^a-z0-9ऀ-ॿ꣠-ꣿ]+/g, ' ')
     .trim()
     .split(' ')
     .filter((t) => t && !HONORIFICS.has(t))
     .join(' ');
 }
 
-/** Order-free key without initials: 'Modi Narendra' and 'Narendra D. Modi' both → 'modi narendra'. */
-const looseKey = (normalised: string) =>
-  normalised
-    .split(' ')
-    .filter((t) => t.length > 1)
-    .sort()
-    .join(' ');
+type Listed = Readonly<{ toks: NameTok[]; compact: string; compactSkel: string }>;
+type NameIndex = Readonly<{
+  /** Every listed name exactly, initials included ('a raja', 'v p singh'). */
+  exact: ReadonlySet<string>;
+  /** Names of two or more real tokens (initials dropped): every token must appear, in any order. */
+  full: Listed[];
+  /** One-token names ('Mayawati', 'A. Raja' → 'raja'): the whole name must be that token. */
+  single: NameTok[];
+  /** Last names of listed people, less the common ones: a lone one does not print ('Modi', 'Kejriwal'). */
+  last: NameTok[];
+  /** Parties, outlets, institutions, epithets, groups: matched as a run of tokens anywhere. */
+  bodies: Listed[];
+}>;
 
-let peopleKeys: { exact: Set<string>; loose: Set<string>; full: string[][] } | null = null;
-function people() {
-  if (peopleKeys) return peopleKeys;
-  const exact = new Set<string>();
-  const loose = new Set<string>();
-  const full: string[][] = [];
-  for (const q of BANK_ITEMS) {
-    const names = [...(q.people ?? []), ...(q.enactedBy ?? []).map((e) => e.name)];
-    for (const n of names) {
-      const key = normalizePersonName(n);
-      if (!key) continue;
-      exact.add(key);
-      const l = looseKey(key);
-      // Two or more real tokens: a full name, not a lone first name ('Rahul' alone is anyone).
-      if (l.includes(' ') && !loose.has(l)) {
-        loose.add(l);
-        full.push(l.split(' '));
-      }
-    }
-  }
-  peopleKeys = { exact, loose, full };
-  return peopleKeys;
+function listed(name: string): Listed | null {
+  const { tokens } = scanName(name);
+  if (!tokens.length) return null;
+  return { toks: tokens, compact: tokens.map((t) => t.fold).join(''), compactSkel: tokens.map((t) => t.skel).join('') };
 }
 
-/** True when `name` is (normalised) a person named anywhere in the bank's `people` / `enactedBy`. */
+function buildIndex(names: Iterable<string>, bodyNames: Iterable<string>): NameIndex {
+  const commons = new Set(COMMON_SURNAMES.map((n) => latinFold(n)));
+  const full: Listed[] = [];
+  const single: NameTok[] = [];
+  const last: NameTok[] = [];
+  const exact = new Set<string>();
+  const seen = new Set<string>();
+  const add = (toks: NameTok[]) => {
+    const key = toks.map((t) => t.fold).join(' ');
+    if (!toks.length || seen.has(key)) return;
+    seen.add(key);
+    if (toks.length === 1) single.push(toks[0]);
+    else full.push({ toks, compact: toks.map((t) => t.fold).join(''), compactSkel: toks.map((t) => t.skel).join('') });
+  };
+  for (const n of names) {
+    const toks = stripHonorifics(scanName(n).tokens);
+    if (toks.length) exact.add(toks.map((t) => t.fold).join(' '));
+    const core = toks.filter((t) => t.fold.length > 1);
+    // 'V. P. Singh' is not every Singh: a one-token core left by initials counts only if uncommon.
+    if (core.length === 1 && toks.length > 1 && commons.has(core[0].fold)) continue;
+    add(core);
+    // 'Atal Bihari Vajpayee' is also typed 'Atal Vajpayee'.
+    if (core.length >= 3) add([core[0], core[core.length - 1]]);
+    const tail = core[core.length - 1];
+    if (core.length >= 2 && tail && !commons.has(tail.fold) && !last.some((l) => l.fold === tail.fold)) last.push(tail);
+  }
+  const bodies: Listed[] = [];
+  for (const n of bodyNames) {
+    const l = listed(n);
+    if (l) bodies.push(l);
+  }
+  return { exact, full, single, last, bodies };
+}
+
+let bankIndex: NameIndex | null = null;
+let publicIndex: NameIndex | null = null;
+const bankPeople = () => {
+  const names = new Set<string>();
+  for (const q of BANK_ITEMS) {
+    for (const n of q.people ?? []) names.add(n);
+    for (const e of q.enactedBy ?? []) names.add(e.name);
+  }
+  return names;
+};
+function indexes(): { bank: NameIndex; public: NameIndex } {
+  bankIndex ??= buildIndex(bankPeople(), []);
+  publicIndex ??= buildIndex(PUBLIC_FIGURES, [
+    ...PUBLIC_NAMES,
+    ...GROUP_NAMES,
+    ...GOVTS.filter((g) => g !== 'Other'),
+  ]);
+  return { bank: bankIndex, public: publicIndex };
+}
+
+/** Does the scanned name match anything in `ix`? */
+function matchesIndex(sc: Scanned, ix: NameIndex): boolean {
+  const words = joinLetters(sc.tokens);
+  const joined = words.map((t) => t.fold).join('');
+  // A word that runs a listed name into more ('NarendraModiFan', 'GodiMediaWala').
+  const inside = (compact: string, min: number) =>
+    compact.length >= min && words.some((w) => w.fold.length > compact.length && w.fold.includes(compact));
+  // Parties, outlets, institutions, epithets and groups: a run of words anywhere in the name. A short
+  // acronym (SP, ED) only as the whole name.
+  for (const b of ix.bodies) {
+    const n = b.toks.length;
+    if (n === 1 && b.toks[0].fold.length <= 2) {
+      if (words.length === 1 && same(words[0], b.toks[0])) return true;
+      continue;
+    }
+    for (const seq of [sc.tokens, words]) {
+      for (let i = 0; i + n <= seq.length; i++) if (b.toks.every((t, k) => same(seq[i + k], t))) return true;
+    }
+    if (joined === b.compact || inside(b.compact, 6)) return true;
+  }
+  const named = joinLetters(stripHonorifics(sc.tokens));
+  if (!named.length) return false;
+  if (ix.exact.has(stripHonorifics(sc.tokens).map((t) => t.fold).join(' '))) return true;
+  const core = named.filter((t) => t.fold.length > 1);
+  const compact = named.map((t) => t.fold).join('');
+  const compactSkel = named.map((t) => t.skel).join('');
+  const anyDeva = named.some((t) => t.deva);
+  // A full name: every word of a listed person appears, in any order ('Modi Narendra D.'), or the name
+  // is that person run together ('NarendraModi', 'N a r e n d r a M o d i').
+  for (const p of ix.full) {
+    if (core.length && p.toks.every((t) => core.some((c) => same(c, t, true)))) return true;
+    if (compact === p.compact || inside(p.compact, 8)) return true;
+    if (anyDeva && p.compactSkel.length >= 4 && compactSkel === p.compactSkel) return true;
+  }
+  // One word: a one-word listed name ('Mayawati', 'Yogi') or a lone listed surname ('Modi', 'Kejriwal').
+  if (core.length === 1) {
+    const [c] = core;
+    if (ix.single.some((t) => same(c, t))) return true;
+    if (ix.last.some((t) => same(c, t))) return true;
+  }
+  // A listed surname or one-word name addressed with an honorific or title beside it: 'PM Modi fan',
+  // 'Kejriwal ji ki jai' (a bare 'Rohan Modi' still prints).
+  const toks = sc.tokens;
+  for (let i = 0; i < toks.length; i++) {
+    const beside = (j: number) => j >= 0 && j < toks.length && HONORIFIC_FOLDS.has(toks[j].fold) && !(j === 0 && NAME_TOO.has(toks[j].fold));
+    if (!beside(i - 1) && !beside(i + 1)) continue;
+    if (HONORIFIC_FOLDS.has(toks[i].fold)) continue;
+    if (ix.last.some((t) => same(toks[i], t)) || ix.single.some((t) => same(toks[i], t))) return true;
+  }
+  return false;
+}
+
+/** True when `name` is (normalised, loosely) a person named anywhere in the bank's `people` / `enactedBy`. */
 export function isBankPerson(name: string): boolean {
-  const key = normalizePersonName(name);
-  if (!key) return false;
-  const { exact, loose } = people();
-  return exact.has(key) || loose.has(looseKey(key));
+  const sc = scanName(name);
+  if (!sc.tokens.length) return false;
+  const named = stripHonorifics(sc.tokens);
+  const core = named.filter((t) => t.fold.length > 1);
+  if (!core.length) return false;
+  const ix = indexes().bank;
+  if (ix.exact.has(named.map((t) => t.fold).join(' '))) return true;
+  if (core.length === 1) return ix.single.some((t) => same(core[0], t)) || ix.last.some((t) => same(core[0], t));
+  return ix.full.some((p) => p.toks.length === core.length && p.toks.every((t) => core.some((c) => same(c, t, true))));
 }
 
 /**
- * True when `name` is a bank person or contains one's full name ('Rahul Gandhi fan', 'Team Mamata
- * Banerjee'): every name token of some person appears in it. A lone first or last name does not count.
+ * True when `name` is a bank person, contains one's full name ('Rahul Gandhi fan', 'Team Mamata
+ * Banerjee'), or is a lone listed surname ('Modi ji'). A lone common surname ('Sharma') does not count.
  */
 export function mentionsBankPerson(name: string): boolean {
-  if (isBankPerson(name)) return true;
-  const tokens = new Set(normalizePersonName(name).split(' ').filter((t) => t.length > 1));
-  if (tokens.size < 2) return false;
-  return people().full.some((person) => person.every((t) => tokens.has(t)));
+  return matchesIndex(scanName(name), indexes().bank);
+}
+
+/** Why a name may not print: 'empty', 'script' (letters we cannot check), 'public', or null (it prints). */
+export type NameBlock = 'empty' | 'script' | 'public' | null;
+
+/**
+ * The certificate gate: is `name` empty, in a script we cannot check, or (loosely) a public figure,
+ * party, outlet, institution or community — anyone in the bank or in ./public-names.ts?
+ */
+export function nameBlock(name: unknown): NameBlock {
+  const sc = scanName(name);
+  if (!sc.tokens.length) return sc.unsupported ? 'script' : 'empty';
+  if (sc.unsupported) return 'script';
+  const core = stripHonorifics(sc.tokens).filter((t) => t.fold.length > 1);
+  // Nothing but titles and honorifics: 'PM', 'CM sahab', 'Didi'.
+  if (!core.length && sc.tokens.some((t) => TITLE_FOLDS.has(t.fold))) return 'public';
+  const { bank, public: pub } = indexes();
+  if (matchesIndex(sc, bank) || matchesIndex(sc, pub)) return 'public';
+  return null;
 }
 
 /** Longest name printed on a certificate or a share (bible §8.4). */
 export const NAME_MAX = 20;
 
+/** The first `n` user-perceived characters (a matra never parts from its letter). */
+function clip(text: string, n: number): string {
+  const Seg = (Intl as unknown as { Segmenter?: new (l?: string, o?: { granularity: string }) => { segment(s: string): Iterable<{ segment: string }> } }).Segmenter;
+  const parts = Seg ? Array.from(new Seg(undefined, { granularity: 'grapheme' }).segment(text), (x) => x.segment) : Array.from(text);
+  return parts.slice(0, n).join('');
+}
+
 /**
- * The name a certificate or share card may print: the player's name trimmed to NAME_MAX, or
- * 'Anonymous Janta' when it is empty or matches anyone in the bank — so nobody can "certify" a real
- * politician (labels never apply to real people).
+ * The name a certificate or share card may print: the player's name (NFKC, invisible and bidi
+ * characters removed) trimmed to NAME_MAX, or 'Anonymous Janta' when it is empty, in a script we
+ * cannot check, or is — or looks like — a public figure, party, outlet, institution or community
+ * (labels never apply to real people, bible §8.5). Both the whole name and the trimmed one are checked.
  */
 export function certificateName(name: string | null | undefined): string {
-  const clean = String(name ?? '')
-    .replace(/\s+/g, ' ')
-    .trim()
-    .slice(0, NAME_MAX)
-    .trim();
-  if (!clean || mentionsBankPerson(clean) || mentionsBankPerson(String(name ?? ''))) return ANONYMOUS;
+  const whole = cleanName(name);
+  const clean = clip(whole, NAME_MAX).trim();
+  if (!clean || nameBlock(whole) !== null || nameBlock(clean) !== null) return ANONYMOUS;
   return clean;
 }

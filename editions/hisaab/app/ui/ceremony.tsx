@@ -63,7 +63,8 @@ function CeremonyCard({ ceremony }: { ceremony: BudgetCeremony }) {
       <div className="h-ceremony__card" role="dialog" aria-modal="true" aria-labelledby={titleId} ref={card}>
         <div className="h-ceremony__slot">
           {ceremony.parts.length === 1 ? (
-            <Thappa text={head.stamp} kind="noted" seed={head.seed ?? head.stamp} height={200} />
+            // The card already played its cue + heavy haptic on open: the 3D stamp lands silently.
+            <Thappa text={head.stamp} kind="noted" seed={head.seed ?? head.stamp} height={200} cues={false} />
           ) : (
             <div className="h-ceremony__stamps" role="img" aria-label={`Stamped: ${ceremony.parts.map((p) => p.stamp).join(', ')}.`}>
               {ceremony.parts.map((p) => (

@@ -40,6 +40,8 @@
 }
 
 @media (min-width: 900px) {
+  /* Bible §11.2 at 1440: poster + label | today's file; tijori | files; quests | resume + duel. The
+     files column also holds the money trail, so it spans two rows beside the tijori and the quests. */
   .h-home__root {
     display: grid;
     grid-template-columns: repeat(12, minmax(0, 1fr));
@@ -48,14 +50,15 @@
     grid-template-areas:
       'who who who who who who who today today today today today'
       'tijori tijori tijori tijori tijori files files files files files files files'
-      'quests quests quests quests quests quests resume resume resume resume resume resume'
-      'quests quests quests quests quests quests duel duel duel duel duel duel';
+      'quests quests quests quests quests files files files files files files files'
+      'resume resume resume resume resume resume duel duel duel duel duel duel';
   }
   .h-home--noresume .h-home__root {
     grid-template-areas:
       'who who who who who who who today today today today today'
       'tijori tijori tijori tijori tijori files files files files files files files'
-      'quests quests quests quests quests quests duel duel duel duel duel duel';
+      'quests quests quests quests quests files files files files files files files'
+      'duel duel duel duel duel duel duel duel duel duel duel duel';
   }
   .h-home__who {
     grid-area: who;
@@ -67,6 +70,11 @@
   }
   .h-home__resume {
     grid-area: resume;
+    align-self: stretch;
+    display: flex;
+  }
+  .h-home__resume > .h-file {
+    flex: 1 1 auto;
   }
   .h-home__tijori {
     grid-area: tijori;
@@ -79,6 +87,25 @@
   }
   .h-home__duel {
     grid-area: duel;
+    align-self: stretch;
+    display: flex;
+    margin-top: 24px; /* level with the resume file's tab */
+  }
+  .h-home__duel > .h-home__panel {
+    flex: 1 1 auto;
+  }
+  .h-home--noresume .h-home__duel {
+    margin-top: 0;
+  }
+  /* Full width without a resume file: copy left, actions right. */
+  .h-home--noresume .h-home__duelstrip {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--h-s-8);
+  }
+  .h-home--noresume .h-home__duelacts {
+    flex: 0 0 min(100%, 380px);
   }
   .h-home__poster {
     display: flex;
@@ -188,6 +215,7 @@
   gap: var(--h-s-2);
 }
 .h-home__cltext {
+  margin-inline-start: 6px;
   font-family: var(--h-font-ui);
   font-weight: var(--h-wght-ui-strong);
   font-size: var(--h-fs-xs);
@@ -303,6 +331,10 @@
   -webkit-tap-highlight-color: transparent;
   transition: transform var(--h-dur-tap) var(--h-ease-out);
 }
+.h-home__questrow--link:focus-visible {
+  outline: none;
+  box-shadow: var(--h-focus-ring);
+}
 .h-home__questrow--link:active {
   transform: translate(var(--h-press-shift), var(--h-press-shift));
   background: var(--h-ground-2);
@@ -386,10 +418,10 @@
   min-width: 0;
 }
 .h-home__grouplink {
+  justify-content: center;
+  min-width: var(--h-tap);
+  padding-inline: var(--h-s-1);
   font-size: var(--h-fs-xs);
-}
-.h-home__groupline {
-  margin: 0;
 }
 
 .h-mini-grid {
@@ -502,18 +534,173 @@
 .h-mini__meta {
   margin-top: auto;
   padding-top: var(--h-s-2);
+  font-size: var(--h-fs-xs);
+  font-weight: var(--h-wght-ui-strong);
+  line-height: 1.35;
+  font-variant-numeric: tabular-nums;
+}
+.h-mini__count {
+  white-space: nowrap;
+}
+:root[lang='hi'] :is(.h-mini__title, .h-mini__tab) {
+  letter-spacing: 0;
+}
+
+/* ---- the money trail: one manila folder, four rows on paper slips ------------------------------ */
+.h-trail {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-3);
+  min-width: 0;
+  margin-top: 24px; /* room for the tab */
+  padding: var(--h-s-4);
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: 0 var(--h-r-l) var(--h-r-l) var(--h-r-l);
+  background: var(--h-manila);
+  color: var(--h-manila-ink);
+  box-shadow: var(--h-shadow-2);
+}
+.h-trail__tab {
+  position: absolute;
+  top: -24px;
+  left: calc(-1 * var(--h-bw));
+  max-width: calc(100% - 24px);
+  height: 24px;
+  padding: 0 var(--h-s-3);
+  border: var(--h-bw) solid var(--h-line);
+  border-bottom: 0;
+  border-radius: var(--h-r-s) var(--h-r-s) 0 0;
+  background: var(--h-manila-2);
   font-family: var(--h-font-mono);
   font-size: var(--h-fs-2xs);
   font-weight: 700;
-  line-height: 1.35;
-  letter-spacing: 0.02em;
+  line-height: 22px;
+  letter-spacing: var(--h-track-kicker);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-:root[lang='hi'] :is(.h-mini__title, .h-mini__tab, .h-mini__meta) {
+.h-trail__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-1);
+  min-width: 0;
+}
+.h-trail__line {
+  margin: 0;
+  font-size: var(--h-fs-xs);
+}
+.h-trail__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--h-s-2);
+}
+.h-trail__item {
+  display: flex;
+  min-width: 0;
+}
+.h-trail__row {
+  display: flex;
+  align-items: center;
+  gap: var(--h-s-3);
+  width: 100%;
+  min-width: 0;
+  min-height: 64px;
+  padding: var(--h-s-2) var(--h-s-3);
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-m);
+  background: var(--h-paper);
+  color: var(--h-ink);
+  box-shadow: var(--h-shadow-1);
+  text-decoration: none;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    transform var(--h-dur-tap) var(--h-ease-out),
+    box-shadow var(--h-dur-tap) var(--h-ease-out);
+}
+.h-trail__row:active {
+  transform: translate(var(--h-press-shift), var(--h-press-shift));
+  box-shadow: var(--h-shadow-0);
+  background: var(--h-ground-2);
+}
+.h-trail__row:focus-visible {
+  outline: none;
+  box-shadow: var(--h-focus-ring), var(--h-shadow-1);
+}
+@media (hover: hover) {
+  .h-trail__row:hover {
+    background: var(--h-ground-2);
+  }
+}
+.h-trail__icon {
+  display: inline-flex;
+  flex: none;
+  color: var(--h-ink);
+}
+.h-trail__names {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.h-trail__hi {
+  font-family: var(--h-font-display);
+  font-weight: var(--h-wght-display-2);
+  font-size: var(--h-fs-s);
+  line-height: var(--h-lh-display-deva);
+  letter-spacing: 0;
+  color: var(--h-syahi-text);
+}
+.h-trail__title {
+  font-family: var(--h-font-display);
+  font-weight: var(--h-wght-display);
+  font-size: var(--h-fs-l);
+  line-height: var(--h-lh-caps);
+  letter-spacing: var(--h-track-caps);
+  text-transform: uppercase;
+  overflow-wrap: break-word;
+}
+.h-trail__meta {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--h-s-2);
+  margin-top: 2px;
+  font-size: var(--h-fs-xs);
+  line-height: 1.35;
+  color: var(--h-ink-2);
+}
+.h-trail__count {
+  font-weight: var(--h-wght-ui-strong);
+  font-variant-numeric: tabular-nums;
+  color: var(--h-ink);
+  white-space: nowrap;
+}
+.h-trail__chev {
+  flex: none;
+  color: var(--h-ink-2);
+}
+.h-trail__all {
+  align-self: flex-start;
+  font-size: var(--h-fs-xs);
+}
+:root[lang='hi'] :is(.h-trail__title, .h-trail__tab) {
   letter-spacing: 0;
 }
-:root[lang='hi'] .h-mini__meta {
-  font-family: var(--h-font-ui);
-  font-size: var(--h-fs-xs);
+@media (min-width: 600px) and (max-width: 899px) {
+  .h-trail__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1200px) {
+  .h-trail__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 /* ---- Muqabla strip ---------------------------------------------------------------------------- */

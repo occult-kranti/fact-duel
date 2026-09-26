@@ -1,0 +1,365 @@
+/*
+ * screens/route/card.css — the untimed card (route player, Aaj Ka Hisaab, taster): the manila file
+ * strip, the question, the result column and the sticky Next bar. Tokens only (bible §5, §11.7).
+ * Nothing here animates before an answer locks.
+ */
+
+/* ---- layout: one column on phones; card (≤ 560) | receipt + noting from 900px ---------------- */
+.h-play {
+  gap: var(--h-s-5);
+}
+.h-play__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--h-s-6);
+  align-items: start;
+  min-width: 0;
+}
+.h-play__main,
+.h-play__side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-5);
+  min-width: 0;
+}
+/* Desktop: where the receipt will print. Static words, no motion (phones never show it). */
+.h-play__wait {
+  display: none;
+}
+@media (min-width: 900px) {
+  .h-play__grid {
+    grid-template-columns: minmax(0, var(--h-col-play)) minmax(0, 1fr);
+    gap: var(--h-s-8);
+  }
+  .h-play__wait {
+    display: flex;
+    flex-direction: column;
+    gap: var(--h-s-2);
+    padding: var(--h-s-5);
+    border: var(--h-bw) dashed var(--h-line);
+    border-radius: var(--h-r-l);
+    color: var(--h-ink-2);
+  }
+  .h-play__wait .h-kicker {
+    color: var(--h-ink-2);
+  }
+}
+
+/* ---- the manila file strip ------------------------------------------------------------------ */
+.h-playhead {
+  --h-card-pad: var(--h-s-4);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-3);
+  padding: var(--h-s-3) var(--h-card-pad) var(--h-s-4);
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-l);
+  background: var(--h-manila);
+  color: var(--h-manila-ink);
+  box-shadow: var(--h-shadow-2);
+}
+.h-playhead__row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--h-s-3);
+  min-width: 0;
+}
+.h-playhead__ids {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-1);
+  min-width: 0;
+  padding-top: var(--h-s-1);
+}
+.h-playhead__fno {
+  color: var(--h-manila-ink);
+  overflow-wrap: anywhere;
+}
+.h-playhead__title {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  font-family: var(--h-font-display);
+  font-weight: var(--h-wght-display);
+  color: var(--h-manila-ink);
+}
+.h-playhead__titlehi {
+  font-size: var(--h-fs-m);
+  line-height: var(--h-lh-display-deva);
+  letter-spacing: 0;
+}
+.h-playhead__titleen {
+  font-size: var(--h-fs-xl);
+  line-height: var(--h-lh-caps);
+  letter-spacing: var(--h-track-caps);
+  text-transform: uppercase;
+  overflow-wrap: break-word;
+}
+.h-playhead__titleen:lang(hi) {
+  letter-spacing: 0;
+  text-transform: none;
+  line-height: var(--h-lh-display-deva);
+}
+.h-playhead__sub {
+  margin: 0;
+  font-size: var(--h-fs-xs);
+  color: var(--h-manila-ink);
+}
+.h-playhead__side {
+  display: flex;
+  align-items: center;
+  gap: var(--h-s-1);
+  flex: none;
+}
+.h-playhead__score {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin: 0;
+  font-weight: 700;
+  font-size: var(--h-fs-m);
+  color: var(--h-manila-ink);
+}
+.h-playhead__pts {
+  font-size: var(--h-fs-xs);
+  font-weight: var(--h-wght-ui-strong);
+}
+.h-playhead__close {
+  border-color: var(--h-line);
+  background: var(--h-paper);
+  color: var(--h-ink);
+}
+.h-playhead__segs {
+  display: flex;
+  gap: var(--h-s-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.h-playhead__seg {
+  flex: 1 1 0;
+  height: 10px;
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-pill);
+  background: var(--h-paper);
+}
+.h-playhead__seg--done {
+  background: var(--h-ink);
+}
+.h-playhead__seg--current {
+  background: var(--h-syahi);
+}
+.h-playhead__tape {
+  margin-top: var(--h-s-1);
+}
+.h-playhead__note {
+  margin: 0;
+  font-family: var(--h-font-mono);
+  font-size: var(--h-fs-xs);
+  font-weight: 700;
+  color: var(--h-manila-ink);
+}
+:root[lang='hi'] .h-playhead__note {
+  font-family: var(--h-font-ui);
+}
+@media (min-width: 900px) {
+  .h-playhead {
+    padding-inline: var(--h-s-5);
+    --h-card-pad: var(--h-s-5);
+  }
+  .h-playhead__titleen {
+    font-size: var(--h-fs-2xl);
+  }
+}
+
+/* ---- the question (bible §11.7) ------------------------------------------------------------- */
+.h-qcard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-4);
+  min-width: 0;
+}
+.h-qcard__kicker {
+  overflow-wrap: anywhere;
+}
+.h-qcard__stem {
+  margin: 0;
+  font-family: var(--h-font-ui);
+  font-weight: var(--h-wght-ui-strong);
+  font-size: var(--h-fs-stem);
+  line-height: 1.3;
+  color: var(--h-ink);
+  overflow-wrap: break-word;
+}
+.h-qcard__hint {
+  margin: 0;
+  font-size: var(--h-fs-xs);
+  color: var(--h-ink-2);
+}
+
+/* ---- a forwarded claim (Forward Court, bible §11.6): the claim in a generic paper chat bubble, the
+   question under it. Never a messenger's green, ticks or chrome; static before and after the lock. -- */
+.h-qcard__stem--fwd {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--h-s-3);
+}
+.h-qcard__bubble {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-2);
+  max-width: min(100%, 34rem);
+  margin-inline-end: var(--h-s-4);
+  padding: var(--h-s-3) var(--h-s-4);
+  border: var(--h-bw) solid var(--h-line);
+  /* The squared corner is the bubble's tail, bottom left. */
+  border-radius: var(--h-r-l) var(--h-r-l) var(--h-r-l) var(--h-r-xs);
+  background: var(--h-paper);
+  color: var(--h-ink);
+  box-shadow: var(--h-shadow-1);
+}
+.h-qcard__bubblehead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--h-s-1) var(--h-s-2);
+  min-width: 0;
+}
+.h-qcard__fwd {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--h-s-1);
+  font-size: var(--h-fs-xs);
+  font-style: italic;
+  font-weight: var(--h-wght-ui);
+  line-height: 1.4;
+  color: var(--h-ink-2);
+}
+.h-qcard__trial {
+  flex: 0 1 auto;
+}
+.h-qcard__trialpart {
+  white-space: nowrap;
+}
+/* दावा · फ़ैसला बंद: Devanagari is read, not a caps code, so it takes the 14px floor (bible §4.3). */
+.h-qcard__trial:lang(hi) {
+  font-family: var(--h-font-ui);
+  font-size: var(--h-fs-xs);
+  line-height: normal;
+}
+.h-qcard__claim {
+  font-size: var(--h-fs-m);
+  font-weight: var(--h-wght-ui);
+  line-height: 1.45;
+  overflow-wrap: break-word;
+}
+.h-qcard__ask {
+  overflow-wrap: break-word;
+}
+@media (min-width: 600px) {
+  .h-qcard__claim {
+    font-size: var(--h-fs-l);
+  }
+}
+
+/* ---- after the lock: stamp → receipt → noting → actions ----------------------------------------- */
+.h-cardres {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-4);
+  min-width: 0;
+  scroll-margin-top: calc(var(--h-top-h) + env(safe-area-inset-top, 0px) + var(--h-s-3));
+  border-radius: var(--h-r-l);
+}
+.h-cardres:focus {
+  outline: none;
+}
+.h-cardres__verdict {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--h-s-2);
+  padding: var(--h-s-4);
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-l);
+  background: var(--h-paper);
+  box-shadow: var(--h-shadow-2);
+}
+/* A tilted stamp overhangs its box by up to ~15px top and bottom: give it the room. */
+.h-cardres__verdict .h-stamp {
+  margin: var(--h-s-3) 0 var(--h-s-4) var(--h-s-1);
+}
+/* GALAT · OBJECTION stays on one line down to 360px; never under the 20px stamp floor. */
+.h-cardres__verdict .h-stamp--l {
+  font-size: clamp(20px, 5.8vw, 26px);
+}
+.h-cardres__line {
+  margin: 0;
+  font-weight: var(--h-wght-ui-strong);
+  font-size: var(--h-fs-l);
+}
+.h-cardres__answer,
+.h-cardres__call {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--h-s-1) var(--h-s-2);
+  margin: 0;
+  min-width: 0;
+}
+.h-cardres__k {
+  font-family: var(--h-font-mono);
+  font-size: var(--h-fs-2xs);
+  font-weight: 700;
+  letter-spacing: var(--h-track-kicker);
+  color: var(--h-ink-2);
+}
+:root[lang='hi'] .h-cardres__k {
+  font-family: var(--h-font-ui);
+  font-size: var(--h-fs-xs);
+  letter-spacing: 0;
+}
+.h-cardres__v {
+  min-width: 0;
+  font-weight: var(--h-wght-ui-strong);
+  font-size: var(--h-fs-m);
+  overflow-wrap: break-word;
+}
+.h-cardres__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--h-s-2) var(--h-s-3);
+}
+
+/* ---- the sticky Next bar (phones: above the home indicator; the nav is hidden while playing) ---- */
+.h-playbar {
+  position: sticky;
+  bottom: 0;
+  z-index: var(--h-z-sticky);
+  margin: 0 calc(-1 * var(--h-gutter)) calc(-1 * var(--h-s-12));
+  padding: var(--h-s-3) max(var(--h-gutter), env(safe-area-inset-right, 0px)) calc(var(--h-s-3) + env(safe-area-inset-bottom, 0px))
+    max(var(--h-gutter), env(safe-area-inset-left, 0px));
+  border-top: var(--h-bw) solid var(--h-line);
+  background: var(--h-ground);
+}
+.h-playbar__inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-2);
+}
+@media (min-width: 900px) {
+  .h-playbar__inner {
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  .h-playbar__inner .h-btn--primary {
+    width: auto;
+    min-width: 18rem;
+  }
+}

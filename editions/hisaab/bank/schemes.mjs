@@ -22,6 +22,10 @@ export const HISAAB_SCHEMES = Object.freeze([
     explanation: "PM-KISAN pays ₹6,000 a year in three equal instalments straight into Aadhaar-seeded bank accounts by DBT. The Agriculture Ministry said in Feb 2025 that over ₹3.46 lakh crore had been paid in 18 instalments since launch.",
     sourceUrl: "https://pib.gov.in/PressReleasePage.aspx?PRID=2100758",
     sourceLabel: "PIB (Agriculture Ministry) — Assessment of impact of PM-KISAN (7 Feb 2025)",
+    tags: ["distribution"],
+    enactedBy: [{ name: "Narendra Modi", role: "Prime Minister (launched PM-KISAN at Gorakhpur, 24 Feb 2019)", party: "BJP" }],
+    outcome:
+      "Announced in the Interim Budget of 1 Feb 2019, it paid its first ₹2,000 instalment to 1.01 crore farmers on 24 Feb 2019, 46 days before Lok Sabha polling began. By Feb 2025 over ₹3.46 lakh crore had been paid in 18 instalments (PIB).",
   },
   {
     id: "hsc002",
@@ -42,6 +46,7 @@ export const HISAAB_SCHEMES = Object.freeze([
     sourceUrl: "https://pib.gov.in/PressReleasePage.aspx?PRID=2100758",
     sourceLabel: "PIB (Agriculture Ministry) — Assessment of impact of PM-KISAN (7 Feb 2025)",
     sources: ["https://www.pmindia.gov.in/en/news_updates/pm-kisan-scheme-extension-to-include-all-eligible-farmer-families-irrespective-of-the-size-of-land-holdings/"],
+    tags: ["distribution"],
   },
   {
     id: "hsc003",
@@ -61,6 +66,7 @@ export const HISAAB_SCHEMES = Object.freeze([
     explanation: "A written Lok Sabha reply put it at ₹2,992.75 crore paid to 42,16,643 ineligible people (such as income-tax payers), with the largest numbers in Assam, Tamil Nadu and Punjab. The government said it was recovering the money.",
     sourceUrl: "https://www.tribuneindia.com/news/nation/govt-deposited-rs-3-000-cr-under-pm-kisan-scheme-in-accounts-of-over-42-lakh-ineligible-persons-285908/amp",
     sourceLabel: "The Tribune — Govt deposited Rs 3,000 cr under PM-KISAN in accounts of over 42 lakh ineligible persons (21 Jul 2021)",
+    tags: ["distribution"],
   },
   {
     id: "hsc004",
@@ -81,6 +87,7 @@ export const HISAAB_SCHEMES = Object.freeze([
     sourceUrl: "https://www.outlookbusiness.com/news/govt-recovers-rs-416-crore-from-ineligible-farmers-so-far-under-pm-kisan-agri-min",
     sourceLabel: "Outlook Business (PTI) — Govt recovers Rs 416 crore from ineligible farmers under PM-KISAN (25 Mar 2025)",
     sources: ["https://www.tribuneindia.com/news/nation/govt-deposited-rs-3-000-cr-under-pm-kisan-scheme-in-accounts-of-over-42-lakh-ineligible-persons-285908/amp"],
+    tags: ["distribution"],
   },
   {
     id: "hsc005",
@@ -101,6 +108,7 @@ export const HISAAB_SCHEMES = Object.freeze([
     sourceUrl: "https://www.pmindia.gov.in/en/news_updates/cabinet-approves-health-coverage-to-all-senior-citizens-of-the-age-70-years-and-above-irrespective-of-income-under-ayushman-bharat-pradhan-mantri-jan-arogya-yojana-ab-pm-jay/",
     sourceLabel: "PMO — Cabinet approves health coverage to all senior citizens aged 70+ under AB PM-JAY (11 Sep 2024)",
     sources: ["https://medicaldialogues.in/news/health/dead-patients-getting-treatment-cag-audit-report-flags-errors-in-pmjay-scheme-health-ministry-issues-clarification-115777"],
+    tags: ["distribution"],
   },
   {
     id: "hsc006",
@@ -120,6 +128,8 @@ export const HISAAB_SCHEMES = Object.freeze([
     explanation: "The 11 Sept 2024 decision covers all citizens aged 70 and above regardless of socio-economic status, aiming at about 4.5 crore families and 6 crore senior citizens with ₹5 lakh free cover on a family basis.",
     sourceUrl: "https://www.pmindia.gov.in/en/news_updates/cabinet-approves-health-coverage-to-all-senior-citizens-of-the-age-70-years-and-above-irrespective-of-income-under-ayushman-bharat-pradhan-mantri-jan-arogya-yojana-ab-pm-jay/",
     sourceLabel: "PMO — Cabinet approves health coverage to all senior citizens aged 70+ under AB PM-JAY (11 Sep 2024)",
+    tags: ["distribution"],
+    enactedBy: [{ name: "Narendra Modi", role: "Prime Minister (chaired the Union Cabinet that approved it)", party: "BJP" }],
   },
   {
     id: "hsc007",
@@ -140,6 +150,7 @@ export const HISAAB_SCHEMES = Object.freeze([
     sourceUrl: "https://cag.gov.in/uploads/download_audit_report/2023/04_Executive-Summary-064d22bab3b3f45.25634714.pdf",
     sourceLabel: "CAG — Performance Audit of AB-PMJAY, Report No. 11 of 2023, Executive Summary (Aug 2023)",
     sources: ["https://medicaldialogues.in/news/health/dead-patients-getting-treatment-cag-audit-report-flags-errors-in-pmjay-scheme-health-ministry-issues-clarification-115777"],
+    tags: ["distribution"],
   },
   {
     id: "hsc008",
@@ -160,6 +171,7 @@ export const HISAAB_SCHEMES = Object.freeze([
     sourceUrl: "https://cag.gov.in/uploads/download_audit_report/2023/Report-No.-11-of-2023_PA-on-PMJAY_English-PDF-A-064d22bab2b83b5.38721048.pdf",
     sourceLabel: "CAG — Performance Audit of AB-PMJAY, Report No. 11 of 2023, para 5.8.2.8 (Aug 2023)",
     sources: ["https://www.business-standard.com/india-news/examining-recommendations-of-cag-audit-report-on-ab-pm-jay-health-ministry-123081800138_1.html"],
+    tags: ["distribution"],
   },
   {
     id: "hsc009",
@@ -180,6 +192,7 @@ export const HISAAB_SCHEMES = Object.freeze([
     sourceUrl: "https://www.pmindia.gov.in/en/news_updates/ujjwala-yojana-achieves-target-of-8-crore-lpg-connections-7-months-ahead-of-target-date/",
     sourceLabel: "PMO — Ujjwala Yojana achieves target of 8 crore LPG connections 7 months ahead of target date (7 Sep 2019)",
     sources: ["https://cag.gov.in/uploads/download_audit_report/2019/Executive_Summary_of_Report_No_14_of_2019_Performance_Audit_of_Pradhan_Mantri_Ujjwala_Yojana_Ministry_of_Petroleum_and_Natural_Gas_0.pdf"],
+    tags: ["distribution"],
   },
   {
     id: "hsc010",
@@ -199,6 +212,7 @@ export const HISAAB_SCHEMES = Object.freeze([
     explanation: "For 1.93 crore such beneficiaries the average was 3.66 refills a year, falling to 3.21 by Dec 2018. CAG called sustained LPG use \"a big challenge\" and urged that nil- and low-consumption beneficiaries be encouraged to keep refilling.",
     sourceUrl: "https://cag.gov.in/uploads/download_audit_report/2019/Executive_Summary_of_Report_No_14_of_2019_Performance_Audit_of_Pradhan_Mantri_Ujjwala_Yojana_Ministry_of_Petroleum_and_Natural_Gas_0.pdf",
     sourceLabel: "CAG — Performance Audit of PMUY, Report No. 14 of 2019, Executive Summary (Dec 2019)",
+    tags: ["distribution"],
   },
   {
     id: "hsc011",
@@ -218,6 +232,7 @@ export const HISAAB_SCHEMES = Object.freeze([
     explanation: "CAG Report No. 14 of 2019 found 1.98 lakh beneficiaries above 12 cylinders a year — \"improbable\" for BPL households — and 13.96 lakh who took 3 to 41 refills in a single month. It asked oil companies to review high-consumption cases regularly.",
     sourceUrl: "https://cag.gov.in/uploads/download_audit_report/2019/Executive_Summary_of_Report_No_14_of_2019_Performance_Audit_of_Pradhan_Mantri_Ujjwala_Yojana_Ministry_of_Petroleum_and_Natural_Gas_0.pdf",
     sourceLabel: "CAG — Performance Audit of PMUY, Report No. 14 of 2019, Executive Summary (Dec 2019)",
+    tags: ["distribution"],
   },
   {
     id: "hsc012",
@@ -237,6 +252,7 @@ export const HISAAB_SCHEMES = Object.freeze([
     explanation: "CAG recorded coverage rising to 94.3%, with 7.19 crore Ujjwala connections issued by March 2019 — a real gain — while flagging weak de-duplication, connections to minors and low refill rates.",
     sourceUrl: "https://cag.gov.in/uploads/download_audit_report/2019/Executive_Summary_of_Report_No_14_of_2019_Performance_Audit_of_Pradhan_Mantri_Ujjwala_Yojana_Ministry_of_Petroleum_and_Natural_Gas_0.pdf",
     sourceLabel: "CAG — Performance Audit of PMUY, Report No. 14 of 2019, Executive Summary (Dec 2019)",
+    tags: ["distribution"],
   },
   {
     id: "hsc013",
@@ -256,6 +272,8 @@ export const HISAAB_SCHEMES = Object.freeze([
     explanation: "The 13 Sept 2023 decision added 75 lakh connections to be released over three years, taking PMUY beneficiaries to 10.35 crore.",
     sourceUrl: "https://www.pmindia.gov.in/en/news_updates/cabinet-approves-expansion-of-ujjwala-yojana/",
     sourceLabel: "PMO — Cabinet approves expansion of Ujjwala Yojana (13 Sep 2023)",
+    tags: ["distribution"],
+    enactedBy: [{ name: "Narendra Modi", role: "Prime Minister (chaired the Union Cabinet that approved it)", party: "BJP" }],
   },
   {
     id: "hsc014",
@@ -372,6 +390,8 @@ export const HISAAB_SCHEMES = Object.freeze([
     explanation: "The Centre will give free grain to about 81.35 crore beneficiaries for five years from 1 Jan 2024 at an estimated ₹11.80 lakh crore — which PIB called among the world's largest food security schemes.",
     sourceUrl: "https://www.pib.gov.in/PressReleasePage.aspx?PRID=1980686",
     sourceLabel: "PIB (Cabinet) — Free foodgrains for 81.35 crore beneficiaries for five years (29 Nov 2023)",
+    tags: ["distribution"],
+    enactedBy: [{ name: "Narendra Modi", role: "Prime Minister (led the Cabinet that extended free grain)", party: "BJP" }],
   },
   {
     id: "hsc020",
@@ -391,6 +411,7 @@ export const HISAAB_SCHEMES = Object.freeze([
     explanation: "Antyodaya families are entitled to 35 kg a month. PIB put the economic cost of 35 kg of rice at ₹1,371 (wheat ₹946), borne by the Centre since the grain became free.",
     sourceUrl: "https://www.pib.gov.in/PressReleasePage.aspx?PRID=1980686",
     sourceLabel: "PIB (Cabinet) — Free foodgrains for 81.35 crore beneficiaries for five years (29 Nov 2023)",
+    tags: ["distribution"],
   },
   {
     id: "hsc021",
@@ -411,6 +432,7 @@ export const HISAAB_SCHEMES = Object.freeze([
     sourceUrl: "https://www.pib.gov.in/PressReleaseIframePage.aspx?PRID=1990696",
     sourceLabel: "PIB (Food & Public Distribution) — Year-End Review 2023 (27 Dec 2023)",
     sources: ["https://en.wikipedia.org/wiki/National_Food_Security_Act,_2013", "https://www.pib.gov.in/PressReleasePage.aspx?PRID=1980686", "https://www.pmindia.gov.in/en/news_updates/cabinet-approves-extension-of-pradhan-mantri-garib-kalyan-anna-yojana-allocation-of-additional-foodgrain-for-further-five-months-from-july-to-november-2020/"],
+    tags: ["distribution"],
   },
   {
     id: "hsc022",
@@ -430,6 +452,7 @@ export const HISAAB_SCHEMES = Object.freeze([
     explanation: "Under ONORC any NFSA beneficiary can take grain from any fair price shop at the same entitlement and price. PIB said 28 crore portability transactions moved over 80 lakh tonnes in 2023 (to November), and 99.8% of shops used ePoS machines.",
     sourceUrl: "https://www.pib.gov.in/PressReleaseIframePage.aspx?PRID=1990696",
     sourceLabel: "PIB (Food & Public Distribution) — Year-End Review 2023 (27 Dec 2023)",
+    tags: ["distribution"],
   },
   {
     id: "hsc023",
@@ -449,6 +472,7 @@ export const HISAAB_SCHEMES = Object.freeze([
     explanation: "As of 13 Aug 2025, 55.7% (31.31 crore) of holders were women and 66.7% of accounts were in rural or semi-urban areas, with ₹2.68 lakh crore in deposits. PIB said banks were contacting holders to reduce inoperative accounts.",
     sourceUrl: "https://www.pib.gov.in/PressReleasePage.aspx?PRID=2161401",
     sourceLabel: "PIB (Finance Ministry) — PMJDY completes 11 years (Aug 2025)",
+    tags: ["distribution"],
   },
   {
     id: "hsc024",
@@ -468,6 +492,7 @@ export const HISAAB_SCHEMES = Object.freeze([
     explanation: "PMJDY accounts are zero-balance with no maintenance charge; the RuPay card has built-in accident cover of ₹2 lakh, and holders can get an overdraft of up to ₹10,000. At least four free withdrawals a month are allowed; banks may charge beyond that.",
     sourceUrl: "https://www.pib.gov.in/PressReleasePage.aspx?PRID=2161401",
     sourceLabel: "PIB (Finance Ministry) — PMJDY completes 11 years (Aug 2025)",
+    tags: ["distribution"],
   },
   {
     id: "hsc025",
@@ -487,6 +512,8 @@ export const HISAAB_SCHEMES = Object.freeze([
     explanation: "The Cabinet noted on 9 Aug 2024 that 35 lakh houses were not completed by 31 Mar 2024 and would be finished in 2024-25. It also approved 2 crore more houses for 2024–29 with a total outlay of ₹3,06,137 crore.",
     sourceUrl: "https://www.pmindia.gov.in/en/news_updates/cabinet-approves-implementation-of-the-pradhan-mantri-awaas-yojana-gramin-pmay-g-during-fy-2024-25-to-2028-29/",
     sourceLabel: "PMO — Cabinet approves PMAY-G during FY 2024-25 to 2028-29 (9 Aug 2024)",
+    tags: ["distribution"],
+    enactedBy: [{ name: "Narendra Modi", role: "Prime Minister (chaired the Union Cabinet that approved it)", party: "BJP" }],
   },
   {
     id: "hsc026",
@@ -506,6 +533,8 @@ export const HISAAB_SCHEMES = Object.freeze([
     explanation: "Assistance stays at ₹1.20 lakh in plain areas and ₹1.30 lakh in north-eastern and hill states/UTs such as Himachal Pradesh, Uttarakhand, J&K and Ladakh; the Centre shares the cost with states.",
     sourceUrl: "https://www.pmindia.gov.in/en/news_updates/cabinet-approves-implementation-of-the-pradhan-mantri-awaas-yojana-gramin-pmay-g-during-fy-2024-25-to-2028-29/",
     sourceLabel: "PMO — Cabinet approves PMAY-G during FY 2024-25 to 2028-29 (9 Aug 2024)",
+    tags: ["distribution"],
+    enactedBy: [{ name: "Narendra Modi", role: "Prime Minister (chaired the Union Cabinet that approved it)", party: "BJP" }],
   },
   {
     id: "hsc027",
@@ -525,6 +554,8 @@ export const HISAAB_SCHEMES = Object.freeze([
     explanation: "The 10 Aug 2022 decision extended PMAY-U so that 122.69 lakh houses sanctioned by 31 Mar 2022 could be completed, after states sought more time. The same note said 8.04 lakh urban houses were completed under the earlier scheme in 2004–2014.",
     sourceUrl: "https://www.pmindia.gov.in/en/news_updates/cabinet-approves-continuation-of-pradhan-mantri-awas-yojana-urban-pmay-u-housing-for-all-mission-up-to-31st-december-2024/",
     sourceLabel: "PMO — Cabinet approves continuation of PMAY-U up to 31 Dec 2024 (10 Aug 2022)",
+    tags: ["distribution"],
+    enactedBy: [{ name: "Narendra Modi", role: "Prime Minister (chaired the Union Cabinet that approved it)", party: "BJP" }],
   },
   {
     id: "hsc028",
@@ -544,6 +575,8 @@ export const HISAAB_SCHEMES = Object.freeze([
     explanation: "The 9 Aug 2024 Cabinet decision set government subsidy at ₹2.30 lakh crore within a total investment of ₹10 lakh crore for 1 crore houses.",
     sourceUrl: "https://www.pmindia.gov.in/en/news_updates/cabinet-approves-pradhan-mantri-awas-yojana-urban-2-0-scheme/",
     sourceLabel: "PMO — Cabinet approves PMAY-Urban 2.0 (9 Aug 2024)",
+    tags: ["distribution"],
+    enactedBy: [{ name: "Narendra Modi", role: "Prime Minister (chaired the Union Cabinet that approved it)", party: "BJP" }],
   },
   {
     id: "hsc029",
@@ -700,6 +733,8 @@ export const HISAAB_SCHEMES = Object.freeze([
     sourceUrl: "https://www.business-standard.com/india-news/vb-g-ram-g-replacing-mgnrega-to-come-into-force-across-india-from-july-1-126051100540_1.html",
     sourceLabel: "Business Standard — VB-G RAM G replacing MGNREGA to come into force across India from July 1 (11 May 2026)",
     sources: ["https://prsindia.org/billtrack/the-viksit-bharat-%E2%80%93-guarantee-for-rozgar-and-ajeevika-mission-gramin-vb-%E2%80%93-g-ram-g-bill-2025", "https://www.deccanherald.com/india/contentious-vb-g-ram-g-bill-2025-tabled-in-parliament-amidst-opposition-protest-3832673"],
+    tags: ["distribution"],
+    enactedBy: [{ name: "Shivraj Singh Chouhan", role: "Union Rural Development Minister (ministry in charge of the law)", party: "BJP" }],
   },
   {
     id: "hsc037",
@@ -719,6 +754,8 @@ export const HISAAB_SCHEMES = Object.freeze([
     explanation: "Wages, material and admin costs are shared 60:40 (90:10 for north-eastern and Himalayan states). Under MGNREGA the Centre paid the entire unskilled wage bill and three-fourths of material costs.",
     sourceUrl: "https://prsindia.org/billtrack/the-viksit-bharat-%E2%80%93-guarantee-for-rozgar-and-ajeevika-mission-gramin-vb-%E2%80%93-g-ram-g-bill-2025",
     sourceLabel: "PRS Legislative Research — The VB-G RAM G Bill, 2025 (Dec 2025)",
+    tags: ["distribution"],
+    enactedBy: [{ name: "Shivraj Singh Chouhan", role: "Union Rural Development Minister (ministry in charge of the law)", party: "BJP" }],
   },
   {
     id: "hsc038",
@@ -738,6 +775,7 @@ export const HISAAB_SCHEMES = Object.freeze([
     explanation: "ABPS became the exclusive channel from 1 Jan 2024. The Rural Development Ministry called it \"the best alternative\" to avoid rejections and speed wages; LibTech India researchers, analysing 3.13 crore wage transactions, disputed claims that it made payments quicker.",
     sourceUrl: "https://m.thewire.in/article/government/mgnrega-aadhaar-based-payments-wages-delay-rejections",
     sourceLabel: "The Wire — MGNREGS: Govt's claims of quickness with Aadhaar-based payments are false (30 Jan 2025)",
+    tags: ["distribution"],
   },
   {
     id: "hsc039",
@@ -757,6 +795,7 @@ export const HISAAB_SCHEMES = Object.freeze([
     explanation: "PRS found only 4% of households got 100 days in 2024-25, down from 8% in 2023-24, and wages received were below notified rates in 11 of 30 states/UTs. The Economic Survey 2023-24 argued MGNREGS demand is not a true indicator of rural distress.",
     sourceUrl: "https://prsindia.org/files/budget/budget_parliament/2025/DFG_Analysis_2025-26_Rural_Development.pdf",
     sourceLabel: "PRS Legislative Research — Demand for Grants 2025-26 Analysis: Rural Development (4 Feb 2025)",
+    tags: ["distribution"],
   },
   {
     id: "hsc040",
@@ -777,6 +816,7 @@ export const HISAAB_SCHEMES = Object.freeze([
     sourceUrl: "https://prsindia.org/files/budget/budget_parliament/2025/DFG_Analysis_2025-26_Rural_Development.pdf",
     sourceLabel: "PRS Legislative Research — Demand for Grants 2025-26 Analysis: Rural Development (4 Feb 2025)",
     sources: ["https://www.scconline.com/blog/post/2026/05/12/vbgramg-act-implemented-from-1-july-2026/", "https://en.wikipedia.org/wiki/National_Rural_Employment_Guarantee_Act,_2005"],
+    tags: ["distribution"],
   },
   {
     id: "hsc041",
@@ -797,6 +837,7 @@ export const HISAAB_SCHEMES = Object.freeze([
     sourceUrl: "https://prsindia.org/files/budget/budget_parliament/2025/DFG_Analysis_2025-26_Rural_Development.pdf",
     sourceLabel: "PRS Legislative Research — Demand for Grants 2025-26 Analysis: Rural Development (4 Feb 2025)",
     sources: ["https://www.business-standard.com/india-news/vb-g-ram-g-replacing-mgnrega-to-come-into-force-across-india-from-july-1-126051100540_1.html"],
+    tags: ["distribution"],
   },
   {
     id: "hsc042",
@@ -856,6 +897,8 @@ export const HISAAB_SCHEMES = Object.freeze([
     explanation: "APY guarantees ₹1,000–₹5,000 a month from 60, depending on contributions. Over 8.66 crore subscribers had enrolled by 19 Jan 2026, and the Cabinet extended its funding support to 2030-31.",
     sourceUrl: "https://www.pmindia.gov.in/en/news_updates/cabinet-approves-for-continuation-of-atal-pension-yojana-apy-and-extension-of-funding-support-for-promotional-and-developmental-activities-and-gap-funding-till-2030-31/",
     sourceLabel: "PMO — Cabinet approves continuation of Atal Pension Yojana till 2030-31 (21 Jan 2026)",
+    tags: ["distribution"],
+    enactedBy: [{ name: "Narendra Modi", role: "Prime Minister (chaired the Cabinet that extended APY to 2030-31)", party: "BJP" }],
   },
   {
     id: "hsc045",
@@ -894,6 +937,7 @@ export const HISAAB_SCHEMES = Object.freeze([
     explanation: "Farmers pay 2% for kharif, 1.5% for rabi and 5% for horticulture; the Centre and states share the remaining premium equally. About 68 crore farmer applications had been insured by Jan 2025.",
     sourceUrl: "https://prsindia.org/files/budget/budget_parliament/2025/DFG_Analysis_2025-26_Agriculture_&_Farmers_Welfare.pdf",
     sourceLabel: "PRS Legislative Research — Demand for Grants 2025-26 Analysis: Agriculture and Farmers Welfare (4 Feb 2025)",
+    tags: ["distribution"],
   },
   {
     id: "hsc047",
@@ -913,6 +957,7 @@ export const HISAAB_SCHEMES = Object.freeze([
     explanation: "Claims fell from ₹29,043 crore (2017-18) to ₹16,441 crore (2022-23), and the 2025-26 allocation of ₹12,242 crore was the lowest since 2018-19. The Agriculture standing committee (2021) blamed delayed claims partly on late state premium subsidy.",
     sourceUrl: "https://prsindia.org/files/budget/budget_parliament/2025/DFG_Analysis_2025-26_Agriculture_&_Farmers_Welfare.pdf",
     sourceLabel: "PRS Legislative Research — Demand for Grants 2025-26 Analysis: Agriculture and Farmers Welfare (4 Feb 2025)",
+    tags: ["distribution"],
   },
   {
     id: "hsc048",
@@ -1047,6 +1092,11 @@ export const HISAAB_SCHEMES = Object.freeze([
     explanation: "Approved on 29 Feb 2024 with ₹75,021 crore, it gives central subsidy of about ₹30,000 for a 1 kW system, ₹60,000 for 2 kW and ₹78,000 for 3 kW or more, at benchmark prices.",
     sourceUrl: "https://www.pmindia.gov.in/en/news_updates/cabinet-approves-pm-surya-ghar-muft-bijli-yojana-for-installing-rooftop-solar-in-one-crore-households/",
     sourceLabel: "PMO — Cabinet approves PM-Surya Ghar: Muft Bijli Yojana (29 Feb 2024)",
+    tags: ["distribution", "pre-election"],
+    enactedBy: [{ name: "Narendra Modi", role: "Prime Minister (launched it; chaired the Cabinet that approved it)", party: "BJP" }],
+    outcome:
+      "Launched by the PM on 13 Feb 2024 and approved by the Cabinet on 29 Feb with an outlay of ₹75,021 crore, 50 days before Lok Sabha polling began on 19 Apr 2024. The BJP won 240 of 543 seats, short of a majority; the NDA won 293.",
+    poll: { label: "Lok Sabha 2024", month: "2024-04", gapDays: 50, result: "BJP won 240 of 543 seats; NDA 293" },
   },
   {
     id: "hsc055",
@@ -1067,6 +1117,7 @@ export const HISAAB_SCHEMES = Object.freeze([
     sourceUrl: "https://dbtbharat.gov.in/",
     sourceLabel: "DBT Mission, Cabinet Secretariat — dbtbharat.gov.in dashboard (viewed Sep 2026)",
     sources: ["https://m.thewire.in/article/political-economy/a-tale-of-trade-offs-the-anatomy-of-the-direct-benefit-transfers-system"],
+    tags: ["distribution"],
   },
   {
     id: "hsc056",
@@ -1087,6 +1138,8 @@ export const HISAAB_SCHEMES = Object.freeze([
     sourceUrl: "https://www.thehindu.com/todays-paper/direct-benefit-transfer-scheme-finally-gets-going/article4281371.ece",
     sourceLabel: "The Hindu — Direct Benefit Transfer scheme finally gets going (7 Jan 2013)",
     sources: ["https://pib.gov.in/newsite/PrintRelease.aspx?relid=90093", "https://dbtbharat.gov.in/", "https://en.wikipedia.org/wiki/Direct_Benefit_Transfer"],
+    tags: ["distribution"],
+    enactedBy: [{ name: "Jairam Ramesh", role: "Union Rural Development Minister (launched DBT in Andhra Pradesh, 2013)", party: "INC" }],
   },
   {
     id: "hsc057",
@@ -1125,6 +1178,7 @@ export const HISAAB_SCHEMES = Object.freeze([
     explanation: "The Power Ministry said 2.86 crore households were electrified, including homes that became willing after 31 Mar 2019; the scheme closed on 31 Mar 2022. All villages had been declared electrified on 28 Apr 2018.",
     sourceUrl: "https://pib.gov.in/Pressreleaseshare.aspx?PRID=1845839",
     sourceLabel: "PIB (Power Ministry) — Schemes to achieve uninterrupted power supply (28 Jul 2022)",
+    tags: ["distribution"],
   },
   {
     id: "hsc059",

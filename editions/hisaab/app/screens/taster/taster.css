@@ -1,0 +1,73 @@
+/* screens/taster/taster.css — the one-card taster: the label reveal and the next steps (card: route/card.css). */
+.h-taster__again {
+  margin: 0;
+  font-size: var(--h-fs-xs);
+  color: var(--h-ink-2);
+}
+.h-taster__next {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--h-s-3);
+}
+.h-taster__next .h-btn--ghost {
+  align-self: flex-start;
+}
+
+/* The label reveal: inline, never a ceremony (bible §11.1). */
+.h-reveal {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-2);
+  padding: var(--h-s-4);
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-l);
+  background: var(--h-paper);
+  box-shadow: var(--h-shadow-2);
+}
+.h-reveal__title {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  font-family: var(--h-font-display);
+  font-weight: var(--h-wght-display);
+}
+.h-reveal__lead {
+  font-family: var(--h-font-ui);
+  font-weight: var(--h-wght-ui-strong);
+  font-size: var(--h-fs-s);
+  color: var(--h-ink-2);
+}
+.h-reveal__hi {
+  font-size: var(--h-fs-xl);
+  line-height: var(--h-lh-display-deva);
+  color: var(--h-syahi-text);
+  letter-spacing: 0;
+}
+.h-reveal__en {
+  font-size: var(--h-fs-3xl);
+  line-height: var(--h-lh-caps);
+  letter-spacing: var(--h-track-caps);
+  text-transform: uppercase;
+  overflow-wrap: break-word;
+}
+:root[lang='hi'] .h-reveal__en {
+  letter-spacing: 0;
+}
+.h-reveal__aside {
+  font-family: var(--h-font-ui);
+  font-weight: var(--h-wght-ui);
+  font-size: var(--h-fs-xs);
+  letter-spacing: 0;
+  text-transform: none;
+}
+.h-reveal__line {
+  margin: 0;
+  font-weight: var(--h-wght-ui-strong);
+}
+.h-reveal__note {
+  margin: 0;
+  font-size: var(--h-fs-xs);
+  color: var(--h-ink-2);
+}

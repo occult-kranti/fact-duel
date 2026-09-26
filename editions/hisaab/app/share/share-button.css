@@ -1,0 +1,4 @@
+/* share/share-button.css — the share button's inline outcome ("Copied ✓"). Tokens only. */
+.h-sharebtn__words {
+  overflow-wrap: break-word;
+}

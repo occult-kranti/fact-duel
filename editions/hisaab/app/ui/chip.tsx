@@ -15,9 +15,14 @@ import './chip.css';
 
 export type ChipKind = 'legal' | 'source' | 'govt' | 'kind' | 'plain';
 
-export function Chip({ kind = 'plain', icon, children, title, className }: { kind?: ChipKind; icon?: ReactNode; children: ReactNode; title?: string; className?: string }) {
+/**
+ * `lang`: the chip's language when it differs from the page's. A Latin code chip (COURT, NDA) passes
+ * 'en' so it keeps the mono face and its tracking in the Hindi locale; a Hindi chip reads in the UI
+ * face (base.css: no Devanagari in mono, bible §4.4).
+ */
+export function Chip({ kind = 'plain', icon, children, title, lang, className }: { kind?: ChipKind; icon?: ReactNode; children: ReactNode; title?: string; lang?: string; className?: string }) {
   return (
-    <span className={cx('h-chip', `h-chip--${kind}`, className)} title={title}>
+    <span className={cx('h-chip', `h-chip--${kind}`, className)} title={title} lang={lang}>
       {icon ? (
         <span className="h-chip__icon" aria-hidden="true">
           {icon}
@@ -31,7 +36,7 @@ export function Chip({ kind = 'plain', icon, children, title, className }: { kin
 /** The source-type chip on a receipt (COURT, CAG, SANSAD, PIB, ECI, RBI, AGENCY, … PRESS). */
 export function SourceChip({ kind }: { kind: SourceKind }) {
   return (
-    <Chip kind="source" title={SOURCE_KIND_TEXT[kind]}>
+    <Chip kind="source" title={SOURCE_KIND_TEXT[kind]} lang="en">
       <span aria-hidden="true">{kind}</span>
       <span className="h-sr">Source type: {SOURCE_KIND_TEXT[kind]}</span>
     </Chip>
@@ -43,9 +48,14 @@ export function SourceChip({ kind }: { kind: SourceKind }) {
  * "NDA" (the receipt's GOVT THEN row already says the rest; screen readers still hear it).
  */
 export function GovtChip({ govt, bare }: { govt: string; bare?: boolean }) {
-  if (!bare) return <Chip kind="govt">{govtText(govt)}</Chip>;
+  if (!bare)
+    return (
+      <Chip kind="govt" lang="en">
+        {govtText(govt)}
+      </Chip>
+    );
   return (
-    <Chip kind="govt">
+    <Chip kind="govt" lang="en">
       <span className="h-sr">Govt then: </span>
       {govt}
     </Chip>
@@ -65,14 +75,16 @@ export type LegalStatusProps = {
  * Long lines wrap (statuses run to ~240 characters); nothing is truncated.
  */
 export function LegalStatus({ status, asOf, className }: LegalStatusProps) {
-  const { locale } = useLang();
+  const { locale, isHi } = useLang();
   return (
     <div className={cx('h-legal', className)}>
       <p className="h-legal__head">
-        <Chip kind="legal" icon={<Scale size={14} strokeWidth={2.4} />}>
+        <Chip kind="legal" icon={<Scale size={14} strokeWidth={2.4} />} lang="en">
           Legal status
         </Chip>
-        <span className="h-legal__asof">{asOfText(asOf, locale)}</span>
+        <span className="h-legal__asof" lang={isHi ? 'hi' : 'en'}>
+          {asOfText(asOf, locale)}
+        </span>
       </p>
       <p className="h-legal__line" lang="en">
         {status}

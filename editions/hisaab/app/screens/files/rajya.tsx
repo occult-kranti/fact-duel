@@ -151,7 +151,7 @@ export function RajyaView({ route }: { route: AppRoute }) {
             <span className="h-mono">{open}</span> {t('open', 'जारी')}
           </>
         ) : null}
-        <span className="h-rajya__quip">Kaunsa rajya? Sab ki file khuli hai.</span>
+        <span className="h-rajya__quip">{t('Kaunsa rajya? Sab ki file khuli hai.', 'कौनसा राज्य? सबकी फ़ाइल खुली है।')}</span>
       </p>
 
       <p className="h-sr" role="status" aria-live="polite">
@@ -474,13 +474,15 @@ const Brief = function Brief({ drawer, centre, loaded, isHi, ref }: BriefProps &
               {drawer.name}
             </h2>
           </div>
+        </div>
+        <div className="h-rajya__statusrow">
+          <p className="h-rajya__briefstatus">{statusWords(status, t)}</p>
           {status.state === 'cleared' ? (
-            <span className="h-stamp-stage h-rajya__stamp">
+            <span className="h-rajya__stamp">
               <Stamp kind="noted" seed={r.id} text="CLEARED" size="l" label={t('File cleared', 'फ़ाइल क्लियर')} />
             </span>
           ) : null}
         </div>
-        <p className="h-rajya__briefstatus">{statusWords(status, t)}</p>
         {status.state === 'sealed' ? <Tape /> : null}
         {status.running ? (
           <Meter value={status.done} max={CARDS} ticks={CARDS} label={t('Cards answered', 'जवाब दिए कार्ड')} valueText={`${status.done} of ${CARDS} answered`} />
@@ -488,7 +490,7 @@ const Brief = function Brief({ drawer, centre, loaded, isHi, ref }: BriefProps &
         <dl className="h-rajya__facts">
           <div>
             <dt>{t('Cards', 'कार्ड')}</dt>
-            <dd>{stateCardsLine(r)}</dd>
+            <dd>{stateCardsLine(r, t)}</dd>
           </div>
           <div>
             <dt>{t('Sectors', 'सेक्टर')}</dt>
@@ -617,7 +619,7 @@ function StateRow({ drawer }: { drawer: Drawer }) {
         <span className="h-rajya__rowname">
           {drawer.name} <span lang="hi">· {drawer.nameHi}</span>
         </span>
-        <span className="h-rajya__rowmeta">{r ? stateCardsLine(r) : t('Being typed.', 'टाइप हो रही है।')}</span>
+        <span className="h-rajya__rowmeta">{r ? stateCardsLine(r, t) : t('Being typed.', 'टाइप हो रही है।')}</span>
       </span>
       <span className={cx('h-rajya__rowstate', `h-rajya__rowstate--${status.state}`)}>
         {status.state === 'cleared' ? <Check size={16} strokeWidth={3} aria-hidden="true" /> : status.state === 'sealed' ? <span className="h-rajya__rowtape" aria-hidden="true" /> : null}

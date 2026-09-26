@@ -1,26 +1,30 @@
 /**
- * screens/files/index.tsx — STUB (foundation lane). The files lane replaces this file.
- * Views: hub (#/files), states (#/files/states — the cartogram), sectors, media (Kiska Media?),
- * forwards (Forward Court). Spec: docs/hisaab/design-bible.md §11.3–§11.6. API: app/README.md.
+ * screens/files/index.tsx — the Files tab (files lane). Views (router.ts):
+ *   #/files            the hub: the section tabs, opening on Rajya Rounds (bible §11.3 — default Rajya)
+ *   #/files/states     Rajya Rounds: the records-room cartogram (?s=UP selects, ?v=list lists, ?q= searches)
+ *   #/files/sectors    Sector Files (?f=<sector slug> selects)                               bible §11.4
+ *   #/files/media      Kiska Media? + who owns what                                          bible §11.5
+ *   #/files/forwards   Forward Court + the docket                                            bible §11.6
+ * The money trail (#/money…) lives under the same tab; see screens/money.
+ *
+ * Hubs are quiet (bible §9): no toast, no ceremony — tile states, meters and registers update in place.
+ * Every file opens #/route/:id.
  */
-import { routesOfKind } from '../../../edition';
 import type { ScreenProps } from '../../router';
-import { StubScreen } from '../../shell/stub-screen';
-
-const VIEWS: Record<string, { title: string; titleHi: string; spec: string }> = {
-  hub: { title: 'Files', titleHi: 'फ़ाइलें', spec: 'bible §11.3' },
-  states: { title: 'Rajya Rounds', titleHi: 'राज्य राउंड्स', spec: 'bible §11.3' },
-  sectors: { title: 'Sector Files', titleHi: 'सेक्टर फ़ाइलें', spec: 'bible §11.4' },
-  media: { title: 'Kiska Media?', titleHi: 'किसका मीडिया?', spec: 'bible §11.5' },
-  forwards: { title: 'Forward Court', titleHi: 'फ़ॉरवर्ड अदालत', spec: 'bible §11.6' },
-};
+import { ForwardsView } from './forwards';
+import { MediaView } from './media';
+import { RajyaView } from './rajya';
+import { SectorsView } from './sectors';
 
 export default function FilesScreen({ route }: ScreenProps) {
-  const v = VIEWS[route.view ?? 'hub'] ?? VIEWS.hub;
-  const counts = `${routesOfKind('state').length} state files · ${routesOfKind('sector').length} sector files · ${routesOfKind('media').length} Kiska Media · ${routesOfKind('forward').length} Forward Court`;
-  return (
-    <StubScreen route={route} title={v.title} titleHi={v.titleHi} spec={v.spec} lane="files (port 5183)">
-      <p className="h-meta">{counts}</p>
-    </StubScreen>
-  );
+  switch (route.view) {
+    case 'sectors':
+      return <SectorsView route={route} />;
+    case 'media':
+      return <MediaView route={route} />;
+    case 'forwards':
+      return <ForwardsView route={route} />;
+    default:
+      return <RajyaView route={route} />;
+  }
 }

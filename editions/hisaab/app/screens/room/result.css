@@ -1,0 +1,308 @@
+/*
+ * screens/room/result.css — the match result (bible §11.12). Phone: verdict → TARAZU → margin → XP →
+ * rank → quests → swipeable round receipts; ≥ 900px: verdict + scale | XP, rank, receipts.
+ */
+.h-result {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.h-result__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--h-s-6);
+  width: 100%;
+  max-width: var(--h-maxw);
+  margin-inline: auto;
+  padding: var(--h-s-5) var(--h-gutter) var(--h-s-6);
+}
+.h-result__verdict,
+.h-result__side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-4);
+  min-width: 0;
+}
+.h-result__word {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-1);
+  font-family: var(--h-font-display);
+  font-weight: var(--h-wght-display);
+  font-size: var(--h-fs-4xl);
+  line-height: var(--h-lh-caps);
+  letter-spacing: var(--h-track-caps);
+  text-transform: uppercase;
+  color: var(--h-ink);
+}
+.h-result__word :lang(hi),
+.h-result__word:lang(hi) {
+  line-height: var(--h-lh-display-deva);
+  letter-spacing: 0;
+  text-transform: none;
+}
+.h-result__wordhi {
+  font-size: var(--h-fs-2xl);
+  color: var(--h-syahi-text);
+}
+.h-result__worden {
+  text-shadow: 3px 3px 0 var(--h-syahi-soft);
+}
+.h-result__sub {
+  font-size: var(--h-fs-l);
+  font-weight: var(--h-wght-ui-strong);
+}
+.h-result__copy {
+  font-size: var(--h-fs-s);
+  color: var(--h-ink-2);
+}
+/* The scale's box is reserved before it mounts, so nothing below it moves (text first, then TARAZU). */
+.h-result__scale {
+  width: 100%;
+  max-width: 360px;
+  min-height: 240px;
+}
+.h-result__scalehold {
+  height: 240px;
+}
+.h-result__margin {
+  font-family: var(--h-font-mono);
+  font-size: var(--h-fs-xs);
+  font-weight: 700;
+  color: var(--h-ink);
+}
+:root[lang='hi'] .h-result__margin {
+  font-family: var(--h-font-ui);
+}
+.h-result__bot {
+  font-size: var(--h-fs-xs);
+  color: var(--h-ink-2);
+}
+
+.h-result__card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-3);
+  padding: var(--h-s-4);
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-l);
+  background: var(--h-paper);
+  box-shadow: var(--h-shadow-2);
+}
+.h-result__h2 {
+  font-family: var(--h-font-display);
+  font-weight: var(--h-wght-display);
+  font-size: var(--h-fs-xl);
+  line-height: var(--h-lh-caps);
+  letter-spacing: var(--h-track-caps);
+  text-transform: uppercase;
+}
+.h-result__h2:lang(hi),
+:root[lang='hi'] .h-result__h2 {
+  line-height: var(--h-lh-display-deva);
+  letter-spacing: 0;
+  text-transform: none;
+}
+.h-result__xp {
+  display: flex;
+  align-items: baseline;
+  gap: var(--h-s-1);
+  color: var(--h-brass-text);
+  font-family: var(--h-font-mono);
+  font-size: var(--h-fs-3xl);
+  font-weight: 700;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+.h-result__xpunit {
+  font-size: var(--h-fs-m);
+}
+.h-result__lines {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--h-fs-xs);
+}
+.h-result__lines li {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--h-s-3);
+  border-bottom: var(--h-bw-thin) dashed var(--h-hair);
+  padding-bottom: 2px;
+}
+.h-result__rank {
+  font-size: var(--h-fs-xs);
+  font-weight: var(--h-wght-ui-strong);
+}
+.h-result__muted {
+  font-size: var(--h-fs-xs);
+  font-weight: var(--h-wght-ui);
+  color: var(--h-ink-2);
+}
+.h-result__quests {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.h-result__quest {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--h-s-2);
+  font-size: var(--h-fs-xs);
+}
+.h-result__quest--done {
+  color: var(--h-pass-text);
+  font-weight: var(--h-wght-ui-strong);
+}
+
+/* swipeable round receipts: a horizontal strip INSIDE its own scroller (the page never scrolls sideways) */
+.h-result__rounds {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-3);
+  min-width: 0;
+}
+/* position: relative — the visually hidden (.h-sr, absolute) words inside the cards must be
+   contained by the scroller, or they escape it and widen the page. */
+.h-result__swipe {
+  position: relative;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: min(86%, 22rem);
+  gap: var(--h-s-3);
+  margin: 0;
+  padding: var(--h-s-1) var(--h-s-1) var(--h-s-3);
+  list-style: none;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+}
+.h-result__mini {
+  position: relative;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-2);
+  padding: var(--h-s-3);
+  border: var(--h-bw) solid var(--h-line);
+  border-radius: var(--h-r-m);
+  background: var(--h-receipt);
+  box-shadow: var(--h-shadow-1);
+}
+.h-result__minihead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--h-s-2);
+}
+.h-result__ministem {
+  font-size: var(--h-fs-xs);
+  font-weight: var(--h-wght-ui-strong);
+  overflow-wrap: break-word;
+}
+.h-result__answer {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--h-s-1);
+  font-size: var(--h-fs-xs);
+  color: var(--h-pass-text);
+  font-weight: var(--h-wght-ui-strong);
+}
+.h-result__answer svg {
+  margin-top: 3px;
+}
+/* The legal STATUS row (charter §2.2): the whole line, verbatim, wrapping — never clamped or clipped. */
+.h-result__legal {
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+.h-result__miniseats {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.h-result__src {
+  gap: var(--h-s-1);
+  font-size: var(--h-fs-xs);
+  overflow-wrap: anywhere;
+}
+
+/* actions */
+.h-result__bar {
+  position: sticky;
+  bottom: 0;
+  z-index: var(--h-z-sticky);
+  margin-top: auto;
+  padding: var(--h-s-3) max(var(--h-gutter), env(safe-area-inset-right, 0px))
+    calc(var(--h-s-3) + env(safe-area-inset-bottom, 0px)) max(var(--h-gutter), env(safe-area-inset-left, 0px));
+  border-top: var(--h-bw) solid var(--h-line);
+  background: var(--h-ground);
+}
+.h-result__barin {
+  display: flex;
+  flex-direction: column;
+  gap: var(--h-s-2);
+  width: 100%;
+  max-width: var(--h-maxw);
+  margin-inline: auto;
+}
+.h-result__note {
+  font-size: var(--h-fs-xs);
+  font-weight: var(--h-wght-ui-strong);
+  color: var(--h-ink-2);
+}
+.h-result__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--h-s-2) var(--h-s-3);
+}
+.h-result__actions .h-btn--primary {
+  flex: 1 1 10rem;
+}
+@media (min-width: 600px) {
+  .h-result__actions .h-btn--primary {
+    flex: 0 1 auto;
+    min-width: 14rem;
+  }
+}
+.h-result__more {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--h-s-2) var(--h-s-6);
+}
+.h-result__exit {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-weight: var(--h-wght-ui-strong);
+  cursor: pointer;
+}
+
+@media (min-width: 900px) {
+  .h-result__grid {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: var(--h-s-10);
+    padding-top: var(--h-s-8);
+    align-items: start;
+  }
+  .h-result__word {
+    font-size: var(--h-fs-5xl);
+  }
+  .h-result__swipe {
+    grid-auto-columns: minmax(16rem, 1fr);
+  }
+}

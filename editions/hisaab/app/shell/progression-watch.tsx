@@ -4,8 +4,10 @@
  *
  *  - a new BAND (label promotion)      → the 'label' ceremony (merged with a 'file' one if both fire)
  *  - a level inside the band           → in place (Activity entry)
- *  - quests completed                  → the visit's one toast (merged into it if one is already up)
  *  - a CL (casual leave) auto-used     → the visit's toast: "Missed a day. 1 CL used. Streak safe."
+ *  - quests completed                  → the visit's one toast, unless the CL notice took it (then in
+ *                                        place): one or the other, never both (bible §9, Home)
+ *  - a promotion while this tab is hidden → Activity kind PENDING_LABEL ({ band }); Home opens it
  *  - achievements (Stamp Register), Babu-rank moves, streak days → in place (Activity entries)
  *
  * The 'file' ceremony (first clear of a state / sector / Kiska Media / Forward Court file) is raised by
@@ -14,7 +16,7 @@
  */
 import { useEffect, useRef } from 'react';
 import { achievementById, levelForXp, progressionDiff } from '@/lib/progression.mjs';
-import { budget } from '../budget';
+import { budget, PENDING_LABEL } from '../budget';
 import { babuRank, goalCopy, labelDisplay } from '../data';
 import { useAppPlayer } from './player';
 
@@ -54,7 +56,8 @@ export function ProgressionWatch() {
           stamp: `ISSUED · ${l.en.toUpperCase()}`,
           seed: `band-${l.band}`,
         });
-      else budget.note(`Now labelled ${l.en}`, l.line);
+      // Earned in another tab: Home opens this ceremony when the player comes back (finds it by kind).
+      else budget.note(`Now labelled ${l.en}`, l.line, { kind: PENDING_LABEL, data: { band: l.band } });
     } else if (to.level > from.level) {
       budget.note(`Level ${to.level}`, goalCopy(after.xp));
     }
@@ -62,20 +65,23 @@ export function ProgressionWatch() {
     const quests = diff.questsCompleted
       .map((id) => after.quests.items.find((q) => q.id === id)?.label)
       .filter((x): x is string => !!x);
-    if (quests.length && visible) {
-      budget.toast({
-        tone: 'quest',
-        title: quests.length === 1 ? 'Quest done' : `${quests.length} quests done`,
-        body: quests.slice(0, 2).join(' · '),
-      });
-    }
+    const questWords = quests.length
+      ? { title: quests.length === 1 ? 'Quest done' : `${quests.length} quests done`, body: quests.slice(0, 2).join(' · ') }
+      : null;
 
+    // Bible §9 (Home): the one toast is the CL notice OR the quests summary, never both. The CL
+    // notice wins (it explains a streak number that would otherwise look wrong); quests go in place.
     const clUsed = after.streak.shields < before.streak.shields && after.streak.current >= before.streak.current;
     if (clUsed && visible) {
       const used = before.streak.shields - after.streak.shields;
       budget.toast({ tone: 'streak', title: `Missed a day. ${used} CL used. Streak safe.` });
-    } else if (after.streak.current !== before.streak.current) {
-      budget.note(`Streak: ${after.streak.current} ${after.streak.current === 1 ? 'day' : 'days'}`);
+      if (questWords) budget.note(questWords.title, questWords.body);
+    } else {
+      if (questWords && visible) budget.toast({ tone: 'quest', ...questWords });
+      else if (questWords) budget.note(questWords.title, questWords.body);
+      if (after.streak.current !== before.streak.current) {
+        budget.note(`Streak: ${after.streak.current} ${after.streak.current === 1 ? 'day' : 'days'}`);
+      }
     }
 
     for (const id of diff.newAchievements) {
