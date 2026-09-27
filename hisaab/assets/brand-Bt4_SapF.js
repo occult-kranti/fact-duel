@@ -1,0 +1,1 @@
+import{n as e}from"./index-BUHO7cea.js";import{t}from"./cx-DDvU-ALM.js";var n=e();function r({className:e}){return(0,n.jsxs)(`span`,{className:t(`h-brand-name`,e),lang:`en`,"aria-hidden":`true`,children:[`HISAAB DO`,(0,n.jsx)(`span`,{className:`h-brand-name__dot`,children:`.`})]})}export{r as t};
