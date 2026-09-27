@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SABHA — The Reading Room · Where India tests what it knows</title>
+<meta name="description" content="SABHA (सभा) — The Reading Room. Indian history & civics knowledge duels. Every answer shows its source. No money, no gambling, no ads.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&family=Rozha+One&family=Noto+Serif+Devanagari:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%231E4A38'/%3E%3Ctext x='16' y='22' font-family='serif' font-size='18' fill='%23F5E9CF' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+  <a class="skip-link" href="#screen">Skip to the reading room</a>
+  <div id="grain" aria-hidden="true"></div>
+  <header id="topbar">
+    <button id="brand" class="brand" type="button" aria-label="Sabha — front desk">
+      <span class="brand-latin">SABHA</span><span class="brand-deva" lang="hi">सभा</span>
+    </button>
+    <nav id="topnav" aria-label="Reading room">
+      <button type="button" data-nav="home"    class="nav-btn" data-i18n="navDesk">Front Desk</button>
+      <button type="button" data-nav="modes"   class="nav-btn" data-i18n="navModes">Sittings</button>
+      <button type="button" data-nav="pass"    class="nav-btn" data-i18n="navPass">Reader’s Pass</button>
+      <button type="button" id="lang-toggle"   class="nav-btn nav-lang" aria-label="Switch language">EN / हिं</button>
+    </nav>
+  </header>
+  <main id="stage">
+    <div id="screen" role="main"></div>
+  </main>
+  <footer id="colophon">
+    <span data-i18n="colophonLine">A knowledge game. No money, no gambling, no ads. Every answer shows its source.</span>
+    <span class="colophon-mono">SABHA · READING ROOM RECORD</span>
+  </footer>
+
+  <!-- Print-only certificate -->
+  <div id="certificate" aria-hidden="true">
+    <div class="cert-frame">
+      <div class="cert-band">
+        <span class="cert-wordmark">SABHA</span>
+        <span class="cert-mono">READING ROOM RECORD</span>
+      </div>
+      <div class="cert-gilt"></div>
+      <p class="cert-label">Certificate of Scholarship</p>
+      <h1 class="cert-title">Entered into the Record</h1>
+      <p class="cert-line">This certifies that</p>
+      <p class="cert-name" id="cert-name">Reader</p>
+      <p class="cert-line" id="cert-body">holds the standing of <strong>Pathak</strong> in the Reading Room.</p>
+      <p class="cert-line" id="cert-detail"></p>
+      <div class="cert-foot">
+        <div class="cert-meta">
+          <span id="cert-date"></span>
+          <span id="cert-acc"></span>
+        </div>
+        <div class="cert-seal" id="cert-seal"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="live" class="visually-hidden" aria-live="polite"></div>
+  <script src="questions.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
