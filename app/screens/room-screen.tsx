@@ -11,6 +11,7 @@ import { LobbyPanel } from './room/lobby-panel';
 import { CountdownStage } from './room/countdown-stage';
 import { QuestionStage } from './room/question-stage';
 import { NextFixture } from './room/next-fixture';
+import { CompletionAdBreak } from './online/completion-ad-break';
 import './room/room.css';
 
 /* Room: chrome (leave / mode · round / connection), HUD, lobby & between-round panel, countdown,
@@ -222,6 +223,12 @@ export function RoomScreen({ duel, player }: RoomScreenProps) {
           {/* The return hook: the next served-sport fixture on the static calendar, after the receipt
               and before any ad. It links to Events; it never counts down in seconds or claims a score. */}
           <NextFixture go={go} />
+          {phase === 'complete' && room.config.opponent === 'friend' && room.settled && (
+            <CompletionAdBreak
+              completionId={`friend:${room.id}:${room.seat}`}
+              outcome={room.winner === null ? 'draw' : room.winner === room.seat ? 'win' : 'loss'}
+            />
+          )}
           {/* The priced ad card goes BELOW the receipt and only once the match is finished: never
               inside a round, never before the result is on screen — the research's timing rule,
               and the single largest complaint cluster across every competitor. */}

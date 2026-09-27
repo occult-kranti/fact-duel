@@ -25,12 +25,29 @@ import path from 'node:path';
 
 const {
   createOverlayBudget,
+  createRoundFeedbackGate,
   OVERLAY_CAPACITY,
   OVERLAY_GAP_MS,
   OVERLAY_MERGE_WINDOW_MS,
   OVERLAY_PRIORITY,
   OVERLAY_WEIGHT,
 } = await import('../components/fx/overlay-budget.ts');
+
+test('round feedback caps three, preserves result on exit and clears only progression at next round', () => {
+  const t = fakeClock();
+  const budget = createOverlayBudget({ clock: t.clock, quiet: true });
+  const gate = createRoundFeedbackGate(budget);
+  gate.setRoundKey('match:round-1');
+  for (let i = 0; i < 3; i++) assert.equal(gate.request({ id: `reward-${i}`, type: 'toast', payload: i }, true), `reward-${i}`);
+  assert.equal(gate.request({ id: 'reward-3', type: 'toast', payload: 3 }, true), '');
+  assert.equal(gate.request({ id: 'network-error', type: 'toast', payload: 'Retry' }, false), 'network-error');
+  gate.setRoundKey(null);
+  assert.equal(budget.getSnapshot().queued.length, 4, 'leaving preserves the result and the operational error');
+  gate.setRoundKey('match:round-2');
+  assert.deepEqual(budget.getSnapshot().queued.map((entry) => entry.id), ['network-error']);
+  assert.equal(gate.request({ id: 'next-reward', type: 'ceremony', payload: 'level' }, true), 'next-reward');
+  budget.destroy();
+});
 
 const require = createRequire(import.meta.url);
 const ts = require('typescript');

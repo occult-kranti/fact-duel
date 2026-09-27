@@ -107,9 +107,12 @@ export function mergeProgressToasts(items: ToastInput[]): ToastInput {
   };
 }
 
-export function useProgressionFeedback(progression: any, quiet: Quiet) {
+export function useProgressionFeedback(progression: any, quiet: Quiet, roundKey: string | null = null) {
   const juice = useJuice();
-  const setOverlaysQuiet = useFx()?.setQuiet;
+  const overlays = useFx();
+  const setOverlaysQuiet = overlays?.setQuiet;
+  const setRoundKey = overlays?.setRoundKey;
+  const priorRound = useRef<string | null>(null);
   const prev = useRef<any>(null);
   const toastQueue = useRef<LogEntry[]>([]);
   // Each entry is one candidate ceremony. A single reward burst (level + badge + rank at the end of
@@ -118,6 +121,15 @@ export function useProgressionFeedback(progression: any, quiet: Quiet) {
   const ceremonyQueue = useRef<Array<{ rank: number; open: () => void; toast: ToastInput }>>([]);
   const handled = useRef(new Set<string>());
   const streakCurrent = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (roundKey !== null && priorRound.current !== roundKey) {
+      priorRound.current = roundKey;
+      toastQueue.current = [];
+      ceremonyQueue.current = [];
+    }
+    setRoundKey?.(roundKey);
+  }, [roundKey, setRoundKey]);
 
   // Diff on every progression change; queue the feedback.
   useEffect(() => {
@@ -141,10 +153,11 @@ export function useProgressionFeedback(progression: any, quiet: Quiet) {
       const info = levelForXp(progression.xp);
       ceremonyQueue.current.push({
         rank: 3,
-        toast: { kind: 'xp', title: `Level ${to}`, body: info.title },
+        toast: { kind: 'xp', title: `Level ${to}`, body: info.title, roundFeedback: true },
         open: () =>
           juice.ceremony({
             kind: 'level',
+            roundFeedback: true,
             kicker: 'LEVEL UP',
             title: `Level ${to}`,
             subtitle: `${info.title} · keep the floodlights on`,
@@ -165,10 +178,11 @@ export function useProgressionFeedback(progression: any, quiet: Quiet) {
       if (!a) continue;
       ceremonyQueue.current.push({
         rank: 2,
-        toast: { kind: 'achievement', title: a.name, body: a.description },
+        toast: { kind: 'achievement', title: a.name, body: a.description, roundFeedback: true },
         open: () =>
           juice.ceremony({
             kind: 'achievement',
+            roundFeedback: true,
             kicker: `${a.tier.toUpperCase()} BADGE`,
             title: a.name,
             subtitle: a.description,
@@ -183,10 +197,11 @@ export function useProgressionFeedback(progression: any, quiet: Quiet) {
       const { to } = diff.rankUp;
       ceremonyQueue.current.push({
         rank: 1,
-        toast: { kind: 'achievement', title: `${rankLabel(to)} tier`, body: 'Arena Rank, on this device' },
+        toast: { kind: 'achievement', title: `${rankLabel(to)} tier`, body: 'Arena Rank, on this device', roundFeedback: true },
         open: () =>
           juice.ceremony({
             kind: 'level',
+            roundFeedback: true,
             kicker: 'RANK UP',
             title: `${rankLabel(to)} tier`,
             subtitle: 'Arena Rank on this device. Your floor is protected from here.',
@@ -204,10 +219,11 @@ export function useProgressionFeedback(progression: any, quiet: Quiet) {
     if (diff.streakChanged && current > (streakCurrent.current ?? 0) && STREAK_MILESTONES.has(current)) {
       ceremonyQueue.current.push({
         rank: 0,
-        toast: { kind: 'streak', title: `${current}-day streak`, body: 'Keep it alight tomorrow' },
+        toast: { kind: 'streak', title: `${current}-day streak`, body: 'Keep it alight tomorrow', roundFeedback: true },
         open: () =>
           juice.ceremony({
             kind: 'streak',
+            roundFeedback: true,
             kicker: 'STREAK MILESTONE',
             title: `${current} days`,
             subtitle:
@@ -258,6 +274,7 @@ export function useProgressionFeedback(progression: any, quiet: Quiet) {
         juice.toast({
           id: `prog:${entry.id}`,
           kind,
+          roundFeedback: true,
           title,
           body: (badge ? [entry.label, body].filter(Boolean).join(' · ') : body) || undefined,
           // Same-kind entries from one burst collapse into a single pop-up; `meta` is what
@@ -278,7 +295,7 @@ export function useProgressionFeedback(progression: any, quiet: Quiet) {
  * `useJuice()` falls back to the event bus, which cannot carry a React `slot`, and every ceremony
  * loses its 3D medal.
  */
-export function ProgressionFeedback({ progression, quiet }: { progression: any; quiet: Quiet }) {
-  useProgressionFeedback(progression, quiet);
+export function ProgressionFeedback({ progression, quiet, roundKey = null }: { progression: any; quiet: Quiet; roundKey?: string | null }) {
+  useProgressionFeedback(progression, quiet, roundKey);
   return null;
 }

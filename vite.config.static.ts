@@ -27,6 +27,20 @@ const jhkServerUrl = (process.env.JHK_SERVER_URL || process.env.VITE_JHK_SERVER_
 const jhkPublicUrl = process.env.JHK_PUBLIC_URL || 'https://occult-kranti.github.io/fact-duel/';
 const jhkDescription = 'Jaanta Hai Kya. Live human sports and science quiz duels, optional free game-coin stakes, source receipts and personal learning expeditions. Server-backed beta; zero coins still lets you play.';
 
+/** Explicitly replace public ad settings in the Pages bundle; missing values fail closed. */
+const jhkAdKeys = [
+  'NEXT_PUBLIC_JHK_ADS_ENABLED',
+  'NEXT_PUBLIC_JHK_ADS_SITE_APPROVED',
+  'NEXT_PUBLIC_JHK_ADS_AUTO_ADS_DISABLED',
+  'NEXT_PUBLIC_JHK_ADS_CLIENT',
+  'NEXT_PUBLIC_JHK_ADS_CMP_ID',
+  'NEXT_PUBLIC_JHK_ADS_ORIGIN',
+  'NEXT_PUBLIC_JHK_ADS_H5_ENABLED',
+  'NEXT_PUBLIC_JHK_ADS_H5_APPROVED',
+  'NEXT_PUBLIC_JHK_ADS_H5_TEST',
+] as const;
+const jhkAdDefines = Object.fromEntries(jhkAdKeys.map((key) => [`process.env.${key}`, JSON.stringify(process.env[key] ?? '')]));
+
 /**
  * The same value, parsed by the same policy the card uses (`lib/redirect-target.mjs`), so the HTML
  * and the bundle can never disagree about whether there is a live game. Null for an empty, junk or
@@ -168,6 +182,7 @@ export default defineConfig(({ mode }) => ({
   css: { postcss: repoRoot },
   define: {
     'process.env.NODE_ENV': JSON.stringify(mode === 'development' ? 'development' : 'production'),
+    ...jhkAdDefines,
     __STATIC_BASE__: JSON.stringify(base),
     'import.meta.env.VITE_APP_URL': JSON.stringify(appUrl),
     'import.meta.env.VITE_JHK_SERVER_URL': JSON.stringify(jhkServerUrl),

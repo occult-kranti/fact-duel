@@ -244,3 +244,27 @@
   font-weight: 600;
   overflow-wrap: anywhere;
 }
+
+/* JHK's required server profile keeps the old game's type and color tokens. */
+.jhk-profile-gate .fd-gate-inner { max-width: 510px; gap: 12px; }
+.jhk-profile-kicker { margin: 0; color: var(--muted); font-size: 12px; font-weight: 800; letter-spacing: .12em; }
+.jhk-profile-gate .fd-gate-input { width: 100%; padding: 0 13px; border: 1px solid var(--line); color: var(--text); }
+.jhk-profile-gate .fd-gate-save { border: 0; background: var(--volt); color: var(--bg-0); cursor: pointer; }
+.jhk-profile-gate .fd-gate-save:disabled { opacity: .55; cursor: wait; }
+.jhk-profile-gate .fd-gate-save:focus-visible, .jhk-profile-gate .fd-gate-secondary:focus-visible,
+.jhk-profile-gate a:focus-visible, .jhk-profile-gate summary:focus-visible { outline: 2px solid var(--volt); outline-offset: 3px; }
+.fd-gate-secondary { min-height: 44px; align-self: flex-start; background: transparent; border: 1px solid var(--line); border-radius: var(--r-control); color: var(--text); padding: 9px 13px; cursor: pointer; font: inherit; }
+.fd-gate-secondary:hover { border-color: var(--volt); }
+.jhk-profile-options { border: 1px solid var(--line); border-radius: var(--r-control); padding: 10px 13px; color: var(--text); }
+.jhk-profile-options summary { cursor: pointer; font-weight: 600; }
+.jhk-profile-options fieldset { border: 0; padding: 12px 0 0; margin: 0; }
+.jhk-profile-options legend { font-weight: 600; }
+.jhk-profile-choices { display: flex; flex-wrap: wrap; gap: 6px 15px; margin-top: 8px; }
+.jhk-profile-choices label { display: inline-flex; align-items: center; gap: 6px; min-height: 38px; cursor: pointer; }
+.jhk-profile-choices input, .jhk-profile-attest input { width: 18px; height: 18px; accent-color: var(--volt); flex: none; }
+.jhk-profile-options .fd-gate-field { margin-top: 12px; }
+.jhk-profile-attest { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; line-height: 1.5; color: var(--text); cursor: pointer; }
+.jhk-profile-attest input { margin-top: 2px; }
+.jhk-profile-gate a { color: var(--text); text-decoration: underline; text-underline-offset: 3px; }
+.jhk-profile-code { display: block; overflow-wrap: anywhere; font-family: ui-monospace, monospace; font-size: clamp(17px, 4vw, 24px); letter-spacing: .03em; padding: 16px; color: var(--text); background: var(--bg-1); border: 1px solid var(--line); border-radius: var(--r-control); user-select: all; }
+@media (max-width: 480px) { .jhk-profile-gate { padding-top: max(16px, env(safe-area-inset-top)); padding-bottom: max(16px, env(safe-area-inset-bottom)); } .jhk-profile-gate .fd-gate-inner { margin: 0 auto; } }

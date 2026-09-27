@@ -1,13 +1,13 @@
-/** Live deployment smoke: real isolated guest credentials, private human seats, full result.
+/** Live deployment smoke: real isolated profile credentials, private human seats, full result.
  * JHK_GAME_URL=https://.../functions/v1/jhk-game SUPABASE_ANON_KEY=... node supabase/jhk/live-check.mjs
  * Optional SIBLING_GAME_URL checks independent HISAAB/AYD credentials in both directions.
- * Creates disposable QA guests; deletes them in finally. Never logs bearer credentials.
+ * Creates disposable QA profiles; deletes them in finally. Never logs bearer credentials.
  */
 import assert from 'node:assert/strict';
 import {ALL_QUESTIONS} from '../../lib/server/bank.mjs';
 const endpoint=process.env.JHK_GAME_URL;
 const key=process.env.SUPABASE_ANON_KEY;
-if(!endpoint)throw new Error('Set JHK_GAME_URL. SUPABASE_ANON_KEY is optional with custom guest authentication.');
+if(!endpoint)throw new Error('Set JHK_GAME_URL. SUPABASE_ANON_KEY is optional with custom profile bearer authentication.');
 if(!/^https:\/\//.test(endpoint))throw new Error('Use an HTTPS deployed function URL.');
 const questions=new Map(ALL_QUESTIONS.map(q=>[q.id,q]));
 const guests=[];const checks=[];
@@ -20,7 +20,7 @@ async function call(action,payload={},guest=null,url=endpoint,header='x-jhk-sess
  return data;
 }
 async function create(nickname,url=endpoint,header='x-jhk-session'){
- const result=await call('session',{nickname},null,url,header);assert.match(result.token,/^[a-f0-9]{64}$/);
+ const result=await call('session',{nickname,email:`qa-${crypto.randomUUID()}@example.invalid`,adultConfirmed:true,termsVersion:'beta-1'},null,url,header);assert.match(result.token,/^[a-f0-9]{64}$/);assert.match(result.recoveryCode,/^[a-f0-9]{64}$/);assert.equal(result.session.profileComplete,true);
  const guest={token:result.token,id:result.session.id,url,header};guests.push(guest);return guest;
 }
 async function room(a,b,stake,file='science'){
@@ -38,11 +38,11 @@ async function awaitQuestions(a,b,roomId){
 }
 try{
  const stamp=Date.now().toString(36);const a=await create(`QA JHK A ${stamp}`);const b=await create(`QA JHK B ${stamp}`);
- check('two independent server guests',a.id!==b.id && a.token!==b.token);
+ check('two independent server profiles',a.id!==b.id && a.token!==b.token);
  if(process.env.SIBLING_GAME_URL){
   const sibling=await create(`QA Cross ${stamp}`,process.env.SIBLING_GAME_URL,'x-hisaab-session');
   const wrongA=await call('profile',{},a,sibling.url,sibling.header,true);const wrongB=await call('profile',{},sibling,endpoint,'x-jhk-session',true);
-  check('cross-game guest credentials are rejected in both directions',wrongA.error?.code==='UNAUTHORIZED' && wrongB.error?.code==='UNAUTHORIZED');
+  check('cross-game profile credentials are rejected in both directions',wrongA.error?.code==='UNAUTHORIZED' && wrongB.error?.code==='UNAUTHORIZED');
  }
  const beforeA=(await call('profile',{},a)).session.balance;const beforeB=(await call('profile',{},b)).session.balance;
  let game=await room(a,b,20);
@@ -86,7 +86,7 @@ try{
  check('prestart cancellation refunds the one reserved seat',(await call('profile',{},a)).session.balance===afterA.balance);
  game=await room(a,b,10);await call('ready',{roomId:game.id,stake:10},a);await call('ready',{roomId:game.id,stake:10},b);await call('leave',{roomId:game.id},a);
  check('poststart quit forfeits stake without minting a reward',(await call('profile',{},a)).session.balance===afterA.balance-10 && (await call('profile',{},b)).session.balance===afterB.balance+10);
- console.log(JSON.stringify({suite:'jhk-live-two-session',checks:checks.length,result:'pass',scope:'two synthetic test clients on deployed authority; no load/fairness proof'}));
+ console.log(JSON.stringify({suite:'jhk-live-two-profile',checks:checks.length,result:'pass',scope:'two synthetic test clients on deployed authority; no load/fairness proof'}));
 } finally{
- for(const guest of guests){try{await call('deleteSession',{},guest,guest.url,guest.header);}catch(error){console.error(`QA guest cleanup failed: ${error.message}`);process.exitCode=1;}}
+ for(const guest of guests){try{await call('deleteSession',{},guest,guest.url,guest.header);}catch(error){console.error(`QA profile cleanup failed: ${error.message}`);process.exitCode=1;}}
 }

@@ -32,7 +32,7 @@ import { particles } from '@/lib/fx/particles';
 import { sound } from '@/lib/fx/sound';
 import { Ceremony, type CeremonyInput, type CeremonyItem } from './ceremony';
 import { FxCanvas } from './fx-canvas';
-import { createOverlayBudget, type OverlayBudget, type OverlayGrant } from './overlay-budget';
+import { createOverlayBudget, createRoundFeedbackGate, type OverlayBudget, type OverlayGrant } from './overlay-budget';
 import { shake } from './shake';
 import { ToastStack, TOAST_MAX_VISIBLE, type ToastInput, type ToastItem } from './toast-stack';
 import { useMounted, useReducedMotion } from './use-prefs';
@@ -63,6 +63,8 @@ export interface FxContextValue {
   pendingOverlays: number;
   /** Hold every overlay back — a live question. Anything already on screen stays. */
   setQuiet: (quiet: boolean) => void;
+  /** Start a live round: clear old feedback and allow at most three new overlays for it. */
+  setRoundKey: (key: string | null) => void;
 }
 
 export const FxContext = createContext<FxContextValue | null>(null);
@@ -101,6 +103,7 @@ export function FxProvider({ children, maxToasts = TOAST_MAX_VISIBLE }: FxProvid
   // One budget per provider, created on first render and never swapped (its identity is what the
   // `useSyncExternalStore` subscription and every callback below hang off).
   const [budget] = useState<OverlayBudget<OverlayPayload>>(() => createOverlayBudget<OverlayPayload>());
+  const [roundBudget] = useState(() => createRoundFeedbackGate(budget));
 
   const snapshot = useSyncExternalStore(budget.subscribe, budget.getSnapshot, budget.getSnapshot);
   const toasts = useMemo(
@@ -116,9 +119,9 @@ export function FxProvider({ children, maxToasts = TOAST_MAX_VISIBLE }: FxProvid
     (input: ToastInput): string => {
       const id = input.id ?? nextId('toast');
       const item: ToastItem = { ...input, id };
-      return budget.request({ id, type: 'toast', mergeKey: input.mergeKey, payload: item });
+      return roundBudget.request({ id, type: 'toast', mergeKey: input.mergeKey, payload: item }, !!input.roundFeedback);
     },
-    [budget],
+    [budget, roundBudget],
   );
 
   const dismissToast = useCallback(
@@ -137,10 +140,9 @@ export function FxProvider({ children, maxToasts = TOAST_MAX_VISIBLE }: FxProvid
     (input: CeremonyInput): string => {
       const id = nextId('ceremony');
       const item: CeremonyItem = { ...input, id };
-      budget.request({ id, type: 'ceremony', payload: item });
-      return id;
+      return roundBudget.request({ id, type: 'ceremony', payload: item }, !!input.roundFeedback);
     },
-    [budget],
+    [budget, roundBudget],
   );
 
   const closeCeremony = useCallback(() => {
@@ -149,6 +151,7 @@ export function FxProvider({ children, maxToasts = TOAST_MAX_VISIBLE }: FxProvid
   }, [budget]);
 
   const setQuiet = useCallback((quiet: boolean) => budget.setQuiet(quiet), [budget]);
+  const setRoundKey = useCallback((key: string | null) => roundBudget.setRoundKey(key), [roundBudget]);
 
   // Unlock audio on the first user gesture (and re-resume after interruptions).
   useEffect(() => {
@@ -198,6 +201,7 @@ export function FxProvider({ children, maxToasts = TOAST_MAX_VISIBLE }: FxProvid
       closeCeremony,
       pendingOverlays: snapshot.queued.length,
       setQuiet,
+      setRoundKey,
     }),
     [
       mounted,
@@ -210,6 +214,7 @@ export function FxProvider({ children, maxToasts = TOAST_MAX_VISIBLE }: FxProvid
       closeCeremony,
       snapshot.queued.length,
       setQuiet,
+      setRoundKey,
     ],
   );
 

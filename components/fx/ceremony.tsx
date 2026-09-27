@@ -21,6 +21,8 @@ import { useReducedMotion } from './use-prefs';
 
 /** Ceremony as accepted by React callers. */
 export interface CeremonyInput extends CeremonyOptions {
+  /** Progress ceremony governed by the active round's three-overlay allowance. */
+  roundFeedback?: boolean;
   /** Custom hero content (e.g. a 3D scene). Defaults to a kind icon. */
   slot?: ReactNode;
   /** Called once the ceremony has been dismissed (Continue, Escape or backdrop). */

@@ -23,6 +23,8 @@ import { useReducedMotion } from './use-prefs';
 
 /** Toast as accepted by React callers: `icon` may be any ReactNode. */
 export interface ToastInput extends Omit<ToastOptions, 'icon'> {
+  /** Progress notification governed by the active round's three-overlay allowance. */
+  roundFeedback?: boolean;
   icon?: ReactNode;
   /**
    * Toasts sharing this key inside one burst collapse into a single toast (see

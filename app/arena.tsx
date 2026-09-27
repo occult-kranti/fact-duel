@@ -25,6 +25,7 @@ import { ProgressionFeedback } from './screens/use-progression-feedback';
 import { LevelRing, StreakChip } from './screens/player/topbar-chips';
 import { SettingsSheet, SETTINGS_KEYS, type MotionPref } from './shell/settings-sheet';
 import { LiveDuelScreen, LiveProgressCard } from './screens/online/live-duel-screen';
+import { JhkProfileGate } from './shell/jhk-profile-gate';
 import { jhkOnline } from '@/lib/jhk-online/runtime';
 import { DEFAULT_NAME } from '@/lib/profile-gate.mjs';
 import { HomeScreen } from './screens/home-screen';
@@ -98,7 +99,7 @@ export default function Arena({ initialTab = 'home' }: { initialTab?: string }) 
 
 function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
   const { t, locale } = useLocale();
-  const [tab, setTab] = useState(() => typeof location !== 'undefined' && location.hash.startsWith('#online') ? 'online' : initialTab),
+  const [tab, setTab] = useState(() => typeof location !== 'undefined' && location.hash.startsWith('#online') ? 'online' : typeof location !== 'undefined' && ['#passport', '#profile'].includes(location.hash) ? 'passport' : initialTab),
     [catalogue, setCatalogue] = useState<any>(null),
     [config, setConfig] = useState<Config>(INITIAL_CONFIG),
     [name, setName] = useState(DEFAULT_NAME),
@@ -120,9 +121,11 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
     [connected, setConnected] = useState(true),
     [copied, setCopied] = useState(false);
   const [liveState, setLiveState] = useState({ inMatch: false, playing: false });
+  const [liveRoundKey, setLiveRoundKey] = useState<string | null>(null);
   const onLiveState = useCallback((inMatch: boolean, playing: boolean) => setLiveState(previous => previous.inMatch === inMatch && previous.playing === playing ? previous : { inMatch, playing }), []);
   const [liveSession, setLiveSession] = useState(jhkOnline.session);
   useEffect(() => jhkOnline.subscribe(() => setLiveSession(jhkOnline.session)), []);
+  useEffect(() => { if (jhkOnline.configured && liveSession?.profileComplete && liveSession.nickname) setName(liveSession.nickname); }, [liveSession?.nickname, liveSession?.profileComplete]);
   const [selectedExpedition, setSelectedExpedition] = useState<string | null>(null);
   /* Find a rival (lib/queue-client.ts): the "Rival" seat is chosen, and the search the launch panel
    * shows. The handle owns the poll loop; everything on screen comes from the server's answers. */
@@ -1041,11 +1044,12 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
         effects={
           <ProgressionFeedback
             progression={player.progression}
+            roundKey={room?.round?.id || liveRoundKey}
             quiet={{
               // Toasts stay out of the way while a question is on screen; full-screen ceremonies
               // wait until the player is off every playing surface, so nothing ever covers a round,
               // a reveal or an expedition card (a ceremony also locks body scroll while open).
-              toasts: liveState.inMatch || !!room && ['scheduled', 'playing'].includes(room.phase) && !room.round?.result,
+              toasts: liveState.playing || !!room && ['scheduled', 'playing'].includes(room.phase) && !room.round?.result,
               ceremonies: liveState.inMatch || !!room || tab === 'journeys',
             }}
           />
@@ -1135,7 +1139,7 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
             go={go}
           />
         )}
-        {!room && (tab === 'online' || (jhkOnline.configured && tab === 'arena')) && <LiveDuelScreen name={name} onPractice={() => go(jhkOnline.configured ? 'journeys' : 'arena')} onHome={() => go('home')} onState={onLiveState} />}
+        {!room && (tab === 'online' || (jhkOnline.configured && tab === 'arena')) && <LiveDuelScreen name={name} onPractice={() => go(jhkOnline.configured ? 'journeys' : 'arena')} onHome={() => go('home')} onState={onLiveState} onRoundKey={setLiveRoundKey} />}
         {!room && tab === 'journeys' && (
           <ExpeditionsScreen
             player={player}
@@ -1192,7 +1196,7 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
         )}
         {room && <RoomScreen duel={duel} player={player} />}
       </AppShell>
-      {/* Human beta asks only for a public nickname at its own desk. Practice starts without an email gate. */}
+      <JhkProfileGate name={name} onName={setName} deferForActiveMatch={liveState.inMatch} />
       <SettingsSheet
         open={settingsOpen}
         onOpenChange={setSettingsOpen}

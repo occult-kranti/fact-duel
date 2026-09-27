@@ -81,3 +81,23 @@
 @media(prefers-reduced-motion:reduce) { .jhk-live-finishmark { animation:none; } }
 :root[data-motion=reduced] .jhk-live-finishmark { animation:none; }
 .jhk-live-wallet { display:inline-flex;align-items:center;min-height:40px;padding:8px 12px;border:1px solid var(--line);border-radius:var(--r-pill);color:var(--gold-text);background:var(--bg-1);font:600 .85rem var(--font-mono); }
+
+.jhk-profile-options-card { max-width: 720px; margin: 24px 0; padding: 16px; border: 1px solid var(--line); border-radius: var(--r-md,12px); background: var(--bg-1); }
+.jhk-profile-options-card summary { cursor: pointer; font-weight: 750; padding: 4px; }
+.jhk-profile-options-card summary:focus-visible, .jhk-profile-options-card button:focus-visible, .jhk-profile-options-card input:focus-visible, .jhk-profile-options-card select:focus-visible { outline: 2px solid var(--volt); outline-offset: 3px; }
+.jhk-profile-options-card .jhk-live-identity { margin: 16px 0; }
+.jhk-profile-topics { display: flex; flex-wrap: wrap; gap: 8px 16px; border: 0; padding: 10px 0; }
+.jhk-profile-topics legend { font-weight: 650; }
+.jhk-profile-topics label { display: inline-flex; align-items: center; min-height: 38px; gap: 6px; }
+.jhk-profile-topics input { width: 18px; height: 18px; }
+.jhk-profile-photo, .jhk-profile-recovery, .jhk-profile-data { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); }
+.jhk-profile-photo strong, .jhk-profile-recovery strong { width: 100%; }
+.jhk-profile-photo img { object-fit: cover; border-radius: 50%; }
+.jhk-profile-photo label { cursor: pointer; }
+.jhk-profile-photo input { display: block; max-width: 100%; font-size: 16px; }
+.jhk-profile-photo small, .jhk-profile-recovery p, .jhk-profile-confirm { width: 100%; color: var(--muted); line-height: 1.5; }
+.jhk-profile-recovery .jhk-profile-code { width: 100%; }
+.jhk-profile-options-card button { min-height: 44px; }
+.jhk-profile-confirm { padding: 14px; border: 1px solid var(--line); border-radius: var(--r-md,12px); }
+.jhk-profile-confirm button { margin: 4px 8px 4px 0; }
+.jhk-profile-avatar { display: inline-grid; place-items: center; width: 40px; height: 40px; margin-right: 10px; border: 1px solid var(--line); border-radius: 50%; color: var(--volt); font-size: 26px; vertical-align: middle; }

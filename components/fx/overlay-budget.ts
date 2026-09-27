@@ -61,6 +61,7 @@ export const OVERLAY_GAP_MS = 1200;
 
 /** Same-kind toasts asked for inside this window of the group's first item merge into it. */
 export const OVERLAY_MERGE_WINDOW_MS = 800;
+export const ROUND_FEEDBACK_MAX = 3;
 
 /** Opaque timer handle; whatever the injected clock hands back. */
 export type OverlayTimer = unknown;
@@ -140,6 +141,26 @@ export interface OverlayBudget<P> {
   getSnapshot: () => OverlaySnapshot<P>;
   /** Stop the pending timer and forget the listeners (for unmount). */
   destroy: () => void;
+}
+
+/** Progress overlays belong to a round; operational messages bypass this allowance. */
+export function createRoundFeedbackGate<P>(budget: OverlayBudget<P>) {
+  let key: string | null = null;
+  const ids = new Set<string>();
+  return {
+    request(req: OverlayRequest<P>, progression: boolean): string {
+      if (progression && key !== null && ids.size >= ROUND_FEEDBACK_MAX) return '';
+      const granted = budget.request(req);
+      if (progression && key !== null && granted) ids.add(granted);
+      return granted;
+    },
+    setRoundKey(next: string | null): void {
+      if (next === null || key === next) return; // Leaving a room keeps its result feedback.
+      key = next;
+      for (const id of ids) budget.release(id);
+      ids.clear();
+    },
+  };
 }
 
 interface Entry<P> {

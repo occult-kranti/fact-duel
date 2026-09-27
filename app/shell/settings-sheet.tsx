@@ -15,6 +15,7 @@ import { gateCopy, readClaimedEmail } from './profile-gate';
 import { useLocale, type Locale } from '../use-locale';
 import { STORAGE } from '@/lib/storage-names.mjs';
 import { LOCALES } from '@/lib/i18n/index.mjs';
+import { jhkOnline } from '@/lib/jhk-online/runtime';
 
 /** Persisted as localStorage['fact-duel-motion']. */
 export type MotionPref = 'full' | 'reduced' | 'off';
@@ -179,15 +180,13 @@ export function SettingsSheet({
           </div>
         </section>
 
-        <AccountPanel />
-
-        <ClaimedProfile locale={locale} />
+        {!jhkOnline.configured && <><AccountPanel /><ClaimedProfile locale={locale} /></>}
 
         <section className="fd-setting-group" aria-labelledby="settings-player">
           <span className="fd-setting-eyebrow" id="settings-player">
             {t('settings.player')}
           </span>
-          <div className="fd-setting-stack">
+          {jhkOnline.configured ? <p className="fd-setting-note">{locale === 'hi' ? 'सार्वजनिक नाम और निजी ईमेल बदलने के लिए ' : 'To edit your public name and private email, open '}<a href="./#passport">{locale === 'hi' ? 'खिलाड़ी प्रोफ़ाइल' : 'Player profile'}</a>.</p> : <div className="fd-setting-stack">
             <Label htmlFor="name-setting">{t('settings.name')}</Label>
             <Input
               id="name-setting"
@@ -197,7 +196,7 @@ export function SettingsSheet({
               autoComplete="nickname"
               placeholder={t('settings.namePlaceholder')}
             />
-          </div>
+          </div>}
         </section>
 
         <section className="fd-setting-group" aria-labelledby="settings-feedback">
