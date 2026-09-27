@@ -1,0 +1,18 @@
+PASS two independent server profiles
+PASS cross-game profile credentials are rejected in both directions
+PASS friend invite selects a second human and disclosed stake
+PASS concurrent duplicate ready reserves exactly once
+PASS both stakes reserved before countdown
+PASS round 1 hides key until answer
+PASS round 2 hides key until answer
+PASS round 3 hides key until answer
+PASS round 4 hides key until answer
+PASS round 5 hides key until answer
+PASS five-round match completes with authoritative winner
+PASS concurrent answer retries credit server XP exactly once
+PASS single pot and eligible completion reward conserve ledger
+PASS terminal replay does not pay twice
+PASS zero-stake human match starts and cannot create a debt on leaving
+PASS prestart cancellation refunds the one reserved seat
+PASS poststart quit forfeits stake without minting a reward
+{"suite":"jhk-live-two-profile","checks":17,"result":"pass","scope":"two synthetic test clients on deployed authority; no load/fairness proof"}
