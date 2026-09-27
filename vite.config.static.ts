@@ -23,6 +23,9 @@ const publicDir = path.join(repoRoot, 'public');
  * here too rather than the string "undefined".
  */
 const appUrl = (process.env.APP_URL ?? '').trim();
+const jhkServerUrl = (process.env.JHK_SERVER_URL || process.env.VITE_JHK_SERVER_URL || '').trim();
+const jhkPublicUrl = process.env.JHK_PUBLIC_URL || 'https://occult-kranti.github.io/fact-duel/';
+const jhkDescription = 'Jaanta Hai Kya. Live human sports and science quiz duels, optional free game-coin stakes, source receipts and personal learning expeditions. Server-backed beta; zero coins still lets you play.';
 
 /**
  * The same value, parsed by the same policy the card uses (`lib/redirect-target.mjs`), so the HTML
@@ -141,6 +144,14 @@ function staticAssets(): Plugin {
             children: `<meta http-equiv="refresh" content="3;url=${escapeAttr(liveHref)}">`,
             injectTo: 'head' as const,
           });
+        } else if (jhkServerUrl) {
+          html = html.replace(/(<meta\s+name="description"\s+content=")[^"]*("\s*\/>)/, `$1${escapeAttr(jhkDescription)}$2`);
+          tags.push(
+            { tag: 'link', attrs: { rel: 'canonical', href: jhkPublicUrl }, injectTo: 'head' as const },
+            { tag: 'meta', attrs: { property: 'og:url', content: jhkPublicUrl }, injectTo: 'head' as const },
+            { tag: 'meta', attrs: { property: 'og:description', content: jhkDescription }, injectTo: 'head' as const },
+            { tag: 'meta', attrs: { property: 'og:image', content: new URL('art/rivalry-stage.webp', jhkPublicUrl).href }, injectTo: 'head' as const },
+          );
         }
         return { html: handoffHtml(html), tags };
       },
@@ -159,7 +170,7 @@ export default defineConfig(({ mode }) => ({
     'process.env.NODE_ENV': JSON.stringify(mode === 'development' ? 'development' : 'production'),
     __STATIC_BASE__: JSON.stringify(base),
     'import.meta.env.VITE_APP_URL': JSON.stringify(appUrl),
-    'import.meta.env.VITE_JHK_SERVER_URL': JSON.stringify(process.env.JHK_SERVER_URL || process.env.VITE_JHK_SERVER_URL || ''),
+    'import.meta.env.VITE_JHK_SERVER_URL': JSON.stringify(jhkServerUrl),
     'import.meta.env.VITE_JHK_SUPABASE_ANON_KEY': JSON.stringify(process.env.JHK_SUPABASE_ANON_KEY || process.env.VITE_JHK_SUPABASE_ANON_KEY || ''),
   },
   resolve: {

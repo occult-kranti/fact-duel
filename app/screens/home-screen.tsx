@@ -8,6 +8,8 @@
 import { ArrowRight, Sliders, Sparkles, Users, Zap } from 'lucide-react';
 import { ACTIVE_EXPEDITIONS as EXPEDITIONS, expeditionStatus } from '@/lib/expeditions.mjs';
 import { emptyProgression, levelForXp, rankForPoints } from '@/lib/progression.mjs';
+import { jhkOnline } from '@/lib/jhk-online/runtime';
+import { practiceMissionDestination } from '@/lib/jhk-online/practice-missions.mjs';
 import type { HomeScreenProps } from './types';
 import { HeroStage } from './home/hero-stage';
 import { PlayerCard } from './home/player-card';
@@ -57,6 +59,12 @@ export function HomeScreen({ player, name, ready, busy, onRoute, onDuel, onLive,
 
   const playNow = onLive;
   const openQuest = (quest: QuestItem) => {
+    if (jhkOnline.configured) {
+      const destination = practiceMissionDestination(quest.template);
+      if (destination === 'journeys') onRoute(continuing?.id ?? null);
+      else if (destination) go(destination);
+      return;
+    }
     const route = questRoute(quest);
     if (route.kind === 'duel' && ready && !busy) onDuel(route.mode, route.topic);
     else if (route.kind === 'expedition') onRoute(continuing?.id ?? null);
@@ -71,7 +79,7 @@ export function HomeScreen({ player, name, ready, busy, onRoute, onDuel, onLive,
       </h1>
 
       <div className="fd-hub-hero">
-        <HeroStage level={level.level} accent={accent.hex} progression={prog} />
+        <HeroStage level={level.level} accent={accent.hex} progression={prog} practiceOnly={jhkOnline.configured} />
         <PlayerCard
           name={name}
           level={level}
@@ -81,6 +89,7 @@ export function HomeScreen({ player, name, ready, busy, onRoute, onDuel, onLive,
           points={prog.rank.points}
           frame={prog.cosmetics.equipped.frame}
           titleId={prog.cosmetics.equipped.title}
+          practiceOnly={jhkOnline.configured}
           accentToken={accent.token}
           onOpen={() => go('passport')}
         />
@@ -123,8 +132,8 @@ export function HomeScreen({ player, name, ready, busy, onRoute, onDuel, onLive,
       {/* The calendar, one line above the quests: what is on, what is next, how many modes are open. */}
       <LiveStrip go={go} />
 
-      <p className="fd-hub-section-note">{locale === 'hi' ? 'नीचे आपके डिवाइस के काम, XP और स्टैम्प हैं। मुक़ाबलों की सर्वर रैंक अलग है।' : 'Your device quests, XP and stamps continue below. Human duels have a separate server rank.'}</p>
-      <QuestBoard items={quests} resetIn={now ? untilReset(now) : ''} onOpen={openQuest} />
+      <p className="fd-hub-section-note">{locale === 'hi' ? 'नीचे आपके डिवाइस के अभ्यास के काम, XP और स्टैम्प हैं। इंसानी मुक़ाबले इन कामों में नहीं गिने जाते।' : 'Your device practice missions, XP and stamps continue below. Human duels do not advance these missions.'}</p>
+      <QuestBoard items={quests} resetIn={now ? untilReset(now) : ''} onOpen={openQuest} practiceOnly={jhkOnline.configured} />
 
       <ExpeditionCard
         route={featured}
@@ -135,7 +144,7 @@ export function HomeScreen({ player, name, ready, busy, onRoute, onDuel, onLive,
         onOpen={() => onRoute(featured.id)}
       />
 
-      <RankStrip points={prog.rank.points} rank={rank} />
+      {!jhkOnline.configured && <RankStrip points={prog.rank.points} rank={rank} />}
 
       <div className="fd-hub-bento">
         <XpLog entries={log} now={now} />

@@ -8,10 +8,12 @@ import type { RulesScreenProps } from './types';
 import { CoinRules } from './rules/coin-rules';
 import { Trust } from './rules/trust';
 import { useLocale } from '../use-locale';
+import { jhkOnline } from '@/lib/jhk-online/runtime';
 
 /* Rules tab: the Playbook, plus the Timing Lab, Rules of the coin and Trust sub-views. */
 export function RulesScreen({ view, go }: RulesScreenProps) {
   const { t } = useLocale();
+  if (jhkOnline.configured) return <OnlineBetaRules go={go} />;
   if (view === 'coin' || view === 'trust')
     return (
       <>
@@ -54,6 +56,20 @@ export function RulesScreen({ view, go }: RulesScreenProps) {
       </div>
     </>
   );
+}
+
+function OnlineBetaRules({ go }: Pick<RulesScreenProps, 'go'>) {
+  const { locale } = useLocale();
+  const text = (en: string, hi: string) => locale === 'hi' ? hi : en;
+  const sections = [
+    [text('Same question. Real rival.', 'एक सवाल। असली प्रतिद्वंद्वी।'), text('Public queue and private room codes connect human players. There is no bot replacement. Each duel has five rounds, 30 seconds each, with a 2.5 second countdown. Your first answer counts.', 'सार्वजनिक कतार और निजी रूम कोड इंसानी खिलाड़ियों को जोड़ते हैं। कोई बॉट नहीं आता। पाँच राउंड, हर राउंड 30 सेकंड, और 2.5 सेकंड की उलटी गिनती। पहला जवाब गिना जाता है।')],
+    [text('Server timing and score', 'सर्वर का समय और स्कोर'), text('Most correct answers wins. Lower total server-recorded answer time breaks ties; a difference within 0.12 seconds is a draw. The server owns questions, accepted answers, scores and coin settlement. Network delay can affect timing.', 'सबसे अधिक सही जवाब जीतते हैं। बराबरी पर कुल कम सर्वर समय जीतता है; 0.12 सेकंड तक का अंतर बराबरी है। सवाल, स्वीकार हुए जवाब, स्कोर और सिक्के सर्वर तय करता है। नेटवर्क समय पर असर डाल सकता है।')],
+    [text('Free simulated coins', 'मुफ़्त खेल के सिक्के'), text('A new server guest starts with 100 coins. Coins cannot be bought or cashed out. Stakes are optional and start at zero; zero balance still lets you duel. Both players confirm the same stake before it is reserved. The winner receives the combined stake; a draw refunds both players.', 'नए सर्वर अतिथि को 100 सिक्के मिलते हैं। इन्हें खरीदा या पैसे में बदला नहीं जा सकता। सिक्के लगाना वैकल्पिक है और शुरुआत शून्य से होती है; शून्य बैलेंस पर भी खेलें। सुरक्षित होने से पहले दोनों बराबर सिक्के मंज़ूर करते हैं। विजेता को दोनों की रकम मिलती है; बराबरी पर वापसी होती है।')],
+    [text('Completion reward', 'पूरा खेलने का इनाम'), text('Earn 10 coins once per topic per UTC day after a completed human duel. Both players must answer at least three rounds, and you must answer at least one correctly. The reward is separate from any stake payout.', 'पूरा इंसानी मुक़ाबला खेलने पर प्रति विषय प्रति UTC दिन एक बार 10 सिक्के मिलते हैं। दोनों को कम से कम तीन राउंड के जवाब देने होंगे और आपका कम से कम एक जवाब सही होना चाहिए। यह लगाई गई रकम से अलग इनाम है।')],
+    [text('Leaving and disconnects', 'छोड़ना और कनेक्शन टूटना'), text('After both players are ready, leaving or deleting your guest forfeits your stake to your rival. Being absent for over 90 seconds while your rival remains also forfeits it. Before the start, system cancellation, or both players absent: reserved stakes are refunded. Cancelled matches give no completion reward or ranked result.', 'दोनों तैयार होने के बाद छोड़ने या अतिथि पहचान मिटाने पर लगाए सिक्के प्रतिद्वंद्वी को जाते हैं। सामने वाला मौजूद हो और आप 90 सेकंड से अधिक गायब हों तो भी यही होता है। शुरू होने से पहले, सिस्टम रद्द होने या दोनों गायब होने पर सुरक्षित सिक्के वापस होते हैं। रद्द मुक़ाबले का इनाम या रैंक नहीं मिलता।')],
+    [text('Your guest and your practice', 'आपकी अतिथि पहचान और अभ्यास'), text('Your public nickname, online XP and server coins belong to this browser’s guest identity, which lasts 30 days. Clearing browser data loses access. A guest identity is not proof of a unique person. Practice XP, missions, medals and stamps remain on this device; online duels do not advance device missions or import device scores into server rank.', 'सार्वजनिक नाम, ऑनलाइन XP और सर्वर सिक्के इस ब्राउज़र की 30 दिन वाली अतिथि पहचान से जुड़े हैं। ब्राउज़र डेटा हटाने पर पहुँच खो जाती है। अतिथि पहचान अलग व्यक्ति का प्रमाण नहीं है। अभ्यास XP, काम, मेडल और स्टैम्प डिवाइस पर रहते हैं; ऑनलाइन मुक़ाबले डिवाइस के काम नहीं बढ़ाते और डिवाइस का स्कोर सर्वर रैंक में नहीं जाता।')],
+  ];
+  return <section className="fd-rules" aria-labelledby="jhk-beta-rules-title"><div className="fd-rules__head"><p className="eyebrow">{text('JHK · ONLINE BETA', 'JHK · ऑनलाइन बीटा')}</p><h1 id="jhk-beta-rules-title">{text('Human duel rules', 'इंसानी मुक़ाबले के नियम')}</h1><p className="fd-rules__lede">{text('Sports and science. Optional coins. Learning at your own pace between duels.', 'खेल और विज्ञान। वैकल्पिक सिक्के। मुक़ाबलों के बीच अपनी रफ़्तार से सीखें।')}</p></div><div className="fd-rules__grid">{sections.map(([title, body]) => <article className="fd-rules__section" key={title}><h2>{title}</h2><p>{body}</p></article>)}</div><Button onClick={() => go('online')}>{text('Find a human rival', 'असली प्रतिद्वंद्वी ढूँढ़ें')}<ArrowRight /></Button></section>;
 }
 
 export function TimingLab() {

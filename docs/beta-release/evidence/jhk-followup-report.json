@@ -1,0 +1,9 @@
+{
+  "checks": [
+    "Home 320: supported mission count, no obsolete goals, live chrome, fits viewport",
+    "Rules 320: actual server timing,100 starter,10 reward,forfeit disclosure",
+    "Home 1280: supported mission count, no obsolete goals, live chrome, fits viewport",
+    "Rules 1280: actual server timing,100 starter,10 reward,forfeit disclosure"
+  ],
+  "errors": []
+}

@@ -65,12 +65,14 @@ export function HeroStage({
   level,
   accent,
   progression,
+  practiceOnly = false,
 }: {
   level: number;
   accent: string;
   progression?: HeroProgression;
+  practiceOnly?: boolean;
 }) {
-  const { t, n } = useLocale();
+  const { t, n, locale } = useLocale();
   const reduced = useReducedMotion();
   const modesPlayed = countModes(progression);
   const awake = modesPlayed >= WAKE_MODES;
@@ -112,6 +114,7 @@ export function HeroStage({
           same reduced-motion read SceneFrame uses to decide whether the scene animates, so what a
           screen reader is told and what moves on the glass cannot drift apart. */}
         <LazyHeroOrb
+          label={practiceOnly ? (locale === 'hi' ? `अभ्यास का स्तर ${level}` : `Practice level ${level}`) : undefined}
           level={level}
           accent={accent}
           parallax={!reduced}
@@ -123,11 +126,11 @@ export function HeroStage({
           }
         />
         <span className="fd-hub-hero-badge fd-mono">{t('hero.lv', { level })}</span>
-        <span className="fd-hub-hero-chip fd-mono" data-state={awake ? 'awake' : 'locked'}>
+        {!practiceOnly && <span className="fd-hub-hero-chip fd-mono" data-state={awake ? 'awake' : 'locked'}>
           {awake ? t('hero.awake') : t('hero.brain', { n: modesPlayed, of: WAKE_MODES })}
-        </span>
+        </span>}
       </div>
-      <p className="fd-hub-hero-note">{note}</p>
+      <p className="fd-hub-hero-note">{practiceOnly ? (locale === 'hi' ? 'अभियानों और याद करने के अभ्यास से XP कमाएँ।' : 'Build practice XP through expeditions and review.') : note}</p>
     </>
   );
 }

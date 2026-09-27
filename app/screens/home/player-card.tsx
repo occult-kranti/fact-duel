@@ -23,6 +23,7 @@ export type PlayerCardProps = {
   accentToken: string;
   titleId: string;
   onOpen: () => void;
+  practiceOnly?: boolean;
 };
 
 export function PlayerCard({
@@ -36,8 +37,9 @@ export function PlayerCard({
   accentToken,
   titleId,
   onOpen,
+  practiceOnly = false,
 }: PlayerCardProps) {
-  const { t, n, fmt } = useLocale();
+  const { t, n, fmt, locale } = useLocale();
   const press = usePress();
   const monogram = (name.trim().charAt(0) || 'P').toUpperCase();
   const badge = cosmeticById(titleId);
@@ -50,7 +52,7 @@ export function PlayerCard({
       style={{ ['--fd-accent' as string]: accentToken }}
       onPointerDown={press}
       onClick={onOpen}
-      aria-label={t('card.aria', { level: level.level, title: level.title, streak: streak.current, badges, rank: rank.label })}
+      aria-label={practiceOnly ? (locale === 'hi' ? `अभ्यास की प्रगति खोलें। स्तर ${level.level}।` : `Open device practice progress. Level ${level.level}.`) : t('card.aria', { level: level.level, title: level.title, streak: streak.current, badges, rank: rank.label })}
     >
       <span className="fd-hub-player-top">
         <span className="fd-hub-avatar" aria-hidden="true">
@@ -105,11 +107,11 @@ export function PlayerCard({
           </b>
           <small>{t('card.badges')}</small>
         </span>
-        <span className="fd-hub-stat fd-hub-stat--rank">
+        {!practiceOnly && <span className="fd-hub-stat fd-hub-stat--rank">
           <Trophy aria-hidden="true" />
           <b>{rank.label}</b>
           <small className="fd-mono">{t('card.pts', { n: points })}</small>
-        </span>
+        </span>}
       </span>
       {frame !== 'default' && (
         <span className="fd-hub-frame-name">{FRAME_LABELS[frame] ?? t('card.frame')}</span>

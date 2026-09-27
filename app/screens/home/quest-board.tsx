@@ -6,6 +6,7 @@
  */
 import { ArrowUpRight, Check, Target, Zap } from 'lucide-react';
 import { XP } from '@/lib/progression.mjs';
+import { visiblePracticeMissions } from '@/lib/jhk-online/practice-missions.mjs';
 import { questHint, type QuestItem } from './util';
 import { usePress } from './press';
 import { useLocale } from '../../use-locale';
@@ -14,33 +15,38 @@ export type QuestBoardProps = {
   items: QuestItem[];
   resetIn: string;
   onOpen: (item: QuestItem) => void;
+  practiceOnly?: boolean;
 };
 
-export function QuestBoard({ items, resetIn, onOpen }: QuestBoardProps) {
-  const { t } = useLocale();
+export function QuestBoard({ items, resetIn, onOpen, practiceOnly = false }: QuestBoardProps) {
+  const { t, locale } = useLocale();
+  const text = (en: string, hi: string) => locale === 'hi' ? hi : en;
+  const visibleItems: QuestItem[] = practiceOnly ? visiblePracticeMissions(items) : items;
   const press = usePress();
-  const doneCount = items.filter((q) => q.done).length;
-  const allDone = items.length > 0 && doneCount === items.length;
+  const doneCount = visibleItems.filter((q) => q.done).length;
+  const allDone = visibleItems.length > 0 && doneCount === visibleItems.length;
   return (
     <section className="fd-hub-quests" aria-labelledby="fd-hub-quests-title">
       <header className="fd-hub-section-head">
         <div>
           <p className="fd-hub-eyebrow">
             <Target aria-hidden="true" />
-            {t('quests.eyebrow')}
+            {practiceOnly ? text('PRACTICE MISSIONS', 'अभ्यास के काम') : t('quests.eyebrow')}
           </p>
           <h2 id="fd-hub-quests-title">
-            {allDone ? t('quests.allDone') : t('quests.done', { done: doneCount, total: items.length || 3 })}
+            {practiceOnly
+              ? visibleItems.length ? t('quests.done', { done: doneCount, total: visibleItems.length }) : text('Keep learning at your pace.', 'अपनी रफ़्तार से सीखते रहें।')
+              : allDone ? t('quests.allDone') : t('quests.done', { done: doneCount, total: items.length || 3 })}
           </h2>
         </div>
         <p className="fd-hub-section-note">
           {/* `resetIn` is empty until the client clock is known, so SSR and hydration agree. */}
           {resetIn && <>{t('quests.newSet', { time: resetIn })}</>}
-          {t('quests.allPays')} <b className="fd-mono">+{XP.questBonus} XP</b>
+          {practiceOnly ? text('Practice XP stays on this device.', 'अभ्यास XP इस डिवाइस पर रहता है।') : <>{t('quests.allPays')} <b className="fd-mono">+{XP.questBonus} XP</b></>}
         </p>
       </header>
       <ul className="fd-hub-quest-grid">
-        {items.map((q) => {
+        {visibleItems.map((q) => {
           const pct = Math.round(Math.min(1, q.progress / Math.max(1, q.target)) * 100);
           return (
             <li key={q.id}>
@@ -83,7 +89,8 @@ export function QuestBoard({ items, resetIn, onOpen }: QuestBoardProps) {
             </li>
           );
         })}
-        {items.length === 0 &&
+        {practiceOnly && visibleItems.length === 0 && <li><span className="fd-hub-quest fd-hub-quest--empty"><strong className="fd-hub-quest-label">{text('No practice missions in today’s set.', 'आज के सेट में अभ्यास का कोई काम नहीं है।')}</strong><small>{text('Expeditions still earn practice XP and stamps.', 'अभियानों से अभ्यास XP और स्टैम्प मिलते रहेंगे।')}</small></span></li>}
+        {!practiceOnly && items.length === 0 &&
           [0, 1, 2].map((i) => (
             <li key={i}>
               <span className="fd-hub-quest fd-hub-quest--empty">

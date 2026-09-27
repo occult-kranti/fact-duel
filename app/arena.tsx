@@ -1073,7 +1073,7 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
             <span>{t('footer.tagline')}</span>
             <span>
               <button className="footer-rules" onClick={() => go('rules')}>
-                {t('footer.rules')}
+                {jhkOnline.configured ? (locale === 'hi' ? 'मुक़ाबले के नियम' : 'Human duel rules') : t('footer.rules')}
               </button>{' '}
               ·{' '}
               <button className="footer-rules" onClick={() => go('coin')}>
@@ -1083,9 +1083,9 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
               <button className="footer-rules" onClick={() => go('trust')}>
                 {t('footer.trust')}
               </button>{' '}
-              · {t('footer.free')} · {t('footer.private')}
+              · {t('footer.free')} · {jhkOnline.configured ? (locale === 'hi' ? 'ऑनलाइन बीटा' : 'Online beta') : t('footer.private')}
             </span>
-            <a href="/studio">{t('footer.research')}</a>
+            {!jhkOnline.configured && <a href="/studio">{t('footer.research')}</a>}
           </footer>
         }
       >

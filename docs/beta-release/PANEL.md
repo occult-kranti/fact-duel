@@ -256,12 +256,12 @@ contract instead of adding new gamification or optional visual work:
 | Optional wagers do not exclude zero-balance play | Real AYD zero-balance completed duel, JHK zero-stake service gate, explicit Ready confirmation and visible stake/reward terms. |
 | The game can recover and settle | JHK browser reload/receipt/result gate, bounded deployed duplicate races, refund/forfeit assertions and successful cron invocation in both namespaces. |
 | Personal sharing is voluntary and honest | AYD current-grant/photo certificates preserved; JHK shares its actual completed result through an explicit button. No auto-post or measured virality claim. |
-| Public release can be reproduced | Main-branch workflows build the correct product/base/backend, use Pages artifact deployment and emit commit manifests; AYD manifest fetched successfully. JHK publication must still match its merged commit. |
+| Public release can be reproduced | Main-branch workflows build the correct product/base/backend, use Pages artifact deployment and emit commit manifests; both initial published manifests were fetched successfully as recorded below. |
 
-No source, UI or server defect remains open in the reviewed beta scope. This verdict permits the
-requested release and does not assert that the pending JHK Pages workflow has already succeeded.
-Root will record its public URL/manifest after deployment below. The review stops optional tests
-and design expansion once that final publication check is complete.
+At the close of round 6, the reviewed code was approved for the requested release, with JHK's Pages
+workflow still pending. Both initial publications were then verified below. The live followup
+found bounded inherited mission/copy defects; their corrections and final acceptance are recorded
+after the publication entries rather than silently erasing the original review boundary.
 
 Remaining product limits are explicit: guest profiles are not verified unique people or a
 cross-device account system; the finite match tests are not a load benchmark or geographic timing
@@ -273,5 +273,64 @@ bot opponents, ad fill or adoption metrics. No ChatGPT Sites deployment was used
 
 - AYD: `https://occult-kranti.github.io/andhbhakt-ya-deshbhakt/`, initial release commit
   `848637cdcb0ebf20ebb133f02196bf49c60d8e79`; Pages success and public manifest independently verified.
-- JHK: `https://occult-kranti.github.io/fact-duel/`; merge/deployment and public manifest verification
-  are the remaining release-owner step, to be appended after the workflow completes.
+- JHK: `https://occult-kranti.github.io/fact-duel/`, initial release commit
+  `b7c506e53e5bb48b94d1d57971169c6c4e0a22eb`, built at 03:31:34 UTC. The advisor independently
+  fetched Home and the matching manifest with HTTP 200; root opened the published Home and human
+  duel CTA in the cloud browser.
+
+### Post-publication correction — unsupported missions and stale copy (verified)
+
+After the six rounds and initial AYD publication, root's live browser check found that a Home
+mission labelled “Play Energy & Mining duel” generated an `online?topic=...` route unsupported by
+the backend's five file choices. The duel desk silently broadened that advertised topic. This is
+a real semantic defect discovered after the earlier gates, not a seventh panel round or optional
+scope expansion. The certificate/brand lane corrected the mission surface to honestly labelled
+local learning activities with their actual solo routes; no new backend topic was invented.
+The lane found that server results do not emit the predecessor
+local duel/mode/topic/speed quest events. The correction therefore filters all unsupported mission
+templates and removes any bonus promise requiring hidden tasks, while preserving actual practice,
+Vault and expedition events and their earned XP.
+
+Root's live JHK review found the same predecessor mission mismatch and reopened the same narrow
+correction there. The advisor also read a stale description in the successfully published JHK
+HTML, claiming a bot and no server despite the correct new manifest. Root/flow were asked to update
+that description and the inherited “Private playtest” label to the actual online beta. Both games'
+source acceptance was reopened only for these honest mission/copy corrections and their
+verification. Their already demonstrated server matches and published URLs remain valid.
+
+The same bounded copy review found a material JHK rule-route mismatch: footer Play rules still
+described the predecessor's 150ms/client-time comparison, 1,000-unit room grant, no public queue
+and blanket post-reveal refunds. The live authority uses 120ms/server time, a 100-unit guest grant,
+public human matching and the disclosed forfeit policy. Root/flow were asked to give the configured
+public rule routes the actual live contract and keep predecessor/local-wallet rules scoped to
+offline/device practice. This is required disclosure accuracy for the existing wager, not a new
+economy or a general rewrite of historical documentation.
+
+Correction verification is complete:
+
+- AYD Home now shows only nine supported practice/Vault template types, labelled Practice
+  missions, with the actual visible count and a useful empty-day practice link. Unsupported
+  online/topic/mode/win/speed tasks and unreachable all-three bonus promises are absent. The
+  six-correct task opens files rather than a five-card daily set. The advisor re-read the actual
+  label/route/filter source; the lane passed two focused tests against real quest templates and
+  accepted local event paths, plus TypeScript. Root's final production build passed.
+- JHK's configured Home uses the equivalent supported learning routes, visible counts and local
+  XP wording. Legacy competitive rank/wake prompts are absent from that Home, while practice
+  medals/XP/stamps remain. Its live chrome says Online beta and omits the broken research link.
+- JHK `RulesScreen` now returns the live rules component before any predecessor rules, coin,
+  trust or timing branch. The advisor inspected this exact guard and its actual five-round/
+  thirty-second, 120ms, 100-unit starter, 10-unit completion, zero-wager and forfeit contract.
+  All three public footer routes reach that guarded contract.
+- The advisor read `/tmp/jhk-followup-ui/report.json`: four scoped Home/rules checks passed at
+  320px and 1280px, with no errors or overflow. The lane reports 11 focused tests and clean
+  TypeScript. No synthetic guest was needed or created by this presentation-only followup.
+- Root's final JHK production build and emitted description/canonical/Open Graph/asset checks
+  passed. The production description now advertises actual human sports/science duels rather
+  than the predecessor's no-server preview. Backend code and authority were unchanged, so the
+  earlier real match/economy/cleanup evidence remains applicable.
+
+**Final source verdict: approved; no open defect in this review's beta scope.** Freeze the panel
+and publish these verified corrections. The release owner must verify the final correction deployments against their public `release.json`
+manifests and report the live URLs. `VERIFICATION.md` retains the initial versions as evidence
+for when the followup defects were discovered; each published manifest identifies its own build. Do not add
+optional rounds, broad tests or design changes to this completed review.

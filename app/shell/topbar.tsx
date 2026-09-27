@@ -1,6 +1,7 @@
 'use client';
 import type { ReactNode } from 'react';
-import { Lock, Volume2, VolumeX, Settings } from 'lucide-react';
+import { Lock, Radio, Volume2, VolumeX, Settings } from 'lucide-react';
+import { jhkOnline } from '@/lib/jhk-online/runtime';
 import { JhkMark, JhkWordmark } from './brand-mark';
 import { useLocale } from '../use-locale';
 
@@ -60,8 +61,8 @@ export function Topbar({
         )}
         {!active && (
           <span className="fd-private">
-            <Lock size={13} aria-hidden="true" />
-            {t('top.private')}
+            {jhkOnline.configured ? <Radio size={13} aria-hidden="true" /> : <Lock size={13} aria-hidden="true" />}
+            {jhkOnline.configured ? (locale === 'hi' ? 'ऑनलाइन बीटा' : 'Online beta') : t('top.private')}
           </span>
         )}
         <button
