@@ -5,7 +5,7 @@
  * open → Arena Rank → a bento row of recent XP and your stamp case. Everything on this screen is
  * read from the device-local progression record; nothing here talks to the server.
  */
-import { ArrowRight, Bot, Sliders, Sparkles, Zap } from 'lucide-react';
+import { ArrowRight, Sliders, Sparkles, Users, Zap } from 'lucide-react';
 import { ACTIVE_EXPEDITIONS as EXPEDITIONS, expeditionStatus } from '@/lib/expeditions.mjs';
 import { emptyProgression, levelForXp, rankForPoints } from '@/lib/progression.mjs';
 import type { HomeScreenProps } from './types';
@@ -22,8 +22,8 @@ import { useNow } from './home/use-now';
 import { useLocale } from '../use-locale';
 import './home/home.css';
 
-export function HomeScreen({ player, name, ready, busy, onRoute, onDuel, onSetup, go }: HomeScreenProps) {
-  const { t } = useLocale();
+export function HomeScreen({ player, name, ready, busy, onRoute, onDuel, onLive, onSetup, go }: HomeScreenProps) {
+  const { t, locale } = useLocale();
   const press = usePress();
   const now = useNow();
 
@@ -55,7 +55,7 @@ export function HomeScreen({ player, name, ready, busy, onRoute, onDuel, onSetup
   const quests: QuestItem[] = prog.quests.items ?? [];
   const log: LogEntry[] = (prog.log ?? []).slice(0, 5);
 
-  const playNow = () => onDuel('quick');
+  const playNow = onLive;
   const openQuest = (quest: QuestItem) => {
     const route = questRoute(quest);
     if (route.kind === 'duel' && ready && !busy) onDuel(route.mode, route.topic);
@@ -90,15 +90,15 @@ export function HomeScreen({ player, name, ready, busy, onRoute, onDuel, onSetup
         <button
           type="button"
           className="fd-hub-btn fd-hub-btn--primary fd-hub-press"
-          disabled={!ready || busy}
+          disabled={busy}
           onPointerDown={press}
           onClick={playNow}
         >
           <Zap aria-hidden="true" />
           <span className="fd-hub-cta-main">
-            <strong>{t('home.playNow')}</strong>
+            <strong>{locale === 'hi' ? 'असली प्रतिद्वंद्वी ढूँढ़ें' : 'Find a human rival'}</strong>
             <small>
-              {t('home.playNowSub')} <i className="fd-hub-bot">{t('home.bot')}</i>
+              {locale === 'hi' ? 'पाँच राउंड · वैकल्पिक सिक्के · शून्य पर भी खेलें' : 'Five rounds · optional coins · zero balance welcome'}
             </small>
           </span>
           <ArrowRight className="fd-hub-cta-arrow" aria-hidden="true" />
@@ -110,19 +110,20 @@ export function HomeScreen({ player, name, ready, busy, onRoute, onDuel, onSetup
           onClick={() => onSetup('settings')}
         >
           <Sliders aria-hidden="true" />
-          {t('home.choose')}
+          {locale === 'hi' ? 'अभियानों से सीखें' : 'Learn with expeditions'}
         </button>
         <p className="fd-hub-cta-note">
           <Sparkles aria-hidden="true" />
-          {t('home.wild')}
-          <Bot aria-hidden="true" />
-          {t('home.botsLabelled')}
+          {locale === 'hi' ? 'खेल और विज्ञान। आपकी जिज्ञासा, आपका रिकॉर्ड।' : 'Sports and science. Your curiosity, your record.'}
+          <Users aria-hidden="true" />
+          {locale === 'hi' ? 'इंसानी मुक़ाबले की सर्वर रैंक अलग है।' : 'Human duels have their own server rank.'}
         </p>
       </div>
 
       {/* The calendar, one line above the quests: what is on, what is next, how many modes are open. */}
       <LiveStrip go={go} />
 
+      <p className="fd-hub-section-note">{locale === 'hi' ? 'नीचे आपके डिवाइस के काम, XP और स्टैम्प हैं। मुक़ाबलों की सर्वर रैंक अलग है।' : 'Your device quests, XP and stamps continue below. Human duels have a separate server rank.'}</p>
       <QuestBoard items={quests} resetIn={now ? untilReset(now) : ''} onOpen={openQuest} />
 
       <ExpeditionCard

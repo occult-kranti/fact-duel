@@ -1,0 +1,83 @@
+/* JHK's Floodlight palette: a live game table, distinct from practice and other editions. */
+.jhk-live { display:flex;flex-direction:column;gap:24px;min-width:0;color:var(--text);overflow-wrap:anywhere; }
+.jhk-live h1,.jhk-live h2,.jhk-live h3,.jhk-live p { margin:0; }
+.jhk-live h1 { font:800 clamp(2.4rem,5.5vw,4.6rem)/1.02 var(--font-display);letter-spacing:-.04em; }
+.jhk-live h2 { font:750 clamp(1.45rem,3vw,2rem)/1.15 var(--font-display);letter-spacing:-.02em; }
+.jhk-live p { line-height:1.55; }
+.jhk-live-head { display:flex;flex-direction:column;gap:14px;max-width:64ch; }
+.jhk-live-kicker { font:700 .75rem/1.4 var(--font-mono);letter-spacing:.12em;color:var(--cyan-text); }
+.jhk-live button,.jhk-live-dialog button { display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:48px;padding:11px 17px;border:1px solid var(--line);border-radius:var(--r-md,12px);background:var(--bg-2);color:var(--text);font:600 1rem/1.3 var(--font-ui,inherit);cursor:pointer; }
+.jhk-live button:hover:not(:disabled),.jhk-live-dialog button:hover { border-color:var(--cyan); }
+.jhk-live button:focus-visible,.jhk-live input:focus-visible,.jhk-live select:focus-visible,.jhk-live a:focus-visible,.jhk-live-dialog button:focus-visible { outline:3px solid var(--cyan);outline-offset:3px; }
+.jhk-live button:disabled { opacity:.55;cursor:default; }
+.jhk-live button.jhk-live-primary,.jhk-live-dialog button.jhk-live-primary { background:var(--volt);color:var(--volt-ink);border-color:var(--volt);font-weight:800; }
+.jhk-live-tabs { display:flex;gap:8px;flex-wrap:wrap;padding-bottom:16px;border-bottom:1px solid var(--line); }
+.jhk-live [aria-pressed=true] { border-color:var(--cyan);background:var(--cyan-soft);color:var(--cyan-text); }
+.jhk-live form,.jhk-live-identity { display:flex;flex-direction:column;gap:14px; }
+.jhk-live-identity { max-width:540px;padding:24px;border:1px solid var(--line);border-radius:var(--r-lg,18px);background:var(--bg-1); }
+.jhk-live label { font-weight:650; }
+.jhk-live input,.jhk-live select { width:100%;min-width:0;min-height:48px;padding:10px 13px;background:var(--bg-0);color:var(--text);font:inherit;font-size:1rem;border:1px solid var(--line);border-radius:var(--r-md,12px); }
+.jhk-live input[aria-invalid=true] { border-color:var(--danger-text); }
+.jhk-live-muted { font-size:.92rem;color:var(--muted); }
+.jhk-live-byline { display:flex;flex-wrap:wrap;gap:12px 24px;padding-block:14px;border-block:1px solid var(--line);font-size:.95rem; }
+.jhk-live-byline span { display:flex;align-items:center;gap:7px; }
+.jhk-live-byline strong { color:var(--volt-text); }
+.jhk-live-desk { display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:30px; }
+.jhk-live-main,.jhk-live-side { display:flex;flex-direction:column;gap:18px;min-width:0; }
+.jhk-live-side { padding:26px;background:var(--bg-1);border:1px solid var(--line);border-radius:var(--r-lg,18px); }
+.jhk-live-stake { min-width:0;padding:18px;display:flex;flex-direction:column;gap:14px;border:1px solid var(--line);border-radius:var(--r-md,12px); }
+.jhk-live-stake legend { padding-inline:6px;font-weight:700; }
+.jhk-live-actions { display:flex;flex-wrap:wrap;gap:10px; }
+.jhk-live-reward { display:flex;flex-direction:column;gap:10px;padding-top:22px;border-top:1px solid var(--line); }
+.jhk-live-reward>svg { color:var(--gold-text); }
+.jhk-live-rules { border-block:1px solid var(--line);padding-block:18px; }
+.jhk-live-rules summary { min-height:44px;font-weight:700;cursor:pointer; }
+.jhk-live-rules p+p { margin-top:12px; }
+.jhk-live-error,.jhk-live-empty { display:flex;flex-direction:column;gap:14px;padding:22px;border:1px solid var(--danger-text);border-radius:var(--r-md,12px); }
+.jhk-live-error button,.jhk-live-empty button { align-self:flex-start; }
+.jhk-live-board { display:flex;flex-direction:column;gap:18px; }
+.jhk-live-tablewrap { overflow-x:auto; }
+.jhk-live table { border-collapse:collapse;width:100%; }
+.jhk-live th,.jhk-live td { padding:15px 12px;text-align:left;border-bottom:1px solid var(--line); }
+.jhk-live thead { color:var(--muted);background:var(--bg-1); }
+.jhk-live [data-self=true] { background:var(--volt-soft); }
+.jhk-live-match { max-width:850px;margin:auto;width:100%; }
+.jhk-live-matchbar { display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;font-family:var(--font-mono);font-size:.85rem; }
+.jhk-live-matchbar>span { display:flex;gap:8px;align-items:center; }
+.jhk-live-scores { display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:var(--r-md,12px);background:var(--bg-1); }
+.jhk-live-scores>div { display:grid;grid-template-columns:1fr auto;gap:6px 12px;padding:20px;min-width:0; }
+.jhk-live-scores>div+div { border-left:1px solid var(--line); }
+.jhk-live-scores span { grid-column:1;color:var(--muted);font:.7rem var(--font-mono); }
+.jhk-live-scores strong { grid-column:1;font-size:1.1rem; }
+.jhk-live-scores b { grid-column:2;grid-row:1/3;font:800 2.4rem var(--font-display);color:var(--volt-text); }
+.jhk-live-stage,.jhk-live-question { display:flex;flex-direction:column;align-items:flex-start;gap:20px;padding-block:18px; }
+.jhk-live-question { align-items:stretch; }
+.jhk-live-question h1 { font-size:clamp(1.5rem,3vw,2.2rem);line-height:1.22;letter-spacing:-.015em; }
+.jhk-live-code { max-width:100%;font:750 clamp(1.65rem,4vw,2.5rem) var(--font-mono);letter-spacing:.1em;color:var(--cyan-text); }
+.jhk-live-terms { padding:18px;border:1px solid var(--line);border-radius:var(--r-md,12px);background:var(--bg-1); }
+.jhk-live-countdown { font:800 6rem var(--font-display);color:var(--volt-text); }
+.jhk-live-answers { display:grid;gap:12px; }
+.jhk-live-answers button { min-height:64px;justify-content:flex-start;text-align:left;padding:16px; }
+.jhk-live-answers b { display:grid;place-items:center;flex:none;width:32px;height:32px;border-radius:6px;background:var(--bg-0);font-family:var(--font-mono); }
+.jhk-live-answers span { flex:1; }
+.jhk-live-receipt { display:flex;flex-direction:column;gap:13px;padding:24px;border:1px solid var(--line);border-left:4px solid var(--cyan);border-radius:var(--r-md,12px);background:var(--bg-1); }
+.jhk-live-receipt[data-correct=true] { border-left-color:var(--volt); }
+.jhk-live-receipt a { color:var(--cyan-text);text-underline-offset:4px; }
+.jhk-live-results { list-style:none;padding:0;margin:0;width:100%; }
+.jhk-live-results li { display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:13px 0;border-bottom:1px solid var(--line); }
+.jhk-live-settlement { padding:18px;border:1px solid var(--line);border-radius:var(--r-md,12px);width:100%; }
+.jhk-live-settlement>strong { color:var(--gold-text);font-size:1.5rem; }
+.jhk-live-finish { position:relative; }
+.jhk-live-finishmark { font-size:2.5rem;color:var(--cyan-text);animation:jhk-result-mark 500ms ease-out both; }
+.jhk-live-finish[data-outcome=win] .jhk-live-finishmark { color:var(--gold-text); }
+@keyframes jhk-result-mark { from { opacity:0;transform:scale(.8); } to { opacity:1;transform:scale(1); } }
+.jhk-live-dialog { width:min(520px,calc(100% - 32px));padding:26px;border:1px solid var(--line);border-radius:var(--r-lg,18px);background:var(--bg-1);color:var(--text); }
+.jhk-live-dialog::backdrop { background:rgb(0 0 0 / .65); }
+.jhk-live-dialog h2 { margin:0 0 14px; }
+.jhk-live-dialog p { line-height:1.6;margin-bottom:22px; }
+.jhk-live-profile { padding:24px;border:1px solid var(--line);border-radius:var(--r-lg,18px);background:var(--bg-1);margin-bottom:24px; }
+.jhk-live-profile button { align-self:flex-start; }
+@media(max-width:720px) { .jhk-live { gap:20px; }.jhk-live-desk { grid-template-columns:1fr;gap:24px; }.jhk-live-side,.jhk-live-identity { padding:20px; }.jhk-live-tabs button { flex:1 1 42%; }.jhk-live-scores>div { padding:14px; }.jhk-live th,.jhk-live td { padding:13px 6px; } }
+@media(prefers-reduced-motion:reduce) { .jhk-live-finishmark { animation:none; } }
+:root[data-motion=reduced] .jhk-live-finishmark { animation:none; }
+.jhk-live-wallet { display:inline-flex;align-items:center;min-height:40px;padding:8px 12px;border:1px solid var(--line);border-radius:var(--r-pill);color:var(--gold-text);background:var(--bg-1);font:600 .85rem var(--font-mono); }

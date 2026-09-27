@@ -13,6 +13,7 @@ import { TopicChip } from './parts';
 import { useEventsPress } from './press';
 import { badgeLabel, formatDay, isoOf, modeDuel, modeState, modeXp } from './util';
 import { useLocale } from '../../use-locale';
+import { jhkOnline } from '@/lib/jhk-online/runtime';
 
 export type ModeCardProps = {
   mode: EventMode;
@@ -35,6 +36,13 @@ export function ModeCard({ mode, now, earnedAt, armed, onChoose }: ModeCardProps
   const earned = earnedAt > 0;
   const reasonId = `fd-ev-mode-why-${mode.id.replace(/[^a-z0-9]+/gi, '-')}`;
 
+  if (jhkOnline.configured) return <article className="fd-ev-mode" data-domain={mode.duel.domain}>
+    <header className="fd-ev-mode-head"><p className="fd-ev-mode-kicker">{locale === 'hi' ? 'पुराने फ़ॉर्मैट का पूर्वावलोकन' : 'CLASSIC FORMAT PREVIEW'}</p><h3>{mode.template.name}</h3><p className="fd-ev-mode-tagline">{mode.template.tagline}</p></header>
+    <p>{locale === 'hi' ? 'लाइव बीटा में पाँच राउंड, हर राउंड तीस सेकंड हैं। इस इवेंट का पुराना फ़ॉर्मैट और बोनस अभी लाइव में उपलब्ध नहीं हैं।' : 'The human beta uses five 30-second rounds. This classic event format and its bonus are not available in live matches yet.'}</p>
+    {earned && <p>{locale === 'hi' ? 'आपका पहले कमाया अभ्यास बैज सुरक्षित है: ' : 'Your previously earned practice badge is kept: '}{badge}</p>}
+    <button type="button" className="fd-ev-play" onClick={() => onChoose(mode)}><Play aria-hidden="true" /><span>{locale === 'hi' ? 'इंसानी मुक़ाबला खोलें' : 'Open human duels'}</span></button>
+  </article>;
+
   return (
     <article
       className="fd-ev-mode"
@@ -45,7 +53,7 @@ export function ModeCard({ mode, now, earnedAt, armed, onChoose }: ModeCardProps
       <header className="fd-ev-mode-head">
         <p className="fd-ev-mode-kicker">
           {state.open ? <Zap aria-hidden="true" /> : <Lock aria-hidden="true" />}
-          {t('modecard.limited')}
+          {t('modecard.limited')} · {jhkOnline.configured ? locale === 'hi' ? 'पुराना फ़ॉर्मैट · लाइव में पाँच राउंड' : 'CLASSIC FORMAT · LIVE USES FIVE ROUNDS' : locale === 'hi' ? 'अभ्यास' : 'PRACTICE'}
         </p>
         <h3>{mode.template.name}</h3>
         <p className="fd-ev-mode-tagline">{mode.template.tagline}</p>

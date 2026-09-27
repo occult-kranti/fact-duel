@@ -1,31 +1,8 @@
 /**
- * vite.config.static.ts — the server-free build (`pnpm build:static` → `dist-static/`).
- *
- * The game's UI is already a client app, so this config bundles `static/main.tsx` (which mounts
- * `app/arena.tsx`) with three aliases that remove the only server-shaped dependencies:
- *   `@/lib/duel-client`   → `lib/duel-client-static.ts` (dispatch in-process, no `/api/duel`)
- *   `@/lib/wallet-client` → `lib/wallet-client-static.ts` (device wallet only, no `/api/wallet`)
- *   `@/lib/presence-client` → `lib/presence-client-static.ts` (never polls, so no live counts)
- *   `next/dynamic`        → `static/next-dynamic-shim.tsx` (React.lazy + Suspense)
- * Everything else — screens, hooks, CSS, the three.js scenes — is imported unchanged.
- *
- * `base` defaults to `/fact-duel/` for a GitHub Pages project site and can be overridden with the
- * `STATIC_BASE` env var (e.g. `STATIC_BASE=/ pnpm build:static` for a user/organisation site).
- *
- * `APP_URL` is the hand-off: once the server build is live somewhere, set it at build time and the
- * bundle stops being the game. `static/main.tsx` then renders `app/redirect-notice.tsx` — a card
- * that names the new host and sends the visitor there — instead of mounting the arena. Unset (the
- * default) it is the empty string and this build behaves exactly as before.
- *
- * The hand-off is also written into the HTML, because the served page must not depend on the
- * bundle to do its one job. When `APP_URL` parses, `staticAssets()` rewrites the description (the
- * preview's own description is what a search result or a WhatsApp unfurl would otherwise say about
- * a page that is now only a signpost), adds a canonical link to the live game, puts a plain link
- * inside `#root` so a visitor whose JavaScript never arrives still sees where the game went, and
- * adds a `<meta http-equiv="refresh">` for a visitor with no JavaScript at all. That refresh is
- * inside a `<noscript>` on purpose: a declarative refresh cannot be cancelled from script, and the
- * card offers a control that stops the countdown (WCAG 2.2.1), which would be a lie if a second,
- * uncancellable timer were running behind it.
+ * GitHub Pages build: local learning plus the optional JHK human-duel backend.
+ * Practice transports remain device-local; lib/jhk-online speaks only to JHK_SERVER_URL.
+ * STATIC_BASE sets the Pages path. APP_URL is a legacy optional hand-off and must stay empty
+ * when this build hosts the game. Public server URL/key values are frozen into the bundle.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -182,6 +159,8 @@ export default defineConfig(({ mode }) => ({
     'process.env.NODE_ENV': JSON.stringify(mode === 'development' ? 'development' : 'production'),
     __STATIC_BASE__: JSON.stringify(base),
     'import.meta.env.VITE_APP_URL': JSON.stringify(appUrl),
+    'import.meta.env.VITE_JHK_SERVER_URL': JSON.stringify(process.env.JHK_SERVER_URL || process.env.VITE_JHK_SERVER_URL || ''),
+    'import.meta.env.VITE_JHK_SUPABASE_ANON_KEY': JSON.stringify(process.env.JHK_SUPABASE_ANON_KEY || process.env.VITE_JHK_SUPABASE_ANON_KEY || ''),
   },
   resolve: {
     alias: [

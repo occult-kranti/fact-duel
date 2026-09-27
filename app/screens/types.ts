@@ -22,6 +22,7 @@ export type PendingAnswer = { roundId: string; attemptId: string; choice: number
 export type Player = ReturnType<typeof usePlayer>;
 export type Tab =
   | 'home'
+  | 'online'
   | 'journeys'
   | 'arena'
   | 'passport'
@@ -176,6 +177,7 @@ export type HomeScreenProps = {
   ready: boolean;
   busy: boolean;
   onRoute: (id: string | null) => void;
+  onLive: () => void;
   onDuel: (mode: string, topic?: string) => void;
   onSetup: (intent?: 'friend' | 'join' | 'settings') => void;
   go: (tab: string) => void;

@@ -1,28 +1,7 @@
 /**
- * static/main.tsx — SPA entry for the server-free (static) build.
- *
- * `app/page.tsx` renders `<Arena/>` and `app/arena.tsx` is `'use client'`, so the whole game is a
- * browser app already: this entry mounts the very same component with `createRoot` and imports the
- * four stylesheets `app/layout.tsx` imports, in the same order. The only additions are the honesty
- * banner (the app screens are untouched) and the base-path patch below.
- *
- * Two builds come out of this file. Without `APP_URL` it is the preview: the arena under a banner
- * that says there is no server here. With `APP_URL` set (vite.config.static.ts freezes it into
- * `import.meta.env.VITE_APP_URL`) the game has moved, and this page is only the hand-off — the
- * redirect card and nothing else. An `APP_URL` that does not parse, or that points back at this
- * very page, falls back to the preview rather than to a blank page or a redirect loop.
- *
- * The arena is behind a dynamic `import()` for that reason: a hand-off page must not download the
- * game it is handing off. `import Arena from '../app/arena'` at module scope put the whole entry
- * chunk — every screen, the question bank, every screen's CSS — in front of a card whose entire
- * content is one sentence and one link, and the three-second countdown only started once all of it
- * had parsed. Now Rollup splits the arena (and the in-page duel service the preview banner's copy
- * comes from) into their own chunks, which the hand-off never asks for.
- *
- * Locale: `<Arena/>` mounts its own LocaleProvider (app/use-locale.tsx), so this build follows the
- * same rule as the Next one — `<html lang>` and the Noto Sans Devanagari stylesheet are set at
- * runtime only while the stored or detected locale is Hindi; static/index.html links no extra font.
- * The hand-off card has no arena under it, so it carries its own provider for the same reason.
+ * GitHub Pages SPA. The same JHK arena keeps local learning, while its isolated live desk uses
+ * the configured server. A practice-only notice appears when no JHK server URL is configured.
+ * The optional legacy APP_URL hand-off and asset base-path adaptation are retained.
  */
 import { createRoot } from 'react-dom/client';
 import '../app/theme/tokens.css';
@@ -80,7 +59,7 @@ function patchBasePaths(base: string) {
   }
 }
 
-/** Required labelling: this build has no server, and it says so above everything else. */
+/** Clearly label a build whose human backend is not connected. */
 function PreviewNote({ notice }: { notice: { title: string; body: string } }) {
   return (
     <aside className="fd-offline-note" aria-label={notice.title}>
@@ -104,13 +83,14 @@ if (HANDOFF) {
   const root = createRoot(container);
   void (async () => {
     try {
-      const [{ default: Arena }, { OFFLINE_BUILD, OFFLINE_NOTICE }] = await Promise.all([
+      const [{ default: Arena }, { OFFLINE_BUILD, OFFLINE_NOTICE }, { jhkOnline }] = await Promise.all([
         import('../app/arena'),
         import('../lib/duel-client-static'),
+        import('../lib/jhk-online/runtime'),
       ]);
       root.render(
         <>
-          {OFFLINE_BUILD && <PreviewNote notice={OFFLINE_NOTICE} />}
+          {OFFLINE_BUILD && !jhkOnline.configured && <PreviewNote notice={{ title: 'Practice build', body: 'Human duels need the shared server connection. Practice games and progress are available on this device.' }} />}
           <Arena />
         </>,
       );

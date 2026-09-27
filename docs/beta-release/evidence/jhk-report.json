@@ -1,0 +1,17 @@
+{
+  "evidence": "Actual deployed JHK backend via exact-endpoint Node fetch relay (Chromium direct egress blocked), two isolated browser contexts, temporary QA profiles",
+  "checks": [
+    "Human desk reachable directly, no email gate, mobile320 + desktop1280 fit",
+    "Real private room shared across two guest identities with stake confirmation",
+    "Reload restores accepted answer and live server room",
+    "Five real shared rounds, answer receipts, both-ready transitions and settled result",
+    "Server balance and online XP persist after settlement",
+    "Coin leaderboard opens after match",
+    "Live learning entry opens expeditions, not legacy bot configurator",
+    "Play nav returns to human server desk",
+    "Server identity and XP appear above preserved device practice achievements",
+    "QA guest deleted",
+    "QA guest deleted"
+  ],
+  "errors": []
+}
