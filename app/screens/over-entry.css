@@ -1,0 +1,49 @@
+/* Explicit match lengths, a quiet next goal, and optional setup. */
+.jo-home .ps-match-meta{margin-bottom:15px}
+.jo-home .ps-match-meta>span:last-child{font-size:.67rem;letter-spacing:.08em;color:var(--muted)}
+.jo-over-choices{display:grid;gap:9px}
+.jo-over-choices button{width:100%;text-align:left;min-width:0}
+.jo-over-choices button:disabled{opacity:.65;cursor:wait}
+.jo-over-choices button>span{display:grid;gap:5px}
+.jo-over-choices strong{font:800 1.12rem/1.2 var(--font-display)}
+.jo-over-choices small{font:550 .75rem/1.4 var(--font-ui)}
+.jo-full{min-height:64px;border:1px solid var(--line);border-radius:12px;padding:12px 18px;background:var(--bg-0);color:var(--text);display:flex;align-items:center;justify-content:space-between;gap:12px}
+.jo-full small{color:var(--muted)}
+.jo-reward-note{font:.72rem/1.45 var(--font-ui);color:var(--muted);margin:9px 0 0;text-align:center}
+.jo-home .jo-free-note{font:550 .75rem/1.5 var(--font-ui);margin:12px 0}
+.jo-other-ways{border-top:1px solid var(--line);margin-top:2px}
+.jo-other-ways>summary,.jo-explore>summary{font:650 .8rem/1.5 var(--font-ui);color:var(--text);padding:13px 2px;min-height:46px;cursor:pointer}
+.jo-other-body{padding:2px 0 12px;display:grid;gap:8px}
+.jo-settings{min-height:44px;border:0;border-radius:9px;background:var(--bg-0);color:var(--text);display:flex;align-items:center;justify-content:center;gap:8px;font:650 .8rem/1.4 var(--font-ui);padding:8px}
+.jo-explore{border-top:1px solid var(--line);margin-top:20px}
+.jo-explore .ps-extras{margin-top:0;border-top:0}
+.jo-format-pick{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:14px 0}
+.jo-format-pick button{min-height:70px;display:grid;align-content:center;gap:5px;border:1px solid var(--line);border-radius:13px;color:var(--text);background:var(--bg-1);padding:12px;text-align:left}
+.jo-format-pick button[aria-pressed=true]{border-color:var(--volt-text);box-shadow:inset 0 0 0 1px var(--volt-text)}
+.jo-format-pick strong{font:750 1rem/1.3 var(--font-display)}
+.jo-format-pick span{font:550 .8rem/1.4 var(--font-ui);color:var(--muted)}
+.jo-title-goal{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:11px;border:1px solid var(--line);background:var(--bg-1);border-radius:14px;margin-top:14px;padding:14px;color:var(--text);width:100%;text-align:left}
+.jo-title-goal>span{min-width:0;display:grid;gap:5px}.jo-title-goal strong{font:700 .9rem/1.3 var(--font-display)}
+.jo-title-goal small{font:.76rem/1.45 var(--font-ui);color:var(--muted)}
+.jo-title-goal progress{display:block;width:100%;height:5px;border:0;accent-color:var(--volt-text);margin-top:3px}
+.jo-home button:focus-visible,.jo-home summary:focus-visible,.jo-format-pick button:focus-visible{outline:3px solid var(--volt-text);outline-offset:3px}
+@media(max-width:599px){
+  .jo-home .ps-world{height:176px;min-height:176px}
+  .jo-home .tr-home-world .ps-world-heading h1{font-size:1.9rem}
+  .jo-home .tr-home-art{object-position:center 62%}
+  .jo-home .ps-world .ps-eyebrow{font-size:.6rem}
+  .jo-home .ps-ground-label{font-size:.58rem}
+  .jo-home .ps-matchdesk{padding:14px}
+  .jo-home .jo-promise{display:block;margin:0 0 13px;font-size:.83rem;line-height:1.45;max-width:none}
+  .jo-home .jo-mini{min-height:69px;padding:12px 15px}
+  .jo-home .jo-full{min-height:60px;padding:11px 15px}
+  .jo-over-choices strong{font-size:1.05rem}
+  .jo-over-choices small{font-size:.75rem}
+  .jo-home .jo-free-note{font-size:.72rem;margin:10px 0 7px}
+  .jo-home .ps-welcome>span{font-size:.59rem}
+}
+@media(max-height:600px) and (max-width:599px){.jo-home .ps-world{height:125px;min-height:125px}.jo-home .ps-world .ps-eyebrow{display:none}.jo-home .tr-home-world .ps-world-heading h1{font-size:1.65rem}.jo-home .jo-promise{font-size:.78rem;margin-bottom:9px}}
+
+.jo-launch-recovery{border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:12px;background:var(--bg-1);color:var(--text);font:.8rem/1.5 var(--font-ui)}
+.jo-launch-recovery p{margin:0 0 8px}.jo-launch-recovery button,.jo-launch-recovery input{min-height:44px;border:1px solid var(--line);border-radius:8px;background:var(--bg-0);color:var(--text);padding:8px 12px;font:650 .8rem var(--font-ui)}
+.jo-launch-recovery label{display:block;margin-bottom:8px}.jo-launch-recovery input{width:100%;min-width:0}

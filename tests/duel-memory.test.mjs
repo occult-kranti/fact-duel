@@ -430,7 +430,7 @@ test('a two-human trilogy, its receipts and its recap are identical on both stor
       f.call(f.host, 'create', { name: 'A', config: { ...CONFIG, mode: 'trilogy' } }),
     );
     await step('join', () => f.call(f.guest, 'join', { name: 'B' }));
-    for (let round = 0; round < 2; round++) {
+    for (let round = 0; round < 3; round++) {
       const before = await f.raw();
       await step(`host ready ${round}`, () =>
         f.call(f.host, 'ready', { roundId: before.round?.id ?? null, rttMs: 40, jitterMs: 10 }),
@@ -484,7 +484,7 @@ test('a two-human trilogy, its receipts and its recap are identical on both stor
     assert.equal(end.balances[0] + end.balances[1] + end.escrow, 2000);
     assert.equal(end.winner, 0);
     assert.deepEqual(end.balances, [1025, 975]);
-    assert.equal(end.completedRounds.length, 2);
+    assert.equal(end.completedRounds.length, 3);
   });
 });
 

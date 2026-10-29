@@ -41,13 +41,13 @@ test('Spicy has depth at every difficulty and official source attribution on eve
   assert.match(CRICKET_SPICY.find(q=>q.id==='cr613').explanation, /restoring leadership eligibility/);
 });
 
-test('the real local service deals five distinct Spicy cards with no retired questions', async () => {
+test('the real local service deals six distinct Spicy cards with no retired questions', async () => {
   const store=new MemoryRoomStore(); let now=1_000_000;
   const auth={roomId:crypto.randomUUID().replaceAll('-',''),token:crypto.randomUUID().replaceAll('-',''),invite:crypto.randomUUID().replaceAll('-','')};
   const call=(action,extra={})=>dispatch(store,{...auth,action,...extra},{now,actor:auth.token,rng:()=>.51});
   const config={opponent:'bot',mode:'gauntlet',duration:30,stake:0,domain:'sports',region:'all',topic:'Cricket',subtopic:'Spicy',difficulty:'all'};
   let data=await call('create',{name:'Spicy reader',config}); const dealt=new Set();
-  for(let i=0;i<5;i++) {
+  for(let i=0;i<6;i++) {
     data=await call('ready',{roundId:data.room.round?.id??null}); now=data.room.round.scheduledAt;
     data=await call('reveal',{roundId:data.room.round.id});
     const q=data.room.round.question; assert.equal(q.subtopic,'Spicy'); assert.ok(!RETIRED_QUESTION_IDS.includes(q.id)); dealt.add(q.id);
@@ -55,7 +55,7 @@ test('the real local service deals five distinct Spicy cards with no retired que
     await call('answer',{roundId,attemptId:crypto.randomUUID().replaceAll('-',''),choice:0,elapsedMs:1000}); now+=10_000;
     data=await call('state');
   }
-  assert.equal(dealt.size,5); assert.equal(data.room.phase,'complete');
+  assert.equal(dealt.size,6); assert.equal(data.room.phase,'complete');
 });
 
 test('the deployment delta touches only retired questions and Spicy question rows', () => {

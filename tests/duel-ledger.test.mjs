@@ -432,7 +432,7 @@ test('a memory store without a ledger keeps the demo coins; with one it plays th
 test('the reconciler passes after a full trilogy at the top tier', async (t) => {
   const f = await fixture(t, { stake: 500, mode: 'trilogy' });
   await staked(f);
-  for (let round = 0; round < 2; round++) {
+  for (let round = 0; round < 3; round++) {
     const r = await f.prepare();
     f.advance(1200);
     await Promise.all([f.answer(f.host, r, 1000), f.answer(f.guest, r, 1151)]);

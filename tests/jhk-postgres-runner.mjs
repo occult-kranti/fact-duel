@@ -10,7 +10,7 @@ try {
  await db.exec(read('supabase/hisaab/schema.sql')); // Existing sibling remains isolated.
  await db.exec(read('supabase/jhk/schema.sql'));await db.exec(read('supabase/jhk/schema.sql'));
  await db.exec(read('supabase/jhk/seed-bank.sql'));
- for(const file of ['tests/jhk-online-security.sql','tests/jhk-online-economy.sql']) {
+ for(const file of ['tests/jhk-online-security.sql','tests/jhk-online-economy.sql','tests/jhk-online-overs.sql']) {
   const result=await db.exec(read(file));const evidence=result.flatMap(r=>r.rows??[]).find(r=>r.evidence)?.evidence;
   assert.ok(evidence?.checks>0);console.log(JSON.stringify({suite:evidence.suite,checks:evidence.checks,result:'pass'}));
  }

@@ -3,6 +3,8 @@ import { useRef } from 'react';
 import { Check, Trophy } from 'lucide-react';
 import { FORMAT_COPY } from '@/lib/duel-presentation.mjs';
 import { XP } from '@/lib/progression.mjs';
+import { TIMED_ANSWER_XP } from '@/lib/edition-rules.mjs';
+import { OVER_REWARD_RULES } from '@/lib/over-rewards.mjs';
 import { PRESENCE_LIVE, presenceLineKey, queuedFormat, usePresence } from '@/lib/presence-client';
 import type { Mode } from '../types';
 import { useRivalQueue } from './opponent-picker';
@@ -16,6 +18,8 @@ import { useLocale } from '../../use-locale';
 export function modeReward(id: string, t?: (key: string, vars?: Record<string, string | number>) => string) {
   const xp = (XP.matchWin as Record<string, number>)[id] ?? XP.matchWin.quick;
   const rp = (XP.rankWin as Record<string, number>)[id] ?? XP.rankWin.quick;
+  const completion = !TIMED_ANSWER_XP && OVER_REWARD_RULES[id as keyof typeof OVER_REWARD_RULES];
+  if (completion) return { xp, rp, label: `Every round answered: +${completion.completionXp} XP` };
   return { xp, rp, label: t ? t('launch.reward', { xp, rp }) : `Win: +${xp} XP · +${rp} RP` };
 }
 

@@ -22,7 +22,7 @@ test('the whole-match verdict does not attribute a multi-round win to its losing
   assert.match(matchVerdict(room).subtitle, /3–2/);
   assert.match(roundReason(room.round, 0), /rival had the only correct/);
   assert.match(matchVerdict({ ...room, seat: 1 }).title, /RIVAL WINS/);
-  assert.match(FORMAT_COPY.trilogy.rule, /otherwise.*after three/);
+  assert.match(FORMAT_COPY.trilogy.rule, /all three rounds/);
 });
 test('refunds, close draws and missing legacy history are described without invented results', () => {
   assert.equal(matchVerdict({ ...room, phase: 'cancelled', reason: 'player-left' }).title, 'MATCH REFUNDED');

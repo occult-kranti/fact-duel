@@ -8,6 +8,7 @@ export type OnlineMatch = {
   phase: 'waiting' | 'countdown' | 'question' | 'result' | 'finished' | 'cancelled';
   file: string; stake: number; rewardMultiplier: number;
   economy: { status: 'pending' | 'reserved' | 'settled' | 'refunded'; balance: number; savings: number; reserved: number; payout: number; reward: number };
+  format?: 'mini' | 'full' | 'legacy'; progression?: { answerXp: number; completionXp: number; perfectXp: number; totalXp: number };
   round: number; roundCount: number; startsAt: number; deadlineAt: number; nextAt?: number;
   serverNow: number; selfId: string; players: OnlinePlayer[];
   reactionsEnabled?: boolean; reactions?: { id: string; playerId: string; sticker: string; at: number; round: number }[];

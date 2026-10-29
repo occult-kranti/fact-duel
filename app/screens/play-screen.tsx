@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useMemo, useRef } from 'react';
+import { useMemo } from 'react';
 import { ArrowRight, ChevronRight, Info } from 'lucide-react';
 import { rankForPoints } from '@/lib/progression.mjs';
 import { defaultStake } from '@/lib/economy/stake-advice.mjs';
@@ -14,6 +14,7 @@ import { JoinForm, OpponentPicker } from './play/opponent-picker';
 import { usePlayJuice } from './play/press';
 import { TopicChips } from './play/topic-chips';
 import './play/play.css';
+import './over-entry.css';
 
 /* Play tab — "two taps from the lobby to the question" (design bible 10.2): format, opponent,
  * subject, then one launch control that is always in the thumb zone. Pure presentation over the
@@ -36,22 +37,11 @@ export function PlayScreen({ duel, player, catalogue, joinView, joinLink }: Play
   const { t, n, pick, locale, topic } = useLocale();
   const wallet = useWalletContext();
   const modeName = pick(`modes.${modeInfo.id}.name`, modeInfo.name);
-  /* The entry tier the wallet suggests (lib/economy/stake-advice.mjs): the highest offered tier it
-   * covers five times over, else the lowest it can afford, else free. Applied to the configurator
-   * ONCE, the first time the wallet is loaded while a friend duel is being set up at a free entry,
-   * and never after the player has touched the picker. It never raises a tier already chosen. */
+  // Advice remains optional: opening setup must never increase a free entry.
   const suggested = useMemo(
     () => (wallet?.loaded ? defaultStake(wallet.wallet, offeredConfig(wallet.config)) : 0),
     [wallet],
   );
-  const stakeTouched = useRef(false);
-  const stakeApplied = useRef(false);
-  const friendAtFree = config.opponent === 'friend' && config.stake === 0;
-  useEffect(() => {
-    if (!wallet?.loaded || stakeApplied.current || stakeTouched.current || !friendAtFree) return;
-    stakeApplied.current = true;
-    if (suggested > 0) change({ stake: suggested });
-  }, [wallet?.loaded, friendAtFree, suggested, change]);
   const facets = catalogue?.facets || [];
   const pool = useMemo(
     () =>
@@ -81,11 +71,11 @@ export function PlayScreen({ duel, player, catalogue, joinView, joinLink }: Play
   const rank = rankForPoints(player.progression?.rank?.points ?? 0);
   const level = player.level;
   return (
-    <div className="fd-play">
+    <div className="fd-play jo-play">
       <header className="fd-play-head">
         <div>
           <p className="fd-play-eyebrow">{t('play.eyebrow')}</p>
-          <h1>{t('play.title')}</h1>
+          <h1>{locale === 'hi' ? 'अपना ओवर चुनें' : 'Make it your over'}</h1>
         </div>
         <button
           type="button"
@@ -120,10 +110,15 @@ export function PlayScreen({ duel, player, catalogue, joinView, joinLink }: Play
             onCreate={() => create()}
             onJoin={join}
           />
+          {catalogue && pool.length < modeInfo.rounds && !joinView && <div className="jo-launch-recovery" role="status"><p>{locale === 'hi' ? 'इस विषय चयन में पूरा ओवर नहीं बन सकता। सभी विषय चुनकर खेलें।' : 'This topic selection cannot fill your over. Choose all topics to play.'}</p><button type="button" onClick={clearFilters}>{t('play.useAll')}</button></div>}
+          {!name.trim() && player.loaded && <div className="jo-launch-recovery"><label htmlFor="jo-nickname">{locale === 'hi' ? 'खेलने के लिए नाम' : 'Choose a playing name'}</label><input id="jo-nickname" autoComplete="nickname" maxLength={24} value={name} onChange={event => setName(event.target.value, joinView ? 'join' : 'create')} placeholder={locale === 'hi' ? 'आपका निकनेम' : 'Your nickname'} /></div>}
         </aside>
         <div className="fd-play-col">
-          <div className="gc-match-summary"><b>{modeName} · {modeInfo.rounds} {locale === 'hi' ? 'सवाल' : 'questions'}</b><span>{config.topic === 'all' ? (locale === 'hi' ? 'सभी विषय' : 'All topics') : topic(config.topic)} · {config.opponent === 'bot' ? (locale === 'hi' ? 'अभ्यास बॉट' : 'Practice bot') : (locale === 'hi' ? 'दोस्त' : 'Friend')}</span><small>{locale === 'hi' ? 'नीचे अपनी पसंद बदलें। बंद करने पर पसंद बनी रहती है।' : 'Choose your format and topic below. Closing settings keeps your choices.'}</small></div>
-          <details className="gc-advanced" open={joinView || undefined}><summary>{locale === 'hi' ? 'विषय, मोड और सेटिंग चुनें' : 'Choose topics, format & settings'}</summary><div className="gc-advanced-body">
+          <div className="gc-match-summary"><b>{modeName} · {modeInfo.rounds} {locale === 'hi' ? 'सवाल' : 'questions'}</b><span>{config.topic === 'all' ? (locale === 'hi' ? 'सभी विषय' : 'All topics') : topic(config.topic)} · {config.opponent === 'bot' ? (locale === 'hi' ? 'अभ्यास बॉट' : 'Practice bot') : (locale === 'hi' ? 'दोस्त' : 'Friend')}</span><small>{locale === 'hi' ? 'अभी खेलें या नीचे ओवर बदलें। विषय और सेटिंग वैकल्पिक हैं।' : 'Start now, or change your over below. Topics and settings are optional.'}</small></div>
+          {!joinView && <section className="jo-format-pick" aria-label={locale === 'hi' ? 'ओवर का आकार' : 'Over length'}>
+            {MODES.filter((mode) => ['trilogy', 'gauntlet'].includes(mode.id)).map((mode) => <button type="button" key={mode.id} aria-pressed={config.mode === mode.id} disabled={busy} onClick={() => change({ mode: mode.id })}><strong>{pick(`modes.${mode.id}.name`, mode.name)}</strong><span>{mode.rounds} {locale === 'hi' ? 'राउंड' : 'rounds'}</span></button>)}
+          </section>}
+          <details className="gc-advanced" open={joinView || undefined}><summary>{locale === 'hi' ? 'विषय, प्रतिद्वंद्वी और वैकल्पिक सेटिंग' : 'Topics, opponent & optional settings'}</summary><div className="gc-advanced-body">
           {!joinView && <ModesRow activeId={duel.eventModeId} onChoose={chooseEventMode} go={go} />}
 
           {!joinView && (
@@ -180,7 +175,6 @@ export function PlayScreen({ duel, player, catalogue, joinView, joinLink }: Play
                   name={name}
                   subtopics={subtopics}
                   onChange={(patch) => {
-                    if ('stake' in patch) stakeTouched.current = true;
                     change(patch);
                   }}
                   onName={(value) => setName(value, 'create')}
@@ -192,24 +186,7 @@ export function PlayScreen({ duel, player, catalogue, joinView, joinLink }: Play
                     {catalogue ? n('play.questions', modeInfo.rounds) : t('play.loading')}
                   </span>
                 </div>
-                {catalogue && pool.length < modeInfo.rounds && (
-                  <div className="fd-warn" role="status">
-                    <span>{t('play.notEnough', { mode: modeName })}</span>
-                    <button type="button" className="fd-link" {...press} onClick={clearFilters}>
-                      {t('play.useAll')}
-                    </button>
-                    {pool.length > 0 && config.mode !== 'quick' && (
-                      <button
-                        type="button"
-                        className="fd-link"
-                        {...press}
-                        onClick={() => change({ mode: 'quick' })}
-                      >
-                        {t('play.playOne')}
-                      </button>
-                    )}
-                  </div>
-                )}
+
               </section>
 
 

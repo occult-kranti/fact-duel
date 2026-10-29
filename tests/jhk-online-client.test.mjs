@@ -167,3 +167,20 @@ test('email-free guest entry never silently accepts human-match terms or replace
  }});
  assert.equal((await existing.ensureGuest()).id,session.id);assert.equal(calls,1);
 });
+
+test('authoritative over XP persists without regressing on a stale snapshot',async()=>{
+ const storage=memory(); storage.setItem(STORAGE.serverSession,JSON.stringify({token,session}));
+ let xp=180;
+ const client=createOnlineClient({url:'https://server.example/game',storage,fetcher:async()=>response({ok:true,serverNow:20,match:{progression:{answerXp:90,completionXp:60,perfectXp:30,totalXp:xp}}})});
+ await client.request('snapshot',{roomId:'room'});assert.equal(client.session.onlineXp,180);
+ xp=120;await client.request('snapshot',{roomId:'room'});assert.equal(client.session.onlineXp,180);
+ assert.equal(JSON.parse(storage.getItem(STORAGE.serverSession)).session.onlineXp,180);
+});
+
+test('late profile refresh cannot regress XP earned by a newer match snapshot',async()=>{
+ const storage=memory();storage.setItem(STORAGE.serverSession,JSON.stringify({token,session}));let finish;
+ const client=createOnlineClient({url:'https://server.example/game',storage,fetcher:async(_,opts)=>JSON.parse(opts.body).action==='profile'?new Promise(resolve=>{finish=resolve;}):response({ok:true,serverNow:30,match:{progression:{totalXp:240}}})});
+ const profile=client.request('profile');await client.request('snapshot',{roomId:'room'});
+ finish(response({ok:true,serverNow:20,session:{...session,onlineXp:100}}));await profile;
+ assert.equal(client.session.onlineXp,240);assert.equal(JSON.parse(storage.getItem(STORAGE.serverSession)).session.onlineXp,240);
+});

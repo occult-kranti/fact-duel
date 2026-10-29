@@ -4,7 +4,7 @@ GitHub Pages serves the JHK UI. The independent `jhk-game` Supabase Edge Functio
 
 ## Rules and boundary
 
-- Two human seats, five rounds, four choices, 30 seconds each; 2.5-second server countdown. No bot is inserted by matchmaking.
+- Two human seats: Mini over plays exactly 3 rounds; Full over exactly 6. Four choices, 30 seconds each; 2.5-second opening countdown. New overs use a 1.5-second result pause and 0.5-second subsequent countdown. Existing five-round rooms retain their original length and timing. No bot is inserted by matchmaking.
 - Match winner: most correct answers, then lowest sum of server-measured answer times. Incorrect/missing answers count as 30 seconds. Differences at or below 120 ms are draws.
 - The server records each player's first question release and first accepted answer. Polling/reconnection never resets the release timestamp. Client identity, correctness, score, XP, balance and timing assertions are ignored.
 - Measurement includes response/answer network delivery. The dead-heat band reduces close-call noise; this is not latency-neutral or a calibrated reaction-time instrument.
@@ -33,8 +33,8 @@ POST `/functions/v1/jhk-game`, JSON `{action,...payload}`, `Content-Type: applic
 | `rotateRecovery` | `{}` | `{recoveryCode}`; invalidates the old recovery code |
 | `exportProfile` | `{}` | `{profile,createdAt,profileCompletedAt,answers,results,walletEntries,circles}`; private authenticated export |
 | `deleteSession` | `{}` | `{deleted:true}` |
-| `queue` | `{mode:'ranked'\|'tournament',file?,stake?}` | `{match}` with exact topic/stake queue |
-| `create` | `{file?,stake?}` | `{match}` with private invitation code |
+| `queue` | `{mode:'ranked'\|'tournament',format:'mini'\|'full',file?,stake?}` | `{match}` with exact topic/stake/format queue |
+| `create` | `{format:'mini'\|'full',file?,stake?}` | `{match}` with private invitation code |
 | `join` | `{code}` | `{match}`; reveals terms without charging |
 | `ready` | `{roomId,stake}` | `{match}`; confirms and reserves |
 | `snapshot` / `next` / `leave` | `{roomId}` | `{match}` |
@@ -44,9 +44,9 @@ POST `/functions/v1/jhk-game`, JSON `{action,...payload}`, `Content-Type: applic
 
 The browser persists a bearer secret separately from local practice XP. Bearer sessions expire after 30 days; a separately saved recovery code restores access without email verification and rotates the bearer. Recovery remains valid until rotated or deactivated. Email is optional unverified private contact data, never an account lookup, linking key or recovery credential. Omitting it or submitting an empty/null value stores no address; an invalid supplied address is rejected. Human entry still requires an explicit 18+ and current-terms confirmation. Two profiles can have the same entered email without sharing access. Credential expiry is **not an automatic data-deletion policy**. Authenticated `deleteSession` revokes bearer/recovery, removes private profile fields, public standings and circle memberships, and pseudonymizes retained historical match/ledger records. It cancels active matches under the same disclosed forfeit/refund policy as leaving. This endpoint never imports locally claimed scores.
 
-`session` contains `id,nickname,email,avatar,locale,preferences,adultConfirmed,termsVersion,profileComplete,expiresAt,onlineXp,balance,savings,title?`. `match` contains `id,code,mode,file,stake,rewardMultiplier:1,phase,round,roundCount:5,startsAt,deadlineAt,nextAt,serverNow,selfId,players,question,receipt,result,winnerId,reason,economy`.
+`session` contains `id,nickname,email,avatar,locale,preferences,adultConfirmed,termsVersion,profileComplete,expiresAt,onlineXp,balance,savings,title?`. `match` contains `id,code,mode,file,stake,rewardMultiplier:1,phase,round,roundCount:3|5|6,format,progression,startsAt,deadlineAt,nextAt,serverNow,selfId,players,question,receipt,result,winnerId,reason,economy`.
 
-Phases are `waiting`, `countdown`, `question`, `result`, `finished`, `cancelled`. Question projection is `{id,prompt:{en},options:[{en}],category,domain,topic,subtopic,difficulty,...}`. Answer keys/explanation/source are hidden until the requesting player's receipt; opponent answers remain hidden until round settlement. `receipt` includes locked `choice,correct,correctIndex,elapsedMs,xp,explanation,sourceUrl`. Correct XP is 30 below 8 seconds, 20 below 15 seconds, else 10. Wrong answers receive zero. Match snapshots are authority; local display clocks are estimates only.
+Phases are `waiting`, `countdown`, `question`, `result`, `finished`, `cancelled`. Question projection is `{id,prompt:{en},options:[{en}],category,domain,topic,subtopic,difficulty,...}`. Answer keys/explanation/source are hidden until the requesting player's receipt; opponent answers remain hidden until round settlement. `receipt` includes locked `choice,correct,correctIndex,elapsedMs,xp,explanation,sourceUrl`. Correct XP is 30 below 8 seconds, 20 below 15 seconds, else 10. Wrong answers receive zero answer XP. Completing a Mini / Full over with an accepted answer on every question earns a further 60 / 150 XP, win or lose. All-correct overs add 30 / 60 perfect XP. `progression` discloses match `answerXp`, `completionXp`, `perfectXp` and cumulative `totalXp`; the unique `(room_id,session_id)` over-XP ledger makes retries idempotent. Partial, idle, cancelled and legacy five-round rooms grant no new completion bonus. Authenticated export includes `overXp`. New clients explicitly send `format`; omission preserves the legacy five-round API for already-open old clients. Friend invites adopt and disclose their host's length. Match snapshots are authority; local display clocks are estimates only.
 
 `economy` contains `status:'pending'|'reserved'|'settled'|'refunded',balance,savings,reserved,payout,reward`. Forfeits use phase `cancelled` plus `winnerId` and reason `player-left-forfeit`, `profile-deleted-forfeit` or `disconnect-forfeit`. Show the reason rather than presenting every cancellation as a refund.
 
@@ -100,3 +100,7 @@ Before deploying, inspect the intended project and the two existing function def
 Verification: 21 targeted client/Edge/PGlite tests passed, including email-free creation, cricket queue entry, contact add/remove, retained identity, recovery rotation, explicit consent, transport isolation, and concurrent guest requests. A separate seven-check migration rehearsal applied this file to the previous canonical schema with an existing profile and retained its ID, wallet, contact value, and service-only RPC permission. This single-connection rehearsal does not establish remote deployment status or load capacity.
 
 Primary references: [Supabase anonymous identities](https://supabase.com/docs/guides/auth/auth-anonymous) distinguishes anonymous identities from the public `anon` API key; [securing Edge Functions](https://supabase.com/docs/guides/functions/auth) describes authentication boundaries and server-only elevated access. JHK retains its existing isolated device-bearer implementation rather than replacing its authority during this UI change.
+
+## Mini / Full over release
+
+Deploy `migrations/20261029234500_jhk_mini_full_overs.sql` before the UI. Then deploy `functions/jhk-game/index.ts` with `core.mjs` and existing function configuration: Edge validation now accepts a sixth answer and the selected format. No bank replacement is needed. The additive migration retains historical rooms and XP; it does not mint retroactive bonuses. `node tests/jhk-postgres-runner.mjs` executes security, existing coin economy, and new over integration checks. Public zero-stake matches auto-ready after the explicit Play action; private and positive-stake rooms still require confirmation.

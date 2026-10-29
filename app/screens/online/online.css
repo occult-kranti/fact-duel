@@ -101,3 +101,6 @@
 .jhk-profile-confirm { padding: 14px; border: 1px solid var(--line); border-radius: var(--r-md,12px); }
 .jhk-profile-confirm button { margin: 4px 8px 4px 0; }
 .jhk-profile-avatar { display: inline-grid; place-items: center; width: 40px; height: 40px; margin-right: 10px; border: 1px solid var(--line); border-radius: 50%; color: var(--volt); font-size: 26px; vertical-align: middle; }
+
+/* Clear over selection and an earned, optional result summary. */
+.jhk-live-formats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0}.jhk-live-formats button{display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:14px;min-height:88px;text-align:left;white-space:normal}.jhk-live-formats button[aria-pressed=true]{border:2px solid var(--fd-accent,#da6f3d);background:var(--fd-surface,#fff8ed);color:var(--fd-ink,#211f1b)}.jhk-live-formats span{font-size:12px;line-height:1.4}.jhk-live-xp{padding:16px;border:1px solid currentColor;border-radius:16px;margin:16px 0}.jhk-live-xp>strong{font-size:30px}.jhk-live-xp p{font-size:13px;line-height:1.5}@media(max-width:360px){.jhk-live-formats{grid-template-columns:1fr}}

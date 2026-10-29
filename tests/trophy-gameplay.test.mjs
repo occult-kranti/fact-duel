@@ -102,7 +102,7 @@ test('rotated room decks exclude recently reserved families until unseen familie
   const first=chooseDeck(pool,config,()=>.5), history=Object.fromEntries(first.map(q=>[q.id,100]));
   const second=chooseDeck(pool,config,()=>.5,{history});
   assert.equal(second.filter(q=>history[q.id]).length,0);
-  assert.equal(new Set(second.map(q=>q.id)).size,5);
+  assert.equal(new Set(second.map(q=>q.id)).size,6);
 });
 test('attempted round counters exclude timeouts, count settled misses, and migrate conservatively', () => {
   const old=emptyProgression();old.counters.rounds=20;old.counters.correct=7;delete old.counters.attemptedRounds;

@@ -32,6 +32,8 @@ import { prizeFor } from '@/lib/economy/economy.mjs';
 import { comboAt, marginLine, matchRank, matchXp, whatYouKeep, winTier } from './screens/room/room-math';
 import { usePress } from './screens/room/room-bits';
 import { useLocale } from './use-locale';
+import { ShareMoment } from './screens/room/share-moment';
+import { getOverRewardSummary, localTitleProgress } from '@/lib/over-rewards.mjs';
 
 /* Consecutive routine wins this session. Module scope, so it resets on reload and never reaches
    storage: this is about habituation inside one sitting, not a durable player stat. */
@@ -45,7 +47,7 @@ export function DuelHUD({ room }: { room: any }) {
     other = 1 - me,
     format = (FORMAT_COPY as any)[room.config.mode],
     rounds = completedRounds(room),
-    max = (MODE_ROUNDS as Record<string, number>)[room.config.mode] || 5;
+    max = room.roundCount || (MODE_ROUNDS as Record<string, number>)[room.config.mode] || 3;
   const combo = comboAt(room);
   const rivalName = room.players[other]?.name?.replace(' · BOT', '') || t('hud.openSeat');
   return (
@@ -65,9 +67,9 @@ export function DuelHUD({ room }: { room: any }) {
         </span>
         <small>
           {room.config.mode === 'chase' ? 'First to 3 correct' : room.config.mode === 'superover' ? 'Runs · 6 balls' : room.config.mode === 'trilogy'
-            ? t('hud.firstToTwo')
+            ? `Mini over · ${max} rounds`
             : room.config.mode === 'gauntlet'
-              ? t('hud.fiveRound')
+              ? `${max === 5 ? "Classic duel" : "Full over"} · ${max} rounds`
               : t('hud.oneShot')}
         </small>
       </div>
@@ -150,6 +152,8 @@ export function MatchFinish({
     mine = scored.map((r: any) => r.receipts?.[room.seat]).filter(Boolean),
     correct = mine.filter((a: any) => a.correct).length;
   const xpGained = matchXp(player, room);
+  const overReward = getOverRewardSummary(room, player.profile);
+  const localTitle = localTitleProgress(player.profile);
   const rank = matchRank(room, player.progression);
   const level = levelForXp(player.progression?.xp ?? 0);
   const settledOk = room.phase === 'complete';
@@ -257,6 +261,14 @@ export function MatchFinish({
           </Button>
         </div>
       </div>
+
+      {settledOk && overReward.rounds > 0 && <section className="jhk-over-receipt" aria-label={locale === 'hi' ? 'ओवर के पुरस्कार' : 'Over rewards'}>
+        <strong>+{xpGained} XP · {localTitle.title}</strong>
+        {overReward.credited ? <p>{locale === 'hi' ? 'पूरा ओवर' : 'Over completed'} +{overReward.completionXp} XP{overReward.precisionXp > 0 ? ` · Perfect answers +${overReward.precisionXp} XP` : ''} · +{overReward.clubPoints} {locale === 'hi' ? 'बोनस क्लब अंक' : 'bonus club points'}</p> : <p>{overReward.recordFull ? (locale === 'hi' ? 'इस प्रोफ़ाइल का ओवर रिकॉर्ड पूरा है।' : 'This profile’s over reward record is full.') : overReward.eligible ? (locale === 'hi' ? 'पुरस्कार दर्ज हो रहे हैं…' : 'Recording your reward…') : (locale === 'hi' ? 'हर राउंड में जवाब देकर पूरा ओवर बोनस पाएँ।' : 'Answer every round to earn the completion bonus.')}</p>}
+        {localTitle.nextTitle && <><progress value={localTitle.progress} max={1} aria-label={`Progress to ${localTitle.nextTitle}`}/><p>{localTitle.remaining} {locale === 'hi' ? 'ओवर बाकी' : 'overs to'} {localTitle.nextTitle}</p></>}
+        <small>{player.persistent ? (locale === 'hi' ? 'इस ब्राउज़र में कमाया खिताब। अपने समय पर लौटें।' : 'Title earned in this browser. Come back at your pace.') : (locale === 'hi' ? 'इस विज़िट तक सुरक्षित। जाने से पहले अपना रिकॉर्ड एक्सपोर्ट करें।' : 'Saved for this visit only. Export your record before leaving.')}</small>
+      </section>}
+      {settledOk && <ShareMoment mode={room.config.mode} nickname={room.players[room.seat]?.name} title={localTitle.title} rounds={rounds.length} correct={correct} xp={xpGained} human={!room.players.some((p: any) => p?.kind === 'bot')}/>}
 
       <details className="fd-result-details" open={compact ? undefined : true}>
         <summary>{locale === 'hi' ? 'मैच के आँकड़े' : 'Match stats'}</summary>

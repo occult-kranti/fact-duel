@@ -78,25 +78,22 @@ export type ArmedMode = {
 
 export const INITIAL_CONFIG: Config = {
   opponent: 'bot',
-  mode: 'quick',
+  mode: 'trilogy',
   stake: 0,
-  duration: MODE_DURATION.quick,
+  duration: 30,
   domain: 'all',
   region: 'all',
   topic: 'all',
   subtopic: 'all',
   difficulty: 'all',
 };
+/** Quick single remains readable for saved rooms and optional one-question lessons. */
+export const LEGACY_MODES: Mode[] = [
+  { id: 'quick', name: 'Quick single', short: 'One question. Make it count.', rounds: 1, icon: Zap },
+];
 export const MODES: Mode[] = [
-  { id: 'quick', name: 'Quick Draw', short: 'One question. Make it count.', rounds: 1, icon: Zap },
-  { id: 'trilogy', name: 'Triple Threat', short: 'Up to three. First to two wins.', rounds: 3, icon: Swords },
-  {
-    id: 'gauntlet',
-    name: 'The Gauntlet',
-    short: 'Five questions. Highest score wins.',
-    rounds: 5,
-    icon: Rocket,
-  },
+  { id: 'trilogy', name: 'Mini over', short: 'All 3 rounds. Highest score wins.', rounds: 3, icon: Swords },
+  { id: 'gauntlet', name: 'Full over', short: 'All 6 rounds. Highest score wins.', rounds: 6, icon: Rocket },
 ];
 
 export const STADIUM_MODES: Mode[] = [

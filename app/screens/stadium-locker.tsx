@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { ArrowUpRight, Check, Copy, Flame, Gem, Lamp, Landmark, Shirt, Sparkles, Trophy, Type } from 'lucide-react';
 import { activeClubBadges, CLUB_ITEMS, clubBalance, createClubRecord, transactClub, transactClubMemory } from '@/lib/stadium-collection.mjs';
 import { useLocale } from '../use-locale';
+import { LOCAL_TITLES, localTitleProgress } from '@/lib/over-rewards.mjs';
 import { STORAGE } from '@/lib/storage-names.mjs';
 import type { Player } from './types';
 import './stadium-locker.css';
@@ -98,13 +99,14 @@ export function StadiumLocker({ player, name = 'Challenger' }: { player: Player;
   }, [player.loaded, apply]);
 
   const balance = clubBalance(record);
+  const earnedTitle = localTitleProgress(player.profile);
   const selected = GROUPS.find((g) => g.id === category)!;
   const title = CLUB_ITEMS.find((i) => i.id === record.equipped.title)?.name ?? 'Gully captain';
   const badges = activeClubBadges(player.profile, now);
   const badge = badges.find((b) => b.id === record.badge);
   const expiry = (at: number) => { const minutes = Math.max(1, Math.ceil((at - now) / 60_000)); return minutes >= 60 ? `${Math.floor(minutes / 60)}h ${minutes % 60}m` : `${minutes}m`; };
   const copyCard = async () => {
-    const text = `${name} / ${title}${badge ? ` / ${badge.name} (${expiry(badge.expiresAt)} left)` : ''}\nMy JHK club: ${['stand', 'light', 'board'].map((slot) => CLUB_ITEMS.find((i) => i.id === record.equipped[slot])?.name).join(' · ')}\nDevice-local practice card · ${player.progression?.counters?.matches ?? 0} matches. Play: https://occult-kranti.github.io/fact-duel/`;
+    const text = `${name} / ${earnedTitle.title} / ${title}${badge ? ` / ${badge.name} (${expiry(badge.expiresAt)} left)` : ''}\nMy JHK club: ${['stand', 'light', 'board'].map((slot) => CLUB_ITEMS.find((i) => i.id === record.equipped[slot])?.name).join(' · ')}\nDevice-local practice card · ${player.progression?.counters?.matches ?? 0} matches. Play: https://occult-kranti.github.io/fact-duel/`;
     try { await navigator.clipboard.writeText(text); setMessage(hi ? 'कार्ड की जानकारी कॉपी हो गई।' : 'Card details copied. Share them wherever you like.'); }
     catch { setMessage(hi ? 'कॉपी उपलब्ध नहीं है। अपने कार्ड का स्क्रीनशॉट लें।' : 'Copy is unavailable here. You can take a screenshot of your card.'); }
   };
@@ -115,7 +117,7 @@ export function StadiumLocker({ player, name = 'Challenger' }: { player: Player;
       <div className="sc-showcase">
         <article className="sc-player-card" data-finish={record.equipped.card} data-testid="club-card">
           <div className="sc-card-top"><span>JHK / CLUB ID</span><span>{hi ? 'इस डिवाइस पर' : 'ON THIS DEVICE'}</span></div>
-          <div className="sc-card-name"><span className="sc-monogram" aria-hidden="true">{name.slice(0, 2).toUpperCase()}</span><div><h3>{name}</h3><p>{title}</p></div><Trophy size={26} aria-hidden="true" /></div>
+          <div className="sc-card-name"><span className="sc-monogram" aria-hidden="true">{name.slice(0, 2).toUpperCase()}</span><div><h3>{name}</h3><p>{earnedTitle.title}</p><p>{title}</p></div><Trophy size={26} aria-hidden="true" /></div>
           <ClubGround equipped={record.equipped} />
           <div className="sc-card-bottom"><span><b>{player.progression?.counters?.matches ?? 0}</b>{hi ? 'मैच' : 'matches'}</span><span><b>{player.progression?.counters?.correct ?? 0}</b>{hi ? 'सही जवाब' : 'correct'}</span><span><b>{record.owned.filter((id) => (CLUB_ITEMS.find((i) => i.id === id)?.price ?? 0) > 0).length}</b>{hi ? 'अपग्रेड' : 'upgrades'}</span></div>
           {badge && <div className="sc-active-badge"><Flame size={16} aria-hidden="true" /><strong>{badge.name}</strong><span>{expiry(badge.expiresAt)} {hi ? 'बाकी' : 'left'}</span></div>}
@@ -131,7 +133,15 @@ export function StadiumLocker({ player, name = 'Challenger' }: { player: Player;
       </div>
       <div className="sc-shop">
         <div className="sc-categories" aria-label={hi ? 'क्लब की श्रेणी' : 'Club shop category'}>{GROUPS.map(({ id, name: label, hi: hindi, icon: Icon }) => <button key={id} type="button" aria-pressed={category === id} onClick={() => setCategory(id)}><Icon size={18} aria-hidden="true" />{hi ? hindi : label}</button>)}</div>
-        <p className="sc-earn">{hi ? 'हर पूरा मैच +30 · हर सही जवाब +3। पॉइंट मुफ्त हैं; नकद मूल्य नहीं।' : '+30 per completed match · +3 per correct answer. Free points; no cash value.'}</p>
+        <p className="sc-earn">{hi ? 'हर पूरा मैच +30 · हर सही जवाब +3। पूरे Mini over पर +15, Full over पर +45 और: हर राउंड का जवाब दें। मुफ्त क्लब पॉइंट।' : '+30 per completed match · +3 per correct answer. Answer every round for +15 more in Mini over or +45 in Full over. Free Club points.'}</p>
+        {category === 'title' && <section className="sc-earned-titles" aria-label={hi ? 'खेल से मिले खिताब' : 'Titles earned by playing'}>
+          <h3>{hi ? 'खेलें। नाम कमाएँ।' : 'Earn your local title.'}</h3>
+          <p>{earnedTitle.nextTitle ? `${earnedTitle.remaining} ${hi ? 'पूरे ओवर और' : 'more completed overs'} → ${earnedTitle.nextTitle}` : hi ? 'सभी खिताब हासिल। अपने हिसाब से खेलें।' : 'Every title earned. Play at your own pace.'}</p>
+          <progress value={earnedTitle.current} max={Math.max(1, earnedTitle.target)} aria-label={hi ? 'अगले खिताब की प्रगति' : 'Progress to next title'} />
+          <ol>{LOCAL_TITLES.map((item) => <li key={item.id} data-earned={earnedTitle.current >= item.overs}><span>{earnedTitle.current >= item.overs ? <Check size={14} aria-hidden="true" /> : <Trophy size={14} aria-hidden="true" />}{item.name}</span><small>{item.overs} {hi ? 'ओवर' : 'overs'}</small></li>)}</ol>
+          <p>{hi ? 'हर राउंड का जवाब देकर ओवर पूरा करें। अभ्यास के खिताब इस डिवाइस पर रहते हैं। कोई समय सीमा नहीं।' : 'Complete overs with an answer on every round. Titles stay on this device, with no deadline.'}</p>
+        </section>}
+
         <div className="sc-items">{CLUB_ITEMS.filter((i) => selected.slots.includes(i.slot)).map((entry) => {
           const owned = record.owned.includes(entry.id);
           const equipped = record.equipped[entry.slot] === entry.id;

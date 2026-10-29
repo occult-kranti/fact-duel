@@ -88,7 +88,7 @@ test('bots finish all three modes with every timer; readiness, secrecy and coins
       assert.equal(end.phase, 'complete');
       assert.equal(end.events.filter((e) => e.type === 'settled').length, 1);
       assert.ok(
-        mode === 'quick' ? rounds === 1 : mode === 'gauntlet' ? rounds === 5 : rounds === 2 || rounds === 3,
+        mode === 'quick' ? rounds === 1 : mode === 'gauntlet' ? rounds === 6 : rounds === 3,
       );
     }
 });

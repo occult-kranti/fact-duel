@@ -147,7 +147,7 @@ export function RoomScreen({ duel, player }: RoomScreenProps) {
         settled={room.settled}
         modeName={pick(`modes.${matchMode.id}.name`, matchMode.name)}
         roundIndex={room.roundIndex}
-        rounds={matchMode.rounds}
+        rounds={room.roundCount || matchMode.rounds}
         connected={connected}
         onLeave={leaveOrBack}
       />

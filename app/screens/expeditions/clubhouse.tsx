@@ -20,9 +20,8 @@ import { DOMAIN_CHIPS, ENABLED_DOMAINS, SINGLE_DOMAIN } from '@/lib/content.mjs'
 import { EpisodeCard, ExpeditionStamp, RouteArt, RouteRail, useTap } from './parts';
 
 const DUELS = [
-  ['quick', 'Quick Draw', '1 question'],
-  ['trilogy', 'Triple Threat', 'Up to 3'],
-  ['gauntlet', 'The Gauntlet', '5 questions'],
+  ['trilogy', 'Mini over', '3 rounds'],
+  ['gauntlet', 'Full over', '6 rounds'],
 ] as const;
 
 export function Clubhouse({

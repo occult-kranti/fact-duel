@@ -210,7 +210,7 @@ test('readProgression sanitizes garbage, clamps, whitelists ids and default-fill
       ['open-2', 0, false],
     ],
   );
-  assert.equal(p.quests.items[1].label, 'Play Triple Threat');
+  assert.equal(p.quests.items[1].label, 'Play Mini over');
   assert.deepEqual(p.rank, { points: 250, tier: 'gold', best: 'gold', floor: 250 });
   assert.equal(p.version, 2);
   assert.ok(!('wallet' in p));
@@ -622,7 +622,7 @@ test('daily quests are deterministic per seed, one per tier, and re-roll on the 
       const t = QUEST_TEMPLATES.find((x) => x.id === i.template);
       if (t.pick === 'topic') assert.match(i.label, new RegExp(`Play a ${i.topic} duel`));
       if (t.pick === 'mode')
-        assert.ok(['Play Quick Draw', 'Play Triple Threat', 'Play The Gauntlet'].includes(i.label));
+        assert.ok(['Play Quick Draw', 'Play Mini over', 'Play The Gauntlet'].includes(i.label));
       assert.ok(!i.label.includes('{'));
     }
   const day1 = reduceProgression(emptyProgression(), [{ kind: 'visit' }], DAY1, { epoch: 'epoch-a' });

@@ -4,7 +4,7 @@ import { register } from 'node:module';
 register('../editions/hisaab/node-aliases.mjs', import.meta.url);
 const { dispatch, D1RoomStore } = await import('../lib/server/duel-service.mjs');
 const { MemoryRoomStore } = await import('../lib/duel-memory-store.mjs');
-const { RULES, settleMatch } = await import('../lib/server/room-engine.mjs');
+const { RULES, settleMatch, MODE_ROUNDS, matchDecided } = await import('../lib/server/room-engine.mjs');
 const { LocalD1 } = await import('./d1-local.mjs');
 const { emptyProfile, reduceProfile } = await import('../lib/passport.mjs');
 
@@ -252,4 +252,13 @@ test('immediate result uses the sealed receipt timing verdict, never the optimis
   assert.equal(room.round.receipts[0].timingOK, false, 'durable stamp overrides optimistic valid timing');
   assert.equal(room.reason, 'timing-inconsistent');
   assert.deepEqual(room.scores, [0, 0]);
+});
+
+// The shared engine's new JHK over lengths must not alter the sibling edition.
+test('Hisaab retains its original five-round Gauntlet and first-to-two Trilogy', () => {
+  assert.equal(MODE_ROUNDS.gauntlet, 5);
+  assert.equal(MODE_ROUNDS.trilogy, 3);
+  assert.equal(matchDecided('trilogy', 1, [2,0]), true);
+  assert.equal(matchDecided('gauntlet', 3, [4,0]), false);
+  assert.equal(matchDecided('gauntlet', 4, [5,0]), true);
 });

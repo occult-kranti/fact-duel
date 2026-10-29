@@ -1,5 +1,5 @@
 /** Shared validation/transport boundary. Match authority lives in the Postgres RPC. */
-export const SERVER_RULES = Object.freeze({ rounds: 5, roundMs: 30000, countdownMs: 2500, breakMs: 10000, tieMs: 120, sessionDays: 30, minimumMatches: 3, minimumOpponents: 3 });
+export const SERVER_RULES = Object.freeze({ rounds: 3, formats: Object.freeze({ mini: 3, full: 6 }), roundMs: 30000, countdownMs: 2500, breakMs: 10000, tieMs: 120, sessionDays: 30, minimumMatches: 3, minimumOpponents: 3 });
 export const ECONOMY_RULES = Object.freeze({ startingBalance: 100, maxStake: 10000, completionReward: 10, bonusMultiplier: 1, rewardAnswers: 3, rewardCorrect: 1, rewardsPerFileUtcDay: 1, disconnectGraceMs: 90000 });
 export const DUEL_FILES = Object.freeze([
  { id: 'all', name: 'Any topic', rewardMultiplier: 1 },
@@ -51,9 +51,10 @@ export function validateInput(body) {
   if (payload.roomId != null && !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(payload.roomId)) throw new GameError('BAD_ROOM', 'Invalid room.');
   if (['snapshot','ready','answer','next','leave','reaction'].includes(body.action) && !payload.roomId) throw new GameError('BAD_ROOM','A room is required.');
   if (body.action === 'reaction' && (!['all-talk','appeal-rejected','brain-duck','nice-shot','check-replay','too-easy'].includes(payload.sticker) || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(payload.requestId || ''))) throw new GameError('BAD_STICKER', 'Choose one supported sticker.');
-  if (body.action === 'answer' && (!Number.isInteger(payload.choice) || payload.choice < 0 || payload.choice > 3 || !Number.isInteger(payload.round) || payload.round < 1 || payload.round > 5 || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(payload.requestId || ''))) throw new GameError('BAD_ANSWER', 'Choose one answer for the current round.');
+  if (body.action === 'answer' && (!Number.isInteger(payload.choice) || payload.choice < 0 || payload.choice > 3 || !Number.isInteger(payload.round) || payload.round < 1 || payload.round > 6 || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(payload.requestId || ''))) throw new GameError('BAD_ANSWER', 'Choose one answer for the current round.');
   if (payload.stake != null && (!Number.isSafeInteger(payload.stake) || payload.stake < 0 || payload.stake > ECONOMY_RULES.maxStake)) throw new GameError('BAD_STAKE', 'Choose whole units from 0 to 10,000.');
   if (['create', 'queue'].includes(body.action)) {
+    if (payload.format != null && !['mini','full'].includes(payload.format)) throw new GameError('BAD_FORMAT', 'Choose Mini over or Full over.');
     payload.stake = payload.stake ?? 0; payload.file = payload.file ?? 'all';
     if (!DUEL_FILES.some(file => file.id === payload.file)) throw new GameError('BAD_FILE', 'Choose an available topic.');
   }

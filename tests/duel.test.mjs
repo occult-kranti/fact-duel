@@ -267,9 +267,13 @@ test('trilogy keeps the original pot and prevents replaying readiness from an ol
   await assert.rejects(f.call(f.host, 'ready', { roundId: first.round.id }), (e) => e.code === 'stale_round');
   f.advance(1200);
   await Promise.all([f.answer(f.host, second, 1000), f.answer(f.guest, second, 1151)]);
+  assert.equal((await f.raw()).phase, 'between', 'Mini over never ends early at two wins');
+  const third = await f.prepare();
+  f.advance(1200);
+  await Promise.all([f.answer(f.host, third, 1000), f.answer(f.guest, third, 1151)]);
   const out = await f.raw();
   assert.equal(out.winner, 0);
-  assert.equal(out.roundIndex, 1);
+  assert.equal(out.roundIndex, 2);
   assert.deepEqual(out.balances, [1025, 975]);
   coins(out);
   assert.notEqual(first.round.question.id, second.round.question.id);
@@ -466,11 +470,11 @@ test('mode validation rejects coercible arrays and objects', () => {
   }
   assert.equal(normalizeConfig({ ...config, mode: 'gauntlet' }, QUESTIONS).mode, 'gauntlet');
 });
-test('Gauntlet plays all five rounds including decisive leads and draws; entry settles once', async (t) => {
+test('Full over plays all six rounds including decisive leads and draws; entry settles once', async (t) => {
   for (const draw of [false, true]) {
     const f = await fixture(t, { mode: 'gauntlet' }),
       questionIds = new Set();
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 6; i++) {
       const r = await f.prepare();
       questionIds.add(r.round.question.id);
       assert.equal(r.escrow, 50);
@@ -487,11 +491,11 @@ test('Gauntlet plays all five rounds including decisive leads and draws; entry s
       ]);
       const after = await f.raw();
       coins(after);
-      assert.equal(after.phase, i === 4 ? 'complete' : 'between');
-      assert.equal(after.settled, i === 4);
+      assert.equal(after.phase, i === 5 ? 'complete' : 'between');
+      assert.equal(after.settled, i === 5);
     }
     const end = await f.raw();
-    assert.equal(questionIds.size, 5);
+    assert.equal(questionIds.size, 6);
     assert.equal(end.winner, draw ? null : 0);
     assert.deepEqual(end.balances, draw ? [1000, 1000] : [1025, 975]);
     assert.equal(end.events.filter((e) => e.type === 'settled').length, 1);
@@ -525,9 +529,9 @@ test('open untimed practice returns three distinct sourced cards without touchin
   await assert.rejects(dispatch(null, { action: 'practice', topic: ['Space'] }));
 });
 
-test('five-round recap persists closed snapshots once without exposing active answers or credentials', async (t) => {
+test('six-round recap persists closed snapshots once without exposing active answers or credentials', async (t) => {
   const f = await fixture(t, { mode: 'gauntlet' });
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 6; i++) {
     const r = await f.prepare(),
       active = (await f.call(f.host, 'state')).room;
     assert.equal(active.completedRounds.length, i);
@@ -549,6 +553,6 @@ test('five-round recap persists closed snapshots once without exposing active an
   }
   const final = (await f.call(f.host, 'state')).room;
   assert.equal(final.phase, 'complete');
-  assert.equal(final.completedRounds.length, 5);
-  assert.equal(new Set(final.completedRounds.map((x) => x.id)).size, 5);
+  assert.equal(final.completedRounds.length, 6);
+  assert.equal(new Set(final.completedRounds.map((x) => x.id)).size, 6);
 });

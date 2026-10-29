@@ -46,7 +46,7 @@ Historical Cloudflare/D1 and local-only behavior is documented in [the archived 
 
 ## Pocket Stadium redesign
 
-One tap starts a five-question, zero-stake practice innings or a dedicated Spicy innings. Human duel retains explicit age/terms confirmation. Stadium / Explore / Play / My club / Answers preserve the existing route identities. Optional Net practice uses real ballistic animation and reduced-motion timing controls, with its own score. Question answers stay stable and celebrations follow settlement.
+One tap starts Mini over (3 rounds); Full over plays all 6 rounds. Spicy has a dedicated Mini over. Practice is zero-stake. Human duel retains explicit age/terms confirmation. Stadium / Explore / Play / My club / Answers preserve the existing route identities. Optional Net practice uses real ballistic animation and reduced-motion timing controls, with its own score. Question answers stay stable and celebrations follow settlement.
 
 My club supports free-earned points, atomic buy/equip, titles, card finishes, three stadium building slots and expiring showoff badges. Human coins/ranks are separate. Six fixed opponent stickers are delivered by Supabase between rounds with one-per-break and eight-second limits. Anonymous presence counts human profiles active within two minutes and expires stale values. All ads remain disabled.
 
@@ -59,3 +59,12 @@ My club supports free-earned points, atomic buy/equip, titles, card finishes, th
 Verification commands: `node --test tests/*.test.mjs` (set PGLITE_MODULE_PATH to installed PGlite), `pnpm exec tsc --noEmit`, `CHROMIUM_PATH=/path/to/chromium node scripts/stadium-browser-check.mjs`, static build/assembly then `node scripts/stadium-production-check.mjs`. The browser runner creates its own Vite server. Physical-phone and live-load studies remain separate from automated emulation.
 
 Earlier [Gully Club](docs/gully-redesign/) and [cricket redesign](docs/cricket-redesign/) notes remain historical. The current Figma connection works with the existing Primary account; this is not a claim of offline/local Figma.
+
+## Mini over / Full over update
+
+Mini over plays exactly 3 rounds and Full over exactly 6, in practice and new human matches. Finish with an answer on every round for +60 / +150 XP; perfect answers add +30 / +60. Practice also adds +15 / +45 bonus Club points. Existing answer and outcome rewards remain separate. No extra coin-stake multiplier was added.
+
+Home starts practice immediately and keeps topics, human play and settings optional. Earn browser-local titles at 3, 10, 25 and 60 completed practice overs. Results offer optional image/text sharing, a downloadable 1080×1350 PNG, replay and a clear exit. No sharing action awards XP. Human XP is stored on the server and never mixed with the local title ladder.
+
+- [Design research and three review rounds](docs/over-redesign/RESEARCH.md)
+- [Rewards, verification and remaining measurement](docs/over-redesign/RELEASE.md)

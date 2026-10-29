@@ -48,9 +48,9 @@ import { Chip, Choices, Dots, EmptyState, FactCard, StatTile, usePress } from '.
 import './screens/vault/vault.css';
 
 const MODE_NAMES: Record<string, string> = {
-  quick: 'Quick Draw',
-  trilogy: 'Triple Threat',
-  gauntlet: 'The Gauntlet',
+  quick: 'Quick single',
+  trilogy: 'Mini over',
+  gauntlet: 'Full over',
 };
 const ISSUE_REASONS: Record<string, string> = {
   incorrect: 'Answer concern',

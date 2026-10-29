@@ -49,6 +49,7 @@ import { MODE_DURATION } from '@/lib/server/room-engine.mjs';
 import {
   INITIAL_CONFIG,
   MODES,
+  LEGACY_MODES,
   STADIUM_MODES,
   type ArmedMode,
   type Config,
@@ -805,7 +806,7 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
   const change = (patch: Partial<Config>) => {
     createDraft.current = null;
     const next =
-      patch.mode && patch.duration === undefined ? { ...patch, duration: modeDuration(patch.mode) } : patch;
+      patch.mode && patch.duration === undefined ? { ...patch, duration: ['trilogy', 'gauntlet'].includes(patch.mode) && config.opponent === 'bot' ? 30 : modeDuration(patch.mode) } : patch;
     setConfig((c) => ({ ...c, ...next }));
   };
   useEffect(() => {
@@ -835,7 +836,7 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
     register({
       name: 'configure_duel_mode',
       description:
-        'Choose Quick Draw, Triple Threat or The Gauntlet in the lobby. Does not create a room or reserve coins.',
+        'Choose Mini over (trilogy, 3 rounds) or Full over (gauntlet, 6 rounds) in the lobby. Does not create a room or reserve coins.',
       inputSchema: {
         type: 'object',
         properties: { mode: { type: 'string', enum: ['quick', 'trilogy', 'gauntlet'] } },
@@ -862,8 +863,8 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
   }, []);
   const active = !!room && ['playing', 'scheduled'].includes(phase),
     isLocked = !!rd?.answerLocked?.[room?.seat] || locked.current;
-  const modeInfo = [...MODES, ...STADIUM_MODES].find((m) => m.id === config.mode) || MODES[0];
-  const matchMode = [...MODES, ...STADIUM_MODES].find((m) => m.id === room?.config.mode) || MODES[0];
+  const modeInfo = [...MODES, ...STADIUM_MODES, ...LEGACY_MODES].find((m) => m.id === config.mode) || MODES[0];
+  const matchMode = [...MODES, ...STADIUM_MODES, ...LEGACY_MODES].find((m) => m.id === room?.config.mode) || MODES[0];
   const chooseCollection = (domain: string, topic: string) => {
     change({ domain, topic, subtopic: 'all', region: 'all', difficulty: 'all' });
     setJoinView(false);
@@ -905,7 +906,7 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
     const next = {
       ...INITIAL_CONFIG,
       mode,
-      duration: mode === 'superover' ? 15 : topic === 'Cricket' ? 30 : modeDuration(mode),
+      duration: mode === 'superover' ? 15 : ['trilogy', 'gauntlet'].includes(mode) || topic === 'Cricket' ? 30 : modeDuration(mode),
       topic,
       subtopic,
       difficulty: 'all',
@@ -919,12 +920,12 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
     go('practice');
     void create(next);
   };
-  const startBotMatch = (file = 'cricket') => {
+  const startBotMatch = (file = 'cricket', format: 'mini' | 'full' = 'mini') => {
     if (createFlight.current || busy) return;
     const topics: Record<string, string> = { cricket: 'Cricket', football: 'Football', basketball: 'Basketball', baseball: 'Baseball', 'formula-1': 'Formula 1', space: 'Space', physics: 'Physics', biology: 'Biology', computing: 'Computing' };
     const topic = topics[file] || 'all';
     const science = ['science', 'space', 'physics', 'biology', 'computing'].includes(file);
-    const next: Config = { ...INITIAL_CONFIG, opponent: 'bot', mode: 'gauntlet', duration: 30, stake: 0, topic, domain: science ? 'science' : file === 'all' ? 'all' : 'sports' };
+    const next: Config = { ...INITIAL_CONFIG, opponent: 'bot', mode: format === 'full' ? 'gauntlet' : 'trilogy', duration: 30, stake: 0, topic, domain: science ? 'science' : file === 'all' ? 'all' : 'sports' };
     createDraft.current = null;
     setConfig(next);
     void create(next);

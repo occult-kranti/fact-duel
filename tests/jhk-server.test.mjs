@@ -14,3 +14,9 @@ test('JHK server contracts contain isolated names and neutral labels',()=>{
  assert.match(schema,/create schema if not exists jhk_private/);assert.match(schema,/public\.jhk_command/);assert.match(edge,/x-jhk-session/);assert.match(edge,/rpc\/jhk_command/);
  assert.doesNotMatch(schema+edge,/hisaab|UPI|[Aa]nti.?[Nn]ational|[Dd]esh.?[Bb]hakt/);assert.match(schema,/'coin-champion'/);
 });
+
+test('new human formats and sixth answer validate while old clients retain omission',()=>{
+ for(const format of ['mini','full']) assert.equal(validateInput({action:'queue',format}).payload.format,format);
+ assert.throws(()=>validateInput({action:'queue',format:'seven'}),{code:'BAD_FORMAT'});
+ assert.equal(validateInput({action:'answer',roomId:'11111111-1111-4111-8111-111111111111',round:6,choice:2,requestId:'22222222-2222-4222-8222-222222222222'}).payload.round,6);
+});

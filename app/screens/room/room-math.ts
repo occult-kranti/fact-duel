@@ -5,6 +5,7 @@
  * Nothing here mutates a room or a profile.
  */
 import { DIFFICULTY_MULTIPLIER, XP, comboMultiplier, rankForPoints, wildRound } from '@/lib/progression.mjs';
+import { matchRewardXp } from '@/lib/over-rewards.mjs';
 import { completedRounds } from '@/lib/duel-presentation.mjs';
 
 export type RoundXp = {
@@ -74,20 +75,9 @@ export function speedBonus(elapsedMs: number): { xp: number; window: number; fra
   return { xp, window, fraction: Math.max(0, Math.min(1, 1 - elapsedMs / window)) };
 }
 
-const MATCH_XP_KINDS = new Set(['round', 'match', 'wild']);
-
-/** XP logged on this device since the room was created (round / match / wild entries only). */
+/** Exact room-scoped XP receipt; parallel matches never inflate this result. */
 export function matchXp(player: any, room: any): number {
-  const since = Number.isFinite(room?.createdAt) ? room.createdAt : 0;
-  const log = player?.progression?.log;
-  if (!Array.isArray(log) || !since) return 0;
-  return log.reduce(
-    (sum: number, e: any) =>
-      e && MATCH_XP_KINDS.has(e.kind) && Number.isFinite(e.at) && e.at >= since
-        ? sum + (Number.isFinite(e.xp) ? e.xp : 0)
-        : sum,
-    0,
-  );
+  return matchRewardXp(player?.profile ?? player, room?.id);
 }
 
 export type MatchRank = {
