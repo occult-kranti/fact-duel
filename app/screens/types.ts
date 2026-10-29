@@ -178,7 +178,7 @@ export type HomeScreenProps = {
   busy: boolean;
   onRoute: (id: string | null) => void;
   onLive: () => void;
-  onDuel: (mode: string, topic?: string) => void;
+  onDuel: (mode: string, topic?: string, subtopic?: string) => void;
   onSetup: (intent?: 'friend' | 'join' | 'settings') => void;
   go: (tab: string) => void;
 };

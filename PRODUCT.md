@@ -1,9 +1,9 @@
-# Jaanta Hai Kya
+# Jaanta Hai Kya — Pocket Stadium
 
-A cricket-first knowledge game with source-backed sports and science learning. The visitor's first useful task is playing a question. Secondary tasks are human/friend duels, choosing custom formats, learning without a clock, revisiting answers, and understanding personal progress.
+A mobile-first cricket knowledge rivalry game with a personal stadium, collectible identity and sourced outside-the-pitch stories. The first useful task is playing, in one tap. No basic cricket-law recall in the served bank. Spicy is a public-record category, not a gossip generator.
 
-Platform: responsive browser app, primarily phones; GitHub Pages frontend plus isolated Supabase human authority. Device-local bot games and learning never become human standings or server coin balances. Free simulated coins have no purchase or cash-out.
+Primary flows: one-tap cricket practice, one-tap Spicy, human/friend duels, build/equip a local club, play a timing-based Net practice toy, explore and review sourced answers. Day and night are visual worlds of the same app.
 
-Release requirements: one tap from fresh home to a five-question, zero-stake practice match; plainly labelled bot; reading-friendly opening preset; all existing screens reachable; no interrupted answer flow; optional account/recovery; both visual themes; English and Hindi chrome; advertising inactive until approved provider integration. No change to human age/terms or settlement authority.
+GitHub Pages serves frontend and offline-capable practice; an isolated Supabase authority owns human matches, coins and rankings. Club points and badges are explicitly local, free-earned cosmetics. Coins and Club points cannot be bought, cashed out or combined. Preset opponent stickers are delivered by the match authority with a cooldown, clear mute control and no overlay on answers.
 
-Success checks: actual first-click question, narrow and short viewport controls, stable topic selection, duplicate input protection, replay/quit/cancel, accessible focus and reduced motion, default-off ads, verified production build. Automation is not a substitute for a study with human players or physical-device coverage.
+Acceptance: one click to questions; all views reachable; real/stale online population stated truthfully; no duplicate answer, reward or purchase; source-backed dramatic facts; actual day/night art; stable timed layout and reduced-motion equivalent; default-off ads; tested production build and deployed backend compatibility. Automated emulation is not a claim of measured user retention or physical-device testing.

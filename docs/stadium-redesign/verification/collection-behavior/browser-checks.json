@@ -1,0 +1,76 @@
+{
+  "pass": "collection-behavior",
+  "checks": [
+    {
+      "name": "fresh club balance is zero",
+      "pass": true
+    },
+    {
+      "name": "unaffordable pavilion cannot be purchased",
+      "pass": true
+    },
+    {
+      "name": "club fits390",
+      "pass": true
+    },
+    {
+      "name": "day club heading has readable contrast",
+      "pass": true,
+      "detail": {
+        "contrastRatio": 12.86
+      }
+    },
+    {
+      "name": "night club heading has readable contrast",
+      "pass": true,
+      "detail": {
+        "contrastRatio": 16.05
+      }
+    },
+    {
+      "name": "two completed matches earn actual club points",
+      "pass": true
+    },
+    {
+      "name": "rapid title purchase debits exactly once",
+      "pass": true
+    },
+    {
+      "name": "purchased title is actually equipped on card",
+      "pass": true
+    },
+    {
+      "name": "title and balance survive reload without another reward",
+      "pass": true
+    },
+    {
+      "name": "actual win displays a time-bound badge",
+      "pass": true
+    },
+    {
+      "name": "expired badge leaves the player card",
+      "pass": true
+    },
+    {
+      "name": "badge expiry does not spend earned points",
+      "pass": true
+    },
+    {
+      "name": "equipped club fits320",
+      "pass": true
+    },
+    {
+      "name": "disabled ads make zero requests",
+      "pass": true
+    },
+    {
+      "name": "no browser runtime errors",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "errors": [],
+  "scenarioErrors": [],
+  "overflow": [],
+  "adRequests": 0
+}

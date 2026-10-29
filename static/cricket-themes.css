@@ -1,21 +1,21 @@
 /* Gully Club: one visual system across play, learning and records. Saved theme keys retained. */
 :root[data-cricket-theme='pavilion'] {
- color-scheme:light;--bg-0:#f8f3e7;--bg-1:#fffcf5;--bg-2:#eee7d9;--text:#182630;--muted:#59636a;--line:#c9c2b3;
- --volt:#ca3c1c;--volt-text:#b93117;--volt-ink:#fffaf1;--volt-soft:#ca3c1c0d;--cyan:#28706c;--cyan-text:#24625e;--cyan-ink:#fff;--cyan-soft:#28706c12;
- --gold:#c3962e;--gold-text:#765813;--gold-ink:#182630;--gold-soft:#c3962e15;--ember:#bd411f;--ember-text:#ad351a;--ember-ink:#fff;--ember-soft:#bd411f12;
+ color-scheme:light;--bg-0:#eff3e8;--bg-1:#ffffff;--bg-2:#e2eadc;--text:#142e28;--muted:#52655c;--line:#bdcdbf;
+ --volt:#276641;--volt-text:#205a38;--volt-ink:#f5ffe9;--volt-soft:#2766410d;--cyan:#28706c;--cyan-text:#24625e;--cyan-ink:#fff;--cyan-soft:#28706c12;
+ --gold:#c3962e;--gold-text:#765813;--gold-ink:#142e28;--gold-soft:#c3962e15;--ember:#bd411f;--ember-text:#ad351a;--ember-ink:#fff;--ember-soft:#bd411f12;
  --magenta:#8d4055;--magenta-text:#81334a;--magenta-ink:#fff;--magenta-soft:#8d405510;--danger:#ba252b;--danger-text:#a3262b;--danger-ink:#fff;--danger-soft:#ba252b12;
- --gc-paper:#f8f3e7;--gc-accent:#ca3c1c;--gc-accent-ink:#fffaf1;
+ --gc-paper:#eff3e8;--gc-accent:#276641;--gc-accent-ink:#f5ffe9;
 }
 :root[data-cricket-theme='floodlights'] {
- color-scheme:dark;--bg-0:#15232b;--bg-1:#1e3039;--bg-2:#283d45;--text:#faf2e0;--muted:#b4bebd;--line:#4a5b60;
- --volt:#ff9471;--volt-text:#ffad92;--volt-ink:#281710;--volt-soft:#ff947114;--cyan:#94d0c8;--cyan-text:#94d0c8;--cyan-ink:#102a27;--cyan-soft:#94d0c812;
+ color-scheme:dark;--bg-0:#071b22;--bg-1:#102b32;--bg-2:#193840;--text:#f0f6eb;--muted:#a5bdbb;--line:#34565b;
+ --volt:#d0fb70;--volt-text:#d0fb70;--volt-ink:#14281e;--volt-soft:#d0fb7014;--cyan:#94d0c8;--cyan-text:#94d0c8;--cyan-ink:#102a27;--cyan-soft:#94d0c812;
  --gold:#e4bd6c;--gold-text:#e4bd6c;--gold-ink:#251c0c;--gold-soft:#e4bd6c15;--ember:#f8a67e;--ember-text:#f8a67e;--ember-ink:#29180e;--ember-soft:#f8a67e12;
  --magenta:#dfadc0;--magenta-text:#dfadc0;--magenta-ink:#301621;--magenta-soft:#dfadc012;--danger:#ff9da0;--danger-text:#ff9da0;--danger-ink:#39171b;--danger-soft:#ff9da012;
- --gc-paper:#f8f3e7;--gc-accent:#ff9471;--gc-accent-ink:#281710;
+ --gc-paper:#eff3e8;--gc-accent:#d0fb70;--gc-accent-ink:#14281e;
 }
 :root[data-cricket-theme] {
  --background:var(--bg-0);--foreground:var(--text);--card:var(--bg-1);--card-foreground:var(--text);--popover:var(--bg-1);--popover-foreground:var(--text);--primary:var(--volt);--primary-foreground:var(--volt-ink);--secondary:var(--bg-2);--secondary-foreground:var(--text);--muted-foreground:var(--muted);--accent:var(--bg-2);--accent-foreground:var(--text);--border:var(--line);--input:var(--line);--ring:var(--cyan-text);
- --font-display:'Bricolage Grotesque','Arial Black',system-ui,sans-serif;--font-ui:'Instrument Sans',system-ui,sans-serif;--r-card:4px;--r-control:5px;--r-hero:4px;--shadow-card:none;--shadow-lift:none;--glow-volt:none;--glow-ember:none;--glow-gold:none;--cr-secondary:var(--cyan-text);--cr-accent:var(--gc-accent);--cr-accent-ink:var(--gc-accent-ink);
+ --font-display:'Bricolage Grotesque','Arial Black',system-ui,sans-serif;--font-ui:'Instrument Sans',system-ui,sans-serif;--r-card:16px;--r-control:12px;--r-hero:20px;--shadow-card:none;--shadow-lift:none;--glow-volt:none;--glow-ember:none;--glow-gold:none;--cr-secondary:var(--cyan-text);--cr-accent:var(--gc-accent);--cr-accent-ink:var(--gc-accent-ink);
 }
 :root[data-cricket-theme] body,:root[data-cricket-theme] .fd-shell {background:var(--bg-0);color:var(--text)}
 :root[data-cricket-theme] .fd-topbar {background:var(--bg-0);border-bottom:1px solid var(--line);box-shadow:none}
@@ -49,7 +49,7 @@
 .gc-art {margin:0;min-width:0;position:relative;align-self:stretch;display:flex;flex-direction:column;justify-content:center}
 .gc-art img {display:block;width:100%;height:auto;aspect-ratio:1;object-fit:cover;border-radius:2px}
 .gc-art figcaption {margin-top:9px;font:600 .58rem/1.5 var(--font-mono);letter-spacing:.17em;text-align:right;color:var(--muted)}
-.gc-art-stamp {position:absolute;right:12px;bottom:38px;display:grid;place-items:center;border:1px solid #182630;padding:12px 16px;background:#f8f3e7e8;color:#182630;font:600 .48rem/1.8 var(--font-mono);letter-spacing:.1em;transform:rotate(-7deg)}
+.gc-art-stamp {position:absolute;right:12px;bottom:38px;display:grid;place-items:center;border:1px solid #142e28;padding:12px 16px;background:#eff3e8e8;color:#142e28;font:600 .48rem/1.8 var(--font-mono);letter-spacing:.1em;transform:rotate(-7deg)}
 .gc-art-stamp b {font:800 2rem/1 var(--font-display)}
 .gc-match-ticket {display:flex;align-items:center;gap:23px;border-block:1px solid var(--text);padding:18px 0}
 .gc-ticket-number {font:800 3.8rem/.9 var(--font-display);letter-spacing:-.07em;color:var(--gc-accent);padding-right:23px;border-right:1px dashed var(--line)}
@@ -210,3 +210,92 @@
 :root[data-cricket-theme] .fd-room .fd-room-chip {min-width:0;max-width:100%;white-space:normal;flex-wrap:wrap;justify-content:center;text-align:center;overflow-wrap:anywhere}
 :root[data-cricket-theme] .fd-room .fd-room-chip :is(b,span) {min-width:0;max-width:100%;overflow-wrap:anywhere}
 .gc-hero h1,.gc-hero h1 em {overflow-wrap:anywhere;white-space:normal}
+/* Pocket Stadium — authored mobile composition, 30 October 2026. */
+:root[data-cricket-theme] {--ps-lime:#d0fb70;--ps-night:#071b22;--ps-stadium:#143a36;--ps-orange:#ff8b57}
+:root[data-cricket-theme] .fd-topbar {border-bottom-color:color-mix(in srgb,var(--line) 60%,transparent)}
+:root[data-cricket-theme] .fd-main {max-width:1280px;padding-top:16px}
+:root[data-cricket-theme] .fd-nav-btn {border-radius:12px}
+:root[data-cricket-theme] .fd-nav-btn[aria-current='page'] .fd-nav-icon {background:var(--volt);color:var(--volt-ink);border-radius:12px}
+:root[data-cricket-theme] .cr-theme-switch {border-radius:24px}
+.ps-home {max-width:1120px;margin:auto}
+.ps-welcome {display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px}
+.ps-welcome>span,.ps-eyebrow,.ps-label {font:600 .62rem/1.5 var(--font-mono);letter-spacing:.13em}
+.ps-welcome>span {color:var(--muted)}
+.ps-welcome button {display:flex;gap:6px;align-items:center;min-height:44px;border:0;background:transparent;font:650 .8rem var(--font-ui);color:var(--text)}
+.ps-hero {display:grid;grid-template-columns:1.25fr 1fr;gap:0;border:1px solid var(--line);border-radius:24px;overflow:hidden;background:var(--bg-1)}
+.ps-world {background:#0b2730;position:relative;min-height:430px;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;color:#f4f8ed;isolation:isolate}
+.ps-world-heading {position:absolute;z-index:2;left:26px;right:20px;top:24px;pointer-events:none}
+.ps-eyebrow {margin:0 0 10px;color:inherit}
+.ps-world h1 {font:800 clamp(2.7rem,4.8vw,4.6rem)/.97 var(--font-display);letter-spacing:-.065em;margin:0;text-shadow:0 1px 25px #071b2280}
+.ps-world h1 em {font-style:normal;color:var(--ps-lime)}
+.ps-ground-label {position:relative;z-index:2;padding:12px 24px;background:#071b22;color:#c2d9ce;font:500 .58rem/1.4 var(--font-mono);letter-spacing:.11em;display:flex;align-items:center;gap:8px}
+.ps-ground-label i {width:6px;height:6px;border-radius:50%;background:var(--ps-lime)}
+.ps-matchdesk {padding:35px 30px;display:flex;flex-direction:column;justify-content:center;min-width:0}
+.ps-match-meta {display:flex;justify-content:space-between;align-items:center;gap:12px;font:600 .62rem/1.4 var(--font-mono);color:var(--muted);letter-spacing:.1em;margin-bottom:28px}
+.ps-match-meta>span:last-child {font-size:1.4rem;color:var(--text);letter-spacing:-.05em}.ps-match-meta small{font-size:.55rem;letter-spacing:.06em}
+.ps-matchdesk h2 {font:800 clamp(1.9rem,3vw,2.8rem)/1.05 var(--font-display);letter-spacing:-.05em;margin:0 0 14px;max-width:12ch}
+.ps-intro {font-size:.94rem;line-height:1.6;color:var(--muted);max-width:35ch;margin:0 0 23px}
+.ps-start.gc-play {width:100%;background:var(--ps-lime);color:#183326;border:1px solid #acdf49;border-bottom:4px solid #84ac37;border-radius:14px;min-height:60px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;font:800 1.1rem var(--font-display);box-shadow:0 7px 18px #071b2210}
+.ps-start.gc-play:not(:disabled):active {translate:0 2px;border-bottom-width:2px}
+.ps-start-note {font:500 .62rem/1.5 var(--font-mono);text-align:center;color:var(--muted);margin:10px 0 17px}
+.ps-rival-row {display:grid;grid-template-columns:1.2fr 1fr;gap:8px}
+.ps-rival-row button {min-height:46px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:transparent;color:var(--text);font:650 .78rem var(--font-ui);display:flex;align-items:center;justify-content:center;gap:7px}
+.ps-rival-row button>svg {flex-shrink:0;width:16px}
+.ps-lower-grid {display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:20px}
+.ps-spicy {background:#452b2a;color:#fff1dd;border:1px solid #79483d;border-radius:20px;padding:23px;position:relative;overflow:hidden}
+:root[data-cricket-theme='pavilion'] .ps-spicy {background:#fff0df;color:#532c29;border-color:#eac7ae}
+.ps-spicy-top {display:flex;align-items:center;justify-content:space-between;gap:8px}.ps-label{display:inline-flex;align-items:center;gap:6px}.ps-heat{font-size:.6rem;letter-spacing:4px;color:#fa925d}
+.ps-spicy-copy {display:flex;align-items:center;gap:15px;padding-block:19px 12px}.ps-spicy-copy>div{flex:1;min-width:0}
+.ps-spicy h2 {font:800 2.8rem/.95 var(--font-display);letter-spacing:-.05em;margin:0 0 12px}.ps-spicy h2>span {display:block;font-size:1.15rem;margin-top:9px;letter-spacing:-.02em;font-weight:600}
+.ps-spicy p,.ps-club-tease p {font-size:.85rem;line-height:1.55;margin:0 0 12px;max-width:32ch}
+.ps-chilli {font-size:5rem;transform:rotate(13deg);filter:drop-shadow(6px 11px 7px #0003)}
+.ps-spicy>button {display:flex;align-items:center;justify-content:space-between;gap:15px;background:#ffc89d;color:#482723;min-height:46px;border:0;border-radius:10px;padding:10px 15px;width:100%;font-weight:750}
+.ps-spicy>small {display:block;margin-top:10px;font-size:.66rem;line-height:1.5;opacity:.8}
+.ps-club-tease {position:relative;border:1px solid var(--line);border-radius:20px;background:var(--bg-1);padding:23px;overflow:hidden}
+.ps-club-tease h2 {font:750 1.4rem/1.15 var(--font-display);letter-spacing:-.04em;max-width:17ch;margin:14px 0 10px}
+.ps-club-tease p {color:var(--muted)}
+.ps-club-tease>button {display:flex;align-items:center;justify-content:space-between;gap:15px;border:1px solid var(--line);background:var(--bg-0);color:var(--text);min-height:46px;border-radius:10px;padding:10px 15px;width:100%;font-weight:700}
+.ps-ticket-art {position:relative;display:flex;flex-direction:column;gap:8px;margin:18px 4px 0;transform:rotate(-3deg);border:1px solid #8cac67;background:linear-gradient(115deg,#d0fb70,#a4d27e 56%,#e5eea7);color:#183b2b;border-radius:12px;padding:16px 22px 14px;box-shadow:0 6px 0 #071b2210;overflow:hidden}
+.ps-ticket-art>span {font:650 .5rem var(--font-mono);letter-spacing:.15em}.ps-ticket-art b{font:750 1.3rem var(--font-display);text-overflow:ellipsis;overflow:hidden;white-space:nowrap;max-width:80%}.ps-ticket-art>i{position:absolute;right:15px;top:25px;font-size:2rem;font-style:normal}
+.ps-extras {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;margin-top:20px;border-block:1px solid var(--line)}
+.ps-extras>button {display:flex;align-items:center;gap:12px;padding:21px 14px;background:transparent;border:0;color:var(--text);text-align:left;min-height:80px;min-width:0}.ps-extras>button+button{border-left:1px solid var(--line)}.ps-extras>button>span{flex:1;min-width:0}.ps-extras b{display:block;font:700 .9rem/1.3 var(--font-display)}.ps-extras small{display:block;font-size:.72rem;line-height:1.5;color:var(--muted);margin-top:3px}.ps-extras svg{flex-shrink:0;width:18px}
+.ps-nets {max-width:720px;margin:0 auto 24px}.ps-nets h1{font:800 2.5rem/1.1 var(--font-display);letter-spacing:-.05em}.ps-nets>p{line-height:1.5;color:var(--muted)}
+/* Quiet scoreboard materials on live play; depth only after answer settlement. */
+:root[data-cricket-theme] .fd-room .fd-hud {background:var(--bg-1);border:1px solid var(--line);border-radius:16px;padding:12px 16px}
+:root[data-cricket-theme] .fd-room .fd-hud-score {color:var(--text);font-size:2.5rem}
+:root[data-cricket-theme] .fd-room .fd-qcard {border-radius:20px;border-color:var(--line);padding:24px}
+:root[data-cricket-theme] .fd-room .fd-answer {border-radius:12px;min-height:56px;box-shadow:0 3px 0 color-mix(in srgb,var(--line) 40%,transparent);padding:13px 15px}
+:root[data-cricket-theme] .fd-room .fd-answer:not(:disabled):active {box-shadow:none;transform:translateY(2px)}
+:root[data-cricket-theme] .fd-room .fd-track {height:5px;border-radius:5px;margin-bottom:14px}
+:root[data-cricket-theme] .fd-room .fd-clock {font:800 1.35rem var(--font-mono);color:var(--volt-text)}
+:root[data-cricket-theme] .fd-room .fd-finish {border-radius:20px}
+@media(max-width:899px) {.ps-hero{grid-template-columns:1.1fr 1fr}.ps-matchdesk{padding:24px 20px}.ps-world-heading{left:20px}.ps-world h1{font-size:3.2rem}.ps-matchdesk h2{font-size:2rem}.ps-rival-row{grid-template-columns:1fr}.ps-rival-row button{min-height:44px}.ps-extras{grid-template-columns:1fr}.ps-extras>button+button{border-left:0;border-top:1px solid var(--line)}}
+@media(max-width:599px) {
+ :root[data-cricket-theme] .fd-main{padding-top:8px}.ps-welcome{margin-bottom:3px}.ps-welcome>span{font-size:.53rem;letter-spacing:.08em}.ps-welcome button{font-size:.72rem}
+ .ps-hero{grid-template-columns:1fr;border-radius:20px;overflow:hidden}.ps-world{min-height:248px;height:248px}.ps-world-heading{left:19px;top:17px}.ps-world .ps-eyebrow{font-size:.49rem;letter-spacing:.13em;margin-bottom:7px}.ps-world h1{font-size:2.4rem}.ps-ground-label{padding:8px 17px;font-size:.47rem}.ps-matchdesk{padding:16px}.ps-match-meta{display:none}.ps-matchdesk h2,.ps-intro{display:none}.ps-start.gc-play{min-height:55px;font-size:1.05rem;border-radius:12px}.ps-start-note{font-size:.56rem;margin:9px 0 12px}.ps-rival-row{grid-template-columns:1.2fr 1fr;gap:7px}.ps-rival-row button{font-size:.74rem;min-height:44px;padding:8px}.ps-rival-row button svg{width:15px}
+ .ps-lower-grid{grid-template-columns:1fr;gap:14px;margin-top:16px}.ps-spicy,.ps-club-tease{padding:19px}.ps-spicy-copy{padding-block:15px 8px}.ps-spicy h2{font-size:2.5rem}.ps-spicy p{font-size:.8rem;max-width:27ch}.ps-chilli{font-size:4rem}.ps-extras{margin-top:16px}.ps-extras>button{padding:18px 4px;min-height:76px}
+ :root[data-cricket-theme] .fd-room .fd-qcard{padding:17px 13px;border-radius:16px}:root[data-cricket-theme] .fd-room .fd-qcard h1{font-size:1.22rem;line-height:1.32;margin:10px 0 18px}:root[data-cricket-theme] .fd-room .fd-answer{min-height:54px;font-size:.9rem;padding:11px 12px}:root[data-cricket-theme] .fd-room .fd-hud{padding:10px 12px}.ps-nets h1{font-size:2rem}
+}
+@media(max-width:359px){.ps-world{height:211px;min-height:211px}.ps-world h1{font-size:2.05rem}.ps-matchdesk{padding:13px}.ps-rival-row button{font-size:.66rem}.ps-start-note{font-size:.49rem}.ps-welcome>span{font-size:.47rem}.ps-label{font-size:.56rem}}
+@media(max-height:500px) and (min-width:600px){.ps-world{min-height:240px;height:240px}.ps-world h1{font-size:2.3rem}.ps-world-heading{top:17px}.ps-matchdesk{padding:16px}.ps-match-meta,.ps-intro,.ps-matchdesk h2{display:none}.ps-rival-row{grid-template-columns:1.1fr 1fr}.ps-start.gc-play{min-height:48px}}
+@media(prefers-reduced-motion:reduce){.ps-home *{transition:none!important;animation:none!important}.ps-ticket-art,.ps-chilli{transform:none}}
+.ps-world .st-scene {width:100%}.ps-world .st-scene-view {border-radius:0;height:370px;aspect-ratio:auto}.ps-world .st-scene-view:after{background:linear-gradient(180deg,#061e31eb 0%,#08213270 28%,transparent 53%,#071b2220 100%)}.ps-world .st-scene-caption{display:none}.ps-world .st-scene-art img{object-position:center 61%}
+.stadium-presence {display:flex;align-items:center;justify-content:center;gap:6px;font:500 .58rem/1.5 var(--font-mono);color:var(--muted);margin-top:12px}.stadium-presence i{display:block;width:5px;height:5px;border-radius:50%;background:var(--muted)}.stadium-presence[data-state=live] i{background:var(--cyan-text)}
+@media(max-width:599px){.ps-world .st-scene-view{height:222px;min-height:0}.stadium-presence{font-size:.54rem;margin-top:10px}}
+@media(max-width:359px){.ps-world .st-scene-view{height:187px}}
+@media(max-height:500px) and (min-width:600px){.ps-world .st-scene-view{height:213px;min-height:0}}
+.ps-chilli {width:76px;height:96px;flex-shrink:0}
+@media(max-width:599px){
+ :root[data-cricket-theme] .fd-room {--room-gap:10px}
+ :root[data-cricket-theme] .fd-room .fd-room-chip {min-height:36px;padding:7px 10px;font-size:.7rem}
+ :root[data-cricket-theme] .fd-room .fd-room-chip>b,:root[data-cricket-theme] .fd-room .fd-room-chip>i {display:none}
+ :root[data-cricket-theme] .fd-room .fd-hud-score small {display:none}
+ :root[data-cricket-theme] .fd-room .fd-hud {gap:8px;padding:10px 12px}
+ :root[data-cricket-theme] .fd-room .fd-hud-format {font-size:.6rem;line-height:1.4}
+ :root[data-cricket-theme] .fd-room .fd-hud-rail {padding-top:7px}
+ :root[data-cricket-theme] .fd-room .fd-hud-id strong {font-size:.7rem}
+ :root[data-cricket-theme] .fd-room .fd-answer kbd {display:none}
+ :root[data-cricket-theme] .fd-room .fd-answer-text {overflow-wrap:anywhere}
+ :root[data-cricket-theme] .fd-room .fd-status {font-size:.75rem;line-height:1.5}
+ .ps-chilli{width:66px;height:84px}
+}

@@ -7,10 +7,10 @@ export type NavTabId = 'home' | 'journeys' | 'arena' | 'passport' | 'journal';
 
 /** Familiar route IDs preserve saved state; task labels describe each group. */
 export const NAV_TABS: { id: NavTabId; label: string; hindi: string; icon: LucideIcon }[] = [
-  { id: 'home', label: 'Home', hindi: 'होम', icon: House },
+  { id: 'home', label: 'Stadium', hindi: 'स्टेडियम', icon: House },
   { id: 'journeys', label: 'Explore', hindi: 'खोजें', icon: Compass },
   { id: 'arena', label: 'Play', hindi: 'खेलें', icon: Swords },
-  { id: 'passport', label: 'Progress', hindi: 'प्रगति', icon: UserRound },
+  { id: 'passport', label: 'My club', hindi: 'मेरा क्लब', icon: UserRound },
   { id: 'journal', label: 'Answers', hindi: 'जवाब', icon: Vault },
 ];
 

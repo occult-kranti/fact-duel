@@ -15,7 +15,7 @@ export const DUEL_FILES = Object.freeze([
  { id: 'biology', name: 'Biology', rewardMultiplier: 1 },
  { id: 'computing', name: 'Computing', rewardMultiplier: 1 },
 ].map(Object.freeze));
-export const ACTIONS = new Set(['session', 'recover', 'rotateRecovery', 'exportProfile', 'deleteSession', 'profile', 'create', 'join', 'queue', 'snapshot', 'ready', 'answer', 'next', 'leave', 'leaderboards', 'leaderboard', 'tournaments', 'circles']);
+export const ACTIONS = new Set(['presence', 'reaction', 'session', 'recover', 'rotateRecovery', 'exportProfile', 'deleteSession', 'profile', 'create', 'join', 'queue', 'snapshot', 'ready', 'answer', 'next', 'leave', 'leaderboards', 'leaderboard', 'tournaments', 'circles']);
 export class GameError extends Error { constructor(code, message, status = 400) { super(message); this.code = code; this.status = status; } }
 export function cleanNickname(value) {
   if (typeof value !== 'string') throw new GameError('BAD_NICKNAME', 'Choose a nickname.');
@@ -49,7 +49,8 @@ export function validateInput(body) {
   if (body.action === 'session' || (body.action === 'profile' && payload.nickname != null)) payload.nickname = cleanNickname(payload.nickname);
   if (payload.nickname != null) payload.nickname = cleanNickname(payload.nickname);
   if (payload.roomId != null && !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(payload.roomId)) throw new GameError('BAD_ROOM', 'Invalid room.');
-  if (['snapshot','ready','answer','next','leave'].includes(body.action) && !payload.roomId) throw new GameError('BAD_ROOM','A room is required.');
+  if (['snapshot','ready','answer','next','leave','reaction'].includes(body.action) && !payload.roomId) throw new GameError('BAD_ROOM','A room is required.');
+  if (body.action === 'reaction' && (!['all-talk','appeal-rejected','brain-duck','nice-shot','check-replay','too-easy'].includes(payload.sticker) || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(payload.requestId || ''))) throw new GameError('BAD_STICKER', 'Choose one supported sticker.');
   if (body.action === 'answer' && (!Number.isInteger(payload.choice) || payload.choice < 0 || payload.choice > 3 || !Number.isInteger(payload.round) || payload.round < 1 || payload.round > 5 || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(payload.requestId || ''))) throw new GameError('BAD_ANSWER', 'Choose one answer for the current round.');
   if (payload.stake != null && (!Number.isSafeInteger(payload.stake) || payload.stake < 0 || payload.stake > ECONOMY_RULES.maxStake)) throw new GameError('BAD_STAKE', 'Choose whole units from 0 to 10,000.');
   if (['create', 'queue'].includes(body.action)) {

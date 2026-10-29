@@ -1,6 +1,6 @@
 # Jaanta Hai Kya — the cricket club
 
-A new Gully Club design: original cricket poster artwork, paper-and-ink day mode, navy night mode, and one-tap five-question practice. Opening practice uses simple cricket questions with 30 seconds to read and answer. Human duels, source-backed sports/science learning and existing records remain available.
+Pocket Stadium: original day/night stadium artwork, one-tap cricket practice, source-backed Spicy questions, free-earned club cosmetics and real opponent banter. Thirty seconds per question, substantive cricket history across difficulties, no basic rules recall. Human duels, sports/science exploration and existing records remain available.
 
 **Play:** https://occult-kranti.github.io/fact-duel/
 
@@ -44,18 +44,18 @@ See the [profile release panel](docs/profile-release/PANEL.md), [verification re
 
 Historical Cloudflare/D1 and local-only behavior is documented in [the archived README](docs/legacy-cloudflare-preview.md). It is not the deployment path for this release.
 
-## Gully Club redesign
+## Pocket Stadium redesign
 
-Home opens directly into a labelled, zero-stake practice game in one tap. Human duel is a separate action and preserves the existing explicit age/terms confirmation. The human server retains its own rules. Bot custom practice adds 20/30-second reading timers alongside the original speed timers. Bot answers remain preplanned independently of player input; their scheduled wait is capped at 9.5 seconds.
+One tap starts a five-question, zero-stake practice innings or a dedicated Spicy innings. Human duel retains explicit age/terms confirmation. Stadium / Explore / Play / My club / Answers preserve the existing route identities. Optional Net practice uses real ballistic animation and reduced-motion timing controls, with its own score. Question answers stay stable and celebrations follow settlement.
 
-Home / Explore / Play / Progress / Answers organize the existing routes. Custom settings and optional progress categories use native disclosures, preserving selections and mounted content. Day/night share the same control order. Active questions use fixed-order stacked answer buttons, visible lock/correctness feedback and discrete screen-reader clock notices. Original home art is a 216kB WebP; decorative art never blocks gameplay.
+My club supports free-earned points, atomic buy/equip, titles, card finishes, three stadium building slots and expiring showoff badges. Human coins/ranks are separate. Six fixed opponent stickers are delivered by Supabase between rounds with one-per-break and eight-second limits. Anonymous presence counts human profiles active within two minutes and expires stale values. All ads remain disabled.
 
-- [Product context](PRODUCT.md) and [design system](DESIGN.md)
-- [Two panel rounds](docs/gully-redesign/PANELS.md), [research rationale](docs/gully-redesign/RESEARCH.md) and [verification](docs/gully-redesign/VERIFICATION.md)
-- [Advertising setup and placement guide](ad_placement.md): all new placements default off; no local-result H5 reload
-- [Editable Excalidraw board](docs/gully-redesign/design-board/gully-club.excalidraw), [SVG export](docs/gully-redesign/design-board/gully-club.svg) and [tooling record](docs/gully-redesign/TOOLING.md)
-- [Artwork prompts and provenance](docs/gully-redesign/ART.md)
+- [Product](PRODUCT.md), [design](DESIGN.md), [two squad rounds](docs/stadium-redesign/PANELS.md), [verification](docs/stadium-redesign/VERIFICATION.md)
+- [Spicy source ledger and editorial boundaries](docs/stadium-redesign/CONTENT.md)
+- [Collectibles](docs/stadium-redesign/COLLECTIBLES.md), [banter/server contract](docs/stadium-redesign/BANTER.md), [physics and design-book rationale](docs/stadium-redesign/VISUAL.md)
+- [Editable Figma mobile designs](https://www.figma.com/design/IzTCUwu6pjverrdSo0AqC0?node-id=2-2) and [tooling evidence](docs/stadium-redesign/FIGMA.md)
+- [Art provenance](docs/stadium-redesign/ART.md), [AdSense placement and activation guide](ad_placement.md)
 
-Run `CHROMIUM_PATH=/path/to/chromium node scripts/gully-browser-check.mjs` for the bounded mobile/desktop and interaction suite. The script launches its own local Vite server. It uses mocked unavailable-human networking for cancellation/fallback checks; it does not generate real human matches or ad impressions.
+Verification commands: `node --test tests/*.test.mjs` (set PGLITE_MODULE_PATH to installed PGlite), `pnpm exec tsc --noEmit`, `CHROMIUM_PATH=/path/to/chromium node scripts/stadium-browser-check.mjs`, static build/assembly then `node scripts/stadium-production-check.mjs`. The browser runner creates its own Vite server. Physical-phone and live-load studies remain separate from automated emulation.
 
-Earlier [cricket redesign notes](docs/cricket-redesign/) remain historical. The user reported Figma unavailable and directed local implementation; this revision used the actual MIT Excalidraw editor for its editable specification.
+Earlier [Gully Club](docs/gully-redesign/) and [cricket redesign](docs/cricket-redesign/) notes remain historical. The current Figma connection works with the existing Primary account; this is not a claim of offline/local Figma.

@@ -9,6 +9,7 @@ export type OnlineMatch = {
   economy: { status: 'pending' | 'reserved' | 'settled' | 'refunded'; balance: number; savings: number; reserved: number; payout: number; reward: number };
   round: number; roundCount: number; startsAt: number; deadlineAt: number; nextAt?: number;
   serverNow: number; selfId: string; players: OnlinePlayer[];
+  reactionsEnabled?: boolean; reactions?: { id: string; playerId: string; sticker: string; at: number; round: number }[];
   question: null | { id: string; prompt: Words; options: Words[]; category: string };
   receipt: OnlineReceipt | null;
   result: null | { correctIndex: number; explanation: Words; sourceUrl?: string; winnerId: string | null; answers: (OnlineReceipt & { playerId: string })[] };

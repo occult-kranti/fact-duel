@@ -1,0 +1,35 @@
+{
+  "suite": "stadium-live-banter-presence",
+  "startedAt": "2026-10-29T22:05:34.418Z",
+  "finishedAt": "2026-10-29T22:05:50.985Z",
+  "endpoint": "https://wvupsqfevlrmhqfjreyx.supabase.co/functions/v1/jhk-game",
+  "result": "pass",
+  "checks": 14,
+  "assertions": [
+    "anonymous presence returns only an aggregate and no identity",
+    "private profile access still rejects unknown bearer",
+    "two synthetic identities remain independent",
+    "zero-stake private human room exposes banter capability",
+    "arbitrary sticker text rejected by deployed Edge",
+    "first sticker is acknowledged by authority",
+    "real opponent snapshot receives the acknowledged sticker",
+    "retried request remains one immutable event",
+    "deployed authority rejects second sticker in same break",
+    "opponent response reaches first seat and feed is bounded",
+    "match snapshot does not expose bearer recovery or contact data",
+    "normal zero-stake game still reaches countdown",
+    "countdown rejects reactions before question play",
+    "synthetic match closes without stake or completion reward"
+  ],
+  "cleanup": [
+    {
+      "seat": "A",
+      "deleted": true
+    },
+    {
+      "seat": "B",
+      "deleted": true
+    }
+  ],
+  "scope": "Two synthetic human-profile clients in one zero-stake private room on the deployed server. No real player modified, no load or physical-device claim. No credentials, profile IDs or invite codes recorded."
+}

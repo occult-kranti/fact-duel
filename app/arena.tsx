@@ -26,6 +26,8 @@ import { JhkProfileGate } from './shell/jhk-profile-gate';
 import { jhkOnline } from '@/lib/jhk-online/runtime';
 import { DEFAULT_NAME } from '@/lib/profile-gate.mjs';
 import { HomeScreen } from './screens/home-screen';
+import { StadiumLocker } from './screens/stadium-locker';
+import { StadiumScene } from './screens/stadium-scene';
 import { ClubDirectory } from './screens/club-directory';
 import { DisplayPlacement } from './ads/display-placement';
 import { PlayScreen } from './screens/play-screen';
@@ -875,7 +877,7 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
     setSelectedExpedition(id);
     go('journeys');
   };
-  const quickDuel = (mode: string, topic = 'all') => {
+  const quickDuel = (mode: string, topic = 'all', subtopic = 'all') => {
     if (createFlight.current || busy) return;
     const chosenTopic = catalogue?.topics.find((t: any) => t.topic === topic);
     const next = {
@@ -883,7 +885,8 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
       mode,
       duration: topic === 'Cricket' ? 30 : modeDuration(mode),
       topic,
-      difficulty: topic === 'Cricket' ? 'simple' : 'all',
+      subtopic,
+      difficulty: 'all',
       domain: chosenTopic?.domain || 'all',
       opponent: 'bot' as const,
       stake: 0,
@@ -1181,19 +1184,20 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
         {!room && tab === 'analytics' && (
           <AnalyticsScreen player={player} go={go} onErase={() => setClearOpen(true)} />
         )}
-        {!room && tab === 'showroom' && <ShowroomScreen showArt={showArt} onShowArt={setShowArt} go={go} />}
+        {!room && tab === 'showroom' && <><section className="ps-nets"><p className="ps-eyebrow">THE PRACTICE GROUND</p><h1>Find your sweet spot.</h1><p>A little bat-and-ball break. Timing practice has its own score; your quiz record stays separate.</p><StadiumScene interactive /></section><details className="gc-progress-group"><summary>Art collection</summary><ShowroomScreen showArt={showArt} onShowArt={setShowArt} go={go} /></details></>}
         {!room && tab === 'collections' && (
           <CollectionsScreen player={player} catalogue={catalogue} onChoose={chooseCollection} />
         )}
         {!room && tab === 'passport' && <details className="gc-account"><summary>{locale === 'hi' ? 'ऑनलाइन रिकॉर्ड और वैकल्पिक प्रोफ़ाइल' : 'Human standings & optional player card'}</summary><button className="cr-secondary" onClick={() => window.dispatchEvent(new Event('jhk-profile-open'))}>{locale === 'hi' ? 'वैकल्पिक प्रोफ़ाइल / रिकवरी' : 'Optional player card / restore'}</button><LiveProgressCard onPlay={() => go('online')} /></details>}
+        {!room && tab === 'passport' && <StadiumLocker player={player} name={name} />}
         {!room && tab === 'passport' && (
-          <PlayerScreen
+          <details className="gc-progress-group"><summary>{locale === 'hi' ? 'पूरा खेल रिकॉर्ड' : 'Full playing record'}</summary><PlayerScreen
             player={player}
             catalogue={catalogue}
             onOpenExpedition={openExpedition}
             onMissionAction={missionAction}
             go={go}
-          />
+          /></details>
         )}
         {!room && tab === 'discovery' && <DiscoveryScreen player={player} topic={config.topic} go={go} />}
         {!room && tab === 'journal' && <VaultScreen player={player} go={go} />}
@@ -1201,7 +1205,7 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
         {!room && (tab === 'rules' || tab === 'timing' || tab === 'coin' || tab === 'trust') && (
           <RulesScreen view={tab} go={go} />
         )}
-        {room && <>{room.config.opponent === 'bot' && <p className="cr-practice-label" role="status">{locale === 'hi' ? 'अभ्यास बॉट · केवल इस डिवाइस का नतीजा · मानव रैंकिंग से अलग' : 'PRACTICE BOT · On-device result · Separate from human rankings'}</p>}<RoomScreen duel={duel} player={player} /></>}
+        {room && <>{room.config.opponent === 'bot' && <p className="cr-practice-label" role="status">{locale === 'hi' ? 'अभ्यास बॉट · इस डिवाइस का रिकॉर्ड' : 'PRACTICE BOT · On-device record'}</p>}<RoomScreen duel={duel} player={player} /></>}
       </AppShell>
       <JhkProfileGate name={name} onName={setName} deferForActiveMatch={liveState.inMatch} />
       <SettingsSheet

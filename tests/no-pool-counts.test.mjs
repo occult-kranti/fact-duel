@@ -31,6 +31,7 @@ const BANNED = [
 
 /** Deliberate keeps: file, the exact text on the line, and why it is not a pool size. */
 const ALLOW = [
+  { file: 'app/screens/stadium-presence.tsx', text: '${count}', why: 'Server-reported human activity count requested for the lobby, not a question-pool size' },
   { file: 'app/screens/vault/bits.tsx', text: '{count}', why: 'Chip count is the player’s own journal tally behind a filter' },
   { file: 'app/collections.tsx', text: '${met} facts met', why: 'facts the player has met, from their own passport' },
   { file: 'app/journal.tsx', text: '${deck.length} cards', why: 'the recall deck built from the player’s own due entries' },

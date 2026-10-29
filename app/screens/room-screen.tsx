@@ -7,6 +7,7 @@ import type { RoomScreenProps } from './types';
 import { RoomChrome } from './room/room-chrome';
 import { LobbyPanel } from './room/lobby-panel';
 import { CountdownStage } from './room/countdown-stage';
+import { BanterTray } from './room/banter-tray';
 import { QuestionStage } from './room/question-stage';
 import './room/room.css';
 
@@ -188,6 +189,10 @@ export function RoomScreen({ duel, player }: RoomScreenProps) {
           onRetry={sendPending}
         />
       )}
+      {room.players.some((member: any) => member?.kind === 'bot') && <BanterTray
+        key={room.id} active={lobby && !!room.players[1]} matchKey={room.id} roundKey={`${room.id}:${room.roundIndex}`} mode="bot"
+        onInteract={() => setHeldFor(roundKey)}
+      />}
       {finished && (
         <div className="fd-final final-panel">
           <MatchFinish

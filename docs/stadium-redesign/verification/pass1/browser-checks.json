@@ -1,0 +1,302 @@
+{
+  "pass": "pass1",
+  "checks": [
+    {
+      "name": "320 daytime home fits",
+      "pass": true
+    },
+    {
+      "name": "320 first play visible without scrolling",
+      "pass": true
+    },
+    {
+      "name": "320 no startup dialog",
+      "pass": true
+    },
+    {
+      "name": "320 first play touch target",
+      "pass": true
+    },
+    {
+      "name": "320 night home fits",
+      "pass": true
+    },
+    {
+      "name": "320 night preference survives reload",
+      "pass": true
+    },
+    {
+      "name": "320 one click starts a four-choice match",
+      "pass": true
+    },
+    {
+      "name": "320 practice identity remains explicit",
+      "pass": true
+    },
+    {
+      "name": "320 answer touch targets",
+      "pass": true
+    },
+    {
+      "name": "320 question fits",
+      "pass": true
+    },
+    {
+      "name": "390 daytime home fits",
+      "pass": true
+    },
+    {
+      "name": "390 first play visible without scrolling",
+      "pass": true
+    },
+    {
+      "name": "390 no startup dialog",
+      "pass": true
+    },
+    {
+      "name": "390 first play touch target",
+      "pass": true
+    },
+    {
+      "name": "390 night home fits",
+      "pass": true
+    },
+    {
+      "name": "390 night preference survives reload",
+      "pass": true
+    },
+    {
+      "name": "390 one click starts a four-choice match",
+      "pass": true
+    },
+    {
+      "name": "390 practice identity remains explicit",
+      "pass": true
+    },
+    {
+      "name": "390 answer touch targets",
+      "pass": true
+    },
+    {
+      "name": "390 question fits",
+      "pass": true
+    },
+    {
+      "name": "844 daytime home fits",
+      "pass": true
+    },
+    {
+      "name": "844 first play visible without scrolling",
+      "pass": true
+    },
+    {
+      "name": "844 no startup dialog",
+      "pass": true
+    },
+    {
+      "name": "844 first play touch target",
+      "pass": true
+    },
+    {
+      "name": "844 night home fits",
+      "pass": true
+    },
+    {
+      "name": "844 night preference survives reload",
+      "pass": true
+    },
+    {
+      "name": "1440 daytime home fits",
+      "pass": true
+    },
+    {
+      "name": "1440 first play visible without scrolling",
+      "pass": true
+    },
+    {
+      "name": "1440 no startup dialog",
+      "pass": true
+    },
+    {
+      "name": "1440 first play touch target",
+      "pass": true
+    },
+    {
+      "name": "1440 night home fits",
+      "pass": true
+    },
+    {
+      "name": "1440 night preference survives reload",
+      "pass": true
+    },
+    {
+      "name": "rapid launch opens exactly one match",
+      "pass": true
+    },
+    {
+      "name": "reading timer remains thirty seconds",
+      "pass": true
+    },
+    {
+      "name": "answer lock gives status keyboard focus",
+      "pass": true
+    },
+    {
+      "name": "repeat answer taps keep all four answers locked",
+      "pass": true
+    },
+    {
+      "name": "answer order stays stable through lock",
+      "pass": true
+    },
+    {
+      "name": "Spicy starts from one click",
+      "pass": true
+    },
+    {
+      "name": "Spicy category reaches the actual question",
+      "pass": true
+    },
+    {
+      "name": "Spicy question fits mobile",
+      "pass": true
+    },
+    {
+      "name": "loaded practice survives offline and missing stadium art",
+      "pass": true
+    },
+    {
+      "name": "blocked local storage preserves gameplay",
+      "pass": true
+    },
+    {
+      "name": "200 percent text home reflows",
+      "pass": true
+    },
+    {
+      "name": "200 percent text question reflows",
+      "pass": true
+    },
+    {
+      "name": "Hindi home reflows",
+      "pass": true
+    },
+    {
+      "name": "Hindi question reflows",
+      "pass": true
+    },
+    {
+      "name": "fresh club balance is zero",
+      "pass": true
+    },
+    {
+      "name": "unaffordable pavilion cannot be purchased",
+      "pass": true
+    },
+    {
+      "name": "club fits390",
+      "pass": true
+    },
+    {
+      "name": "two completed matches earn actual club points",
+      "pass": true
+    },
+    {
+      "name": "rapid title purchase debits exactly once",
+      "pass": true
+    },
+    {
+      "name": "purchased title is actually equipped on card",
+      "pass": true
+    },
+    {
+      "name": "title and balance survive reload without another reward",
+      "pass": true
+    },
+    {
+      "name": "actual win displays a time-bound badge",
+      "pass": true
+    },
+    {
+      "name": "expired badge leaves the player card",
+      "pass": true
+    },
+    {
+      "name": "badge expiry does not spend earned points",
+      "pass": true
+    },
+    {
+      "name": "equipped club fits320",
+      "pass": true
+    },
+    {
+      "name": "reduced-motion shot remains playable",
+      "pass": true
+    },
+    {
+      "name": "reduced-motion stadium has no transform animation",
+      "pass": true
+    },
+    {
+      "name": "net practice fits390",
+      "pass": true
+    },
+    {
+      "name": "closing net practice resets its state",
+      "pass": false
+    },
+    {
+      "name": "warm-up shots award no quiz points",
+      "pass": true
+    },
+    {
+      "name": "timed delivery enters a physical shot state",
+      "pass": true
+    },
+    {
+      "name": "changing motion off cancels an active delivery",
+      "pass": true
+    },
+    {
+      "name": "banter cannot cover a live question",
+      "pass": true
+    },
+    {
+      "name": "practice response is labelled as an automatic bot",
+      "pass": true
+    },
+    {
+      "name": "rapid reactions remain locked for this break",
+      "pass": true
+    },
+    {
+      "name": "mute removes reaction controls and visible speech",
+      "pass": true
+    },
+    {
+      "name": "mute preference is persisted",
+      "pass": true
+    },
+    {
+      "name": "between-round banter fits390",
+      "pass": true
+    },
+    {
+      "name": "next timed round hides the whole reaction tray",
+      "pass": true
+    },
+    {
+      "name": "disabled ads make zero requests",
+      "pass": true
+    },
+    {
+      "name": "no browser runtime errors",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "errors": [],
+  "scenarioErrors": [],
+  "overflow": [],
+  "adRequests": 0
+}

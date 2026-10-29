@@ -14,6 +14,7 @@ async function readBody(request) {
   const data=new Uint8Array(size); let offset=0; for(const chunk of chunks){data.set(chunk,offset);offset+=chunk.length;}
   return new TextDecoder().decode(data);
 }
+let presenceCache = null;
 Deno.serve(async (request) => {
   if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors });
   if (request.method !== 'POST') return output({ok:false,error:{code:'METHOD',message:'Use POST.'}},405);
@@ -22,9 +23,10 @@ Deno.serve(async (request) => {
     if (text.length > 4096) throw new GameError('TOO_LARGE','Request is too large.',413);
     let body; try { body = JSON.parse(text); } catch { throw new GameError('BAD_JSON','Invalid request.'); }
     const { action, payload } = validateInput(body);
+    if (action === 'presence' && presenceCache && Date.now() - presenceCache.at < 15000) return output(presenceCache.data);
     const issuedToken = ['session','recover'].includes(action) ? makeToken() : null;
     const token = issuedToken || request.headers.get('x-jhk-session');
-    const tokenHash = await hashToken(token);
+    const tokenHash = action === 'presence' ? null : await hashToken(token);
     const recoveryCode = ['session','rotateRecovery','profile'].includes(action) ? makeToken() : null;
     const recoveryHash = recoveryCode ? await hashRecovery(recoveryCode) : action === 'recover' ? await hashRecovery(body.recoveryCode) : null;
     if (recoveryHash) payload._recoveryHash = recoveryHash;
@@ -39,6 +41,7 @@ Deno.serve(async (request) => {
     if (issuedToken) data.token = issuedToken;
     if (action === 'session' || action === 'rotateRecovery' || (action === 'profile' && data.recoveryIssued)) data.recoveryCode = recoveryCode;
     delete data.recoveryIssued;
+    if (action === 'presence') presenceCache = { at: Date.now(), data };
     return output(data);
   } catch (error) { return output({ok:false,error:{code:error instanceof GameError ? error.code : 'SERVER_ERROR',message:error instanceof GameError ? error.message : 'Unable to reach the game server.'}},error instanceof GameError ? error.status : 500); }
 });

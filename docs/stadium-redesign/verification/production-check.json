@@ -1,0 +1,15 @@
+{
+  "production": true,
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "cpuThrottle": 4,
+  "firstPlayClicks": 1,
+  "elapsedMs": 4180,
+  "answerCount": 4,
+  "readingTimer": 30,
+  "ads": 0,
+  "errors": [],
+  "failed": []
+}

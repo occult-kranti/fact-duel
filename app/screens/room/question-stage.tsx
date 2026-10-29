@@ -19,6 +19,7 @@ import { FORMAT_COPY } from '@/lib/duel-presentation.mjs';
 import { Lock } from 'lucide-react';
 import { AnswerButton, usePress } from './room-bits';
 import { useLocale } from '../../use-locale';
+import { StadiumOutcome } from '../stadium-scene';
 
 const HOT_MS = 3000;
 
@@ -217,6 +218,7 @@ export function QuestionStage({
         )}
       </div>
 
+      {result && <StadiumOutcome correct={correct} roundKey={rd.id} />}
       {isLocked && !result && (
         <p className="fd-note">
           {rd.answerLocked[1 - room.seat] ? t('q.bothIn') : t('q.waitingOther')}

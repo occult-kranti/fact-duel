@@ -1,0 +1,21 @@
+.stadium-banter{margin:16px 0 0;border-top:1px solid var(--line,#536273);padding-top:12px;color:inherit;isolation:isolate}
+.stadium-banter-head{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:13px;font-weight:800}
+.stadium-banter-head>span{display:flex;align-items:center;gap:7px}
+.stadium-banter-head button{display:flex;align-items:center;gap:5px;min-width:58px;min-height:44px;border:1px solid currentColor;border-radius:22px;padding:5px 10px;color:inherit;background:transparent;font:inherit;font-size:11px}
+.stadium-banter-head button[aria-pressed=true]{opacity:.75}
+.stadium-banter-scope,.stadium-banter-note{font-size:11px;line-height:1.5;margin:2px 0 8px;opacity:.8}
+.stadium-banter-feed{min-height:58px;display:flex;align-items:center;overflow-wrap:anywhere}
+.stadium-banter-speech{display:flex;align-items:center;gap:8px;border-left:3px solid currentColor;padding:5px 10px}
+.stadium-banter-speech>span:first-child{font-size:26px}
+.stadium-banter-speech small{display:block;font-size:10px;line-height:1.4;font-weight:600}
+.stadium-banter-speech strong{font-size:15px;line-height:1.4}
+.stadium-banter-stickers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.stadium-banter-stickers button{min-height:67px;min-width:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:3px;border:1px solid currentColor;border-radius:7px;padding:7px 4px;background:transparent;color:inherit;font:inherit;cursor:pointer}
+.stadium-banter-stickers button>span{font-size:24px;line-height:1.1;transition:transform 140ms ease}
+.stadium-banter-stickers button b{font-size:10px;line-height:1.3;overflow-wrap:anywhere}
+.stadium-banter-stickers button:not(:disabled):active>span{transform:rotate(-9deg) scale(1.1)}
+.stadium-banter-stickers button:disabled{opacity:.45;cursor:default}
+.stadium-banter button:focus-visible{outline:3px solid currentColor;outline-offset:3px}
+@media(min-width:600px){.stadium-banter-stickers{grid-template-columns:repeat(6,minmax(0,1fr))}}
+@media(prefers-reduced-motion:reduce){.stadium-banter-stickers button>span{transition:none!important;transform:none!important}}
+.stadium-banter-stickers button>span,.stadium-banter-speech>span:first-child{display:grid;place-items:center}.stadium-banter-stickers svg,.stadium-banter-speech svg{width:26px;height:26px}

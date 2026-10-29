@@ -14,9 +14,9 @@ const LINKS: Record<ClubSection, ClubLink[]> = {
     { route: 'practice', label: 'Custom practice', hindi: 'अपना अभ्यास', detail: 'Choose topic & format', hindiDetail: 'विषय और मोड चुनें' },
   ],
   progress: [
-    { route: 'passport', label: 'Your progress', hindi: 'आपकी प्रगति', detail: 'Records & achievements', hindiDetail: 'रिकॉर्ड और उपलब्धियाँ' },
+    { route: 'passport', label: 'My club', hindi: 'मेरा क्लब', detail: 'Identity, ground & record', hindiDetail: 'पहचान, मैदान और रिकॉर्ड' },
     { route: 'analytics', label: 'Activity & data', hindi: 'गतिविधि और डेटा', detail: 'Inspect or export', hindiDetail: 'देखें या निर्यात करें' },
-    { route: 'showroom', label: 'Art collection', hindi: 'कला संग्रह', detail: 'Explore the game artwork', hindiDetail: 'खेल की कला देखें' },
+    { route: 'showroom', label: 'Net practice', hindi: 'नेट प्रैक्टिस', detail: 'Find your sweet spot', hindiDetail: 'सही टाइमिंग खोजें' },
   ],
   answers: [
     { route: 'journal', label: 'Answers & recall', hindi: 'जवाब और दोहराव', detail: 'Saved facts & sources', hindiDetail: 'सहेजे तथ्य और स्रोत' },

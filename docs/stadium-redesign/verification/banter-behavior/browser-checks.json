@@ -1,0 +1,50 @@
+{
+  "pass": "banter-behavior",
+  "checks": [
+    {
+      "name": "banter cannot cover a live question",
+      "pass": true
+    },
+    {
+      "name": "all six sticker graphics render as native SVG",
+      "pass": true
+    },
+    {
+      "name": "practice response is labelled as an automatic bot",
+      "pass": true
+    },
+    {
+      "name": "rapid reactions remain locked for this break",
+      "pass": true
+    },
+    {
+      "name": "mute removes reaction controls and visible speech",
+      "pass": true
+    },
+    {
+      "name": "mute preference is persisted",
+      "pass": true
+    },
+    {
+      "name": "between-round banter fits390",
+      "pass": true
+    },
+    {
+      "name": "next timed round hides the whole reaction tray",
+      "pass": true
+    },
+    {
+      "name": "disabled ads make zero requests",
+      "pass": true
+    },
+    {
+      "name": "no browser runtime errors",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "errors": [],
+  "scenarioErrors": [],
+  "overflow": [],
+  "adRequests": 0
+}
