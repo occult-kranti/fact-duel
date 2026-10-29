@@ -16,9 +16,11 @@ import { STORAGE } from './storage-names.mjs';
 import { parseApp } from './redirect-target.mjs';
 import { transactProfile } from './profile-store.mjs';
 import { withLocalQuestionHistory, recordLocalQuestionExposure } from './local-question-history.mjs';
+import { createBackgroundTaskQueue } from './local-practice-clock.mjs';
 const roomEpochs = new Map<string, string>();
 const recordedExposures = new Set<string>();
 const releasedReservations = new Set<string>();
+const queueExposure = createBackgroundTaskQueue();
 
 /** True in this build only. The static entry reads it to render the preview notice. */
 export const OFFLINE_BUILD = true;
@@ -144,17 +146,24 @@ export async function request(body: Body) {
       (result.room?.round?.question && !recordedExposures.has(`${result.room.id}/${result.room.round.id}`)) ||
       (result.room?.settled && !releasedReservations.has(result.room.id))
     )) {
-      const row = await store.read(result.room.id);
-      const room = row ? JSON.parse(row.state) : null;
-      const epoch = roomEpochs.get(result.room.id);
-      if (room && epoch) {
-        await recordLocalQuestionExposure(epoch, {
-          roomId: room.id, roundId: room.round?.id, question: result.room.round?.question ? room.round?.question : null,
-          at: room.round?.issuedAt?.[0] || Date.now(), finished: !!room.settled,
-        });
-        if (result.room.round?.question) recordedExposures.add(`${room.id}/${room.round.id}`);
-        if (room.settled) releasedReservations.add(room.id);
-      }
+      // The issue stamp is already committed. IndexedDB may stall for seconds; do not
+      // spend the player's answer window waiting for nonessential history bookkeeping.
+      const exposure = result.room;
+      const key = `${exposure.id}/${exposure.round?.id}/${exposure.settled ? 'finished' : 'shown'}`;
+      void queueExposure(key, async () => {
+        const row = await store.read(exposure.id);
+        const room = row ? JSON.parse(row.state) : null;
+        const epoch = roomEpochs.get(exposure.id);
+        if (room && epoch) {
+          await recordLocalQuestionExposure(epoch, {
+            roomId: room.id, roundId: exposure.round?.id,
+            question: exposure.round?.question && room.round?.id === exposure.round.id ? room.round.question : null,
+            at: exposure.round?.issuedAt || Date.now(), finished: !!exposure.settled,
+          });
+          if (exposure.round?.question && room.round?.id === exposure.round.id) recordedExposures.add(`${room.id}/${exposure.round.id}`);
+          if (exposure.settled) releasedReservations.add(room.id);
+        }
+      });
     }
     return result;
   } catch (error) {

@@ -46,6 +46,8 @@ import { ShowroomScreen } from './screens/showroom-screen';
 import { STORAGE } from '@/lib/storage-names.mjs';
 import { eventModeEvent } from '@/lib/progression.mjs';
 import { MODE_DURATION } from '@/lib/server/room-engine.mjs';
+import { IMMEDIATE_DUEL_FEEDBACK } from '@/lib/edition-rules.mjs';
+import { localPracticeStartAt } from '@/lib/local-practice-clock.mjs';
 import {
   INITIAL_CONFIG,
   MODES,
@@ -503,9 +505,15 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
       b = 0;
     a = requestAnimationFrame(() => {
       b = requestAnimationFrame(() => {
-        startMark.current = { roundId: rd.id, at: performance.now() };
+        const now = performance.now();
+        const at = localPracticeStartAt({
+          now, wallNow: Date.now(), issuedAt: rd.issuedAt,
+          useIssueTime: process.env.NEXT_PUBLIC_JHK_STATIC_BUILD === 'true' &&
+            !IMMEDIATE_DUEL_FEEDBACK && room.players[1]?.kind === 'bot',
+        });
+        startMark.current = { roundId: rd.id, at };
         setShown(true);
-        setRemaining(room.config.duration * 1000);
+        setRemaining(Math.max(0, room.config.duration * 1000 - (now - at)));
       });
     });
     return () => {
