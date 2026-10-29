@@ -1,0 +1,11 @@
+{
+  "round": 3,
+  "phoneCount": 6,
+  "phoneSize": [
+    390,
+    844
+  ],
+  "checked": "All native text anchored inside each phone fits right/bottom inset (16/12px).",
+  "overflow": [],
+  "result": "PASS"
+}

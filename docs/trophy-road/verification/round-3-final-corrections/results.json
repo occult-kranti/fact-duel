@@ -1,0 +1,329 @@
+{
+  "pass": "round-3-final-corrections",
+  "at": "2026-10-29T22:40:48.546Z",
+  "environment": "Headless Chromium desktop engine with viewport emulation; not a physical device or a screen-reader test",
+  "fixturePolicy": "Arena boundary tests seed local counters. Earning/replay/rotation and pacing use actual browser play. Odd unreachable practice thresholds 59/179 belong to pure function tests.",
+  "checks": [
+    {
+      "name": "320 home fits",
+      "pass": true
+    },
+    {
+      "name": "320 primary Play visible without scroll",
+      "pass": true
+    },
+    {
+      "name": "320 primary Play touch target",
+      "pass": true
+    },
+    {
+      "name": "320 no startup modal",
+      "pass": true
+    },
+    {
+      "name": "320 night home fits",
+      "pass": true
+    },
+    {
+      "name": "320 trophy road fits",
+      "pass": true
+    },
+    {
+      "name": "320 three map nodes",
+      "pass": true
+    },
+    {
+      "name": "320 map node touch targets",
+      "pass": true
+    },
+    {
+      "name": "320 night road fits",
+      "pass": true
+    },
+    {
+      "name": "320 Crown preview fits",
+      "pass": true
+    },
+    {
+      "name": "320 locked Crown previews but cannot launch",
+      "pass": true
+    },
+    {
+      "name": "320 one home action starts a match",
+      "pass": true
+    },
+    {
+      "name": "320 answers have touch targets",
+      "pass": true
+    },
+    {
+      "name": "320 reading pause has touch target",
+      "pass": true
+    },
+    {
+      "name": "320 bot identity explicit",
+      "pass": true
+    },
+    {
+      "name": "320 question fits",
+      "pass": true
+    },
+    {
+      "name": "390 home fits",
+      "pass": true
+    },
+    {
+      "name": "390 primary Play visible without scroll",
+      "pass": true
+    },
+    {
+      "name": "390 primary Play touch target",
+      "pass": true
+    },
+    {
+      "name": "390 no startup modal",
+      "pass": true
+    },
+    {
+      "name": "390 night home fits",
+      "pass": true
+    },
+    {
+      "name": "390 trophy road fits",
+      "pass": true
+    },
+    {
+      "name": "390 three map nodes",
+      "pass": true
+    },
+    {
+      "name": "390 map node touch targets",
+      "pass": true
+    },
+    {
+      "name": "390 night road fits",
+      "pass": true
+    },
+    {
+      "name": "390 Crown preview fits",
+      "pass": true
+    },
+    {
+      "name": "390 locked Crown previews but cannot launch",
+      "pass": true
+    },
+    {
+      "name": "390 one home action starts a match",
+      "pass": true
+    },
+    {
+      "name": "390 answers have touch targets",
+      "pass": true
+    },
+    {
+      "name": "390 reading pause has touch target",
+      "pass": true
+    },
+    {
+      "name": "390 bot identity explicit",
+      "pass": true
+    },
+    {
+      "name": "390 question fits",
+      "pass": true
+    },
+    {
+      "name": "844 home fits",
+      "pass": true
+    },
+    {
+      "name": "844 primary Play visible without scroll",
+      "pass": true
+    },
+    {
+      "name": "844 primary Play touch target",
+      "pass": true
+    },
+    {
+      "name": "844 no startup modal",
+      "pass": true
+    },
+    {
+      "name": "844 night home fits",
+      "pass": true
+    },
+    {
+      "name": "844 trophy road fits",
+      "pass": true
+    },
+    {
+      "name": "844 three map nodes",
+      "pass": true
+    },
+    {
+      "name": "844 map node touch targets",
+      "pass": true
+    },
+    {
+      "name": "844 night road fits",
+      "pass": true
+    },
+    {
+      "name": "844 Crown preview fits",
+      "pass": true
+    },
+    {
+      "name": "844 locked Crown previews but cannot launch",
+      "pass": true
+    },
+    {
+      "name": "844 one home action starts a match",
+      "pass": true
+    },
+    {
+      "name": "844 answers have touch targets",
+      "pass": true
+    },
+    {
+      "name": "844 reading pause has touch target",
+      "pass": true
+    },
+    {
+      "name": "844 bot identity explicit",
+      "pass": true
+    },
+    {
+      "name": "844 question fits",
+      "pass": true
+    },
+    {
+      "name": "1440 home fits",
+      "pass": true
+    },
+    {
+      "name": "1440 primary Play visible without scroll",
+      "pass": true
+    },
+    {
+      "name": "1440 primary Play touch target",
+      "pass": true
+    },
+    {
+      "name": "1440 no startup modal",
+      "pass": true
+    },
+    {
+      "name": "1440 night home fits",
+      "pass": true
+    },
+    {
+      "name": "1440 trophy road fits",
+      "pass": true
+    },
+    {
+      "name": "1440 three map nodes",
+      "pass": true
+    },
+    {
+      "name": "1440 map node touch targets",
+      "pass": true
+    },
+    {
+      "name": "1440 night road fits",
+      "pass": true
+    },
+    {
+      "name": "1440 Crown preview fits",
+      "pass": true
+    },
+    {
+      "name": "1440 locked Crown previews but cannot launch",
+      "pass": true
+    },
+    {
+      "name": "1440 one home action starts a match",
+      "pass": true
+    },
+    {
+      "name": "1440 answers have touch targets",
+      "pass": true
+    },
+    {
+      "name": "1440 reading pause has touch target",
+      "pass": true
+    },
+    {
+      "name": "1440 bot identity explicit",
+      "pass": true
+    },
+    {
+      "name": "1440 question fits",
+      "pass": true
+    },
+    {
+      "name": "keyboard answer locks controls",
+      "pass": true
+    },
+    {
+      "name": "keyboard answer moves focus to status",
+      "pass": true
+    },
+    {
+      "name": "optional reading pause keeps the settled round",
+      "pass": true
+    },
+    {
+      "name": "reading pause resumes with one action",
+      "pass": true
+    },
+    {
+      "name": "focusing banter prevents automatic advance mid-action",
+      "pass": true
+    },
+    {
+      "name": "200 percent text home fits",
+      "pass": true
+    },
+    {
+      "name": "200 percent text road fits",
+      "pass": true
+    },
+    {
+      "name": "reduced-motion road has no running decorative animation",
+      "pass": true,
+      "detail": 0
+    },
+    {
+      "name": "road does not display question inventory totals",
+      "pass": true
+    },
+    {
+      "name": "public catalogue omits category inventory fields",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "loaded offline practice works despite missing art",
+      "pass": true
+    },
+    {
+      "name": "200 percent text offline question fits",
+      "pass": true
+    },
+    {
+      "name": "no uncaught browser runtime errors",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "disabled ads make no ad network requests",
+      "pass": true,
+      "detail": 0
+    }
+  ],
+  "timings": [],
+  "errors": [],
+  "scenarios": [],
+  "observations": [],
+  "adRequests": 0
+}

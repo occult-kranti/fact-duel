@@ -1,0 +1,39 @@
+{
+  "note": "Art only is raster. All UI layers are native editable elements. Canvas imports are proportional display derivatives, embedded in each Excalidraw scene.",
+  "rounds": {
+    "2": {
+      "gully": {
+        "source": "generated_images/exec-b28179eb-fbb6-41fb-b901-52d7d830e531.png",
+        "sha256": "66ca360d7a96afbd8eb4231e6e5dfe5fe0299d07f27814b44d864c61030a7729",
+        "sourceBytes": 2449399
+      },
+      "riverside": {
+        "source": "generated_images/exec-ec9bb9d9-eee6-46f3-b454-61be008d288b.png",
+        "sha256": "26bb45b7583969f30579211f40715910dd03c903a86efd405302ec6e870ba82c",
+        "sourceBytes": 2590110
+      },
+      "crown": {
+        "source": "generated_images/exec-9d1a4071-a348-4534-8cc7-8a1332970fec.png",
+        "sha256": "9f7b8b098a190805aee03ef323c2c8989bbd066fc9e84f6804c0a146b1df418f",
+        "sourceBytes": 2488627
+      }
+    },
+    "3": {
+      "gully": {
+        "source": "public/art/arena-gully.webp",
+        "sha256": "728e391a3e5b2cef84d0943ca5fc5cd0947ad26fe67881588f8ce7076d07df7f",
+        "sourceBytes": 116704
+      },
+      "riverside": {
+        "source": "public/art/arena-riverside.webp",
+        "sha256": "87d6c31afffd543d7c2f2e2e0bcb609c23e49f13687f0e607171c474e87cd03f",
+        "sourceBytes": 141618
+      },
+      "crown": {
+        "source": "public/art/arena-crown.webp",
+        "sha256": "845c6edf391cb331c32042da609ea74a788b60c99d8e5361e1e5d03b7b90a01a",
+        "sourceBytes": 122156
+      }
+    }
+  }
+}

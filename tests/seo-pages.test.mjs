@@ -142,8 +142,8 @@ test('the IPL page fills from cricket when fewer than ten IPL questions exist, a
   if (exact.length < PAGE_SIZE) {
     assert.equal(sel.filled, true);
     const line = fallbackLine(intent, sel);
-    assert.match(line, /and more cricket/);
-    assert.match(line, new RegExp(`\\b${exact.length}\\b`));
+    assert.match(line, /wider cricket bank/);
+    assert.doesNotMatch(line, /\d/);
   } else {
     assert.equal(sel.filled, false);
     assert.equal(fallbackLine(intent, sel), null);

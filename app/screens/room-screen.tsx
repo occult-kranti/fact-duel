@@ -11,25 +11,10 @@ import { BanterTray } from './room/banter-tray';
 import { QuestionStage } from './room/question-stage';
 import './room/room.css';
 
-/* Room: chrome (leave / mode · round / connection), HUD, lobby & between-round panel, countdown,
- * the live question, the reveal hold and the finish stage. Pure presentation over the
- * DuelController — every piece of state lives in arena.tsx.
- *
- * Timing contract (README): the question card mounts with `visibility: hidden` until the reveal
- * marker (`shown`, set by the double-rAF useLayoutEffect in arena.tsx). No entrance animation, no
- * layout shift, no extra work before the marker; the timer track has `transition: none`.
- *
- * Reveal hold: the server flips the phase to `between` / `complete` the instant a round resolves,
- * so the card would vanish under the result juice. We keep the stage mounted for REVEAL_MS after a
- * round we actually played, purely so the correct answer, the XP float and the burst land on the
- * button that was pressed. Nothing about the live round changes.
- *
- * Auto-advance: a multi-round match runs itself. Once the between-round panel is up we arm a single
- * AUTO_ADVANCE_MS window and then send `ready` on the player's behalf, so Triple Threat and the
- * Gauntlet never ask for a click to keep going. It fires at most once per round — a failed send
- * leaves the manual button and its error in place rather than retrying forever — and any deliberate
- * touch inside the fact panel, or the Keep reading control, cancels it for that round. */
-const REVEAL_MS = 1900;
+/* Room presentation keeps answer input stable. Local practice shows the resolved answer for
+ * 900 ms then starts the next ball. Review, focus, banter or a hidden tab pauses that advance;
+ * Next remains available and the full question/source review survives in the finish screen. */
+const REVEAL_MS = 900;
 const AUTO_ADVANCE_MS = 5000;
 
 export function RoomScreen({ duel, player }: RoomScreenProps) {
@@ -68,52 +53,61 @@ export function RoomScreen({ duel, player }: RoomScreenProps) {
   } = actions;
 
   const { t, pick, topic, locale } = useLocale();
-  /* Only hold on a round this device actually watched go live. */
-  const playedLive = useRef<Set<string>>(new Set());
-  const [holdId, setHoldId] = useState<string | null>(null);
-  useEffect(() => {
-    if (question && shown && !rd?.result && rd?.id) playedLive.current.add(rd.id);
-  }, [question, shown, rd?.id, rd?.result]);
-  useEffect(() => {
-    if (!rd?.result || !question || !playedLive.current.has(rd.id)) return;
-    setHoldId(rd.id);
-    const timer = setTimeout(() => setHoldId(null), REVEAL_MS);
-    return () => clearTimeout(timer);
-  }, [rd?.id, rd?.result, question]);
-  const revealing = !!rd?.result && !!question && holdId === rd.id;
-
-  const lobby = !revealing && ['waiting', 'between'].includes(phase);
-  const counting = !revealing && ['scheduled', 'playing'].includes(phase) && !question;
-  const live = !!question && (!rd?.result || revealing);
-  const finished = !revealing && ['complete', 'cancelled'].includes(phase);
-  const mine = rd?.result ? (rd.receipts?.[room.seat] ?? null) : null;
-
-  /* Auto-advance: after the reveal hold, the between-round panel starts the next round by itself.
-   * Both switches are per-round state rather than refs because `armed` is read during render — a
-   * deliberate hold, and the one shot we allow. A failed send leaves the manual button and its
-   * error in place rather than retrying on a loop. */
+  const botPractice = room.players[1]?.kind === 'bot';
   const roundKey = rd?.id ?? null;
+  const hasResult = !!rd?.result;
+  const playedLive = useRef<Set<string>>(new Set());
+  const [endedFor, setEndedFor] = useState<string | null>(null);
   const [heldFor, setHeldFor] = useState<string | null>(null);
   const [firedFor, setFiredFor] = useState<string | null>(null);
-  const armed =
-    lobby &&
-    phase === 'between' &&
-    !!roundKey &&
-    !!room.players[1] &&
-    !room.players[room.seat]?.ready &&
-    !room.settled &&
-    heldFor !== roundKey &&
-    firedFor !== roundKey;
-  const auto = armed
-    ? {
-        totalMs: AUTO_ADVANCE_MS,
-        onHold: () => setHeldFor(roundKey),
-        onFire: () => {
-          setFiredFor(roundKey);
-          void ready();
-        },
+  const heldRef = useRef<string | null>(null);
+  const firedRef = useRef<string | null>(null);
+  const readyRef = useRef(ready);
+  readyRef.current = ready;
+  const hold = () => {
+    heldRef.current = roundKey;
+    setHeldFor(roundKey);
+  };
+  const startNext = () => {
+    if (!roundKey || firedRef.current === roundKey) return;
+    firedRef.current = roundKey;
+    setFiredFor(roundKey);
+    void readyRef.current();
+  };
+  useEffect(() => {
+    if (question && shown && !hasResult && roundKey) playedLive.current.add(roundKey);
+  }, [question, shown, roundKey, hasResult]);
+  useEffect(() => {
+    if (!hasResult || !roundKey || !playedLive.current.has(roundKey)) return;
+    const pauseIfHidden = () => {
+      if (document.visibilityState !== 'visible') {
+        heldRef.current = roundKey;
+        setHeldFor(roundKey);
       }
-    : null;
+    };
+    pauseIfHidden();
+    document.addEventListener('visibilitychange', pauseIfHidden);
+    const timer = setTimeout(() => {
+      setEndedFor(roundKey);
+      if (botPractice && phase === 'between' && heldRef.current !== roundKey && firedRef.current !== roundKey && document.visibilityState === 'visible') {
+        firedRef.current = roundKey;
+        setFiredFor(roundKey);
+        void readyRef.current();
+      }
+    }, botPractice ? REVEAL_MS : 1900);
+    return () => {
+      clearTimeout(timer);
+      document.removeEventListener('visibilitychange', pauseIfHidden);
+    };
+  }, [roundKey, hasResult, botPractice, phase]);
+  const revealing = hasResult && !!question && !!roundKey && playedLive.current.has(roundKey) && endedFor !== roundKey;
+  const lobby = !revealing && ['waiting', 'between'].includes(phase);
+  const counting = !revealing && ['scheduled', 'playing'].includes(phase) && !question;
+  const live = !!question && (!hasResult || revealing);
+  const finished = !revealing && ['complete', 'cancelled'].includes(phase);
+  const mine = hasResult ? (rd.receipts?.[room.seat] ?? null) : null;
+  const armed = !botPractice && lobby && phase === 'between' && !!roundKey && !!room.players[1] && !room.players[room.seat]?.ready && !room.settled && heldFor !== roundKey && firedFor !== roundKey;
+  const auto = armed ? { totalMs: AUTO_ADVANCE_MS, onHold: hold, onFire: startNext } : null;
 
   const headline =
     phase === 'between'
@@ -143,6 +137,10 @@ export function RoomScreen({ duel, player }: RoomScreenProps) {
   return (
     <section
       className="fd-room"
+      data-room-phase={phase}
+      data-round-id={roundKey ?? undefined}
+      data-human-locked={rd?.answerLocked?.[room.seat] ? "true" : "false"}
+      data-bot-locked={botPractice && rd?.answerLocked?.[1] ? "true" : "false"}
       data-stage={live ? 'question' : counting ? 'countdown' : finished ? 'finish' : 'lobby'}
     >
       <RoomChrome
@@ -173,26 +171,65 @@ export function RoomScreen({ duel, player }: RoomScreenProps) {
       )}
       {counting && <CountdownStage countdown={countdown} roundId={rd?.id} />}
       {live && (
-        <QuestionStage
-          room={room}
-          rd={rd}
-          question={question}
-          shown={shown}
-          chosen={chosen}
-          isLocked={isLocked}
-          answerPending={answerPending}
-          remaining={remaining}
-          startMark={startMark}
-          pendingAnswer={pendingAnswer}
-          onAnswer={answer}
-          onExpire={expire}
-          onRetry={sendPending}
+        <div
+          onPointerDownCapture={hasResult ? hold : undefined}
+          onFocusCapture={hasResult ? (event) => {
+            // Arena moves focus to the result heading automatically. Only an actual review control
+            // pauses play; otherwise that accessibility hand-off would stop every automatic round.
+            if ((event.target as HTMLElement).matches('a,button,input,summary,[role="button"]')) hold();
+          } : undefined}
+        >
+          <QuestionStage
+            room={room}
+            rd={rd}
+            question={question}
+            shown={shown}
+            chosen={chosen}
+            isLocked={isLocked}
+            answerPending={answerPending}
+            remaining={remaining}
+            startMark={startMark}
+            pendingAnswer={pendingAnswer}
+            onAnswer={answer}
+            onExpire={expire}
+            onRetry={sendPending}
+          />
+          {botPractice && !room.settled && (
+            <div className="fd-flow-controls" aria-label="Round flow">
+              <button
+                type="button"
+                className="fd-flow-pause"
+                aria-pressed={heldFor === roundKey}
+                onClick={() => {
+                  if (heldFor === roundKey && !hasResult) {
+                    heldRef.current = null;
+                    setHeldFor(null);
+                  } else hold();
+                }}
+              >
+                {heldFor === roundKey
+                  ? (locale === 'hi' ? 'रिव्यू के लिए रुका' : 'Paused for review')
+                  : (locale === 'hi' ? 'इस गेंद के बाद रुकें' : 'Pause after this ball')}
+              </button>
+              {hasResult && phase === 'between' && (
+                <button type="button" className="fd-flow-next" onClick={startNext} disabled={busy || firedFor === roundKey}>
+                  {locale === 'hi' ? 'अगली गेंद' : 'Next ball'}
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+      {botPractice && (
+        <BanterTray
+          key={room.id}
+          active={(lobby || revealing) && !!room.players[1]}
+          matchKey={room.id}
+          roundKey={`${room.id}:${room.roundIndex}`}
+          mode="bot"
+          onInteract={hold}
         />
       )}
-      {room.players.some((member: any) => member?.kind === 'bot') && <BanterTray
-        key={room.id} active={lobby && !!room.players[1]} matchKey={room.id} roundKey={`${room.id}:${room.roundIndex}`} mode="bot"
-        onInteract={() => setHeldFor(roundKey)}
-      />}
       {finished && (
         <div className="fd-final final-panel">
           <MatchFinish

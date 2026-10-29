@@ -221,7 +221,7 @@ export function QuestionStage({
       {result && <StadiumOutcome correct={correct} roundKey={rd.id} />}
       {isLocked && !result && (
         <p className="fd-note">
-          {rd.answerLocked[1 - room.seat] ? t('q.bothIn') : t('q.waitingOther')}
+          {rd.answerLocked[1 - room.seat] ? t('q.bothIn') : room.config.opponent === 'bot' && rd.answerLocked[room.seat] ? (locale === 'hi' ? 'बॉट अपना जवाब चुन रहा है · कुछ सेकंड…' : 'The bot is choosing · a few seconds…') : t('q.waitingOther')}
         </p>
       )}
       {pendingAnswer.current && !rd.answerLocked[room.seat] && !answerPending && !result && (

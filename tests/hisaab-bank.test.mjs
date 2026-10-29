@@ -54,7 +54,9 @@ test('through the alias table the duel service serves the civics bank: catalogue
   assert.equal(served.QUESTIONS, QUESTIONS, 'lib/server/bank.mjs resolves to the edition bank');
 
   const cat = catalogue();
-  assert.equal(cat.count, QUESTIONS.length);
+  assert.equal(cat.available, true);
+  assert.ok(!Object.hasOwn(cat, 'count'));
+  assert.ok(cat.topics.every(t => t.available === true && !Object.hasOwn(t, 'count')));
   assert.ok(cat.topics.every((t) => t.domain === 'civics' && SECTORS.includes(t.topic)));
 
   const practice = await dispatch(null, { action: 'practice' });

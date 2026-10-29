@@ -48,7 +48,9 @@ test('every served topic is known to the profile layer, in the right domain', ()
 
 test('the catalogue a client sees is the filtered bank', () => {
   const cat = catalogue();
-  assert.equal(cat.count, QUESTIONS.length);
+  assert.equal(cat.available, true);
+  assert.ok(!Object.hasOwn(cat, 'count'));
+  assert.ok(cat.topics.every(t => t.available === true && !Object.hasOwn(t, 'count')));
   assert.ok(cat.topics.every((t) => domainEnabled(t.domain)));
   assert.ok(cat.facets.every((f) => domainEnabled(f.domain)));
 });

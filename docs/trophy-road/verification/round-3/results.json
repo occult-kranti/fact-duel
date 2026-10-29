@@ -1,0 +1,1189 @@
+{
+  "pass": "round-3",
+  "at": "2026-10-29T22:39:29.544Z",
+  "environment": "Headless Chromium desktop engine with viewport emulation; not a physical device or a screen-reader test",
+  "fixturePolicy": "Arena boundary tests seed local counters. Earning/replay/rotation and pacing use actual browser play. Odd unreachable practice thresholds 59/179 belong to pure function tests.",
+  "checks": [
+    {
+      "name": "320 home fits",
+      "pass": true
+    },
+    {
+      "name": "320 primary Play visible without scroll",
+      "pass": true
+    },
+    {
+      "name": "320 primary Play touch target",
+      "pass": true
+    },
+    {
+      "name": "320 no startup modal",
+      "pass": true
+    },
+    {
+      "name": "320 night home fits",
+      "pass": true
+    },
+    {
+      "name": "320 trophy road fits",
+      "pass": true
+    },
+    {
+      "name": "320 three map nodes",
+      "pass": true
+    },
+    {
+      "name": "320 map node touch targets",
+      "pass": true
+    },
+    {
+      "name": "320 night road fits",
+      "pass": true
+    },
+    {
+      "name": "320 Crown preview fits",
+      "pass": true
+    },
+    {
+      "name": "320 locked Crown previews but cannot launch",
+      "pass": true
+    },
+    {
+      "name": "320 one home action starts a match",
+      "pass": true
+    },
+    {
+      "name": "320 answers have touch targets",
+      "pass": true
+    },
+    {
+      "name": "320 bot identity explicit",
+      "pass": true
+    },
+    {
+      "name": "320 question fits",
+      "pass": true
+    },
+    {
+      "name": "390 home fits",
+      "pass": true
+    },
+    {
+      "name": "390 primary Play visible without scroll",
+      "pass": true
+    },
+    {
+      "name": "390 primary Play touch target",
+      "pass": true
+    },
+    {
+      "name": "390 no startup modal",
+      "pass": true
+    },
+    {
+      "name": "390 night home fits",
+      "pass": true
+    },
+    {
+      "name": "390 trophy road fits",
+      "pass": true
+    },
+    {
+      "name": "390 three map nodes",
+      "pass": true
+    },
+    {
+      "name": "390 map node touch targets",
+      "pass": true
+    },
+    {
+      "name": "390 night road fits",
+      "pass": true
+    },
+    {
+      "name": "390 Crown preview fits",
+      "pass": true
+    },
+    {
+      "name": "390 locked Crown previews but cannot launch",
+      "pass": true
+    },
+    {
+      "name": "390 one home action starts a match",
+      "pass": true
+    },
+    {
+      "name": "390 answers have touch targets",
+      "pass": true
+    },
+    {
+      "name": "390 bot identity explicit",
+      "pass": true
+    },
+    {
+      "name": "390 question fits",
+      "pass": true
+    },
+    {
+      "name": "844 home fits",
+      "pass": true
+    },
+    {
+      "name": "844 primary Play visible without scroll",
+      "pass": true
+    },
+    {
+      "name": "844 primary Play touch target",
+      "pass": true
+    },
+    {
+      "name": "844 no startup modal",
+      "pass": true
+    },
+    {
+      "name": "844 night home fits",
+      "pass": true
+    },
+    {
+      "name": "844 trophy road fits",
+      "pass": true
+    },
+    {
+      "name": "844 three map nodes",
+      "pass": true
+    },
+    {
+      "name": "844 map node touch targets",
+      "pass": true
+    },
+    {
+      "name": "844 night road fits",
+      "pass": true
+    },
+    {
+      "name": "844 Crown preview fits",
+      "pass": true
+    },
+    {
+      "name": "844 locked Crown previews but cannot launch",
+      "pass": true
+    },
+    {
+      "name": "844 one home action starts a match",
+      "pass": true
+    },
+    {
+      "name": "844 answers have touch targets",
+      "pass": true
+    },
+    {
+      "name": "844 bot identity explicit",
+      "pass": true
+    },
+    {
+      "name": "844 question fits",
+      "pass": true
+    },
+    {
+      "name": "1440 home fits",
+      "pass": true
+    },
+    {
+      "name": "1440 primary Play visible without scroll",
+      "pass": true
+    },
+    {
+      "name": "1440 primary Play touch target",
+      "pass": true
+    },
+    {
+      "name": "1440 no startup modal",
+      "pass": true
+    },
+    {
+      "name": "1440 night home fits",
+      "pass": true
+    },
+    {
+      "name": "1440 trophy road fits",
+      "pass": true
+    },
+    {
+      "name": "1440 three map nodes",
+      "pass": true
+    },
+    {
+      "name": "1440 map node touch targets",
+      "pass": true
+    },
+    {
+      "name": "1440 night road fits",
+      "pass": true
+    },
+    {
+      "name": "1440 Crown preview fits",
+      "pass": true
+    },
+    {
+      "name": "1440 locked Crown previews but cannot launch",
+      "pass": true
+    },
+    {
+      "name": "1440 one home action starts a match",
+      "pass": true
+    },
+    {
+      "name": "1440 answers have touch targets",
+      "pass": true
+    },
+    {
+      "name": "1440 bot identity explicit",
+      "pass": true
+    },
+    {
+      "name": "1440 question fits",
+      "pass": true
+    },
+    {
+      "name": "fixture 0 displayed exactly",
+      "pass": true
+    },
+    {
+      "name": "fixture 0 gully gate",
+      "pass": true
+    },
+    {
+      "name": "fixture 0 gully semantic unlocked state",
+      "pass": true
+    },
+    {
+      "name": "fixture 0 riverside gate",
+      "pass": true
+    },
+    {
+      "name": "fixture 0 riverside semantic unlocked state",
+      "pass": true
+    },
+    {
+      "name": "fixture 0 crown gate",
+      "pass": true
+    },
+    {
+      "name": "fixture 0 crown semantic unlocked state",
+      "pass": true
+    },
+    {
+      "name": "fixture 0 survives ordinary reload",
+      "pass": true
+    },
+    {
+      "name": "fixture 58 displayed exactly",
+      "pass": true
+    },
+    {
+      "name": "fixture 58 gully gate",
+      "pass": true
+    },
+    {
+      "name": "fixture 58 gully semantic unlocked state",
+      "pass": true
+    },
+    {
+      "name": "fixture 58 riverside gate",
+      "pass": true
+    },
+    {
+      "name": "fixture 58 riverside semantic unlocked state",
+      "pass": true
+    },
+    {
+      "name": "fixture 58 crown gate",
+      "pass": true
+    },
+    {
+      "name": "fixture 58 crown semantic unlocked state",
+      "pass": true
+    },
+    {
+      "name": "fixture 58 survives ordinary reload",
+      "pass": true
+    },
+    {
+      "name": "fixture 60 displayed exactly",
+      "pass": true
+    },
+    {
+      "name": "fixture 60 gully gate",
+      "pass": true
+    },
+    {
+      "name": "fixture 60 gully semantic unlocked state",
+      "pass": true
+    },
+    {
+      "name": "fixture 60 riverside gate",
+      "pass": true
+    },
+    {
+      "name": "fixture 60 riverside semantic unlocked state",
+      "pass": true
+    },
+    {
+      "name": "fixture 60 crown gate",
+      "pass": true
+    },
+    {
+      "name": "fixture 60 crown semantic unlocked state",
+      "pass": true
+    },
+    {
+      "name": "fixture 60 survives ordinary reload",
+      "pass": true
+    },
+    {
+      "name": "fixture 178 displayed exactly",
+      "pass": true
+    },
+    {
+      "name": "fixture 178 gully gate",
+      "pass": true
+    },
+    {
+      "name": "fixture 178 gully semantic unlocked state",
+      "pass": true
+    },
+    {
+      "name": "fixture 178 riverside gate",
+      "pass": true
+    },
+    {
+      "name": "fixture 178 riverside semantic unlocked state",
+      "pass": true
+    },
+    {
+      "name": "fixture 178 crown gate",
+      "pass": true
+    },
+    {
+      "name": "fixture 178 crown semantic unlocked state",
+      "pass": true
+    },
+    {
+      "name": "fixture 178 survives ordinary reload",
+      "pass": true
+    },
+    {
+      "name": "fixture 180 displayed exactly",
+      "pass": true
+    },
+    {
+      "name": "fixture 180 gully gate",
+      "pass": true
+    },
+    {
+      "name": "fixture 180 gully semantic unlocked state",
+      "pass": true
+    },
+    {
+      "name": "fixture 180 riverside gate",
+      "pass": true
+    },
+    {
+      "name": "fixture 180 riverside semantic unlocked state",
+      "pass": true
+    },
+    {
+      "name": "fixture 180 crown gate",
+      "pass": true
+    },
+    {
+      "name": "fixture 180 crown semantic unlocked state",
+      "pass": true
+    },
+    {
+      "name": "fixture 180 survives ordinary reload",
+      "pass": true
+    },
+    {
+      "name": "rapid launch opens one room",
+      "pass": true
+    },
+    {
+      "name": "quick ball 1 bot waits for the human",
+      "pass": true
+    },
+    {
+      "name": "quick ball 1 all answers lock",
+      "pass": true
+    },
+    {
+      "name": "quick ball 1 bot responds in 3–4 seconds",
+      "pass": true,
+      "detail": 3707.900000002235
+    },
+    {
+      "name": "quick ball 1 automatic transition stays brief",
+      "pass": true,
+      "detail": 1007
+    },
+    {
+      "name": "quick completes without manual next-round taps",
+      "pass": true
+    },
+    {
+      "name": "quick no family repeats within the match",
+      "pass": true,
+      "detail": [
+        "cr386"
+      ]
+    },
+    {
+      "name": "quick actual match length",
+      "pass": true,
+      "detail": 1
+    },
+    {
+      "name": "one actual answered round earns six practice trophies",
+      "pass": true,
+      "detail": {
+        "rounds": 1,
+        "attemptedRounds": 1,
+        "correct": 1,
+        "matches": 1,
+        "wins": 1,
+        "losses": 0,
+        "draws": 0,
+        "humanMatches": 0,
+        "expeditions": 0,
+        "stamps": 0,
+        "facts": 1,
+        "opens": 0,
+        "recalls": 0,
+        "saves": 0,
+        "reviews": 0,
+        "discoveries": 0,
+        "eventModes": 0,
+        "questsDone": 0,
+        "bestCombo": 1,
+        "perfectGauntlets": 0,
+        "fastestCorrectMs": 137,
+        "byTopic": {
+          "Cricket": {
+            "rounds": 1,
+            "correct": 1
+          },
+          "Football": {
+            "rounds": 0,
+            "correct": 0
+          },
+          "Basketball": {
+            "rounds": 0,
+            "correct": 0
+          },
+          "American football": {
+            "rounds": 0,
+            "correct": 0
+          },
+          "Tennis": {
+            "rounds": 0,
+            "correct": 0
+          },
+          "Baseball": {
+            "rounds": 0,
+            "correct": 0
+          },
+          "Formula 1": {
+            "rounds": 0,
+            "correct": 0
+          },
+          "Space": {
+            "rounds": 0,
+            "correct": 0
+          },
+          "Physics": {
+            "rounds": 0,
+            "correct": 0
+          },
+          "Biology": {
+            "rounds": 0,
+            "correct": 0
+          },
+          "Computing": {
+            "rounds": 0,
+            "correct": 0
+          }
+        },
+        "byMode": {
+          "quick": {
+            "played": 1,
+            "wins": 1
+          },
+          "trilogy": {
+            "played": 0,
+            "wins": 0
+          },
+          "gauntlet": {
+            "played": 0,
+            "wins": 0
+          },
+          "chase": {
+            "played": 0,
+            "wins": 0
+          },
+          "superover": {
+            "played": 0,
+            "wins": 0
+          }
+        }
+      }
+    },
+    {
+      "name": "one replay action returns to playable answers",
+      "pass": true
+    },
+    {
+      "name": "quick ball 1 bot waits for the human",
+      "pass": true
+    },
+    {
+      "name": "quick ball 1 all answers lock",
+      "pass": true
+    },
+    {
+      "name": "quick ball 1 bot responds in 3–4 seconds",
+      "pass": true,
+      "detail": 3651.10000000149
+    },
+    {
+      "name": "quick ball 1 automatic transition stays brief",
+      "pass": true,
+      "detail": 933
+    },
+    {
+      "name": "quick completes without manual next-round taps",
+      "pass": true
+    },
+    {
+      "name": "quick no family repeats within the match",
+      "pass": true,
+      "detail": [
+        "cr607"
+      ]
+    },
+    {
+      "name": "quick actual match length",
+      "pass": true,
+      "detail": 1
+    },
+    {
+      "name": "replay prefers a new question family",
+      "pass": true
+    },
+    {
+      "name": "two real results persist as twelve trophies after reload",
+      "pass": true
+    },
+    {
+      "name": "rotation survives reload",
+      "pass": true,
+      "detail": "q006"
+    },
+    {
+      "name": "gauntlet three road actions start the correct mode",
+      "pass": true
+    },
+    {
+      "name": "gauntlet mobile HUD fits",
+      "pass": true
+    },
+    {
+      "name": "gauntlet ball 1 bot waits for the human",
+      "pass": true
+    },
+    {
+      "name": "gauntlet ball 1 all answers lock",
+      "pass": true
+    },
+    {
+      "name": "gauntlet ball 1 bot responds in 3–4 seconds",
+      "pass": true,
+      "detail": 3948.199999999255
+    },
+    {
+      "name": "gauntlet ball 1 automatic transition stays brief",
+      "pass": true,
+      "detail": 1231
+    },
+    {
+      "name": "gauntlet ball 2 bot waits for the human",
+      "pass": true
+    },
+    {
+      "name": "gauntlet ball 2 all answers lock",
+      "pass": true
+    },
+    {
+      "name": "gauntlet ball 2 bot responds in 3–4 seconds",
+      "pass": true,
+      "detail": 3691.199999999255
+    },
+    {
+      "name": "gauntlet ball 2 automatic transition stays brief",
+      "pass": true,
+      "detail": 1212
+    },
+    {
+      "name": "gauntlet ball 3 bot waits for the human",
+      "pass": true
+    },
+    {
+      "name": "gauntlet ball 3 all answers lock",
+      "pass": true
+    },
+    {
+      "name": "gauntlet ball 3 bot responds in 3–4 seconds",
+      "pass": true,
+      "detail": 3708.900000002235
+    },
+    {
+      "name": "gauntlet ball 3 automatic transition stays brief",
+      "pass": true,
+      "detail": 1152
+    },
+    {
+      "name": "gauntlet ball 4 bot waits for the human",
+      "pass": true
+    },
+    {
+      "name": "gauntlet ball 4 all answers lock",
+      "pass": true
+    },
+    {
+      "name": "gauntlet ball 4 bot responds in 3–4 seconds",
+      "pass": true,
+      "detail": 3808.60000000149
+    },
+    {
+      "name": "gauntlet ball 4 automatic transition stays brief",
+      "pass": true,
+      "detail": 1160
+    },
+    {
+      "name": "gauntlet ball 5 bot waits for the human",
+      "pass": true
+    },
+    {
+      "name": "gauntlet ball 5 all answers lock",
+      "pass": true
+    },
+    {
+      "name": "gauntlet ball 5 bot responds in 3–4 seconds",
+      "pass": true,
+      "detail": 3795.300000000745
+    },
+    {
+      "name": "gauntlet ball 5 automatic transition stays brief",
+      "pass": true,
+      "detail": 950
+    },
+    {
+      "name": "gauntlet completes without manual next-round taps",
+      "pass": true
+    },
+    {
+      "name": "gauntlet no family repeats within the match",
+      "pass": true,
+      "detail": [
+        "cr642",
+        "cr226",
+        "cr311",
+        "cr187",
+        "cr561"
+      ]
+    },
+    {
+      "name": "gauntlet actual match length",
+      "pass": true,
+      "detail": 5
+    },
+    {
+      "name": "chase three road actions start the correct mode",
+      "pass": true
+    },
+    {
+      "name": "chase mobile HUD fits",
+      "pass": true
+    },
+    {
+      "name": "chase ball 1 bot waits for the human",
+      "pass": true
+    },
+    {
+      "name": "chase ball 1 all answers lock",
+      "pass": true
+    },
+    {
+      "name": "chase ball 1 bot responds in 3–4 seconds",
+      "pass": true,
+      "detail": 3562.099999997765
+    },
+    {
+      "name": "chase ball 1 automatic transition stays brief",
+      "pass": true,
+      "detail": 1156
+    },
+    {
+      "name": "chase ball 2 bot waits for the human",
+      "pass": true
+    },
+    {
+      "name": "chase ball 2 all answers lock",
+      "pass": true
+    },
+    {
+      "name": "chase ball 2 bot responds in 3–4 seconds",
+      "pass": true,
+      "detail": 3784.199999999255
+    },
+    {
+      "name": "chase ball 2 automatic transition stays brief",
+      "pass": true,
+      "detail": 1167
+    },
+    {
+      "name": "chase ball 3 bot waits for the human",
+      "pass": true
+    },
+    {
+      "name": "chase ball 3 all answers lock",
+      "pass": true
+    },
+    {
+      "name": "chase ball 3 bot responds in 3–4 seconds",
+      "pass": true,
+      "detail": 3796
+    },
+    {
+      "name": "chase ball 3 automatic transition stays brief",
+      "pass": true,
+      "detail": 943
+    },
+    {
+      "name": "chase completes without manual next-round taps",
+      "pass": true
+    },
+    {
+      "name": "chase no family repeats within the match",
+      "pass": true,
+      "detail": [
+        "cr529",
+        "cr465",
+        "cr103"
+      ]
+    },
+    {
+      "name": "chase actual match length",
+      "pass": true,
+      "detail": 3
+    },
+    {
+      "name": "Chase reaches target using correct answers",
+      "pass": true
+    },
+    {
+      "name": "superover three road actions start the correct mode",
+      "pass": true
+    },
+    {
+      "name": "superover mobile HUD fits",
+      "pass": true
+    },
+    {
+      "name": "superover ball 1 bot waits for the human",
+      "pass": true
+    },
+    {
+      "name": "superover ball 1 all answers lock",
+      "pass": true
+    },
+    {
+      "name": "superover ball 1 bot responds in 3–4 seconds",
+      "pass": true,
+      "detail": 3665
+    },
+    {
+      "name": "superover ball 1 automatic transition stays brief",
+      "pass": true,
+      "detail": 1204
+    },
+    {
+      "name": "superover ball 2 bot waits for the human",
+      "pass": true
+    },
+    {
+      "name": "superover ball 2 all answers lock",
+      "pass": true
+    },
+    {
+      "name": "superover ball 2 bot responds in 3–4 seconds",
+      "pass": true,
+      "detail": 3706.800000000745
+    },
+    {
+      "name": "superover ball 2 automatic transition stays brief",
+      "pass": true,
+      "detail": 1153
+    },
+    {
+      "name": "superover ball 3 bot waits for the human",
+      "pass": true
+    },
+    {
+      "name": "superover ball 3 all answers lock",
+      "pass": true
+    },
+    {
+      "name": "superover ball 3 bot responds in 3–4 seconds",
+      "pass": true,
+      "detail": 3817.5
+    },
+    {
+      "name": "superover ball 3 automatic transition stays brief",
+      "pass": true,
+      "detail": 1160
+    },
+    {
+      "name": "superover ball 4 bot waits for the human",
+      "pass": true
+    },
+    {
+      "name": "superover ball 4 all answers lock",
+      "pass": true
+    },
+    {
+      "name": "superover ball 4 bot responds in 3–4 seconds",
+      "pass": true,
+      "detail": 3730.099999997765
+    },
+    {
+      "name": "superover ball 4 automatic transition stays brief",
+      "pass": true,
+      "detail": 1177
+    },
+    {
+      "name": "superover ball 5 bot waits for the human",
+      "pass": true
+    },
+    {
+      "name": "superover ball 5 all answers lock",
+      "pass": true
+    },
+    {
+      "name": "superover ball 5 bot responds in 3–4 seconds",
+      "pass": true,
+      "detail": 3783.10000000149
+    },
+    {
+      "name": "superover ball 5 automatic transition stays brief",
+      "pass": true,
+      "detail": 1152
+    },
+    {
+      "name": "superover ball 6 bot waits for the human",
+      "pass": true
+    },
+    {
+      "name": "superover ball 6 all answers lock",
+      "pass": true
+    },
+    {
+      "name": "superover ball 6 bot responds in 3–4 seconds",
+      "pass": true,
+      "detail": 3811.599999997765
+    },
+    {
+      "name": "superover ball 6 automatic transition stays brief",
+      "pass": true,
+      "detail": 946
+    },
+    {
+      "name": "superover completes without manual next-round taps",
+      "pass": true
+    },
+    {
+      "name": "superover no family repeats within the match",
+      "pass": true,
+      "detail": [
+        "cr222",
+        "cr509",
+        "cr020",
+        "cr567",
+        "cr632",
+        "cr165"
+      ]
+    },
+    {
+      "name": "superover actual match length",
+      "pass": true,
+      "detail": 6
+    },
+    {
+      "name": "Super Over six fast correct answers score 36 runs",
+      "pass": true
+    },
+    {
+      "name": "keyboard answer locks controls",
+      "pass": true
+    },
+    {
+      "name": "keyboard answer moves focus to status",
+      "pass": true
+    },
+    {
+      "name": "optional reading pause keeps the settled round",
+      "pass": true
+    },
+    {
+      "name": "reading pause resumes with one action",
+      "pass": true
+    },
+    {
+      "name": "focusing banter prevents automatic advance mid-action",
+      "pass": true
+    },
+    {
+      "name": "200 percent text home fits",
+      "pass": true
+    },
+    {
+      "name": "200 percent text road fits",
+      "pass": true
+    },
+    {
+      "name": "reduced-motion road has no running decorative animation",
+      "pass": true,
+      "detail": 0
+    },
+    {
+      "name": "road does not display question inventory totals",
+      "pass": true
+    },
+    {
+      "name": "public catalogue omits category inventory fields",
+      "pass": false,
+      "detail": [
+        ".catalogue.count",
+        ".catalogue.topics.0.count",
+        ".catalogue.topics.1.count",
+        ".catalogue.topics.2.count",
+        ".catalogue.topics.3.count",
+        ".catalogue.topics.4.count",
+        ".catalogue.topics.5.count",
+        ".catalogue.topics.6.count"
+      ]
+    },
+    {
+      "name": "loaded offline practice works despite missing art",
+      "pass": true
+    },
+    {
+      "name": "200 percent text offline question fits",
+      "pass": true
+    },
+    {
+      "name": "blocked localStorage preserves first play",
+      "pass": true
+    },
+    {
+      "name": "Hindi road fits",
+      "pass": true
+    },
+    {
+      "name": "Hindi question fits",
+      "pass": true
+    },
+    {
+      "name": "concurrent tabs reserve two actual five-question decks",
+      "pass": true,
+      "detail": [
+        5,
+        5
+      ]
+    },
+    {
+      "name": "Web Locks prevent overlap across same-profile concurrent decks",
+      "pass": true
+    },
+    {
+      "name": "each exposed first question persists in IndexedDB",
+      "pass": true,
+      "detail": [
+        "cr194",
+        "cr202"
+      ]
+    },
+    {
+      "name": "question exposures survive a full page reload",
+      "pass": true
+    },
+    {
+      "name": "new profile epoch has isolated question memory",
+      "pass": true
+    },
+    {
+      "name": "no uncaught browser runtime errors",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "disabled ads make no ad network requests",
+      "pass": true,
+      "detail": 0
+    }
+  ],
+  "timings": [
+    {
+      "mode": "quick",
+      "ball": 1,
+      "roundId": "5a57b699c0744c7eb4f94feabc34effc:0",
+      "humanAt": 1862.7999999970198,
+      "botAt": 5570.699999999255,
+      "responseMs": 3707.900000002235
+    },
+    {
+      "mode": "quick",
+      "ball": 1,
+      "roundId": "039cf1ecb45a447c83d032d8feee55b0:0",
+      "humanAt": 7278.099999997765,
+      "botAt": 10929.199999999255,
+      "responseMs": 3651.10000000149
+    },
+    {
+      "mode": "gauntlet",
+      "ball": 1,
+      "roundId": "16fc40caab7b49aaa3c4e5aff8bcd08f:0",
+      "humanAt": 2493.699999999255,
+      "botAt": 6441.89999999851,
+      "responseMs": 3948.199999999255
+    },
+    {
+      "mode": "gauntlet",
+      "ball": 2,
+      "roundId": "16fc40caab7b49aaa3c4e5aff8bcd08f:1",
+      "humanAt": 7777,
+      "botAt": 11468.199999999255,
+      "responseMs": 3691.199999999255
+    },
+    {
+      "mode": "gauntlet",
+      "ball": 3,
+      "roundId": "16fc40caab7b49aaa3c4e5aff8bcd08f:2",
+      "humanAt": 12793.29999999702,
+      "botAt": 16502.199999999255,
+      "responseMs": 3708.900000002235
+    },
+    {
+      "mode": "gauntlet",
+      "ball": 4,
+      "roundId": "16fc40caab7b49aaa3c4e5aff8bcd08f:3",
+      "humanAt": 17719.89999999851,
+      "botAt": 21528.5,
+      "responseMs": 3808.60000000149
+    },
+    {
+      "mode": "gauntlet",
+      "ball": 5,
+      "roundId": "16fc40caab7b49aaa3c4e5aff8bcd08f:4",
+      "humanAt": 22753.099999997765,
+      "botAt": 26548.39999999851,
+      "responseMs": 3795.300000000745
+    },
+    {
+      "mode": "chase",
+      "ball": 1,
+      "roundId": "52398ea306e84f0b91fd09964b581907:0",
+      "humanAt": 1542.800000000745,
+      "botAt": 5104.89999999851,
+      "responseMs": 3562.099999997765
+    },
+    {
+      "mode": "chase",
+      "ball": 2,
+      "roundId": "52398ea306e84f0b91fd09964b581907:1",
+      "humanAt": 6332.199999999255,
+      "botAt": 10116.39999999851,
+      "responseMs": 3784.199999999255
+    },
+    {
+      "mode": "chase",
+      "ball": 3,
+      "roundId": "52398ea306e84f0b91fd09964b581907:2",
+      "humanAt": 11354,
+      "botAt": 15150,
+      "responseMs": 3796
+    },
+    {
+      "mode": "superover",
+      "ball": 1,
+      "roundId": "941a8d6407004bfc91783007391b5eb6:0",
+      "humanAt": 1988,
+      "botAt": 5653,
+      "responseMs": 3665
+    },
+    {
+      "mode": "superover",
+      "ball": 2,
+      "roundId": "941a8d6407004bfc91783007391b5eb6:1",
+      "humanAt": 6962.300000000745,
+      "botAt": 10669.10000000149,
+      "responseMs": 3706.800000000745
+    },
+    {
+      "mode": "superover",
+      "ball": 3,
+      "roundId": "941a8d6407004bfc91783007391b5eb6:2",
+      "humanAt": 11879.199999999255,
+      "botAt": 15696.699999999255,
+      "responseMs": 3817.5
+    },
+    {
+      "mode": "superover",
+      "ball": 4,
+      "roundId": "941a8d6407004bfc91783007391b5eb6:3",
+      "humanAt": 16991.10000000149,
+      "botAt": 20721.199999999255,
+      "responseMs": 3730.099999997765
+    },
+    {
+      "mode": "superover",
+      "ball": 5,
+      "roundId": "941a8d6407004bfc91783007391b5eb6:4",
+      "humanAt": 21955.300000000745,
+      "botAt": 25738.400000002235,
+      "responseMs": 3783.10000000149
+    },
+    {
+      "mode": "superover",
+      "ball": 6,
+      "roundId": "941a8d6407004bfc91783007391b5eb6:5",
+      "humanAt": 26942.10000000149,
+      "botAt": 30753.699999999255,
+      "responseMs": 3811.599999997765
+    }
+  ],
+  "errors": [],
+  "scenarios": [],
+  "observations": [
+    {
+      "kind": "actual-browser-concurrency",
+      "oldEpochFamilies": [
+        "cr194",
+        "cr202"
+      ],
+      "newEpochFamilies": [
+        "cr192"
+      ]
+    }
+  ],
+  "adRequests": 0
+}

@@ -101,3 +101,9 @@ Automated tests validate this release's default-off renderer, explicit developme
 ## Pocket Stadium follow-up — 29 October 2026
 
 The stadium home still mounts only the disabled normal-flow `home-footer` slot, after the Spicy, club and quick-entry sections. Do not put a banner between stadium art and Play, between any answer options, near sticker buttons, inside the cosmetic store, or over Net practice's ball/timing controls. The interactive Net practice toy is gameplay even though it does not affect quiz score, so it is also ad-free. The club's purchase actions spend free earned points, but ad-click rewards and ads that resemble item buttons remain excluded. No advertising provider was enabled by this redesign.
+
+## Trophy Road follow-up — 29 October 2026
+
+All three stadium routes, locked previews, unlock progress, Chase, and Superover are protected game surfaces. Do not serve display ads on the trophy road or between a trophy unlock and its Play action. Unlocks depend only on earned play records, never ad views. Trophy road navigation adds no mandatory gate to the first innings.
+
+The shorter bot sequence is not an advertising opportunity: the 3.5-second opponent response, 900-millisecond result beat, and immediate next-delivery transition stay ad-free. Never extend those delays to wait for inventory. The existing finished-match cadence and consent rules remain unchanged; new local challenge results cannot load the H5 provider. A future integration must test direct replay from Chase and Superover, a newly unlocked ground, switching selected ground, and a tab hidden during result review. Slot failure must leave the selected ground and earned trophies unchanged.

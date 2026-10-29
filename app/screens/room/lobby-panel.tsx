@@ -141,7 +141,7 @@ export function LobbyPanel({
         )}
       </section>
       {between && (
-        <div className="fd-review-hold" onPointerDownCapture={auto?.onHold}>
+        <div className="fd-review-hold" onPointerDownCapture={auto?.onHold} onFocusCapture={auto?.onHold}>
           {review}
         </div>
       )}

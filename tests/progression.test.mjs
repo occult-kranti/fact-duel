@@ -420,6 +420,8 @@ test('match outcomes: losses, draws, trilogy wins, comebacks and mode tour', () 
     quick: { played: 1, wins: 1 },
     trilogy: { played: 1, wins: 1 },
     gauntlet: { played: 1, wins: 0 },
+    chase: { played: 0, wins: 0 },
+    superover: { played: 0, wins: 0 },
   });
   assert.equal(p.progression.counters.matches, 3);
 });

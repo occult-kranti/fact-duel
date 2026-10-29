@@ -1,0 +1,41 @@
+{
+  "suite": "trophy-road-live-rotation",
+  "startedAt": "2026-10-29T22:39:46.807Z",
+  "finishedAt": "2026-10-29T22:40:14.391Z",
+  "endpoint": "https://wvupsqfevlrmhqfjreyx.supabase.co/functions/v1/jhk-game",
+  "result": "pass",
+  "checks": 20,
+  "assertions": [
+    "seat A has zero server-derived trophies",
+    "seat B has zero server-derived trophies",
+    "game 1 is a two-human private zero-stake room",
+    "existing banter survives migration with idempotent opponent delivery",
+    "game 1 countdown hides the question",
+    "game 1 exposes the same card to both seats without its key",
+    "game 1 persists newly delivered history",
+    "game 1 repeated polls preserve exposure time",
+    "earlier exposure is not refreshed by later play",
+    "game 1 closes without reward or stake",
+    "game 2 is a two-human private zero-stake room",
+    "game 2 countdown hides the question",
+    "game 2 exposes the same card to both seats without its key",
+    "game 2 persists newly delivered history",
+    "next game avoids the previously exposed fact family",
+    "game 2 repeated polls preserve exposure time",
+    "earlier exposure is not refreshed by later play",
+    "game 2 closes without reward or stake",
+    "cancelled practice-like human tests cannot mint trophies or coins",
+    "cancelled practice-like human tests cannot mint trophies or coins"
+  ],
+  "cleanup": [
+    {
+      "seat": "A",
+      "deleted": true
+    },
+    {
+      "seat": "B",
+      "deleted": true
+    }
+  ],
+  "scope": "Two synthetic private zero-stake rooms, no submitted answers, no result rewards. No real player modified. No load-capacity claim. Credentials, identifiers and invite codes are omitted."
+}

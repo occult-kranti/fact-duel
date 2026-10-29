@@ -436,11 +436,11 @@ test('atomic reveal uses database write time and refuses stale release windows',
   assert.equal(late, null);
 });
 
-test('the timer is 5, 7 or 10 seconds and every format opens on one of them', () => {
+test('competitive legacy timers stay 5, 7 or 10 seconds and every legacy format opens on one of them', () => {
   assert.deepEqual([...DURATIONS], [5, 7, 10]);
   // Every format's opening clock must itself be selectable, or the launch screen would ship a
   // config the server rejects.
-  for (const mode of Object.keys(MODE_ROUNDS)) {
+  for (const mode of ['quick', 'trilogy', 'gauntlet']) {
     assert.ok(DURATIONS.includes(MODE_DURATION[mode]), mode);
     assert.equal(
       normalizeConfig({ ...config, mode, duration: MODE_DURATION[mode] }, QUESTIONS).duration,

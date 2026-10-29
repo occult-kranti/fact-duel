@@ -16,7 +16,7 @@ import { D1RoomStore, dispatch } from '../lib/server/duel-service.mjs';
 import { MemoryRoomStore } from '../lib/duel-memory-store.mjs';
 import { MemoryLedgerStore } from '../lib/ledger-memory-store.mjs';
 import { grant } from '../lib/ledger/intents.mjs';
-import { DURATIONS, MODE_ROUNDS, RULES, makeRoom } from '../lib/server/room-engine.mjs';
+import { BOT_REPLY_MS, DURATIONS, MODE_ROUNDS, RULES, makeRoom } from '../lib/server/room-engine.mjs';
 import { QUESTIONS } from '../lib/server/bank.mjs';
 import { LocalD1 } from './d1-local.mjs';
 
@@ -397,7 +397,6 @@ test('a full bot duel is identical on both stores in all three modes', async (t)
         f.setTime(scheduled.round.scheduledAt);
         await step(`reveal ${rounds}`, () => f.call(f.host, 'reveal', { roundId: scheduled.round.id }));
         const issued = await f.raw();
-        const plan = issued.botPlans[issued.roundIndex];
         f.setTime(issued.round.issuedAt[0] + 600);
         await step(`answer ${rounds}`, () =>
           f.call(f.host, 'answer', {
@@ -407,9 +406,9 @@ test('a full bot duel is identical on both stores in all three modes', async (t)
             elapsedMs: 600,
           }),
         );
-        f.setTime(issued.round.issuedAt[1] + plan.elapsedMs - 1);
+        f.setTime(issued.round.issuedAt[0] + 600 + BOT_REPLY_MS - 1);
         await step(`the bot is not locked yet ${rounds}`, () => f.call(f.host, 'state'));
-        f.setTime(issued.round.issuedAt[1] + plan.elapsedMs);
+        f.setTime(issued.round.issuedAt[0] + 600 + BOT_REPLY_MS);
         await step(`the bot locks on schedule ${rounds}`, () => f.call(f.host, 'state'));
         await step(`a later poll changes nothing ${rounds}`, () => f.call(f.host, 'state'));
       }
@@ -714,7 +713,9 @@ test('the static client maps service results and errors the way the worker does'
   const { request, OFFLINE_BUILD } = await import('../lib/duel-client-static.ts');
   assert.equal(OFFLINE_BUILD, true);
   const catalogue = await request({ action: 'catalogue' });
-  assert.equal(catalogue.catalogue.count, QUESTIONS.length);
+  assert.equal(catalogue.catalogue.available, true);
+  assert.ok(!Object.hasOwn(catalogue.catalogue, 'count'));
+  assert.ok(catalogue.catalogue.topics.every(topic => topic.available === true && !Object.hasOwn(topic, 'count')));
   assert.equal((await request({ action: 'practice', topic: 'Cricket' })).cards.length, 3);
   const clock = await request({ action: 'clock' });
   assert.ok(Math.abs(clock.serverNow - Date.now()) < 5000);

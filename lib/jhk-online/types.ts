@@ -1,5 +1,6 @@
+export type HumanRoad = { trophies: number; stadiumId: 'gully' | 'riverside' | 'crown'; level: 1 | 2 | 3; answeredRounds: number; correctAnswers: number; eligibleMatches: number; source: 'server-human-results' };
 export type Words = { en: string; hi?: string };
-export type PlayerSession = { id: string; nickname: string; email?: string | null; avatar?: string | null; locale?: string | null; preferences?: { topics?: string[] } | null; adultConfirmed?: boolean; termsVersion?: string | null; profileComplete?: boolean; expiresAt: number; onlineXp?: number; balance?: number; savings?: number; title?: TitleGrant | null };
+export type PlayerSession = { id: string; nickname: string; email?: string | null; avatar?: string | null; locale?: string | null; preferences?: { topics?: string[] } | null; adultConfirmed?: boolean; termsVersion?: string | null; profileComplete?: boolean; expiresAt: number; onlineXp?: number; humanRoad?: HumanRoad; balance?: number; savings?: number; title?: TitleGrant | null };
 export type OnlinePlayer = { id: string; nickname: string; ready: boolean; answered: boolean; score: number };
 export type OnlineReceipt = { choice: number | null; correct: boolean; correctIndex: number; elapsedMs: number; xp: number; explanation: Words; sourceUrl?: string };
 export type OnlineMatch = {

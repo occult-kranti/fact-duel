@@ -21,6 +21,7 @@ export type StartMark = { roundId: string; at: number };
 export type PendingAnswer = { roundId: string; attemptId: string; choice: number; elapsedMs: number };
 export type Player = ReturnType<typeof usePlayer>;
 export type Tab =
+  | 'road'
   | 'home'
   | 'online'
   | 'journeys'
@@ -98,6 +99,11 @@ export const MODES: Mode[] = [
   },
 ];
 
+export const STADIUM_MODES: Mode[] = [
+  { id: 'chase', name: 'The Chase', short: 'First to three correct. Five deliveries at most.', rounds: 5, icon: Swords },
+  { id: 'superover', name: 'Superover', short: 'Six balls. Fifteen seconds. Score six, four or two.', rounds: 6, icon: Rocket },
+];
+
 /* ---------- DuelController: everything the Play and Room screens need ---------- */
 export type DuelActions = {
   /** Lock an answer (0–3). Ignored unless the reveal marker is set and the round is open. */
@@ -172,6 +178,8 @@ export type DuelController = {
 
 /* ---------- screen props ---------- */
 export type HomeScreenProps = {
+  selectedStadiumId?: string;
+  humanTrophies?: number;
   player: Player;
   name: string;
   ready: boolean;

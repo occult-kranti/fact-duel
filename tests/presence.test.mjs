@@ -24,7 +24,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { setImmediate as tick } from 'node:timers/promises';
-import { IN_GAME_PHASES, PRESENCE_MODES, PRESENCE_ROOM_WINDOW_MS, presence } from '../lib/server/matchmaking.mjs';
+import { IN_GAME_PHASES, PRESENCE_MODES, PRESENCE_ROOM_WINDOW_MS, presence, readLane } from '../lib/server/matchmaking.mjs';
 import { PRESENCE_CACHE_MS, cachedPresence, handleQueueRequest } from '../lib/server/http-queue.mjs';
 import { LocalD1 } from './d1-local.mjs';
 import {
@@ -185,6 +185,18 @@ test('a room whose mode is not a served format is counted under no format at all
     2,
     'the unknown mode added nothing anywhere',
   );
+});
+
+test('local stadium practice modes never enter human matchmaking or online presence', async (t) => {
+  const db = new LocalD1();
+  t.after(() => db.close());
+  for (const [index, mode] of ['chase', 'superover'].entries()) {
+    assert.throws(() => readLane({ sport: 'Cricket', mode, stake: 0 }), /valid mode/);
+    await roomRow(db, { id: hex(String(index + 1)), phase: 'playing', mode, opponent: 'bot', players: [HUMAN, BOT] });
+  }
+  const view = await presence(db, { now: T0 });
+  assert.deepEqual(Object.keys(view.modes), ['quick', 'trilogy', 'gauntlet']);
+  assert.equal(Object.values(view.modes).reduce((n, mode) => n + mode.inGame + mode.inQueue, 0), 0);
 });
 
 test('the whole way through a real pairing: waiting, then a lobby, then two people in game', async (t) => {

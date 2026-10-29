@@ -26,6 +26,8 @@ import { JhkProfileGate } from './shell/jhk-profile-gate';
 import { jhkOnline } from '@/lib/jhk-online/runtime';
 import { DEFAULT_NAME } from '@/lib/profile-gate.mjs';
 import { HomeScreen } from './screens/home-screen';
+import { StadiumRoad } from './screens/stadium-road';
+import { canPlayStadiumMode, eligibleStadiumSelection } from '@/lib/stadium-road.mjs';
 import { StadiumLocker } from './screens/stadium-locker';
 import { StadiumScene } from './screens/stadium-scene';
 import { ClubDirectory } from './screens/club-directory';
@@ -47,6 +49,7 @@ import { MODE_DURATION } from '@/lib/server/room-engine.mjs';
 import {
   INITIAL_CONFIG,
   MODES,
+  STADIUM_MODES,
   type ArmedMode,
   type Config,
   type Credentials,
@@ -145,6 +148,20 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
     [haptics, setHaptics] = useState(true),
     [motion, setMotion] = useState<MotionPref>('full');
   const player = usePlayer(room, credentials?.profileEpoch);
+  const humanTrophies = liveSession?.humanRoad?.trophies ?? 0;
+  const [stadiumSelection, setStadiumSelection] = useState<{ epoch: string; id: string } | null>(null);
+  useEffect(() => {
+    try { setStadiumSelection(JSON.parse(localStorage.getItem(STORAGE.stadiumSelection) || 'null')); } catch {}
+    if (jhkOnline.configured && jhkOnline.hasCredential) void jhkOnline.connect().catch(() => {});
+  }, []);
+  const selectedStadium = eligibleStadiumSelection(player.profile, stadiumSelection?.epoch === player.epoch() ? stadiumSelection?.id : undefined, humanTrophies);
+  const selectStadium = (id: string) => {
+    const stage = eligibleStadiumSelection(player.profile, id, humanTrophies);
+    if (stage.id !== id || !player.loaded) return;
+    const next = { epoch: player.epoch(), id };
+    setStadiumSelection(next);
+    try { localStorage.setItem(STORAGE.stadiumSelection, JSON.stringify(next)); } catch {}
+  };
   // The coin wallet: its own store, its own hook (app/use-wallet.ts), handed down by context so the
   // top bar and Discovery can reach it without every wrapper in between learning a prop.
   const wallet = useWallet();
@@ -580,6 +597,11 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
     return () => window.removeEventListener('keydown', handler);
   }, [answer, leaveOpen, settingsOpen]);
   async function create(forcedConfig?: Config) {
+    const requestedMode = (forcedConfig || config).mode;
+    if (['chase', 'superover'].includes(requestedMode) && !canPlayStadiumMode(player.profile, requestedMode, humanTrophies)) {
+      setError('Earn the stadium trophies to unlock this format. Your home innings is always open.');
+      return;
+    }
     if (jhkOnline.configured && (forcedConfig || config).opponent !== 'bot') {
       setTab('online');
       history.replaceState(history.state, '', `${location.pathname}${location.search}#online`);
@@ -615,7 +637,7 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
       accept(data);
       createDraft.current = null;
       if (draft.config.opponent === 'bot' && data.room.phase === 'waiting') {
-        const m = clock.current.samples ? clock.current : await calibrate();
+        const m = { rttMs: 0, jitterMs: 0 };
         accept(
           await request({
             action: 'ready',
@@ -753,7 +775,7 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
     setBusy(true);
     setError('');
     try {
-      const m = await calibrate();
+      const m = roomRef.current?.config?.opponent === 'bot' ? { rttMs: 0, jitterMs: 0 } : await calibrate();
       setBusy(false);
       await mutate('ready', {
         roundId: roomRef.current?.round?.id || null,
@@ -840,8 +862,8 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
   }, []);
   const active = !!room && ['playing', 'scheduled'].includes(phase),
     isLocked = !!rd?.answerLocked?.[room?.seat] || locked.current;
-  const modeInfo = MODES.find((m) => m.id === config.mode) || MODES[0];
-  const matchMode = MODES.find((m) => m.id === room?.config.mode) || MODES[0];
+  const modeInfo = [...MODES, ...STADIUM_MODES].find((m) => m.id === config.mode) || MODES[0];
+  const matchMode = [...MODES, ...STADIUM_MODES].find((m) => m.id === room?.config.mode) || MODES[0];
   const chooseCollection = (domain: string, topic: string) => {
     change({ domain, topic, subtopic: 'all', region: 'all', difficulty: 'all' });
     setJoinView(false);
@@ -883,7 +905,7 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
     const next = {
       ...INITIAL_CONFIG,
       mode,
-      duration: topic === 'Cricket' ? 30 : modeDuration(mode),
+      duration: mode === 'superover' ? 15 : topic === 'Cricket' ? 30 : modeDuration(mode),
       topic,
       subtopic,
       difficulty: 'all',
@@ -1138,6 +1160,8 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
             name={name}
             ready={player.loaded && !!catalogue && !!name.trim()}
             busy={busy}
+            selectedStadiumId={selectedStadium.id}
+            humanTrophies={humanTrophies}
             onRoute={openExpedition}
             onDuel={quickDuel}
             onLive={() => { setLiveEntry({file: 'cricket', intent: 'play'}); go('online'); }}
@@ -1145,6 +1169,7 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
             go={go}
           />
         )}
+        {!room && tab === 'road' && <StadiumRoad player={player} name={name} ready={player.loaded && !!catalogue && !!name.trim()} busy={busy} selectedId={selectedStadium.id} humanTrophies={humanTrophies} onSelect={selectStadium} onPlay={(mode, id) => { selectStadium(id); quickDuel(mode, 'Cricket'); }} />}
         {!room && (tab === 'online' || (jhkOnline.configured && tab === 'arena')) && <LiveDuelScreen name={name} initialFile={liveEntry.file} initialIntent={liveEntry.intent} onBot={startBotMatch} onPractice={() => startBotMatch('cricket')} onHome={() => go('home')} onState={onLiveState} onRoundKey={setLiveRoundKey} />}
         {!room && ['journeys', 'collections', 'discovery', 'events', 'practice'].includes(tab) && <ClubDirectory section="explore" current={tab} go={go} />}
         {!room && ['passport', 'analytics', 'showroom'].includes(tab) && <ClubDirectory section="progress" current={tab} go={go} />}

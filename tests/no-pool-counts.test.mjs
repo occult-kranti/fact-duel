@@ -1,7 +1,7 @@
 /**
  * Pool sizes are never shown in the product. The player must not learn how many questions the bank,
- * a topic, a drill or a set holds — the SEO pages under public/quiz are the only exception and are
- * built elsewhere. This is a source grep over the app's screens: every hit against a banned pattern
+ * a topic, a drill or a set holds. SEO inventory totals are covered by rendered-page regression in
+ * no-pool-counts-seo.test.mjs. This is a source grep over app screens: every hit against a banned pattern
  * must be on the allowlist below, with a reason, and every allowlist entry must still be in use so
  * the list cannot rot. Counts of the player's OWN record (facts met, cards answered, entries behind a
  * journal filter) and the length of a RUN about to be played ("6 cards", "5 questions") are fine.

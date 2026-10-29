@@ -1783,3 +1783,10 @@
   outline-offset: 3px;
 }
 .fd-result-details[open] > summary { margin-bottom: 12px; }
+
+/* Practice flow controls remain reachable before the short result reveal. */
+.fd-room .fd-flow-controls { display:flex; gap:.65rem; align-items:center; justify-content:space-between; padding:.5rem 0; }
+.fd-room .fd-flow-controls button { min-height:44px; padding:.55rem .8rem; border-radius:12px; border:1px solid var(--line); font:inherit; font-size:.8rem; color:var(--text); background:var(--bg-1); cursor:pointer; touch-action:manipulation; }
+.fd-room .fd-flow-controls button:focus-visible { outline:3px solid var(--cyan-text); outline-offset:3px; }
+.fd-room .fd-flow-pause[aria-pressed=true] { border-color:var(--cyan-text); color:var(--cyan-text); }
+.fd-room .fd-flow-next { font-weight:800; }

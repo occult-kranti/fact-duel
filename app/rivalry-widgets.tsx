@@ -26,6 +26,7 @@ import {
 } from 'lucide-react';
 import { NumberCounter, useJuice } from '@/components/fx';
 import { completedRounds, FORMAT_COPY, matchVerdict, roundReason } from '@/lib/duel-presentation.mjs';
+import { MODE_ROUNDS } from '@/lib/server/room-engine.mjs';
 import { comboMultiplier, levelForXp } from '@/lib/progression.mjs';
 import { prizeFor } from '@/lib/economy/economy.mjs';
 import { comboAt, marginLine, matchRank, matchXp, whatYouKeep, winTier } from './screens/room/room-math';
@@ -44,7 +45,7 @@ export function DuelHUD({ room }: { room: any }) {
     other = 1 - me,
     format = (FORMAT_COPY as any)[room.config.mode],
     rounds = completedRounds(room),
-    max = room.config.mode === 'quick' ? 1 : room.config.mode === 'trilogy' ? 3 : 5;
+    max = (MODE_ROUNDS as Record<string, number>)[room.config.mode] || 5;
   const combo = comboAt(room);
   const rivalName = room.players[other]?.name?.replace(' · BOT', '') || t('hud.openSeat');
   return (
@@ -63,7 +64,7 @@ export function DuelHUD({ room }: { room: any }) {
           <b>{room.scores[other]}</b>
         </span>
         <small>
-          {room.config.mode === 'trilogy'
+          {room.config.mode === 'chase' ? 'First to 3 correct' : room.config.mode === 'superover' ? 'Runs · 6 balls' : room.config.mode === 'trilogy'
             ? t('hud.firstToTwo')
             : room.config.mode === 'gauntlet'
               ? t('hud.fiveRound')

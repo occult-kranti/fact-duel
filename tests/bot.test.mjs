@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { D1RoomStore, dispatch } from '../lib/server/duel-service.mjs';
-import { DURATIONS, planBotAttempt } from '../lib/server/room-engine.mjs';
+import { BOT_REPLY_MS, DURATIONS, planBotAttempt } from '../lib/server/room-engine.mjs';
 import { LocalD1 } from './d1-local.mjs';
 
 const token = () => crypto.randomUUID().replaceAll('-', '') + '1234567890abcdef';
@@ -71,9 +71,9 @@ test('bots finish all three modes with every timer; readiness, secrecy and coins
           choice: (r.round.question.correctIndex + 1) % 4,
           elapsedMs: 500,
         });
-        f.setTime(r.round.issuedAt[1] + plan.elapsedMs - 1);
+        f.setTime(r.round.issuedAt[0] + 500 + BOT_REPLY_MS - 1);
         assert.equal((await f.call('state')).room.round.answerLocked[1], false);
-        f.setTime(r.round.issuedAt[1] + plan.elapsedMs);
+        f.setTime(r.round.issuedAt[0] + 500 + BOT_REPLY_MS);
         await Promise.all(Array.from({ length: 6 }, () => f.call('state')));
         const after = await f.raw();
         assert.equal(after.round.answers[1].choice, plan.choice);

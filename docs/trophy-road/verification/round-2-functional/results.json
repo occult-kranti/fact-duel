@@ -1,0 +1,411 @@
+{
+  "pass": "round-2-functional",
+  "at": "2026-10-29T22:32:48.106Z",
+  "environment": "Headless Chromium desktop engine with viewport emulation; not a physical device or a screen-reader test",
+  "fixturePolicy": "Arena boundary tests seed local counters. Earning/replay/rotation and pacing use actual browser play. Odd unreachable practice thresholds 59/179 belong to pure function tests.",
+  "checks": [
+    {
+      "name": "320 home fits",
+      "pass": true
+    },
+    {
+      "name": "320 primary Play visible without scroll",
+      "pass": true
+    },
+    {
+      "name": "320 primary Play touch target",
+      "pass": true
+    },
+    {
+      "name": "320 no startup modal",
+      "pass": true
+    },
+    {
+      "name": "320 trophy road fits",
+      "pass": true
+    },
+    {
+      "name": "320 three map nodes",
+      "pass": true
+    },
+    {
+      "name": "320 map node touch targets",
+      "pass": true
+    },
+    {
+      "name": "320 Crown preview fits",
+      "pass": true
+    },
+    {
+      "name": "320 locked Crown previews but cannot launch",
+      "pass": true
+    },
+    {
+      "name": "320 one home action starts a match",
+      "pass": true
+    },
+    {
+      "name": "320 answers have touch targets",
+      "pass": true
+    },
+    {
+      "name": "320 bot identity explicit",
+      "pass": true
+    },
+    {
+      "name": "320 question fits",
+      "pass": true
+    },
+    {
+      "name": "390 home fits",
+      "pass": true
+    },
+    {
+      "name": "390 primary Play visible without scroll",
+      "pass": true
+    },
+    {
+      "name": "390 primary Play touch target",
+      "pass": true
+    },
+    {
+      "name": "390 no startup modal",
+      "pass": true
+    },
+    {
+      "name": "390 trophy road fits",
+      "pass": true
+    },
+    {
+      "name": "390 three map nodes",
+      "pass": true
+    },
+    {
+      "name": "390 map node touch targets",
+      "pass": true
+    },
+    {
+      "name": "390 Crown preview fits",
+      "pass": true
+    },
+    {
+      "name": "390 locked Crown previews but cannot launch",
+      "pass": true
+    },
+    {
+      "name": "390 one home action starts a match",
+      "pass": true
+    },
+    {
+      "name": "390 answers have touch targets",
+      "pass": true
+    },
+    {
+      "name": "390 bot identity explicit",
+      "pass": true
+    },
+    {
+      "name": "390 question fits",
+      "pass": true
+    },
+    {
+      "name": "844 home fits",
+      "pass": true
+    },
+    {
+      "name": "844 primary Play visible without scroll",
+      "pass": true
+    },
+    {
+      "name": "844 primary Play touch target",
+      "pass": true
+    },
+    {
+      "name": "844 no startup modal",
+      "pass": true
+    },
+    {
+      "name": "844 trophy road fits",
+      "pass": true
+    },
+    {
+      "name": "844 three map nodes",
+      "pass": true
+    },
+    {
+      "name": "844 map node touch targets",
+      "pass": true
+    },
+    {
+      "name": "844 Crown preview fits",
+      "pass": true
+    },
+    {
+      "name": "844 locked Crown previews but cannot launch",
+      "pass": true
+    },
+    {
+      "name": "844 one home action starts a match",
+      "pass": true
+    },
+    {
+      "name": "844 answers have touch targets",
+      "pass": true
+    },
+    {
+      "name": "844 bot identity explicit",
+      "pass": true
+    },
+    {
+      "name": "844 question fits",
+      "pass": true
+    },
+    {
+      "name": "1440 home fits",
+      "pass": true
+    },
+    {
+      "name": "1440 primary Play visible without scroll",
+      "pass": true
+    },
+    {
+      "name": "1440 primary Play touch target",
+      "pass": true
+    },
+    {
+      "name": "1440 no startup modal",
+      "pass": true
+    },
+    {
+      "name": "1440 trophy road fits",
+      "pass": true
+    },
+    {
+      "name": "1440 three map nodes",
+      "pass": true
+    },
+    {
+      "name": "1440 map node touch targets",
+      "pass": true
+    },
+    {
+      "name": "1440 Crown preview fits",
+      "pass": true
+    },
+    {
+      "name": "1440 locked Crown previews but cannot launch",
+      "pass": true
+    },
+    {
+      "name": "1440 one home action starts a match",
+      "pass": true
+    },
+    {
+      "name": "1440 answers have touch targets",
+      "pass": true
+    },
+    {
+      "name": "1440 bot identity explicit",
+      "pass": true
+    },
+    {
+      "name": "1440 question fits",
+      "pass": true
+    },
+    {
+      "name": "arena boundary fixtures",
+      "pass": false,
+      "detail": "page.evaluate: TypeError: Failed to fetch dynamically imported module: http://127.0.0.1:5197/fact-duel/lib/passport.mjs"
+    },
+    {
+      "name": "rapid launch opens one room",
+      "pass": true
+    },
+    {
+      "name": "quick ball 1 bot waits for the human",
+      "pass": true
+    },
+    {
+      "name": "quick ball 1 all answers lock",
+      "pass": true
+    },
+    {
+      "name": "quick ball 1 bot responds in 3–4 seconds",
+      "pass": true,
+      "detail": 3755.2000000029802
+    },
+    {
+      "name": "quick ball 1 automatic transition stays brief",
+      "pass": true,
+      "detail": 966
+    },
+    {
+      "name": "quick completes without manual next-round taps",
+      "pass": true
+    },
+    {
+      "name": "quick no family repeats within the match",
+      "pass": true,
+      "detail": [
+        "cr163"
+      ]
+    },
+    {
+      "name": "quick actual match length",
+      "pass": true,
+      "detail": 1
+    },
+    {
+      "name": "real pacing earning replay and rotation",
+      "pass": false,
+      "detail": "page.evaluate: TypeError: Failed to fetch dynamically imported module: http://127.0.0.1:5197/fact-duel/lib/profile-store.mjs"
+    },
+    {
+      "name": "gauntlet three road actions start the correct mode",
+      "pass": true
+    },
+    {
+      "name": "gauntlet mobile HUD fits",
+      "pass": true
+    },
+    {
+      "name": "gauntlet ball 1 bot waits for the human",
+      "pass": true
+    },
+    {
+      "name": "gauntlet ball 1 all answers lock",
+      "pass": true
+    },
+    {
+      "name": "gauntlet ball 1 bot responds in 3–4 seconds",
+      "pass": true,
+      "detail": 3755.599999997765
+    },
+    {
+      "name": "gauntlet mode",
+      "pass": false,
+      "detail": "page.waitForFunction: Timeout 5000ms exceeded."
+    },
+    {
+      "name": "chase mode",
+      "pass": false,
+      "detail": "page.evaluate: TypeError: Failed to fetch dynamically imported module: http://127.0.0.1:5197/fact-duel/lib/passport.mjs"
+    },
+    {
+      "name": "superover mode",
+      "pass": false,
+      "detail": "page.evaluate: TypeError: Failed to fetch dynamically imported module: http://127.0.0.1:5197/fact-duel/lib/passport.mjs"
+    },
+    {
+      "name": "keyboard answer locks controls",
+      "pass": true
+    },
+    {
+      "name": "keyboard answer moves focus to status",
+      "pass": true
+    },
+    {
+      "name": "optional reading pause keeps the settled round",
+      "pass": true
+    },
+    {
+      "name": "reading pause resumes with one action",
+      "pass": true
+    },
+    {
+      "name": "200 percent text home fits",
+      "pass": true
+    },
+    {
+      "name": "200 percent text road fits",
+      "pass": true
+    },
+    {
+      "name": "reduced-motion road has no running decorative animation",
+      "pass": true,
+      "detail": 0
+    },
+    {
+      "name": "road does not display question inventory totals",
+      "pass": true
+    },
+    {
+      "name": "resilience privacy and reduced motion",
+      "pass": false,
+      "detail": "page.evaluate: TypeError: Failed to fetch dynamically imported module: http://127.0.0.1:5197/fact-duel/lib/duel-client-static.ts"
+    },
+    {
+      "name": "blocked localStorage preserves first play",
+      "pass": true
+    },
+    {
+      "name": "Hindi road fits",
+      "pass": true
+    },
+    {
+      "name": "Hindi question fits",
+      "pass": true
+    },
+    {
+      "name": "no uncaught browser runtime errors",
+      "pass": false,
+      "detail": [
+        "Failed to read the 'localStorage' property from 'Window': Access is denied for this document."
+      ]
+    },
+    {
+      "name": "disabled ads make no ad network requests",
+      "pass": true,
+      "detail": 0
+    }
+  ],
+  "timings": [
+    {
+      "mode": "quick",
+      "ball": 1,
+      "roundId": "534697a09785465983b3e126f8c069ed:0",
+      "humanAt": 2278.599999997765,
+      "botAt": 6033.800000000745,
+      "responseMs": 3755.2000000029802
+    },
+    {
+      "mode": "gauntlet",
+      "ball": 1,
+      "roundId": "347546a8512748a1826cd89fb5254c15:0",
+      "humanAt": 2104.900000002235,
+      "botAt": 5860.5,
+      "responseMs": 3755.599999997765
+    }
+  ],
+  "errors": [
+    "Failed to read the 'localStorage' property from 'Window': Access is denied for this document."
+  ],
+  "scenarios": [
+    {
+      "name": "arena boundary fixtures",
+      "error": "page.evaluate: TypeError: Failed to fetch dynamically imported module: http://127.0.0.1:5197/fact-duel/lib/passport.mjs\n    at seedPractice (/workspace/scratch/9b2fec00becf/fact-duel/scripts/trophy-road-browser-check.mjs:55:11)\n    at /workspace/scratch/9b2fec00becf/fact-duel/scripts/trophy-road-browser-check.mjs:161:30\n    at async scenario (/workspace/scratch/9b2fec00becf/fact-duel/scripts/trophy-road-browser-check.mjs:26:9)\n    at async file:///workspace/scratch/9b2fec00becf/fact-duel/scripts/trophy-road-browser-check.mjs:157:3"
+    },
+    {
+      "name": "real pacing earning replay and rotation",
+      "error": "page.evaluate: TypeError: Failed to fetch dynamically imported module: http://127.0.0.1:5197/fact-duel/lib/profile-store.mjs\n    at readProfile (/workspace/scratch/9b2fec00becf/fact-duel/scripts/trophy-road-browser-check.mjs:65:42)\n    at /workspace/scratch/9b2fec00becf/fact-duel/scripts/trophy-road-browser-check.mjs:184:29\n    at async scenario (/workspace/scratch/9b2fec00becf/fact-duel/scripts/trophy-road-browser-check.mjs:26:9)\n    at async file:///workspace/scratch/9b2fec00becf/fact-duel/scripts/trophy-road-browser-check.mjs:177:3"
+    },
+    {
+      "name": "gauntlet mode",
+      "error": "page.waitForFunction: Timeout 5000ms exceeded.\n    at complete (/workspace/scratch/9b2fec00becf/fact-duel/scripts/trophy-road-browser-check.mjs:115:13)\n    at async file:///workspace/scratch/9b2fec00becf/fact-duel/scripts/trophy-road-browser-check.mjs:206:9\n    at async scenario (/workspace/scratch/9b2fec00becf/fact-duel/scripts/trophy-road-browser-check.mjs:26:9)\n    at async file:///workspace/scratch/9b2fec00becf/fact-duel/scripts/trophy-road-browser-check.mjs:199:5"
+    },
+    {
+      "name": "chase mode",
+      "error": "page.evaluate: TypeError: Failed to fetch dynamically imported module: http://127.0.0.1:5197/fact-duel/lib/passport.mjs\n    at seedPractice (/workspace/scratch/9b2fec00becf/fact-duel/scripts/trophy-road-browser-check.mjs:55:11)\n    at /workspace/scratch/9b2fec00becf/fact-duel/scripts/trophy-road-browser-check.mjs:202:44\n    at async scenario (/workspace/scratch/9b2fec00becf/fact-duel/scripts/trophy-road-browser-check.mjs:26:9)\n    at async file:///workspace/scratch/9b2fec00becf/fact-duel/scripts/trophy-road-browser-check.mjs:199:5"
+    },
+    {
+      "name": "superover mode",
+      "error": "page.evaluate: TypeError: Failed to fetch dynamically imported module: http://127.0.0.1:5197/fact-duel/lib/passport.mjs\n    at seedPractice (/workspace/scratch/9b2fec00becf/fact-duel/scripts/trophy-road-browser-check.mjs:55:11)\n    at /workspace/scratch/9b2fec00becf/fact-duel/scripts/trophy-road-browser-check.mjs:202:44\n    at async scenario (/workspace/scratch/9b2fec00becf/fact-duel/scripts/trophy-road-browser-check.mjs:26:9)\n    at async file:///workspace/scratch/9b2fec00becf/fact-duel/scripts/trophy-road-browser-check.mjs:199:5"
+    },
+    {
+      "name": "resilience privacy and reduced motion",
+      "error": "page.evaluate: TypeError: Failed to fetch dynamically imported module: http://127.0.0.1:5197/fact-duel/lib/duel-client-static.ts\n    at /workspace/scratch/9b2fec00becf/fact-duel/scripts/trophy-road-browser-check.mjs:238:33\n    at async scenario (/workspace/scratch/9b2fec00becf/fact-duel/scripts/trophy-road-browser-check.mjs:26:9)\n    at async file:///workspace/scratch/9b2fec00becf/fact-duel/scripts/trophy-road-browser-check.mjs:228:3"
+    }
+  ],
+  "observations": [],
+  "adRequests": 0
+}

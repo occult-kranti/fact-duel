@@ -1,0 +1,40 @@
+{
+  "checkedAt": "2026-10-29T22:40:21.485Z",
+  "project": "wvupsqfevlrmhqfjreyx",
+  "mode": "read-only metadata and aggregate verification",
+  "migrations": [
+    {
+      "version": "20261029223909",
+      "name": "jhk_trophy_road_rotation"
+    },
+    {
+      "version": "20261029223935",
+      "name": "jhk_cricket_expansion"
+    }
+  ],
+  "checks": {
+    "expansionCards": 48,
+    "totalCards": 921,
+    "historyRls": true,
+    "anonHistoryRead": false,
+    "authenticatedHistoryRead": false,
+    "anonRoadExecute": false,
+    "ownProfileRoad": true
+  },
+  "securityAdvisors": {
+    "feature": "question_seen has the expected INFO RLS-enabled-without-policy notice: private service-role-only access intentionally uses no browser policy. Table and helper grants deny browser roles.",
+    "unrelatedWarnings": [
+      "public.set_updated_at has mutable search_path",
+      "public.rls_auto_enable is executable as SECURITY DEFINER by anon/authenticated",
+      "Supabase Auth leaked-password protection is disabled"
+    ],
+    "changedUnrelatedSettings": false,
+    "remediation": [
+      "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "https://supabase.com/docs/guides/database/database-linter?lint=0011_function_search_path_mutable",
+      "https://supabase.com/docs/guides/database/database-linter?lint=0028_anon_security_definer_function_executable",
+      "https://supabase.com/docs/guides/database/database-linter?lint=0029_authenticated_security_definer_function_executable",
+      "https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection"
+    ]
+  }
+}

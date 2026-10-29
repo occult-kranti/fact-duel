@@ -58,3 +58,6 @@ e2e-failure-*.png
 
 # Python bytecode from the deck/chart scripts.
 __pycache__/
+
+# Supabase CLI local workspace metadata
+supabase/.temp/

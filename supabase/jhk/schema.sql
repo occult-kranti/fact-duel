@@ -48,6 +48,11 @@ create index if not exists jhk_rooms_waiting on jhk_private.rooms(mode,created_a
 create table if not exists jhk_private.releases (
  room_id uuid not null references jhk_private.rooms(id) on delete cascade, round integer not null, session_id uuid not null references jhk_private.sessions(id), issued_at timestamptz not null, primary key(room_id,round,session_id)
 );
+-- Rotation memory records actual releases, independently of match completion.
+create table if not exists jhk_private.question_seen (
+ session_id uuid not null references jhk_private.sessions(id), family_key text not null,
+ seen_at timestamptz not null, primary key(session_id,family_key)
+);
 create table if not exists jhk_private.answers (
  room_id uuid not null references jhk_private.rooms(id) on delete cascade, round integer not null check(round between 1 and 5),
  session_id uuid not null references jhk_private.sessions(id), request_id uuid not null,
@@ -196,17 +201,45 @@ create or replace function jhk_private.ms(t timestamptz) returns bigint language
 create or replace function jhk_private.fail(code text, message text) returns jsonb language sql immutable set search_path='' as $$ select jsonb_build_object('ok',false,'error',jsonb_build_object('code',code,'message',message)) $$;
 
 drop function if exists jhk_private.make_deck();
--- Randomize both question order and option positions per match, on the server.
-create or replace function jhk_private.make_deck(p_file text default 'all',p_now timestamptz default now()) returns jsonb language plpgsql set search_path='' as $$
+-- Same-fact aliases also apply to old immutable room snapshots and releases.
+create or replace function jhk_private.question_family(q jsonb) returns text language sql immutable set search_path='' as $$
+ select coalesce(nullif(q->>'familyKey',''),nullif(q->>'familyId',''),case q->>'id'
+  when 'cr042' then 'cricket-ipl-suspension-seasons-2016-17' when 'cr473' then 'cricket-ipl-suspension-seasons-2016-17'
+  when 'cr056' then 'cricket-yuvraj-broad-six-sixes-2007' when 'cr291' then 'cricket-yuvraj-broad-six-sixes-2007'
+  when 'cr244' then 'cricket-afridi-chennai-141-1999' when 'cr566' then 'cricket-afridi-chennai-141-1999' else q->>'id' end)
+$$;
+-- Both seats matter: unseen by BOTH first, then the oldest most-recent exposure.
+-- Distinct fact families prevent rephrased cards appearing in the same deck.
+create or replace function jhk_private.make_rotated_deck(p_file text,p_players uuid[],p_now timestamptz) returns jsonb language plpgsql set search_path='' as $$
 declare q jsonb; shuffled jsonb; options jsonb; correct integer; result jsonb:='[]'::jsonb;
 begin
- for q in select payload from jhk_private.questions where p_file='all' or (payload->'files') ? p_file order by random() limit 5 loop
+ for q in
+  with candidates as (
+   select payload,jhk_private.question_family(payload) family from jhk_private.questions
+   where p_file='all' or (payload->'files') ? p_file
+  ), families as (
+   select distinct on (family) family,payload from candidates order by family,random()
+  ), ranked as (
+   select f.payload,(select max(h.seen_at) from jhk_private.question_seen h where h.family_key=f.family and h.session_id=any(p_players)) seen_at from families f
+  ) select payload from ranked order by seen_at nulls first,random() limit 5
+ loop
   select jsonb_agg(jsonb_build_object('option',value,'original',ordinality-1) order by random()) into shuffled from jsonb_array_elements(q->'options') with ordinality;
   select jsonb_agg(value->'option' order by ordinality),max((ordinality-1)::int) filter(where (value->>'original')::int=(q->>'correctIndex')::int) into options,correct from jsonb_array_elements(shuffled) with ordinality;
   result:=result||jsonb_build_array(q||jsonb_build_object('options',options,'correctIndex',correct));
  end loop;
  return result;
 end $$;
+create or replace function jhk_private.make_deck(p_file text default 'all',p_now timestamptz default now()) returns jsonb language sql set search_path='' as $$
+ select jhk_private.make_rotated_deck(p_file,array[]::uuid[],p_now)
+$$;
+
+-- Idempotent backfill counts only actually issued questions, not unplayed future deck cards.
+insert into jhk_private.question_seen(session_id,family_key,seen_at)
+ select x.session_id,jhk_private.question_family(r.deck->(x.round-1)),max(x.issued_at)
+ from jhk_private.releases x join jhk_private.rooms r on r.id=x.room_id join jhk_private.sessions s on s.id=x.session_id
+ where not s.deleted and jhk_private.question_family(r.deck->(x.round-1)) is not null
+ group by x.session_id,jhk_private.question_family(r.deck->(x.round-1))
+ on conflict(session_id,family_key) do update set seen_at=greatest(jhk_private.question_seen.seen_at,excluded.seen_at);
 
 -- Idempotent settlement. Caller holds the room row lock.
 create or replace function jhk_private.settle(p_room uuid, p_now timestamptz) returns void language plpgsql set search_path='' as $$
@@ -244,12 +277,17 @@ end $$;
 
 -- Projection never exposes another player's answer/key before round settlement.
 create or replace function jhk_private.snapshot(p_room uuid,p_self uuid,p_now timestamptz) returns jsonb language plpgsql set search_path='' as $$
-declare r jhk_private.rooms; q jsonb; own jhk_private.answers; receipt jsonb; verdict jsonb; players jsonb; winner uuid; a record; b record; issued timestamptz;
+declare r jhk_private.rooms; q jsonb; own jhk_private.answers; receipt jsonb; verdict jsonb; players jsonb; winner uuid; a record; b record; issued timestamptz; released integer;
 begin
  select * into r from jhk_private.rooms where id=p_room;
  q:=r.deck->(r.round-1);
- if r.phase='question' and p_now>=r.starts_at and p_now<r.deadline_at then
+ if q is not null and ((r.phase='question' and p_now>=r.starts_at and p_now<r.deadline_at) or r.phase in ('result','finished')) then
   insert into jhk_private.releases(room_id,round,session_id,issued_at) values(r.id,r.round,p_self,greatest(r.starts_at,clock_timestamp())) on conflict do nothing;
+  get diagnostics released = row_count;
+  if released=1 then
+   insert into jhk_private.question_seen(session_id,family_key,seen_at) values(p_self,jhk_private.question_family(q),p_now)
+   on conflict(session_id,family_key) do update set seen_at=greatest(jhk_private.question_seen.seen_at,excluded.seen_at);
+  end if;
  end if;
  select issued_at into issued from jhk_private.releases where room_id=r.id and round=r.round and session_id=p_self;
  select * into own from jhk_private.answers where room_id=r.id and round=r.round and session_id=p_self;
@@ -326,9 +364,21 @@ create or replace function jhk_private.profile_complete(p jhk_private.sessions) 
 language sql stable set search_path='' as $$
  select coalesce(p.adult_confirmed and p.terms_version='beta-1' and p.profile_completed_at is not null,false)
 $$;
+-- Permanent cosmetic progression uses accepted human answers in eligible server results only.
+-- Existing standings, stakes, wallets and temporary titles are independent and unchanged.
+create or replace function jhk_private.human_road(p_self uuid) returns jsonb language sql stable set search_path='' as $$
+ with totals as (
+  select count(*)::int matches,coalesce(sum(x.correct),0)::int correct,
+   coalesce(sum((select count(*) from jhk_private.answers a where a.room_id=x.room_id and a.session_id=x.session_id)),0)::int answered
+  from jhk_private.results x where x.session_id=p_self
+ ), road as (select *,answered*4+correct*2 trophies from totals)
+ select jsonb_build_object('trophies',trophies,'level',case when trophies>=180 then 3 when trophies>=60 then 2 else 1 end,
+  'stadiumId',case when trophies>=180 then 'crown' when trophies>=60 then 'riverside' else 'gully' end,
+  'answeredRounds',answered,'correctAnswers',correct,'eligibleMatches',matches,'source','server-human-results') from road
+$$;
 create or replace function jhk_private.profile_json(p jhk_private.sessions,p_now timestamptz) returns jsonb
 language sql stable set search_path='' as $$
- select jsonb_build_object('id',p.id,'nickname',p.nickname,'email',p.email,'avatar',p.avatar,'locale',p.locale,'preferences',p.preferences,'adultConfirmed',p.adult_confirmed,'termsVersion',p.terms_version,'profileComplete',jhk_private.profile_complete(p),'expiresAt',jhk_private.ms(p.expires_at),'onlineXp',(select coalesce(sum(a.xp),0) from jhk_private.answers a where a.session_id=p.id))||jhk_private.wallet(p.id)||jsonb_build_object('title',jhk_private.current_title(p.id,p_now))
+ select jsonb_build_object('id',p.id,'nickname',p.nickname,'email',p.email,'avatar',p.avatar,'locale',p.locale,'preferences',p.preferences,'adultConfirmed',p.adult_confirmed,'termsVersion',p.terms_version,'profileComplete',jhk_private.profile_complete(p),'expiresAt',jhk_private.ms(p.expires_at),'onlineXp',(select coalesce(sum(a.xp),0) from jhk_private.answers a where a.session_id=p.id))||jhk_private.wallet(p.id)||jsonb_build_object('title',jhk_private.current_title(p.id,p_now),'humanRoad',jhk_private.human_road(p.id))
 $$;
 
 -- Entry time is captured BEFORE any row/advisory lock. Client timestamps are ignored.
@@ -388,6 +438,7 @@ begin
   delete from jhk_private.circle_members where session_id=s.id;
   delete from jhk_private.circles cc where cc.id=any(circle_ids) and not exists(select 1 from jhk_private.circle_members m where m.circle_id=cc.id);
   delete from jhk_private.results where session_id=s.id;
+  delete from jhk_private.question_seen where session_id=s.id;
   update jhk_private.sessions set deleted=true,nickname='Deleted player',email=null,recovery_hash=null,adult_confirmed=false,terms_version=null,avatar=null,locale=null,preferences='{}'::jsonb,profile_completed_at=null,expires_at=t where id=s.id;
   return jsonb_build_object('ok',true,'serverNow',jhk_private.ms(t),'deleted',true);
  elsif p_action='profile' then
@@ -433,6 +484,7 @@ begin
  elsif p_action='exportProfile' then
   return jsonb_build_object('ok',true,'serverNow',jhk_private.ms(t),'profile',jhk_private.profile_json(s,t),
    'createdAt',s.created_at,'profileCompletedAt',s.profile_completed_at,
+   'questionHistory',(select coalesce(jsonb_object_agg(h.family_key,jhk_private.ms(h.seen_at)),'{}'::jsonb) from jhk_private.question_seen h where h.session_id=s.id),
    'answers',(select coalesce(jsonb_agg(jsonb_build_object('roomId',a.room_id,'round',a.round,'choice',a.choice,'correct',a.correct,'elapsedMs',a.elapsed_ms,'xp',a.xp,'receivedAt',a.received_at) order by a.received_at),'[]'::jsonb) from jhk_private.answers a where a.session_id=s.id),
    'results',(select coalesce(jsonb_agg(to_jsonb(res) order by res.completed_at),'[]'::jsonb) from jhk_private.results res where res.session_id=s.id),
    'walletEntries',(select coalesce(jsonb_agg(to_jsonb(w) order by w.created_at),'[]'::jsonb) from jhk_private.wallet_entries w where w.session_id=s.id),
@@ -545,6 +597,12 @@ begin
     update jhk_private.members set ready=true where room_id=r.id and session_id=s.id;
    end if;
    if (r.phase='waiting' and (select count(*) from jhk_private.members where room_id=r.id and ready)=2) or (r.phase='result' and r.round<5 and ((select count(*) from jhk_private.members where room_id=r.id and ready)=2 or t>=r.next_at)) then
+    if r.phase='waiting' then
+     deck:=jhk_private.make_rotated_deck(r.file,(select array_agg(session_id) from jhk_private.members where room_id=r.id),t);
+     if jsonb_array_length(deck)<5 then return jhk_private.fail('NO_QUESTIONS','This topic needs more available questions.'); end if;
+     r.deck:=deck;
+     update jhk_private.rooms set deck=r.deck where id=r.id;
+    end if;
     update jhk_private.rooms set phase='question',round=r.round+1,starts_at=t+interval '2500 milliseconds',deadline_at=t+interval '32500 milliseconds',next_at=null where id=r.id;
     update jhk_private.members set ready=false where room_id=r.id;
    end if;

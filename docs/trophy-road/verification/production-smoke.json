@@ -1,0 +1,32 @@
+{
+  "at": "2026-10-29T22:43:11.322Z",
+  "artifact": "dist-static",
+  "base": "/fact-duel/",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "scope": "Built artifact smoke only; local static server, not production hosting or physical device.",
+  "checks": [
+    {
+      "name": "production arena artwork uses fact-duel base and loads",
+      "pass": true,
+      "detail": [
+        {
+          "url": "http://127.0.0.1:5198/fact-duel/art/arena-gully.webp",
+          "loaded": true,
+          "width": 960
+        }
+      ]
+    },
+    {
+      "name": "production one-tap launch exposes four playable answers",
+      "pass": true
+    },
+    {
+      "name": "production browser has no JavaScript errors",
+      "pass": true,
+      "detail": []
+    }
+  ]
+}

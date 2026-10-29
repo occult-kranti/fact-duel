@@ -1,0 +1,29 @@
+{
+  "checkedAt": "2026-10-29T22:43:07.514811+00:00",
+  "tests": {
+    "command": "PGLITE_MODULE_PATH=node_modules/@electric-sql/pglite/dist/index.js node --test tests/*.test.mjs",
+    "total": 1042,
+    "passed": 1042,
+    "failed": 0,
+    "skipped": 0
+  },
+  "typescript": "pass",
+  "productionBuild": "pass",
+  "pagesAssembly": "pass",
+  "diffWhitespace": "pass",
+  "productionDatabase": {
+    "migrations": [
+      "20261029223909",
+      "20261029223935"
+    ],
+    "expansionRows": 48,
+    "historyRls": true,
+    "anonHistoryRead": false,
+    "authenticatedHistoryRead": false,
+    "anonCommandExecute": false
+  },
+  "buildWarnings": [
+    "Existing optional gem-vault chunk exceeds chunk size advisory; build succeeds."
+  ],
+  "scope": "Local Chromium browser and local PostgreSQL-compatible checks are documented separately from production SQL/live verification. No real-device or production load claim."
+}

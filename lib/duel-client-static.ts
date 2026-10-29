@@ -14,6 +14,11 @@ import { dispatch } from './server/duel-service.mjs';
 import { MemoryRoomStore } from './duel-memory-store.mjs';
 import { STORAGE } from './storage-names.mjs';
 import { parseApp } from './redirect-target.mjs';
+import { transactProfile } from './profile-store.mjs';
+import { withLocalQuestionHistory, recordLocalQuestionExposure } from './local-question-history.mjs';
+const roomEpochs = new Map<string, string>();
+const recordedExposures = new Set<string>();
+const releasedReservations = new Set<string>();
 
 /** True in this build only. The static entry reads it to render the preview notice. */
 export const OFFLINE_BUILD = true;
@@ -121,12 +126,37 @@ export async function request(body: Body) {
     }
     if (['catalogue', 'practice', 'expedition', 'fixture'].includes(body?.action ?? ''))
       return await dispatch(null, body, { now: Date.now() });
-    return await dispatch(store, body, {
-      now: Date.now(),
-      actor: ACTOR,
-      useDatabaseClock: true,
-      principalId: principalId(),
-    });
+    const options = { now: Date.now(), actor: ACTOR, useDatabaseClock: true, principalId: principalId() };
+    let result;
+    if (body?.action === 'create') {
+      const profile = await transactProfile(null).catch(() => null) as { epoch?: string } | null;
+      const epoch = roomEpochs.get(String(body.roomId)) || profile?.epoch || 'initial';
+      result = await withLocalQuestionHistory(epoch, async (questionHistory: Record<string, number>) => {
+        const response = await dispatch(store, body, { ...options, questionHistory });
+        if (!('room' in response)) throw new Error('Room creation did not return a room.');
+        const row = await store.read(response.room.id);
+        const room = row ? JSON.parse(row.state) : null;
+        roomEpochs.set(response.room.id, epoch);
+        return { result: response, roomId: response.room.id, deck: room?.deck || [], at: Date.now(), expiresAt: room?.expiresAt };
+      });
+    } else result = await dispatch(store, body, options);
+    if (result && 'room' in result && (
+      (result.room?.round?.question && !recordedExposures.has(`${result.room.id}/${result.room.round.id}`)) ||
+      (result.room?.settled && !releasedReservations.has(result.room.id))
+    )) {
+      const row = await store.read(result.room.id);
+      const room = row ? JSON.parse(row.state) : null;
+      const epoch = roomEpochs.get(result.room.id);
+      if (room && epoch) {
+        await recordLocalQuestionExposure(epoch, {
+          roomId: room.id, roundId: room.round?.id, question: result.room.round?.question ? room.round?.question : null,
+          at: room.round?.issuedAt?.[0] || Date.now(), finished: !!room.settled,
+        });
+        if (result.room.round?.question) recordedExposures.add(`${room.id}/${room.round.id}`);
+        if (room.settled) releasedReservations.add(room.id);
+      }
+    }
+    return result;
   } catch (error) {
     throw toClientError(error);
   }
