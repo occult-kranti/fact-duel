@@ -8,7 +8,8 @@
  * - installs a capturing pointerdown/keydown/touchend listener that unlocks the AudioContext;
  * - subscribes to the `fx` bus so non-React code can trigger particles, shakes, toasts and
  *   ceremonies;
- * - runs every overlay through the pop-up budget (`./overlay-budget.ts`), which is the single
+ * - suppresses reward overlays by default: scorecards and profile screens carry progression;
+ * - runs permitted operational overlays through the pop-up budget (`./overlay-budget.ts`), the single
  *   answer to "how many pop-ups may the player see": at most two on screen, never two in the same
  *   instant, a ceremony takes the whole budget, same-kind toasts in one burst merge, and nothing
  *   at all opens while `setQuiet(true)` is on (a live question). A ceremony also outranks a toast:
@@ -30,11 +31,12 @@ import {
 import { fx } from '@/lib/fx/bus';
 import { particles } from '@/lib/fx/particles';
 import { sound } from '@/lib/fx/sound';
+import { allowCeremonyOverlay, allowToastOverlay } from '@/lib/fx/notification-policy.mjs';
 import { Ceremony, type CeremonyInput, type CeremonyItem } from './ceremony';
 import { FxCanvas } from './fx-canvas';
 import { createOverlayBudget, createRoundFeedbackGate, type OverlayBudget, type OverlayGrant } from './overlay-budget';
 import { shake } from './shake';
-import { ToastStack, TOAST_MAX_VISIBLE, type ToastInput, type ToastItem } from './toast-stack';
+import { ToastStack, type ToastInput, type ToastItem } from './toast-stack';
 import { useMounted, useReducedMotion } from './use-prefs';
 import './fx.css';
 
@@ -79,8 +81,10 @@ const nextId = (prefix: string): string => `${prefix}-${++seq}-${Date.now().toSt
 
 export interface FxProviderProps {
   children?: ReactNode;
-  /** Max toasts visible at once (default 2, and the budget will not hand out more anyway). */
+  /** Max operational toasts visible at once (default 1; the budget still caps at two). */
   maxToasts?: number;
+  /** Explicitly enable celebration overlays in a demo/playground. Off in the game. */
+  rewardOverlays?: boolean;
 }
 
 /** What the budget carries: a toast, or a ceremony. `grant.type` says which. */
@@ -97,7 +101,7 @@ function toastFromGrant(grant: OverlayGrant<OverlayPayload>): ToastItem {
   return { ...copy, id: grant.id };
 }
 
-export function FxProvider({ children, maxToasts = TOAST_MAX_VISIBLE }: FxProviderProps) {
+export function FxProvider({ children, maxToasts = 1, rewardOverlays = false }: FxProviderProps) {
   const mounted = useMounted();
   const reduced = useReducedMotion();
   // One budget per provider, created on first render and never swapped (its identity is what the
@@ -117,11 +121,12 @@ export function FxProvider({ children, maxToasts = TOAST_MAX_VISIBLE }: FxProvid
 
   const toast = useCallback(
     (input: ToastInput): string => {
+      if (!allowToastOverlay(input, { rewardOverlays })) return '';
       const id = input.id ?? nextId('toast');
       const item: ToastItem = { ...input, id };
       return roundBudget.request({ id, type: 'toast', mergeKey: input.mergeKey, payload: item }, !!input.roundFeedback);
     },
-    [budget, roundBudget],
+    [budget, roundBudget, rewardOverlays],
   );
 
   const dismissToast = useCallback(
@@ -138,11 +143,12 @@ export function FxProvider({ children, maxToasts = TOAST_MAX_VISIBLE }: FxProvid
   // order, since one ceremony never jumps another.
   const openCeremony = useCallback(
     (input: CeremonyInput): string => {
+      if (!allowCeremonyOverlay({ rewardOverlays })) return '';
       const id = nextId('ceremony');
       const item: CeremonyItem = { ...input, id };
       return roundBudget.request({ id, type: 'ceremony', payload: item }, !!input.roundFeedback);
     },
-    [budget, roundBudget],
+    [budget, roundBudget, rewardOverlays],
   );
 
   const closeCeremony = useCallback(() => {

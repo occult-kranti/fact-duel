@@ -1,161 +1,38 @@
 'use client';
-/**
- * Home — the Arena Hub (design bible §10.1).
- * Hero row (knowledge core + player card) → primary CTA → daily quests → the expedition you left
- * open → Arena Rank → a bento row of recent XP and your stamp case. Everything on this screen is
- * read from the device-local progression record; nothing here talks to the server.
- */
-import { ArrowRight, Sliders, Sparkles, Users, Zap } from 'lucide-react';
-import { ACTIVE_EXPEDITIONS as EXPEDITIONS, expeditionStatus } from '@/lib/expeditions.mjs';
-import { emptyProgression, levelForXp, rankForPoints } from '@/lib/progression.mjs';
-import { jhkOnline } from '@/lib/jhk-online/runtime';
-import { practiceMissionDestination } from '@/lib/jhk-online/practice-missions.mjs';
+import { ArrowRight, Users, BookOpen, FlaskConical } from 'lucide-react';
+import { CricketArt, CricketMark } from '../cricket-art';
 import type { HomeScreenProps } from './types';
-import { HeroStage } from './home/hero-stage';
-import { PlayerCard } from './home/player-card';
-import { QuestBoard } from './home/quest-board';
-import { ExpeditionCard } from './home/expedition-card';
-import { RankStrip } from './home/rank-strip';
-import { StampShelf, XpLog, type LogEntry, type StampRoute } from './home/activity';
-import { LiveStrip } from './events/live-strip';
-import { accentOf, questRoute, untilReset, type QuestItem } from './home/util';
-import { usePress } from './home/press';
-import { useNow } from './home/use-now';
 import { useLocale } from '../use-locale';
-import './home/home.css';
 
-export function HomeScreen({ player, name, ready, busy, onRoute, onDuel, onLive, onSetup, go }: HomeScreenProps) {
-  const { t, locale } = useLocale();
-  const press = usePress();
-  const now = useNow();
-
-  const prog = player.progression ?? emptyProgression();
-  const level = player.level ?? levelForXp(prog.xp);
-  const rank = rankForPoints(prog.rank.points);
-  const accent = accentOf(prog.cosmetics.equipped.accent);
-
-  /* The expedition slot: an unfinished run always wins it (Zeigarnik), newest first — the same
-     rule the Clubhouse used — otherwise the next route without a stamp. */
-  const journeys = player.profile.journeys || {};
-  const continuing = EXPEDITIONS.filter(
-    (r: { key: string }) => expeditionStatus(journeys[r.key]) === 'continue',
-  ).sort(
-    (a: { key: string }, b: { key: string }) => journeys[b.key].run.startedAt - journeys[a.key].run.startedAt,
-  )[0];
-  const featured =
-    continuing ?? EXPEDITIONS.find((r: { key: string }) => !journeys[r.key]?.first) ?? EXPEDITIONS[0];
-  const record = journeys[featured.key];
-  const isContinue = expeditionStatus(record) === 'continue';
-
-  const earned = (EXPEDITIONS as StampRoute[])
-    .filter((r) => journeys[r.key]?.first)
-    .sort((a, b) => (journeys[b.key].first.at ?? 0) - (journeys[a.key].first.at ?? 0));
-  const shelf = (earned.length ? earned.slice(0, 3) : (EXPEDITIONS as StampRoute[]).slice(0, 3)).map(
-    (route) => ({ route, correct: journeys[route.key]?.first?.correct ?? null }),
-  );
-
-  const quests: QuestItem[] = prog.quests.items ?? [];
-  const log: LogEntry[] = (prog.log ?? []).slice(0, 5);
-
-  const playNow = onLive;
-  const openQuest = (quest: QuestItem) => {
-    if (jhkOnline.configured) {
-      const destination = practiceMissionDestination(quest.template);
-      if (destination === 'journeys') onRoute(continuing?.id ?? null);
-      else if (destination) go(destination);
-      return;
-    }
-    const route = questRoute(quest);
-    if (route.kind === 'duel' && ready && !busy) onDuel(route.mode, route.topic);
-    else if (route.kind === 'expedition') onRoute(continuing?.id ?? null);
-    else if (route.kind === 'tab') go(route.tab);
-    else onSetup(route.kind === 'setup' ? route.intent : 'settings');
-  };
-
+/** The homepage is a launch surface. Records and learning tools stay one tap away. */
+export function HomeScreen({ ready, busy, onRoute, onDuel, onLive, onSetup, go }: HomeScreenProps) {
+  const { locale } = useLocale();
+  const hi = locale === 'hi';
   return (
-    <section className="fd-home" aria-labelledby="fd-hub-title">
-      <h1 id="fd-hub-title" className="fd-hub-sr">
-        {t('home.title')}
-      </h1>
-
-      <div className="fd-hub-hero">
-        <HeroStage level={level.level} accent={accent.hex} progression={prog} practiceOnly={jhkOnline.configured} />
-        <PlayerCard
-          name={name}
-          level={level}
-          streak={prog.streak}
-          badges={Object.keys(prog.achievements ?? {}).length}
-          rank={rank}
-          points={prog.rank.points}
-          frame={prog.cosmetics.equipped.frame}
-          titleId={prog.cosmetics.equipped.title}
-          practiceOnly={jhkOnline.configured}
-          accentToken={accent.token}
-          onOpen={() => go('passport')}
-        />
+    <section className="cr-home" aria-labelledby="cr-home-title">
+      <div className="cr-hero">
+        <div className="cr-hero-copy">
+          <p className="cr-eyebrow"><span aria-hidden="true">●</span> {hi ? 'जान्ता है क्या / क्रिकेट क्लब' : 'JAANTA HAI KYA / THE CRICKET CLUB'}</p>
+          <h1 id="cr-home-title" className="cr-hero-title">{hi ? <>क्रिकेट दिमाग में?<br /><em>पिच पर आओ।</em></> : <>Know the game?<br /><em>Play your shot.</em></>}</h1>
+          <p className="cr-hero-lead">{hi ? 'चार विकल्प। पाँच सवाल। क्रिकेट की जानकारी का एक छोटा मुकाबला।' : 'Four choices. Five questions. A little cricket knowledge goes a long way.'}</p>
+          <div className="cr-actions">
+            <button className="cr-primary" disabled={busy} onClick={onLive}>{hi ? 'क्रिकेट खेलें' : 'Play cricket'} <ArrowRight size={20} aria-hidden="true" /></button>
+            <button className="cr-secondary" disabled={!ready || busy} onClick={() => onDuel('gauntlet', 'Cricket')}>{hi ? 'बॉट के साथ अभ्यास' : 'Just practice'}</button>
+          </div>
+          <p className="cr-inline-note">{hi ? 'ईमेल ज़रूरी नहीं · 5 सेकंड में खिलाड़ी न मिले तो अभ्यास बॉट' : 'No email needed · No rival in 5 seconds? Play a practice bot.'}</p>
+          <div className="cr-match-facts" aria-label={hi ? 'मुकाबले की जानकारी' : 'Match details'}>
+            <span><b>05</b> {hi ? 'सवाल' : 'questions'}</span><span><b>04</b> {hi ? 'विकल्प' : 'choices'}</span><span><b>₹0</b> {hi ? 'असली पैसे नहीं' : 'real money'}</span>
+          </div>
+        </div>
+        <CricketArt />
       </div>
-
-      <div className="fd-hub-cta">
-        <button
-          type="button"
-          className="fd-hub-btn fd-hub-btn--primary fd-hub-press"
-          disabled={busy}
-          onPointerDown={press}
-          onClick={playNow}
-        >
-          <Zap aria-hidden="true" />
-          <span className="fd-hub-cta-main">
-            <strong>{locale === 'hi' ? 'असली प्रतिद्वंद्वी ढूँढ़ें' : 'Find a human rival'}</strong>
-            <small>
-              {locale === 'hi' ? 'पाँच राउंड · वैकल्पिक सिक्के · शून्य पर भी खेलें' : 'Five rounds · optional coins · zero balance welcome'}
-            </small>
-          </span>
-          <ArrowRight className="fd-hub-cta-arrow" aria-hidden="true" />
-        </button>
-        <button
-          type="button"
-          className="fd-hub-btn fd-hub-btn--ghost fd-hub-press"
-          onPointerDown={press}
-          onClick={() => onSetup('settings')}
-        >
-          <Sliders aria-hidden="true" />
-          {locale === 'hi' ? 'अभियानों से सीखें' : 'Learn with expeditions'}
-        </button>
-        <p className="fd-hub-cta-note">
-          <Sparkles aria-hidden="true" />
-          {locale === 'hi' ? 'खेल और विज्ञान। आपकी जिज्ञासा, आपका रिकॉर्ड।' : 'Sports and science. Your curiosity, your record.'}
-          <Users aria-hidden="true" />
-          {locale === 'hi' ? 'इंसानी मुक़ाबले की सर्वर रैंक अलग है।' : 'Human duels have their own server rank.'}
-        </p>
+      <div className="cr-section-heading"><h2>{hi ? 'अपना खेल चुनें' : 'Your next innings'}</h2><span>{hi ? 'सीधे खेलें। आसानी से।' : 'A quick game. A good break.'}</span></div>
+      <div className="cr-mode-grid">
+        <button className="cr-mode" onClick={() => onSetup('friend')}><span className="cr-mode-number">01 / VERSUS</span><Users className="cr-mode-icon" aria-hidden="true" /><strong>{hi ? 'दोस्त को चुनौती' : 'Challenge a friend'}</strong><p>{hi ? 'लिंक भेजें और आमने-सामने खेलें।' : 'Send a link. Settle it on the scoreboard.'}</p><ArrowRight size={18} aria-hidden="true" /></button>
+        <button className="cr-mode" disabled={!ready || busy} onClick={() => onDuel('quick', 'Cricket')}><span className="cr-mode-number">02 / QUICK SINGLE</span><CricketMark kind="ball" className="cr-mode-icon" /><strong>{hi ? 'एक सवाल का शॉट' : 'One-question warm-up'}</strong><p>{hi ? 'एक सवाल। अभ्यास बॉट। तुरंत नतीजा।' : 'One question against a bot. Straight to the result.'}</p><ArrowRight size={18} aria-hidden="true" /></button>
+        <button className="cr-mode" onClick={() => onRoute(null)}><span className="cr-mode-number">03 / OFF THE PITCH</span><BookOpen className="cr-mode-icon" aria-hidden="true" /><strong>{hi ? 'सीखें और खोजें' : 'Explore & learn'}</strong><p>{hi ? 'बिना घड़ी के खेल और विज्ञान के सवाल।' : 'Untimed sports and science. Follow your curiosity.'}</p><ArrowRight size={18} aria-hidden="true" /></button>
       </div>
-
-      {/* The calendar, one line above the quests: what is on, what is next, how many modes are open. */}
-      <LiveStrip go={go} />
-
-      <p className="fd-hub-section-note">{locale === 'hi' ? 'नीचे आपके डिवाइस के अभ्यास के काम, XP और स्टैम्प हैं। इंसानी मुक़ाबले इन कामों में नहीं गिने जाते।' : 'Your device practice missions, XP and stamps continue below. Human duels do not advance these missions.'}</p>
-      <QuestBoard items={quests} resetIn={now ? untilReset(now) : ''} onOpen={openQuest} practiceOnly={jhkOnline.configured} />
-
-      <ExpeditionCard
-        route={featured}
-        cursor={record?.run?.cursor ?? 0}
-        answers={record?.run?.answers?.length ?? 0}
-        continuing={isContinue}
-        stamped={!!record?.first}
-        onOpen={() => onRoute(featured.id)}
-      />
-
-      {!jhkOnline.configured && <RankStrip points={prog.rank.points} rank={rank} />}
-
-      <div className="fd-hub-bento">
-        <XpLog entries={log} now={now} />
-        <StampShelf
-          stamps={shelf}
-          total={EXPEDITIONS.length}
-          earnedCount={earned.length}
-          onOpen={(id) => onRoute(id)}
-          onAll={() => onRoute(null)}
-        />
-      </div>
+      <div className="cr-home-links"><button onClick={() => onSetup('settings')}><FlaskConical size={16} aria-hidden="true" />{hi ? 'सभी विषय और गेम मोड' : 'All topics & game modes'} <ArrowRight size={16} aria-hidden="true" /></button><button onClick={() => go('journal')}>{hi ? 'जवाब और स्रोत देखें' : 'Your answers & sources'} <ArrowRight size={16} aria-hidden="true" /></button></div>
     </section>
   );
 }

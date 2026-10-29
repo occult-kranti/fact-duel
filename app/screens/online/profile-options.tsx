@@ -33,10 +33,10 @@ export function ProfileOptions({ session }: { session: PlayerSession }) {
   const save = async (event: React.FormEvent) => {
     event.preventDefault();
     const nickname = name.replace(/\s+/g, ' ').trim(), address = email.trim().toLowerCase();
-    if (nickname.length < 2 || nickname.length > 24 || !EMAIL.test(address)) { setMessage(t('Use a 2–24 character name and a valid email.', '2–24 अक्षरों का नाम और सही ईमेल दर्ज करें।')); return; }
+    if (nickname.length < 2 || nickname.length > 24 || (address && (address.length > 254 || !EMAIL.test(address)))) { setMessage(t('Use a 2–24 character name. Email is optional; if added, use a valid address.', '2–24 अक्षरों का नाम रखें। ईमेल वैकल्पिक है; जोड़ें तो सही पता दें।')); return; }
     setBusy(true); setMessage('');
     try {
-      await jhkOnline.updateProfile({ nickname, email: address, avatar, locale });
+      await jhkOnline.updateProfile({ nickname, email: address || null, avatar, locale });
       try { localStorage.setItem(TOPICS_KEY, JSON.stringify(topics)); } catch { /* local preference is optional */ }
       setMessage(t('Player card saved. Your email remains private and unverified.', 'खिलाड़ी पहचान सेव हुई। ईमेल निजी और असत्यापित है।'));
     } catch (error) { setMessage(error instanceof Error ? error.message : t('Could not save. Try again.', 'सेव नहीं हुआ। फिर कोशिश करें।')); }
@@ -90,7 +90,7 @@ export function ProfileOptions({ session }: { session: PlayerSession }) {
     <p className="jhk-live-muted">{t('Your nickname is public. Your email is private, unverified, and cannot recover access.', 'नाम सार्वजनिक है। ईमेल निजी, असत्यापित है और उससे पहुँच वापस नहीं मिलेगी।')}</p>
     <form className="jhk-live-identity" onSubmit={save}>
       <label htmlFor="jhk-edit-name">{t('Public nickname', 'सार्वजनिक नाम')}</label><input id="jhk-edit-name" value={name} onChange={event => setName(event.target.value)} maxLength={24} autoComplete="nickname" disabled={busy} />
-      <label htmlFor="jhk-edit-email">{t('Private email', 'निजी ईमेल')}</label><input id="jhk-edit-email" type="email" value={email} onChange={event => setEmail(event.target.value)} autoComplete="email" disabled={busy} />
+      <label htmlFor="jhk-edit-email">{t('Email (optional, private)', 'ईमेल (वैकल्पिक, निजी)')}</label><input id="jhk-edit-email" type="email" value={email} onChange={event => setEmail(event.target.value)} autoComplete="email" disabled={busy} />
       <label htmlFor="jhk-edit-avatar">{t('Avatar', 'अवतार')}</label><select id="jhk-edit-avatar" value={avatar} onChange={event => setAvatar(event.target.value)} disabled={busy}>{AVATARS.map(option => <option value={option} key={option}>{option}</option>)}</select>
       <label htmlFor="jhk-edit-locale">{t('Language', 'भाषा')}</label><select id="jhk-edit-locale" value={locale} onChange={event => setLocale(event.target.value as 'en' | 'hi')} disabled={busy}><option value="en">English</option><option value="hi">हिन्दी</option></select>
       <fieldset className="jhk-profile-topics"><legend>{t('Favourite topics · saved on this device', 'पसंदीदा विषय · इसी डिवाइस पर सेव')}</legend>{TOPICS.map(topic => <label key={topic}><input type="checkbox" checked={topics.includes(topic)} onChange={event => setTopics(current => event.target.checked ? [...current, topic] : current.filter(value => value !== topic))} />{topic}</label>)}</fieldset>

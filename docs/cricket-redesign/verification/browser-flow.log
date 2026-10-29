@@ -1,0 +1,11 @@
+PASS cricket CTA chooses cricket
+PASS bot fallback begins after five seconds despite failed network
+PASS bot fallback clearly labelled
+PASS fallback delivers playable question
+PASS cancel prevents delayed bot match
+PASS guest can finish a game without signup
+PASS result exposes replay and collapses stats
+PASS result has no coin ad upsell
+PASS guest replay starts another question
+PASS no runtime errors
+{"suite":"cricket-browser","passed":10,"result":"pass"}

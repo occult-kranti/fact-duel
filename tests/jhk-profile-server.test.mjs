@@ -62,3 +62,41 @@ test('legacy session upgrades in place, keeping XP and wallet, and recovery rota
   assert.deepEqual(deleted,{email:null,recovery_hash:null,adult_confirmed:false,preferences:{}});
  } finally {await db.close()}
 });
+
+
+test('email-free human guest keeps consent and validates optional contact data',()=>{
+ const guest={action:'session',nickname:'Cricket fan',adultConfirmed:true,termsVersion:'beta-1'};
+ assert.equal(validateInput(guest).payload.email,undefined);
+ assert.equal(validateInput({...guest,email:'  '}).payload.email,null);
+ assert.equal(validateInput({...guest,email:null}).payload.email,null);
+ assert.equal(validateInput({...guest,email:'Fan@Example.test'}).payload.email,'fan@example.test');
+ for (const email of ['bad',123,{},'@example.test']) assert.throws(()=>validateInput({...guest,email}),{code:'BAD_EMAIL'});
+ assert.throws(()=>validateInput({...guest,adultConfirmed:false}),{code:'AGE_CONFIRMATION_REQUIRED'});
+ assert.throws(()=>validateInput({...guest,adultConfirmed:undefined}),{code:'PROFILE_REQUIRED'});
+ assert.throws(()=>validateInput({...guest,termsVersion:'old'}),{code:'TERMS_REQUIRED'});
+});
+
+test('SQL no-email guest can queue, preserve identity after email removal, and recover', {skip:!enabled},async()=>{
+ const {PGlite}=await import(pathToFileURL(process.env.PGLITE_MODULE_PATH).href);
+ const db=new PGlite();
+ try {
+  await db.exec('create role anon; create role authenticated; create role service_role bypassrls;');
+  await db.exec(fs.readFileSync(new URL('../supabase/jhk/schema.sql',import.meta.url),'utf8'));
+  await db.exec(fs.readFileSync(new URL('../supabase/jhk/seed-bank.sql',import.meta.url),'utf8'));
+  const query=async(tokenHash,action,payload={})=>(await db.query('select public.jhk_command($1,$2,$3::jsonb,$4) as result',[tokenHash,action,JSON.stringify(payload),'guest-network'])).rows[0].result;
+  const guestHash=h('email-free'), recoveryHash=await hashRecovery('e'.repeat(64));
+  const created=await query(guestHash,'session',{nickname:'Cricket fan',adultConfirmed:true,termsVersion:'beta-1',_recoveryHash:recoveryHash});
+  assert.equal(created.ok,true); assert.equal(created.session.email,null); assert.equal(created.session.profileComplete,true);
+  const id=created.session.id;
+  const queued=await query(guestHash,'queue',{mode:'ranked',file:'cricket',stake:0});
+  assert.equal(queued.ok,true); assert.equal(queued.match.phase,'waiting');
+  assert.equal((await query(guestHash,'leave',{roomId:queued.match.id})).ok,true);
+  const withEmail=await query(guestHash,'profile',{email:'fan@example.test'});
+  assert.equal(withEmail.session.id,id); assert.equal(withEmail.session.email,'fan@example.test');
+  const cleared=await query(guestHash,'profile',{email:null});
+  assert.equal(cleared.session.id,id); assert.equal(cleared.session.email,null); assert.equal(cleared.session.profileComplete,true);
+  const recovered=await query(h('restored-email-free'),'recover',{_recoveryHash:recoveryHash});
+  assert.equal(recovered.session.id,id); assert.equal(recovered.session.email,null);
+  assert.equal((await query(guestHash,'profile')).error.code,'UNAUTHORIZED');
+ } finally {await db.close()}
+});

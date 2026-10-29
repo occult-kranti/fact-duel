@@ -1,5 +1,5 @@
 'use client';
-/** Optional, terminal human-match ad opportunity in the JHK shell. */
+/** Optional ad opportunity after a final human or bot match, never an active round. */
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { sound } from '@/components/fx';
@@ -62,7 +62,7 @@ export function CompletionAdBreak({ completionId, outcome }: { completionId: str
       <button type="button" disabled={open} onClick={() => {
         if (document.hidden || document.querySelector('dialog[open], [aria-modal="true"]')) return;
         setOpen(true);
-      }}>{hi ? 'आगे' : 'Continue'}</button>
+      }}>{hi ? 'वैकल्पिक विज्ञापन देखें' : 'Watch optional ad'}</button>
     </div>
     {open ? createPortal(<AdDialog hi={hi} onClose={() => { setOpen(false); setDue(false); }} />, document.body) : null}
   </>;

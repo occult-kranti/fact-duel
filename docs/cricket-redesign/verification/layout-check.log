@@ -1,0 +1,18 @@
+PASS 320px fresh home has no modal
+PASS 320px floodlights no horizontal overflow
+PASS 320px pavilion no horizontal overflow
+PASS 320px theme persists
+PASS 320px friend entry is focused
+PASS 320px no required email
+PASS 390px fresh home has no modal
+PASS 390px floodlights no horizontal overflow
+PASS 390px pavilion no horizontal overflow
+PASS 390px theme persists
+PASS 390px friend entry is focused
+PASS 390px no required email
+PASS 1440px fresh home has no modal
+PASS 1440px floodlights no horizontal overflow
+PASS 1440px pavilion no horizontal overflow
+PASS 1440px theme persists
+PASS 1440px friend entry is focused
+PASS 1440px no required email

@@ -129,16 +129,19 @@ export function MatchFinish({
   onReplay,
   onVault,
   onFinish,
+  compact = false,
 }: {
   room: any;
   player: any;
   onReplay: () => void;
   onVault: () => void;
   onFinish: () => void;
+  /** Quiet result: score and replay first, optional detailed progression below. */
+  compact?: boolean;
 }) {
   const juice = useJuice();
   const press = usePress();
-  const { t, n, pick } = useLocale();
+  const { t, n, pick, locale } = useLocale();
   const celebrated = useRef<string | null>(null);
   const v = matchVerdict(room),
     rounds = completedRounds(room),
@@ -158,7 +161,7 @@ export function MatchFinish({
   const keep = v.key === 'loss' ? whatYouKeep(room, player) : null;
   const tier = v.key === 'win' ? winTier(room, player) : null;
   useEffect(() => {
-    if (celebrated.current === room.id) return;
+    if (compact || celebrated.current === room.id) return;
     if (v.key === 'win') {
       celebrated.current = room.id;
       // Ceremonial wins already have the overlay; stacking confetti behind one is two celebrations
@@ -183,7 +186,7 @@ export function MatchFinish({
       const id = setTimeout(() => juice.settle(), 400);
       return () => clearTimeout(id);
     }
-  }, [v.key, tier, room.id, juice]);
+  }, [v.key, tier, room.id, juice, compact]);
   return (
     <div className="fd-finish" data-verdict={v.key}>
       <section className="fd-verdict">
@@ -220,7 +223,7 @@ export function MatchFinish({
         <p className="fd-margin">{marginLine(room)}</p>
       </section>
 
-      {keep && (
+      {keep && !compact && (
         <section className="fd-keep" aria-labelledby="fd-keep-head">
           <p className="fd-keep-kicker" id="fd-keep-head">
             {t('finish.keep')}
@@ -254,6 +257,8 @@ export function MatchFinish({
         </div>
       </div>
 
+      <details className="fd-result-details" open={compact ? undefined : true}>
+        <summary>{locale === 'hi' ? 'मैच के आँकड़े' : 'Match stats'}</summary>
       <div className="fd-tiles">
         <div className="fd-tile" data-accent="gold">
           <small>{t('finish.xpThis')}</small>
@@ -300,6 +305,7 @@ export function MatchFinish({
           <span>{room.ledger ? t('finish.coinsFromAds') : t('finish.simNoValue')}</span>
         </div>
       </div>
+      </details>
 
       {/* One disclaimer slot per screen (bible §9): the coins line lives on the COINS tile, so
           `v.detail` — which repeats it word for word — is not printed again here. */}

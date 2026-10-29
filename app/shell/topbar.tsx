@@ -19,6 +19,7 @@ export type TopbarProps = {
   level?: ReactNode;
   /** The coin count (app/screens/economy/wallet-chip.tsx): the one place the balance is shown. */
   wallet?: ReactNode;
+  appearance?: ReactNode;
 };
 
 export function Topbar({
@@ -31,6 +32,7 @@ export function Topbar({
   streak,
   level,
   wallet,
+  appearance,
 }: TopbarProps) {
   const { t, locale } = useLocale();
   return (
@@ -52,6 +54,7 @@ export function Topbar({
         <JhkWordmark height={16} title="" variant={locale === 'hi' ? 'hi' : 'full'} className="fd-brand-word" />
       </a>
       <div className="fd-topbar-right">
+        {appearance}
         {(streak || level || wallet) && (
           <div className="fd-topbar-slots">
             {streak}

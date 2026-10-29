@@ -51,9 +51,9 @@ BEGIN
  PERFORM pg_temp.check_it(NOT EXISTS(SELECT 1 FROM pg_class c JOIN pg_namespace s ON s.oid=c.relnamespace WHERE s.nspname='jhk_private' AND c.relkind='r' AND (NOT c.relrowsecurity OR has_table_privilege('anon',c.oid,'SELECT, INSERT, UPDATE, DELETE') OR has_table_privilege('authenticated',c.oid,'SELECT, INSERT, UPDATE, DELETE'))),'private tables have RLS and no browser grants');
  PERFORM pg_temp.check_it(NOT EXISTS(SELECT 1 FROM pg_proc p JOIN pg_namespace s ON s.oid=p.pronamespace WHERE s.nspname='jhk_private' AND (has_function_privilege('anon',p.oid,'EXECUTE') OR has_function_privilege('authenticated',p.oid,'EXECUTE'))),'helper functions have no inherited public execution');
 
- response:=pg_temp.command(host_hash,'session','{"nickname":"JHK_QA_host"}'); h:=(response#>>'{session,id}')::uuid;
- response:=pg_temp.command(guest_hash,'session','{"nickname":"JHK_QA_guest"}'); g:=(response#>>'{session,id}')::uuid;
- response:=pg_temp.command(stranger_hash,'session','{"nickname":"JHK_QA_stranger"}'); stranger:=(response#>>'{session,id}')::uuid;
+ response:=pg_temp.command(host_hash,'session','{"nickname":"JHK_QA_host","adultConfirmed":true,"termsVersion":"beta-1","_recoveryHash":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}'); h:=(response#>>'{session,id}')::uuid;
+ response:=pg_temp.command(guest_hash,'session','{"nickname":"JHK_QA_guest","adultConfirmed":true,"termsVersion":"beta-1","_recoveryHash":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"}'); g:=(response#>>'{session,id}')::uuid;
+ response:=pg_temp.command(stranger_hash,'session','{"nickname":"JHK_QA_stranger","adultConfirmed":true,"termsVersion":"beta-1","_recoveryHash":"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"}'); stranger:=(response#>>'{session,id}')::uuid;
  PERFORM pg_temp.check_it(h<>g AND h<>stranger AND g<>stranger,'server assigns distinct identities');
  response:=public.jhk_command(repeat('f',64),'profile');
  PERFORM pg_temp.check_it(response#>>'{error,code}'='UNAUTHORIZED','unknown bearer hash rejected');

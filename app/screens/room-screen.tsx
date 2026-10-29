@@ -1,16 +1,14 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import { completedRounds } from '@/lib/duel-presentation.mjs';
+import { roomAdCompletion } from '@/lib/completion-ad.mjs';
 import { DuelHUD, MatchFinish, RoundReview } from '../rivalry-widgets';
-import { useWalletContext } from '../use-wallet';
 import { useLocale } from '../use-locale';
-import { AdCard } from './economy/ad-card';
 import type { RoomScreenProps } from './types';
 import { RoomChrome } from './room/room-chrome';
 import { LobbyPanel } from './room/lobby-panel';
 import { CountdownStage } from './room/countdown-stage';
 import { QuestionStage } from './room/question-stage';
-import { NextFixture } from './room/next-fixture';
 import { CompletionAdBreak } from './online/completion-ad-break';
 import './room/room.css';
 
@@ -70,7 +68,7 @@ export function RoomScreen({ duel, player }: RoomScreenProps) {
     setConfig,
   } = actions;
 
-  const { t, pick, topic } = useLocale();
+  const { t, pick, topic, locale } = useLocale();
   /* Only hold on a round this device actually watched go live. */
   const playedLive = useRef<Set<string>>(new Set());
   const [holdId, setHoldId] = useState<string | null>(null);
@@ -88,7 +86,7 @@ export function RoomScreen({ duel, player }: RoomScreenProps) {
   const lobby = !revealing && ['waiting', 'between'].includes(phase);
   const counting = !revealing && ['scheduled', 'playing'].includes(phase) && !question;
   const live = !!question && (!rd?.result || revealing);
-  const wallet = useWalletContext();
+  const completion = roomAdCompletion(room);
   const finished = !revealing && ['complete', 'cancelled'].includes(phase);
   const mine = rd?.result ? (rd.receipts?.[room.seat] ?? null) : null;
 
@@ -196,6 +194,7 @@ export function RoomScreen({ duel, player }: RoomScreenProps) {
       {finished && (
         <div className="fd-final final-panel">
           <MatchFinish
+            compact
             room={room}
             player={player}
             onReplay={() => {
@@ -211,7 +210,7 @@ export function RoomScreen({ duel, player }: RoomScreenProps) {
             }}
             onFinish={() => {
               resetLocal();
-              go('passport');
+              go('home');
             }}
           />
           <p className="fd-final-brand">
@@ -219,20 +218,11 @@ export function RoomScreen({ duel, player }: RoomScreenProps) {
               topic: room.config.topic && room.config.topic !== 'all' ? topic(room.config.topic) : t('topic.Sports'),
             })}
           </p>
-          {completedRounds(room).length > 0 && <RoundReview room={room} player={player} />}
-          {/* The return hook: the next served-sport fixture on the static calendar, after the receipt
-              and before any ad. It links to Events; it never counts down in seconds or claims a score. */}
-          <NextFixture go={go} />
-          {phase === 'complete' && room.config.opponent === 'friend' && room.settled && (
-            <CompletionAdBreak
-              completionId={`friend:${room.id}:${room.seat}`}
-              outcome={room.winner === null ? 'draw' : room.winner === room.seat ? 'win' : 'loss'}
-            />
-          )}
-          {/* The priced ad card goes BELOW the receipt and only once the match is finished: never
-              inside a round, never before the result is on screen — the research's timing rule,
-              and the single largest complaint cluster across every competitor. */}
-          {wallet && <AdCard wallet={wallet} placement="coins" />}
+          {completedRounds(room).length > 0 && <details className="fd-result-details">
+            <summary>{locale === 'hi' ? 'सवाल और स्रोत देखें' : 'Review questions & sources'}</summary>
+            <RoundReview room={room} player={player} />
+          </details>}
+          {completion && <CompletionAdBreak {...completion} />}
         </div>
       )}
     </section>

@@ -321,7 +321,7 @@ $$;
 -- Account metadata is returned only by the bearer-authenticated profile/recovery command.
 create or replace function jhk_private.profile_complete(p jhk_private.sessions) returns boolean
 language sql stable set search_path='' as $$
- select p.email is not null and p.adult_confirmed and p.terms_version='beta-1' and p.profile_completed_at is not null
+ select coalesce(p.adult_confirmed and p.terms_version='beta-1' and p.profile_completed_at is not null,false)
 $$;
 create or replace function jhk_private.profile_json(p jhk_private.sessions,p_now timestamptz) returns jsonb
 language sql stable set search_path='' as $$
@@ -341,8 +341,8 @@ begin
   insert into jhk_private.network_limits(network_hash,window_start) values(p_network_hash,date_trunc('hour',t)) on conflict(network_hash,window_start) do update set count=jhk_private.network_limits.count+1 returning count into n;
   if n>20 then return jhk_private.fail('RATE_LIMIT','Too many new profiles. Try again later.'); end if;
   delete from jhk_private.network_limits where window_start<t-interval '2 days';
-  v_email:=lower(btrim(p_payload->>'email')); v_recovery:=p_payload->>'_recoveryHash';
-  if v_email is null or char_length(v_email)>254 or v_email !~ '^[^[:space:]@]+@[^[:space:]@]+\.[^[:space:]@]+$' then return jhk_private.fail('BAD_EMAIL','Enter a valid email address.'); end if;
+  v_email:=nullif(lower(btrim(p_payload->>'email')),''); v_recovery:=p_payload->>'_recoveryHash';
+  if v_email is not null and (char_length(v_email)>254 or v_email !~ '^[^[:space:]@]+@[^[:space:]@]+\.[^[:space:]@]+$') then return jhk_private.fail('BAD_EMAIL','Enter a valid email address.'); end if;
   if (p_payload->>'adultConfirmed') is distinct from 'true' then return jhk_private.fail('AGE_CONFIRMATION_REQUIRED','Confirm that you are at least 18.'); end if;
   if p_payload->>'termsVersion' is distinct from 'beta-1' then return jhk_private.fail('TERMS_REQUIRED','Accept the current beta terms.'); end if;
   if v_recovery !~ '^[a-f0-9]{64}$' or v_recovery is null then return jhk_private.fail('BAD_RECOVERY','A recovery credential is required.'); end if;
@@ -386,8 +386,8 @@ begin
  elsif p_action='profile' then
   if p_payload ? 'nickname' then nick:=btrim(p_payload->>'nickname'); if char_length(nick) not between 2 and 24 then return jhk_private.fail('BAD_NICKNAME','Use 2–24 characters.'); end if; s.nickname:=nick; end if;
   if p_payload ? 'email' then
-   v_email:=lower(btrim(p_payload->>'email'));
-   if v_email is null or char_length(v_email)>254 or v_email !~ '^[^[:space:]@]+@[^[:space:]@]+\.[^[:space:]@]+$' then return jhk_private.fail('BAD_EMAIL','Enter a valid email address.'); end if;
+   v_email:=nullif(lower(btrim(p_payload->>'email')),'');
+   if v_email is not null and (char_length(v_email)>254 or v_email !~ '^[^[:space:]@]+@[^[:space:]@]+\.[^[:space:]@]+$') then return jhk_private.fail('BAD_EMAIL','Enter a valid email address.'); end if;
    s.email:=v_email;
   end if;
   if p_payload ? 'adultConfirmed' then
@@ -410,7 +410,7 @@ begin
    if jsonb_typeof(p_payload->'preferences')<>'object' or (p_payload->'preferences')-array['sound','reducedMotion'] <> '{}'::jsonb or (p_payload->'preferences' ? 'sound' and jsonb_typeof(p_payload->'preferences'->'sound')<>'boolean') or (p_payload->'preferences' ? 'reducedMotion' and jsonb_typeof(p_payload->'preferences'->'reducedMotion')<>'boolean') then return jhk_private.fail('BAD_PREFERENCES','Choose supported preferences.'); end if;
    s.preferences:=p_payload->'preferences';
   end if;
-  if s.email is not null and s.adult_confirmed and s.terms_version='beta-1' and s.profile_completed_at is null then
+  if s.adult_confirmed and s.terms_version='beta-1' and s.profile_completed_at is null then
    v_recovery:=p_payload->>'_recoveryHash';
    if v_recovery !~ '^[a-f0-9]{64}$' or v_recovery is null then return jhk_private.fail('BAD_RECOVERY','A recovery credential is required.'); end if;
    s.profile_completed_at:=t; s.recovery_hash:=v_recovery; issued_recovery:=true;

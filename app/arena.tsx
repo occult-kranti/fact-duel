@@ -15,14 +15,11 @@ import { X } from 'lucide-react';
 import { usePlayer } from './use-player';
 import { LocaleProvider, useLocale } from './use-locale';
 import { useWallet, WalletContext } from './use-wallet';
-import { WalletChip } from './screens/economy/wallet-chip';
 import { request } from '@/lib/duel-client';
 import { startSearch, type QueueJoin, type SearchHandle } from '@/lib/queue-client';
 import { sportOfTopic } from '@/lib/season.mjs';
 import { RivalQueueContext, type RivalQueue, type RivalSearch } from './screens/play/opponent-picker';
 import { AppShell } from './shell/app-shell';
-import { ProgressionFeedback } from './screens/use-progression-feedback';
-import { LevelRing, StreakChip } from './screens/player/topbar-chips';
 import { SettingsSheet, SETTINGS_KEYS, type MotionPref } from './shell/settings-sheet';
 import { LiveDuelScreen, LiveProgressCard } from './screens/online/live-duel-screen';
 import { JhkProfileGate } from './shell/jhk-profile-gate';
@@ -121,6 +118,7 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
     [connected, setConnected] = useState(true),
     [copied, setCopied] = useState(false);
   const [liveState, setLiveState] = useState({ inMatch: false, playing: false });
+  const [liveEntry, setLiveEntry] = useState<{file?: string; intent?: 'play' | 'friend' | 'join'}>({});
   const [liveRoundKey, setLiveRoundKey] = useState<string | null>(null);
   const onLiveState = useCallback((inMatch: boolean, playing: boolean) => setLiveState(previous => previous.inMatch === inMatch && previous.playing === playing ? previous : { inMatch, playing }), []);
   const [liveSession, setLiveSession] = useState(jhkOnline.session);
@@ -266,6 +264,7 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
   }, [remember]);
   useEffect(() => {
     document.documentElement.dataset.theme = light ? 'light' : 'dark';
+    document.documentElement.dataset.cricketTheme = light ? 'pavilion' : 'floodlights';
     try {
       localStorage.setItem(SETTINGS_KEYS.theme, light ? 'light' : 'dark');
       localStorage.setItem(SETTINGS_KEYS.sound, sound ? 'on' : 'off');
@@ -576,7 +575,7 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
     return () => window.removeEventListener('keydown', handler);
   }, [answer, leaveOpen, settingsOpen]);
   async function create(forcedConfig?: Config) {
-    if (jhkOnline.configured) {
+    if (jhkOnline.configured && (forcedConfig || config).opponent !== 'bot') {
       setTab('online');
       history.replaceState(history.state, '', `${location.pathname}${location.search}#online`);
       return;
@@ -872,7 +871,6 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
     go('journeys');
   };
   const quickDuel = (mode: string, topic = 'all') => {
-    if (jhkOnline.configured) { go('online'); return; }
     const chosenTopic = catalogue?.topics.find((t: any) => t.topic === topic);
     const next = {
       ...INITIAL_CONFIG,
@@ -887,8 +885,17 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
     go('arena');
     void create(next);
   };
+  const startBotMatch = (file = 'cricket') => {
+    const topics: Record<string, string> = { cricket: 'Cricket', football: 'Football', basketball: 'Basketball', baseball: 'Baseball', 'formula-1': 'Formula 1', space: 'Space', physics: 'Physics', biology: 'Biology', computing: 'Computing' };
+    const topic = topics[file] || 'all';
+    const science = ['science', 'space', 'physics', 'biology', 'computing'].includes(file);
+    const next: Config = { ...INITIAL_CONFIG, opponent: 'bot', mode: 'gauntlet', duration: modeDuration('gauntlet'), stake: 0, topic, domain: science ? 'science' : file === 'all' ? 'all' : 'sports' };
+    createDraft.current = null;
+    setConfig(next);
+    void create(next);
+  };
   const setupDuel = (intent: 'friend' | 'join' | 'settings' = 'settings') => {
-    if (jhkOnline.configured) { go(intent === 'settings' ? 'journeys' : 'online'); return; }
+    if (jhkOnline.configured) { go(intent === 'settings' ? 'practice' : 'online'); return; }
     setJoinView(intent === 'join');
     if (intent === 'friend') change({ opponent: 'friend' });
     go('arena');
@@ -1041,28 +1048,14 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
   return (
     <WalletContext value={wallet}>
       <AppShell
-        effects={
-          <ProgressionFeedback
-            progression={player.progression}
-            roundKey={room?.round?.id || liveRoundKey}
-            quiet={{
-              // Toasts stay out of the way while a question is on screen; full-screen ceremonies
-              // wait until the player is off every playing surface, so nothing ever covers a round,
-              // a reveal or an expedition card (a ceremony also locks body scroll while open).
-              toasts: liveState.playing || !!room && ['scheduled', 'playing'].includes(room.phase) && !room.round?.result,
-              ceremonies: liveState.inMatch || !!room || tab === 'journeys',
-            }}
-          />
-        }
+        effects={null}
         tab={tab === 'online' ? 'arena' : tab}
         inRoom={!!room || liveState.inMatch}
         active={active || liveState.playing}
         skin={player.passport.skin}
         onNavigate={(id) => go(id === 'arena' ? 'online' : id)}
         topbar={{
-          streak: <StreakChip progression={player.progression} />,
-          wallet: tab === 'online' ? <span className="jhk-live-wallet">{liveSession?.balance ?? '—'} {locale === 'hi' ? 'सर्वर सिक्के' : 'server coins'}</span> : <WalletChip />,
-          level: <LevelRing progression={player.progression} level={player.level} />,
+          appearance: <button className="cr-theme-switch" aria-label={light ? 'Switch to Floodlights design' : 'Switch to Pavilion design'} onClick={() => setLight(v => !v)}><span aria-hidden="true">{light ? '☀' : '☾'}</span> {light ? 'Pavilion' : 'Floodlights'}</button>,
           sound,
           onToggleSound: () => setSound((v) => !v),
           onOpenSettings: () => setSettingsOpen(true),
@@ -1134,12 +1127,12 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
             busy={busy}
             onRoute={openExpedition}
             onDuel={quickDuel}
-            onLive={() => go('online')}
-            onSetup={(intent) => intent === 'friend' || intent === 'join' ? go('online') : setupDuel(intent)}
+            onLive={() => { setLiveEntry({file: 'cricket', intent: 'play'}); go('online'); }}
+            onSetup={(intent) => { if (intent === 'friend' || intent === 'join') { setLiveEntry({file: 'cricket', intent}); go('online'); } else setupDuel(intent); }}
             go={go}
           />
         )}
-        {!room && (tab === 'online' || (jhkOnline.configured && tab === 'arena')) && <LiveDuelScreen name={name} onPractice={() => go(jhkOnline.configured ? 'journeys' : 'arena')} onHome={() => go('home')} onState={onLiveState} onRoundKey={setLiveRoundKey} />}
+        {!room && (tab === 'online' || (jhkOnline.configured && tab === 'arena')) && <LiveDuelScreen name={name} initialFile={liveEntry.file} initialIntent={liveEntry.intent} onBot={startBotMatch} onPractice={() => startBotMatch('cricket')} onHome={() => go('home')} onState={onLiveState} onRoundKey={setLiveRoundKey} />}
         {!room && tab === 'journeys' && (
           <ExpeditionsScreen
             player={player}
@@ -1150,7 +1143,7 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
             go={go}
           />
         )}
-        {!room && !jhkOnline.configured && tab === 'arena' && (
+        {!room && (tab === 'practice' || !jhkOnline.configured && tab === 'arena') && (
           <RivalQueueContext value={rival}>
             <PlayScreen
               duel={duel}
@@ -1179,7 +1172,7 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
         {!room && tab === 'collections' && (
           <CollectionsScreen player={player} catalogue={catalogue} onChoose={chooseCollection} />
         )}
-        {!room && tab === 'passport' && <LiveProgressCard onPlay={() => go('online')} />}
+        {!room && tab === 'passport' && <><button className="cr-secondary" onClick={() => window.dispatchEvent(new Event('jhk-profile-open'))}>{locale === 'hi' ? 'वैकल्पिक प्रोफ़ाइल / रिकवरी' : 'Optional player card / restore'}</button><LiveProgressCard onPlay={() => go('online')} /></>}
         {!room && tab === 'passport' && (
           <PlayerScreen
             player={player}
@@ -1194,7 +1187,7 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
         {!room && (tab === 'rules' || tab === 'timing' || tab === 'coin' || tab === 'trust') && (
           <RulesScreen view={tab} go={go} />
         )}
-        {room && <RoomScreen duel={duel} player={player} />}
+        {room && <>{room.config.opponent === 'bot' && <p className="cr-practice-label" role="status">{locale === 'hi' ? 'अभ्यास बॉट · केवल इस डिवाइस का नतीजा · मानव रैंकिंग से अलग' : 'PRACTICE BOT · On-device result · Separate from human rankings'}</p>}<RoomScreen duel={duel} player={player} /></>}
       </AppShell>
       <JhkProfileGate name={name} onName={setName} deferForActiveMatch={liveState.inMatch} />
       <SettingsSheet

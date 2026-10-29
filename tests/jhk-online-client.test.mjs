@@ -140,3 +140,30 @@ test('legacy profile upgrade preserves its bearer and server XP, and exposes cod
   assert.equal(JSON.parse(storage.getItem(STORAGE.serverSession)).token,token);
   assert.equal(storage.getItem(STORAGE.serverSession).includes('legacy-code'),false);
 });
+
+
+test('email-free guest entry creates one identity for concurrent play clicks',async()=>{
+ const storage=memory();const calls=[];let finish;
+ const guest={...session,email:null,nickname:'Cricket fan'};
+ const client=createOnlineClient({url:'https://server.example/game',storage,fetcher:async(_,options)=>{
+  calls.push(JSON.parse(options.body));
+  return new Promise(resolve=>{finish=()=>resolve(response({ok:true,serverNow:1,token,session:guest}));});
+ }});
+ const details={nickname:'Cricket fan',adultConfirmed:true,termsVersion:'beta-1'};
+ const first=client.ensureGuest(details);const second=client.ensureGuest(details);
+ assert.equal(calls.length,1); assert.equal(calls[0].email,undefined);
+ assert.deepEqual(calls[0],{action:'session',...details});
+ finish(); const [a,b]=await Promise.all([first,second]);
+ assert.equal(a.id,b.id);assert.equal(a.email,null);assert.equal(client.session.id,guest.id);
+});
+
+test('email-free guest entry never silently accepts human-match terms or replaces existing identity',async()=>{
+ const storage=memory();let calls=0;
+ const client=createOnlineClient({url:'https://server.example/game',storage,fetcher:async()=>{calls++;return response({ok:true,token,session});}});
+ await assert.rejects(client.ensureGuest(),{code:'PROFILE_REQUIRED'}); assert.equal(calls,0);
+ storage.setItem(STORAGE.serverSession,JSON.stringify({token,session}));
+ const existing=createOnlineClient({url:'https://server.example/game',storage,fetcher:async(_,options)=>{
+  calls++;assert.equal(JSON.parse(options.body).action,'profile');assert.equal(options.headers['x-jhk-session'],token);return response({ok:true,session});
+ }});
+ assert.equal((await existing.ensureGuest()).id,session.id);assert.equal(calls,1);
+});

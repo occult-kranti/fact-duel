@@ -1,0 +1,3 @@
+{"suite":"jhk-online-security","checks":51,"result":"pass"}
+{"suite":"jhk-online-economy","checks":33,"result":"pass"}
+{"suite":"jhk-upgrade-and-role","checks":3,"result":"pass","concurrency":"single-connection; not measured"}

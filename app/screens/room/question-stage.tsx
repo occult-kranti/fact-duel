@@ -11,14 +11,13 @@
  *     nothing defers the click;
  *   • option order is fixed, and correctness styling only appears once `round.result` exists.
  *
- * Juice happens on lock (press cue) and on the result (burst / float / shake) — never on mount.
+ * A brief answer cue confirms the result; XP, speed rewards and combo celebrations stay out of play.
  */
 import { useEffect, useRef, useState } from 'react';
-import { particles, useJuice } from '@/components/fx';
+import { useJuice } from '@/components/fx';
 import { FORMAT_COPY } from '@/lib/duel-presentation.mjs';
 import { Lock } from 'lucide-react';
 import { AnswerButton, usePress } from './room-bits';
-import { comboAt, roundXp, speedBonus } from './room-math';
 import { useLocale } from '../../use-locale';
 
 const HOT_MS = 3000;
@@ -64,12 +63,9 @@ export function QuestionStage({
 
   /* ---- clock: one 50 ms tick feeds the digits, the track and the speed bar ---- */
   const [left, setLeft] = useState(duration);
-  const leftRef = useRef(duration);
-  leftRef.current = left;
   const running = shown && !result;
   useEffect(() => {
     setLeft(duration);
-    leftRef.current = duration;
   }, [rd.id, duration]);
   useEffect(() => {
     if (!running) return;
@@ -89,16 +85,6 @@ export function QuestionStage({
     return () => clearInterval(timer);
   }, [startMark, rd.id, duration, running, onExpire]);
 
-  /* ---- the speed-bonus bar freezes the moment this device locks an answer ---- */
-  const [lockedElapsed, setLockedElapsed] = useState<number | null>(null);
-  useEffect(() => setLockedElapsed(null), [rd.id]);
-  useEffect(() => {
-    if (!isLocked) return;
-    setLockedElapsed((v) => (v === null ? Math.max(0, duration - leftRef.current) : v));
-  }, [isLocked, duration]);
-  const elapsed = lockedElapsed ?? duration - left;
-  const bonus = speedBonus(elapsed);
-
   /* ---- focus follows the lock: the audit found it dropping to <body> ----
    * Locking disables every answer button, so the browser drops focus to <body>. Move it to the
    * status line instead. Never steal focus from a modal (a ceremony overlay can be open over the
@@ -117,25 +103,16 @@ export function QuestionStage({
   /* ---- result layer: exactly once per round id. Arena already plays win/loss/draw. ---- */
   const mine = result ? (rd.receipts?.[room.seat] ?? null) : null;
   const correct = mine?.correct === true;
-  const xp = result ? roundXp(room, rd) : null;
-  const combo = result && correct ? comboAt(room, rd.id) : 0;
   useEffect(() => {
     if (!result || fired.current.has(rd.id)) return;
     fired.current.add(rd.id);
     const target = (chosen !== null ? optionRefs.current[chosen] : null) ?? cardRef.current ?? document.body;
     if (correct) {
       juice.burst(target, 'correct');
-      if (xp) juice.floatText(target, `+${xp.total} XP`);
     } else {
       juice.burst(target, 'wrong');
     }
-    if (combo >= 3) {
-      const r = target.getBoundingClientRect();
-      particles.ringPulse({ x: r.left + r.width / 2, y: r.top + r.height / 2, radius: 82 });
-      juice.sound('combo', { n: combo });
-      juice.haptic('combo');
-    }
-  }, [result, rd.id, chosen, correct, combo, xp, juice]);
+  }, [result, rd.id, chosen, correct, juice]);
 
   const format = (FORMAT_COPY as any)[room.config.mode];
   const hot = !result && left <= HOT_MS;
@@ -153,12 +130,6 @@ export function QuestionStage({
       </div>
       <div className="fd-track timer-track" aria-hidden="true">
         <span style={{ width: `${(100 * left) / duration}%` }} />
-      </div>
-      <div className="fd-speed-row" aria-hidden="true">
-        <div className="fd-speed" data-spent={bonus.xp ? 'false' : 'true'}>
-          <span style={{ width: `${100 * bonus.fraction}%` }} />
-        </div>
-        <span className="fd-speed-label">{bonus.xp ? t('q.speed', { xp: bonus.xp }) : t('q.speedGone')}</span>
       </div>
 
       <div
@@ -230,15 +201,7 @@ export function QuestionStage({
         {result ? (
           <>
             <strong>{correct ? t('q.correct') : mine ? t('q.notThisTime') : t('q.noAnswer')}</strong>
-            {correct && xp ? (
-              <span>
-                +{xp.total} XP{xp.speed ? t('q.speedPart', { n: xp.speed }) : ''}
-                {xp.combo >= 2 ? t('q.comboPart', { n: xp.multiplier }) : ''}
-                {xp.wild > 1 ? t('q.wildPart', { n: xp.wild }) : ''}
-              </span>
-            ) : (
-              <span>{t('q.wasAnswer', { answer: question.options[question.correctIndex] })}</span>
-            )}
+            <span>{t('q.wasAnswer', { answer: question.options[question.correctIndex] })}</span>
           </>
         ) : isLocked ? (
           <>
@@ -262,7 +225,6 @@ export function QuestionStage({
           {t('q.retry')}
         </button>
       )}
-      {!result && <p className="fd-note">{t('q.lockNote')}</p>}
     </section>
   );
 }

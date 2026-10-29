@@ -30,17 +30,17 @@ export function validateInput(body) {
   for (const key of ['sessionId','playerId','elapsedMs','correct','score','xp','correctIndex','serverNow','tokenHash','balance','savings','reward','rewardMultiplier','payout','winnerId']) delete payload[key];
   delete payload._recoveryHash;
   if (['session','profile'].includes(body.action)) {
-    if (payload.email != null) {
-      if (typeof payload.email !== 'string') throw new GameError('BAD_EMAIL','Enter a valid email address.');
-      payload.email = payload.email.trim().toLowerCase();
-      if (payload.email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email)) throw new GameError('BAD_EMAIL','Enter a valid email address.');
+    if (Object.prototype.hasOwnProperty.call(payload, 'email')) {
+      if (payload.email !== null && typeof payload.email !== 'string') throw new GameError('BAD_EMAIL','Enter a valid email address.');
+      payload.email = payload.email === null ? null : payload.email.trim().toLowerCase() || null;
+      if (payload.email !== null && (payload.email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email))) throw new GameError('BAD_EMAIL','Enter a valid email address.');
     }
     if (payload.adultConfirmed != null && payload.adultConfirmed !== true) throw new GameError('AGE_CONFIRMATION_REQUIRED','Confirm that you are at least 18.');
     if (payload.termsVersion != null && payload.termsVersion !== 'beta-1') throw new GameError('TERMS_REQUIRED','Accept the current beta terms.');
     if (payload.avatar != null && !['spark','shield','bolt','star','book','compass'].includes(payload.avatar)) throw new GameError('BAD_AVATAR','Choose a supported avatar.');
     if (payload.locale != null && !['en','hi'].includes(payload.locale)) throw new GameError('BAD_LOCALE','Choose a supported language.');
     if (payload.preferences != null && (typeof payload.preferences !== 'object' || Array.isArray(payload.preferences) || Object.keys(payload.preferences).some(key => !['sound','reducedMotion'].includes(key)) || Object.values(payload.preferences).some(value => typeof value !== 'boolean'))) throw new GameError('BAD_PREFERENCES','Choose supported preferences.');
-    if (body.action === 'session' && (!payload.email || payload.adultConfirmed !== true || payload.termsVersion !== 'beta-1')) throw new GameError('PROFILE_REQUIRED','Email, 18+ confirmation and beta terms are required.');
+    if (body.action === 'session' && (payload.adultConfirmed !== true || payload.termsVersion !== 'beta-1')) throw new GameError('PROFILE_REQUIRED','18+ confirmation and beta terms are required for human matches.');
   }
   if (body.action === 'recover') {
     if (!/^[a-f0-9]{64}$/.test(payload.recoveryCode || '')) throw new GameError('BAD_RECOVERY','The recovery code is invalid.');

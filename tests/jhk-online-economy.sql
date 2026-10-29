@@ -7,11 +7,12 @@ DECLARE response jsonb; BEGIN response:=public.jhk_command(token,action,payload,
 DO $$
 DECLARE ha text:=repeat('1',64); hb text:=repeat('2',64); a uuid; b uuid; rid uuid; other uuid; snap jsonb; result jsonb; n integer; i integer; f text; book bigint; deck jsonb;
 BEGIN
- a:=(pg_temp.jhk_call(ha,'session','{"nickname":"JHK Alpha"}')#>>'{session,id}')::uuid;
- b:=(pg_temp.jhk_call(hb,'session','{"nickname":"JHK Beta"}')#>>'{session,id}')::uuid;
+ a:=(pg_temp.jhk_call(ha,'session','{"nickname":"JHK Alpha","adultConfirmed":true,"termsVersion":"beta-1","_recoveryHash":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}')#>>'{session,id}')::uuid;
+ b:=(pg_temp.jhk_call(hb,'session','{"nickname":"JHK Beta","adultConfirmed":true,"termsVersion":"beta-1","_recoveryHash":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"}')#>>'{session,id}')::uuid;
  PERFORM pg_temp.jhk_check((SELECT balance=100 FROM jhk_private.wallets WHERE session_id=a),'starter coins are 100 server-owned units');
  PERFORM pg_temp.jhk_check(public.hisaab_game(ha,'profile')#>>'{error,code}'='UNAUTHORIZED','JHK guest cannot authenticate to other game');
- PERFORM public.hisaab_game(repeat('5',64),'session','{"nickname":"Sibling check"}'::jsonb,'jhk-cross-check');
+ result:=public.hisaab_game(repeat('5',64),'session','{"nickname":"Sibling check","email":"sibling@example.test","adultConfirmed":true,"termsVersion":"beta-1","_recoveryHash":"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"}'::jsonb,'jhk-cross-check');
+ PERFORM pg_temp.jhk_check(result->>'ok'='true','sibling fixture has a real isolated session');
  PERFORM pg_temp.jhk_check(public.jhk_command(repeat('5',64),'profile')#>>'{error,code}'='UNAUTHORIZED','other game guest cannot authenticate to JHK');
  PERFORM pg_temp.jhk_check(NOT EXISTS(SELECT 1 FROM hisaab_private.sessions WHERE id IN(a,b)),'JHK identities remain in isolated schema');
  result:=public.jhk_command(ha,'create','{"file":"subsidies"}');

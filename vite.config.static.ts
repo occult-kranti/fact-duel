@@ -25,7 +25,7 @@ const publicDir = path.join(repoRoot, 'public');
 const appUrl = (process.env.APP_URL ?? '').trim();
 const jhkServerUrl = (process.env.JHK_SERVER_URL || process.env.VITE_JHK_SERVER_URL || '').trim();
 const jhkPublicUrl = process.env.JHK_PUBLIC_URL || 'https://occult-kranti.github.io/fact-duel/';
-const jhkDescription = 'Jaanta Hai Kya. Live human sports and science quiz duels, optional free game-coin stakes, source receipts and personal learning expeditions. Server-backed beta; zero coins still lets you play.';
+const jhkDescription = 'Jaanta Hai Kya. Cricket quiz duels with email-free play, human rivals and a practice bot after five seconds. Choose Floodlights or Pavilion. Sports, science and answer sources included.';
 
 /** Explicitly replace public ad settings in the Pages bundle; missing values fail closed. */
 const jhkAdKeys = [

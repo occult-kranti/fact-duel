@@ -27,7 +27,7 @@ POST `/functions/v1/jhk-game`, JSON `{action,...payload}`, `Content-Type: applic
 
 | Action | Payload | Response data |
 | --- | --- | --- |
-| `session` | `{nickname,email,adultConfirmed:true,termsVersion:'beta-1',avatar?,locale?,preferences?}` | `{token,recoveryCode,session}` |
+| `session` | `{nickname,email?,adultConfirmed:true,termsVersion:'beta-1',avatar?,locale?,preferences?}` | `{token,recoveryCode,session}` |
 | `profile` | `{nickname?,email?,adultConfirmed?,termsVersion?,avatar?,locale?,preferences?}` | `{session,recoveryCode?}`; initial recovery code only when completing a legacy profile |
 | `recover` | `{recoveryCode}` | `{token,session}`; rotates the bearer and extends access 30 days |
 | `rotateRecovery` | `{}` | `{recoveryCode}`; invalidates the old recovery code |
@@ -42,7 +42,7 @@ POST `/functions/v1/jhk-game`, JSON `{action,...payload}`, `Content-Type: applic
 | `leaderboards` | `{period:'daily'\|'weekly'\|'savings'}` | `{rows,self,startsAt,endsAt,...}` |
 | `tournaments` | `{}` | `{tournaments,standings}` |
 
-The browser persists a bearer secret separately from local practice XP. Bearer sessions expire after 30 days; a separately saved recovery code restores access without email verification and rotates the bearer. Recovery remains valid until rotated or deactivated. Email is unverified private contact data, never an account lookup, linking key or recovery credential. Two profiles can have the same entered email without sharing access. Credential expiry is **not an automatic data-deletion policy**. Authenticated `deleteSession` revokes bearer/recovery, removes private profile fields, public standings and circle memberships, and pseudonymizes retained historical match/ledger records. It cancels active matches under the same disclosed forfeit/refund policy as leaving. This endpoint never imports locally claimed scores.
+The browser persists a bearer secret separately from local practice XP. Bearer sessions expire after 30 days; a separately saved recovery code restores access without email verification and rotates the bearer. Recovery remains valid until rotated or deactivated. Email is optional unverified private contact data, never an account lookup, linking key or recovery credential. Omitting it or submitting an empty/null value stores no address; an invalid supplied address is rejected. Human entry still requires an explicit 18+ and current-terms confirmation. Two profiles can have the same entered email without sharing access. Credential expiry is **not an automatic data-deletion policy**. Authenticated `deleteSession` revokes bearer/recovery, removes private profile fields, public standings and circle memberships, and pseudonymizes retained historical match/ledger records. It cancels active matches under the same disclosed forfeit/refund policy as leaving. This endpoint never imports locally claimed scores.
 
 `session` contains `id,nickname,email,avatar,locale,preferences,adultConfirmed,termsVersion,profileComplete,expiresAt,onlineXp,balance,savings,title?`. `match` contains `id,code,mode,file,stake,rewardMultiplier:1,phase,round,roundCount:5,startsAt,deadlineAt,nextAt,serverNow,selfId,players,question,receipt,result,winnerId,reason,economy`.
 
@@ -82,8 +82,21 @@ The local runner executes actual PostgreSQL functions, constraints, permissions 
 
 References: [Supabase changelog](https://supabase.com/changelog.md), [database functions](https://supabase.com/docs/guides/database/functions), [RLS](https://supabase.com/docs/guides/database/postgres/row-level-security), [Edge authentication](https://supabase.com/docs/guides/functions/auth), [PostgreSQL explicit locking](https://www.postgresql.org/docs/current/explicit-locking.html). Reviewed September 27, 2026; the September pgcrypto legacy-cipher change does not affect these SHA-256 profile hashes.
 
-## Required-profile migration details
+## Device guest compatibility
 
 New `create`, `join`, `queue` and `ready` commands reject incomplete legacy profiles with `PROFILE_REQUIRED`. Existing active match snapshot/answer/next/leave remain usable so an upgrade cannot strand a match; update `profile` in place to retain player UUID, balances and XP. Supported avatar IDs are `spark`, `shield`, `bolt`, `star`, `book`, `compass`; locale is `en` or `hi`; server preferences are `sound` and `reducedMotion` booleans. Other local interests/photo options stay on the device. Recovery values are generated in the Edge, game-domain-separated before hashing, and never included in public snapshots or rankings.
 
 See [profile verification](../../docs/profile-release/VERIFICATION.md) and [owner launch checklist](../../docs/profile-release/LAUNCH-CHECKLIST.md).
+
+
+## Optional-email upgrade (October 29, 2026)
+
+Apply `migrations/20261029_optional_email_guests.sql` to an already installed JHK schema. This migration replaces only `jhk_private.profile_complete` and `public.jhk_command`; it does not recreate tables, rewrite rows, reseed questions, or reset balances. Deploy the adjacent Edge `index.ts` and `core.mjs` together afterward so HTTP validation matches Postgres. Keep the existing custom bearer authentication and `verify_jwt=false` configuration.
+
+`createOnlineClient().ensureGuest({nickname,adultConfirmed:true,termsVersion:'beta-1'})` returns the server `PlayerSession` directly. Concurrent entry clicks share one session request. Existing sessions resume or upgrade in place and keep their player ID, wallet, XP, and recovery boundary. The API call follows the player's explicit confirmation; the transport does not silently infer acceptance. No synthetic email is generated. Optional profile setup and recovery remain available separately from immediate local bot play.
+
+Before deploying, inspect the intended project and the two existing function definitions. Apply the migration with Supabase's `apply_migration`, then replace the `jhk-game` Edge Function. A frontend connected to an older backend may receive `BAD_EMAIL` or `PROFILE_REQUIRED`; the matchmaking UI must route this to clearly labelled local bot practice without retrying with a fabricated address. The bot has no server seat and cannot enter human standings or alter the server wallet.
+
+Verification: 21 targeted client/Edge/PGlite tests passed, including email-free creation, cricket queue entry, contact add/remove, retained identity, recovery rotation, explicit consent, transport isolation, and concurrent guest requests. A separate seven-check migration rehearsal applied this file to the previous canonical schema with an existing profile and retained its ID, wallet, contact value, and service-only RPC permission. This single-connection rehearsal does not establish remote deployment status or load capacity.
+
+Primary references: [Supabase anonymous identities](https://supabase.com/docs/guides/auth/auth-anonymous) distinguishes anonymous identities from the public `anon` API key; [securing Edge Functions](https://supabase.com/docs/guides/functions/auth) describes authentication boundaries and server-only elevated access. JHK retains its existing isolated device-bearer implementation rather than replacing its authority during this UI change.

@@ -1,0 +1,45 @@
+{
+  "checks": [
+    {
+      "message": "cricket CTA chooses cricket",
+      "ok": true
+    },
+    {
+      "message": "bot fallback begins after five seconds despite failed network",
+      "ok": true
+    },
+    {
+      "message": "bot fallback clearly labelled",
+      "ok": true
+    },
+    {
+      "message": "fallback delivers playable question",
+      "ok": true
+    },
+    {
+      "message": "cancel prevents delayed bot match",
+      "ok": true
+    },
+    {
+      "message": "guest can finish a game without signup",
+      "ok": true
+    },
+    {
+      "message": "result exposes replay and collapses stats",
+      "ok": true
+    },
+    {
+      "message": "result has no coin ad upsell",
+      "ok": true
+    },
+    {
+      "message": "guest replay starts another question",
+      "ok": true
+    },
+    {
+      "message": "no runtime errors",
+      "ok": true
+    }
+  ],
+  "errors": []
+}

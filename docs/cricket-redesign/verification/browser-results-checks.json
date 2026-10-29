@@ -1,0 +1,29 @@
+{
+  "checks": [
+    {
+      "message": "guest can finish a game without signup",
+      "ok": true
+    },
+    {
+      "message": "result exposes replay and collapses stats",
+      "ok": true
+    },
+    {
+      "message": "result has no coin ad upsell",
+      "ok": true
+    },
+    {
+      "message": "guest replay starts another question",
+      "ok": true
+    },
+    {
+      "message": "all-mode launcher still starts guest practice",
+      "ok": true
+    },
+    {
+      "message": "no runtime errors",
+      "ok": true
+    }
+  ],
+  "errors": []
+}

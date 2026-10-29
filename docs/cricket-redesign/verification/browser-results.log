@@ -1,0 +1,7 @@
+PASS guest can finish a game without signup
+PASS result exposes replay and collapses stats
+PASS result has no coin ad upsell
+PASS guest replay starts another question
+PASS all-mode launcher still starts guest practice
+PASS no runtime errors
+{"suite":"cricket-browser","passed":6,"result":"pass"}

@@ -15,7 +15,7 @@ try {
   assert.ok(evidence?.checks>0);console.log(JSON.stringify({suite:evidence.suite,checks:evidence.checks,result:'pass'}));
  }
  assert.equal((await db.query('select count(*)::int n from jhk_private.sessions')).rows[0].n,0);
- const result=await db.exec("begin;set local role service_role;select public.jhk_command(repeat('a',64),'session','{\"nickname\":\"Service test\"}'::jsonb,'runner') as response;rollback;");
+ const result=await db.exec("begin;set local role service_role;select public.jhk_command(repeat('a',64),'session','{\"nickname\":\"Service test\",\"adultConfirmed\":true,\"termsVersion\":\"beta-1\",\"_recoveryHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\"}'::jsonb,'runner') as response;rollback;");
  assert.equal(result.flatMap(r=>r.rows??[]).find(r=>r.response)?.response?.session?.balance,100);
  console.log(JSON.stringify({suite:'jhk-upgrade-and-role',checks:3,result:'pass',concurrency:'single-connection; not measured'}));
 } finally{await db.close();}
