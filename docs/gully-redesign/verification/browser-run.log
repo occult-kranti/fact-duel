@@ -1,0 +1,74 @@
+PASS 320 home fits
+PASS 320 first play above fold
+PASS 320 no startup modal
+PASS 320 night fits
+PASS 320 theme persists
+PASS 390 home fits
+PASS 390 first play above fold
+PASS 390 no startup modal
+PASS 390 night fits
+PASS 390 theme persists
+PASS 390 Explore fits
+PASS 390 Progress fits
+PASS 390 Answers fits
+PASS 390 custom practice fits
+PASS 390 advanced closed
+PASS 390 advanced fits
+PASS 844 home fits
+PASS 844 first play above fold
+PASS 844 no startup modal
+PASS 844 night fits
+PASS 844 theme persists
+PASS 1440 home fits
+PASS 1440 first play above fold
+PASS 1440 no startup modal
+PASS 1440 night fits
+PASS 1440 theme persists
+PASS 1440 Explore fits
+PASS 1440 Progress fits
+PASS 1440 Answers fits
+PASS 1440 custom practice fits
+PASS 1440 advanced closed
+PASS 1440 advanced fits
+PASS one-tap rapid launch reaches four answers
+PASS practice bot label visible
+PASS first play uses thirty-second simple questions
+PASS question fits
+PASS answer lock moves keyboard focus to status
+PASS rapid answer locks every option
+PASS one-question result has replay
+PASS result review starts collapsed
+PASS result fits
+PASS rapid replay starts a labelled practice game
+PASS 320 route Topics
+PASS 320 selected parent for Topics
+PASS 320 route Discover facts
+PASS 320 selected parent for Discover facts
+PASS 320 route Fixtures & challenges
+PASS 320 selected parent for Fixtures & challenges
+PASS 320 route Custom practice
+PASS 320 selected parent for Custom practice
+PASS 320 route Expeditions
+PASS 320 selected parent for Expeditions
+PASS optional progress categories collapsed
+PASS progress disclosure opens by keyboard
+PASS 320 route Activity & data
+PASS 320 route Art collection
+PASS 320 route Your progress
+PASS distinct rules view Human duel rules
+PASS 320 Human duel rules
+PASS distinct rules view Rules of the coin
+PASS 320 Rules of the coin
+PASS distinct rules view Trust
+PASS 320 Trust
+PASS offline after load and missing artwork still plays
+PASS blocked web storage does not block practice
+PASS Hindi home fits 320
+PASS Hindi question chrome fits 320
+PASS 200 percent text home reflows
+PASS 200 percent text question reflows
+PASS cancelled search cannot revive practice
+PASS failed human network has labelled practice fallback
+PASS disabled ads make no network request
+PASS no runtime errors
+{"suite":"gully-browser","passed":73}

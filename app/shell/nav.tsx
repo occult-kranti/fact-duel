@@ -5,14 +5,22 @@ import { useLocale } from '../use-locale';
 
 export type NavTabId = 'home' | 'journeys' | 'arena' | 'passport' | 'journal';
 
-/** `label` is the English name; the rendered label comes from the locale dictionary (`nav.<id>`). */
-export const NAV_TABS: { id: NavTabId; label: string; icon: LucideIcon }[] = [
-  { id: 'home', label: 'Home', icon: House },
-  { id: 'journeys', label: 'Expeditions', icon: Compass },
-  { id: 'arena', label: 'Play', icon: Swords },
-  { id: 'passport', label: 'Player', icon: UserRound },
-  { id: 'journal', label: 'Vault', icon: Vault },
+/** Familiar route IDs preserve saved state; task labels describe each group. */
+export const NAV_TABS: { id: NavTabId; label: string; hindi: string; icon: LucideIcon }[] = [
+  { id: 'home', label: 'Home', hindi: 'होम', icon: House },
+  { id: 'journeys', label: 'Explore', hindi: 'खोजें', icon: Compass },
+  { id: 'arena', label: 'Play', hindi: 'खेलें', icon: Swords },
+  { id: 'passport', label: 'Progress', hindi: 'प्रगति', icon: UserRound },
+  { id: 'journal', label: 'Answers', hindi: 'जवाब', icon: Vault },
 ];
+
+export function navParent(tab: string): NavTabId {
+  if (['online', 'practice', 'arena'].includes(tab)) return 'arena';
+  if (['journeys', 'collections', 'discovery', 'events'].includes(tab)) return 'journeys';
+  if (['passport', 'analytics', 'showroom'].includes(tab)) return 'passport';
+  if (tab === 'journal') return 'journal';
+  return 'home';
+}
 
 export type NavProps = {
   tab: string;
@@ -22,7 +30,8 @@ export type NavProps = {
 /* Bottom tab bar ≤ 899px, left icon rail ≥ 900px (labels inline ≥ 1200px). During a room the
  * shell does not render this component at all. */
 export function Nav({ tab, onNavigate }: NavProps) {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
+  const current = navParent(tab);
   return (
     <nav className="fd-nav" aria-label={t('nav.label')}>
       {/* Decorative: the mark heads the desktop rail (shell.css hides it in the bottom tab bar). The
@@ -30,19 +39,19 @@ export function Nav({ tab, onNavigate }: NavProps) {
       <span className="fd-nav-mark">
         <JhkMark size={24} />
       </span>
-      {NAV_TABS.map(({ id, icon: Icon }) => (
+      {NAV_TABS.map(({ id, label, hindi, icon: Icon }) => (
         <button
           key={id}
           type="button"
           className="fd-nav-btn"
           data-nav={id}
-          aria-current={tab === id ? 'page' : undefined}
+          aria-current={current === id ? 'page' : undefined}
           onClick={() => onNavigate(id)}
         >
           <span className="fd-nav-icon">
             <Icon aria-hidden="true" />
           </span>
-          <span className="fd-nav-label">{t(`nav.${id}`)}</span>
+          <span className="fd-nav-label">{locale === 'hi' ? hindi : label}</span>
         </button>
       ))}
     </nav>

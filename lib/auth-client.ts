@@ -55,6 +55,8 @@ export function readGuestPrincipal(): string | null {
 }
 
 async function post(body: Record<string, unknown>, timeoutMs = 8000): Promise<Envelope> {
+  // GitHub Pages has no legacy auth API; its human duels use the separate JHK authority.
+  if (process.env.NEXT_PUBLIC_JHK_STATIC_BUILD === 'true') return { status: 0, body: null };
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
   try {

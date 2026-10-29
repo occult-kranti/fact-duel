@@ -1,5 +1,4 @@
 'use client';
-import { SUBJECT_LINE } from '@/lib/content.mjs';
 import { useEffect, useMemo, useRef } from 'react';
 import { ArrowRight, ChevronRight, Info } from 'lucide-react';
 import { rankForPoints } from '@/lib/progression.mjs';
@@ -34,7 +33,7 @@ export function PlayScreen({ duel, player, catalogue, joinView, joinLink }: Play
     chooseEventMode,
   } = actions;
   const { press } = usePlayJuice();
-  const { t, n, pick } = useLocale();
+  const { t, n, pick, locale, topic } = useLocale();
   const wallet = useWalletContext();
   const modeName = pick(`modes.${modeInfo.id}.name`, modeInfo.name);
   /* The entry tier the wallet suggests (lib/economy/stake-advice.mjs): the highest offered tier it
@@ -81,7 +80,6 @@ export function PlayScreen({ duel, player, catalogue, joinView, joinLink }: Play
   const canJoin = player.loaded && !busy && !!name.trim() && !!joinLink.trim();
   const rank = rankForPoints(player.progression?.rank?.points ?? 0);
   const level = player.level;
-  const recent = player.journal.matches.slice(0, 5).reverse();
   return (
     <div className="fd-play">
       <header className="fd-play-head">
@@ -108,7 +106,24 @@ export function PlayScreen({ duel, player, catalogue, joinView, joinLink }: Play
       </header>
 
       <div className="fd-play-grid">
+        <aside className="fd-play-aside">
+          <LaunchPanel
+            joinView={joinView}
+            busy={busy}
+            playerLoaded={player.loaded}
+            canPlay={canPlay}
+            canJoin={canJoin}
+            opponent={config.opponent}
+            mode={modeInfo}
+            duration={config.duration}
+            stake={config.stake}
+            onCreate={() => create()}
+            onJoin={join}
+          />
+        </aside>
         <div className="fd-play-col">
+          <div className="gc-match-summary"><b>{modeName} · {modeInfo.rounds} {locale === 'hi' ? 'सवाल' : 'questions'}</b><span>{config.topic === 'all' ? (locale === 'hi' ? 'सभी विषय' : 'All topics') : topic(config.topic)} · {config.opponent === 'bot' ? (locale === 'hi' ? 'अभ्यास बॉट' : 'Practice bot') : (locale === 'hi' ? 'दोस्त' : 'Friend')}</span><small>{locale === 'hi' ? 'नीचे अपनी पसंद बदलें। बंद करने पर पसंद बनी रहती है।' : 'Choose your format and topic below. Closing settings keeps your choices.'}</small></div>
+          <details className="gc-advanced" open={joinView || undefined}><summary>{locale === 'hi' ? 'विषय, मोड और सेटिंग चुनें' : 'Choose topics, format & settings'}</summary><div className="gc-advanced-body">
           {!joinView && <ModesRow activeId={duel.eventModeId} onChoose={chooseEventMode} go={go} />}
 
           {!joinView && (
@@ -136,7 +151,7 @@ export function PlayScreen({ duel, player, catalogue, joinView, joinLink }: Play
               opponent={config.opponent}
               joinView={joinView}
               duration={config.duration}
-              onOpponent={(opponent) => change(opponent === 'bot' ? { opponent, stake: 0 } : { opponent })}
+              onOpponent={(opponent) => change(opponent === 'bot' ? { opponent, stake: 0 } : { opponent, duration: config.duration > 10 ? 10 : config.duration })}
               onJoinView={setJoinView}
             />
             {joinView && (
@@ -197,39 +212,11 @@ export function PlayScreen({ duel, player, catalogue, joinView, joinLink }: Play
                 )}
               </section>
 
-              <section className="fd-block" aria-labelledby="play-record">
-                <div className="fd-block-head">
-                  <h2 id="play-record">{t('play.record')}</h2>
-                  <button type="button" className="fd-link" {...press} onClick={() => go('journal')}>
-                    {t('play.history')}
-                    <ArrowRight size={15} aria-hidden="true" />
-                  </button>
-                </div>
-                <div className="fd-form">
-                  <span className="fd-form-label">{t('play.lastFive')}</span>
-                  {recent.length ? (
-                    recent.map((m: any) => (
-                      <span
-                        key={m.id}
-                        className="fd-form-dot"
-                        data-outcome={m.outcome}
-                        title={t('play.matchTitle', {
-                          who: m.bot ? t('play.bot') : t('play.friend'),
-                          outcome: pick(`outcome.${m.outcome}`, m.outcome),
-                        })}
-                      >
-                        {m.outcome === 'win' ? 'W' : m.outcome === 'loss' ? 'L' : 'D'}
-                      </span>
-                    ))
-                  ) : (
-                    <span className="fd-form-empty">{t('play.firstResult')}</span>
-                  )}
-                </div>
-                <p className="fd-fine">{t('play.kept')}</p>
-              </section>
+
             </>
           )}
 
+          </div></details>
           <p className="fd-live-note">
             <Info size={15} aria-hidden="true" />
             {t('play.liveNote')}
@@ -240,39 +227,7 @@ export function PlayScreen({ duel, player, catalogue, joinView, joinLink }: Play
           </p>
         </div>
 
-        <aside className="fd-play-aside">
-          <LaunchPanel
-            joinView={joinView}
-            busy={busy}
-            playerLoaded={player.loaded}
-            canPlay={canPlay}
-            canJoin={canJoin}
-            opponent={config.opponent}
-            mode={modeInfo}
-            duration={config.duration}
-            stake={config.stake}
-            onCreate={() => create()}
-            onJoin={join}
-          />
-          <div className="fd-poster">
-            <img
-              src="/art/rivalry-stage.webp"
-              alt={t('play.posterAlt')}
-              width="1672"
-              height="941"
-              loading="lazy"
-              decoding="async"
-            />
-            <div className="fd-poster-copy">
-              <span>{SUBJECT_LINE}</span>
-              <strong>{t('footer.tagline')}</strong>
-            </div>
-            <button type="button" className="fd-link fd-pressable" {...press} onClick={() => go('showroom')}>
-              {t('play.enter3d')}
-              <ArrowRight size={15} aria-hidden="true" />
-            </button>
-          </div>
-        </aside>
+
       </div>
     </div>
   );

@@ -62,6 +62,7 @@ function guestHeader(): Record<string, string> {
  * offline, a timeout, a static host's HTML error page — so callers read "null" as "no server".
  */
 async function post(url: string, body: unknown, { keepalive = false } = {}): Promise<Reply> {
+  if (process.env.NEXT_PUBLIC_JHK_STATIC_BUILD === 'true') return null;
   if (typeof fetch !== 'function') return null;
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);

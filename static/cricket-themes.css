@@ -1,168 +1,212 @@
-/* Two complete cricket worlds. Existing routes inherit the same semantic tokens. */
-:root[data-cricket-theme='floodlights'] {
-  color-scheme: dark;
-  --bg-0:#0c191d;--bg-1:#12252b;--bg-2:#1b3036;--text:#f7f4e9;--muted:#a8b9b8;--line:#3a4b4e;
-  --volt:#d5f386;--volt-ink:#142112;--volt-text:#d5f386;--volt-soft:#d5f38615;
-  --cyan:#a7d1c2;--cyan-text:#a7d1c2;--cyan-soft:#a7d1c215;--cyan-ink:#13241d;
-  --gold:#efc879;--gold-text:#efc879;--gold-soft:#efc87915;--gold-ink:#281d0a;
-  --ember:#f08f73;--ember-text:#f08f73;--ember-soft:#f08f7315;--ember-ink:#33180e;
-  --magenta:#dfb9b9;--magenta-text:#dfb9b9;--magenta-soft:#dfb9b915;--danger:#ff9c8d;--danger-text:#ff9c8d;--danger-soft:#ff9c8d15;
-  --cr-accent:#d5f386;--cr-accent-ink:#142112;--cr-secondary:#ee9378;--cr-panel:#13292e;--cr-rule:#465657;
-  --cr-turf:#173f35;--cr-turf-light:#3c7356;--cr-stripe:#6f9b6a;--cr-chalk:#f4f0d8;--cr-pitch:#b9a47a;
-  --cr-stands:#142b31;--cr-seat:#76958c;--cr-structure:#4d6d6a;--cr-light:#edeece;--cr-stadium-shadow:#071317;--cr-grip:#193d3d;--cr-orbit:#d5f386;
-  --shadow-card:none;--shadow-lift:0 12px 28px #0002;--glow-volt:none;--glow-ember:none;--glow-gold:none;
-}
+/* Gully Club: one visual system across play, learning and records. Saved theme keys retained. */
 :root[data-cricket-theme='pavilion'] {
-  color-scheme:light;
-  --bg-0:#f6f1e5;--bg-1:#fffcf3;--bg-2:#ece7da;--text:#203c32;--muted:#5b685c;--line:#c5c9b7;
-  --volt:#244e3d;--volt-ink:#fffcef;--volt-text:#244e3d;--volt-soft:#244e3d0d;
-  --cyan:#315f56;--cyan-text:#315f56;--cyan-soft:#315f5610;--cyan-ink:#fffcef;
-  --gold:#ba962f;--gold-text:#745714;--gold-soft:#ba962f15;--gold-ink:#271e09;
-  --ember:#a94332;--ember-text:#a94332;--ember-soft:#a9433210;--ember-ink:#fffcef;
-  --magenta:#873c48;--magenta-text:#873c48;--magenta-soft:#873c4810;--magenta-ink:#fffcef;--danger:#b03b2b;--danger-text:#a23122;--danger-soft:#a2312210;--danger-ink:#fffcef;
-  --cr-accent:#244e3d;--cr-accent-ink:#fffcef;--cr-secondary:#a94332;--cr-panel:#ebe8d9;--cr-rule:#929e89;
-  --cr-turf:#4e7752;--cr-turf-light:#87a876;--cr-stripe:#bed1a1;--cr-chalk:#fff9dc;--cr-pitch:#d7c48c;
-  --cr-stands:#d7d8bf;--cr-seat:#7e9771;--cr-structure:#7a8a71;--cr-light:#fffbdc;--cr-stadium-shadow:#314a2820;--cr-grip:#294f3b;--cr-orbit:#ab5635;
-  --shadow-card:none;--shadow-lift:0 10px 24px #354f2810;--glow-volt:none;--glow-ember:none;--glow-gold:none;
+ color-scheme:light;--bg-0:#f8f3e7;--bg-1:#fffcf5;--bg-2:#eee7d9;--text:#182630;--muted:#59636a;--line:#c9c2b3;
+ --volt:#ca3c1c;--volt-text:#b93117;--volt-ink:#fffaf1;--volt-soft:#ca3c1c0d;--cyan:#28706c;--cyan-text:#24625e;--cyan-ink:#fff;--cyan-soft:#28706c12;
+ --gold:#c3962e;--gold-text:#765813;--gold-ink:#182630;--gold-soft:#c3962e15;--ember:#bd411f;--ember-text:#ad351a;--ember-ink:#fff;--ember-soft:#bd411f12;
+ --magenta:#8d4055;--magenta-text:#81334a;--magenta-ink:#fff;--magenta-soft:#8d405510;--danger:#ba252b;--danger-text:#a3262b;--danger-ink:#fff;--danger-soft:#ba252b12;
+ --gc-paper:#f8f3e7;--gc-accent:#ca3c1c;--gc-accent-ink:#fffaf1;
+}
+:root[data-cricket-theme='floodlights'] {
+ color-scheme:dark;--bg-0:#15232b;--bg-1:#1e3039;--bg-2:#283d45;--text:#faf2e0;--muted:#b4bebd;--line:#4a5b60;
+ --volt:#ff9471;--volt-text:#ffad92;--volt-ink:#281710;--volt-soft:#ff947114;--cyan:#94d0c8;--cyan-text:#94d0c8;--cyan-ink:#102a27;--cyan-soft:#94d0c812;
+ --gold:#e4bd6c;--gold-text:#e4bd6c;--gold-ink:#251c0c;--gold-soft:#e4bd6c15;--ember:#f8a67e;--ember-text:#f8a67e;--ember-ink:#29180e;--ember-soft:#f8a67e12;
+ --magenta:#dfadc0;--magenta-text:#dfadc0;--magenta-ink:#301621;--magenta-soft:#dfadc012;--danger:#ff9da0;--danger-text:#ff9da0;--danger-ink:#39171b;--danger-soft:#ff9da012;
+ --gc-paper:#f8f3e7;--gc-accent:#ff9471;--gc-accent-ink:#281710;
 }
 :root[data-cricket-theme] {
-  --background:var(--bg-0);--foreground:var(--text);--card:var(--bg-1);--card-foreground:var(--text);--popover:var(--bg-1);--popover-foreground:var(--text);
-  --primary:var(--volt);--primary-foreground:var(--volt-ink);--secondary:var(--bg-2);--secondary-foreground:var(--text);--muted-foreground:var(--muted);--accent:var(--bg-2);--accent-foreground:var(--text);--border:var(--line);--input:var(--line);--ring:var(--cr-secondary);
-  --r-card:12px;--r-control:8px;--r-hero:16px;--font-display:'Bricolage Grotesque','Arial Black',system-ui,sans-serif;--font-ui:'Instrument Sans',system-ui,sans-serif;
+ --background:var(--bg-0);--foreground:var(--text);--card:var(--bg-1);--card-foreground:var(--text);--popover:var(--bg-1);--popover-foreground:var(--text);--primary:var(--volt);--primary-foreground:var(--volt-ink);--secondary:var(--bg-2);--secondary-foreground:var(--text);--muted-foreground:var(--muted);--accent:var(--bg-2);--accent-foreground:var(--text);--border:var(--line);--input:var(--line);--ring:var(--cyan-text);
+ --font-display:'Bricolage Grotesque','Arial Black',system-ui,sans-serif;--font-ui:'Instrument Sans',system-ui,sans-serif;--r-card:4px;--r-control:5px;--r-hero:4px;--shadow-card:none;--shadow-lift:none;--glow-volt:none;--glow-ember:none;--glow-gold:none;--cr-secondary:var(--cyan-text);--cr-accent:var(--gc-accent);--cr-accent-ink:var(--gc-accent-ink);
 }
-:root[data-cricket-theme] .fd-shell { background:var(--bg-0); }
-:root[data-cricket-theme] .fd-topbar { background:var(--bg-0);border-bottom-color:var(--line); }
-:root[data-cricket-theme] .fd-nav { background:var(--bg-0); }
-:root[data-cricket-theme] .fd-nav-btn[aria-current='page'] .fd-nav-icon { background:var(--volt-soft); }
-:root[data-cricket-theme] .fd-footer { background:var(--bg-0); }
-:root[data-cricket-theme] .fd-main { padding-top:30px; }
-:root[data-cricket-theme] :is(button,a,input,select,summary):focus-visible { outline-color:var(--cr-secondary); }
-:root[data-cricket-theme] .fd-brand { letter-spacing:-.06em; }
-
-.cr-home { width:100%;display:flex;flex-direction:column;gap:32px;max-width:1260px;margin-inline:auto; }
-.cr-hero { position:relative;display:grid;grid-template-columns:minmax(0,1.04fr) minmax(0,1fr);gap:12px;min-height:440px;align-items:center;border-bottom:1px solid var(--line);padding:18px 0 30px;isolation:isolate; }
-.cr-hero-copy { min-width:0;position:relative;z-index:1;padding:8px 0; }
-.cr-eyebrow { display:flex;align-items:center;gap:10px;margin-bottom:25px;font:650 .73rem/1.5 var(--font-mono);letter-spacing:.13em;text-transform:uppercase;color:var(--muted); }
-.cr-eyebrow:before { content:'';width:20px;height:2px;background:var(--cr-secondary);flex:none; }
-.cr-hero-title { margin:0;font:800 clamp(3rem,5.2vw,5.1rem)/.98 var(--font-display);letter-spacing:-.065em;text-wrap:balance;color:var(--text); }
-.cr-hero-title em { font-style:normal;color:var(--cr-accent); }
-.cr-hero-lead { max-width:36ch;margin-top:23px;color:var(--muted);font-size:1.05rem;line-height:1.6; }
-.cr-actions { display:flex;flex-wrap:wrap;gap:12px;margin-top:28px; }
-.cr-primary,.cr-secondary { display:inline-flex;align-items:center;justify-content:center;gap:14px;min-height:54px;padding:14px 22px;border:1px solid var(--cr-accent);border-radius:var(--r-control);font:750 .98rem/1.3 var(--font-ui);text-decoration:none;transition:transform 160ms ease,background 160ms ease; }
-.cr-primary { background:var(--cr-accent);color:var(--cr-accent-ink); }
-.cr-secondary { background:transparent;color:var(--text);border-color:var(--line); }
-.cr-primary:hover:not(:disabled),.cr-secondary:hover:not(:disabled) { transform:translateY(-2px); }
-.cr-primary:disabled,.cr-secondary:disabled { opacity:.5;cursor:default; }
-.cr-primary svg,.cr-secondary svg { width:18px;height:18px; }
-.cr-match-facts { display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;margin-top:18px;color:var(--muted);font:500 .75rem/1.6 var(--font-mono); }
-.cr-match-facts span { display:inline-flex;align-items:center;gap:6px; }
-.cr-match-facts b { color:var(--text);font-size:1rem;font-weight:650;letter-spacing:-.03em; }
-.cr-match-facts svg { width:14px;height:14px;color:var(--cr-accent); }
-.cr-art { position:relative;min-width:0;width:100%;align-self:center;padding:18px; }
-.cr-stadium { display:block;width:100%;max-width:100%;height:auto;margin:0;overflow:visible; }
-.cr-art-caption { position:absolute;bottom:0;right:3%;font:600 .62rem/1.4 var(--font-mono);letter-spacing:.22em;color:var(--muted); }
-.cr-ball { transform-origin:218px 361px;animation:cr-ball-arrive 800ms cubic-bezier(.2,.7,.3,1) both; }
-.cr-bat { animation:cr-art-arrive 800ms ease-out both; }
-@keyframes cr-ball-arrive { from { opacity:0;translate:-30px -18px;rotate:-20deg; } to { opacity:1;translate:0 0;rotate:0deg; } }
-@keyframes cr-art-arrive { from { opacity:0; } to { opacity:1; } }
-.cr-section-heading { display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:17px; }
-.cr-section-heading h2 { font:750 1.4rem/1.2 var(--font-display);letter-spacing:-.035em; }
-.cr-home>.cr-section-heading { margin-bottom:-15px; }
-.cr-section-heading p,.cr-section-heading>span { color:var(--muted);font-size:.82rem; }
-.cr-section-heading button { background:none;border:0;color:var(--text);padding:8px 0;font:650 .83rem var(--font-ui);min-height:44px;text-decoration:underline;text-underline-offset:4px; }
-.cr-mode-grid { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px; }
-.cr-mode { position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:14px;min-height:206px;padding:23px;text-align:left;min-width:0;border:1px solid var(--line);border-radius:var(--r-card);background:var(--bg-1);color:var(--text);transition:border-color 160ms ease,transform 160ms ease; }
-.cr-mode:hover { border-color:var(--cr-accent);transform:translateY(-3px); }
-.cr-mode:disabled { opacity:.5;cursor:default; }
-.cr-mode-number { position:absolute;top:25px;right:22px;font:500 .7rem var(--font-mono);letter-spacing:.1em;color:var(--muted); }
-.cr-mode-icon { display:grid;place-items:center;width:44px;height:44px;color:var(--cr-accent); }
-.cr-mark { width:44px;height:44px;display:block; }
-.cr-mode h3,.cr-mode strong { font:750 1.25rem/1.2 var(--font-display);letter-spacing:-.03em; }
-.cr-mode p,.cr-mode small { font-size:.88rem;font-weight:400;line-height:1.55;color:var(--muted);max-width:29ch; }
-.cr-mode>svg:last-child { width:19px;height:19px;position:absolute;right:22px;bottom:23px; }
-.cr-inline-note { padding:19px 0;display:flex;align-items:center;gap:16px;border-top:1px solid var(--line);color:var(--muted);font-size:.82rem;line-height:1.6; }
-.cr-inline-note strong { color:var(--text); }
-.cr-theme-switch { display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:38px;border:1px solid var(--line);border-radius:8px;padding:7px 11px;background:var(--bg-0);color:var(--text);font:650 .75rem/1.3 var(--font-ui);white-space:nowrap; }
-.cr-theme-switch:hover { background:var(--bg-2); }
-.cr-theme-switch button { min-height:34px;border:0;border-radius:5px;padding:6px 11px;background:transparent;color:var(--muted);font:650 .75rem/1.3 var(--font-ui); }
-.cr-theme-switch button[aria-pressed=true] { background:var(--bg-2);color:var(--text); }
-.cr-theme-switch button:hover { color:var(--text); }
-.cr-topline { display:flex;align-items:center;justify-content:space-between;gap:16px; }
-.cr-topline>span { color:var(--muted);font:500 .7rem var(--font-mono);letter-spacing:.08em; }
-.cr-home-links { display:flex;align-items:center;justify-content:space-between;gap:12px 24px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:8px; }
-.cr-home-links button { display:inline-flex;align-items:center;gap:9px;background:none;border:0;padding:12px 0;min-height:46px;color:var(--muted);font:600 .85rem/1.5 var(--font-ui);text-align:left; }
-.cr-home-links button:hover { color:var(--text); }
-.cr-hero-copy>.cr-inline-note { border:0;padding:0;margin-top:14px;font-size:.78rem;max-width:42ch; }
-.cr-practice-label { margin:0 auto 20px;max-width:850px;padding:10px 14px;border:1px solid var(--line);border-left:3px solid var(--cr-accent);border-radius:var(--r-control);background:var(--bg-1);color:var(--muted);font:500 .72rem/1.55 var(--font-mono);letter-spacing:.025em; }
-
-/* Pavilion deliberately changes typography, composition and materials, beyond a palette swap. */
-:root[data-cricket-theme='pavilion'] { --r-card:2px;--r-control:3px;--r-hero:3px; }
-[data-cricket-theme='pavilion'] .cr-hero { border-top:3px double var(--cr-rule);border-bottom:3px double var(--cr-rule);padding-top:30px;min-height:460px; }
-[data-cricket-theme='pavilion'] .cr-hero-title { font-family:Georgia,'Times New Roman',serif;font-weight:500;letter-spacing:-.065em;line-height:1.02;font-size:clamp(3rem,5.4vw,5.3rem); }
-[data-cricket-theme='pavilion'] .cr-hero-title em { font-family:Georgia,'Times New Roman',serif;font-style:italic;color:var(--cr-secondary); }
-[data-cricket-theme='pavilion'] .cr-eyebrow { letter-spacing:.17em;color:var(--cr-accent); }
-[data-cricket-theme='pavilion'] .cr-stadium-lights { opacity:.28; }
-[data-cricket-theme='pavilion'] .cr-stadium { transform:rotate(-3deg); }
-[data-cricket-theme='pavilion'] .cr-mode-grid { gap:0;border-block:1px solid var(--line); }
-[data-cricket-theme='pavilion'] .cr-mode { border:0;border-radius:0;background:transparent;padding:25px; }
-[data-cricket-theme='pavilion'] .cr-mode+.cr-mode { border-left:1px solid var(--line); }
-[data-cricket-theme='pavilion'] .cr-mode:hover { background:var(--bg-1);transform:none; }
-[data-cricket-theme='pavilion'] .cr-mode h3,[data-cricket-theme='pavilion'] .cr-mode strong { font-family:Georgia,'Times New Roman',serif;font-size:1.4rem;font-weight:500; }
-[data-cricket-theme='pavilion'] .cr-section-heading h2 { font-family:Georgia,'Times New Roman',serif;font-size:1.6rem;font-weight:500; }
-[data-cricket-theme='pavilion'] .cr-art-caption { letter-spacing:.18em; }
-[data-cricket-theme='pavilion'] .cr-theme-switch,[data-cricket-theme='pavilion'] .cr-theme-switch button { border-radius:3px; }
-[data-cricket-theme='pavilion'] .fd-nav-icon { border-radius:3px; }
-
-/* Existing play, knowledge, profile and event routes share the new quiet surfaces. */
-:root[data-cricket-theme] .jhk-live { gap:22px; }
-:root[data-cricket-theme] .jhk-live h1 { font-size:clamp(2.15rem,4.3vw,3.6rem); }
-:root[data-cricket-theme] :is(.jhk-live-side,.jhk-live-identity,.jhk-live-profile,.jhk-profile-options-card,.jhk-live-scores,.jhk-live-receipt,.jhk-live-terms,.jhk-live-stake) { border-radius:var(--r-card);box-shadow:none; }
-:root[data-cricket-theme] .jhk-live button { border-radius:var(--r-control); }
-:root[data-cricket-theme] .jhk-live-answers { gap:10px; }
-:root[data-cricket-theme] .jhk-live-answers button { min-height:65px;background:var(--bg-1); }
-:root[data-cricket-theme] .jhk-live-answers button:hover:not(:disabled) { background:var(--bg-2); }
-[data-cricket-theme='pavilion'] .jhk-live-head h1 { font-family:Georgia,'Times New Roman',serif;font-weight:500;letter-spacing:-.05em; }
-:root[data-cricket-theme] .fd-offline-note { background:var(--bg-1);font-size:.8rem;padding-block:9px; }
-
-@media(min-width:1200px) { :root[data-cricket-theme] .fd-main { padding:32px 42px 42px; } }
-@media(max-width:1050px) { .cr-hero-title { font-size:clamp(2.7rem,5.6vw,4rem); }.cr-mode { padding:20px; }.cr-mode-grid { gap:10px; } }
-@media(max-width:760px) {
-  :root[data-cricket-theme] .fd-main { padding-top:22px; }
-  .cr-home { gap:25px; }.cr-hero { grid-template-columns:minmax(0,1fr);padding:4px 0 18px;gap:0;min-height:0; }
-  .cr-hero-copy { padding-top:10px; }.cr-eyebrow { margin-bottom:17px;font-size:.67rem; }.cr-hero-title { font-size:clamp(2.9rem,11.6vw,5.1rem); }
-  .cr-hero-lead { max-width:37ch;font-size:1rem;margin-top:18px; }.cr-actions { margin-top:23px;gap:10px; }
-  .cr-primary,.cr-secondary { min-height:53px;padding:14px 18px;font-size:.95rem; }
-  .cr-art { width:100%;max-width:440px;justify-self:center;margin-top:-10px; }.cr-stadium { width:100%;margin:0; }.cr-art-caption { bottom:0;font-size:.58rem; }
-  .cr-mode-grid { grid-template-columns:minmax(0,1fr);gap:10px; }.cr-mode { display:grid;grid-template-columns:46px 1fr;column-gap:16px;row-gap:5px;min-height:112px;padding:20px 45px 20px 18px; }
-  .cr-mode-icon { grid-row:1/3;align-self:center; }.cr-mode h3,.cr-mode strong { grid-column:2;font-size:1.15rem; }.cr-mode p,.cr-mode small { grid-column:2;max-width:34ch;font-size:.83rem; }.cr-mode-number { display:none; }.cr-mode>svg:last-child { right:15px;bottom:calc(50% - 10px);width:17px; }
-  .cr-section-heading { margin-bottom:13px; }.cr-section-heading h2 { font-size:1.25rem; }.cr-inline-note { align-items:flex-start;padding-block:16px;gap:12px; }.cr-match-facts { font-size:.68rem;gap:8px 14px;margin-top:15px; }
-  .cr-home>.cr-section-heading { margin-bottom:-12px; }.cr-section-heading>span { max-width:16ch;text-align:right;line-height:1.5; }
-  [data-cricket-theme='pavilion'] .cr-hero { padding-top:15px;min-height:0; }[data-cricket-theme='pavilion'] .cr-hero-title { font-size:clamp(2.9rem,11.8vw,5.2rem); }
-  [data-cricket-theme='pavilion'] .cr-mode-grid { gap:0; }[data-cricket-theme='pavilion'] .cr-mode { padding:20px 45px 20px 15px; }[data-cricket-theme='pavilion'] .cr-mode+.cr-mode { border-left:0;border-top:1px solid var(--line); }
-  [data-cricket-theme='pavilion'] .cr-mode h3,[data-cricket-theme='pavilion'] .cr-mode strong { font-size:1.3rem; }
-  .cr-topline { flex-wrap:wrap;gap:10px; }.cr-theme-switch button { padding-inline:9px;font-size:.72rem; }
+:root[data-cricket-theme] body,:root[data-cricket-theme] .fd-shell {background:var(--bg-0);color:var(--text)}
+:root[data-cricket-theme] .fd-topbar {background:var(--bg-0);border-bottom:1px solid var(--line);box-shadow:none}
+:root[data-cricket-theme] .fd-main {padding-top:24px;max-width:1440px}
+:root[data-cricket-theme] .fd-nav {background:var(--bg-0)}
+:root[data-cricket-theme] .fd-nav-btn[aria-current='page'] .fd-nav-icon {background:transparent}
+:root[data-cricket-theme] .fd-nav-btn[aria-current='page'] {background:var(--volt-soft);color:var(--volt-text)}
+:root[data-cricket-theme] .fd-nav-mark {display:none}
+:root[data-cricket-theme] .fd-footer {background:var(--bg-0)}
+:root[data-cricket-theme] :is(button,a,input,select,summary):focus-visible {outline:3px solid var(--cyan-text);outline-offset:3px}
+:root[data-cricket-theme] button {touch-action:manipulation}
+:root[data-cricket-theme] .fd-brand-word {height:19px}
+.cr-theme-switch {display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;min-width:44px;border:1px solid var(--line);border-radius:4px;padding:7px 10px;background:transparent;color:var(--text);font:650 .78rem/1.3 var(--font-ui)}
+.cr-secondary {display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:10px 16px;border:1px solid var(--line);border-radius:4px;background:var(--bg-1);color:var(--text);font:650 .9rem var(--font-ui)}
+.gc-home {width:100%;max-width:1200px;margin:auto;min-width:0}
+.gc-edition {display:flex;justify-content:space-between;gap:20px;padding-bottom:17px;border-bottom:1px solid var(--text);font:600 .64rem/1.5 var(--font-mono);letter-spacing:.12em;color:var(--muted)}
+.gc-hero {display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:18px;padding:30px 0 34px;isolation:isolate}
+.gc-hero-copy {min-width:0;position:relative;z-index:1}
+.gc-kicker {font:600 .69rem/1.5 var(--font-mono);letter-spacing:.13em;margin:0 0 23px;color:var(--muted)}
+.gc-hero h1 {font:800 clamp(3.8rem,6.1vw,6.4rem)/.93 var(--font-display);letter-spacing:-.065em;margin:0 0 24px;text-wrap:balance}
+.gc-hero h1 em {font-style:normal;color:var(--gc-accent)}
+.gc-lead {max-width:37ch;font-size:1.03rem;line-height:1.6;color:var(--muted);margin:0 0 24px}
+.gc-actions {display:flex;flex-direction:column;gap:10px;max-width:365px}
+.gc-play,.gc-human {display:flex;align-items:center;justify-content:flex-start;gap:13px;min-height:58px;width:100%;padding:14px 18px;border-radius:4px;font:750 1rem/1.4 var(--font-ui);transition:background 140ms ease,translate 140ms ease;text-align:left}
+.gc-play {background:var(--gc-accent);color:var(--gc-accent-ink);border:1px solid var(--gc-accent)}
+.gc-human {background:transparent;border:1px solid var(--text);color:var(--text);min-height:50px;font-size:.9rem}
+.gc-actions button>svg:last-child {margin-left:auto;flex-shrink:0}
+.gc-play:disabled,.gc-human:disabled {opacity:.55;cursor:wait}
+.gc-play:not(:disabled):hover,.gc-human:not(:disabled):hover {translate:0 -2px}
+.gc-play-note {margin:13px 0 0;font:500 .68rem/1.6 var(--font-mono);color:var(--muted)}
+.gc-art {margin:0;min-width:0;position:relative;align-self:stretch;display:flex;flex-direction:column;justify-content:center}
+.gc-art img {display:block;width:100%;height:auto;aspect-ratio:1;object-fit:cover;border-radius:2px}
+.gc-art figcaption {margin-top:9px;font:600 .58rem/1.5 var(--font-mono);letter-spacing:.17em;text-align:right;color:var(--muted)}
+.gc-art-stamp {position:absolute;right:12px;bottom:38px;display:grid;place-items:center;border:1px solid #182630;padding:12px 16px;background:#f8f3e7e8;color:#182630;font:600 .48rem/1.8 var(--font-mono);letter-spacing:.1em;transform:rotate(-7deg)}
+.gc-art-stamp b {font:800 2rem/1 var(--font-display)}
+.gc-match-ticket {display:flex;align-items:center;gap:23px;border-block:1px solid var(--text);padding:18px 0}
+.gc-ticket-number {font:800 3.8rem/.9 var(--font-display);letter-spacing:-.07em;color:var(--gc-accent);padding-right:23px;border-right:1px dashed var(--line)}
+.gc-match-ticket p {display:flex;flex-direction:column;gap:4px;margin:0;min-width:0}
+.gc-match-ticket p>b {font:750 1.2rem/1.3 var(--font-display)}
+.gc-match-ticket p>span {color:var(--muted);font-size:.85rem;line-height:1.5}
+.gc-ticket-free {margin-left:auto;flex-shrink:0;font:650 .66rem/1.6 var(--font-mono);letter-spacing:.06em;text-align:right}
+.gc-ticket-free small {display:block;font:400 .72rem/1.6 var(--font-ui);color:var(--muted);letter-spacing:0}
+.gc-section-title {display:flex;align-items:center;justify-content:space-between;gap:12px;padding:30px 0 13px}
+.gc-section-title h2 {font:750 1.45rem/1.3 var(--font-display);letter-spacing:-.04em;margin:0}
+.gc-section-title button {display:flex;align-items:center;gap:6px;background:none;border:0;color:var(--muted);font:650 .8rem var(--font-ui);min-height:44px;white-space:nowrap}
+.gc-game-menu {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-block:1px solid var(--line)}
+.gc-game-menu button {display:grid;grid-template-columns:24px 1fr 21px;align-items:start;gap:16px 12px;position:relative;padding:24px 20px;text-align:left;border:0;background:transparent;color:var(--text);min-width:0}
+.gc-game-menu button+button {border-left:1px solid var(--line)}
+.gc-game-menu button>span:not(.gc-menu-no) {grid-row:2;grid-column:1/3}
+.gc-game-menu button>svg:last-child {grid-column:3;grid-row:2;align-self:center}
+.gc-game-menu button>.gc-menu-no {grid-column:2;grid-row:1;text-align:right;color:var(--gc-accent);font:600 .72rem var(--font-mono)}
+.gc-game-menu button>svg:first-of-type {grid-column:1;grid-row:1}
+.gc-game-menu button strong {display:block;font:750 1.16rem/1.3 var(--font-display);letter-spacing:-.035em;margin-bottom:5px}
+.gc-game-menu button small {font:400 .84rem/1.5 var(--font-ui);color:var(--muted);display:block;max-width:26ch}
+.gc-game-menu button:hover {background:var(--bg-1)}
+.gc-game-menu button:disabled {opacity:.5}
+.gc-club-notes {display:flex;flex-wrap:wrap;align-items:center;gap:16px 30px;padding:23px 0}
+.gc-club-notes>div {display:flex;align-items:flex-start;gap:12px;flex:1 1 280px}
+.gc-club-notes p {display:flex;flex-direction:column;gap:4px;margin:0;font-size:.81rem;line-height:1.5}
+.gc-club-notes p>span {color:var(--muted);max-width:55ch}
+.gc-club-notes button {display:flex;align-items:center;gap:8px;font:650 .78rem var(--font-ui);min-height:44px;background:transparent;border:0;color:var(--text)}
+/* Task directories retain routes and expose the features where they belong. */
+.gc-directory {display:flex;flex-wrap:wrap;align-items:center;gap:4px 18px;margin-bottom:25px;padding:0 0 15px;border-bottom:1px solid var(--line)}
+.gc-directory-link {display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:8px 2px;border:0;border-bottom:2px solid transparent;background:transparent;color:var(--muted);font:650 .8rem/1.4 var(--font-ui)}
+.gc-directory-link[aria-current='page'] {border-bottom-color:var(--gc-accent);color:var(--text)}
+.gc-directory-link svg {width:16px;height:16px}
+.gc-directory-title,.gc-directory-label {font:600 .63rem/1.5 var(--font-mono);letter-spacing:.1em;color:var(--muted)}
+.gc-account {margin-block:0 24px;border:1px solid var(--line);border-radius:4px;padding:0 16px;background:var(--bg-1)}
+.gc-account>summary {min-height:50px;align-content:center;font-weight:650;font-size:.85rem;cursor:pointer}
+.gc-account[open] {padding-bottom:18px}
+/* The working surfaces share paper, ink, consistent rules and quiet headings. */
+:root[data-cricket-theme] :is(.fd-block,.fd-launch,.fd-panel,.fd-player-hero,.fd-mode,.fd-vault-card,.jhk-live-side,.jhk-live-identity,.jhk-live-profile,.jhk-profile-options-card,.jhk-live-scores,.jhk-live-receipt,.jhk-live-terms,.jhk-live-stake) {border-radius:4px;box-shadow:none}
+:root[data-cricket-theme] :is(.fd-play-head,.fd-player-head,.fd-ev-head,.fd-an-head,.jhk-live-head) h1 {font-family:var(--font-display);letter-spacing:-.055em;font-size:clamp(2.1rem,4vw,3.4rem);line-height:1.05}
+:root[data-cricket-theme] .jhk-live-question h1 {font:750 clamp(1.3rem,2.4vw,1.9rem)/1.3 var(--font-display);letter-spacing:-.025em;overflow-wrap:anywhere}
+:root[data-cricket-theme] .jhk-live {gap:22px}
+:root[data-cricket-theme] .jhk-live button {border-radius:4px}
+:root[data-cricket-theme] .fd-poster {display:none}
+:root[data-cricket-theme] .fd-play-grid {align-items:start}
+:root[data-cricket-theme] .fd-room {max-width:760px;--room-gap:12px}
+:root[data-cricket-theme] .fd-room .fd-qcard {padding:26px;background:var(--bg-1);border:1px solid var(--line);border-radius:4px}
+:root[data-cricket-theme] .fd-room .fd-qcard h1 {font:750 clamp(1.35rem,2.5vw,1.9rem)/1.3 var(--font-display);letter-spacing:-.03em;overflow-wrap:anywhere;margin:10px 0 22px}
+:root[data-cricket-theme] .fd-room .fd-answers {display:grid;grid-template-columns:1fr;gap:10px}
+:root[data-cricket-theme] .fd-room .fd-answer {min-height:54px;border:1px solid var(--line);border-radius:4px;padding:13px 16px;background:var(--bg-0);font:650 .98rem/1.4 var(--font-ui);box-shadow:none}
+:root[data-cricket-theme] .fd-room .fd-answer[data-state='correct'] {border-color:var(--cyan-text);background:var(--cyan-soft)}
+:root[data-cricket-theme] .fd-room .fd-answer[data-state='wrong'] {border-color:var(--danger-text);background:var(--danger-soft)}
+:root[data-cricket-theme] .fd-room .fd-hud {border-block:1px solid var(--line);background:transparent;border-radius:0;padding:16px 0}
+:root[data-cricket-theme] .fd-room .fd-hud-score {font-family:var(--font-display);font-size:2.8rem;color:var(--gc-accent)}
+:root[data-cricket-theme] .fd-room .fd-qtag {font-size:.66rem}
+:root[data-cricket-theme] .fd-room .fd-track {height:3px}
+:root[data-cricket-theme] .fd-room .fd-finish {background:var(--bg-1);border:1px solid var(--line);border-radius:4px;padding:26px}
+.cr-practice-label {margin:0 auto 17px;max-width:760px;border-bottom:1px dashed var(--line);padding:0 0 11px;font:600 .63rem/1.6 var(--font-mono);letter-spacing:.035em;color:var(--muted)}
+.fd-result-details {padding:16px 0;border-block:1px solid var(--line);margin-top:18px}
+.fd-result-details>summary {cursor:pointer;min-height:44px;align-content:center;font-weight:650}
+.gc-advanced {border:1px solid var(--line);border-radius:4px;background:var(--bg-1)}
+.gc-advanced>summary {min-height:50px;padding:14px 18px;cursor:pointer;font-size:.88rem;font-weight:650}
+.gc-advanced-body {padding:0 16px 16px;display:flex;flex-direction:column;gap:18px}
+.gc-match-summary {padding:16px 18px;border:1px solid var(--line);background:var(--bg-1);border-left:3px solid var(--gc-accent);font-size:.9rem;line-height:1.6}
+.gc-match-summary b {display:block;font-family:var(--font-display);font-size:1.15rem}
+.gc-match-summary small {display:block;color:var(--muted);font-size:.8rem}
+@media(min-width:900px) {
+ :root[data-cricket-theme] .fd-frame {grid-template-columns:150px minmax(0,1fr)}
+ :root[data-cricket-theme] .fd-nav {width:150px;padding:24px 12px;gap:8px}
+ :root[data-cricket-theme] .fd-nav-btn {flex-direction:row;justify-content:flex-start;gap:8px;padding:10px;min-height:48px;font-size:.78rem;border-radius:4px}
+ :root[data-cricket-theme] .fd-nav-icon {width:25px;height:25px}
+ :root[data-cricket-theme] .fd-nav-icon svg {width:19px;height:19px}
+ :root[data-cricket-theme] .fd-nav-label {font-size:.78rem}
+ :root[data-cricket-theme] .fd-shell--room .fd-frame {display:block}
 }
-@media(max-width:599px) { :root[data-cricket-theme] .fd-brand>.fd-brand-word { display:none; }.cr-theme-switch { min-height:38px;padding-inline:9px;font-size:.72rem; }.cr-home-links { align-items:flex-start;gap:0; }.cr-home-links button { width:100%;justify-content:flex-start; }.cr-home-links button>svg:last-child { margin-left:auto; } }
-@media(max-width:380px) { .cr-primary,.cr-secondary { flex:1;padding-inline:12px; }.cr-hero-title { font-size:2.8rem; }.cr-hero-lead { font-size:.94rem; }.cr-art { margin-block:-10px 0; }.cr-theme-switch button { font-size:.68rem; }.cr-match-facts { gap:6px 10px; }.cr-eyebrow { font-size:.6rem;gap:6px;letter-spacing:.08em; } }
-/* Explicitly outrank the incumbent arena's broad h1 rule. Keep the full hook on two lines. */
-:root[data-cricket-theme] .cr-hero-title { font-size:clamp(2.8rem,4vw,3.5rem); }
-@media(max-width:760px) {
-  :root[data-cricket-theme='floodlights'] .cr-hero-title { font-size:clamp(1.9rem,10vw,2.7rem); }
-  :root[data-cricket-theme='pavilion'] .cr-hero-title { font-size:clamp(2.35rem,11.8vw,3rem); }
-  .cr-art { padding:12px; }
+@media(max-width:899px) {
+ .gc-hero {gap:16px;padding-block:24px}
+ .gc-hero h1 {font-size:clamp(3rem,7vw,4.4rem)}
+ .gc-edition>span:last-child {display:none}
+ .gc-lead {font-size:.93rem}
+ .gc-kicker {font-size:.58rem;margin-bottom:18px}
+ .gc-ticket-free {font-size:.6rem}
+ .gc-game-menu button {padding:20px 12px}
+ :root[data-cricket-theme] .fd-main {padding-top:18px}
+ :root[data-cricket-theme] .fd-play-aside {order:-1}
+ :root[data-cricket-theme] .fd-launch {position:static}
 }
-@media(prefers-reduced-motion:reduce) { .cr-ball,.cr-bat { animation:none; }.cr-primary,.cr-secondary,.cr-mode { transition:none; } }
-:root[data-motion='reduced'] :is(.cr-ball,.cr-bat) { animation:none; }
-:root[data-motion='reduced'] :is(.cr-primary,.cr-secondary,.cr-mode) { transition:none; }
-
-/* Keep long cricket questions and all four answers within the phone's play area. */
-@media (max-width: 599px) {
-  :root[data-cricket-theme] .fd-room[data-stage='question'] .fd-hud-rail { display:none; }
-  :root[data-cricket-theme] .fd-room[data-stage='question'] .fd-hud { margin-bottom:12px; }
-  :root[data-cricket-theme] .fd-qstage { gap:10px; }
-  :root[data-cricket-theme] .fd-qstage .fd-qcard h1 { font-size:clamp(1.05rem,4.7vw,1.3rem);line-height:1.28;letter-spacing:-.01em; }
-  :root[data-cricket-theme] .fd-qstage .fd-qcard { padding:14px;gap:14px; }
-  :root[data-cricket-theme] .fd-qstage .fd-answers { gap:8px; }
-  :root[data-cricket-theme] .fd-qstage .fd-answer { min-height:48px;padding-block:9px; }
-  :root[data-cricket-theme] .cr-practice-label { margin-bottom:10px;padding:8px 12px;font-size:.65rem; }
+@media(max-width:599px) {
+ .gc-edition {font-size:.56rem;letter-spacing:.08em;padding-bottom:13px}
+ .gc-hero {grid-template-columns:1fr;padding:25px 0 17px;gap:22px}
+ .gc-hero-copy {padding:0}
+ .gc-kicker {margin-bottom:15px;font-size:.61rem}
+ .gc-hero h1 {font-size:clamp(3.65rem,17vw,5.4rem);margin-bottom:17px}
+ .gc-lead {max-width:34ch;font-size:.95rem;line-height:1.55;margin-bottom:20px}
+ .gc-actions {max-width:none}
+ .gc-play {min-height:56px}
+ .gc-human {min-height:48px}
+ .gc-play-note {font-size:.65rem}
+ .gc-art {max-height:255px;overflow:hidden;display:block}
+ .gc-art img {height:255px;width:100%;aspect-ratio:auto;object-fit:cover;object-position:center 56%}
+ .gc-art figcaption {display:none}
+ .gc-art-stamp {bottom:12px;right:12px;padding:9px 13px}
+ .gc-match-ticket {padding:17px 0;gap:15px;flex-wrap:wrap}
+ .gc-ticket-number {font-size:3rem;padding-right:15px}
+ .gc-match-ticket p {flex:1 1 180px}
+ .gc-match-ticket p>b {font-size:1.05rem}
+ .gc-match-ticket p>span {font-size:.79rem;max-width:26ch}
+ .gc-ticket-free {display:none}
+ .gc-section-title {padding-top:24px}
+ .gc-section-title h2 {font-size:1.2rem}
+ .gc-game-menu {grid-template-columns:1fr}
+ .gc-game-menu button {grid-template-columns:22px 1fr 22px;gap:0 13px;padding:19px 2px}
+ .gc-game-menu button+button {border-left:0;border-top:1px solid var(--line)}
+ .gc-game-menu button>span:not(.gc-menu-no) {grid-column:2;grid-row:1/3}
+ .gc-game-menu button>svg:first-of-type {display:none}
+ .gc-game-menu button>.gc-menu-no {grid-column:1;text-align:left;align-self:center}
+ .gc-game-menu button>svg:last-child {grid-row:1/3}
+ .gc-game-menu button strong {font-size:1.05rem}
+ .gc-game-menu button small {max-width:27ch;font-size:.8rem}
+ .gc-club-notes {gap:10px 22px;padding-block:20px}
+ .gc-directory {gap:0 14px;margin-bottom:18px}
+ .gc-directory-link {font-size:.74rem}
+ :root[data-cricket-theme] .fd-room .fd-qcard {padding:17px 13px}
+ :root[data-cricket-theme] .fd-room .fd-qcard h1 {font-size:1.3rem;margin-bottom:18px}
+ :root[data-cricket-theme] .fd-room .fd-answer {min-height:52px;padding:11px 12px;font-size:.91rem}
+ :root[data-cricket-theme] .fd-room .fd-finish {padding:20px 16px}
+ :root[data-cricket-theme] .fd-main {padding-top:15px}
+ :root[data-cricket-theme] .fd-topbar {gap:6px}
+ :root[data-cricket-theme] .fd-brand-word {height:15px}
+ .cr-theme-switch {padding-inline:8px;font-size:.7rem}
+ .cr-practice-label {font-size:.57rem}
 }
+@media(max-width:359px) {.cr-theme-switch>span:last-child{display:none}.gc-hero h1{font-size:3.4rem}.gc-lead{font-size:.88rem}.gc-play-note{font-size:.6rem}}
+@media(prefers-reduced-motion:reduce) {.gc-home *{animation:none!important;transition:none!important;transform:none!important;translate:none!important}}
+:root[data-motion='reduced'] .gc-home *,:root[data-motion='off'] .gc-home * {animation:none!important;transition:none!important;transform:none!important;translate:none!important}
+.gc-directory-link>span {display:flex;flex-direction:column;align-items:flex-start;gap:2px}
+.gc-directory-link strong {font-size:.78rem}
+.gc-directory-link small {font-size:.64rem;font-weight:400;line-height:1.4;color:var(--muted)}
+@media(max-height:500px) and (min-width:600px) {
+ .gc-hero {padding-block:12px;gap:22px}
+ .gc-hero h1 {font-size:2.7rem;margin-bottom:14px}
+ .gc-kicker {font-size:.55rem;margin-bottom:9px}
+ .gc-lead {display:none}
+ .gc-actions {flex-direction:row;max-width:none;gap:8px}
+ .gc-play,.gc-human {min-height:46px;padding:10px;gap:7px;font-size:.8rem;flex:1;white-space:nowrap}
+ .gc-actions button>svg {width:16px}
+ .gc-art {height:225px;overflow:hidden}
+ .gc-art img {height:225px;object-fit:cover;object-position:center 55%}
+ .gc-play-note {font-size:.57rem;margin-top:8px}
+ .gc-art figcaption {display:none}
+ .gc-art-stamp {bottom:10px}
+}
+.gc-progress-group {border:1px solid var(--line);border-radius:4px;margin-block:0 16px;background:var(--bg-1)}
+.gc-progress-group>summary {min-height:56px;padding:16px 18px;cursor:pointer;font:700 .95rem/1.5 var(--font-ui);color:var(--text)}
+.gc-progress-group[open] {padding:0 18px 18px}
+.gc-progress-group[open]>summary {margin-inline:-18px;border-bottom:1px solid var(--line);margin-bottom:18px}
+/* Long localized labels and enlarged text must reflow inside the match frame. */
+:root[data-cricket-theme] .fd-room .fd-room-bar {display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px}
+:root[data-cricket-theme] .fd-room .fd-room-chip {min-width:0;max-width:100%;white-space:normal;flex-wrap:wrap;justify-content:center;text-align:center;overflow-wrap:anywhere}
+:root[data-cricket-theme] .fd-room .fd-room-chip :is(b,span) {min-width:0;max-width:100%;overflow-wrap:anywhere}
+.gc-hero h1,.gc-hero h1 em {overflow-wrap:anywhere;white-space:normal}

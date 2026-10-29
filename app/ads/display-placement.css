@@ -1,0 +1,31 @@
+/* These dimensions exist only for the explicit development preview. Production renders null. */
+.jhk-display-placement {
+  margin-block: 150px;
+  inline-size: 100%;
+  max-inline-size: 100%;
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  color: var(--text-muted, #65665e);
+  font: 12px/1.5 system-ui, sans-serif;
+}
+.jhk-display-placement__label { margin: 0; }
+.jhk-display-placement__box {
+  box-sizing: border-box;
+  inline-size: min(100%, 300px);
+  block-size: 250px;
+  border: 1px dashed currentColor;
+  display: grid;
+  place-content: center;
+  padding: 16px;
+  text-align: center;
+}
+@media (max-width: 359px) {
+  .jhk-display-placement__box { inline-size: min(100%, 250px); }
+}
+@media (min-width: 768px) {
+  .jhk-display-placement__box {
+    inline-size: min(100%, 728px);
+    block-size: 90px;
+  }
+}

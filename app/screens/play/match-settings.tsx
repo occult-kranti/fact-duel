@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { DURATIONS, MODE_DURATION } from '@/lib/server/room-engine.mjs';
+import { DURATIONS, MODE_DURATION, PRACTICE_DURATIONS } from '@/lib/server/room-engine.mjs';
 import { DEFAULT_CONFIG, feeFor, prizeFor } from '@/lib/economy/economy.mjs';
 import { advise, closedReason, evCopy } from '@/lib/economy/stake-advice.mjs';
 import type { WalletApi } from '../../use-wallet';
@@ -123,7 +123,7 @@ export function MatchSettings({
         <div className="fd-field">
           <Label id="timer-label">{t('match.timeLabel')}</Label>
           <div className="fd-opts" role="group" aria-labelledby="timer-label">
-            {TIMERS.map((duration) => (
+            {(bot ? [...TIMERS, ...PRACTICE_DURATIONS] : TIMERS).map((duration) => (
               <button
                 key={duration}
                 type="button"

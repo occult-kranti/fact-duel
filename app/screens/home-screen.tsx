@@ -1,38 +1,38 @@
 'use client';
-import { ArrowRight, Users, BookOpen, FlaskConical } from 'lucide-react';
-import { CricketArt, CricketMark } from '../cricket-art';
+import { ArrowRight, ArrowUpRight, Users, BookOpen, Zap, SlidersHorizontal, Play, Radio } from 'lucide-react';
 import type { HomeScreenProps } from './types';
 import { useLocale } from '../use-locale';
+import { DisplayPlacement } from '../ads/display-placement';
 
-/** The homepage is a launch surface. Records and learning tools stay one tap away. */
+/** The first question takes one tap. Human duels keep their separate beta consent. */
 export function HomeScreen({ ready, busy, onRoute, onDuel, onLive, onSetup, go }: HomeScreenProps) {
   const { locale } = useLocale();
   const hi = locale === 'hi';
   return (
-    <section className="cr-home" aria-labelledby="cr-home-title">
-      <div className="cr-hero">
-        <div className="cr-hero-copy">
-          <p className="cr-eyebrow"><span aria-hidden="true">●</span> {hi ? 'जान्ता है क्या / क्रिकेट क्लब' : 'JAANTA HAI KYA / THE CRICKET CLUB'}</p>
-          <h1 id="cr-home-title" className="cr-hero-title">{hi ? <>क्रिकेट दिमाग में?<br /><em>पिच पर आओ।</em></> : <>Know the game?<br /><em>Play your shot.</em></>}</h1>
-          <p className="cr-hero-lead">{hi ? 'चार विकल्प। पाँच सवाल। क्रिकेट की जानकारी का एक छोटा मुकाबला।' : 'Four choices. Five questions. A little cricket knowledge goes a long way.'}</p>
-          <div className="cr-actions">
-            <button className="cr-primary" disabled={busy} onClick={onLive}>{hi ? 'क्रिकेट खेलें' : 'Play cricket'} <ArrowRight size={20} aria-hidden="true" /></button>
-            <button className="cr-secondary" disabled={!ready || busy} onClick={() => onDuel('gauntlet', 'Cricket')}>{hi ? 'बॉट के साथ अभ्यास' : 'Just practice'}</button>
+    <section className="gc-home" aria-labelledby="gc-home-title">
+      <div className="gc-edition"><span>{hi ? 'जान्ता है क्या / क्रिकेट क्लब' : 'JAANTA HAI KYA / CRICKET KNOWLEDGE CLUB'}</span><span>{hi ? 'जिज्ञासु लोगों के लिए' : 'FOR THE LOVE OF THE GAME'}</span></div>
+      <div className="gc-hero">
+        <div className="gc-hero-copy">
+          <p className="gc-kicker">{hi ? 'बातों से आगे। पिच पर आओ।' : 'BIG OPINIONS. SMALL GAMES.'}</p>
+          <h1 id="gc-home-title">{hi ? <>जानते हो?<br /><em>दिखाओ।</em></> : <>All talk?<br /><em>Prove it.</em></>}</h1>
+          <p className="gc-lead">{hi ? 'गली क्रिकेट से विश्व कप तक। पाँच सवाल, एक अभ्यास बॉट और आपकी अगली अच्छी खोज।' : 'From the gully to the World Cup. Five questions, a practice rival, and something worth knowing.'}</p>
+          <div className="gc-actions">
+            <button type="button" className="gc-play" disabled={!ready || busy} onClick={() => onDuel('gauntlet', 'Cricket')}><Play size={19} fill="currentColor" aria-hidden="true" /><span>{busy ? (hi ? 'पिच तैयार है…' : 'Taking the field…') : ready ? (hi ? 'क्रिकेट खेलें' : 'Play cricket') : (hi ? 'सवाल तैयार हो रहे हैं…' : 'Getting your questions…')}</span><ArrowRight size={22} aria-hidden="true" /></button>
+            <button type="button" className="gc-human" disabled={busy} onClick={onLive}><Users size={19} aria-hidden="true" /><span>{hi ? 'इंसान से मुकाबला' : 'Human duel'}</span><ArrowUpRight size={20} aria-hidden="true" /></button>
           </div>
-          <p className="cr-inline-note">{hi ? 'ईमेल ज़रूरी नहीं · 5 सेकंड में खिलाड़ी न मिले तो अभ्यास बॉट' : 'No email needed · No rival in 5 seconds? Play a practice bot.'}</p>
-          <div className="cr-match-facts" aria-label={hi ? 'मुकाबले की जानकारी' : 'Match details'}>
-            <span><b>05</b> {hi ? 'सवाल' : 'questions'}</span><span><b>04</b> {hi ? 'विकल्प' : 'choices'}</span><span><b>₹0</b> {hi ? 'असली पैसे नहीं' : 'real money'}</span>
-          </div>
+          <p className="gc-play-note">{hi ? 'अभ्यास बॉट · हर सवाल के लिए 30 सेकंड · साइनअप नहीं' : 'Practice bot · 30s per question · No signup'}</p>
         </div>
-        <CricketArt />
+        <figure className="gc-art"><img src="/art/gully-cricket.webp" width="960" height="960" alt="" fetchPriority="high" decoding="async" /><figcaption>{hi ? 'गली से दुनिया तक।' : 'SAME GAME. ENDLESS CURIOSITY.'}</figcaption><span className="gc-art-stamp" aria-hidden="true">JHK<br /><b>05</b><br />CRICKET CLUB</span></figure>
       </div>
-      <div className="cr-section-heading"><h2>{hi ? 'अपना खेल चुनें' : 'Your next innings'}</h2><span>{hi ? 'सीधे खेलें। आसानी से।' : 'A quick game. A good break.'}</span></div>
-      <div className="cr-mode-grid">
-        <button className="cr-mode" onClick={() => onSetup('friend')}><span className="cr-mode-number">01 / VERSUS</span><Users className="cr-mode-icon" aria-hidden="true" /><strong>{hi ? 'दोस्त को चुनौती' : 'Challenge a friend'}</strong><p>{hi ? 'लिंक भेजें और आमने-सामने खेलें।' : 'Send a link. Settle it on the scoreboard.'}</p><ArrowRight size={18} aria-hidden="true" /></button>
-        <button className="cr-mode" disabled={!ready || busy} onClick={() => onDuel('quick', 'Cricket')}><span className="cr-mode-number">02 / QUICK SINGLE</span><CricketMark kind="ball" className="cr-mode-icon" /><strong>{hi ? 'एक सवाल का शॉट' : 'One-question warm-up'}</strong><p>{hi ? 'एक सवाल। अभ्यास बॉट। तुरंत नतीजा।' : 'One question against a bot. Straight to the result.'}</p><ArrowRight size={18} aria-hidden="true" /></button>
-        <button className="cr-mode" onClick={() => onRoute(null)}><span className="cr-mode-number">03 / OFF THE PITCH</span><BookOpen className="cr-mode-icon" aria-hidden="true" /><strong>{hi ? 'सीखें और खोजें' : 'Explore & learn'}</strong><p>{hi ? 'बिना घड़ी के खेल और विज्ञान के सवाल।' : 'Untimed sports and science. Follow your curiosity.'}</p><ArrowRight size={18} aria-hidden="true" /></button>
+      <div className="gc-match-ticket" aria-label={hi ? 'खेलने का तरीका' : 'How a match works'}><span className="gc-ticket-number" aria-hidden="true">05</span><p><b>{hi ? 'एक छोटी पारी।' : 'A little innings.'}</b><span>{hi ? 'चार विकल्प। जवाब लॉक करें। जानें क्यों। फिर खेलें।' : 'Four choices. Lock your answer. Learn the why. Go again.'}</span></p><span className="gc-ticket-free">{hi ? 'मुफ़्त खेलें' : 'FREE TO PLAY'}<small>{hi ? 'असली पैसा नहीं' : 'No real money'}</small></span></div>
+      <div className="gc-section-title"><h2>{hi ? 'आज किस मूड में हो?' : 'Find your kind of game.'}</h2><button onClick={() => onSetup('settings')}>{hi ? 'सभी मोड' : 'All modes'}<ArrowUpRight size={17} aria-hidden="true" /></button></div>
+      <div className="gc-game-menu">
+        <button disabled={!ready || busy} onClick={() => onDuel('quick', 'Cricket')}><span className="gc-menu-no">01</span><Zap size={24} aria-hidden="true" /><span><strong>{hi ? 'एक सवाल का शॉट' : 'The quick single'}</strong><small>{hi ? 'एक सवाल। तुरंत नतीजा।' : 'One question. A tiny test of instinct.'}</small></span><ArrowUpRight size={23} aria-hidden="true" /></button>
+        <button onClick={() => onSetup('friend')}><span className="gc-menu-no">02</span><Users size={24} aria-hidden="true" /><span><strong>{hi ? 'दोस्त को चुनौती' : 'Settle it with a friend'}</strong><small>{hi ? 'निजी रूम। लिंक भेजें। साथ खेलें।' : 'A private room. A link. A proper rivalry.'}</small></span><ArrowUpRight size={23} aria-hidden="true" /></button>
+        <button onClick={() => onRoute(null)}><span className="gc-menu-no">03</span><BookOpen size={24} aria-hidden="true" /><span><strong>{hi ? 'बिना घड़ी के खोजें' : 'Take the scenic route'}</strong><small>{hi ? 'खेल और विज्ञान। अपनी रफ़्तार से।' : 'Sports and science, at your own pace.'}</small></span><ArrowUpRight size={23} aria-hidden="true" /></button>
       </div>
-      <div className="cr-home-links"><button onClick={() => onSetup('settings')}><FlaskConical size={16} aria-hidden="true" />{hi ? 'सभी विषय और गेम मोड' : 'All topics & game modes'} <ArrowRight size={16} aria-hidden="true" /></button><button onClick={() => go('journal')}>{hi ? 'जवाब और स्रोत देखें' : 'Your answers & sources'} <ArrowRight size={16} aria-hidden="true" /></button></div>
+      <div className="gc-club-notes"><div><Radio size={19} aria-hidden="true" /><p><b>{hi ? 'इंसान के साथ खेलना है?' : 'Want a human rival?'}</b><span>{hi ? 'पाँच सेकंड में कोई न मिले तो अलग, शून्य-सिक्का अभ्यास शुरू होता है।' : 'Public search opens separate, zero-stake practice if nobody joins in five seconds.'}</span></p></div><button onClick={() => go('journal')}>{hi ? 'आपके जवाब और स्रोत' : 'Your answers & sources'}<ArrowRight size={17} aria-hidden="true" /></button><button onClick={() => onSetup('settings')}><SlidersHorizontal size={16} aria-hidden="true" />{hi ? 'अपना खेल बनाएँ' : 'Build your own match'}</button></div>
+      <DisplayPlacement placement="home-footer" />
     </section>
   );
 }

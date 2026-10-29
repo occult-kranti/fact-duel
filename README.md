@@ -1,6 +1,6 @@
 # Jaanta Hai Kya — the cricket club
 
-Cricket-first quiz duels, email-free guest play, a five-second practice-bot fallback and two selectable designs: Floodlights and Pavilion. Sports, science, source receipts and personal learning tools remain available.
+A new Gully Club design: original cricket poster artwork, paper-and-ink day mode, navy night mode, and one-tap five-question practice. Opening practice uses simple cricket questions with 30 seconds to read and answer. Human duels, source-backed sports/science learning and existing records remain available.
 
 **Play:** https://occult-kranti.github.io/fact-duel/
 
@@ -44,8 +44,18 @@ See the [profile release panel](docs/profile-release/PANEL.md), [verification re
 
 Historical Cloudflare/D1 and local-only behavior is documented in [the archived README](docs/legacy-cloudflare-preview.md). It is not the deployment path for this release.
 
-## Cricket redesign
+## Gully Club redesign
 
-Use the topbar appearance switch for Floodlights (night stadium) or Pavilion (daylight scorebook). Both apply across the game and persist between visits. The home screen prioritizes Play cricket, practice and friend challenges. All modes are available from All topics & game modes. Original vector art and short compositor animations respect reduced motion.
+Home opens directly into a labelled, zero-stake practice game in one tap. Human duel is a separate action and preserves the existing explicit age/terms confirmation. The human server retains its own rules. Bot custom practice adds 20/30-second reading timers alongside the original speed timers. Bot answers remain preplanned independently of player input; their scheduled wait is capped at 9.5 seconds.
 
-See [two-round panel and research](docs/cricket-redesign/PSYCHOLOGY.md), [design system](docs/cricket-redesign/DESIGN.md), [matchmaking](docs/cricket-redesign/MATCHMAKING.md), [verification](docs/cricket-redesign/VERIFICATION.md) and [Figma draft](https://www.figma.com/design/6IRTmI9Fc3xv6J62EoCnPy). The Figma draft remains incomplete because Starter tool limits blocked layout correction and verification; the browser implementation is verified separately.
+Home / Explore / Play / Progress / Answers organize the existing routes. Custom settings and optional progress categories use native disclosures, preserving selections and mounted content. Day/night share the same control order. Active questions use fixed-order stacked answer buttons, visible lock/correctness feedback and discrete screen-reader clock notices. Original home art is a 216kB WebP; decorative art never blocks gameplay.
+
+- [Product context](PRODUCT.md) and [design system](DESIGN.md)
+- [Two panel rounds](docs/gully-redesign/PANELS.md), [research rationale](docs/gully-redesign/RESEARCH.md) and [verification](docs/gully-redesign/VERIFICATION.md)
+- [Advertising setup and placement guide](ad_placement.md): all new placements default off; no local-result H5 reload
+- [Editable Excalidraw board](docs/gully-redesign/design-board/gully-club.excalidraw), [SVG export](docs/gully-redesign/design-board/gully-club.svg) and [tooling record](docs/gully-redesign/TOOLING.md)
+- [Artwork prompts and provenance](docs/gully-redesign/ART.md)
+
+Run `CHROMIUM_PATH=/path/to/chromium node scripts/gully-browser-check.mjs` for the bounded mobile/desktop and interaction suite. The script launches its own local Vite server. It uses mocked unavailable-human networking for cancellation/fallback checks; it does not generate real human matches or ad impressions.
+
+Earlier [cricket redesign notes](docs/cricket-redesign/) remain historical. The user reported Figma unavailable and directed local implementation; this revision used the actual MIT Excalidraw editor for its editable specification.

@@ -1,0 +1,68 @@
+$ vite build --config vite.config.static.ts
+vite v8.0.13 building client environment for production...
+
+transforming...✓ 2846 modules transformed.
+rendering chunks...
+computing gzip size...
+dist-static/licenses/fonts-OFL.txt                                        0.01 kB │ gzip:   0.03 kB
+dist-static/window.svg                                                    0.38 kB │ gzip:   0.22 kB
+dist-static/file.svg                                                      0.39 kB │ gzip:   0.26 kB
+dist-static/brand/favicon.svg                                             0.42 kB │ gzip:   0.29 kB
+dist-static/brand/jhk-mark.svg                                            0.42 kB │ gzip:   0.29 kB
+dist-static/favicon.svg                                                   0.42 kB │ gzip:   0.29 kB
+dist-static/brand/jhk-wordmark-hi-dark.svg                                0.46 kB │ gzip:   0.37 kB
+dist-static/brand/jhk-wordmark-hi.svg                                     0.46 kB │ gzip:   0.37 kB
+dist-static/robots.txt                                                    0.54 kB │ gzip:   0.37 kB
+dist-static/brand/jhk-lockup-dark.svg                                     0.89 kB │ gzip:   0.45 kB
+dist-static/brand/jhk-lockup.svg                                          0.89 kB │ gzip:   0.45 kB
+dist-static/globe.svg                                                     1.03 kB │ gzip:   0.54 kB
+dist-static/licenses/three-MIT.txt                                        1.08 kB │ gzip:   0.67 kB
+dist-static/brand/jhk-wordmark-dark.svg                                   1.41 kB │ gzip:   0.42 kB
+dist-static/brand/jhk-wordmark.svg                                        1.41 kB │ gzip:   0.43 kB
+dist-static/contact.html                                                  1.75 kB │ gzip:   0.91 kB
+dist-static/index.html                                                    2.68 kB │ gzip:   1.08 kB
+dist-static/brand/og.svg                                                  4.10 kB │ gzip:   1.01 kB
+dist-static/terms.html                                                    4.41 kB │ gzip:   2.13 kB
+dist-static/licenses/fonts-OFL-1.1.txt                                    4.59 kB │ gzip:   1.99 kB
+dist-static/brand/apple-touch-icon.png                                    6.17 kB
+dist-static/privacy.html                                                  6.30 kB │ gzip:   2.72 kB
+dist-static/licenses/fake-indexeddb-Apache-2.0.txt                       10.89 kB │ gzip:   3.93 kB
+dist-static/fonts/instrument-sans-latin-ext-normal-400-700.woff2         11.14 kB
+dist-static/fonts/jetbrains-mono-latin-ext-normal-500-700.woff2          11.62 kB
+dist-static/fonts/instrument-sans-latin-normal-400-700.woff2             30.09 kB
+dist-static/fonts/bricolage-grotesque-latin-ext-normal-500-800.woff2     30.73 kB
+dist-static/fonts/jetbrains-mono-latin-normal-500-700.woff2              31.43 kB
+dist-static/art/curiosity-stage.webp                                     40.29 kB
+dist-static/sports-club.webp                                             69.05 kB
+dist-static/fonts/bricolage-grotesque-latin-normal-500-800.woff2         76.88 kB
+dist-static/science-club.webp                                            87.53 kB
+dist-static/art/rivalry-stage.webp                                      120.92 kB
+dist-static/arena-art.webp                                              122.32 kB
+dist-static/brand/og.png                                                184.00 kB
+dist-static/art/gully-cricket.webp                                      216.00 kB
+dist-static/beta-policy.css                                               1.21 kB │ gzip:   0.65 kB
+dist-static/fonts/fonts.css                                               2.72 kB │ gzip:   0.51 kB
+dist-static/assets/arena-Y54RcSgN.css                                   188.00 kB │ gzip:  28.81 kB
+dist-static/assets/index-Bk4DTnAo.css                                   293.09 kB │ gzip:  47.76 kB
+dist-static/assets/gem-vault-fallback-DbewR-zp.js                         1.73 kB │ gzip:   0.92 kB
+dist-static/assets/BufferGeometryUtils-CBHd2p0W.js                        2.21 kB │ gzip:   0.94 kB
+dist-static/assets/rapier-BN8wJJkg.js                                     2.68 kB │ gzip:   1.18 kB
+dist-static/assets/reduced-motion-BnbFTP06.js                             4.05 kB │ gzip:   1.88 kB
+dist-static/assets/arcade-scene-CA7JmfVZ.js                               4.47 kB │ gzip:   2.00 kB
+dist-static/assets/runtime-Cw_iw2LG.js                                    5.08 kB │ gzip:   2.29 kB
+dist-static/assets/stamp-case-3d-C8npJM53.js                              5.67 kB │ gzip:   2.41 kB
+dist-static/assets/reward-medal-DCF81FpH.js                              10.05 kB │ gzip:   3.79 kB
+dist-static/assets/hero-orb-Y2ZUHcwT.js                                  15.92 kB │ gzip:   6.34 kB
+dist-static/assets/shared-BsmDn4tW.js                                   216.95 kB │ gzip:  71.05 kB
+dist-static/assets/index-D5lKxfTu.js                                    333.42 kB │ gzip:  99.69 kB
+dist-static/assets/duel-client-static-CgAwu4Nl.js                       604.51 kB │ gzip: 157.58 kB
+dist-static/assets/three.module-B5889p1s.js                             734.65 kB │ gzip: 188.04 kB
+dist-static/assets/arena-DhyMP3DI.js                                    756.99 kB │ gzip: 232.93 kB
+dist-static/assets/gem-vault-uSafRHMw.js                              2,264.06 kB │ gzip: 852.15 kB
+
+[plugin builtin:vite-reporter]
+(!) Some chunks are larger than 1200 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 1.35s

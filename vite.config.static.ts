@@ -25,7 +25,7 @@ const publicDir = path.join(repoRoot, 'public');
 const appUrl = (process.env.APP_URL ?? '').trim();
 const jhkServerUrl = (process.env.JHK_SERVER_URL || process.env.VITE_JHK_SERVER_URL || '').trim();
 const jhkPublicUrl = process.env.JHK_PUBLIC_URL || 'https://occult-kranti.github.io/fact-duel/';
-const jhkDescription = 'Jaanta Hai Kya. Cricket quiz duels with email-free play, human rivals and a practice bot after five seconds. Choose Floodlights or Pavilion. Sports, science and answer sources included.';
+const jhkDescription = 'Jaanta Hai Kya. Cricket quiz duels with email-free play, human rivals and a practice bot after five seconds. One-tap cricket practice with original club artwork. Sports, science and answer sources included.';
 
 /** Explicitly replace public ad settings in the Pages bundle; missing values fail closed. */
 const jhkAdKeys = [
@@ -164,7 +164,7 @@ function staticAssets(): Plugin {
             { tag: 'link', attrs: { rel: 'canonical', href: jhkPublicUrl }, injectTo: 'head' as const },
             { tag: 'meta', attrs: { property: 'og:url', content: jhkPublicUrl }, injectTo: 'head' as const },
             { tag: 'meta', attrs: { property: 'og:description', content: jhkDescription }, injectTo: 'head' as const },
-            { tag: 'meta', attrs: { property: 'og:image', content: new URL('art/rivalry-stage.webp', jhkPublicUrl).href }, injectTo: 'head' as const },
+            { tag: 'meta', attrs: { property: 'og:image', content: new URL('art/gully-cricket.webp', jhkPublicUrl).href }, injectTo: 'head' as const },
           );
         }
         return { html: handoffHtml(html), tags };
@@ -182,6 +182,7 @@ export default defineConfig(({ mode }) => ({
   css: { postcss: repoRoot },
   define: {
     'process.env.NODE_ENV': JSON.stringify(mode === 'development' ? 'development' : 'production'),
+    'process.env.NEXT_PUBLIC_JHK_STATIC_BUILD': JSON.stringify('true'),
     ...jhkAdDefines,
     __STATIC_BASE__: JSON.stringify(base),
     'import.meta.env.VITE_APP_URL': JSON.stringify(appUrl),

@@ -26,6 +26,8 @@ import { JhkProfileGate } from './shell/jhk-profile-gate';
 import { jhkOnline } from '@/lib/jhk-online/runtime';
 import { DEFAULT_NAME } from '@/lib/profile-gate.mjs';
 import { HomeScreen } from './screens/home-screen';
+import { ClubDirectory } from './screens/club-directory';
+import { DisplayPlacement } from './ads/display-placement';
 import { PlayScreen } from './screens/play-screen';
 import { RoomScreen } from './screens/room-screen';
 import { PlayerScreen } from './screens/player-screen';
@@ -107,7 +109,7 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
     [busy, setBusy] = useState(false),
     [error, setError] = useState(''),
     [note, setNote] = useState(''),
-    [light, setLight] = useState(false),
+    [light, setLight] = useState(true),
     [sound, setSound] = useState(true),
     [leaveOpen, setLeaveOpen] = useState(false),
     [metrics, setMetrics] = useState({ rttMs: 0, jitterMs: 0, offset: 0, samples: 0 }),
@@ -157,6 +159,7 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
     mutation = useRef(false),
     revealing = useRef(false),
     createDraft = useRef<any>(null),
+    createFlight = useRef(false),
     joinDraft = useRef<any>(null),
     alive = useRef(true),
     recovered = useRef(false),
@@ -230,7 +233,7 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
       .then((data) => setCatalogue(data.catalogue))
       .catch((e) => setError(e.message));
     try {
-      setLight(localStorage.getItem(SETTINGS_KEYS.theme) === 'light');
+      setLight(localStorage.getItem(SETTINGS_KEYS.theme) !== 'dark');
       setShowArt(localStorage.getItem(SETTINGS_KEYS.art) !== 'off');
       setSound(localStorage.getItem(SETTINGS_KEYS.sound) !== 'off');
       const savedName = localStorage.getItem(SETTINGS_KEYS.name);
@@ -580,11 +583,12 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
       history.replaceState(history.state, '', `${location.pathname}${location.search}#online`);
       return;
     }
-    if (busy || !player.loaded) return;
+    if (busy || createFlight.current || !player.loaded) return;
     if (!name.trim()) {
       setError('Choose a player name first.');
       return;
     }
+    createFlight.current = true;
     setBusy(true);
     setError('');
     setShowArt(false);
@@ -624,6 +628,7 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
     } catch (e: any) {
       setError(e.message);
     } finally {
+      createFlight.current = false;
       setBusy(false);
     }
   }
@@ -838,7 +843,7 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
   const chooseCollection = (domain: string, topic: string) => {
     change({ domain, topic, subtopic: 'all', region: 'all', difficulty: 'all' });
     setJoinView(false);
-    go('arena');
+    go('practice');
     window.scrollTo({ top: 0, behavior: 'instant' });
   };
   const go = (next: string) => {
@@ -860,7 +865,7 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
     if (['quick', 'trilogy', 'gauntlet'].includes(action)) {
       setJoinView(false);
       change({ mode: action });
-      go('arena');
+      go('practice');
     } else go(action === 'play' ? 'discovery' : action === 'recall' ? 'discovery' : 'journal');
   };
   const clearFilters = () =>
@@ -871,25 +876,30 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
     go('journeys');
   };
   const quickDuel = (mode: string, topic = 'all') => {
+    if (createFlight.current || busy) return;
     const chosenTopic = catalogue?.topics.find((t: any) => t.topic === topic);
     const next = {
       ...INITIAL_CONFIG,
       mode,
-      duration: modeDuration(mode),
+      duration: topic === 'Cricket' ? 30 : modeDuration(mode),
       topic,
+      difficulty: topic === 'Cricket' ? 'simple' : 'all',
       domain: chosenTopic?.domain || 'all',
+      opponent: 'bot' as const,
+      stake: 0,
     };
     createDraft.current = null;
     setConfig(next);
     setJoinView(false);
-    go('arena');
+    go('practice');
     void create(next);
   };
   const startBotMatch = (file = 'cricket') => {
+    if (createFlight.current || busy) return;
     const topics: Record<string, string> = { cricket: 'Cricket', football: 'Football', basketball: 'Basketball', baseball: 'Baseball', 'formula-1': 'Formula 1', space: 'Space', physics: 'Physics', biology: 'Biology', computing: 'Computing' };
     const topic = topics[file] || 'all';
     const science = ['science', 'space', 'physics', 'biology', 'computing'].includes(file);
-    const next: Config = { ...INITIAL_CONFIG, opponent: 'bot', mode: 'gauntlet', duration: modeDuration('gauntlet'), stake: 0, topic, domain: science ? 'science' : file === 'all' ? 'all' : 'sports' };
+    const next: Config = { ...INITIAL_CONFIG, opponent: 'bot', mode: 'gauntlet', duration: 30, stake: 0, topic, domain: science ? 'science' : file === 'all' ? 'all' : 'sports' };
     createDraft.current = null;
     setConfig(next);
     void create(next);
@@ -925,7 +935,7 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
       difficulty: 'all',
     });
     setJoinView(false);
-    go('arena');
+    go('practice');
     requestAnimationFrame(() => {
       const bar = document.querySelector<HTMLElement>('.fd-play .fd-launch');
       if (!bar) return;
@@ -1055,7 +1065,7 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
         skin={player.passport.skin}
         onNavigate={(id) => go(id === 'arena' ? 'online' : id)}
         topbar={{
-          appearance: <button className="cr-theme-switch" aria-label={light ? 'Switch to Floodlights design' : 'Switch to Pavilion design'} onClick={() => setLight(v => !v)}><span aria-hidden="true">{light ? '☀' : '☾'}</span> {light ? 'Pavilion' : 'Floodlights'}</button>,
+          appearance: !active && !liveState.playing ? <button className="cr-theme-switch" aria-label={light ? 'Switch to night match' : 'Switch to day match'} onClick={() => setLight(v => !v)}><span aria-hidden="true">{light ? '☾' : '☀'}</span><span>{light ? (locale === 'hi' ? 'रात' : 'Night') : (locale === 'hi' ? 'दिन' : 'Day')}</span></button> : null,
           sound,
           onToggleSound: () => setSound((v) => !v),
           onOpenSettings: () => setSettingsOpen(true),
@@ -1133,6 +1143,9 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
           />
         )}
         {!room && (tab === 'online' || (jhkOnline.configured && tab === 'arena')) && <LiveDuelScreen name={name} initialFile={liveEntry.file} initialIntent={liveEntry.intent} onBot={startBotMatch} onPractice={() => startBotMatch('cricket')} onHome={() => go('home')} onState={onLiveState} onRoundKey={setLiveRoundKey} />}
+        {!room && ['journeys', 'collections', 'discovery', 'events', 'practice'].includes(tab) && <ClubDirectory section="explore" current={tab} go={go} />}
+        {!room && ['passport', 'analytics', 'showroom'].includes(tab) && <ClubDirectory section="progress" current={tab} go={go} />}
+        {!room && ['journal'].includes(tab) && <ClubDirectory section="answers" current={tab} go={go} />}
         {!room && tab === 'journeys' && (
           <ExpeditionsScreen
             player={player}
@@ -1172,7 +1185,7 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
         {!room && tab === 'collections' && (
           <CollectionsScreen player={player} catalogue={catalogue} onChoose={chooseCollection} />
         )}
-        {!room && tab === 'passport' && <><button className="cr-secondary" onClick={() => window.dispatchEvent(new Event('jhk-profile-open'))}>{locale === 'hi' ? 'वैकल्पिक प्रोफ़ाइल / रिकवरी' : 'Optional player card / restore'}</button><LiveProgressCard onPlay={() => go('online')} /></>}
+        {!room && tab === 'passport' && <details className="gc-account"><summary>{locale === 'hi' ? 'ऑनलाइन रिकॉर्ड और वैकल्पिक प्रोफ़ाइल' : 'Human standings & optional player card'}</summary><button className="cr-secondary" onClick={() => window.dispatchEvent(new Event('jhk-profile-open'))}>{locale === 'hi' ? 'वैकल्पिक प्रोफ़ाइल / रिकवरी' : 'Optional player card / restore'}</button><LiveProgressCard onPlay={() => go('online')} /></details>}
         {!room && tab === 'passport' && (
           <PlayerScreen
             player={player}
@@ -1184,6 +1197,7 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
         )}
         {!room && tab === 'discovery' && <DiscoveryScreen player={player} topic={config.topic} go={go} />}
         {!room && tab === 'journal' && <VaultScreen player={player} go={go} />}
+        {!room && ['journeys', 'collections', 'journal', 'discovery'].includes(tab) && <DisplayPlacement placement="learn-footer" />}
         {!room && (tab === 'rules' || tab === 'timing' || tab === 'coin' || tab === 'trust') && (
           <RulesScreen view={tab} go={go} />
         )}

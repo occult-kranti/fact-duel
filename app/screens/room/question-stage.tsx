@@ -53,7 +53,7 @@ export function QuestionStage({
 }) {
   const juice = useJuice();
   const press = usePress();
-  const { t, pick, topic } = useLocale();
+  const { t, pick, topic, locale } = useLocale();
   const duration = room.config.duration * 1000;
   const result = rd?.result ?? null;
   const cardRef = useRef<HTMLDivElement>(null);
@@ -117,8 +117,10 @@ export function QuestionStage({
   const format = (FORMAT_COPY as any)[room.config.mode];
   const hot = !result && left <= HOT_MS;
   const seconds = (left / 1000).toFixed(1);
+  const clockNotice = !running ? '' : left <= 5000 ? (locale === 'hi' ? 'पाँच सेकंड से कम बाकी।' : 'Less than five seconds remaining.') : left <= 10000 ? (locale === 'hi' ? 'दस सेकंड से कम बाकी।' : 'Less than ten seconds remaining.') : (locale === 'hi' ? `जवाब देने के लिए ${room.config.duration} सेकंड हैं।` : `You have ${room.config.duration} seconds to answer.`);
   return (
     <section className="fd-qstage" data-live={result ? 'false' : 'true'}>
+      <p className="fd-sr" role="status" aria-live="polite" aria-atomic="true">{clockNotice}</p>
       <div className="fd-qtop">
         <span className="fd-qtopic">
           {topic(question.topic)} <i aria-hidden="true">/</i> {question.subtopic}

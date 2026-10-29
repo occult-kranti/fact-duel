@@ -2,8 +2,9 @@
 /**
  * Player — ownership and accomplishment on one screen (design bible 10.5).
  *
- * Order: identity (level / Arena Rank / streak / Conviction) → topic record → achievements → stamp
- * case → the Locker → the legacy side quests and card finishes. Every number on this page comes from
+ * Order: identity (level / Arena Rank / streak / Conviction) → optional supporter card → grouped
+ * records, achievements and stamps → the Locker and side quests. Native details keep children
+ * mounted while allowing the player to choose the records they want to see. Every number comes from
  * `player.progression`; nothing is inferred or invented, and the "on this device" disclaimers sit on
  * the two cards that make a claim about the player — Arena Rank and Conviction.
  *
@@ -34,7 +35,8 @@ import { useLocale } from '../use-locale';
 import './player/player.css';
 
 export function PlayerScreen({ player, onOpenExpedition, onMissionAction, go }: PlayerScreenProps) {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
+  const hi = locale === 'hi';
   const progression = player.progression ?? emptyProgression();
   const accent: string = progression.cosmetics.equipped.accent;
   const [name, setName] = useState('');
@@ -65,10 +67,6 @@ export function PlayerScreen({ player, onOpenExpedition, onMissionAction, go }: 
         </div>
       </header>
 
-      {/* The Supporter Card is the identity hook: handle, allegiance per sport, per-sport rating and
-          season, matchweek streak, the age band. All device-local; it says so itself. */}
-      <SupporterCard player={player} />
-
       <div className="fd-player-hero">
         <LevelCard progression={progression} level={player.level} name={name} />
         <RankCard progression={progression} />
@@ -78,58 +76,73 @@ export function PlayerScreen({ player, onOpenExpedition, onMissionAction, go }: 
 
       {/* The Arena Rank card above says "on this device"; this is where that claim can be checked. */}
       <MeasurementLink onOpen={() => go('analytics')} />
-      <section className="fd-sec" aria-labelledby="fd-boards-sec-h">
-        <div className="fd-sec-head">
-          <div>
-            <p className="fd-eyebrow">{t('player.boardsEyebrow')}</p>
-            <h2 id="fd-boards-sec-h">{t('player.boards')}</h2>
+
+      <details className="gc-progress-group">
+        <summary>{hi ? 'समर्थक कार्ड और अपनी टीमें' : 'Supporter card & your teams'}</summary>
+        <SupporterCard player={player} />
+      </details>
+
+      <details className="gc-progress-group">
+        <summary>{hi ? 'इस डिवाइस की रैंकिंग' : 'Your local boards'}</summary>
+        <section className="fd-sec" aria-labelledby="fd-boards-sec-h">
+          <div className="fd-sec-head">
+            <div>
+              <p className="fd-eyebrow">{t('player.boardsEyebrow')}</p>
+              <h2 id="fd-boards-sec-h">{t('player.boards')}</h2>
+            </div>
+            <span>{t('player.boardsNote')}</span>
           </div>
-          <span>{t('player.boardsNote')}</span>
-        </div>
-        <Boards profile={player.profile} at={boardsAt} />
-      </section>
+          <Boards profile={player.profile} at={boardsAt} />
+        </section>
+      </details>
 
       {/* Only `counters.byTopic` feeds these bars and only duel rounds write it, so the heading and
           the aside name what is counted instead of claiming strength the numbers cannot support. */}
-      <section className="fd-sec" aria-labelledby="fd-topic-h">
-        <div className="fd-sec-head">
-          <div>
-            <p className="fd-eyebrow">{t('player.topicEyebrow')}</p>
-            <h2 id="fd-topic-h">{t('player.topic')}</h2>
+      <details className="gc-progress-group">
+        <summary>{hi ? 'हर विषय में आपका रिकॉर्ड' : 'Your topic record'}</summary>
+        <section className="fd-sec" aria-labelledby="fd-topic-h">
+          <div className="fd-sec-head">
+            <div>
+              <p className="fd-eyebrow">{t('player.topicEyebrow')}</p>
+              <h2 id="fd-topic-h">{t('player.topic')}</h2>
+            </div>
+            <span>{t('player.topicNote')}</span>
           </div>
-          <span>{t('player.topicNote')}</span>
-        </div>
-        <Mastery progression={progression} />
-      </section>
+          <Mastery progression={progression} />
+        </section>
+      </details>
 
-      <section className="fd-sec" aria-labelledby="fd-ach-h">
-        <div className="fd-sec-head">
-          <div>
-            <p className="fd-eyebrow">{t('player.achEyebrow')}</p>
-            <h2 id="fd-ach-h">{t('player.ach')}</h2>
+      <details className="gc-progress-group">
+        <summary>{hi ? 'उपलब्धियाँ और यात्रा स्टैम्प' : 'Achievements & expedition stamps'}</summary>
+        <section className="fd-sec" aria-labelledby="fd-ach-h">
+          <div className="fd-sec-head">
+            <div>
+              <p className="fd-eyebrow">{t('player.achEyebrow')}</p>
+              <h2 id="fd-ach-h">{t('player.ach')}</h2>
+            </div>
+            <span>{t('player.achNote')}</span>
           </div>
-          <span>{t('player.achNote')}</span>
-        </div>
-        <Achievements progression={progression} />
-      </section>
+          <Achievements progression={progression} />
+        </section>
+        <section className="fd-sec">
+          <StampCase player={player} onOpen={onOpenExpedition} />
+        </section>
+      </details>
 
-      {/* ExpeditionCase brings its own "Your expedition stamps" heading; the 3D case sits above it. */}
-      <section className="fd-sec">
-        <StampCase player={player} onOpen={onOpenExpedition} />
-      </section>
-
-      <section className="fd-sec" aria-labelledby="fd-locker-sec-h">
-        <div className="fd-sec-head">
-          <div>
-            <p className="fd-eyebrow">{t('player.lockerEyebrow')}</p>
-            <h2 id="fd-locker-sec-h">{t('player.locker')}</h2>
+      <details className="gc-progress-group">
+        <summary>{hi ? 'लॉकर और वैकल्पिक मिशन' : 'Locker & optional missions'}</summary>
+        <section className="fd-sec" aria-labelledby="fd-locker-sec-h">
+          <div className="fd-sec-head">
+            <div>
+              <p className="fd-eyebrow">{t('player.lockerEyebrow')}</p>
+              <h2 id="fd-locker-sec-h">{t('player.locker')}</h2>
+            </div>
+            <span>{t('player.lockerNote')}</span>
           </div>
-          <span>{t('player.lockerNote')}</span>
-        </div>
-        <Locker player={player} />
-      </section>
-
-      <Passport player={player} onAction={onMissionAction} />
+          <Locker player={player} />
+        </section>
+        <Passport player={player} onAction={onMissionAction} />
+      </details>
     </div>
   );
 }

@@ -1,7 +1,6 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import { completedRounds } from '@/lib/duel-presentation.mjs';
-import { roomAdCompletion } from '@/lib/completion-ad.mjs';
 import { DuelHUD, MatchFinish, RoundReview } from '../rivalry-widgets';
 import { useLocale } from '../use-locale';
 import type { RoomScreenProps } from './types';
@@ -9,7 +8,6 @@ import { RoomChrome } from './room/room-chrome';
 import { LobbyPanel } from './room/lobby-panel';
 import { CountdownStage } from './room/countdown-stage';
 import { QuestionStage } from './room/question-stage';
-import { CompletionAdBreak } from './online/completion-ad-break';
 import './room/room.css';
 
 /* Room: chrome (leave / mode · round / connection), HUD, lobby & between-round panel, countdown,
@@ -86,7 +84,6 @@ export function RoomScreen({ duel, player }: RoomScreenProps) {
   const lobby = !revealing && ['waiting', 'between'].includes(phase);
   const counting = !revealing && ['scheduled', 'playing'].includes(phase) && !question;
   const live = !!question && (!rd?.result || revealing);
-  const completion = roomAdCompletion(room);
   const finished = !revealing && ['complete', 'cancelled'].includes(phase);
   const mine = rd?.result ? (rd.receipts?.[room.seat] ?? null) : null;
 
@@ -222,7 +219,8 @@ export function RoomScreen({ duel, player }: RoomScreenProps) {
             <summary>{locale === 'hi' ? 'सवाल और स्रोत देखें' : 'Review questions & sources'}</summary>
             <RoundReview room={room} player={player} />
           </details>}
-          {completion && <CompletionAdBreak {...completion} />}
+          {/* Local rooms live in memory. The H5 provider reloads on close, so only the
+              server-backed LiveDuelScreen may offer that recoverable ad break. */}
         </div>
       )}
     </section>

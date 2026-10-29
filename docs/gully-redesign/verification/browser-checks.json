@@ -1,0 +1,298 @@
+{
+  "checks": [
+    {
+      "name": "320 home fits",
+      "pass": true
+    },
+    {
+      "name": "320 first play above fold",
+      "pass": true
+    },
+    {
+      "name": "320 no startup modal",
+      "pass": true
+    },
+    {
+      "name": "320 night fits",
+      "pass": true
+    },
+    {
+      "name": "320 theme persists",
+      "pass": true
+    },
+    {
+      "name": "390 home fits",
+      "pass": true
+    },
+    {
+      "name": "390 first play above fold",
+      "pass": true
+    },
+    {
+      "name": "390 no startup modal",
+      "pass": true
+    },
+    {
+      "name": "390 night fits",
+      "pass": true
+    },
+    {
+      "name": "390 theme persists",
+      "pass": true
+    },
+    {
+      "name": "390 Explore fits",
+      "pass": true
+    },
+    {
+      "name": "390 Progress fits",
+      "pass": true
+    },
+    {
+      "name": "390 Answers fits",
+      "pass": true
+    },
+    {
+      "name": "390 custom practice fits",
+      "pass": true
+    },
+    {
+      "name": "390 advanced closed",
+      "pass": true
+    },
+    {
+      "name": "390 advanced fits",
+      "pass": true
+    },
+    {
+      "name": "844 home fits",
+      "pass": true
+    },
+    {
+      "name": "844 first play above fold",
+      "pass": true
+    },
+    {
+      "name": "844 no startup modal",
+      "pass": true
+    },
+    {
+      "name": "844 night fits",
+      "pass": true
+    },
+    {
+      "name": "844 theme persists",
+      "pass": true
+    },
+    {
+      "name": "1440 home fits",
+      "pass": true
+    },
+    {
+      "name": "1440 first play above fold",
+      "pass": true
+    },
+    {
+      "name": "1440 no startup modal",
+      "pass": true
+    },
+    {
+      "name": "1440 night fits",
+      "pass": true
+    },
+    {
+      "name": "1440 theme persists",
+      "pass": true
+    },
+    {
+      "name": "1440 Explore fits",
+      "pass": true
+    },
+    {
+      "name": "1440 Progress fits",
+      "pass": true
+    },
+    {
+      "name": "1440 Answers fits",
+      "pass": true
+    },
+    {
+      "name": "1440 custom practice fits",
+      "pass": true
+    },
+    {
+      "name": "1440 advanced closed",
+      "pass": true
+    },
+    {
+      "name": "1440 advanced fits",
+      "pass": true
+    },
+    {
+      "name": "one-tap rapid launch reaches four answers",
+      "pass": true
+    },
+    {
+      "name": "practice bot label visible",
+      "pass": true
+    },
+    {
+      "name": "first play uses thirty-second simple questions",
+      "pass": true
+    },
+    {
+      "name": "question fits",
+      "pass": true
+    },
+    {
+      "name": "answer lock moves keyboard focus to status",
+      "pass": true
+    },
+    {
+      "name": "rapid answer locks every option",
+      "pass": true
+    },
+    {
+      "name": "one-question result has replay",
+      "pass": true
+    },
+    {
+      "name": "result review starts collapsed",
+      "pass": true
+    },
+    {
+      "name": "result fits",
+      "pass": true
+    },
+    {
+      "name": "rapid replay starts a labelled practice game",
+      "pass": true
+    },
+    {
+      "name": "320 route Topics",
+      "pass": true
+    },
+    {
+      "name": "320 selected parent for Topics",
+      "pass": true
+    },
+    {
+      "name": "320 route Discover facts",
+      "pass": true
+    },
+    {
+      "name": "320 selected parent for Discover facts",
+      "pass": true
+    },
+    {
+      "name": "320 route Fixtures & challenges",
+      "pass": true
+    },
+    {
+      "name": "320 selected parent for Fixtures & challenges",
+      "pass": true
+    },
+    {
+      "name": "320 route Custom practice",
+      "pass": true
+    },
+    {
+      "name": "320 selected parent for Custom practice",
+      "pass": true
+    },
+    {
+      "name": "320 route Expeditions",
+      "pass": true
+    },
+    {
+      "name": "320 selected parent for Expeditions",
+      "pass": true
+    },
+    {
+      "name": "optional progress categories collapsed",
+      "pass": true
+    },
+    {
+      "name": "progress disclosure opens by keyboard",
+      "pass": true
+    },
+    {
+      "name": "320 route Activity & data",
+      "pass": true
+    },
+    {
+      "name": "320 route Art collection",
+      "pass": true
+    },
+    {
+      "name": "320 route Your progress",
+      "pass": true
+    },
+    {
+      "name": "distinct rules view Human duel rules",
+      "pass": true
+    },
+    {
+      "name": "320 Human duel rules",
+      "pass": true
+    },
+    {
+      "name": "distinct rules view Rules of the coin",
+      "pass": true
+    },
+    {
+      "name": "320 Rules of the coin",
+      "pass": true
+    },
+    {
+      "name": "distinct rules view Trust",
+      "pass": true
+    },
+    {
+      "name": "320 Trust",
+      "pass": true
+    },
+    {
+      "name": "offline after load and missing artwork still plays",
+      "pass": true
+    },
+    {
+      "name": "blocked web storage does not block practice",
+      "pass": true
+    },
+    {
+      "name": "Hindi home fits 320",
+      "pass": true
+    },
+    {
+      "name": "Hindi question chrome fits 320",
+      "pass": true
+    },
+    {
+      "name": "200 percent text home reflows",
+      "pass": true
+    },
+    {
+      "name": "200 percent text question reflows",
+      "pass": true
+    },
+    {
+      "name": "cancelled search cannot revive practice",
+      "pass": true
+    },
+    {
+      "name": "failed human network has labelled practice fallback",
+      "pass": true
+    },
+    {
+      "name": "disabled ads make no network request",
+      "pass": true
+    },
+    {
+      "name": "no runtime errors",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "adRequests": 0
+}
