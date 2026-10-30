@@ -39,3 +39,10 @@ The project-wide Supabase advisor reported pre-existing notices outside this mig
 ## HTTPS verification timing repair
 
 Live browser verification reproduced an honest bot-practice cancellation: a 2.033-second delay between the local engine issuing the question and the UI starting its clock exceeded the unchanged 500ms timing allowance. Question-history IndexedDB writes now run as deduplicated background bookkeeping. Static JHK bot timing and its displayed remaining time use the projected engine issue stamp, so rendering delay cannot create a contradictory elapsed-time claim. The timer budget includes that delay; no timing tolerance, human-server rule or Hisaab behavior is relaxed. Regression tests cover the observed delay, nonblocking/deduplicated writes, failure/retry and unchanged alternate-transport clocks.
+
+
+## HTTPS verification receipt recovery
+
+The deployed timing repair (43bb6c) completed both a three-round Mini and a six-round Full over in live HTTPS play. The 60/150 completion XP bonuses were verified, and Save card produced a 1080×1350 PNG. A separate persistence fault reproduced in a fresh sole tab: completion XP logs survived while the new receipt ledger disappeared after reload. Current source and extracted deployed sanitizers preserve the ledger in isolated checks; the exact writer cause is not established.
+
+Profile loading now reconstructs missing receipt IDs only from sanitized, exact `over-completion-v1` bonus logs with known format, completion/perfect XP and Club amounts. It merges IDs once, respects the permanent receipt cap, changes no XP, and preserves reset isolation. Regression coverage includes sequential Mini/Full completion, a missing-field reload, repeat result delivery after journal trimming, invalid proofs and capacity. A lost receipt whose supporting log has already been trimmed cannot be recovered; intact permanent receipts remain independent of that log. Final live reload verification of this recovery is pending publication.
