@@ -1,5 +1,5 @@
 'use client';
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { Component, lazy, Suspense, useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   AlertDialog,
@@ -62,6 +62,17 @@ import {
   type StartMark,
 } from './screens/types';
 
+const TeamsScreen = lazy(() => import('./screens/teams-screen').then(module => ({ default: module.TeamsScreen })));
+
+class TeamScreenBoundary extends Component<{ children: ReactNode; onHome: () => void }, { failed: boolean }> {
+  state = { failed: false };
+  static getDerivedStateFromError() { return { failed: true }; }
+  render() {
+    if (!this.state.failed) return this.props.children;
+    return <section className="notice-box" role="alert"><h1>The team pavilion could not open.</h1><p>The connection may have dropped while loading. Reload to reconnect to your team.</p><button className="cr-primary" onClick={() => window.location.reload()}>Reload the game</button><button className="cr-secondary" onClick={this.props.onHome}>Back to play</button></section>;
+  }
+}
+
 /** The timer a format opens on. Unknown formats fall back to Quick Draw's clock. */
 function modeDuration(mode: string) {
   return MODE_DURATION[mode as keyof typeof MODE_DURATION] ?? MODE_DURATION.quick;
@@ -106,7 +117,7 @@ export default function Arena({ initialTab = 'home' }: { initialTab?: string }) 
 
 function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
   const { t, locale } = useLocale();
-  const [tab, setTab] = useState(() => typeof location !== 'undefined' && location.hash.startsWith('#online') ? 'online' : typeof location !== 'undefined' && ['#passport', '#profile'].includes(location.hash) ? 'passport' : initialTab),
+  const [tab, setTab] = useState(() => typeof location !== 'undefined' && location.hash.startsWith('#teams') ? 'teams' : typeof location !== 'undefined' && location.hash.startsWith('#online') ? 'online' : typeof location !== 'undefined' && ['#passport', '#profile'].includes(location.hash) ? 'passport' : initialTab),
     [catalogue, setCatalogue] = useState<any>(null),
     [config, setConfig] = useState<Config>(INITIAL_CONFIG),
     [name, setName] = useState(DEFAULT_NAME),
@@ -128,6 +139,8 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
     [connected, setConnected] = useState(true),
     [copied, setCopied] = useState(false);
   const [liveState, setLiveState] = useState({ inMatch: false, playing: false });
+  const [teamLiveState, setTeamLiveState] = useState({ inRun: false, playing: false });
+  const onTeamState = useCallback((state: { inRun: boolean; playing: boolean }) => setTeamLiveState(previous => previous.inRun === state.inRun && previous.playing === state.playing ? previous : state), []);
   const [liveEntry, setLiveEntry] = useState<{file?: string; intent?: 'play' | 'friend' | 'join'}>({});
   const [liveRoundKey, setLiveRoundKey] = useState<string | null>(null);
   const onLiveState = useCallback((inMatch: boolean, playing: boolean) => setLiveState(previous => previous.inMatch === inMatch && previous.playing === playing ? previous : { inMatch, playing }), []);
@@ -883,7 +896,8 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
     if (jhkOnline.configured && next === 'arena') next = 'online';
     // The live desk must survive a browser reload so its server room can be recovered.
     if (next === 'online') history.replaceState(history.state, '', `${location.pathname}${location.search}#online`);
-    else if (location.hash.startsWith('#online')) history.replaceState(history.state, '', `${location.pathname}${location.search}`);
+    else if (next === 'teams' && !location.hash.startsWith('#teams')) history.replaceState(history.state, '', `${location.pathname}${location.search}#teams`);
+    else if (next !== 'teams' && ['#online', '#teams', '#passport', '#profile'].some(hash => location.hash.startsWith(hash))) history.replaceState(history.state, '', `${location.pathname}${location.search}`);
     if (next !== 'arena') cancelRival();
     setTab(next);
     window.scrollTo({ top: 0, behavior: 'instant' });
@@ -1094,16 +1108,18 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
       <AppShell
         effects={null}
         tab={tab === 'online' ? 'arena' : tab}
-        inRoom={!!room || liveState.inMatch}
-        active={active || liveState.playing}
+        inRoom={!!room || liveState.inMatch || teamLiveState.inRun}
+        active={active || liveState.playing || teamLiveState.playing}
         skin={player.passport.skin}
         onNavigate={(id) => go(id === 'arena' ? 'online' : id)}
         topbar={{
-          appearance: !active && !liveState.playing ? <button className="cr-theme-switch" aria-label={light ? 'Switch to night match' : 'Switch to day match'} onClick={() => setLight(v => !v)}><span aria-hidden="true">{light ? '☾' : '☀'}</span><span>{light ? (locale === 'hi' ? 'रात' : 'Night') : (locale === 'hi' ? 'दिन' : 'Day')}</span></button> : null,
+          appearance: !active && !liveState.playing && !teamLiveState.playing ? <button className="cr-theme-switch" aria-label={light ? 'Switch to night match' : 'Switch to day match'} onClick={() => setLight(v => !v)}><span aria-hidden="true">{light ? '☾' : '☀'}</span><span>{light ? (locale === 'hi' ? 'रात' : 'Night') : (locale === 'hi' ? 'दिन' : 'Day')}</span></button> : null,
+          teamTag: liveSession?.teamTag || undefined,
           sound,
           onToggleSound: () => setSound((v) => !v),
           onOpenSettings: () => setSettingsOpen(true),
           onBrand: () => {
+            if (teamLiveState.inRun) { window.dispatchEvent(new Event('jhk-team-request-leave')); return; }
             if (liveState.inMatch) { window.dispatchEvent(new Event('jhk-live-request-leave')); return; }
             if (room) leaveOrBack();
             else go('home');
@@ -1180,6 +1196,7 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
         )}
         {!room && tab === 'road' && <StadiumRoad player={player} name={name} ready={player.loaded && !!catalogue && !!name.trim()} busy={busy} selectedId={selectedStadium.id} humanTrophies={humanTrophies} onSelect={selectStadium} onPlay={(mode, id) => { selectStadium(id); quickDuel(mode, 'Cricket'); }} />}
         {!room && (tab === 'online' || (jhkOnline.configured && tab === 'arena')) && <LiveDuelScreen name={name} initialFile={liveEntry.file} initialIntent={liveEntry.intent} onBot={startBotMatch} onPractice={() => startBotMatch('cricket')} onHome={() => go('home')} onState={onLiveState} onRoundKey={setLiveRoundKey} />}
+        {!room && tab === 'teams' && <TeamScreenBoundary onHome={() => go('home')}><Suspense fallback={<p className="notice-box" role="status">Opening the team pavilion…</p>}><TeamsScreen name={name} onHome={() => go('home')} onPractice={() => quickDuel('trilogy', 'Cricket')} onState={onTeamState} /></Suspense></TeamScreenBoundary>}
         {!room && ['journeys', 'collections', 'discovery', 'events', 'practice'].includes(tab) && <ClubDirectory section="explore" current={tab} go={go} />}
         {!room && ['passport', 'analytics', 'showroom'].includes(tab) && <ClubDirectory section="progress" current={tab} go={go} />}
         {!room && ['journal'].includes(tab) && <ClubDirectory section="answers" current={tab} go={go} />}
@@ -1241,7 +1258,7 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
         )}
         {room && <>{room.config.opponent === 'bot' && <p className="cr-practice-label" role="status">{locale === 'hi' ? 'अभ्यास बॉट · इस डिवाइस का रिकॉर्ड' : 'PRACTICE BOT · On-device record'}</p>}<RoomScreen duel={duel} player={player} /></>}
       </AppShell>
-      <JhkProfileGate name={name} onName={setName} deferForActiveMatch={liveState.inMatch} />
+      <JhkProfileGate name={name} onName={setName} deferForActiveMatch={liveState.inMatch || teamLiveState.inRun} />
       <SettingsSheet
         open={settingsOpen}
         onOpenChange={setSettingsOpen}

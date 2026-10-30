@@ -20,6 +20,7 @@ export type TopbarProps = {
   /** The coin count (app/screens/economy/wallet-chip.tsx): the one place the balance is shown. */
   wallet?: ReactNode;
   appearance?: ReactNode;
+  teamTag?: string;
 };
 
 export function Topbar({
@@ -33,6 +34,7 @@ export function Topbar({
   level,
   wallet,
   appearance,
+  teamTag,
 }: TopbarProps) {
   const { t, locale } = useLocale();
   return (
@@ -51,7 +53,7 @@ export function Topbar({
             359px and below (app/shell/shell.css) the CSS hides it and the tile alone carries the
             brand; every width from 360px up — the 375px iPhones included — keeps it. Under the
             Hindi locale the Devanagari wordmark takes its place (docs/brand.md §5). */}
-        <JhkWordmark height={16} title="" variant={locale === 'hi' ? 'hi' : 'full'} className="fd-brand-word" />
+        <span className="jhk-brand-identity"><JhkWordmark height={16} title="" variant={locale === 'hi' ? 'hi' : 'full'} className="fd-brand-word" />{teamTag && <span className="jhk-member-tag" aria-label={`Team ${teamTag}`}>{teamTag}</span>}</span>
       </a>
       <div className="fd-topbar-right">
         {appearance}

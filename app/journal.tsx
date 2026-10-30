@@ -599,9 +599,9 @@ export function Journal({
   return (
     <section className="fd-learn fd-vault">
       <header className="fd-learn__head">
-        <p className="fd-eyebrow">YOUR VAULT · ON THIS DEVICE</p>
+        <p className="fd-eyebrow">Your answer book · This browser</p>
         <div className="fd-learn__title">
-          <h1>Your history, on this device.</h1>
+          <h1>Good facts are worth keeping.</h1>
           {met > 0 && (
             <div className="fd-head-actions">
               <button
@@ -618,8 +618,8 @@ export function Journal({
           )}
         </div>
         <p className="fd-lede">
-          Every fact you have answered, with your recent attempts on each. Kept in this browser, never sent
-          anywhere. Meeting a fact is not the same as knowing it.
+          Revisit the facts you have played, open their sources, or try recall. Your activity is stored
+          in this browser.
         </p>
         <div className="fd-stats">
           <StatTile icon={BookOpen} tone="cyan" value={met} label="Facts you have met" />

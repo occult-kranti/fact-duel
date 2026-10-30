@@ -56,7 +56,7 @@ export default function Discovery({
 }) {
   const juice = useJuice();
   const press = usePress();
-  const { t, topic: topicName } = useLocale();
+  const { t, topic: topicName, locale } = useLocale();
   const wallet = useWalletContext();
   const [cards, setCards] = useState<any[]>([]),
     [index, setIndex] = useState(0),
@@ -193,10 +193,10 @@ export default function Discovery({
         </button>
       </div>
       <header className="fd-learn__head">
-        <p className="fd-eyebrow">{t('disc.eyebrow')}</p>
+        <p className="fd-eyebrow">{locale === 'hi' ? t('disc.eyebrow') : 'A little curiosity'}</p>
         <div className="fd-learn__title">
           <h1 ref={heading} tabIndex={-1}>
-            {fixture ? label : t('disc.title', { label })}
+            {fixture ? label : locale === 'hi' ? t('disc.title', { label }) : `${label}, at your pace.`}
           </h1>
           <span className="fd-tag fd-tag--cool">
             <Compass />

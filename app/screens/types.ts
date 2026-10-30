@@ -23,6 +23,7 @@ export type Player = ReturnType<typeof usePlayer>;
 export type Tab =
   | 'road'
   | 'home'
+  | 'teams'
   | 'online'
   | 'journeys'
   | 'arena'

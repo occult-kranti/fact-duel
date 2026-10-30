@@ -108,17 +108,17 @@ export default function Collections({
   return (
     <section className="fd-learn fd-collections">
       <header className="fd-learn__head">
-        <p className="fd-eyebrow">KNOW YOUR SUBJECT</p>
+        <p className="fd-eyebrow">Follow your curiosity</p>
         <div className="fd-learn__title">
-          <h1>Pick your home ground.</h1>
+          <h1>Find your next subject.</h1>
           <span className="fd-tag fd-tag--cool">
             <Layers />
             {met === 1 ? '1 fact met' : `${met} facts met`}
           </span>
         </div>
         <p className="fd-lede">
-          Pick a sport or your specialist subject. Choose a collection and the duel configurator follows
-          you back to Play. The mini-bars show what you have already met, opened and recalled.
+          Pick a topic for your next over. Your activity bars show the facts you have encountered,
+          opened and recalled.
         </p>
         <div className="fd-toolbar">
           <div className="fd-chips">

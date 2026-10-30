@@ -74,8 +74,9 @@ export function PlayScreen({ duel, player, catalogue, joinView, joinLink }: Play
     <div className="fd-play jo-play">
       <header className="fd-play-head">
         <div>
-          <p className="fd-play-eyebrow">{t('play.eyebrow')}</p>
-          <h1>{locale === 'hi' ? 'अपना ओवर चुनें' : 'Make it your over'}</h1>
+          <p className="fd-play-eyebrow">{locale === 'hi' ? 'अपनी तरह खेलें' : 'Practice, your way'}</p>
+          <h1>{locale === 'hi' ? 'अपना अगला ओवर चुनें' : 'Set your next over.'}</h1>
+          <p className="jp-page-caption">{locale === 'hi' ? 'मिनी या फुल चुनें। विषय और दूसरी सेटिंग नीचे हैं।' : 'Choose Mini or Full. Topics and the finer details are below.'}</p>
         </div>
         <button
           type="button"

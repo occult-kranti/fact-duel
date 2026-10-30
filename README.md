@@ -10,7 +10,7 @@ GitHub Pages serves the frontend; Supabase referees live human matches. `jhk-gam
 
 ## Human beta and practice
 
-Play practice immediately without signup. The human desk asks once for the existing 18+/beta-terms confirmation, creates an email-free device profile, and looks for a human. If none is found within five seconds, a clearly labelled zero-stake practice bot starts on this device. Cancellation and late server responses cannot revive an abandoned search. Friend invitations remain human-only. Email and profile setup are optional, accessible from Player → Optional player card / restore. Each live match has five rounds with a 30-second answer deadline, four choices and one locked answer. Most correct answers wins, then server-measured answer time; a 120 ms dead heat draws. Network delivery remains part of the timing.
+Play practice immediately without signup. The human desk asks once for the existing 18+/beta-terms confirmation, creates an email-free device profile, and looks for a human. If none is found within five seconds, a clearly labelled zero-stake practice bot starts on this device. Cancellation and late server responses cannot revive an abandoned search. Friend invitations remain human-only. Email and profile setup are optional, accessible from Player → Optional player card / restore. Each new live match offers Mini over with three rounds or Full over with six, a 30-second answer deadline, four choices and one locked answer. Legacy five-round rooms retain their rules. Most correct answers wins, then server-measured answer time; a 120 ms dead heat draws. Network delivery remains part of the timing.
 
 Free game-coin stakes are optional and default to zero. A zero balance never blocks a zero-stake duel. Both players confirm the disclosed stake. The server reserves it once, pays the pot once, refunds draws and system/prestart cancellations, and applies the disclosed forfeit rule after both players ready. Earned completion rewards are separate and capped. There is no payment, cash-out, or actual money.
 
@@ -46,7 +46,7 @@ Historical Cloudflare/D1 and local-only behavior is documented in [the archived 
 
 ## Pocket Stadium redesign
 
-One tap starts Mini over (3 rounds); Full over plays all 6 rounds. Spicy has a dedicated Mini over. Practice is zero-stake. Human duel retains explicit age/terms confirmation. Stadium / Explore / Play / My club / Answers preserve the existing route identities. Optional Net practice uses real ballistic animation and reduced-motion timing controls, with its own score. Question answers stay stable and celebrations follow settlement.
+One tap starts Mini over (3 rounds); Full over plays all 6 rounds. Spicy has a dedicated Mini over. Practice is zero-stake. Human duel retains explicit age/terms confirmation. Play / Teams / Explore / My club / Answers provide the main navigation while existing route identities remain available. Optional Net practice uses real ballistic animation and reduced-motion timing controls, with its own score. Question answers stay stable and celebrations follow settlement.
 
 My club supports free-earned points, atomic buy/equip, titles, card finishes, three stadium building slots and expiring showoff badges. Human coins/ranks are separate. Six fixed opponent stickers are delivered by Supabase between rounds with one-per-break and eight-second limits. Anonymous presence counts human profiles active within two minutes and expires stale values. All ads remain disabled.
 
@@ -68,3 +68,18 @@ Home starts practice immediately and keeps topics, human play and settings optio
 
 - [Design research and three review rounds](docs/over-redesign/RESEARCH.md)
 - [Rewards, verification and remaining measurement](docs/over-redesign/RELEASE.md)
+
+## Team Pavilion
+
+Teams supports squads of **5 or 11**, with an automatic public tag, original crest, shared palette and captain settings. Join with a private invite code, fill the team sheet, then challenge another full squad of the same size. Each member plays their own Mini or Full over in a 24-hour fixture window. Team correctness is primary; wrong and missing answers count as 30 seconds in the time tiebreak. Four-team cups run two semi-finals and one final, with the exact-tie seed rule disclosed before entry. Captains can withdraw from recruiting cups or cancel a cup they host; recruitment expires after 48 hours.
+
+Completed contributions and fixture outcomes earn server-owned team points. Levels unlock the Star crest at 100 points, Crown at 300 and Legacy frame at 700. These are cosmetic benefits. The team record is separate from browser-local Club points and personal online coins / rank / XP.
+
+The mobile-first visual system uses warm paper, dark ink, saffron play controls and teal team identity, then expands into desktop columns. Teams loads separately from solo play. Existing 18+/terms confirmation is required before creating a server identity.
+
+- [Research and implementation review](docs/team-redesign/RESEARCH.md)
+- [Decision ledger](docs/team-redesign/PANELS.md)
+- [Team server contract](docs/team-redesign/SERVER.md) and [independent security review](docs/team-redesign/SECURITY-REVIEW.md)
+- [Editable design canvas](docs/team-redesign/design-board/index.html) and [tooling evidence](docs/team-redesign/FIGMA.md)
+
+The Figma project was created but its Starter tool quota prevented screen editing. The editable HTML/SVG canvas is the delivered design artifact. Real-team satisfaction, mobile-device ergonomics, WAN fairness and production load require separate observed studies.

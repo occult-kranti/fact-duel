@@ -10,6 +10,7 @@ import '../app/rivalry.css';
 import '../app/expeditions.css';
 import './static.css';
 import './cricket-themes.css';
+import '../app/team-theme.css';
 import RedirectNotice from '../app/redirect-notice';
 import { redirectTarget } from '../lib/redirect-target.mjs';
 import { LocaleProvider } from '../app/use-locale';

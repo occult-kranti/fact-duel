@@ -1,21 +1,22 @@
 'use client';
-import { House, Compass, Swords, UserRound, Vault, type LucideIcon } from 'lucide-react';
+import { House, Compass, UsersRound, UserRound, Vault, type LucideIcon } from 'lucide-react';
 import { JhkMark } from './brand-mark';
 import { useLocale } from '../use-locale';
 
-export type NavTabId = 'home' | 'journeys' | 'arena' | 'passport' | 'journal';
+export type NavTabId = 'home' | 'teams' | 'journeys' | 'arena' | 'passport' | 'journal';
 
 /** Familiar route IDs preserve saved state; task labels describe each group. */
 export const NAV_TABS: { id: NavTabId; label: string; hindi: string; icon: LucideIcon }[] = [
-  { id: 'home', label: 'Stadium', hindi: 'स्टेडियम', icon: House },
+  { id: 'home', label: 'Play', hindi: 'खेलें', icon: House },
+  { id: 'teams', label: 'Teams', hindi: 'टीमें', icon: UsersRound },
   { id: 'journeys', label: 'Explore', hindi: 'खोजें', icon: Compass },
-  { id: 'arena', label: 'Play', hindi: 'खेलें', icon: Swords },
   { id: 'passport', label: 'My club', hindi: 'मेरा क्लब', icon: UserRound },
   { id: 'journal', label: 'Answers', hindi: 'जवाब', icon: Vault },
 ];
 
 export function navParent(tab: string): NavTabId {
-  if (['online', 'practice', 'arena'].includes(tab)) return 'arena';
+  if (['online', 'practice', 'arena'].includes(tab)) return 'home';
+  if (tab === 'teams') return 'teams';
   if (['journeys', 'collections', 'discovery', 'events'].includes(tab)) return 'journeys';
   if (['passport', 'analytics', 'showroom'].includes(tab)) return 'passport';
   if (tab === 'journal') return 'journal';

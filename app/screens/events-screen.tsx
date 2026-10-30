@@ -48,9 +48,9 @@ export function EventsScreen({ player, ready, busy, onDuel, onMode, activeModeId
         </button>
         <p className="fd-ev-eyebrow">
           <CalendarDays aria-hidden="true" />
-          {t('events.eyebrow', { month: locale === 'en' ? month.toUpperCase() : month })}
+          {locale === 'hi' ? t('events.eyebrow', { month }) : `${month} · The fixture book`}
         </p>
-        <h1 id="fd-ev-title">{t('events.title')}</h1>
+        <h1 id="fd-ev-title">{locale === 'hi' ? t('events.title') : 'Something to play for.'}</h1>
         <p className="fd-ev-lede">{t('events.lede')}</p>
 
         <dl className="fd-ev-stats">

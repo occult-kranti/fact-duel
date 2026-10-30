@@ -6,6 +6,14 @@ if (!fs.existsSync(path.join(out, 'index.html'))) throw new Error('Build JHK fir
 const commit = execFileSync('git', ['rev-parse', 'HEAD'], {encoding:'utf8'}).trim();
 fs.writeFileSync(path.join(out, '.nojekyll'), '');
 fs.writeFileSync(path.join(out, 'release.json'), JSON.stringify({commit, builtAt:new Date().toISOString(),game:'Jaanta Hai Kya',transport:'Supabase human duels',adsEnabled:false},null,2)+'\n');
+const teamCanvas = path.resolve('docs/team-redesign/design-board');
+if (fs.existsSync(path.join(teamCanvas, 'index.html'))) {
+  const canvasOut = path.join(out, 'design/teams');
+  fs.cpSync(teamCanvas, canvasOut, { recursive: true });
+  const canvasFile = path.join(canvasOut, 'index.html');
+  const base = (process.env.STATIC_BASE || '/fact-duel/').replace(/\/?$/, '/');
+  fs.writeFileSync(canvasFile, fs.readFileSync(canvasFile, 'utf8').replaceAll('../../../public/', base));
+}
 const moved = 'https://occult-kranti.github.io/andhbhakt-ya-deshbhakt/';
 fs.mkdirSync(path.join(out,'hisaab'),{recursive:true});
 fs.writeFileSync(path.join(out,'hisaab/index.html'),`<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Andhbhakt ya Deshbhakt</title><link rel="canonical" href="${moved}"><script>location.replace(${JSON.stringify(moved)}+location.search+location.hash)</script><noscript><meta http-equiv="refresh" content="0;url=${moved}"></noscript><main><h1>HISAAB DO is now Andhbhakt ya Deshbhakt</h1><p><a href="${moved}">Play at the new address</a></p></main></html>`);

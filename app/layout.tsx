@@ -3,6 +3,7 @@ import './theme/tokens.css';
 import './globals.css';
 import './rivalry.css';
 import './expeditions.css';
+import './team-theme.css';
 
 /* Open Graph images must be absolute URLs. SITE_BASE is the same knob scripts/seo-pages.mjs reads;
    the GitHub Pages address is the fallback, as in lib/seo/intents.mjs DEFAULT_BASE. */
@@ -12,12 +13,12 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_BASE),
   title: 'Jaanta Hai Kya — Do you know? Prove it.',
   description:
-    'Jaanta Hai Kya (JHK): competitive sports quizzing. Football, cricket, baseball, Formula 1 and basketball. Duel a friend or a bot under the clock, run an expedition, collect stamps. Free coins, no purchases.',
+    'Your people. Your innings. Play a quick cricket quiz, build a squad of 5 or 11, and compete in team matches and tournaments. Mini over, Full over, original banners and earned honours.',
   applicationName: 'Jaanta Hai Kya',
   openGraph: {
     title: 'Jaanta Hai Kya — Do you know? Prove it.',
     description:
-      'Competitive sports quizzing: football, cricket, baseball, Formula 1 and basketball. Duel a friend or a bot under the clock. Free coins, no purchases.',
+      'Cricket knowledge, shared glory. Solo overs, squads of 5 or 11, team matches and tournaments. Play at your pace and build your team identity.',
     siteName: 'Jaanta Hai Kya',
     type: 'website',
     images: [{ url: '/brand/og.png', width: 1200, height: 630, alt: 'Jaanta Hai Kya — Do you know? Prove it.' }],

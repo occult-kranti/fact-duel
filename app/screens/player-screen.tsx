@@ -62,8 +62,9 @@ export function PlayerScreen({ player, onOpenExpedition, onMissionAction, go }: 
     <div className="fd-player">
       <header className="fd-player-head">
         <div>
-          <p className="fd-eyebrow">{t('player.eyebrow')}</p>
-          <h1>{t('player.title')}</h1>
+          <p className="fd-eyebrow">{hi ? 'हर ओवर की एक याद' : 'Every over leaves a mark'}</p>
+          <h1>{hi ? 'आपका खेल रिकॉर्ड।' : 'Your playing record.'}</h1>
+          <p className="jp-page-caption">{hi ? 'आपके XP, यादें और इस ब्राउज़र में कमाई गई पहचान।' : 'Your XP, milestones and the identity you have earned in this browser.'}</p>
         </div>
       </header>
 
@@ -78,7 +79,7 @@ export function PlayerScreen({ player, onOpenExpedition, onMissionAction, go }: 
       <MeasurementLink onOpen={() => go('analytics')} />
 
       <details className="gc-progress-group">
-        <summary>{hi ? 'समर्थक कार्ड और अपनी टीमें' : 'Supporter card & your teams'}</summary>
+        <summary>{hi ? 'समर्थक कार्ड और पसंदीदा टीमें' : 'Supporter card & favourite sides'}</summary>
         <SupporterCard player={player} />
       </details>
 

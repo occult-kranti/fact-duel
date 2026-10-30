@@ -15,7 +15,15 @@ export const DUEL_FILES = Object.freeze([
  { id: 'biology', name: 'Biology', rewardMultiplier: 1 },
  { id: 'computing', name: 'Computing', rewardMultiplier: 1 },
 ].map(Object.freeze));
-export const ACTIONS = new Set(['presence', 'reaction', 'session', 'recover', 'rotateRecovery', 'exportProfile', 'deleteSession', 'profile', 'create', 'join', 'queue', 'snapshot', 'ready', 'answer', 'next', 'leave', 'leaderboards', 'leaderboard', 'tournaments', 'circles']);
+export const ACTIONS = new Set(['presence', 'reaction', 'session', 'recover', 'rotateRecovery', 'exportProfile', 'deleteSession', 'profile', 'create', 'join', 'queue', 'snapshot', 'ready', 'answer', 'next', 'leave', 'leaderboards', 'leaderboard', 'tournaments', 'circles', 'team']);
+export const TEAM_OPERATIONS = Object.freeze(['dashboard','create','join','settings','rotateInvite','transfer','kick','leave','challenge','accept','decline','fixture','play','answer','next','tournamentCreate','tournamentJoin','tournamentStart','tournamentLeave']);
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+function cleanTeamText(value, max, label) {
+  if (typeof value !== 'string') throw new GameError('BAD_TEAM', `Choose a ${label}.`);
+  const next = value.normalize('NFKC').replace(/[\p{Cc}\p{Cf}]/gu, '').trim().replace(/\s+/g, ' ');
+  if ([...next].length < 2 || [...next].length > max) throw new GameError('BAD_TEAM', `Use 2–${max} characters for the ${label}.`);
+  return next;
+}
 export class GameError extends Error { constructor(code, message, status = 400) { super(message); this.code = code; this.status = status; } }
 export function cleanNickname(value) {
   if (typeof value !== 'string') throw new GameError('BAD_NICKNAME', 'Choose a nickname.');
@@ -29,6 +37,36 @@ export function validateInput(body) {
   // Never accept identity, timing, scores or answers supplied as assertions.
   for (const key of ['sessionId','playerId','elapsedMs','correct','score','xp','correctIndex','serverNow','tokenHash','balance','savings','reward','rewardMultiplier','payout','winnerId']) delete payload[key];
   delete payload._recoveryHash;
+  if (body.action === 'team') {
+    const op = payload.op ?? 'dashboard';
+    if (!TEAM_OPERATIONS.includes(op)) throw new GameError('BAD_TEAM_ACTION', 'Choose a supported team action.');
+    payload.op = op;
+    if (op === 'create') {
+      payload.name = cleanTeamText(payload.name, 32, 'team name');
+      if (![5,11].includes(payload.capacity)) throw new GameError('BAD_TEAM', 'Choose a team of 5 or 11.');
+    }
+    if (op === 'settings' && payload.name != null) payload.name = cleanTeamText(payload.name, 32, 'team name');
+    if (op === 'tournamentCreate') payload.name = cleanTeamText(payload.name, 40, 'cup name');
+    if (payload.emblem != null && !['bat','bolt','crown','star'].includes(payload.emblem)) throw new GameError('BAD_BANNER','Choose a supported team emblem.');
+    if (payload.palette != null && !['teal','saffron','berry','blue'].includes(payload.palette)) throw new GameError('BAD_PALETTE','Choose a supported team palette.');
+    if (payload.joinOpen != null && typeof payload.joinOpen !== 'boolean') throw new GameError('BAD_TEAM','Choose whether team invites are open.');
+    if (['challenge','tournamentCreate'].includes(op)) {
+      payload.format = payload.format ?? 'mini';
+      if (!['mini','full'].includes(payload.format)) throw new GameError('BAD_FORMAT','Choose Mini over or Full over.');
+    }
+    if (op === 'challenge') {
+      if (typeof payload.targetTag !== 'string') throw new GameError('BAD_TEAM_TAG','Enter the other team’s public tag.');
+      payload.targetTag = payload.targetTag.trim().toUpperCase();
+      if (!/^[A-Z0-9]{1,4}-[A-F0-9]{4}$/.test(payload.targetTag)) throw new GameError('BAD_TEAM_TAG','Check the other team’s public tag.');
+    }
+    for (const [operations,key] of [[['transfer','kick'],'memberId'],[['accept','decline','fixture','play','answer','next'],'fixtureId'],[['tournamentStart','tournamentLeave'],'tournamentId']]) {
+      if (operations.includes(op) && !UUID_RE.test(payload[key] || '')) throw new GameError('BAD_TEAM_ID','Choose a valid team member, match or cup.');
+    }
+    if (['join','tournamentJoin'].includes(op) && (typeof payload.code !== 'string' || !/^[A-Fa-f0-9]{16}$/.test(payload.code.trim()))) throw new GameError('BAD_CODE','Check the private invite code.');
+    if (op === 'answer' && (!Number.isInteger(payload.round) || payload.round < 1 || payload.round > 6 || !Number.isInteger(payload.choice) || payload.choice < 0 || payload.choice > 3 || !UUID_RE.test(payload.requestId || ''))) throw new GameError('BAD_ANSWER','Choose one answer for the current ball.');
+    // Explicitly ignore authority assertions in this protocol too. No team operation accepts a stake.
+    for (const key of ['teamId','tag','capacityOverride','level','points','captainId','winnerTeamId','deadlineAt','startedAt','issuedAt','stake']) delete payload[key];
+  }
   if (['session','profile'].includes(body.action)) {
     if (Object.prototype.hasOwnProperty.call(payload, 'email')) {
       if (payload.email !== null && typeof payload.email !== 'string') throw new GameError('BAD_EMAIL','Enter a valid email address.');

@@ -9,6 +9,40 @@ const response = (data, status=200) => new Response(JSON.stringify(data), { stat
 const session = { id:'player-one', nickname:'Rani', email:'rani@example.org', profileComplete:true, expiresAt:Date.now()+86400000, onlineXp: 90 };
 const details = { nickname:'Rani', email:'rani@example.org', adultConfirmed:true, termsVersion:'beta-1' };
 
+test('team commands require the current private identity and keep invite data out of URLs', async () => {
+  const storage=memory(), calls=[];
+  const client=createOnlineClient({url:'https://server.example/game',storage,fetcher:async(url,opts)=>{
+    calls.push({url,opts});
+    return response({ok:true,serverNow:5000,session,...(JSON.parse(opts.body).action==='session'?{token}:{}),team:null,fixtures:[],tournaments:[]});
+  }});
+  await assert.rejects(client.team('dashboard'),error=>error.code==='PROFILE_REQUIRED');
+  assert.equal(calls.length,0);
+  await client.createProfile(details);
+  await client.team('join',{code:'PRIVATECODE',action:'session',op:'create'});
+  const sent=calls.at(-1);
+  assert.deepEqual(JSON.parse(sent.opts.body),{code:'PRIVATECODE',action:'team',op:'join'});
+  assert.equal(sent.opts.headers['x-jhk-session'],token);
+  assert.equal(sent.opts.url,undefined);
+  assert.ok(!sent.url.includes('PRIVATECODE'));
+  assert.ok(!sent.opts.body.includes(token));
+});
+
+test('team answer retry retains its idempotency key and expired identity never creates a replacement', async () => {
+  const storage=memory(); storage.setItem(STORAGE.serverSession,JSON.stringify({token,session}));
+  const payloads=[]; let attempts=0;
+  const client=createOnlineClient({url:'https://server.example/game',storage,fetcher:async(_,opts)=>{
+    payloads.push(JSON.parse(opts.body));
+    if(attempts++===0) throw new Error('Lost acknowledgement');
+    return response({ok:false,error:{code:'SESSION_EXPIRED',message:'Recover your player identity.'}},401);
+  }});
+  const answer={fixtureId:'fixture',round:1,choice:2,requestId:'same-attempt'};
+  await assert.rejects(client.team('answer',answer),error=>error.code==='NETWORK');
+  await assert.rejects(client.team('answer',answer),error=>error.code==='SESSION_EXPIRED');
+  assert.deepEqual(payloads[0],payloads[1]);
+  assert.equal(client.session.id,session.id);
+  assert.ok(payloads.every(payload=>payload.action==='team'));
+});
+
 test('online transport does not contact an unconfigured or insecure endpoint', async () => {
   let calls=0;
   for (const url of ['', 'http://remote.example/game', 'javascript:bad']) {
