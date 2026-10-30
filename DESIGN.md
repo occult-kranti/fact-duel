@@ -1,4 +1,4 @@
-# Team Pavilion
+# Club Pavilion
 
 JHK is a cricket knowledge game made for a phone held in one hand. This direction expands Pocket Stadium into a personal and shared clubhouse: a quick solo over, a recognizable squad, and a finite team competition. It replaces the lime-led visual system with warm paper, deep ink and a decisive saffron action. Original stadium artwork and the one-tap solo contract remain product assets.
 
@@ -28,17 +28,17 @@ Five compact navigation destinations: Play, Teams, Explore, My club and Answers.
 
 Play has one primary Mini over action and a clear Full over alternative. Mini remains 3 rounds; Full remains 6. The original ground illustration is compact above or beside the start controls; it cannot push the first useful action far below a phone viewport. Team creation is optional and does not become an onboarding tax on solo practice. Headlines use plain cricket language: “One over. Make it yours.” and “Your people. Your innings.”
 
-Teams begins with Create a team and Join with an invite. Creation asks for a name, a fixed capacity of 5 or 11, and a cosmetic banner. The service generates a unique public team tag. The tag is recognizable identity, not a secret join credential; invite codes are distinct. The captain sees the roster, capacity and invitation action before a competition is offered as ready.
+Teams begins with Create a team and Join with an invite. Creation asks for a name, a fixed playing format of 5 or 11, and a cosmetic banner. Both formats allow up to 22 club members; selected players and reserves are shown separately. The service generates a unique public team tag. The tag is recognizable identity, not a secret join credential; invite codes are distinct. The captain sees the roster, capacity and invitation action before a competition is offered as ready.
 
-Team home orders information by task: banner and public tag; roster `x / 5` or `x / 11`; next accepted fixture and contribution status; shared cabinet and optional settings. An incomplete squad sees a truthful preparation state, not an enabled competitive start that will inevitably fail. Empty states offer one useful next step. No fabricated rival activity, member avatars or scores appear as live information.
+Team home orders information by task: banner and public tag; the next preparation/battle action; selected `x / 5` or `x / 11` and club `x / 22`; shared cabinet and optional settings. An incomplete squad sees a truthful preparation state, not an enabled competitive start that will inevitably fail. Empty states offer one useful next step. No fabricated rival activity, member avatars or scores appear as live information.
 
 ## Team match contract
 
-Competitive fixtures require complete, equal-sized 5-versus-5 or 11-versus-11 squads. Roster snapshots lock on acceptance. Each frozen member plays one server-dealt Mini or Full over during a 24-hour fixture window; players do not have to be online simultaneously. Local practice history and browser XP are never competitive authority.
+Competitive fixtures require complete, equal-sized 5-versus-5 or 11-versus-11 squads. New fixtures start with 23 hours of preparation. Authorized lineup managers can substitute from reserves before battle. The playing sheet freezes at battle start, followed by a 24-hour window. Both Captain/VC sides can explicitly start early; either sheet changing clears both readiness flags. Each frozen member plays one server-dealt Mini or Full over; players do not have to be online simultaneously. Local practice history and browser XP are never competitive authority.
 
 Correct answers decide the result first. Lower penalized elapsed time breaks a tied correct-answer total; wrong or missing answers contribute a 30-second penalty each. A remaining exact tie is a draw in a direct fixture. Missing member contributions are explicitly shown and score zero correct answers, with their stated time penalty. The fixture page shows completion, deadline, pending members, personal contribution and settled result. Starting an over explains the one-attempt rule before the answer clock begins.
 
-A four-team knockout cup has two semi-finals and a final. Captains explicitly join. The owner starts only after four full squads enter. Seeds follow join order: 1 plays 4, 2 plays 3. An exact tied cup fixture advances the lower original entry seed; this deterministic rule is disclosed before entry and start, not hidden in a result. A team has one active fixture or cup at a time. Frozen lineups do not change when membership changes later.
+A four-team knockout cup has two semi-finals and a final. Captains explicitly join. The owner opens preparation only after four full selected sides enter. Each new stage has its own preparation and battle window. An incomplete sheet at the preparation boundary cancels the cup and releases locks, without awarding a result. Seeds follow join order: 1 plays 4, 2 plays 3. An exact tied cup fixture advances the lower original entry seed; this deterministic rule is disclosed before entry and start, not hidden in a result. A team has one active fixture or cup at a time. Frozen lineups do not change when membership changes later.
 
 ## Identity and benefits
 
@@ -46,7 +46,7 @@ Team benefits are a shared public tag, preset banner, fixture history and cosmet
 
 Personal Club points, browser-local titles, server human XP, team points and simulated coins retain explicit labels. They are not interchangeable. Team cosmetics do not change question access, timing, answer correctness, matchmaking odds or score. There is no purchasable performance advantage or real-money return.
 
-Captain settings contain banner and team-name customization, deliberate Save, and clear roster controls. Active lineups remain locked through competition settlement. Public identity and private invite/recovery credentials are never combined in one share card. A team exit or captain change uses a deliberate action and explains its effect before confirmation.
+Captain settings contain banner and team-name customization, deliberate Save, and clear roster controls. Vice Captains can arrange fixtures and lineups; Coaches can select lineups only. Bottle boy, Analyst, Keeper, Finisher and Cheer captain are opt-in fun tags and grant no authority. Active lineups remain locked through competition settlement. Public identity and private invite/recovery credentials are never combined in one share card. A team exit or captain change uses a deliberate action and explains its effect before confirmation.
 
 ## Layout and interaction
 
@@ -63,3 +63,10 @@ The editable local canvas at `docs/team-redesign/design-board/index.html` includ
 Figma file creation succeeded, but the Starter plan’s MCP quota blocked the first design-library discovery call. No team-screen layers were created in that blank file. `docs/team-redesign/FIGMA.md` records the exact tool boundary and fallback. Previous Pocket Stadium Figma boards remain historical references.
 
 Research at `docs/team-redesign/RESEARCH.md` scopes official game mechanics, player reports, author resources and mobile accessibility guidance. Source-informed design decisions and AI panel reviews do not establish representative player preference, measured satisfaction or retention. Physical-phone testing and consented first-time-player research remain separate evidence.
+
+
+## Club war expansion
+
+A club can keep 22 members while playing only five or eleven. Reserve joining does not change a frozen battle sheet. New weekly rematches remain inert drafts until a home Captain/VC sends a current sheet and the other club accepts with a current sheet. Either club can stop the series. Dates show local absolute time alongside remaining time, and server reconciliation happens on authenticated requests.
+
+Original cricket outcome feedback uses a bat boundary and optional synthetic cheer for a win, displaced bails for a loss, a run-out metaphor for a close loss, and raised bats for a draw. It follows settlement, never timed questions; no-contest/cancelled fixtures do not celebrate. The inline moment lasts at most 2.6 seconds, offers Skip and never blocks replay. Motion-off and reduced-motion paths remain static. The editable mobile-first exploration and source-linked decisions are in docs/club-wars/.

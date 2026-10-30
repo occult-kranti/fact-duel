@@ -1,0 +1,66 @@
+/** Build an isolated, explicitly labelled UI fixture for the managed preview.
+ * This harness never creates a profile, accepts terms or calls a game server.
+ * Production publication must exclude the generated fixture directory.
+ */
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import { build } from 'vite';
+
+const root = process.cwd();
+const out = path.resolve(process.argv[2] || '/tmp/jhk-club-ui-preview');
+const cache = path.join(root, 'node_modules/.cache/jhk-club-preview');
+await fs.mkdir(cache, { recursive: true });
+await fs.mkdir(out, { recursive: true });
+const entry = path.join(cache, 'fixture.tsx');
+await fs.writeFile(entry, `
+import React, {useState} from 'react';
+import {createRoot} from 'react-dom/client';
+import {ClubRoster} from ${JSON.stringify(path.join(root,'app/screens/teams/club-roster.tsx'))};
+import {FixturePreparation, WarPhaseStrip, WeeklyChoice, FixtureCalendar} from ${JSON.stringify(path.join(root,'app/screens/teams/war-phase.tsx'))};
+import {TeamBanner} from ${JSON.stringify(path.join(root,'app/screens/teams/team-banner.tsx'))};
+import {TeamsScreen} from ${JSON.stringify(path.join(root,'app/screens/teams-screen.tsx'))};
+import {jhkOnline} from ${JSON.stringify(path.join(root,'lib/jhk-online/runtime.ts'))};
+import {CricketOutcomeMoment} from ${JSON.stringify(path.join(root,'app/cricket-fx/cricket-outcome-moment.tsx'))};
+import {FxProvider} from ${JSON.stringify(path.join(root,'components/fx/fx-provider.tsx'))};
+import {usePrefs} from ${JSON.stringify(path.join(root,'components/fx/use-prefs.ts'))};
+import {setPref} from ${JSON.stringify(path.join(root,'lib/fx/prefs.ts'))};
+import {sound} from ${JSON.stringify(path.join(root,'lib/fx/sound.ts'))};
+const params=new URLSearchParams(location.search), viewer=params.get('role')||'captain', mode=params.get('mode')||'roster';
+const role=viewer==='reserve'?'member':viewer;
+const toggleTheme=()=>{const dark=document.documentElement.dataset.cricketTheme!=='floodlights';document.documentElement.dataset.cricketTheme=dark?'floodlights':'pavilion';document.documentElement.dataset.theme=dark?'dark':'light';};
+const members=Array.from({length:22},(_,i)=>({id:'qa-'+i,nickname:i===0?'QA Captain':i===1?'QA Vice captain':i===2?'QA Coach':'QA Teammate '+(i+1),isCaptain:i===0,role:i===0?'captain':i===1?'vice-captain':i===2?'coach':'member',isSelected:i<11,isReserve:i>=11,funBadge:'none',funBadgeConsent:i===4}));
+const selfId=viewer==='reserve'?'qa-18':role==='captain'?'qa-0':role==='vice-captain'?'qa-1':role==='coach'?'qa-2':'qa-4';
+const initialTeam={id:'qa-home',name:'QA Local Cricket Club',tag:'QACL-0001',capacity:11,rosterLimit:22,memberCount:22,selectedCount:11,selectedMemberIds:members.slice(0,11).map(m=>m.id),emblem:'bat',palette:'teal',captainId:'qa-0',role,joinOpen:true,inviteCode:'LOCAL-QA-ONLY',members,points:120,level:2,benefits:[]};
+const now=Date.now();
+const initialFixture={id:'qa-fixture',status:'preparation',homeTeam:initialTeam,awayTeam:{...initialTeam,id:'qa-away',name:'QA Opponent Club',tag:'QAOP-0002'},capacity:11,format:'mini',roundCount:3,createdAt:now,acceptedAt:now,prepEndsAt:now+23*3600000,battleStartsAt:now+23*3600000,deadlineAt:now+47*3600000,ready:{home:false,away:false},lineups:{home:members.slice(0,11),away:members.slice(0,11).map(m=>({...m,id:'other-'+m.id}))},recurrence:{cadence:'weekly',confirmed:true,stopped:false,nextDraftAt:now+7*86400000,nextFixtureId:null},stage:'friendly',tournamentId:null,homeScore:{correct:0,elapsedMs:0,completed:0,rosterSize:11},awayScore:{correct:0,elapsedMs:0,completed:0,rosterSize:11},winnerTeamId:null,tieBreak:null};
+function App(){const [team,setTeam]=useState(initialTeam),[fixture,setFixture]=useState(initialFixture),[weekly,setWeekly]=useState(false),[last,setLast]=useState(null);
+function action(op,values={}){const event={op,...values};setLast(event);window.__lastClubOp=event;
+if(op==='selectLineup')setTeam(t=>({...t,selectedMemberIds:values.memberIds}));
+if(op==='roleConsent')setTeam(t=>({...t,members:t.members.map(m=>m.id===selfId?{...m,funBadgeConsent:values.consent,funBadge:values.consent?m.funBadge:'none'}:m)}));
+if(op==='fixtureLineup')setFixture(f=>({...f,ready:{home:false,away:false},lineups:{...f.lineups,home:members.filter(m=>values.memberIds.includes(m.id))}}));
+if(op==='substitute')setFixture(f=>({...f,ready:{home:false,away:false},lineups:{...f.lineups,home:f.lineups.home.map(m=>m.id===values.outMemberId?members.find(v=>v.id===values.inMemberId):m)}}));
+if(op==='readyLineup')setFixture(f=>({...f,ready:{...f.ready,home:values.ready}}));
+if(op==='stopRecurrence')setFixture(f=>({...f,recurrence:{...f.recurrence,stopped:true}}));}
+return <><aside className="qa-harness"><strong>LOCAL UI TEST FIXTURE</strong><span>22 synthetic QA entries. No accounts or server calls.</span><nav aria-label="Fixture controls">{['roster','preparation','weekly','rematch-home','rematch-away','rematch-away-sent'].map(v=><a href={'?mode='+v+'&role='+viewer} key={v}>{v}</a>)}<span>Viewer: {role}</span>{['captain','vice-captain','coach','member','reserve'].map(v=><a href={'?mode='+mode+'&role='+v} key={v}>{v}</a>)}<button onClick={toggleTheme}>Day / night</button></nav></aside><main className="jhk-teams"><TeamBanner team={team} subtitle="Local fixture only"/>{mode==='roster'?<ClubRoster team={team} selfId={selfId} busy={false} onAction={action} invite={<details className="jhk-team-disclosure"><summary>Private club invite</summary><p>Local QA invite only.</p></details>}/>:mode==='preparation'?<><WarPhaseStrip fixture={fixture}/><FixturePreparation fixture={fixture} team={team} selfId={selfId} now={now} busy={false} onAction={action}/></>:<><WeeklyChoice checked={weekly} onChange={setWeekly}/><FixtureCalendar fixture={fixture} team={team} busy={false} onAction={action}/></>}<output className="qa-output" aria-live="polite">{last?'UI callback: '+JSON.stringify(last):'No operation sent.'}</output></main></>}
+let rematchFixture={...initialFixture,status:'pending',prepEndsAt:null,battleStartsAt:null,deadlineAt:null,availableAt:now-60000,draftSentAt:null,recurrence:{cadence:'weekly',confirmed:false,stopped:false,homeConfirmed:false,isDraft:true,nextDraftAt:null,nextFixtureId:null}};
+if(mode.startsWith('rematch-away'))rematchFixture={...rematchFixture,homeTeam:initialFixture.awayTeam,awayTeam:initialTeam};
+if(mode==='rematch-away-sent')rematchFixture={...rematchFixture,draftSentAt:now-1000,recurrence:{...rematchFixture.recurrence,homeConfirmed:true}};
+let qaServerNow=now;
+if(mode.startsWith('rematch')){Object.defineProperty(jhkOnline,'session',{configurable:true,get:()=>({id:selfId,nickname:'QA Viewer',adultConfirmed:true,termsVersion:'beta-1',profileComplete:true})});jhkOnline.configured=true;jhkOnline.subscribe=()=>()=>{};jhkOnline.team=async(op,values={})=>{if(op!=='dashboard'&&op!=='fixture'){window.__lastClubOp={op,...values};const output=document.getElementById('qa-rematch-operation');if(output)output.textContent='UI callback: '+JSON.stringify(window.__lastClubOp);}if(op==='sendRematch')rematchFixture={...rematchFixture,draftSentAt:Date.now(),recurrence:{...rematchFixture.recurrence,homeConfirmed:true}};if(op==='accept')rematchFixture={...initialFixture,id:rematchFixture.id,homeTeam:rematchFixture.homeTeam,awayTeam:rematchFixture.awayTeam,recurrence:{...rematchFixture.recurrence,cadence:values.recurrence,confirmed:values.recurrence==='weekly',homeConfirmed:true}};if(op==='stopRecurrence')rematchFixture={...rematchFixture,status:'declined',recurrence:{...rematchFixture.recurrence,stopped:true}};return{ok:true,serverNow:++qaServerNow,team:initialTeam,fixtures:[rematchFixture],tournaments:[]};};}
+function RematchHarness(){return <><aside className="qa-harness"><strong>LOCAL REMATCH UI TEST FIXTURE</strong><span>Actual TeamsScreen, in-memory responses only. No accounts, terms acceptance or server calls.</span><nav><a href="?mode=rematch-home">Home draft</a><a href="?mode=rematch-away">Away before host sends</a><a href="?mode=rematch-away-sent">Away after host sends</a><button onClick={toggleTheme}>Day / night</button></nav></aside><TeamsScreen name="QA Viewer" onHome={()=>{}} onPractice={()=>{}}/><output id="qa-rematch-operation" className="qa-output" aria-live="polite">No operation sent.</output></>}
+function FxHarness(){const [kind,setKind]=useState('boundary'),[receipt,setReceipt]=useState(0),[action,setAction]=useState('Ready for local QA'),[audio,setAudio]=useState('Audio starts only after a gesture');const prefs=usePrefs();const values={boundary:['win',5,2],wicket:['loss',1,5],'run-out':['loss',2,3],level:['draw',4,4],cancelled:['cancelled',0,0],forfeit:['loss',0,3],unsettled:['win',0,0]};const current=values[kind];
+return <><aside className="qa-harness"><strong>LOCAL CRICKET FX TEST FIXTURE</strong><span>Actual result component + FxProvider. Synthetic scores. No profile, consent, network or rewards.</span><nav aria-label="Cricket moment cases">{Object.keys(values).map(value=><button key={value} onClick={()=>{setKind(value);setReceipt(n=>n+1);setAction('Started '+value);requestAnimationFrame(()=>setAudio(sound.ready?'Existing audio context running':'Audio unavailable or not unlocked'));}}>{value}</button>)}</nav><label>Motion preference <select value={prefs.motion} onChange={event=>setPref('motion',event.target.value)}><option value="full">Full motion</option><option value="reduced">Reduced motion</option><option value="off">Effects off</option></select></label><label><input type="checkbox" checked={prefs.sound} onChange={event=>setPref('sound',event.target.checked)}/> Cricket sound</label><output>Motion: {prefs.motion}. Sound: {prefs.sound?'on':'off'}. {audio}.</output></aside><main className="qa-fx-mobile"><p className="jhk-team-eyebrow">390 PX MOBILE RESULT FRAME</p><h1>{current[0]==='win'?'That one’s yours.':current[0]==='draw'?'Level on the scorecard.':current[0]==='cancelled'?'The table has closed.':'Good duel. New knowledge.'}</h1><p>Actual quiz score: {current[1]} – {current[2]}</p><CricketOutcomeMoment eventId={'qa-cricket:'+kind+':'+receipt} outcome={current[0]} settled={kind!=='unsettled'} ourScore={current[1]} theirScore={current[2]} forfeit={kind==='forfeit'}/><div className="qa-fx-actions"><button onClick={()=>setAction('Replay is available immediately')}>Replay</button><button onClick={()=>setAction('Share is available immediately; no post sent')}>Share score</button></div><output aria-live="polite">{action}</output></main></>}
+createRoot(document.getElementById('root')).render(<FxProvider>{mode.startsWith('rematch')?<RematchHarness/>:mode==='fx'?<FxHarness/>:mode==='fx-mobile'?<><h1>Mobile cricket FX preview</h1><iframe title="390 pixel mobile cricket result" width="390" height="850" style={{border:'1px solid #ccc',maxWidth:'100%',background:'#f7f1e6'}} src="?mode=fx"/></>:<App/>}</FxProvider>);
+`);
+const result = await build({configFile:false,logLevel:'error',root,resolve:{alias:{'@':root}},define:{'process.env.NODE_ENV':JSON.stringify('production')},build:{write:false,minify:true,lib:{entry,formats:['iife'],name:'JHKClubFixture'},emptyOutDir:false}});
+const outputs = (Array.isArray(result) ? result : [result]).flatMap(item => item.output || []);
+const code = outputs.find(item => item.type === 'chunk')?.code;
+if (!code) throw new Error('Fixture bundle was not generated.');
+await fs.writeFile(path.join(out,'bundle.js'),code);
+const themePath = path.join(root,'app/club-wars-theme.css');
+const css = await fs.readFile(path.join(root,'app/screens/teams/teams.css'),'utf8');
+const bundledCss = outputs.filter(item=>item.type==='asset' && item.fileName.endsWith('.css')).map(item=>String(item.source)).join('\n');
+const theme = await fs.readFile(themePath,'utf8').catch(()=> '');
+const productionTheme = await fs.readFile(path.join(root,'app/team-theme.css'),'utf8');
+await fs.writeFile(path.join(out,'index.html'),`<!doctype html><html lang="en" data-cricket-theme="pavilion" data-theme="light"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>JHK local club UI test fixture</title><style>html{--bg-0:#f7f1e6;--bg-1:#fffdf8;--text:#122c35;--muted:#53656a;--line:#d9d9cc;--cyan-text:#076f6b;--volt:#ffbd59;background:var(--bg-0);color:var(--text);font-family:system-ui}body{margin:0;padding:16px}.qa-harness{font-size:11px;display:grid;gap:8px;margin-bottom:22px;border:1px dashed currentColor;padding:10px}.qa-harness nav{display:flex;gap:10px;flex-wrap:wrap}.qa-harness a{color:inherit}.qa-harness button,.qa-harness select{min-height:44px}.qa-output{display:block;white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;padding:15px 0}.qa-fx-mobile{width:min(100%,390px);margin:0 auto}.qa-fx-mobile h1{font-size:28px;line-height:1.1}.qa-fx-mobile output{display:block;margin-top:16px;font-size:12px}.qa-fx-actions{display:flex;gap:10px}.qa-fx-actions button{flex:1;min-height:48px;background:#087f7a;color:#fff;border:0;border-radius:10px}.jhk-team-banner{margin-bottom:18px}${bundledCss}${css}${productionTheme}${theme}</style><div id="root"></div><script src="./bundle.js"></script></html>`);
+console.log(JSON.stringify({fixturePreview:out,files:['index.html','bundle.js'],usesActualComponents:true,networkCalls:false,productionPublication:false}));

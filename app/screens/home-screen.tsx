@@ -46,7 +46,7 @@ export function HomeScreen({ player, selectedStadiumId, humanTrophies = 0, name,
       </div>
       <button className="jp-team-invite" type="button" onClick={() => go('teams')}>
         <span className="jp-team-emblem" aria-hidden="true"><Users size={27} /><span>JHK</span></span>
-        <span className="jp-team-invite-copy"><strong>{hi ? 'आपके साथी। आपकी पारी।' : 'Your people. Your innings.'}</strong><small>{hi ? '5 या 11 की टीम · टीम मैच और टूर्नामेंट' : 'Squads of 5 or 11 · Team matches & tournaments'}</small></span>
+        <span className="jp-team-invite-copy"><strong>{hi ? 'आपके साथी। आपकी पारी।' : 'Your people. Your innings.'}</strong><small>{hi ? '22 का क्लब · खेलने वाले 5 या 11 · क्लब मुकाबले' : 'Clubs of 22 · Playing 5 or XI · Club wars'}</small></span>
         <ArrowRight size={21} aria-hidden="true" />
       </button>
       <button className="jo-title-goal" onClick={() => go('passport')} aria-label={hi ? 'अपनी स्थानीय पहचान और प्रगति देखें' : 'View your local title and progress'}>

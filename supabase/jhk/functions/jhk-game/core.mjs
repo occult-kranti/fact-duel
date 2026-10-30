@@ -16,7 +16,7 @@ export const DUEL_FILES = Object.freeze([
  { id: 'computing', name: 'Computing', rewardMultiplier: 1 },
 ].map(Object.freeze));
 export const ACTIONS = new Set(['presence', 'reaction', 'session', 'recover', 'rotateRecovery', 'exportProfile', 'deleteSession', 'profile', 'create', 'join', 'queue', 'snapshot', 'ready', 'answer', 'next', 'leave', 'leaderboards', 'leaderboard', 'tournaments', 'circles', 'team']);
-export const TEAM_OPERATIONS = Object.freeze(['dashboard','create','join','settings','rotateInvite','transfer','kick','leave','challenge','accept','decline','fixture','play','answer','next','tournamentCreate','tournamentJoin','tournamentStart','tournamentLeave']);
+export const TEAM_OPERATIONS = Object.freeze(['dashboard','create','join','settings','rotateInvite','transfer','kick','leave','challenge','accept','decline','fixture','play','answer','next','tournamentCreate','tournamentJoin','tournamentStart','tournamentLeave','selectLineup','assignRole','assignBadge','roleConsent','fixtureLineup','substitute','readyLineup','startBattle','stopRecurrence','sendRematch']);
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 function cleanTeamText(value, max, label) {
   if (typeof value !== 'string') throw new GameError('BAD_TEAM', `Choose a ${label}.`);
@@ -59,13 +59,19 @@ export function validateInput(body) {
       payload.targetTag = payload.targetTag.trim().toUpperCase();
       if (!/^[A-Z0-9]{1,4}-[A-F0-9]{4}$/.test(payload.targetTag)) throw new GameError('BAD_TEAM_TAG','Check the other team’s public tag.');
     }
-    for (const [operations,key] of [[['transfer','kick'],'memberId'],[['accept','decline','fixture','play','answer','next'],'fixtureId'],[['tournamentStart','tournamentLeave'],'tournamentId']]) {
+    for (const [operations,key] of [[['transfer','kick','assignRole','assignBadge'],'memberId'],[['accept','decline','fixture','play','answer','next','fixtureLineup','substitute','readyLineup','startBattle','stopRecurrence','sendRematch'],'fixtureId'],[['tournamentStart','tournamentLeave'],'tournamentId'],[['substitute'],'outMemberId'],[['substitute'],'inMemberId']]) {
       if (operations.includes(op) && !UUID_RE.test(payload[key] || '')) throw new GameError('BAD_TEAM_ID','Choose a valid team member, match or cup.');
     }
     if (['join','tournamentJoin'].includes(op) && (typeof payload.code !== 'string' || !/^[A-Fa-f0-9]{16}$/.test(payload.code.trim()))) throw new GameError('BAD_CODE','Check the private invite code.');
     if (op === 'answer' && (!Number.isInteger(payload.round) || payload.round < 1 || payload.round > 6 || !Number.isInteger(payload.choice) || payload.choice < 0 || payload.choice > 3 || !UUID_RE.test(payload.requestId || ''))) throw new GameError('BAD_ANSWER','Choose one answer for the current ball.');
+    if (['selectLineup','fixtureLineup'].includes(op) && (!Array.isArray(payload.memberIds) || ![5,11].includes(payload.memberIds.length) || new Set(payload.memberIds).size !== payload.memberIds.length || payload.memberIds.some(id => typeof id !== 'string' || !UUID_RE.test(id)))) throw new GameError('BAD_LINEUP','Select five or eleven different club members.');
+    if (op === 'assignRole' && !['member','vice-captain','coach'].includes(payload.role)) throw new GameError('BAD_ROLE','Choose member, vice-captain or coach.');
+    if (op === 'assignBadge' && !['none','bottle-boy','analyst','keeper','finisher','cheer-captain'].includes(payload.badge)) throw new GameError('BAD_BADGE','Choose an available fun badge.');
+    if (op === 'roleConsent' && typeof payload.consent !== 'boolean') throw new GameError('BAD_BADGE','Choose whether to allow fun badges.');
+    if (op === 'readyLineup' && typeof payload.ready !== 'boolean') throw new GameError('BAD_READY','Choose whether this line-up is ready for an early battle.');
+    if (['challenge','accept'].includes(op) && payload.recurrence != null && !['none','weekly'].includes(payload.recurrence)) throw new GameError('BAD_RECURRENCE','Choose a single match or weekly rematch drafts.');
     // Explicitly ignore authority assertions in this protocol too. No team operation accepts a stake.
-    for (const key of ['teamId','tag','capacityOverride','level','points','captainId','winnerTeamId','deadlineAt','startedAt','issuedAt','stake']) delete payload[key];
+    for (const key of ['teamId','tag','capacityOverride','level','points','captainId','winnerTeamId','deadlineAt','startedAt','issuedAt','stake','rosterLimit','isSelected','funBadgeConsent','prepEndsAt','battleStartsAt','homeReady','awayReady','permissions','draftSentAt','warVersion','recurrenceConfirmed','recurrenceStopped']) delete payload[key];
   }
   if (['session','profile'].includes(body.action)) {
     if (Object.prototype.hasOwnProperty.call(payload, 'email')) {

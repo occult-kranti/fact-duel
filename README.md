@@ -71,7 +71,7 @@ Home starts practice immediately and keeps topics, human play and settings optio
 
 ## Team Pavilion
 
-Teams supports squads of **5 or 11**, with an automatic public tag, original crest, shared palette and captain settings. Join with a private invite code, fill the team sheet, then challenge another full squad of the same size. Each member plays their own Mini or Full over in a 24-hour fixture window. Team correctness is primary; wrong and missing answers count as 30 seconds in the time tiebreak. Four-team cups run two semi-finals and one final, with the exact-tie seed rule disclosed before entry. Captains can withdraw from recruiting cups or cancel a cup they host; recruitment expires after 48 hours.
+Teams supports **22-member clubs**, with a fixed **playing 5 or XI**, an automatic public tag, original crest and reserves. Captains manage the club, Vice Captains arrange fixtures, and Coaches select the team sheet. Fun tags are optional and separate from permissions. New fixtures have **23h preparation + 24h battle**, with substitutions before battle only. Both Captain/VC sides can opt to start early. Each selected member contributes one Mini or Full over. Weekly series create fresh drafts requiring both clubs' renewed confirmation. Four-team cups have preparation before each stage; legacy active fixtures keep their original clocks. Correctness leads, with server answer time as tiebreak; wrong/missing answers count as 30 seconds. No contest produces no outcome applause.
 
 Completed contributions and fixture outcomes earn server-owned team points. Levels unlock the Star crest at 100 points, Crown at 300 and Legacy frame at 700. These are cosmetic benefits. The team record is separate from browser-local Club points and personal online coins / rank / XP.
 
@@ -83,3 +83,6 @@ The mobile-first visual system uses warm paper, dark ink, saffron play controls 
 - [Editable design canvas](docs/team-redesign/design-board/index.html) and [tooling evidence](docs/team-redesign/FIGMA.md)
 
 The Figma project was created but its Starter tool quota prevented screen editing. The editable HTML/SVG canvas is the delivered design artifact. Real-team satisfaction, mobile-device ergonomics, WAN fairness and production load require separate observed studies.
+
+
+Club release references: [research](docs/club-wars/RESEARCH.md), [roadmap](docs/club-wars/ROADMAP.md), [three-round panel](docs/club-wars/PANEL.md), [editable canvas](docs/club-wars/design-board/index.html), [server contract](docs/club-wars/SERVER.md), and [updated pitch](public/product/investor/deck.md).

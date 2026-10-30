@@ -1,0 +1,39 @@
+.cricket-outcome{box-sizing:border-box;--cricket-ink:#122c35;--cricket-paper:#f7f1e6;position:relative;display:grid;grid-template-columns:minmax(110px,38%) 1fr;align-items:center;gap:4px;width:100%;min-height:118px;padding:8px 42px 8px 6px;margin:16px 0;color:var(--cricket-ink);background:var(--cricket-paper);border:1px solid #d9d2bf;border-radius:18px;overflow:hidden;text-align:left;isolation:isolate}
+.cricket-scene{display:block;width:100%;height:auto;max-height:118px;overflow:visible}
+.cricket-moment-copy{min-width:0;padding:4px 0}
+.cricket-moment-copy>span{display:block;color:#356661;font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;line-height:1.5}
+.cricket-moment-copy>strong{display:block;margin:4px 0;font-size:clamp(15px,2.7vw,19px);line-height:1.12;font-weight:850;letter-spacing:-.02em}
+.cricket-moment-copy>p{margin:0;color:#43575a;font-size:11px;line-height:1.45}
+.cricket-moment-skip{position:absolute;right:0;top:0;min-width:44px;min-height:44px;padding:8px 5px;background:transparent;border:0;color:#245b57;border-radius:12px;font-size:11px;font-weight:750;cursor:pointer}
+.cricket-moment-skip:hover{background:#087f7a12}.cricket-moment-skip:focus-visible{outline:3px solid #087f7a;outline-offset:-4px}
+.cricket-bail-left{transform:translate(-9px,-16px) rotate(-22deg);transform-origin:8px 10px}.cricket-bail-right{transform:translate(15px,-22px) rotate(34deg);transform-origin:24px 10px}
+.cricket-bat-swing{transform:rotate(34deg);transform-origin:0 0}
+.cricket-outcome-running .cricket-bat-swing{animation:cricket-bat-drive .55s cubic-bezier(.2,.8,.3,1) both}
+.cricket-outcome-running .cricket-boundary-ball{animation:cricket-boundary-arc 1.2s cubic-bezier(.2,.7,.4,1) both}
+.cricket-outcome-running .cricket-trajectory{animation:cricket-flight-mark 1.2s ease-out both}
+.cricket-outcome-running .cricket-cheers{animation:cricket-cheer 1.7s .35s ease-out both;transform-origin:150px 96px}
+.cricket-outcome-running .cricket-bail-left{animation:cricket-left-bail .8s .42s ease-out both}
+.cricket-outcome-running .cricket-bail-right{animation:cricket-right-bail .8s .42s ease-out both}
+.cricket-outcome-running .cricket-wicket-ball{animation:cricket-wicket-strike .85s ease-out both}
+.cricket-outcome-running .cricket-impact{animation:cricket-impact .55s .42s ease-out both;transform-origin:145px 65px}
+.cricket-outcome-running.cricket-outcome-run-out .cricket-bail-left,.cricket-outcome-running.cricket-outcome-run-out .cricket-bail-right{animation-delay:.72s}
+.cricket-outcome-running .cricket-bat-slide{animation:cricket-slide .94s cubic-bezier(.1,.7,.2,1) both}
+.cricket-outcome-running .cricket-runout-ball{animation:cricket-runout-strike .9s linear both}
+.cricket-outcome-running .cricket-dust{animation:cricket-dust .9s ease-out both}
+.cricket-outcome-running .cricket-bat-raise{animation:cricket-raise .75s ease-out both}
+.cricket-outcome-running .cricket-bat-raise-right{animation-delay:.1s}
+@keyframes cricket-bat-drive{0%{transform:rotate(-53deg)}60%{transform:rotate(43deg)}100%{transform:rotate(34deg)}}
+@keyframes cricket-boundary-arc{0%,12%{transform:translate(-120px,46px)}50%{transform:translate(-53px,-12px)}100%{transform:translate(0,0)}}
+@keyframes cricket-flight-mark{0%,20%{opacity:0}65%,100%{opacity:.75}}
+@keyframes cricket-cheer{0%{transform:scaleY(.6);opacity:.1}22%,62%{transform:scaleY(1.12);opacity:1}40%,80%,100%{transform:scaleY(1);opacity:1}}
+@keyframes cricket-left-bail{0%{transform:translate(0,0) rotate(0)}65%{transform:translate(-9px,-24px) rotate(-35deg)}100%{transform:translate(-9px,-16px) rotate(-22deg)}}
+@keyframes cricket-right-bail{0%{transform:translate(0,0) rotate(0)}65%{transform:translate(15px,-31px) rotate(50deg)}100%{transform:translate(15px,-22px) rotate(34deg)}}
+@keyframes cricket-wicket-strike{0%{transform:translate(-92px,0)}50%{transform:translate(-18px,-12px)}100%{transform:translate(0,0)}}
+@keyframes cricket-impact{0%{opacity:0;transform:scale(.4)}35%{opacity:1;transform:scale(1.1)}100%{opacity:1;transform:scale(1)}}
+@keyframes cricket-slide{0%{transform:translateY(-49px)}100%{transform:translateY(0)}}
+@keyframes cricket-runout-strike{0%{transform:translate(38px,-68px)}80%{transform:translate(0,-19px)}100%{transform:translate(0,0)}}
+@keyframes cricket-dust{0%{opacity:0;transform:translateX(-12px)}50%{opacity:.8}100%{opacity:.5;transform:translateX(0)}}
+@keyframes cricket-raise{0%{transform:translateY(21px)}100%{transform:translateY(0)}}
+html[data-motion='reduced'] .cricket-outcome *,html[data-motion='off'] .cricket-outcome *{animation:none!important;transition:none!important}
+@media(prefers-reduced-motion:reduce){.cricket-outcome *{animation:none!important;transition:none!important}}
+@media(max-width:360px){.cricket-outcome{grid-template-columns:104px 1fr;padding-right:34px;gap:0}.cricket-moment-copy>strong{font-size:15px}.cricket-moment-copy>p{font-size:10px}}

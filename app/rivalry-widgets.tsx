@@ -6,7 +6,7 @@
  * Copy from lib/duel-presentation.mjs (matchVerdict / roundReason / FORMAT_COPY) is quoted
  * verbatim — tests pin it. QuestionIssue keeps its export and props: app/expeditions.tsx uses it.
  */
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import {
@@ -24,22 +24,17 @@ import {
   Flame,
   Timer,
 } from 'lucide-react';
-import { NumberCounter, useJuice } from '@/components/fx';
+import { NumberCounter } from '@/components/fx';
 import { completedRounds, FORMAT_COPY, matchVerdict, roundReason } from '@/lib/duel-presentation.mjs';
 import { MODE_ROUNDS } from '@/lib/server/room-engine.mjs';
 import { comboMultiplier, levelForXp } from '@/lib/progression.mjs';
 import { prizeFor } from '@/lib/economy/economy.mjs';
-import { comboAt, marginLine, matchRank, matchXp, whatYouKeep, winTier } from './screens/room/room-math';
+import { comboAt, marginLine, matchRank, matchXp, whatYouKeep } from './screens/room/room-math';
 import { usePress } from './screens/room/room-bits';
 import { useLocale } from './use-locale';
 import { ShareMoment } from './screens/room/share-moment';
 import { getOverRewardSummary, localTitleProgress } from '@/lib/over-rewards.mjs';
-
-/* Consecutive routine wins this session. Module scope, so it resets on reload and never reaches
-   storage: this is about habituation inside one sitting, not a durable player stat. */
-let routineWins = 0;
-/** After this many identical routine celebrations, the next ones are medallion + counter only. */
-const ROUTINE_CELEBRATIONS = 3;
+import { CricketOutcomeMoment } from './cricket-fx/cricket-outcome-moment';
 
 export function DuelHUD({ room }: { room: any }) {
   const { t } = useLocale();
@@ -142,10 +137,8 @@ export function MatchFinish({
   /** Quiet result: score and replay first, optional detailed progression below. */
   compact?: boolean;
 }) {
-  const juice = useJuice();
   const press = usePress();
   const { t, n, pick, locale } = useLocale();
-  const celebrated = useRef<string | null>(null);
   const v = matchVerdict(room),
     rounds = completedRounds(room),
     scored = rounds.filter((r: any) => r.result.reason !== 'timing-inconsistent'),
@@ -164,34 +157,6 @@ export function MatchFinish({
     .filter(Boolean)
     .join(' ');
   const keep = v.key === 'loss' ? whatYouKeep(room, player) : null;
-  const tier = v.key === 'win' ? winTier(room, player) : null;
-  useEffect(() => {
-    if (compact || celebrated.current === room.id) return;
-    if (v.key === 'win') {
-      celebrated.current = room.id;
-      // Ceremonial wins already have the overlay; stacking confetti behind one is two celebrations
-      // for one event. Routine bot wins decay across a session so the tenth does not look like the
-      // first — the *content* varies, never the volume, because randomised intensity is a
-      // reinforcement schedule and randomised true content is a reason to read the screen.
-      if (tier === 'ceremonial') return;
-      if (tier === 'notable') {
-        routineWins = 0;
-        juice.confetti('win');
-        return;
-      }
-      routineWins += 1;
-      if (routineWins <= ROUTINE_CELEBRATIONS)
-        juice.sound('win', { gain: Math.max(0.55, 1 - 0.12 * (routineWins - 1)) });
-      return;
-    }
-    if (v.key === 'loss') {
-      celebrated.current = room.id;
-      routineWins = 0;
-      // Second beat, after the verdict has landed and been announced. Never before it.
-      const id = setTimeout(() => juice.settle(), 400);
-      return () => clearTimeout(id);
-    }
-  }, [v.key, tier, room.id, juice, compact]);
   return (
     <div className="fd-finish" data-verdict={v.key}>
       <section className="fd-verdict">
@@ -261,6 +226,8 @@ export function MatchFinish({
           </Button>
         </div>
       </div>
+
+      <CricketOutcomeMoment eventId={`practice:${room.id}:${room.seat}`} outcome={v.key as 'win' | 'loss' | 'draw' | 'cancelled'} settled={settledOk} ourScore={room.scores[room.seat]} theirScore={room.scores[1 - room.seat]} />
 
       {settledOk && overReward.rounds > 0 && <section className="jhk-over-receipt" aria-label={locale === 'hi' ? 'ओवर के पुरस्कार' : 'Over rewards'}>
         <strong>+{xpGained} XP · {localTitle.title}</strong>

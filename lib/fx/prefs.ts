@@ -165,7 +165,7 @@ export function setPref<K extends PrefKey>(key: K, value: FxPrefs[K]): void {
       raw = String(Math.min(1, Math.max(0, Number(value) || 0)));
       break;
     case 'motion':
-      raw = value === 'reduced' ? 'reduced' : 'full';
+      raw = value === 'off' ? 'off' : value === 'reduced' ? 'reduced' : 'full';
       break;
     default:
       return;

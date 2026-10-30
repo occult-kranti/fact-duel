@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1350" height="1250" viewBox="0 0 1350 1250" role="img" aria-labelledby="title desc">
+  <title id="title">JHK Club Wars: membership, preparation, battle and rematch flow</title>
+  <desc id="desc">A club of up to 22 members chooses a side of 5 or 11. The default is 23 hours of preparation followed by a 24 hour battle with a frozen side. Both captains or vice captains may mark ready to start early. Editing preparation clears readiness. A settled result may create one weekly rematch draft when both clubs opt in; it always needs fresh acceptance and lineup confirmation. Reserves never add extra answers.</desc>
+  <defs>
+    <pattern id="paper-rule" width="18" height="18" patternUnits="userSpaceOnUse"><path d="M0 18H18" stroke="#122c35" stroke-opacity=".025"/></pattern>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="#087f7a"/></marker>
+    <style>text{font-family:Inter,Arial,sans-serif;fill:#122c35}.title{font-size:44px;font-weight:800;letter-spacing:-2px}.lead{font-size:17px;fill:#53656a}.eyebrow{font-size:11px;letter-spacing:1.8px;font-weight:700;fill:#076f6b}.step{font-size:25px;font-weight:800;letter-spacing:-.7px}.body{font-size:15px;fill:#53656a}.tiny{font-size:12px;fill:#53656a}.aside-title{font-size:19px;font-weight:750;letter-spacing:-.4px}.pill{font-size:11px;font-weight:700}.route{fill:none;stroke:#087f7a;stroke-width:2;marker-end:url(#arrow)}.card{fill:#fffdf8;stroke:#d9d9cc;stroke-width:1.5}.aside{fill:#f0efe4;stroke:#cdd6c7}.rule{stroke:#d9d9cc;stroke-width:1}</style>
+  </defs>
+  <rect width="1350" height="1250" fill="#f7f1e6"/>
+  <rect width="1350" height="1250" fill="url(#paper-rule)"/>
+  <text x="40" y="44" class="eyebrow">JHK / CLUB WARS / EDITABLE FLOW CANVAS</text>
+  <text x="40" y="101" class="title">One club. A prepared side. A fair match.</text>
+  <text x="40" y="137" class="lead">Exact product contract · 30 October 2026 · Example names, scores and dates live only in the companion preview</text>
+
+  <g id="membership">
+    <rect x="390" y="180" width="580" height="106" rx="15" fill="#122c35"/>
+    <path d="M892 180h49v68l-24.5-14L892 248Z" fill="#ffbd59"/>
+    <text x="415" y="212" class="eyebrow" style="fill:#a4d7ce">01 / BELONG</text>
+    <text x="415" y="246" class="step" style="fill:#fffdf8">Club membership · up to 22</text>
+    <text x="415" y="270" class="body" style="fill:#c3d5d3">A shared tag, crest and honours. Playing selection is separate.</text>
+    <text x="917" y="213" font-size="20" font-weight="800" text-anchor="middle">22</text>
+  </g>
+  <g id="roles">
+    <rect x="40" y="180" width="290" height="165" rx="13" class="aside"/>
+    <text x="60" y="214" class="aside-title">A role has one job.</text>
+    <text x="60" y="244" class="body">Captain: club + roles + fixtures.</text>
+    <text x="60" y="268" class="body">VC: team sheets + fixtures.</text>
+    <text x="60" y="292" class="body">Coach: team sheets only.</text>
+    <text x="60" y="323" class="tiny">Fun tags need player opt-in; removable.</text>
+  </g>
+  <g id="legacy">
+    <rect x="1020" y="180" width="290" height="106" rx="13" class="aside"/>
+    <text x="1040" y="214" class="aside-title">Respect live matches.</text>
+    <text x="1040" y="244" class="body">Existing active fixtures keep</text>
+    <text x="1040" y="268" class="body">their original deadlines.</text>
+  </g>
+  <path d="M680 286v35" class="route"/>
+  <g id="selection">
+    <rect x="390" y="328" width="580" height="112" rx="15" class="card"/>
+    <text x="415" y="359" class="eyebrow">02 / SELECT</text>
+    <text x="415" y="392" class="step">Choose exactly 5 or 11 to play</text>
+    <text x="415" y="418" class="body">The remaining members stay as reserves inside the club.</text>
+  </g>
+  <g id="reserves">
+    <rect x="1020" y="328" width="290" height="155" rx="13" class="aside"/>
+    <text x="1040" y="362" class="aside-title">Reserves belong.</text>
+    <text x="1040" y="393" class="body">They can join the next selection.</text>
+    <text x="1040" y="417" class="body">They do not add extra answers.</text>
+    <text x="1040" y="451" class="tiny">Role, membership and playing status</text>
+    <text x="1040" y="469" class="tiny">are three distinct properties.</text>
+  </g>
+  <path d="M970 384h40" class="route"/>
+  <path d="M680 440v49" class="route"/>
+  <text x="699" y="471" class="tiny">Both sides accept this fixture</text>
+  <g id="preparation">
+    <rect x="390" y="496" width="580" height="132" rx="15" class="card"/>
+    <path d="M405 496h550" stroke="#ffbd59" stroke-width="4"/>
+    <text x="415" y="528" class="eyebrow">03 / PREPARE · DEFAULT 23 HOURS</text>
+    <text x="415" y="562" class="step">Confirm the side. Make substitutes.</text>
+    <text x="415" y="590" class="body">Captain / VC / Coach may adjust their team sheet.</text>
+    <text x="415" y="613" class="body">Any preparation change clears early-start readiness.</text>
+  </g>
+  <g id="early-start">
+    <rect x="40" y="496" width="290" height="132" rx="13" class="aside"/>
+    <text x="60" y="530" class="aside-title">Ready to start early?</text>
+    <text x="60" y="561" class="body">Both captains or VCs confirm.</text>
+    <text x="60" y="585" class="body">Both full sides lock together.</text>
+    <text x="60" y="613" class="tiny">Otherwise use the scheduled opening.</text>
+  </g>
+  <path d="M390 561h-50" class="route"/>
+  <path d="M680 628v43" class="route"/>
+  <g id="battle">
+    <rect x="390" y="678" width="580" height="112" rx="15" class="card"/>
+    <path d="M405 678h550" stroke="#087f7a" stroke-width="4"/>
+    <text x="415" y="710" class="eyebrow">04 / BATTLE · 24 HOURS</text>
+    <text x="415" y="744" class="step">The side is frozen. Each player plays.</text>
+    <text x="415" y="772" class="body">One over per selected member. No battle substitutions.</text>
+  </g>
+  <path d="M680 790v45" class="route"/>
+  <g id="result">
+    <rect x="390" y="842" width="580" height="112" rx="15" class="card"/>
+    <text x="415" y="874" class="eyebrow">05 / SETTLE</text>
+    <text x="415" y="908" class="step">An earned finish, recorded once.</text>
+    <text x="415" y="936" class="body">Boundary / wicket / close run-out. Optional short cricket cues.</text>
+  </g>
+  <g id="cups">
+    <rect x="40" y="842" width="290" height="137" rx="13" class="aside"/>
+    <text x="60" y="876" class="aside-title">The cup follows this flow.</text>
+    <text x="60" y="906" class="body">Each semi-final and final has</text>
+    <text x="60" y="930" class="body">its own preparation and battle.</text>
+    <text x="60" y="960" class="tiny">Fresh team-sheet confirmation each time.</text>
+  </g>
+  <path d="M680 954v41" class="route"/>
+  <text x="699" y="984" class="tiny">Only when both clubs opted in</text>
+  <g id="weekly-draft">
+    <rect x="390" y="1002" width="580" height="141" rx="15" class="card" stroke-dasharray="6 4"/>
+    <text x="415" y="1034" class="eyebrow">06 / OPTIONAL WEEKLY OPPORTUNITY</text>
+    <text x="415" y="1068" class="step">One future rematch draft.</text>
+    <text x="415" y="1096" class="body">Fresh acceptance + line-up confirmation. Never auto-enrol.</text>
+    <text x="415" y="1120" class="body">7-day anchor; skip missed weeks. Captain or VC can stop.</text>
+  </g>
+  <path d="M970 1070h30V422h-23" class="route" stroke-dasharray="6 5"/>
+  <text x="1023" y="1051" class="tiny">Returns to a fresh invitation.</text>
+  <text x="1023" y="1074" class="tiny">It never skips straight to battle.</text>
+  <text x="40" y="1200" class="eyebrow">DESIGN PRINCIPLE</text>
+  <text x="40" y="1225" class="lead">A reason to come back, with room to step away. No absence penalty, forced share or surprise commitment.</text>
+</svg>
