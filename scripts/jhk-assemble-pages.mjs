@@ -26,6 +26,18 @@ if (fs.existsSync(path.join(clubCanvas, 'index.html'))) {
     if (fs.existsSync(source)) fs.copyFileSync(source, path.join(canvasOut, file));
   }
 }
+const polishCanvas = path.resolve('docs/obsidian-polish/canvas');
+if (fs.existsSync(path.join(polishCanvas, 'index.html'))) {
+  const canvasOut = path.join(out, 'design/obsidian');
+  fs.cpSync(polishCanvas, canvasOut, { recursive: true });
+  const base = (process.env.STATIC_BASE || '/fact-duel/').replace(/\/?$/, '/');
+  const canvasFile = path.join(canvasOut, 'index.html');
+  fs.writeFileSync(canvasFile, fs.readFileSync(canvasFile, 'utf8').replaceAll('../../../public/', base));
+  for (const file of ['RESEARCH.md', 'COPY.md', 'DESIGN.md', 'MATERIAL.md', 'PANEL.md', 'QA.md', 'REVIEW.md', 'UI.md', 'CLUB-THEME.md', 'DEPLOYMENT.md']) {
+    const source = path.resolve('docs/obsidian-polish', file);
+    if (fs.existsSync(source)) fs.copyFileSync(source, path.join(canvasOut, file));
+  }
+}
 const moved = 'https://occult-kranti.github.io/andhbhakt-ya-deshbhakt/';
 fs.mkdirSync(path.join(out,'hisaab'),{recursive:true});
 fs.writeFileSync(path.join(out,'hisaab/index.html'),`<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Andhbhakt ya Deshbhakt</title><link rel="canonical" href="${moved}"><script>location.replace(${JSON.stringify(moved)}+location.search+location.hash)</script><noscript><meta http-equiv="refresh" content="0;url=${moved}"></noscript><main><h1>HISAAB DO is now Andhbhakt ya Deshbhakt</h1><p><a href="${moved}">Play at the new address</a></p></main></html>`);

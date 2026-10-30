@@ -57,7 +57,7 @@
 }
 .jhk-teams .jhk-club-lineup-sheet::selection {
   background: var(--team-saffron);
-  color: #122c35;
+  color: var(--volt-ink, #122c35);
 }
 .jhk-teams .jhk-club-reserve-note {
   border-left-color: color-mix(in srgb, var(--team-teal) 45%, var(--team-line));

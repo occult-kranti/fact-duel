@@ -21,6 +21,7 @@ async function getDatabase() {
     await database.exec(read('supabase/jhk/migrations/20261030003000_jhk_teams.sql'));
     await database.exec(read('supabase/jhk/migrations/20261030020000_jhk_club_wars.sql'));
     await database.exec(read('supabase/jhk/migrations/20261030020000_jhk_club_wars.sql'));
+    await database.exec(read('supabase/jhk/migrations/20261030040000_jhk_public_club_identity.sql'));
     return database;
   })();
   return databasePromise;

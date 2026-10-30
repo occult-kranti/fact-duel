@@ -62,8 +62,8 @@ export function PlayerScreen({ player, onOpenExpedition, onMissionAction, go }: 
     <div className="fd-player">
       <header className="fd-player-head">
         <div>
-          <p className="fd-eyebrow">{hi ? 'हर ओवर की एक याद' : 'Every over leaves a mark'}</p>
-          <h1>{hi ? 'आपका खेल रिकॉर्ड।' : 'Your playing record.'}</h1>
+          <p className="fd-eyebrow">{hi ? 'अपनी मेहनत। अपनी पहचान।' : 'Apne dum par.'}</p>
+          <h1>{hi ? 'स्कोरकार्ड बोलता है।' : 'Scorecard bolta hai.'}</h1>
           <p className="jp-page-caption">{hi ? 'आपके XP, यादें और इस ब्राउज़र में कमाई गई पहचान।' : 'Your XP, milestones and the identity you have earned in this browser.'}</p>
         </div>
       </header>

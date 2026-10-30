@@ -193,10 +193,10 @@ export default function Discovery({
         </button>
       </div>
       <header className="fd-learn__head">
-        <p className="fd-eyebrow">{locale === 'hi' ? t('disc.eyebrow') : 'A little curiosity'}</p>
+        <p className="fd-eyebrow">{locale === 'hi' ? 'ज्ञान का वार्म-अप' : 'Gyaan ka warm-up'}</p>
         <div className="fd-learn__title">
           <h1 ref={heading} tabIndex={-1}>
-            {fixture ? label : locale === 'hi' ? t('disc.title', { label }) : `${label}, at your pace.`}
+            {fixture ? label : locale === 'hi' ? t('disc.title', { label }) : `${label}. Thoda aur jaan lo.`}
           </h1>
           <span className="fd-tag fd-tag--cool">
             <Compass />

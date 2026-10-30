@@ -12,6 +12,8 @@ import './static.css';
 import './cricket-themes.css';
 import '../app/team-theme.css';
 import '../app/club-wars-theme.css';
+import '../app/obsidian-polish.css';
+import '../app/club-accent.css';
 import RedirectNotice from '../app/redirect-notice';
 import { redirectTarget } from '../lib/redirect-target.mjs';
 import { LocaleProvider } from '../app/use-locale';

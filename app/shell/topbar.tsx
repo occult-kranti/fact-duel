@@ -4,6 +4,8 @@ import { Lock, Radio, Volume2, VolumeX, Settings } from 'lucide-react';
 import { jhkOnline } from '@/lib/jhk-online/runtime';
 import { JhkMark, JhkWordmark } from './brand-mark';
 import { useLocale } from '../use-locale';
+import { TeamIdentity } from '../components/team-identity';
+import { teamIdentityText } from '@/lib/team-identity.mjs';
 
 export type TopbarProps = {
   /** A room is open (any phase): brand click leaves/backs instead of going home. */
@@ -21,6 +23,9 @@ export type TopbarProps = {
   wallet?: ReactNode;
   appearance?: ReactNode;
   teamTag?: string;
+  playerName?: string;
+  teamName?: string | null;
+  teamPalette?: 'teal' | 'saffron' | 'berry' | 'blue' | null;
 };
 
 export function Topbar({
@@ -35,6 +40,9 @@ export function Topbar({
   wallet,
   appearance,
   teamTag,
+  playerName,
+  teamName,
+  teamPalette,
 }: TopbarProps) {
   const { t, locale } = useLocale();
   return (
@@ -42,7 +50,7 @@ export function Topbar({
       <a
         href="/"
         className="fd-brand"
-        aria-label={t('top.brandHome')}
+        aria-label={playerName ? `${t('top.brandHome')}. ${locale === 'hi' ? 'खिलाड़ी' : 'Player'}: ${teamIdentityText(playerName, teamTag)}` : t('top.brandHome')}
         onClick={(e) => {
           e.preventDefault();
           onBrand();
@@ -53,7 +61,7 @@ export function Topbar({
             359px and below (app/shell/shell.css) the CSS hides it and the tile alone carries the
             brand; every width from 360px up — the 375px iPhones included — keeps it. Under the
             Hindi locale the Devanagari wordmark takes its place (docs/brand.md §5). */}
-        <span className="jhk-brand-identity"><JhkWordmark height={16} title="" variant={locale === 'hi' ? 'hi' : 'full'} className="fd-brand-word" />{teamTag && <span className="jhk-member-tag" aria-label={`Team ${teamTag}`}>{teamTag}</span>}</span>
+        <span className="jhk-brand-identity"><JhkWordmark height={16} title="" variant={locale === 'hi' ? 'hi' : 'full'} className="fd-brand-word" />{playerName && <span className="jhk-topbar-player" data-team-palette={teamPalette || undefined}><TeamIdentity name={playerName} teamTag={teamTag} teamName={teamName}/></span>}</span>
       </a>
       <div className="fd-topbar-right">
         {appearance}

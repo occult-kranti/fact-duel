@@ -1,0 +1,37 @@
+/* Club colour is an identity accent. Base surfaces and answer/error semantics stay independent. */
+:root[data-club-palette='teal'] { --club-art-accent:#8cdbc9; --club-accent:#087f7a; --club-accent-ink:#ffffff; --club-accent-text:#076f6b; --club-accent-soft:#087f7a14; }
+:root[data-club-palette='saffron'] { --club-art-accent:#ffca7a; --club-accent:#ffbd59; --club-accent-ink:#122c35; --club-accent-text:#795019; --club-accent-soft:#ffbd5921; }
+:root[data-club-palette='berry'] { --club-art-accent:#ecaacd; --club-accent:#8e3863; --club-accent-ink:#ffffff; --club-accent-text:#8e3863; --club-accent-soft:#8e386312; }
+:root[data-club-palette='blue'] { --club-art-accent:#add3ff; --club-accent:#285bb8; --club-accent-ink:#ffffff; --club-accent-text:#285bb8; --club-accent-soft:#285bb812; }
+:root[data-cricket-theme='floodlights'][data-club-palette='teal'] { --club-accent:#8cdbc9; --club-accent-text:#8cdbc9; --club-accent-soft:#8cdbc916; }
+:root[data-cricket-theme='floodlights'][data-club-palette='saffron'] { --club-accent:#ffca7a; --club-accent-text:#ffca7a; --club-accent-soft:#ffca7a16; }
+:root[data-cricket-theme='floodlights'][data-club-palette='berry'] { --club-accent:#ecaacd; --club-accent-text:#ecaacd; --club-accent-soft:#ecaacd16; }
+:root[data-cricket-theme='floodlights'][data-club-palette='blue'] { --club-accent:#add3ff; --club-accent-text:#add3ff; --club-accent-soft:#add3ff16; }
+:root[data-cricket-theme='floodlights'][data-club-palette] { --club-accent-ink:#122c35; }
+:root[data-cricket-theme][data-club-palette] {
+  --volt:var(--club-accent); --volt-text:var(--club-accent-text); --volt-ink:var(--club-accent-ink); --volt-soft:var(--club-accent-soft);
+  --primary:var(--club-accent); --primary-text:var(--club-accent-text); --primary-foreground:var(--club-accent-ink);
+  --cr-accent:var(--club-accent); --cr-accent-ink:var(--club-accent-ink); --gc-accent:var(--club-accent); --gc-accent-ink:var(--club-accent-ink); --ps-lime:var(--club-art-accent);
+  --jp-team:var(--club-accent); --jp-team-ink:var(--club-accent-ink); --jp-team-soft:var(--club-accent-soft); --ring:var(--club-accent-text);
+}
+/* These legacy controls used a fixed dark foreground; pair it with the chosen fill. */
+:root[data-cricket-theme][data-club-palette] .ps-start.gc-play,
+:root[data-cricket-theme][data-club-palette] .cr-primary {
+  background:var(--club-accent);
+  color:var(--club-accent-ink);
+  border-color:color-mix(in srgb,var(--club-accent) 75%,var(--club-accent-ink));
+}
+:root[data-cricket-theme][data-club-palette] .jhk-profile-gate .fd-gate-save {
+  color:var(--club-accent-ink);
+}
+:root[data-cricket-theme][data-club-palette] .jhk-club-lineup-sheet::selection {
+  background:var(--club-accent);
+  color:var(--club-accent-ink);
+}
+
+/* Stadium artwork stays dark in both modes: its lettering uses a light identity tint. */
+/* Keep paired text/fill changes atomic, including returning to the default palette. */
+:root[data-cricket-theme] .ps-start.gc-play,
+:root[data-cricket-theme] .cr-primary {
+  transition-property: transform, box-shadow;
+}

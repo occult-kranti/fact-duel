@@ -50,7 +50,7 @@ export function EventsScreen({ player, ready, busy, onDuel, onMode, activeModeId
           <CalendarDays aria-hidden="true" />
           {locale === 'hi' ? t('events.eyebrow', { month }) : `${month} · The fixture book`}
         </p>
-        <h1 id="fd-ev-title">{locale === 'hi' ? t('events.title') : 'Something to play for.'}</h1>
+        <h1 id="fd-ev-title">{locale === 'hi' ? 'अगली चुनौती के लिए तैयार?' : 'Agla challenge, ready?'}</h1>
         <p className="fd-ev-lede">{t('events.lede')}</p>
 
         <dl className="fd-ev-stats">

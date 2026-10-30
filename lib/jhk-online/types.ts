@@ -1,7 +1,7 @@
 export type HumanRoad = { trophies: number; stadiumId: 'gully' | 'riverside' | 'crown'; level: 1 | 2 | 3; answeredRounds: number; correctAnswers: number; eligibleMatches: number; source: 'server-human-results' };
 export type Words = { en: string; hi?: string };
-export type PlayerSession = { id: string; nickname: string; email?: string | null; avatar?: string | null; locale?: string | null; preferences?: { topics?: string[] } | null; adultConfirmed?: boolean; termsVersion?: string | null; profileComplete?: boolean; expiresAt: number; onlineXp?: number; humanRoad?: HumanRoad; balance?: number; savings?: number; title?: TitleGrant | null; teamTag?: string | null; teamName?: string | null; teamSize?: 5 | 11 | null };
-export type OnlinePlayer = { id: string; nickname: string; ready: boolean; answered: boolean; score: number };
+export type PlayerSession = { id: string; nickname: string; email?: string | null; avatar?: string | null; locale?: string | null; preferences?: { topics?: string[] } | null; adultConfirmed?: boolean; termsVersion?: string | null; profileComplete?: boolean; expiresAt: number; onlineXp?: number; humanRoad?: HumanRoad; balance?: number; savings?: number; title?: TitleGrant | null; teamTag?: string | null; teamName?: string | null; teamSize?: 5 | 11 | null; teamPalette?: 'teal' | 'saffron' | 'berry' | 'blue' | null };
+export type OnlinePlayer = { id: string; nickname: string; teamTag?: string | null; teamName?: string | null; teamPalette?: string | null; ready: boolean; answered: boolean; score: number };
 export type OnlineReceipt = { choice: number | null; correct: boolean; correctIndex: number; elapsedMs: number; xp: number; explanation: Words; sourceUrl?: string };
 export type OnlineMatch = {
   id: string; code: string; mode: 'private' | 'ranked' | 'tournament';
@@ -18,7 +18,7 @@ export type OnlineMatch = {
   winnerId: string | null; reason?: string;
 };
 export type TitleGrant = { title: string; source: 'leaderboard' | 'tournament' | 'savings'; rank: number; awardedAt: number; expiresAt: number; competitionId: string; name?: string };
-export type BoardRow = { rank: number; id: string; nickname: string; matches: number; wins: number; points: number; correct: number; elapsedMs: number; title: TitleGrant | null; savings?: number };
+export type BoardRow = { rank: number; id: string; nickname: string; teamTag?: string | null; teamName?: string | null; teamPalette?: string | null; matches: number; wins: number; points: number; correct: number; elapsedMs: number; title: TitleGrant | null; savings?: number };
 export type Board = { period: string; startsAt: number; endsAt: number; rows: BoardRow[]; self: BoardRow | null; minimumMatches?: number };
 export type Tournament = { id: string; name: string; startsAt: number; endsAt: number; status: string; format: string; minimumMatches: number };
 export type ServerCircle = { id: string; code: string; name: string; kind: 'friends' | 'family'; nickname: string; members: { id: string; nickname: string }[] };

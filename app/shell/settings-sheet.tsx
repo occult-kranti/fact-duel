@@ -24,6 +24,7 @@ export const SETTINGS_KEYS = {
   sound: STORAGE.sound, // 'on' | 'off'
   volume: STORAGE.volume, // '0'..'1'
   theme: STORAGE.theme, // 'dark' | 'light'
+  clubColours: STORAGE.clubColours, // 'club' | 'default'
   name: STORAGE.name,
   haptics: STORAGE.haptics, // 'on' | 'off'
   motion: STORAGE.motion, // 'full' | 'reduced' | 'off'
@@ -46,6 +47,9 @@ export type SettingsSheetProps = {
   onMotionChange: (pref: MotionPref) => void;
   light: boolean;
   onLightChange: (on: boolean) => void;
+  clubColours: boolean;
+  onClubColoursChange: (on: boolean) => void;
+  clubName?: string | null;
   showArt: boolean;
   onShowArtChange: (on: boolean) => void;
   canExport: boolean;
@@ -133,6 +137,9 @@ export function SettingsSheet({
   onMotionChange,
   light,
   onLightChange,
+  clubColours,
+  onClubColoursChange,
+  clubName,
   showArt,
   onShowArtChange,
   canExport,
@@ -258,6 +265,11 @@ export function SettingsSheet({
             <Label htmlFor="art-setting">{t('settings.art')}</Label>
             <Switch id="art-setting" checked={showArt} onCheckedChange={onShowArtChange} />
           </div>
+          <div className="fd-setting-row">
+            <Label htmlFor="club-colours-setting">{locale === 'hi' ? 'क्लब के रंग इस्तेमाल करें' : 'Use club colours'}</Label>
+            <Switch id="club-colours-setting" checked={clubColours} onCheckedChange={onClubColoursChange} />
+          </div>
+          <p className="fd-setting-note">{locale === 'hi' ? clubName ? `${clubName} के रंग बटन और हाइलाइट पर दिखेंगे। दिन और रात का चुनाव आपका रहेगा।` : 'क्लब में जुड़ने पर उसके रंग बटन और हाइलाइट पर दिखेंगे। दिन और रात का चुनाव आपका रहेगा।' : clubName ? `${clubName} colours your buttons and highlights. Day and night stay your choice.` : 'Your club colours buttons and highlights when you join one. Day and night stay your choice.'}</p>
         </section>
 
         <section className="fd-setting-group" aria-labelledby="settings-measurement">

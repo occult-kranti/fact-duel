@@ -1,0 +1,151 @@
+/* Obsidian Pavilion: an optical finish on dark chrome, never a quiz effect.
+   The base remains opaque without backdrop-filter. Reflection is decorative;
+   text, focus and control boundaries have their own contrasting colours. */
+:root {
+  --obsidian-deep: #0c1820;
+  --obsidian-base: #10272f;
+  --obsidian-text: #f7f1e6;
+  --obsidian-muted: #c0cfce;
+  --obsidian-control: #758d98;
+  --obsidian-edge: #394d57;
+  --obsidian-accent: color-mix(in srgb, var(--club-accent, #8cdbc9) 40%, #fffdf8 60%);
+  --obsidian-reflection: color-mix(in srgb, var(--club-accent, #8cdbc9) 14%, transparent);
+}
+
+/* Dark navigation anchors the warm daytime page as well as floodlights. */
+:root[data-cricket-theme] .fd-nav {
+  background-color: var(--obsidian-deep);
+  background-image:
+    linear-gradient(120deg, #ffffff0b, #ffffff00 36%, #ffffff04 76%, #ffffff00),
+    radial-gradient(ellipse at 90% 0%, var(--obsidian-reflection), transparent 64%);
+  border-color: var(--obsidian-control);
+  box-shadow: inset 0 1px 0 #ffffff14, 0 -6px 22px #07151d12;
+}
+:root[data-cricket-theme] .fd-nav-mark { color: var(--obsidian-text); }
+:root[data-cricket-theme] .fd-nav .fd-nav-btn {
+  color: var(--obsidian-muted);
+  background-color: transparent;
+}
+:root[data-cricket-theme] .fd-nav .fd-nav-btn:is(:hover, :focus-visible) {
+  color: var(--obsidian-text);
+}
+:root[data-cricket-theme] .fd-nav .fd-nav-btn:focus-visible {
+  outline: 3px solid var(--obsidian-text);
+  outline-offset: -4px;
+}
+:root[data-cricket-theme] .fd-nav .fd-nav-btn[aria-current='page'] {
+  color: var(--obsidian-text);
+  background: linear-gradient(135deg, #ffffff0d, #ffffff03);
+  box-shadow: inset 0 1px 0 #ffffff16, inset 0 0 0 1px #ffffff09;
+}
+:root[data-cricket-theme] .fd-nav .fd-nav-btn[aria-current='page'] .fd-nav-icon {
+  position: relative;
+  color: var(--obsidian-accent);
+  background: color-mix(in srgb, var(--club-accent, #8cdbc9) 15%, transparent);
+}
+:root[data-cricket-theme] .fd-nav-btn[aria-current='page'] .fd-nav-icon::after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  right: 3px;
+  top: 1px;
+  background: var(--obsidian-text);
+  clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%);
+  pointer-events: none;
+  opacity: .28;
+  animation: obsidian-corner-glint 700ms ease-out 1 both;
+}
+
+/* Team identity already owns a dark ground. The moving reflection is a
+   background layer, so it cannot intercept a tap or cover a focus outline. */
+:root[data-cricket-theme] .jhk-team-banner {
+  background-color: var(--obsidian-deep);
+  background-image:
+    linear-gradient(116deg, transparent 22%, #ffffff0d 29%, #ffffff00 38%, transparent 63%),
+    radial-gradient(ellipse at 100% 0%, var(--obsidian-reflection), transparent 65%);
+  background-size: 220% 100%, 100% 100%;
+  background-position: 100% 0, 0 0;
+  border: 1px solid color-mix(in srgb, var(--club-accent, #8cdbc9) 24%, #394d57);
+  box-shadow: inset 0 1px 0 #ffffff1f, inset 0 -1px 0 #00000035, 0 5px 14px #0c18200b;
+  transition: background-position 550ms ease-out;
+}
+:root[data-cricket-theme] .jhk-team-banner:focus-within { background-position: 0 0, 0 0; }
+.jhk-team-banner-copy > p,
+.jhk-team-banner-copy > small { color: #c0cfce; }
+:root[data-cricket-theme] .jhk-team-banner :is(h1, h2) { color: var(--obsidian-text); }
+:root[data-cricket-theme] .jhk-team-banner .jhk-team-banner-level { color: var(--obsidian-accent); }
+
+/* Selected roster tabs are controls, with stable high-contrast text and count. */
+.jhk-teams .jhk-club-roster-tabs button[aria-pressed='true'] {
+  color: var(--obsidian-text);
+  background-color: var(--obsidian-base);
+  background-image: linear-gradient(125deg, #ffffff0a, transparent 62%);
+  border-color: var(--obsidian-control);
+  box-shadow: inset 0 1px 0 #ffffff1a;
+}
+.jhk-teams .jhk-club-roster-tabs button[aria-pressed='true'] b {
+  color: var(--obsidian-text);
+  background: color-mix(in srgb, var(--club-accent, #8cdbc9) 18%, var(--obsidian-base));
+}
+
+/* Only the floodlights world gives non-question surfaces a glass finish.
+   No answer, clock, question card or timed-run surface is selected here. */
+:root:is([data-theme='dark'], [data-cricket-theme='floodlights']) .fd-topbar {
+  background-color: var(--obsidian-base);
+  background-image: linear-gradient(110deg, #ffffff08, #ffffff00 46%);
+  border-bottom-color: var(--obsidian-control);
+  box-shadow: inset 0 -1px 0 #ffffff08;
+}
+:root:is([data-theme='dark'], [data-cricket-theme='floodlights']) .fd-shell:not(.fd-shell--room)
+  :is(.fd-player-hero, .fd-vault-card, .jp-team-invite, .jo-title-goal),
+:root:is([data-theme='dark'], [data-cricket-theme='floodlights']) .jhk-teams:not(.jhk-team-run)
+  :is(.jhk-team-card, .jhk-team-next-action, .jhk-team-fixture-card) {
+  background-image:
+    linear-gradient(137deg, #ffffff08, #ffffff00 37%),
+    radial-gradient(ellipse at 100% 0%, var(--obsidian-reflection), transparent 70%);
+  box-shadow: inset 0 1px 0 #ffffff13, inset 0 -1px 0 #00000026, 0 4px 13px #07151d10;
+}
+
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root[data-cricket-theme] .fd-nav {
+    background-color: #0c1820f2;
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+  }
+  :root:is([data-theme='dark'], [data-cricket-theme='floodlights']) .fd-topbar {
+    background-color: #10272ff5;
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+  }
+}
+@media (hover: hover) and (pointer: fine) {
+  :root[data-cricket-theme] .jhk-team-banner:hover { background-position: 0 0, 0 0; }
+}
+@media (max-width: 599px) {
+  :root[data-cricket-theme] .fd-nav { box-shadow: inset 0 1px 0 #ffffff14, 0 -3px 12px #07151d0d; }
+}
+@media (min-width: 900px) {
+  :root[data-cricket-theme] .fd-nav { box-shadow: inset -1px 0 0 #ffffff11; }
+}
+@keyframes obsidian-corner-glint {
+  0% { opacity: 0; transform: scale(.45) rotate(-12deg); }
+  48% { opacity: .75; transform: scale(1) rotate(0); }
+  100% { opacity: .28; transform: scale(.8) rotate(0); }
+}
+
+/* Honor both OS and saved in-game motion preferences. Preserve a static edge. */
+:root:is([data-motion='off'], [data-motion='reduced']) .jhk-team-banner {
+  transition: none;
+  background-position: 100% 0, 0 0;
+}
+:root:is([data-motion='off'], [data-motion='reduced']) .fd-nav-icon::after,
+.fd-shell--room .fd-nav-icon::after {
+  animation: none !important;
+  transform: none;
+  opacity: .28;
+}
+@media (prefers-reduced-motion: reduce) {
+  :root[data-cricket-theme] .jhk-team-banner { transition: none; background-position: 100% 0, 0 0; }
+  :root[data-cricket-theme] .fd-nav-icon::after { animation: none !important; transform: none; opacity: .28; }
+}

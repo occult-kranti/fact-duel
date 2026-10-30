@@ -1,6 +1,7 @@
 'use client';
 import { Crown, Zap, Star } from 'lucide-react';
 import type { Emblem, TeamPalette, TeamSummary } from './types';
+import { TeamIdentity } from '../../components/team-identity';
 
 export const EMBLEMS: { id: Emblem; label: string }[] = [{ id: 'bat', label: 'Crossed bats' }, { id: 'bolt', label: 'Lightning' }, { id: 'crown', label: 'Crown' }, { id: 'star', label: 'Star' }];
 export const PALETTES: { id: TeamPalette; label: string }[] = [{ id: 'teal', label: 'Pavilion teal' }, { id: 'saffron', label: 'Marigold' }, { id: 'berry', label: 'Jamun' }, { id: 'blue', label: 'Evening blue' }];
@@ -16,7 +17,7 @@ export function TeamBanner({ team, subtitle, action, headingLevel = 1 }: { team:
   return <header className={`jhk-team-banner${(team.level || 0) >= 4 ? ' has-legacy-frame' : ''}`} data-palette={team.palette}>
     <span className="jhk-team-banner-rule" aria-hidden="true"/>
     <TeamCrest emblem={team.emblem} palette={team.palette}/>
-    <div className="jhk-team-banner-copy"><p>{team.capacity === 11 ? 'PLAYING XI' : 'PLAYING 5'} · A CLUB OF UP TO 22</p>{headingLevel === 1 ? <h1>{team.name}</h1> : <h2>{team.name}</h2>}<span className="jhk-team-tag">#{team.tag.replace(/^#/, '')}</span>{subtitle && <small>{subtitle}</small>}</div>
+    <div className="jhk-team-banner-copy"><p>{team.capacity === 11 ? 'PLAYING XI' : 'PLAYING 5'} · A CLUB OF UP TO 22</p>{headingLevel === 1 ? <h1><TeamIdentity name={team.name} teamTag={team.tag} wrap/></h1> : <h2><TeamIdentity name={team.name} teamTag={team.tag} wrap/></h2>}{subtitle && <small>{subtitle}</small>}</div>
     {action}
     {(team.level || 0) >= 4 && <span className="jhk-team-legacy-label">Legacy frame</span>}
   </header>;

@@ -86,3 +86,5 @@ The Figma project was created but its Starter tool quota prevented screen editin
 
 
 Club release references: [research](docs/club-wars/RESEARCH.md), [roadmap](docs/club-wars/ROADMAP.md), [three-round panel](docs/club-wars/PANEL.md), [editable canvas](docs/club-wars/design-board/index.html), [server contract](docs/club-wars/SERVER.md), and [updated pitch](public/product/investor/deck.md).
+
+Obsidian polish adds club-colour accents, public team-tag prefixes, finite reflection details and compact Hinglish challenges. The editable [polish canvas](docs/obsidian-polish/canvas/index.html), [review](docs/obsidian-polish/REVIEW.md) and [stress record](docs/obsidian-polish/QA.md) accompany the release.

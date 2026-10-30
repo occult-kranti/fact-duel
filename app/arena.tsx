@@ -24,6 +24,7 @@ import { SettingsSheet, SETTINGS_KEYS, type MotionPref } from './shell/settings-
 import { LiveDuelScreen, LiveProgressCard } from './screens/online/live-duel-screen';
 import { JhkProfileGate } from './shell/jhk-profile-gate';
 import { jhkOnline } from '@/lib/jhk-online/runtime';
+import { activeClubPalette, applyClubPalette, clubColourMode } from '@/lib/club-theme.mjs';
 import { DEFAULT_NAME } from '@/lib/profile-gate.mjs';
 import { HomeScreen } from './screens/home-screen';
 import { StadiumRoad } from './screens/stadium-road';
@@ -145,7 +146,32 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
   const [liveRoundKey, setLiveRoundKey] = useState<string | null>(null);
   const onLiveState = useCallback((inMatch: boolean, playing: boolean) => setLiveState(previous => previous.inMatch === inMatch && previous.playing === playing ? previous : { inMatch, playing }), []);
   const [liveSession, setLiveSession] = useState(jhkOnline.session);
-  useEffect(() => jhkOnline.subscribe(() => setLiveSession(jhkOnline.session)), []);
+  const [clubIdentity, setClubIdentity] = useState(jhkOnline.club);
+  const [clubColours, setClubColours] = useState<'club' | 'default'>(() => {
+    try { return clubColourMode(typeof window === 'undefined' ? null : localStorage.getItem(SETTINGS_KEYS.clubColours)); }
+    catch { return 'club'; }
+  });
+  useEffect(() => jhkOnline.subscribe(() => { setLiveSession(jhkOnline.session); setClubIdentity(jhkOnline.club); }), []);
+  const clubPalette = activeClubPalette(clubIdentity, clubColours);
+  useEffect(() => {
+    applyClubPalette(document.documentElement, clubPalette);
+    return () => applyClubPalette(document.documentElement, null);
+  }, [clubPalette]);
+  useEffect(() => {
+    if (!jhkOnline.configured || !liveSession?.id) return;
+    let refreshing = false;
+    const refresh = async () => {
+      if (refreshing || document.hidden || !jhkOnline.hasCredential) return;
+      refreshing = true;
+      try { await jhkOnline.connect(); } catch { /* Keep the last verified state; profile recovery owns errors. */ }
+      finally { refreshing = false; }
+    };
+    const focus = () => void refresh();
+    const timer = setInterval(focus, 30000);
+    window.addEventListener('focus', focus);
+    document.addEventListener('visibilitychange', focus);
+    return () => { clearInterval(timer); window.removeEventListener('focus', focus); document.removeEventListener('visibilitychange', focus); };
+  }, [liveSession?.id]);
   useEffect(() => { if (jhkOnline.configured && liveSession?.profileComplete && liveSession.nickname) setName(liveSession.nickname); }, [liveSession?.nickname, liveSession?.profileComplete]);
   const [selectedExpedition, setSelectedExpedition] = useState<string | null>(null);
   /* Find a rival (lib/queue-client.ts): the "Rival" seat is chosen, and the search the launch panel
@@ -269,6 +295,7 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
       .catch((e) => setError(e.message));
     try {
       setLight(localStorage.getItem(SETTINGS_KEYS.theme) !== 'dark');
+      setClubColours(clubColourMode(localStorage.getItem(SETTINGS_KEYS.clubColours)));
       setShowArt(localStorage.getItem(SETTINGS_KEYS.art) !== 'off');
       setSound(localStorage.getItem(SETTINGS_KEYS.sound) !== 'off');
       const savedName = localStorage.getItem(SETTINGS_KEYS.name);
@@ -334,6 +361,11 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
     try {
       localStorage.setItem(SETTINGS_KEYS.art, on ? 'on' : 'off');
     } catch {}
+  };
+  const changeClubColours = (on: boolean) => {
+    const next = on ? 'club' : 'default';
+    setClubColours(next);
+    try { localStorage.setItem(SETTINGS_KEYS.clubColours, next); } catch {}
   };
   const calibrate = useCallback(async () => {
     const samples: { rtt: number; offset: number }[] = [];
@@ -1114,7 +1146,10 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
         onNavigate={(id) => go(id === 'arena' ? 'online' : id)}
         topbar={{
           appearance: !active && !liveState.playing && !teamLiveState.playing ? <button className="cr-theme-switch" aria-label={light ? 'Switch to night match' : 'Switch to day match'} onClick={() => setLight(v => !v)}><span aria-hidden="true">{light ? '☾' : '☀'}</span><span>{light ? (locale === 'hi' ? 'रात' : 'Night') : (locale === 'hi' ? 'दिन' : 'Day')}</span></button> : null,
-          teamTag: liveSession?.teamTag || undefined,
+          playerName: liveSession?.nickname || name,
+          teamTag: clubIdentity?.verified ? clubIdentity.teamTag || undefined : undefined,
+          teamName: clubIdentity?.verified ? clubIdentity.teamName || undefined : undefined,
+          teamPalette: clubIdentity?.verified ? clubIdentity.teamPalette || undefined : undefined,
           sound,
           onToggleSound: () => setSound((v) => !v),
           onOpenSettings: () => setSettingsOpen(true),
@@ -1279,6 +1314,9 @@ function ArenaShell({ initialTab = 'home' }: { initialTab?: string }) {
         onMotionChange={changeMotion}
         light={light}
         onLightChange={setLight}
+        clubColours={clubColours === 'club'}
+        onClubColoursChange={changeClubColours}
+        clubName={clubIdentity?.verified ? clubIdentity.teamName : null}
         showArt={showArt}
         onShowArtChange={changeShowArt}
         canExport={player.loaded}

@@ -70,3 +70,10 @@ Research at `docs/team-redesign/RESEARCH.md` scopes official game mechanics, pla
 A club can keep 22 members while playing only five or eleven. Reserve joining does not change a frozen battle sheet. New weekly rematches remain inert drafts until a home Captain/VC sends a current sheet and the other club accepts with a current sheet. Either club can stop the series. Dates show local absolute time alongside remaining time, and server reconciliation happens on authenticated requests.
 
 Original cricket outcome feedback uses a bat boundary and optional synthetic cheer for a win, displaced bails for a loss, a run-out metaphor for a close loss, and raised bats for a draw. It follows settlement, never timed questions; no-contest/cancelled fixtures do not celebrate. The inline moment lasts at most 2.6 seconds, offers Skip and never blocks replay. Motion-off and reduced-motion paths remain static. The editable mobile-first exploration and source-linked decisions are in docs/club-wars/.
+
+
+## Obsidian mobile polish
+
+Dark navigation, club banners and selected non-question controls use layered reflection and inset edges. The dark canvas is #0C1820 with raised surfaces #10272F, warm ivory text and restrained club tints. Essential control boundaries use #758D98; low-contrast #394D57 is decorative only. Reflection never replaces readable text, a focus outline or selected-state labels. Navigation glints run once and banner reflection responds to interaction; reduced/off/OS motion settings disable decorative motion.
+
+A club identity is expressed as #TAG before the unchanged player name, with wrapping/truncation chosen per context and full accessible text. Public tags never serve as join credentials. Current authenticated membership supplies the club palette; switching or leaving clears stale identity, and Use club colours can return the default accent. Theme is cosmetic: correct/error states and scoring retain their meaning. Short Hinglish headings add competitive personality; instructions, mode names, costs, bot disclosures and cancellation terms remain direct.

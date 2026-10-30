@@ -601,7 +601,7 @@ export function Journal({
       <header className="fd-learn__head">
         <p className="fd-eyebrow">Your answer book · This browser</p>
         <div className="fd-learn__title">
-          <h1>Good facts are worth keeping.</h1>
+          <h1>Agla jawab, aur pakka.</h1>
           {met > 0 && (
             <div className="fd-head-actions">
               <button

@@ -5,6 +5,8 @@ import './rivalry.css';
 import './expeditions.css';
 import './team-theme.css';
 import './club-wars-theme.css';
+import './obsidian-polish.css';
+import './club-accent.css';
 
 /* Open Graph images must be absolute URLs. SITE_BASE is the same knob scripts/seo-pages.mjs reads;
    the GitHub Pages address is the fallback, as in lib/seo/intents.mjs DEFAULT_BASE. */
